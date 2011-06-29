@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	<title>ProcessPuzzle</title>
+			
+    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-more-1.3.js"></script>
+    
+	<!--[if IE]>
+	    <script type="text/javascript" src="JavaScript/MochaUI/excanvas.js"></script>
+	<![endif]--> 
+    
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Core.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Dock.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Layout.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Tabs.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Window.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/WebKitShadower.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Modal.js"></script>
+    
+	<script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+    
+	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlIO.js"></script>
+	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlEscape.js"></script>
+	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlsax.js"></script>
+	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+	
+    <script type="text/javascript" src="JavaScript/Libraries/Log4JavaScript/log4javascript.js"></script>
+    
+    <script type="text/javascript" src="JavaScript/Singleton/Singleton.js"></script>
+    <script type="text/javascript" src="JavaScript/WebUIMessageBus/WebUIMessage.js"></script>
+    
+    <script type="text/javascript" src="JavaScript/Source/BrowserWidget/BrowserWidget.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/CommonScripts/AssertUtil.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/CommonScripts/inheritFrom.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/CommonScripts/StringUtil.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/CommonScripts/StringBuffer.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/CommonScripts/UserException.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/ComponentStateManager.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/DesktopConfigurator/DesktopConfigurator.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/DesktopConfigurator/DesktopStructure.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/DesktopConfigurator/PanelInterpreter.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/DocumentManager/DocumentManager.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/ArrayList.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/FundamentalTypes/LinkedHashMap.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/FundamentalTypes/StringTokenizer.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/WebUIException.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/XmlResource.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/Internationalization/Locale.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/Internationalization/LocaleUtil.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/Internationalization/ResourceKey.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/Internationalization/ResourceCache.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/Internationalization/XMLBundleParser.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/Internationalization/XMLResourceBundle.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/LanguageSelectorWidget/LanguageChangedMessage.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/SkinSelectorWidget/SkinChangedMessage.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/SkinSelectorWidget/SkinSelectorWidget.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/TabWidget/DuplicatedTabException.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/TabWidget/Tab.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/TabWidget/TabSelectedMessage.js"></script>
+	<script type="text/javascript" src="JavaScript/Source/TabWidget/TabWidget.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUIController/UnconfiguredWebUIControllerException.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUIController/WebUIController.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUILogger/WebUILogger.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUIController/WebUIStateRestoredMessage.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessageBus.js"></script>
+
+    <script type="text/javascript" >
+      window.addEvent('domready', function() {
+      	var controller = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml" });
+      	controller.configure();
+  	  });
+    </script>
+  	
+</head>
+
+<body>
+	<div style="HEIGHT: 1042px" id=desktop></div>
+</body>
+</html>

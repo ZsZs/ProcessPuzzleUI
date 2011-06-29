@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>Test page for HashMapTest.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+
+    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.3.js"></script>
+    
+	<script language="JavaScript" src="../FundamentalTypes/WebUIException.js"></script>
+	<script language="JavaScript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script language="JavaScript" src="../FundamentalTypes/HashMap.js"></script>
+	
+    <script type="text/javascript" >
+		window.addEvent('domready', function() {
+			runTestFunction();
+		});
+		
+		var sampleMap = null;
+		var ENTRY_ONE_KEY = "entryOneKey";
+		var ENTRY_ONE_VALUE = "entry one value";
+		var ENTRY_TWO_KEY = "entryTwoKey";
+		var ENTRY_TWO_VALUE = "entry two value";
+		var ENTRY_THREE_KEY = "entryThreeKey";
+		var ENTRY_THREE_VALUE = "entry three value";
+		
+		function setUp(){
+			sampleMap = new HashMap();
+			sampleMap.put( ENTRY_ONE_KEY, ENTRY_ONE_VALUE );
+			sampleMap.put( ENTRY_TWO_KEY, ENTRY_TWO_VALUE );
+			sampleMap.put( ENTRY_THREE_KEY, ENTRY_THREE_VALUE );
+		}
+
+		function tearDown(){
+			sampleMap = null;
+		}
+		
+		function testInitialize() {
+			var emptyMap = new HashMap();
+			
+			assertEquals( "After initialization, size is:", 0, emptyMap.size() );
+			assertTrue( "After initializaiton, map is empty.", emptyMap.isEmpty() );
+		}
+		
+		function testClear_DiscardsMapEntries() {
+			assertEquals( "Before 'clear' map's size is:", 3, sampleMap.size() );
+			sampleMap.clear();
+			assertEquals( "After 'clear' map's size is:", 0, sampleMap.size() );
+		}
+		
+		function testContainsKey(){
+			assertTrue( sampleMap.containsKey( ENTRY_TWO_KEY ));
+		}
+		
+		function testContainsValue() {
+			assertTrue( sampleMap.containsValue( ENTRY_TWO_VALUE ));
+		}
+		
+		function testEach_IteratesThrueAllItems() {
+			//SETUP:
+			var sameMap = new HashMap();
+			sameMap.put( ENTRY_ONE_KEY, ENTRY_ONE_VALUE );
+			sameMap.put( ENTRY_TWO_KEY, ENTRY_TWO_VALUE );
+			sameMap.put( ENTRY_THREE_KEY, ENTRY_THREE_VALUE );
+			
+			//EXCERCISE:
+			sampleMap.each( function( mapEntry, index ){
+				if( index == 2 ) { assertEquals( ENTRY_ONE_KEY, mapEntry.getKey() ); assertEquals( ENTRY_ONE_VALUE, mapEntry.getValue() );}
+				if( index == 1 ) { assertEquals( ENTRY_TWO_KEY, mapEntry.getKey() ); assertEquals( ENTRY_TWO_VALUE, mapEntry.getValue() );}
+				if( index == 0 ) { assertEquals( ENTRY_THREE_KEY, mapEntry.getKey() ); assertEquals( ENTRY_THREE_VALUE, mapEntry.getValue() );}
+			}, this );
+		}
+		
+		function testEquals() {
+			var sameMap = new HashMap();
+			sameMap.put( ENTRY_ONE_KEY, ENTRY_ONE_VALUE );
+			sameMap.put( ENTRY_TWO_KEY, ENTRY_TWO_VALUE );
+			sameMap.put( ENTRY_THREE_KEY, ENTRY_THREE_VALUE );
+			
+			assertTrue( sampleMap.equals( sameMap ));
+			assertTrue( sameMap.equals( sampleMap ));
+		}
+		
+		function testGet() {
+			assertEquals( ENTRY_THREE_VALUE, sampleMap.get( ENTRY_THREE_KEY ));
+		}
+		
+		function testIterator() {
+			var iterator = sampleMap.iterator();
+			var index = 1;
+			while( iterator.hasNext() ){
+				var mapEntry = iterator.next();
+				if( index == 1 ) {
+					assertEquals( ENTRY_THREE_KEY, mapEntry.getKey() );
+					assertEquals( ENTRY_THREE_VALUE, mapEntry.getValue() );
+				}
+				
+				if( index == 2 ) {
+					assertEquals( ENTRY_TWO_KEY, mapEntry.getKey() );
+					assertEquals( ENTRY_TWO_VALUE, mapEntry.getValue() );
+				}
+				
+				index++;
+			}
+		}
+		
+		//runs a test function during debugging
+		function runTestFunction(){
+			setUp();
+		    testEach_IteratesThrueAllItems();
+			tearDown();
+		}
+    </script>
+</head>
+
+<body>
+	<h1>HashMap.js test page</H1>
+	<p>This page contains tests for HashMap.js JavaScript class.</P>
+</body>
+</html>
