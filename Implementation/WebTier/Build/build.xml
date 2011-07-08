@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ProcessPuzzleUI Web Tier" basedir=".." default="webtier-build">
+
+	<property name="project.root" location="${basedir}" />
+	<property name="view.root.path" location="../../../" />
+	<property name="common.build.path" value="${view.root.path}/BuildPuzzle/Implementation/BuildSnippets" />
+
+	<property file="${project.root}/Build/local.build.properties" />
+	<property file="${project.root}/Build/buildinfo.properties" />
+	<property file="${common.build.path}/common.build.properties" />
+	
+	<path id="project.auxiliary.classpath">
+	</path>
+	
+	<patternset id="javascript.source.files">
+		<include name="Source/FundamentalTypes/*.js" />
+		<include name="Source/Singleton/*.js" />
+		<include name="Source/BrowserWidget/*.js" />
+		<include name="Source/DesktopConfigurator/*.js" />
+		<include name="Source/Internationalization/*.js" />
+		<include name="Source/WebUIController/*.js" />
+		<exclude name="**/*.copyarea.db" />
+	</patternset>
+
+	<target name="webtier-build">
+		<ant dir="${project.root}" antfile="${common.build.path}/${common.webtier.build.file}" target="all">
+			<property name="cobertura.data.file" value="${project.root}/${cobertura.data.file}" />
+			<reference refid="project.auxiliary.classpath"/>
+			<reference refid="javascript.source.files"/>
+		</ant>
+	</target>
+</project>

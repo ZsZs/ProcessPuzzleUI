@@ -1,118 +1,132 @@
-// HashSet.js
-
 /**
-* use as java.util.HashSet
-*/
+ * Name: HasSet
+ * 
+ * Description: JavaScript implementation of Java HashSet
+ * 
+ * Requires:
+ * 
+ * Provides:
+ * 
+ * Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly
+ * configurable, browser font-end, based on MochaUI and MooTools.
+ * http://www.processpuzzle.com
+ * 
+ * Authors: - Zsolt Zsuffa
+ * 
+ * Copyright: (C) 2011 This program is free software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-function testHashSet(){
- alert("HashSet test begin:");
- try{
- }
- catch(e){
-  alert(e);
- }
- alert("HashSet test end");
-}
+var HashSet = new Class( {
+	// Constructor
+	initialize : function() {
+		this.map = new HashMap();
+		this.ZERO = 0;
+	},
 
+	// Public accessors and mutators
+	add : function( object ) {
+		this.map.put( object, this.ZERO ) == null;
+	},
 
-function HashSet(){  
+	addAll : function(set) {
+		var mod = false;
+		for ( var it = set.iterator(); it.hasNext();) {
+			if (this.add( it.next() ))
+				mod = true;
+		}
+		return mod;
+	},
 
-    private:
- this.map=new HashMap();
- this.ZERO=new Integer(0);
+	clear : function() {
+		this.map.clear();
+	},
 
+	contains : function(o) {
+		return this.map.containsKey( o );
+	},
 
- 
- function HashIterator(it){
-        this.it=it;
-  
-  this.hasNext=hasNext;
-  function hasNext() {
-   return this.it.hasNext();
-        }
+   each : function( fn, bind ){
+      var iterator = this.iterator();
+      var index = 0;
+      while( iterator.hasNext() ){
+         var setElement = iterator.next();
+         fn.call( bind, setElement, index, this );
+         index++;
+      }
+   },
+   
+	equals : function(o) {
+		if (o.size() != this.size())
+			return false;
+		for ( var it = this.iterator(); it.hasNext();) {
+			if (!o.contains( it.next() ))
+				return false;
+		}
+		return true;
+	},
 
-        this.next=next;
-  function next() { 
-   return this.it.next().getKey();
-        }
-    }
- 
- public:
- this.size=size;
- function size(){
-  return this.map.size();
-    }
+	hashCode : function() {
+		var h = 0;
+		for ( var it = this.iterator(); it.hasNext();) {
+			h += it.next().hashCode();
+		}
+		return h;
+	},
 
-    this.isEmpty=isEmpty;
- function isEmpty() {
-  return this.map.isEmpty();
-    }
+	isEmpty : function() {
+		return this.map.isEmpty();
+	},
 
- this.contains=contains;
- function contains(o) {
-  return this.map.containsKey(o);
-    }
- 
- this.add=add;
- function add(o) {
-  return this.map.put(o,this.ZERO)==null;
-    }
+	iterator : function() {
+      return new SetIterator( this.map );
+	},
 
- this.addAll=addAll;
- function addAll(set){
-  var mod=false;
-  for(var it=set.iterator();it.hasNext();){
-   if(this.add(it.next())) mod=true;
-  }
-  return mod;
- }
+	remove : function(o) {
+		return this.map.remove( o ).equals( this.ZERO );
+	},
 
- 
- this.remove=remove;
-    function remove(o) {
-  return this.map.remove(o).equals(this.ZERO);
-    }
- 
- 
-    this.clear=clear;
- function clear() {
-  this.map.clear();
-    }
- 
- 
- this.iterator=iterator;
- function iterator(){
-  return new HashIterator(this.map.iterator());
- }
+	size : function() {
+		return this.map.size();
+	},
 
- 
- this.equals=equals;
- function equals(o) {
-  if (o.size() != this.size())
-   return false;
-        for(var it=this.iterator();it.hasNext();){
-   if(!o.contains(it.next())) return false;
-  }
-  return true;
- }
- 
- this.hashCode=hashCode;
- function hashCode() {
-  var h=0;
-  for(var it=this.iterator();it.hasNext();){
-   h+=it.next().hashCode();
-  }
-  return h;
- }
- 
- this.toArray=toArray;
- function toArray(){
-  var arr=new Array();
-  var i=0;
-  for(var it=this.iterator();it.hasNext();){
-   arr[i++]=it.next();
-  }
-  return arr;
- }
-}
+	toArray : function() {
+		var arr = new Array();
+		var i = 0;
+		for ( var it = this.iterator(); it.hasNext();) {
+			arr[i++] = it.next();
+		}
+		return arr;
+	},
+
+	// Protected, private helper methods
+	hashIterator : function(it) {
+		this.it = it;
+	}.protect()
+
+});
+
+var SetIterator = new Class({
+   initialize : function( map ) {
+      this.mapIterator = map.iterator();
+   },
+
+   hasNext : function() {
+      return this.mapIterator.hasNext();
+   },
+
+   next : function() {
+      return this.mapIterator.next().getKey();
+   }
+});
 

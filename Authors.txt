@@ -5,4 +5,4 @@ individuals. For exact contribution history, see the revision history
 and logs, available at https://github.com/ZsZs/ProcessPuzzleUI
 
 Joe Kueser (joe.kueser@gmail.com)
-Zsolt Zsuffa (zsolt.zsuffa@gmail.com)
+Zsolt Zsuffa (zsolt.zsuffa@itkodex.hu)
