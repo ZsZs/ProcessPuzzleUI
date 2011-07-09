@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+  	<Country name="GB">
+	    <Resource key="res_2" type="String">Resource_two</Resource>
+  	</Country>
+  </Language>
+</pp:Resources>

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>Test page for ResourceKeyTest.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+
+    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+    
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+	<script language="JavaScript" src="../CommonScripts/AssertUtil.js"></script>
+	<script language="JavaScript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script language="JavaScript" src="ResourceKey.js"></script>
+	
+    <script type="text/javascript" >
+		window.addEvent('domready', function() {
+			runTestFunction();
+		});
+  	
+		function setUp(){}
+
+		function tearDown(){}
+
+		function testToString(){
+			var aKey = new ResourceKey("someKey", "someType");
+			assertEquals("toString() concatenates the key and type parameters with a slash.", "someKey/someType", aKey.toString());
+		}
+
+		function testCompareTo(){
+			var aKey = new ResourceKey("someKey", "someType");
+			var anotherKey = new ResourceKey("otherKey", "someType");
+			assertFalse("The two key are't the same.", aKey.compareTo(anotherKey));
+		}
+		
+		//runs a test function during debugging
+		function runTestFunction(){
+			setUp();
+		    //testToString();
+			tearDown();
+		}
+    </script>
+</head>
+
+<body>
+	<h1>ResourceKey.js test page</H1>
+	<p>This page contains tests for ResourceKey.js JavaScript class.</P>
+</body>
+</html>

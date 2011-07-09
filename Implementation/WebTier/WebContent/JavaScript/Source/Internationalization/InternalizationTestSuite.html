@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+  <head>
+	<title>Internalization Test Suite</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+	
+	<script language="javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+	<script language="JavaScript">
+		function suite() {
+		  var newsuite = new top.jsUnitTestSuite();
+		  newsuite.addTestPage("../Internationalization/LocaleTest.html");
+		  newsuite.addTestPage("../Internationalization/LocaleUtilTest.html");
+		  newsuite.addTestPage("../Internationalization/ResourceCacheTest.html");
+		  newsuite.addTestPage("../Internationalization/ResourceKeyTest.html");
+		  newsuite.addTestPage("../Internationalization/XMLBundleParserTest.html");
+		  newsuite.addTestPage("../Internationalization/XMLResourceBundleTest.html");
+		  return newsuite;
+		}
+	</script>
+  </head>
+
+  <body>
+    <h1>Internalization Test Suite</h1>
+
+    <p>This page contains a suite of tests for&nbsp;'Internalization' testing.</p>
+  </body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>Test page for XMLResourceBundleTest.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+
+    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+    
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+    
+	<script type="text/javascript" src="../Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="../Sarissa/sarissa_ieemu_xpath.js"></script>
+    
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../CommonScripts/AssertUtil.js"></script>
+	<script type="text/javascript" src="../CommonScripts/StringUtil.js"></script>
+	<script type="text/javascript" src="../CommonScripts/StringBuffer.js"></script>
+	<script type="text/javascript" src="../CommonScripts/inheritFrom.js"></script>
+	<script type="text/javascript" src="../CommonScripts/UserException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+	<script type="text/javascript" src="../XMLforScript/xmlIO.js"></script>
+	<script type="text/javascript" src="../XMLforScript/xmlEscape.js"></script>
+	<script type="text/javascript" src="../XMLforScript/xmlsax.js"></script>
+	<script type="text/javascript" src="../XMLforScript/preMadeSaxEventHandler.js"></script>
+	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+	<script type="text/javascript" src="Locale.js"></script>
+	<script type="text/javascript" src="LocaleUtil.js"></script>
+	<script type="text/javascript" src="ResourceKey.js"></script>
+	<script type="text/javascript" src="ResourceCache.js"></script>
+	<script type="text/javascript" src="XMLBundleParser.js"></script>
+	<script type="text/javascript" src="XMLResourceBundle.js"></script>
+	
+    <script type="text/javascript" >
+		window.addEvent('domready', function() {
+			runTestFunction();
+		});
+  	
+		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+		var RESOURCE_BUNDLE_ONE_NAME = "../Internationalization/TestResources";
+		var RESOURCE_BUNDLE_TWO_NAME = "../Internationalization/TestResourcesTwo";
+		var bundle = null;
+		var webUIConfiguration = null;
+
+		function setUp(){
+			webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+			bundle = new XMLResourceBundle( webUIConfiguration );
+		}
+
+		function tearDown(){
+		}
+		
+		function testInitialization() {
+			assertTrue( "XMLResourceBundle...", true );
+			assertEquals( "... determines name space.", "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'", bundle.getNameSpace() );
+			assertEquals( "... determines default locale.", "hu", bundle.getDefaultLocale() );
+			assertEquals( "... determines resource bundle names.", 4, bundle.getResourceBundleNames().length );
+			assertEquals( RESOURCE_BUNDLE_ONE_NAME, bundle.getResourceBundleNames()[2] );
+			assertEquals( RESOURCE_BUNDLE_TWO_NAME, bundle.getResourceBundleNames()[3] );
+		}
+
+		function testLoad_RetrievesAllResourcesWithoutLanguageSpecification(){
+			var locale = new Locale({ language : "en" });
+			bundle.load( locale );
+			
+			assertEquals("We got the English version text for the 'res_1' key.", "Resource one", bundle.getText("res_1"));
+		}
+		
+		function testLoad_CollectsResourcesFromAllResourceBundles(){
+			var locale = new Locale({ language : "en" });
+			bundle.load( locale );
+			
+			assertEquals("'TestResourcesTwo.res_21' is defined in the second resourceBundle.", "Resource twenty one", bundle.getText("TestResourcesTwo.res_21"));
+		}
+
+		function testLoad_ForRetrievingBaseFile(){ 
+			//There is no specific 'TestResources_hu.xml' file, therefore resource should be retrieved from the base file.
+
+			var locale = new Locale({ language : "hu" });		
+			bundle.load( locale );
+			assertEquals("We got the Hungarian version text for the 'res_3' key.", "Erőforrás három", bundle.getText("res_3"));
+		}
+		
+		function testLoad_ForRetrievingSpecificFile(){
+			//There is specific 'TestResources_en.xml' file, therefore resource should be retrieved
+			//from this more specific file.
+
+			var locale = new Locale({ language : "en" });
+			bundle.load(locale);
+			assertEquals("We got the English version text for the 'res_2' key.", "Resource 2", bundle.getText("res_2"));
+		}
+
+
+		function testLoad_ForRetrievingEvenMoreSpecificFile(){
+			//There is a even more specific 'TestResources_en_GB.xml' file, therefore resource should be retrieved
+			//from this more specific file.
+
+			var locale = new Locale( { language : "en", country : "GB" });
+			bundle.load(locale);
+			assertEquals("We got the English version text for the 'res_2' key.", "Resource_two", bundle.getText("res_2"));
+		}
+		
+		function testRelease(){
+			//SETUP:
+			var locale = new Locale({ language : "en" });
+			bundle.load(locale);
+			
+			//EXCERCISE:
+			bundle.release();
+			
+			//VERIFY:
+			assertTrue( "After XMLResourceBundle.release()...", true );
+			assertFalse( "... resource arn't loaded.", bundle.isLoaded );
+			assertNull( "... Cache is flushed.", bundle.cache );
+			assertNull( "... Locale is released.", bundle.getLocale() );
+			assertEquals( "... Resouce Bundle Name array is cleared.", 0, bundle.getResourceBundleNames().length );
+		}
+
+		//runs a test function during debugging
+		function runTestFunction(){
+			setUp();
+		    testRelease();
+			tearDown();
+		}
+
+    </script>
+	
+</head>
+
+<body>
+	<h1>XMLResourceBundle.js test page</H1>
+	<p>This page contains tests for XMLResourceBundle.js JavaScript class.</P>
+</body>
+</html>

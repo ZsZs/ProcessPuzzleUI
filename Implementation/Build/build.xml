@@ -2,30 +2,14 @@
 <project name="ProcessPuzzleUI - Build" basedir=".." default="call-webtier-build">
 	
 	<property name="view.root.path" location="../../" />
-	<property name="common.build.path" value="${view.root.path}/ProcessPuzzle/Environment/ANT/Scripts" />
+	<property name="common.build.path" value="${view.root.path}/BuildPuzzle/Implementation/BuildSnippets" />
 	<property name="application.build.dir" value="Build" />
 	
 	<property file="${application.build.dir}/local.build.properties" />
-	<property file="${application.build.dir}/buildinfo.properties" />
+	<property file="${application.build.dir}/component.properties" />
 	<property file="${common.build.path}/common.build.properties" />
 
-	<target name="call-domaintier-build">
-		<ant dir="${project.domaintier.root}" antfile="${project.build.file}" inheritall="false">
-			<property name="project.root" location="${project.domaintier.root}" />
-			<property name="view.root.path" location="${view.root.path}" />
-			<property file="${project.build.dir}/local.build.properties" />
-		</ant>
-	</target>
-
-	<target name="call-domaincomponents-build" depends="call-domaintier-build">
-		<ant dir="${project.archetypes.root}" antfile="${project.build.file}" inheritall="false">
-			<property name="project.root" location="${project.archetypes.root}" />
-			<property name="view.root.path" location="${view.root.path}" />
-			<property file="${project.build.dir}/local.build.properties" />
-		</ant>
-	</target>
-
-	<target name="call-webtier-build" depends="call-domaincomponents-build">
+	<target name="call-webtier-build">
 		<ant dir="${project.webtier.root}" antfile="${project.build.file}" inheritall="false">
 			<property name="project.root" location="${project.webtier.root}" />
 			<property name="view.root.path" location="${view.root.path}" />

@@ -6,7 +6,7 @@
 	<property name="common.build.path" value="${view.root.path}/BuildPuzzle/Implementation/BuildSnippets" />
 
 	<property file="${project.root}/Build/local.build.properties" />
-	<property file="${project.root}/Build/buildinfo.properties" />
+	<property file="${project.root}/Build/component.properties" />
 	<property file="${common.build.path}/common.build.properties" />
 	
 	<path id="project.auxiliary.classpath">
