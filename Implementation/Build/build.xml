@@ -6,7 +6,7 @@
 	<property name="application.build.dir" value="Build" />
 	
 	<property file="${application.build.dir}/local.build.properties" />
-	<property file="${application.build.dir}/component.properties" />
+	<property file="${application.build.dir}/application.properties" />
 	<property file="${common.build.path}/common.build.properties" />
 
 	<target name="call-webtier-build">
