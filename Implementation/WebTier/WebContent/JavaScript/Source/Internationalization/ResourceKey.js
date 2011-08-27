@@ -22,8 +22,8 @@ var ResourceKey = new Class({
    
    initialize: function( theKey, theType ) {
       //parameter assertions
-      AssertUtil.assertParamNotNull(theKey, "theKey");
-      AssertUtil.assertParamNotNull(theType, "theType");
+      assertThat( theKey, not( nil() ));
+      assertThat( theType, not( nil() ));
       
       //private instance variables
       this.key = theKey;
