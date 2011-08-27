@@ -30,34 +30,34 @@ var LocaleUtil = new Class({
 	
 	//public accessors methods
 	getFileName : function( locale, prefix, suffix, depth ){
-      var buffer = new StringBuffer(prefix);
+	  var buffer = new String( prefix );
       if (depth > 0) {
          var language = locale.getLanguage();
          if ( language != null && language != "" ) {
-            buffer.append( this.DELIMITER );
-            buffer.append(language);
+            buffer += this.DELIMITER;
+            buffer += language;
          }
       }
       if (depth > 1) {
          var country = locale.getCountry();
          if ( country != null && country != "" ) {
-            buffer.append( this.DELIMITER );
-            buffer.append( country );
+            buffer += this.DELIMITER;
+            buffer += country;
          }
       }
       if (depth > 2) {
          var variant = locale.getVariant();
          if ( variant != null && variant != "" ) {
-            buffer.append( this.DELIMITER );
-            buffer.append( variant );
+            buffer += this.DELIMITER;
+            buffer += variant;
          }
       }
       return buffer.toString() + suffix;
 	},
 
 	getFileNameList : function( locale, prefix, suffix ) {
-		AssertUtil.assertParamIsNotEmpty (suffix, "suffix");
-		AssertUtil.assertTrue( StringUtil.contains(suffix, "."), "'suffix' contains '.'" );
+		assertThat( suffix, not( nil() ));
+		assertThat( suffix, containsString( "." ));
 		
 		var list = new ArrayList();
 		for (var i = 0; i < 3; i++) {
