@@ -19,88 +19,84 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // XMLBundleParser
-function XMLBundleParser() {
-	//check parameter assertions
-
-	inheritFrom(this, new SAXEventHandler());
-
-	//private instance variables
-	var cache = new ResourceCache();
-	var parserLanguage, parserCountry, parserVariant;
-	var targetLanguage, targetCountry, targetVariant;
-	var buffer = new StringBuffer();
-	var xmlResource = null;
-	var xmlAsText = "";
-	var key;
-	var self = this;
+var XMLBundleParser = new Class({
 	
-	//public accessors methods
+	//Constructor
+	initialize: function() {
+		//private instance variables
+		this.buffer = new String();
+		this.cache = new ResourceCache();
+		this.key;
+		this.parserLanguage, this.parserCountry, this.parserVariant;
+		this.targetLanguage, this.targetCountry, this.targetVariant;
+		this.saxEventHandler = new SAXEventHandler(); 
+		this.xmlResource = null;
+		this.xmlAsText = "";
+	},
 	
-	//public mutators methods
-	this.parse = _Parse;
-	this.setXML = function (strXML) { xmlAsText = strXML; };
-	this.characters = _Characters;
-	this.startElement = _StartElement;
-	this.endElement = _EndElement;
+	//Public accessors and mutator methods
+	characters : function( chars, offset, length ) {
+	    this.buffer += chars.substring( offset, offset + length );
+	},
 
-	//private method
-	function _Parse(theCache, theFilename, theTargetLocale) {
-	    cache = theCache;
-	    targetLanguage = theTargetLocale.getLanguage();
-	    targetCountry = theTargetLocale.getCountry();
-	    targetVariant = theTargetLocale.getVariant();
+	endElement : function( qName ) {
+	    var content = this.buffer.trim();
+	    this.buffer = new String();
+	    if( qName.equals("Language")) {
+	        this.parserLanguage = null;
+	    }
+	    if( qName.equals("Country")) {
+	        this.parserCountry = null;
+	    }
+	    if( qName.equals("Variant")) {
+	        this.parserVariant = null;
+	    }
+	    if( qName.equals("Resource") && this.inContext()) {
+	        this.cache.put( this.key, content );
+	    }
+	},
+
+	parse : function( theCache, theFilename, theTargetLocale ) {
+	    this.cache = theCache;
+	    this.targetLanguage = theTargetLocale.getLanguage();
+	    this.targetCountry = theTargetLocale.getCountry();
+	    this.targetVariant = theTargetLocale.getVariant();
+	    
 	    var parser = new SAXDriver();
-	    parser.setDocumentHandler(self);
-	    parser.setLexicalHandler(self);
-	    parser.setErrorHandler(self);
-	    xmlResource = new XmlResource( theFilename, { parseOnComplete : false } );
-	    parser.parse( xmlResource.getXmlAsText() );
-	}
+	    parser.setDocumentHandler( this );
+	    parser.setLexicalHandler(this );
+	    parser.setErrorHandler( this );
+	    this.xmlResource = new XmlResource( theFilename, { parseOnComplete : false } );
+	    parser.parse( this.xmlResource.getXmlAsText() );
+	},
 
-	function _InContext() {
-	    if (parserLanguage == null || parserLanguage.equals(targetLanguage)) {
-	        if (parserCountry == null || parserCountry.equals(targetCountry)) {
-	        if (parserVariant == null || parserVariant.equals(targetVariant)) {
+	startElement : function( qName, attrs ) {
+	    if( qName.equals("Language")) {
+	    	this.parserLanguage = attrs.getValueByName("name");
+	    }
+	    if( qName.equals("Country")) {
+	    	this.parserCountry = attrs.getValueByName("name");
+	    }
+	    if( qName.equals("Variant")) {
+	    	this.parserVariant = attrs.getValueByName("name");
+	    }
+	    if( qName.equals("Resource")) {
+	    	this.key = new ResourceKey(attrs.getValueByName("key"), attrs.getValueByName("type"));
+	    }
+	},
+
+	//Properties
+	setXML : function( strXML ) { this.xmlAsText = strXML; },
+	
+	//Protected private helper methods
+	inContext : function() {
+	    if( this.parserLanguage == null || this.parserLanguage.equals( this.targetLanguage )) {
+	        if( this.parserCountry == null || this.parserCountry.equals( this.targetCountry )) {
+	        if( this.parserVariant == null || this.parserVariant.equals( this.targetVariant )) {
 	            return true;
 	        }
 	        }
 	    }
 	    return false;
-	}
-
-	function _Characters(chars, offset, length) {
-	    buffer.append(chars, offset, length);
-	}
-
-	function _StartElement(qName, attrs) {
-	    if (qName.equals("Language")) {
-	        parserLanguage = attrs.getValueByName("name");
-	    }
-	    if (qName.equals("Country")) {
-	        parserCountry = attrs.getValueByName("name");
-	    }
-	    if (qName.equals("Variant")) {
-	        parserVariant = attrs.getValueByName("name");
-	    }
-	    if (qName.equals("Resource")) {
-	        key = new ResourceKey(attrs.getValueByName("key"), attrs.getValueByName("type"));
-	    }
-	}
-
-	function _EndElement(qName) {
-	    var content = buffer.toString().trim();
-	    buffer.setLength(0);
-	    if (qName.equals("Language")) {
-	        parserLanguage = null;
-	    }
-	    if (qName.equals("Country")) {
-	        parserCountry = null;
-	    }
-	    if (qName.equals("Variant")) {
-	        parserVariant = null;
-	    }
-	    if (qName.equals("Resource") && _InContext()) {
-	        cache.put(key, content);
-	    }
-	}
-}
+	}.protect()
+});

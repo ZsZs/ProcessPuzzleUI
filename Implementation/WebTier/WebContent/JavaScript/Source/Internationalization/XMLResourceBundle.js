@@ -30,7 +30,7 @@ var XMLResourceBundle = new Class( {
    initialize : function(webUIConfiguration, options) {
 
       // parameter assertions
-   AssertUtil.assertParamNotNull( webUIConfiguration, "webUIConfiguration" );
+   assertThat( webUIConfiguration, not( nil() ));
    this.setOptions( options );
 
    // private instance variables

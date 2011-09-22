@@ -55,7 +55,7 @@ var XmlResource = new Class({
    // Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      AssertUtil.assertParamNotNull( uri, "uri");
+      assertThat( uri, not( nil() ));
       
       this.parent( options );
       this.options.url = uri;

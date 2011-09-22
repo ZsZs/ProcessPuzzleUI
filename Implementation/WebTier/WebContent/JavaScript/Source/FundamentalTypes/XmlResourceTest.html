@@ -8,11 +8,11 @@
 	
     <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
     
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
     <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.3.js"></script>
 	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
     <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
 
-    <script type="text/javascript" src="../FundamentalTypes/Assertion.js"></script>
     <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
     <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
     <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
@@ -27,6 +27,8 @@
 	    runTestFunction();
   	  });
   	  
+      JsHamcrest.Integration.JsUnit();
+		
   	  var RESOURCE_LOCATOR_ONE = "../Internationalization/TestResources.xml";
   	  var RESOURCE_LOCATOR_TWO = "../Internationalization/TestResources_en.xml";
   	  var xmlResource;

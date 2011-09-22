@@ -6,38 +6,34 @@
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-
-    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+	<script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>    
+	
+	<script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.3.js"></script>
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
-    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
-
-	<script type="text/javascript" src="../Sarissa/sarissa.js"></script>  
-    <script type="text/javascript" src="../Sarissa/sarissa_ieemu_xpath.js"></script>
-    
-	<script language="JavaScript" src="../FundamentalTypes/JavaCompatibility.js"></script>
-	<script language="JavaScript" src="../FundamentalTypes/ArrayList.js"></script>
-	<script language="JavaScript" src="../CommonScripts/AssertUtil.js"></script>
-	<script language="JavaScript" src="../FundamentalTypes/HashMap.js"></script>
-	<script language="JavaScript" src="../CommonScripts/StringUtil.js"></script>
-	<script language="JavaScript" src="../CommonScripts/StringBuffer.js"></script>
-	<script language="JavaScript" src="../CommonScripts/inheritFrom.js"></script>
-	<script language="JavaScript" src="../CommonScripts/UserException.js"></script>
-	<script language="JavaScript" src="../FundamentalTypes/XmlResource.js"></script>
-	<script language="JavaScript" src="../XMLforScript/xmlIO.js"></script>
-	<script language="JavaScript" src="../XMLforScript/xmlEscape.js"></script>
-	<script language="JavaScript" src="../XMLforScript/xmlsax.js"></script>
-	<script language="JavaScript" src="../XMLforScript/preMadeSaxEventHandler.js"></script>
-	<script language="JavaScript" src="Locale.js"></script>
-	<script language="JavaScript" src="LocaleUtil.js"></script>
-	<script language="JavaScript" src="ResourceKey.js"></script>
-	<script language="JavaScript" src="ResourceCache.js"></script>
-	<script language="JavaScript" src="XMLBundleParser.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
+	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
 	
     <script type="text/javascript" >
 		window.addEvent('domready', function() {
 			runTestFunction();
 		});
   	
+		JsHamcrest.Integration.JsUnit();
+		
 		function setUp(){}
 
 		function tearDown(){}
@@ -49,7 +45,8 @@
 			var parser = new XMLBundleParser();
 
 			parser.parse( cache, fileName, locale );
-			assertEquals("We can retrieve the resource by the 'key' and 'type' pairs.", "Resource 2", cache.get("res_2","String"));
+			var foundValue = cache.get("res_2","String");
+			assertThat( cache.get("res_2","String"), equalTo( "Resource 2" ));
 		}
 
 		//runs a test function during debugging
