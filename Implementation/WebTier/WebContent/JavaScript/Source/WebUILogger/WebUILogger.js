@@ -80,7 +80,7 @@ var WebUILogger = new Class({
    
    log : function( logLevel, logMessage ){
       if( !this.logLevelIsValid( logLevel ) ) 
-         throw new IllegalArgumentException( "WebUILogger.log( logLevel, logMessage ): logLevel parameter is required, but was: " + logLevel );
+         throw new IllegalArgumentException( "logLevel", logLevel );
       this.defaultLogger.log( logLevel, logMessage );
    },
    
