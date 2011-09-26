@@ -361,10 +361,10 @@
         
         assertNotNull( "The TABLE contains THEAD element.", theNewTable.getElement( "THEAD" ) );
         assertNotNull( "The table head (THEAD) contains a TR element.", theNewTable.getElement( "THEAD TR" ) );
-        assertEquals( tableDefinition.getColumns().getCountOfObjects(), theNewTable.getElements( "THEAD TR TH" ).length );
+        assertEquals( tableDefinition.getColumns().size(), theNewTable.getElements( "THEAD TR TH" ).length );
         
         theNewTable.getElements( "THEAD TR TH" ).each( function( tableHeader, index ){
-        	assertEquals( tableDefinition.getColumns().getItemByIndex( index ).getCaption(), tableHeader.get( 'text' ));
+        	assertEquals( tableDefinition.getColumns().getColumnByIndex( index ).getCaption(), tableHeader.get( 'text' ));
         });
         
         assertNotNull( "The TABLE contains TBODY element.", theNewTable.getElement( "TBODY" ) );
@@ -461,7 +461,7 @@
       //runs a test function during debugging
       function runTestFunction(){
 	    setUp();
-	    testCreateButton_CreatesNewInputElement();
+	    testCreateTable();
 		tearDown();
 	  }
 	  

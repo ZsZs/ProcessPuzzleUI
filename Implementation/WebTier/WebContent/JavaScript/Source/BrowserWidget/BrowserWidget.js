@@ -72,7 +72,7 @@ var BrowserWidget = new Class( {
 		this.configureMessageBus();
 		this.loadWidgetDefinition();
 
-		assertThat( this.i18Resource, nil() );
+		assertThat( this.i18Resource, not( nil() ));
 		if (this.containerElement == null)
 			throw new IllegalArgumentException( "Parameter 'widgetContainerId' in invalid." );
 		if (!this.i18Resource.isLoaded)
@@ -256,7 +256,7 @@ var BrowserWidget = new Class( {
 	},
 
 	createForm : function(formName, methodType) {
-		assertThat( formName, nil() );
+		assertThat( formName, not( nil() ));
 		assertThat( methodType == "POST" || methodType == "GET", is( true ) );
 
 		var form = this.createElement( "FORM" );
@@ -304,7 +304,7 @@ var BrowserWidget = new Class( {
 		return spanElement;
 	},
 
-	createStaticRow : function(labelText, valueText, valueElementId) {
+	createStaticRow : function( labelText, valueText, valueElementId) {
 		var rowElement = this.createElement( "DIV" );
 		rowElement.className = this.ROW_CLASS_NAME;
 
@@ -312,12 +312,13 @@ var BrowserWidget = new Class( {
 		rowElement.appendChild( label );
 
 		var valueElement = this.createRowValue();
-		var valueText = this.createText( valueText );
+		var valueTextNode = this.createText( valueText );
 		if (valueElementId != null) {
 			valueElement.set( "id", valueElementId );
 			// valueElement.set( "name", valueElementId );
 		}
-		valueElement.appendChild( valueText );
+		
+		valueElement.appendChild( valueTextNode );
 		rowElement.appendChild( valueElement );
 
 		return rowElement;
@@ -332,8 +333,8 @@ var BrowserWidget = new Class( {
 		tableElement.appendChild( tableHeadElement );
 		tableHeadElement.appendChild( tableHeadRowElement );
 
-		for ( var i = 1; i <= theTableDefinition.getColumns().getCountOfObjects(); i++) {
-			var tableColumnDefinition = theTableDefinition.getColumns().getItemByIndex( i - 1 );
+		for ( var i = 1; i <= theTableDefinition.getColumns().size(); i++) {
+			var tableColumnDefinition = theTableDefinition.getColumns().getColumnByIndex( i - 1 );
 
 			var tableColumnElement = this.createElement( "TH" );
 			var tableColumnText = this.createText( tableColumnDefinition.getCaption() );
@@ -344,7 +345,7 @@ var BrowserWidget = new Class( {
 
 		tableElement.appendChild( tableBodyElement );
 
-		for ( var i = 0; i < theTableDefinition.getRows().getCountOfObjects(); i++) {
+		for ( var i = 0; i < theTableDefinition.getRows().size(); i++) {
 			var tableRow = theTableDefinition.getRow( i );
 			var tableBodyRowElement = this.createElement( "TR" );
 			tableBodyElement.appendChild( tableBodyRowElement );
@@ -533,31 +534,57 @@ var TableColumnDefinition = new Class( {
 	getCaption : function() {
 		return this.caption;
 	}
-} );
+});
+
+var TableColumnList = new Class({
+	//Constructor
+	initialize: function(){
+		this.tableColumns = new ArrayList();		
+	},
+
+	//Public accessor and mutator methods
+	add : function( tableColumnDefinition ){
+		this.tableColumns.add( tableColumnDefinition );
+	},
+	
+	getColumnByIndex : function( columnIndex ){
+		var searchedColumn = null;
+		this.tableColumns.each( function( columnDefinition, index ){
+			if( index == columnIndex ) { searchedColumn = columnDefinition; }
+		}, this );
+		
+		return searchedColumn;
+	},
+	
+	size : function() {
+		return this.tableColumns.size();
+	}
+});
 
 var TableHeaderDefinition = new Class( {
 	// Constructor
 	initialize : function(i18Resource) {
-		this.tableColumns = new Collection();
+		this.tableColumns = new TableColumnList();
 		this.i18Resource = i18Resource;
 	},
 
 	// Public accessor and mutator methods
 	addColumn : function(theCaptionKey) {
 		var columnDefinition = new TableColumnDefinition( theCaptionKey, this.i18Resource );
-		this.tableColumns.add( columnDefinition.getCaption, columnDefinition );
+		this.tableColumns.add( columnDefinition );
+		//this.tableColumns.add( columnDefinition.getCaption, columnDefinition );
 	},
 
 	getColumns : function() {
 		return this.tableColumns;
 	}
-} );
+});
 
 var TableDefinition = new Class( {
 	// Constructor
 	initialize : function(i18Resource) {
 		this.tableHeaderDefinition = new TableHeaderDefinition( i18Resource );
-		this.tableRows = new Collection();
+		this.tableRows = new TableRowList();
 	},
 
 	// Public accessor and mutator methods
@@ -565,18 +592,45 @@ var TableDefinition = new Class( {
 		this.tableHeaderDefinition.addColumn( theCaptionKey );
 	},
 
-	addRow : function(theRowArray) {
-		this.tableRows.add( this.tableRows.getCountOfObjects(), theRowArray );
+	addRow : function( rowArray ) {
+		this.tableRows.add( rowArray );
 	},
 
 	// Properties
 	getColumns : function() {
 		return this.tableHeaderDefinition.getColumns();
 	},
-	getRow : function(theRowIndex) {
-		return this.tableRows.getItemByIndex( theRowIndex );
+	
+	getRow : function( rowIndex ) {
+		return this.tableRows.getRowByIndex( rowIndex );
 	},
+	
 	getRows : function() {
 		return this.tableRows;
 	}
-} );
+});
+
+var TableRowList = new Class({
+	//Constructor
+	initialize: function(){
+		this.tableRows = new ArrayList();		
+	},
+
+	//Public accessor and mutator methods
+	add : function( tableRowDefinition ){
+		this.tableRows.add( tableRowDefinition );
+	},
+	
+	getRowByIndex : function( rowIndex ){
+		var searchedRow = null;
+		this.tableRows.each( function( rowDefinition, index ){
+			if( index == rowIndex ) { searchedRow = rowDefinition; }
+		}, this );
+		
+		return searchedRow;
+	},
+	
+	size : function() {
+		return this.tableRows.size();
+	}
+});
