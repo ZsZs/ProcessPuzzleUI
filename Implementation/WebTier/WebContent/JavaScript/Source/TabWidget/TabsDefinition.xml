@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:tabWidgetDefinition
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<tabWidget tabWidgetId="TabWidget" selectedTabClass="selectedTab" showCloseButton="true" showPrintButton="true">
+		<tab tabId="tabOne" caption="TabWidget.tabOne"></tab>
+		<tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true"></tab>
+		<tab tabId="tabThree" caption="TabWidget.tabThree"></tab>
+	</tabWidget>
+	
+</pp:tabWidgetDefinition>

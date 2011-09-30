@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Test page for TabWidget.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">	
+	<link rel="stylesheet" type="text/css" href="../TabWidget/invertedtab.css">
+
+    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="../MooTools/mootools-more-1.3.js"></script>
+    
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+	
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+
+	<script type="text/javascript" src="../CommonScripts/Collection.js"></script>
+	<script type="text/javascript" src="../CommonScripts/UserException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../TabWidget/Tab.js"></script>
+	<script type="text/javascript" src="../TabWidget/TabEvents.js" ></script>
+	<script type="text/javascript" src="../TabWidget/TabWidget.js" ></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+
+</head>
+
+<body>
+	<h1>invertedTabWidgetTest.js test page</h1>
+	<p>This page contains tests for invertedTabWidgetigatorTest.js javascript class.</p>
+
+	<div id="InvertedTabWidget">
+<!--
+		<ul Class="InvertedTabs">
+			<li><a href="#">Tab_1</a></li>
+			<li><a href="#">Tab_2</a></li>
+		</ul>
+		<ul Class="Buttons">
+			<li><a href="#" title="Close">Close</a></li>
+			<li><a href="#">Print</a></li>
+		</ul>
+-->	
+	</div>
+
+	<script language="javascript">
+		var invertedTabWidget;
+		
+		function setUp() {
+			invTabsDiv = document.getElementById("InvertedTabWidget");
+			invertedTabWidget = new TabWidget(invTabsDiv);
+		}
+
+		function tearDown(){
+			invertedTabWidget = null;
+		}
+
+		function testConstructor(){
+			assertNotNull("Document navigator is created", invertedTabWidget);
+		}
+
+		function testConstructorForUndefinedDivIdParameter(){
+			try {var anotherWidget = new TabWidget(null);}
+			catch(e) {
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				return;
+			}
+			fail("No exception was thrown.");
+		}
+
+
+		function testShowForVisibility(){
+			invertedTabWidget.show();
+			assertTrue("Just showed widget is visible.", invertedTabWidget.isVisible());
+		}
+
+		function testShowForFirstTabsAcitivity(){
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			invertedTabWidget.addNewTab("InvertedTab2","InvertedTab2Caption");
+			invertedTabWidget.show();
+			assertEquals("When we show the widget, the first tab is active.", "InvertedTab1", invertedTabWidget.getActiveTab().getName());
+		}
+
+
+		function testOnClickCallback() {
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			invertedTabWidget.addNewTab("InvertedTab2","InvertedTab2Caption");
+			invertedTabWidget.addNewTab("InvertedTab3","InvertedTab3Caption");
+			invertedTabWidget.show();
+
+			var InvertedTabId = invertedTabWidget.getTabByName("InvertedTab1").getId();
+			document.getElementById(InvertedTabId).click();
+			assertEquals("Clicking on the first InvertedTab activates it.", "InvertedTab1", invertedTabWidget.getActiveTab().getName());
+		}
+
+
+		function testaddNewTabForInvertedTabCount() {
+			var countOfInvertedTabs = invertedTabWidget.tabCount();
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			assertEquals("Adding a InvertedTab to the widget increments the InvertedTab count.", countOfInvertedTabs + 1, invertedTabWidget.tabCount());
+		}
+
+		function testaddNewTabForAcitivity(){
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			assertEquals("The newly added InvertedTab is the active InvertedTab.", "InvertedTab1", invertedTabWidget.getActiveTab().getName());
+		}
+
+		function testaddNewTabForAcitivityWith2Tabs(){
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			invertedTabWidget.addNewTab("InvertedTab2","InvertedTab2Caption");
+			assertEquals("New the second InvertedTab is the active InvertedTab.", "InvertedTab2", invertedTabWidget.getActiveTab().getName());
+		}
+
+		function testaddNewTabForObjectToSelect() {
+			var aObject = new Object();
+			aObject.isActive = false;
+			aObject.activate = function () {this.isActive = true;}
+			aObject.deActivate = function () {this.isActive = false;}
+			invertedTabWidget.addNewTab("InvertedTab1", "InvertedTab1Caption", aObject);
+			var aInvertedTab = invertedTabWidget.getTabByName("InvertedTab1");
+			assertEquals("The newly created InvertedTab's target object is the same what we passed to.", aObject, aInvertedTab.getObjectToSelect());
+		}
+
+		function testaddNewTabForUniquness(){
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			try {invertedTabWidget.addNewTab("InvertedTab1");}
+			catch(e) {
+				assertTrue("addNewTab() throws 'DuplicatedItemException' if a InvertedTab with the same name already exists.", e instanceof DuplicatedItemException);
+				return;
+			}
+			fail("No exception was thrown but 'DuplicatedItemException' was expected.");
+		}
+
+		function testRemoveTabForTabCount() {
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			var countOfTabs = invertedTabWidget.tabCount();
+			invertedTabWidget.removeTab("InvertedTab1");
+			assertEquals("Removing a InvertedTab decrements the InvertedTab count.", countOfTabs - 1, invertedTabWidget.tabCount());
+		}
+
+		function testRemoveInvertedTabForActivity() {
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			invertedTabWidget.addNewTab("InvertedTab2","InvertedTab2Caption");
+
+			invertedTabWidget.removeTab("InvertedTab1");
+			assertEquals("After removal of the first InvertedTab, the second one is the active InvertedTab.", "InvertedTab2", invertedTabWidget.getActiveTab().getName());
+		}
+
+		function testRemoveInvertedTabForRemovingTheLastInvertedTab() {
+			invertedTabWidget.addNewTab("InvertedTab1","InvertedTab1Caption");
+			invertedTabWidget.addNewTab("InvertedTab2","InvertedTab2Caption");
+
+			invertedTabWidget.removeTab("InvertedTab2");
+			assertEquals("After removal of the last InvertedTab, the first one is the active InvertedTab.", "InvertedTab1", invertedTabWidget.getActiveTab().getName());
+		}
+
+		//runs a test funcition during debugging
+		function runTestFunction(){
+			setUp();
+			testaddNewTabForObjectToSelect();
+			tearDown();
+		}
+
+		runTestFunction();
+
+
+	</script>
+
+</body>
+
+</html>

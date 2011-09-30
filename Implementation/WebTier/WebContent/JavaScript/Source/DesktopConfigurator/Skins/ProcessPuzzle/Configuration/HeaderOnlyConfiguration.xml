@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:desktopConfiguration 
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
+
+	<name>HeaderOnlyConfiguration</name>
+	<version>1.0</version>
+	<description>This is desktop configuration which contains only a header.</description>
+	
+	<resources>
+		<styleSheets>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Content.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Core.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Dock.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Layout.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Panels.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Tabs.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
+		</styleSheets>
+		<images></images>
+		<scripts></scripts>
+	</resources>
+	
+	<header tag="div" name="desktopHeader">
+		<titleBar tag="div" name="desktopTitleBar">
+			<elements>
+				<element tag="h1" class="applicationTitle">DesktopConfigurator.desktopTitle</element>
+				<element tag="h2" class="tagline" href="http://mochaui.org">DesktopConfigurator.desktopSubTitle</element>
+			</elements>
+		</titleBar>
+		
+		<navigationBar tag="div" name="desktopNavigationBar">
+			<elements>
+				<element tag="div" id="HorizontalMenuBar">
+					<plugin>{ 'css': ['../HierarchicalMenuWidget/HorizontalLayout.css'], 
+							  'images': ['../HierarchicalMenuWidget/Images/HorizontalMenuBackground-Left-Normal.gif'], 
+							  'js': ['../HierarchicalMenuWidget/MenuSelectedMessage.js', '../HierarchicalMenuWidget/HierarchicalMenuWidget.js'], 
+							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml'}).configure();} }
+					</plugin>
+				</element>
+				<element tag="div" class="navigationBarText">DesktopConfigurator.navigationBar</element>
+				<element tag="div" id="LanguageSelectorWidget"></element>
+			</elements>
+		</navigationBar>
+	</header>
+</pp:desktopConfiguration>
+

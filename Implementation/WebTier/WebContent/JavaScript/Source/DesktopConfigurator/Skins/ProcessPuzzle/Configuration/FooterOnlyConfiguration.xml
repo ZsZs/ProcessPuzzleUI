@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:desktopConfiguration 
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
+
+	<name>HeaderOnlyConfiguration</name>
+	<version>1.0</version>
+	<description>This is desktop configuration which contains only a header.</description>
+
+	<resources>
+		<styleSheets>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Content.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Core.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Dock.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Layout.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Panels.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Tabs.css</styleSheet>
+			<styleSheet>../../Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
+		</styleSheets>
+		<images></images>
+		<scripts></scripts>
+	</resources>
+	
+	<footer tag="div" name="desktopFooterWrapper">
+		<footerBar tag="div" name="desktopFooter">
+			<elements>
+				<element tag="div" class="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
+			</elements>
+		</footerBar>
+	</footer>
+</pp:desktopConfiguration>

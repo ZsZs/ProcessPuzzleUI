@@ -1,0 +1,428 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>Test page for DesktopConfigurator.js</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+    
+	<!--[if IE]>
+	    <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+	<![endif]--> 
+    
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.3.js"></script>
+    <script type="text/javascript" src="../../Libraries/MochaUI/Core.js"></script>
+    <script type="text/javascript" src="../../Libraries/MochaUI/Dock.js"></script>
+    <script type="text/javascript" src="../../Libraries/MochaUI/Layout.js"></script>
+    <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
+    <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
+    <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+    
+	<script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+	<script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+    <script type="text/javascript" src="../DesktopConfigurator/DesktopConfigurator.js"></script>
+    <script type="text/javascript" src="../DesktopConfigurator/DesktopStructure.js"></script>
+    <script type="text/javascript" src="../DesktopConfigurator/PanelInterpreter.js"></script>
+    <script type="text/javascript" src="../DesktopConfigurator/plugins/tree/scripts/tree.js"></script>
+    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+	<script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+	<script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
+	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+	<script type="text/javascript" src="../LanguageSelectorWidget/LanguageChangedMessage.js"></script>
+	<script type="text/javascript" src="../LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+	<script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
+	<script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
+	<script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
+	<script type="text/javascript" src="../TabWidget/Tab.js"></script>
+	<script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
+	<script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
+    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+
+    <script type="text/javascript" >
+      window.addEvent( 'domready', function() {
+	    runTestFunction();
+  	  });
+  	  
+ 	  JsHamcrest.Integration.JsUnit();
+ 	  
+	  var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+  	  var DESKTOP_DOCKER_AUTOHIDE_ELEMENT_ID = 'dockAutoHide';
+  	  var DESKTOP_DOCKER_CLEAR_ELEMENT_ID = 'dockClear';
+  	  var DESKTOP_DOCKER_CONTROLS_ELEMENT_ID = 'dock';
+  	  var DESKTOP_DOCKER_PLACEMENT_ELEMENT_ID = 'dockPlacement';
+  	  var DESKTOP_DOCKER_SORT_ELEMENT_ID = 'dockSort';
+  	  var DESKTOP_DOCKER_WRAPPER_ELEMENT_ID = 'dockWrapper';
+  	  var DESKTOP_DOCKER_ELEMENT_ID = 'dock';
+  	  var DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID = 'pageWrapper';
+  	  var DESKTOP_ELEMENT_ID = 'desktop';
+  	  var DESKTOP_FOOTER_ELEMENT_ID = 'desktopFooterWrapper';
+  	  var DESKTOP_FOOTER_BAR_ELEMENT_ID = 'desktopFooter';
+  	  var DESKTOP_HEADER_ELEMENT_ID = 'desktopHeader';
+  	  var DESKTOP_HEADER_LANGUAGE_SELECTOR_ELEMENT_ID = 'LanguageSelectorWidget';
+  	  var DESKTOP_HEADER_MENU_ID = 'HorizontalMenuBar';
+  	  var DESKTOP_NAVIGATION_BAR_ID = 'desktopNavigationBar';
+  	  var DESKTOP_TITLE_BAR_WRAPPER_ID = 'desktopTitlebarWrapper';
+  	  var DESKTOP_TITLE_BAR_ID = 'desktopTitleBar';
+  	  var DOCKER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/WindowDockerOnlyConfiguration.xml';
+  	  var DOCUMENT_BROWSER_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/TreeView.html';
+  	  var DOCUMENT_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/HelloWorldContent.html';
+  	  var DOCUMENT_PANEL_ID = 'documents-panel';
+  	  var DOCUMENT_SELECTOR_ID = 'documentSelector';
+  	  var EMPTY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/EmptyConfiguration.xml';
+  	  var FOOTER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/FooterOnlyConfiguration.xml';
+  	  var FULL_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml';
+  	  var HEADER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/HeaderOnlyConfiguration.xml';
+
+  	  var desktopElement;
+  	  var desktopConfigurator;
+  	  var resourceBundle;
+      var testWindow;
+  	  var webUIConfiguration;
+  	  var webUIController;
+
+      function setUp() {
+        if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
+        else testWindow = window;
+        
+        webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+        resourceBundle = new XMLResourceBundle( webUIConfiguration );
+		webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : "../WebUIController/SampleConfiguration.xml" }, testWindow );
+      	desktopElement = $( DESKTOP_ELEMENT_ID );
+      }
+
+      function tearDown() {
+      	if( desktopConfigurator ) desktopConfigurator.destroy();
+      	if( webUIController.isConfigured ) webUIController.destroy();
+		desktopConfigurator = null;
+      }
+
+      function testInitialization_WhenOptionsAreGiven() {
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+      	
+		assertTrue( "Desktop Configurator ...", true );
+		assertEquals( "Options overrides 'webUIConfiguration'", EMPTY_CONFIGURATION_PATH, desktopConfigurator.options.configurationURI );
+		assertNotNull( ".. loads xml desktop configuration.", desktopConfigurator.getConfigurationXml() ); 
+		assertEquals( ".. locates desktop element.", desktopElement, desktopConfigurator.getDesktopElement() );
+		assertTrue( ".. if XMLResourceBundle isn't loaded, loads with default locale.", resourceBundle.isLoaded );
+		assertEquals( ".. if locale wasn't specified with Resource Bundle the default is used.", "hu", desktopConfigurator.getCurrentLocale().getLanguage() );
+      }
+      
+      function testInitialization_WhenOptionsAreMissing() {
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle );
+      	
+		assertTrue( "Desktop Configurator ...", true );
+		assertEquals( "Options overrides 'webUIConfiguration'", "../DesktopConfigurator/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml", desktopConfigurator.options.configurationURI );
+		assertNotNull( ".. loads xml desktop configuration.", desktopConfigurator.getConfigurationXml() ); 
+		assertEquals( ".. locates desktop element.", desktopElement, desktopConfigurator.getDesktopElement() );
+		assertTrue( ".. if XMLResourceBundle isn't loaded, loads with default locale.", resourceBundle.isLoaded );
+		assertEquals( ".. if locale wasn't specified with Resource Bundle the default is used.", "hu", desktopConfigurator.getCurrentLocale().getLanguage() );
+      }
+      
+      function testConfigure_LoadsResources() {
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		assertTrue( "Desktop Configurator ...", true );
+		assertEquals( "... maintains a list of styles sheets specified by the configuration:", 7, desktopConfigurator.getStyles().size() );
+		desktopConfigurator.getStyles().each( function( styleReference, index ){
+			var linkElement = $$("link[href='" + styleReference + "']");
+			assertEquals( "... links style sheet to the current document.", 1, linkElement.length );
+		});
+      }
+      
+      function testConfigure_CreatesDocumentContainer() {
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		assertTrue( "Desktop Configurator ...", true );
+      	assertNotNull( ".. creates a DIV element for Document Container.", desktopElement.getElementById( DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID ) );
+		assertNotNull( ".. instantiates an initialization chain.", desktopConfigurator.getInitializationChain() );
+		assertNotNull( ".. initializes MUI.Desktop.", desktopConfigurator.getDesktop() );
+		assertNotNull( ".. initializes MUI.Dock.", desktopConfigurator.getDock() );
+      }
+      
+      function testConfigure_WhenHeaderIsSpecified_CreatesHierarchyOfDivisions() {
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		var headerElement = desktopElement.getElementById( DESKTOP_HEADER_ELEMENT_ID );
+		assertTrue( "Desktop Configurator ...", true );
+      	assertNotNull( "... creates new div element for desktop header.", headerElement );
+      	assertEquals( "DIV", headerElement.tagName.toUpperCase() );
+		
+		var titleBarWrapperElement = headerElement.getElementById( DESKTOP_TITLE_BAR_WRAPPER_ID );
+		assertNotNull( "... creates new div element for title bar wrapper.", titleBarWrapperElement );   	
+      	assertEquals( "DIV", titleBarWrapperElement.tagName.toUpperCase() );
+      	
+      	var titleBarElement = titleBarWrapperElement.getElementById( DESKTOP_TITLE_BAR_ID );
+      	assertNotNull( "... creates new div element for title bar.", titleBarElement );
+      	assertEquals( "DIV", titleBarElement.tagName.toUpperCase() );
+      	
+      	var navigationBarElement = headerElement.getElementById( DESKTOP_NAVIGATION_BAR_ID );
+      	assertNotNull( "... creates new div element for navigation bar.", navigationBarElement );
+      	assertEquals( "DIV", navigationBarElement.tagName.toUpperCase() );
+      	
+      	//TEARDOWN: see tearDown()
+      }
+      
+      function testConfigure_WhenAdhocElementsAreSpecified() {
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		var headerElement = desktopElement.getElementById( DESKTOP_HEADER_ELEMENT_ID );
+		var headerElement = desktopElement.getElementById( DESKTOP_HEADER_ELEMENT_ID );
+		var titleBarWrapperElement = headerElement.getElementById( DESKTOP_TITLE_BAR_WRAPPER_ID );
+      	var titleBarElement = titleBarWrapperElement.getElementById( DESKTOP_TITLE_BAR_ID );
+      	
+      	var addedElement = titleBarElement.getElement( "h1" );
+      	assertNotNull( "... adds elements to title bar.", addedElement );
+      	assertEquals( "... adds element's text.", resourceBundle.getText( "DesktopConfigurator.desktopTitle" ), XmlResource.determineNodeText( addedElement ));
+      	assertTrue( "... sets added element's style.", addedElement.hasClass( "applicationTitle" ));
+      	
+      	addedElement = titleBarElement.getElement( "h2" );
+      	assertTrue( "If the adhoc element has 'href' attribute, than an inner anchor element is created.", true );
+      	assertEquals( "http://mochaui.org", addedElement.getChildren( 'A' )[0].get( 'href' ) );
+      }
+      
+      function testConfigure_WhenPluginIsSpecified_LoadsIt() {
+      	//SETUP:
+		var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : "../WebUIController/SampleConfiguration.xml" });
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		var menuElement = desktopElement.getElementById( DESKTOP_HEADER_MENU_ID );
+		assertTrue( "Desktop Configurator ...", true );
+		assertEquals( "... plugin's resources are added to the section specified by: <resources>.", 8, desktopConfigurator.getStyles().size() );
+		assertEquals( 1, desktopConfigurator.getImages().size() );
+		assertEquals( 2, desktopConfigurator.getScripts().size() );
+		assertNotNull( "... dinamically loads style sheets.", $$( "link[href=" + desktopConfigurator.getStyles().get( 7 ) + "]" ).getFirst() );
+		assertNotNull( "... dinamically loads images.", $$( "img[src=" + desktopConfigurator.getImages().get( 0 ) + "]" ).getFirst() );
+		assertNotNull( "... dinamically loads scripts.", $$( "script[src=" + desktopConfigurator.getScripts().get( 0 ) + "]" ).getFirst() );
+      }
+      
+      function testConfigure_WhenWindowDockerIsSpecified_CreatesHierarchyOfDivisions() {
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : DOCKER_ONLY_CONFIGURATION_PATH } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		assertTrue( "Desktop Configurator ...", true );
+		var windowDockerElement = desktopElement.getElementById( DESKTOP_DOCKER_WRAPPER_ELEMENT_ID );
+		assertNotNull( "... creates new div element for window docker.", windowDockerElement );
+      	assertEquals( "DIV", windowDockerElement.tagName.toUpperCase() );
+      	
+      	var dockerControlsElement = windowDockerElement.getElementById( DESKTOP_DOCKER_ELEMENT_ID );
+      	assertNotNull( "... creates new div element for docker controls.", dockerControlsElement );
+      	assertNotNull( "... and creates new div for Auto Hide.", dockerControlsElement.getElementById( DESKTOP_DOCKER_AUTOHIDE_ELEMENT_ID ));
+      	assertNotNull( "... and creates new div for Placement.", dockerControlsElement.getElementById( DESKTOP_DOCKER_PLACEMENT_ELEMENT_ID ));
+      	
+      	var dockerSortElement = dockerControlsElement.getElementById( DESKTOP_DOCKER_SORT_ELEMENT_ID );
+      	assertNotNull( "... and creates new div for Sort.", dockerSortElement );
+      	assertNotNull( "... and creates new div for Clear.", dockerSortElement.getElementById( DESKTOP_DOCKER_CLEAR_ELEMENT_ID ));
+      	assertTrue( dockerSortElement.getElementById( DESKTOP_DOCKER_CLEAR_ELEMENT_ID ).hasClass( "clear" ));
+      	
+      	//TEARDOWN: see tearDown()
+      }
+      
+      function testConfigure_WhenPanelHeaderIsSpecified_InsertsDivAndRunsPlugins(){
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		assertTrue( "Desktop Configurator - when Panel Header is specified - ...", true );
+		var panelHeaderElement = desktopElement.getElement( 'div#documents-panel_headerToolbox' );
+		var tabWidgetElement = panelHeaderElement.getElements( 'UL' ); 
+      	assertNotNull( "Inserts a DIV into the panel.", panelHeaderElement );
+      	assertEquals( "Tab Widget defines UL elements:", 2, tabWidgetElement.length );
+      }
+      
+      function testConfigure_WhenFooterIsSpecified_CreatesHierarchyOfDivisions() {
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FOOTER_ONLY_CONFIGURATION_PATH } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+		assertTrue( "Desktop Configurator ...", true );
+		var footerElement = desktopElement.getElementById( DESKTOP_FOOTER_ELEMENT_ID );
+		assertNotNull( "... creates new div element for footer.", footerElement );
+      	assertEquals( "DIV", footerElement.tagName.toUpperCase() );
+      	
+		var footerBarElement = footerElement.getElementById( DESKTOP_FOOTER_BAR_ELEMENT_ID );
+		assertNotNull( "... creates new div element for footer bar.", footerBarElement );
+		
+      	//TEARDOWN: see tearDown()
+      }
+      
+      function testConfigure_CreatesColumns() {
+      	inform( "testConfigure_CreatesColumns() started" );
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+      	assertEquals( "Number of columns is:", 3, desktopConfigurator.getDesktopColumns().size() );
+      	var leftColumn = desktopConfigurator.getDesktopColumns().get(0);
+      	assertEquals( "Column's 'id' is:", "leftColumn", leftColumn.options.id );
+      	assertEquals( "Column's 'placement' is:", "left", leftColumn.options.placement );
+      	assertEquals( "Column's 'width' is:", 200, leftColumn.options.width );
+      	
+      	var rightColumn = desktopConfigurator.getDesktopColumns().get(2);
+      	assertEquals( "Column's 'id' is:", "rightColumn", rightColumn.options.id );
+      	assertEquals( "Column's 'placement' is:", "right", rightColumn.options.placement );
+      	assertEquals( "Column's 'width' is:", 220, rightColumn.options.width );
+      }
+      
+      function testConfigure_CreatesPanels() {
+      	inform( "testConfigure_CreatesPanels() started" );
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.configure();
+      	
+      	//VERIFY:
+      	assertEquals( "Number of panels is:", 5, desktopConfigurator.getDesktopPanels().size() );
+      	
+      	var documentsBrowserPanel = desktopConfigurator.getDesktopPanels().get(0)
+		assertEquals( "Panel's content url is:", DOCUMENT_BROWSER_PANEL_CONTENT_URL, documentsBrowserPanel.options.contentURL );
+		var require = documentsBrowserPanel.options.require;
+		assertEquals( '../DesktopConfigurator/plugins/tree/css/style.css', require.css[0] );
+		assertEquals( '../DesktopConfigurator/plugins/tree/scripts/tree.js', require.js[0] );
+		var onloadScript = require.onload;
+//		onloadScript();
+		
+      	var documentPanel = desktopConfigurator.getDesktopPanels().get(1)
+		assertEquals( "Panel's content url is:", DOCUMENT_PANEL_CONTENT_URL, documentPanel.options.contentURL );
+		      	
+      	var consolePanel = desktopConfigurator.getDesktopPanels().get(2)
+      	assertEquals( "Panel's 'title' is:", this.resourceBundle.getText( "DesktopConfigurator.Panel.consoleTitle" ), consolePanel.options.title );
+      	assertEquals( "Panes's height is: ", 100, consolePanel.options.height );
+      	
+      }
+      
+      function testDestroy_RemovesAllHtmlElements(){
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle );
+      	desktopConfigurator.configure();
+      	
+      	//EXCERCISE:
+      	desktopConfigurator.destroy();
+      	
+      	//VERIFY:
+      	assertEquals( 0, desktopConfigurator.getDesktopWindows().size() );
+      	assertEquals( 0, desktopConfigurator.getDesktopPanels().size() );
+      	assertEquals( 0, desktopConfigurator.getDesktopColumns().size() );
+      	assertEquals( 0, desktopElement.getChildren().length );
+      }
+      
+      function testDestroy_RemovesAllResources(){
+      	//SETUP:
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+      	desktopConfigurator.configure();
+      	var loadedStyleSheets = desktopConfigurator.getStyles().clone();
+      	var loadedImages = desktopConfigurator.getImages().clone();
+      	var loadedScripts = desktopConfigurator.getScripts().clone();
+
+      	//EXCERCISE:
+      	desktopConfigurator.destroy();
+      	
+      	//VERIFY:
+		assertTrue( "Desktop Configurator ...", true );
+		assertEquals( "... flushes style sheet list:", 0, desktopConfigurator.getStyles().size() );
+		loadedStyleSheets.each( function( styleReference, index ){
+			var linkElement = $$("link[href='" + styleReference + "']");
+			assertEquals( "... links style sheet to the current document.", 0, linkElement.length );
+		});
+		
+		assertEquals( "... flushes style images list:", 0, desktopConfigurator.getImages().size() );
+		loadedImages.each( function( imageReference, index ){
+			var imageElement = $$("img[src='" + imageReference + "']");
+			assertEquals( "... images in the current document.", 0, imageElement.length );
+		});
+		
+		assertEquals( "... flushes style scripts list:", 0, desktopConfigurator.getScripts().size() );
+		loadedScripts.each( function( scriptReference, index ){
+			var scriptElement = $$("script[src='" + scriptReference + "']");
+			assertEquals( "... script in the current document.", 0, scriptElement.length );
+		});
+      }
+      
+      function showFullConfiguration() {
+      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle );
+      	desktopConfigurator.configure();
+      }
+      
+      //runs a test function during debugging
+      function runTestFunction(){
+	    setUp();
+	    testConfigure_WhenPanelHeaderIsSpecified_InsertsDivAndRunsPlugins();
+		tearDown();
+	  }
+
+    </script>
+    
+</head>
+
+<body>
+	<div id='desktop'></div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="HierarchicalMenuWidget.mainItemOne" type="String">Main Item One</Resource>
+    <Resource key="HierarchicalMenuWidget.mainItemTwo" type="String">Main Item Two</Resource>
+    <Resource key="HierarchicalMenuWidget.mainItemThree" type="String">Main Item Three</Resource>
+    <Resource key="HierarchicalMenuWidget.itemOne" type="String">Menu Item One</Resource>
+    <Resource key="HierarchicalMenuWidget.itemTwo" type="String">Menu Item Two</Resource>
+    <Resource key="HierarchicalMenuWidget.itemThree" type="String">Menu Item Three</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="HierarchicalMenuWidget.mainItemOne" type="String">Fő menü egy</Resource>
+    <Resource key="HierarchicalMenuWidget.mainItemTwo" type="String">Fő menü kettő</Resource>
+    <Resource key="HierarchicalMenuWidget.mainItemThree" type="String">Fő menü három</Resource>
+    <Resource key="HierarchicalMenuWidget.itemOne" type="String">Menü elem egy</Resource>
+    <Resource key="HierarchicalMenuWidget.itemTwo" type="String">Menü elem kettő</Resource>
+    <Resource key="HierarchicalMenuWidget.itemThree" type="String">Menü elem három</Resource>
+  </Language>
+</pp:Resources>

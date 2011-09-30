@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+
+	<title>Test page for TabWidget.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+	<link rel="stylesheet" type="text/css" href="tab.css">
+
+    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="../MooTools/mootools-more-1.3.js"></script>
+    
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+	
+	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+
+	<script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>	
+	<script type="text/javascript" src="../CommonScripts/Collection.js"></script>
+	<script type="text/javascript" src="../CommonScripts/UserException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../TabWidget/Tab.js"></script>
+	<script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+ 	
+	<script type="text/javascript">
+		window.addEvent('domready', function() {
+			runTestFunction();
+		});
+
+		var TAB_CAPTION = "aTab";
+		var TAB_NAME = "aTab";
+		var TAB_WIDGET_ID = "TabWidget";
+		var aTab;
+		var callBackMessage = null;
+		var callBackWasCalled = false;
+		var messageBus;
+		var targetObject;
+		
+		function setUp(){
+			messageBus = new WebUIMessageBus();
+			targetObject = new Object();
+			targetObject.isActive = false;
+			targetObject.activate = function () {this.isActive = true;}
+			targetObject.deActivate = function () {this.isActive = false;}
+			aTab = new Tab( TAB_NAME, TAB_CAPTION, $( TAB_WIDGET_ID ), targetObject );
+		}
+
+		function tearDown(){
+			messageBus.tearDown();
+			if( aTab.isVisible() ) aTab.destroy();
+			targetObject = null;
+			aTab = null;
+			callBackMessage = null;
+			callBackWasCalled = false;
+		}
+
+		function testConstructorForVisibility(){
+			assertFalse("Newly created tab is not visible.", aTab.isVisible() );
+		}
+
+		function testConstructorForAvitivity(){
+			assertFalse("Newly created tab is not active.", aTab.isActive());
+		}
+
+		function testConstructorForUndefinedNameParameter(){
+			try {var anotherTab = new Tab("", "tabwithoutName", document.getElementById("TabWidget"));}
+			catch(e) {
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				return;
+			}
+			fail("No exception was thrown.");
+		}
+
+		function testConstructorForUndefinedCaptionParameter(){
+			try {var anotherTab = new Tab("tabwithoutCaption", "", document.getElementById("TabWidget"));}
+			catch(e) {
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				return;
+			}
+			fail("No exception was thrown.");
+		}
+
+		function testConstructorForUndefinedWidgetIdParameter(){
+			try {var anotherTab = new Tab("anotherTab", "anotherTab");}
+			catch(e) {
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				return;
+			}
+			fail("No exception was thrown.");
+		}
+
+		function testShowForVisiblity(){
+			aTab.configure();
+			assertTrue("Just showed tab is visible.", aTab.isVisible());
+		}
+
+		function testShowForHtmlListItem(){
+			aTab.configure();
+			assertEquals( "The configure() method adds a <A> into the document.", 1, $$( "A#tab_" + TAB_NAME ).length );
+		}
+
+		function testHideForVisiblity(){
+			aTab.configure();
+			aTab.destroy();
+			assertFalse("Just hided tab is invisible.", aTab.isVisible());
+		}
+
+		function testHideForHtmlListItem(){
+			showTestFrame = true;
+			aTab.configure();
+			aTab.destroy();
+			assertEquals( "Hiding a tab removes the <A> tag from the document.", 0, $$( "A#tab_"  + TAB_NAME ).length );
+		}
+
+		function testActivate(){
+			aTab.configure();
+			aTab.activate();
+			assertTrue( "Just activated tab is active.", aTab.isActive() );
+		}
+
+		function testActivateForCurrentId(){
+			aTab.configure();
+			aTab.activate();
+			var theAnchor = $( "tab_" + TAB_NAME );
+			assertEquals( "Active tab's line item id is 'current'.", 'current', theAnchor.parentNode.id );
+		}
+
+		function testActivateForObserverCall(){
+			aTab.configure();
+			aTab.activate();
+			assertTrue( "activate() calls target object's activate().", targetObject.isActive );
+		}
+
+		function testActivateForHidenTab(){
+			aTab.activate();
+			assertFalse( "Hidden tabs can't be active.", aTab.isActive() );
+		}
+		
+		function testDeActivate(){
+			aTab.configure();
+			aTab.activate();
+			aTab.deActivate();
+			assertFalse("Just deactivated tab is not active.", aTab.isActive());
+		}
+
+		function testDeActivateForCurrentId(){
+			aTab.configure();
+			aTab.activate();
+			aTab.deActivate();
+			var theAnchor = $( "tab_" + TAB_NAME );
+			assertEquals( "De activated tab's line item id is ''.", "", theAnchor.parentNode.id );
+		}
+
+		function testDeActivateForObjectSelection(){
+			aTab.configure();
+			aTab.activate();
+			aTab.deActivate();
+			assertFalse( "De activating the tab deactivates the target object too.", targetObject.isActive );
+		}
+		
+		function testEqualsWhenTabsAreSame() {
+			var tabOne = new Tab( TAB_NAME, TAB_CAPTION, $( TAB_WIDGET_ID ), targetObject );
+			var tabTwo = new Tab( TAB_NAME, TAB_CAPTION, $( TAB_WIDGET_ID ), targetObject );
+			
+			assertTrue( tabOne.equals( tabTwo ));
+			assertTrue( tabTwo.equals( tabOne ));
+		}
+
+		function testEqualsWhithDifferentClass(){
+			assertFalse( aTab.equals( new Object() ));
+		}
+		
+		function testOnClickEventHandler(){
+		}
+
+		function testOnSelection() {
+			//SETUP:
+			messageBus.subscribeToMessage( TabSelectedMessage, onSelectCallBack );
+			aTab.configure();
+      
+			//EXCERCISE:
+			var theAnchor = $( "tab_" + TAB_NAME );
+			theAnchor.fireEvent( 'click' );
+   	  
+			//VERIFY:
+			assertTrue( "Clicking on a tab activates it.", aTab.isActive() );
+			assertTrue( callBackWasCalled );
+			assertTrue( "Tab broadcast a message of type:", instanceOf( callBackMessage, TabSelectedMessage ));
+			assertEquals( "Expected message argument is:", TAB_NAME, callBackMessage.getTabId() );
+		}
+   
+		function onSelectCallBack( webUIMessage ) {
+			callBackMessage = webUIMessage;
+			callBackWasCalled = true;
+		}
+   		
+		//runs a test function during debugging
+		function runTestFunction(){
+			setUp();
+			testEqualsWhenTabsAreSame();
+			tearDown();
+		}
+    </script>
+</head>
+
+<body>
+	<h1>TabTest.js test page</H1>
+	<p>This page contains tests for Tab.js JavaScript class.</P>
+
+	<div id=TabWidget>
+			<ul class="Tabs">
+				<li><a href="#">Tab_1</a></li>
+				<li><a href="#">Tab_2</a></li>
+			</ul>
+			<ul class="Buttons">
+				<li><a href="#" title="Close">Close</a></li>
+				<li><a href="#">Print</a></li>
+			</ul>
+	</div>
+</body></html>
