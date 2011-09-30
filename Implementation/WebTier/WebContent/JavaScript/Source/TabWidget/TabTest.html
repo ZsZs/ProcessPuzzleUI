@@ -7,22 +7,22 @@
 	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-	<link rel="stylesheet" type="text/css" href="tab.css">
+	<link rel="stylesheet" type="text/css" href="../TabWidget/tab.css">
 
-    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
-    <script type="text/javascript" src="../MooTools/mootools-more-1.3.js"></script>
-    
     <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+    
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.3.js"></script>    
 	
 	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
 	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
 
 	<script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>	
-	<script type="text/javascript" src="../CommonScripts/Collection.js"></script>
-	<script type="text/javascript" src="../CommonScripts/UserException.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
 	<script type="text/javascript" src="../TabWidget/Tab.js"></script>
 	<script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
@@ -33,6 +33,8 @@
 			runTestFunction();
 		});
 
+		JsHamcrest.Integration.JsUnit();
+		
 		var TAB_CAPTION = "aTab";
 		var TAB_NAME = "aTab";
 		var TAB_WIDGET_ID = "TabWidget";
@@ -71,7 +73,7 @@
 		function testConstructorForUndefinedNameParameter(){
 			try {var anotherTab = new Tab("", "tabwithoutName", document.getElementById("TabWidget"));}
 			catch(e) {
-				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof IllegalArgumentException);
 				return;
 			}
 			fail("No exception was thrown.");
@@ -80,7 +82,7 @@
 		function testConstructorForUndefinedCaptionParameter(){
 			try {var anotherTab = new Tab("tabwithoutCaption", "", document.getElementById("TabWidget"));}
 			catch(e) {
-				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof IllegalArgumentException );
 				return;
 			}
 			fail("No exception was thrown.");
@@ -89,7 +91,7 @@
 		function testConstructorForUndefinedWidgetIdParameter(){
 			try {var anotherTab = new Tab("anotherTab", "anotherTab");}
 			catch(e) {
-				assertTrue("Constructor throws InvalidParameterException.", e instanceof InvalidParameterException);
+				assertTrue("Constructor throws InvalidParameterException.", e instanceof IllegalArgumentException );
 				return;
 			}
 			fail("No exception was thrown.");

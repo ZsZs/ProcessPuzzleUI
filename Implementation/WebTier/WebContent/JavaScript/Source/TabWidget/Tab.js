@@ -31,10 +31,10 @@ var Tab = new Class({
    //Constructor
    initialize: function( theName, theCaption, theWidgetElement, theObjectToSelect ) {
    	//check parameter assertions
-   	if( theCaption == null || theCaption == "") throw new InvalidParameterException( theCaption );
-   	if( theName == null || theName == "") throw new InvalidParameterException( theName );	
-   	if( theWidgetElement == null ) throw new InvalidParameterException( theWidgetElement );
-   	if( theObjectToSelect && theObjectToSelect.activate == null ) throw new InvalidParameterException("The ObbectToSelect should have implement activate() method!");
+   	if( theCaption == null || theCaption == "") throw new IllegalArgumentException( "caption", theCaption );
+   	if( theName == null || theName == "") throw new IllegalArgumentException( "name", theName );	
+   	if( theWidgetElement == null ) throw new IllegalArgumentException( "widgetElement", theWidgetElement );
+   	if( theObjectToSelect && theObjectToSelect.activate == null ) throw new IllegalArgumentException( "objectToSelect", theObjectToSelect );
 
    	//private instance variables
    	this.active = false;
