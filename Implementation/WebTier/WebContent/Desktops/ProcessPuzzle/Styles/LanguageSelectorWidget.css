@@ -1,0 +1,40 @@
+@CHARSET "UTF-8";
+
+#LanguageSelectorWidget {
+	display: inline;
+	padding-top: 6px;
+	padding-bottom: 5px;
+	padding-left: 100px;
+	padding-right: 20px;
+	position: fixed;
+	right: 0px;
+	top: 94px;
+}
+
+span.LanguageSelectorWrapper {
+	background: transparent;
+	background-image: url("../Images/SelectorBackground-Right.jpg");
+	background-position: top right;
+	background-repeat: no-repeat;
+	display: inline-block;
+	height: 30px;
+	text-decoration: none;
+}
+
+span.LanguageSelectorWrapper span{
+	background-color: transparent;
+	background-image: url("../Images/SelectorBackground-Left.jpg");
+	background-position: top left;
+	background-repeat: no-repeat;
+	display: inline-block;
+	height: 30px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 4px;
+}
+
+#LanguageSelector{
+	background-color: transparent;
+	color: blue;
+}
+

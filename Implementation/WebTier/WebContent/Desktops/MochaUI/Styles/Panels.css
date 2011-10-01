@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+/*
+
+Panels.css for ProcessPuzzle.DesktopConfigurator
+
+Skin: ProcessPuzzle
+
+Copyright:
+	Copyright (c) 2010 IT Codex Llc, <http://itkodex.hu/>.
+	
+License:
+	MIT-style license.
+
+Required by:
+	DesktopConfigurator.js
+ 
+*/
+
+
+
+#documents-panel {
+	overflow: hidden;
+}

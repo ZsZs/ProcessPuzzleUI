@@ -82,12 +82,12 @@ var DesktopConfigurator = new Class({
 		
 	//Public accessor and mutator methods
 	configure : function() {
-	   this.loadResources();
+		this.loadResources();
 		this.createHtmlElements();
 		this.initializeMUI();
-      this.createColumns();
-      this.createPanels();
-      this.createWindows();
+		this.createColumns();
+		this.createPanels();
+		this.createWindows();
 		this.isConfigured = true;
 	},
 	

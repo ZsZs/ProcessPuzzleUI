@@ -1026,6 +1026,6 @@ MUI.extend({
 
 if (Browser.Engine.webkit) {
     new MUI.Require({
-        js: [MUI.path.plugins + '../Commons/JavaScript/MochaUI/WebKitShadower.js']
+        js: [MUI.path.plugins + '../../../Libraries/MochaUI/WebKitShadower.js']
     });
 }
