@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd" >
 
-	<name>DesktopConfiguration</name>
+	<name>MochaUI Desktop</name>
 	<version>1.0</version>
 	<description>This is full flagged desktop configuration.</description>
 

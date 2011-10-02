@@ -10,13 +10,13 @@
 
 	<resources>
 		<styleSheets>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Content.css</styleSheet>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Core.css</styleSheet>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Dock.css</styleSheet>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Layout.css</styleSheet>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Panels.css</styleSheet>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Tabs.css</styleSheet>
-			<styleSheet>../../Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Content.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Core.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Dock.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Layout.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Panels.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Tabs.css</styleSheet>
+			<styleSheet>Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
 		</styleSheets>
 		<images></images>
 		<scripts></scripts>

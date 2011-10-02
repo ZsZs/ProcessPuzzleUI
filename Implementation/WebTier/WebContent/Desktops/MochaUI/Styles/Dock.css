@@ -1,11 +1,10 @@
 /*
+Layout.css for MochaUI.DesktopConfigurator
 
-Layout.css for ProcessPuzzle.DesktopConfigurator
-
-Skin: ProcessPuzzle
+Dektop: MochaUI
 
 Copyright:
-	Copyright (c) 2010 IT Codex Llc, <http://itkodex.hu/>.
+	Copyright (c) 2011 IT Codex Llc, <http://itkodex.hu/>.
 	
 License:
 	MIT-style license.
@@ -31,7 +30,7 @@ Required by:
 	bottom: 0;
 	left: 0;
 	background: #f2f2f2;
-	min-height: 27px;
+	min-height: 30px;
 	height: auto;
 }
 

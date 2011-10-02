@@ -26,7 +26,7 @@ var PanelInterpreter = new Class({
 	options : {
 		headerSelector : "panelHeader",
 		pluginSelector : "plugin",
-		toolboxContent : "EmptyToolboxContent.html"
+		toolboxContent : "../DesktopConfigurator/EmptyToolboxContent.html"
 	},
 	
 	//Constructor

@@ -41,7 +41,7 @@ body {
 }
 
 #desktopTitlebarWrapper {
-	height: 75px;
+	height: 45px;
 	position: relative;	
 	background: url(../Images/TitleImage.gif) no-repeat;
 	background-position: top;
