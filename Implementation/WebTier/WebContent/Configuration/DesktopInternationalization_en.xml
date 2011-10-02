@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains internalization resources for Desktop Configurator. -->
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="DesktopConfigurator.desktopTitle" type="String"> </Resource>
+    <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Workflow and Content Management Business Platform</Resource>
+    <Resource key="DesktopConfigurator.navigationBar" type="String">Navigation Bar</Resource>
+    <Resource key="DesktopConfigurator.footerText" type="String">Powered by ProcessPuzzle - Copyright 2005-2011, IT Codex Llc.</Resource>
+    <Resource key="DesktopConfigurator.Panel.contentBrowserTitle" type="String">Content Browser</Resource>
+    <Resource key="DesktopConfigurator.Panel.documentsTitle" type="String">Documents</Resource>
+    <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Console</Resource>
+    <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menus</Resource>
+    <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
+    <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
+
+    <Resource key="HierarchicalMenuWidget.yourMenu" type="String">Your Menu</Resource>
+    <Resource key="HierarchicalMenuWidget.yourMenu.sampleDocument" type="String">Sample Document</Resource>
+
+    <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
+    
+    <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
+    <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
+    <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
+
+    <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
+  </Language>
+</pp:Resources>

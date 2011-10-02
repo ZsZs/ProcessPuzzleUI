@@ -1113,6 +1113,29 @@ JsHamcrest.Integration = (function() {
     },
 
     /**
+     * Uses ProcessPuzzleUI WebUILogger to display the assertion
+     * results. Intended to use in production environment.
+     */
+    ProcessPuzzle: function() {
+      JsHamcrest.Integration.copyMembers(self);
+
+      self.assertThat = function ( actual, matcher, message ) {
+        return JsHamcrest.Operators.assert( actual, matcher, {
+          message: message,
+          fail: function(message) {
+             var logger = Class.getInstanceOf( WebUILogger );
+             if( logger != null ) logger.log( WebUILogger.ERROR, message );
+             else alert( message );
+          },
+          pass: function(message) {
+             var logger = Class.getInstanceOf( WebUILogger );
+             if( logger != null ) logger.log( WebUILogger.INFO, message );
+          }
+        });
+      };
+    },
+
+    /**
      * Uses the Rhino's print() function to display the assertion results.
      * Great for prototyping.
      */

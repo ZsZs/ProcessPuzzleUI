@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ProcessPuzzle default configuration values. Don not change them! -->
+<pp:processPuzzleConfiguration
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:pp="http://www.processpuzzle.com" 
+	xmlns:ac="http://www.processpuzzle.com/ApplicationConfiguration" 
+	xmlns:bc="http://www.processpuzzle.com/BeanContainerConfiguration" 
+	xmlns:bd="http://www.processpuzzle.com/BusinessDefinitionsConfiguration" 
+	xmlns:bi="http://www.processpuzzle.com/BusinessImplementationsConfiguration" 
+	xmlns:dl="http://www.processpuzzle.com/DataLoadersConfiguration" 
+	xmlns:em="http://www.processpuzzle.com/EmailConfiguration" 
+	xmlns:fc="http://www.processpuzzle.com/FrontControllerConfiguration" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:in="http://www.processpuzzle.com/InternationalizationConfiguration" 
+	xmlns:pr="http://www.processpuzzle.com/PersistenceConfiguration" 
+	xmlns:rt="http://www.processpuzzle.com/RuntimeConfiguration" 
+	xmlns:wui="http://www.processpuzzle.com/WebUIConfiguration" 
+	xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/ProcessPuzzleConfiguration.xsd"> 
+
+	<!-- Application -->
+	<ac:application>
+		<ac:applicationName>ProcessPuzzle</ac:applicationName>
+		<ac:version>1.0</ac:version>
+		<ac:serverWorkingFolder>c:\\processpuzzle</ac:serverWorkingFolder>
+		<ac:clientWorkingFolder>c:\\processpuzzle</ac:clientWorkingFolder>
+		<ac:defaultUserAccount>
+			<ge:userName>ProcessPuzzle</ge:userName>
+			<ge:password>ProcessPuzzle</ge:password>
+		</ac:defaultUserAccount>
+		<ac:persistentDataInitializationStrategy>dropAndCreate</ac:persistentDataInitializationStrategy>
+	</ac:application>
+	
+	<!-- WebUI -->
+	<wui:webUI>
+		<wui:desktop>
+			<wui:menu definitionURI="Configuration/WebUIMenuDefinition.xml"></wui:menu>
+			<wui:availableSkins>
+				<wui:skin name="MochaUI" relativePath="Desktops/MochaUI" configurationURI="Desktops/MochaUI/DesktopConfiguration.xml" />
+				<wui:skin name="ProcessPuzzle" relativePath="Desktops/ProcessPuzzle" configurationURI="Desktops/ProcessPuzzle/DesktopConfiguration.xml" />
+			</wui:availableSkins>
+			<wui:defaultSkin name="ProcessPuzzle"></wui:defaultSkin>
+		</wui:desktop>
+			
+		<wui:logging>
+			<wui:loggers>
+				<wui:logger name="WebUI" level="debug" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+			</wui:loggers>
+			
+			<wui:layouts>
+				<wui:patternLayout name="formattedLayout" pattern="%d{HH:mm:ss} %-5p - %c: %m%n"/>
+			</wui:layouts>
+
+			<wui:appenders>
+				<wui:popUpAppender 
+					name="formattedPopUpAppender" 
+					layoutReference="formattedLayout" 
+					commandLineObjectExpansionDepth="10"
+					complainAboutPopUpBlocking="true"
+					focusPopUp="true"
+					lazyInit="true"
+					threshold="debug"
+					maxMessages="1000"
+					newestMessageAtTop="true"
+					height="600"
+					reopenWhenClosed="true"
+					scrollToLatestMessage="true"
+					showCommandLine="true"
+					initiallyMinimized="true"
+					useDocumentWrite="false"
+					useOldPopUp="true"
+					width="800"/>
+			</wui:appenders>			
+		</wui:logging>
+	</wui:webUI>
+	
+	<!-- Runtime Configuration -->
+	<rt:runtime>
+		<rt:environment>local</rt:environment>
+	</rt:runtime>
+	
+	<!-- Front Controller Configuration -->
+	<fc:frontController>
+		<fc:commandMapping>
+			<ge:fullClassName>com.processpuzzle.application.configuration.control.ProcessPuzzleCommandMapping</ge:fullClassName>
+		</fc:commandMapping>
+	</fc:frontController>
+	
+	<!-- Persistence Configuration -->
+	<pr:persistence>
+		<pr:persistenceStrategies>
+			<pr:persistenceStrategy name="TEST_STRATEGY">
+				<pr:repositoryEventHandlers>
+					<pr:repositoryEventHandler name="TEST_PROVIDER" kind="PersistenceProvider">
+						<pr:description>Hibernate provider, configured to use HSQL DB Server, DOMAINTIER_TEST_DB dabase.</pr:description>
+
+						<pr:eventHandlerClass>com.processpuzzle.persistence.domain.HibernatePersistenceProvider</pr:eventHandlerClass>
+	
+						<!-- HSQL specific properties-->
+						<pr:hibernate>
+							<pr:connection>
+								<pr:driver_class>org.hsqldb.jdbcDriver</pr:driver_class>
+								<pr:url>jdbc:hsqldb:mem:DOMAINTIER_TEST_DB</pr:url>
+								<ge:userName>sa</ge:userName>
+								<ge:password></ge:password>
+							</pr:connection> 
+							<pr:dialect>org.hibernate.dialect.HSQLDialect</pr:dialect>
+		
+							<!-- Generic properties --> 
+							<pr:current_session_context_class>thread</pr:current_session_context_class>
+							<pr:show_sql>true</pr:show_sql>
+							<pr:transaction>
+								<pr:factory_class>org.hibernate.transaction.JDBCTransactionFactory</pr:factory_class>
+							</pr:transaction>
+							<pr:cache>
+								<pr:provider_class>org.hibernate.cache.HashtableCacheProvider</pr:provider_class>
+								<pr:use_second_level_cache>true</pr:use_second_level_cache>
+								<pr:use_query_cache>true</pr:use_query_cache>
+							</pr:cache>
+							<pr:c3p0>
+								<pr:max_size>5</pr:max_size>
+								<pr:min_size>2</pr:min_size>
+								<pr:timeout>5000</pr:timeout>
+								<pr:max_statements>100</pr:max_statements>
+								<pr:idle_test_period>3000</pr:idle_test_period>
+								<pr:acquire_increment>2</pr:acquire_increment>
+								<pr:validate>false</pr:validate>
+							</pr:c3p0>
+							<pr:hbm2ddl>
+								<pr:auto>create-drop</pr:auto>
+							</pr:hbm2ddl>
+						</pr:hibernate>
+					</pr:repositoryEventHandler>
+
+					<pr:repositoryEventHandler name="BIDIRECTIONAL_SYNCHRONIZATION-DOMAINTIER_TEST_DB" kind="SynchronizationProvider">
+						<pr:description>Database synchronization event handler, configured with two persistence provider.</pr:description>
+						<pr:eventHandlerClass>com.processpuzzle.persistence.domain.BidirectionalSynchronizationStrategy</pr:eventHandlerClass>
+						<pr:persistenceProviders>
+							<pr:persistenceProviderClass>com.processpuzzle.persistence.domain.InMemoryPersistenceProvider</pr:persistenceProviderClass>
+							<pr:persistenceProviderClass>com.processpuzzle.persistence.domain.InMemoryPersistenceProvider</pr:persistenceProviderClass>
+						</pr:persistenceProviders>
+					</pr:repositoryEventHandler>
+
+				</pr:repositoryEventHandlers>
+			</pr:persistenceStrategy>
+		</pr:persistenceStrategies>
+
+		<pr:repositories>
+			<!-- Domain Tier repositories -->
+			<pr:repositoryList class="com.processpuzzle.application.configuration.domain.DomainComponentRepositories" strategy="TEST_STRATEGY"/>
+			<pr:repository class="com.processpuzzle.persistence.domain.TestEntityRepository" strategy="TEST_STRATEGY"/>
+
+			<!-- Domain Components repositories -->
+			<pr:repository class="com.processpuzzle.artifact.domain.ArtifactSubClassRepository" strategy="TEST_STRATEGY"/>
+		</pr:repositories>
+
+		<pr:persistentClasses>
+			<pr:persistentClassList class="com.processpuzzle.application.configuration.domain.DomainComponentPersistentClasses"/>
+
+			<pr:persistentClass class="com.processpuzzle.persistence.domain.TestEntity"/>
+			<pr:persistentClass class="com.processpuzzle.persistence.domain.TestEntityComponent"/>
+		</pr:persistentClasses>
+
+	</pr:persistence>
+	
+	<!-- Internationalization Configuration -->
+	<in:internationalization>
+		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
+			<in:resourceBundle>Configuration/DesktopInternationalization</in:resourceBundle>
+		</in:resouceBundles>
+		
+		<in:availableLocales>
+			<in:locale>hu</in:locale>
+			<in:locale>en</in:locale>
+		</in:availableLocales>
+		<in:defaultLocale>hu</in:defaultLocale>
+		<in:localeDefinitions>classpath:com/processpuzzle/internalization/domain/LocaleDefinitions.xml</in:localeDefinitions>
+	</in:internationalization>
+	
+	<!-- Data Loaders -->	
+	<dl:dataLoaders>
+	</dl:dataLoaders>
+	
+	<!-- Business Definitions -->
+	<bd:businessDefinitions>
+		<ge:schema>classpath:BusinessDefinition.xsd</ge:schema>
+		<ge:mapping>classpath:com/processpuzzle/resource/integration/BusinessDefinitionMapping.xml</ge:mapping>
+		<bd:businessDefinition>/BusinessDefinition/GenericBusinessDefinition.xml</bd:businessDefinition>
+	</bd:businessDefinitions>
+	
+	<!-- Emailing -->
+	<em:emailing>
+		<em:system>
+			<em:activation>passive</em:activation>
+		</em:system>
+		<em:host>
+			<em:systemUser>
+				<ge:userName>gabox01</ge:userName>
+				<ge:password>ggmail81</ge:password>
+			</em:systemUser>
+		</em:host>
+		<em:smtp>
+			<em:host>smtp.gmail.com</em:host>
+			<em:auth>true</em:auth>
+			<em:debug>true</em:debug>
+			<em:port>465</em:port>
+			<em:socketFactory>
+				<em:port>465</em:port>
+				<ge:fullClassName>javax.net.ssl.SSLSocketFactory</ge:fullClassName>
+				<em:fallback>false</em:fallback>
+			</em:socketFactory>
+		</em:smtp>
+	</em:emailing>
+	
+	<!-- Bean Container -->
+	<bc:beanContainer>
+		<bc:containerDefinitionPath>/Configuration/BeanContainerDefinition.xml</bc:containerDefinitionPath>
+	</bc:beanContainer>
+	
+</pp:processPuzzleConfiguration>

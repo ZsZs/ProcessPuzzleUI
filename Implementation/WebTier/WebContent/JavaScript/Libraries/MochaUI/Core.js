@@ -1025,7 +1025,14 @@ MUI.extend({
 });
 
 if (Browser.Engine.webkit) {
+	 var webUIController = null;
+	 var contextRootPrefix = "../";
+	 try{
+		 webUIController = Class.getInstanceOf( WebUIController );
+		 if( webUIController != null ) contextRootPrefix = webUIController.getContextRootPrefix();
+    }catch( e ){};
+    
     new MUI.Require({
-        js: [MUI.path.plugins + '../../../Libraries/MochaUI/WebKitShadower.js']
+        js: [MUI.path.plugins + contextRootPrefix + 'JavaScript/Libraries/MochaUI/WebKitShadower.js']
     });
 }

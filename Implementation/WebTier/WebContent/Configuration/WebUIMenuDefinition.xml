@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:menuWidgetDefinition
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<menuWidget selectedItemClass="selectedMenuItem" />
+	
+	<menuItem menuItemId="MenuWidget">
+		<menuItem menuItemId="YourMenu" caption="HierarchicalMenuWidget.yourMenu" isDefault="true">
+			<messageProperties>{actionType : 'loadMenu', contextItemId : 'YourMenu'}</messageProperties>
+					
+			<menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.sampleDocument" isDefault="true">
+				<messageProperties>{actionType : 'loadDocument', documentURI : 'Documents/SampleDocument'}</messageProperties>			
+			</menuItem>			
+		</menuItem>
+		
+		<menuItem menuItemId="Administration" caption="HierarchicalMenuWidget.administration">
+			<messageProperties>{actionType : 'loadMenu', contextItemId : 'Administration'}</messageProperties>
+					
+			<menuItem menuItemId="Administration-Users" caption="HierarchicalMenuWidget.administration.users" isDefault="true">
+				<messageProperties>{actionType : 'loadDocument', documentURI : 'Commons/BusinessImplementation/SystemAdministration/UserList_ListView.jsp'}</messageProperties>			
+			</menuItem>
+						
+		</menuItem>
+	</menuItem>
+</pp:menuWidgetDefinition>

@@ -34,7 +34,7 @@
 			<elements>
 				<element tag="div" id="HorizontalMenuBar">
 					<plugin>{ 'css': ['Desktops/MochaUI/Styles/HorizontalMenuLayout.css'], 
-							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', componentName : 'HorizontalMenuBar' }).configure();} }
+							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', componentName : 'HorizontalMenuBar' }).configure();} }
 					</plugin>
 				</element>
 				<element tag="div" id="LanguageSelectorWidget">
@@ -54,7 +54,7 @@
 	<panels>
 		<panel name='documents-panel' columnReference='mainColumn' >
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
-			<contentURL>Desktops/ProcessPuzzle/Pages/Welcome_hu.html</contentURL>
+			<contentURL>Desktops/MochaUI/Pages/Welcome_hu.html</contentURL>
 		</panel>
 		
 		<panel name='console' columnReference='mainColumn' height='100'>

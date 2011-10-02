@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains internalization resources for Desktop Configurator. -->
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="hu">
+    <Resource key="DesktopConfigurator.desktopTitle" type="String"> </Resource>
+    <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Munkafolyamat- és tartalomkezelő üzleti platform</Resource>
+    <Resource key="DesktopConfigurator.navigationBar" type="String">Navigációs sáv</Resource>
+    <Resource key="DesktopConfigurator.footerText" type="String">ProcessPuzzle-l támogatva - Minden jog fenntartva 2005-2011, IT Kódex Kft.</Resource>
+    <Resource key="DesktopConfigurator.Panel.contentBrowserTitle" type="String">Tartalom böngésző</Resource>
+    <Resource key="DesktopConfigurator.Panel.documentsTitle" type="String">Dokumentumok</Resource>
+    <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Konzol</Resource>
+    <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menük</Resource>
+    <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tippek</Resource>
+    <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Ki van bent?</Resource>
+
+    <Resource key="HierarchicalMenuWidget.yourMenu" type="String">Te menüd</Resource>
+    <Resource key="HierarchicalMenuWidget.yourMenu.sampleDocument" type="String">Példa dokumentum</Resource>
+
+    <Resource key="HierarchicalMenuWidget.administration" type="String">Adminisztráció</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Felhasználók</Resource>
+
+    <Resource key="LanguageSelectorWidget.en" type="String">angol</Resource>
+    <Resource key="LanguageSelectorWidget.hu" type="String">magyar</Resource>
+    <Resource key="LanguageSelectorWidget.select" type="String">Válasszon nyelvet:</Resource>
+
+    <Resource key="SkinSelectorWidget.select" type="String">Válasszon megjelenést:</Resource>
+  </Language>
+</pp:Resources>

@@ -5,40 +5,31 @@
 	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	<title>ProcessPuzzle</title>
 			
-    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.3.js"></script>
-    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-more-1.3.js"></script>
-    
 	<!--[if IE]>
-	    <script type="text/javascript" src="JavaScript/MochaUI/excanvas.js"></script>
+	    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/excanvas.js"></script>
 	<![endif]--> 
     
+	<script type="text/javascript" src="JavaScript/Libraries/JsHamcrest/jshamcrest.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/Log4JavaScript/log4javascript.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-more-1.3.js"></script>    
     <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Core.js"></script>
     <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Dock.js"></script>
     <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Layout.js"></script>
     <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Tabs.js"></script>
     <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Window.js"></script>
-    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/WebKitShadower.js"></script>
-    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Modal.js"></script>
-    
+    <script type="text/javascript" src="JavaScript/Libraries/MochaUI/Modal.js"></script>    
 	<script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa.js"></script>  
-    <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
-    
+    <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>  
 	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlIO.js"></script>
 	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlEscape.js"></script>
 	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlsax.js"></script>
 	<script type="text/javascript" src="JavaScript/Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
-	
-    <script type="text/javascript" src="JavaScript/Libraries/Log4JavaScript/log4javascript.js"></script>
-    
-    <script type="text/javascript" src="JavaScript/Singleton/Singleton.js"></script>
-    <script type="text/javascript" src="JavaScript/WebUIMessageBus/WebUIMessage.js"></script>
+  
+    <script type="text/javascript" src="JavaScript/Source/Singleton/Singleton.js"></script>
+    <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessage.js"></script>
     
     <script type="text/javascript" src="JavaScript/Source/BrowserWidget/BrowserWidget.js"></script>
-    <script type="text/javascript" src="JavaScript/Source/CommonScripts/AssertUtil.js"></script>
-    <script type="text/javascript" src="JavaScript/Source/CommonScripts/inheritFrom.js"></script>
-	<script type="text/javascript" src="JavaScript/Source/CommonScripts/StringUtil.js"></script>
-	<script type="text/javascript" src="JavaScript/Source/CommonScripts/StringBuffer.js"></script>
-    <script type="text/javascript" src="JavaScript/Source/CommonScripts/UserException.js"></script>
 	<script type="text/javascript" src="JavaScript/Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
     <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/ComponentStateManager.js"></script>
     <script type="text/javascript" src="JavaScript/Source/DesktopConfigurator/DesktopConfigurator.js"></script>
@@ -77,6 +68,7 @@
 
     <script type="text/javascript" >
       window.addEvent('domready', function() {
+      	JsHamcrest.Integration.ProcessPuzzle();
       	var controller = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml" });
       	controller.configure();
   	  });
