@@ -1024,15 +1024,18 @@ MUI.extend({
 	
 });
 
-if (Browser.Engine.webkit) {
+if( Browser.Engine.webkit ) {
 	 var webUIController = null;
-	 var contextRootPrefix = "../";
+	 var pathPrefix = "";
 	 try{
 		 webUIController = Class.getInstanceOf( WebUIController );
-		 if( webUIController != null ) contextRootPrefix = webUIController.getContextRootPrefix();
-    }catch( e ){};
+		 if( webUIController != null ) pathPrefix = webUIController.getContextRootPrefix();
+    }catch( e ){
+         if( !(typeof( contectRootPrefix ) === 'undefined' )) 
+            pathPrefix = contectRootPrefix;
+    };
     
     new MUI.Require({
-        js: [MUI.path.plugins + contextRootPrefix + 'JavaScript/Libraries/MochaUI/WebKitShadower.js']
+        js: [pathPrefix + 'JavaScript/Libraries/MochaUI/WebKitShadower.js']
     });
 }

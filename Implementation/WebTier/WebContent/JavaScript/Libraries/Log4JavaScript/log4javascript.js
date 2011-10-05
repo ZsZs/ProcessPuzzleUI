@@ -1730,7 +1730,7 @@ var log4javascript;
 						var messages = (conversionCharacter === "a") ? loggingEvent.messages[0] : loggingEvent.messages;
 						for (var i = 0, len = messages.length; i < len; i++) {
 							if (i > 0 && (replacement.charAt(replacement.length - 1) !== " ")) {
-								replacement += " ";
+								replacement += "";
 							}
 							if (depth === 0) {
 								replacement += messages[i];

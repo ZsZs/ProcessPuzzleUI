@@ -6,10 +6,12 @@
    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	
    <link type="text/css" rel="stylesheet" href="../JsUnit/css/jsUnitStyle.css">
-   <link type="text/css" rel="stylesheet" href="../DesktopConfigurator/plugins/tree/css/style.css" />
-   <link type="text/css" rel="stylesheet" href="../LanguageSelectorWidget/LanguageSelectorWidget.css" />
    
    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   
+   <script type="text/javascript">
+      var contextRootPrefix = "../../../";
+   </script>
 
    <!--[if IE]>
 	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
@@ -25,6 +27,7 @@
    <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
    <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
    <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
@@ -32,6 +35,7 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
     
@@ -39,6 +43,7 @@
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../DesktopConfigurator/ConfigurationTimeoutException.js"></script>
    <script type="text/javascript" src="../DesktopConfigurator/DesktopConfigurator.js"></script>
    <script type="text/javascript" src="../DesktopConfigurator/DesktopStructure.js"></script>
    <script type="text/javascript" src="../DesktopConfigurator/PanelInterpreter.js"></script>
@@ -46,10 +51,10 @@
    <script type="text/javascript" src="../DocumentManager/DocumentManager.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
@@ -80,7 +85,7 @@
       });
   	  
 		JsHamcrest.Integration.JsUnit();
-		  
+		
 		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
 		var SAMPLE_DOCUMENT_ONE = "../WebUIController/Content/SampleContentOne";
 		var componentStateManager = null;
@@ -301,7 +306,7 @@
       //runs a test function during debugging
       function runTestFunction(){
 	    setUp();
-	    testConfigure();
+	    testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted();
 		tearDown();
 	  }
 	</script>

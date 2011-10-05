@@ -46,23 +46,27 @@ provides: [ProcessPuzzle.DesktopConfigurator]
 */
 
 var DesktopConfigurator = new Class({
-	Implements : [Options], 
-	options : {
-	   callChainDelay : 2000,
-		configurationXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-		configurationURI : "DesktopConfiguration.xml",
-		loggerGroupName : "DesktopConfigurator",
-		pluginOnloadDelay : 1000,
-		skin : "ProcessPuzzle"
-	},
+   Implements : [Options], 
+   Binds : ['createColumns', 'createHtmlElements', 'createPanels', 'createWindows', 'determineConfigurationStatus', 'initializeMUI', 'loadResources'],
+   options : {
+      callChainDelay : 2000,
+      componentName : "DesktopConfigurator",
+      configurationXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      configurationURI : "DesktopConfiguration.xml",
+      pluginOnloadDelay : 1000,
+      resourceLoadTimeout : 5000,
+      skin : "ProcessPuzzle",
+      waitStep : 500
+   },
 	
 	//Constructor
 	initialize : function( webUIConfiguration, resourceBundle, options ) {
-	   this.presetOptionsBasedOnWebUIConfiguration( webUIConfiguration );
+	    this.presetOptionsBasedOnWebUIConfiguration( webUIConfiguration );
 		this.setOptions( options );
 
 	//Private instance variables
 		this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
+		this.configurationChain = new Chain();
 		this.desktop = null;
 		this.desktopStructure = new DesktopStructure( options, this.configurationXml );
 		this.dock = null;
@@ -70,6 +74,7 @@ var DesktopConfigurator = new Class({
 		this.isConfigured = false;
 		this.currentLocale = null;
 		this.logger = new WebUILogger( webUIConfiguration );
+		this.pendingResourcesCounter = 0;
 		this.resourceBundle = resourceBundle;
 		this.scripts = new ArrayList();
 		this.styleSheets = new ArrayList();
@@ -82,75 +87,90 @@ var DesktopConfigurator = new Class({
 		
 	//Public accessor and mutator methods
 	configure : function() {
-		this.loadResources();
-		this.createHtmlElements();
-		this.initializeMUI();
-		this.createColumns();
-		this.createPanels();
-		this.createWindows();
-		this.isConfigured = true;
+	   this.logger.group( this.options.componentName + ".configure", false );
+       this.logger.debug( "Configuration started." );
+	   this.createConfigurationChain();
+       this.configurationChain.callChain();
+       //this.waitForConfigurationReady( 0 );
+       this.logger.groupEnd();
 	},
 	
 	destroy : function() {
+       this.logger.group( this.options.componentName + ".destroy", false );
 	   if( this.isConfigured ){
 	      this.destroyHtmlElements( this.getDesktopElement() );
 	      this.destroyWindows();
-         this.destroyPanels();
-         this.destroyColumns();
-         this.destroyResources();
+	      this.destroyPanels();
+	      this.destroyColumns();
+	      this.destroyResources();
 	      this.removeDesktopEvents();
 	      this.isConfigured = false;
 	   }
+       this.logger.groupEnd();
 	},
 	
-	//Properties
-	getConfigurationXml : function() { return this.configurationXml; },
-	getCurrentLocale : function() { return this.currentLocale; },
-	getDesktop : function() { return this.desktop; },
-	getDesktopColumns : function() { return this.desktopStructure.getDesktopColumns(); },
-	getDesktopElement : function() { return this.desktopStructure.getDesktopElement(); },
-	getDesktopPanels : function() { return this.desktopStructure.getDesktopPanels(); },
-	getDesktopWindows : function() { return this.desktopStructure.getDesktopWindows(); },
-	getDock : function() { return this.dock; },
-	getHeaderElement : function() { return this.desktopStructure.getHeaderElement(); },
-	getImages : function() { return this.images; },
-	getInitializationChain : function() { return MUI.myChain; },
-	getScripts : function() { return this.scripts; },
-	getStyles : function() { return this.styleSheets; },
+   //Properties
+   getConfigurationXml : function() { return this.configurationXml; },
+   getCurrentLocale : function() { return this.currentLocale; },
+   getDesktop : function() { return this.desktop; },
+   getDesktopColumns : function() { return this.desktopStructure.getDesktopColumns(); },
+   getDesktopElement : function() { return this.desktopStructure.getDesktopElement(); },
+   getDesktopPanels : function() { return this.desktopStructure.getDesktopPanels(); },
+   getDesktopWindows : function() { return this.desktopStructure.getDesktopWindows(); },
+   getDock : function() { return this.dock; },
+   getHeaderElement : function() { return this.desktopStructure.getHeaderElement(); },
+   getImages : function() { return this.images; },
+   getInitializationChain : function() { return MUI.myChain; },
+   getScripts : function() { return this.scripts; },
+   getStyles : function() { return this.styleSheets; },
 	
-	//Private methods
-	addAdHocElementsToDesktop : function( targetDesktopElement, sourceConfigurationElement ) {
-		var elementsSelector = this.desktopStructure.getElementsSelector();
-		var configurationElements = sourceConfigurationElement.selectNodes( elementsSelector );
-		Array.each( configurationElements, function( configurationElement, index ) {
-			var className = this.configurationXml.determineAttributeValue( configurationElement, 'class' );
-			var elementValue = this.configurationXml.determineNodeText( configurationElement );
+   //Private methods
+   addAdHocElementsToDesktop : function( targetDesktopElement, sourceConfigurationElement ) {
+      var elementsSelector = this.desktopStructure.getElementsSelector();
+      var configurationElements = sourceConfigurationElement.selectNodes( elementsSelector );
+      Array.each( configurationElements, function( configurationElement, index ) {
+         var className = this.configurationXml.determineAttributeValue( configurationElement, 'class' );
+         var elementValue = this.configurationXml.determineNodeText( configurationElement );
          var href = this.configurationXml.determineAttributeValue( configurationElement, 'href' );
          var id = this.configurationXml.determineAttributeValue( configurationElement, 'id' );
          var tagName = this.configurationXml.determineAttributeValue( configurationElement, 'tag' );
-			elementValue = this.resourceBundle.getText( elementValue );
-			elementValue = elementValue != null ? elementValue : "";
+         elementValue = this.resourceBundle.getText( elementValue );
+         elementValue = elementValue != null ? elementValue : "";
 			
-			var newElement = this.appendNewHtmlElement( tagName, id, targetDesktopElement );
+         var newElement = this.appendNewHtmlElement( tagName, id, targetDesktopElement );
          newElement.addClass( className );
-			if( href ){
-			   var innerAnchor = this.appendNewHtmlElement( 'a', null, newElement );
+         if( href ){
+            var innerAnchor = this.appendNewHtmlElement( 'a', null, newElement );
             innerAnchor.set( 'href', href );
-			   innerAnchor.set( 'target', '_blank' );
-			   innerAnchor.appendText( elementValue );
-			}else {
-	         newElement.appendText( elementValue );
-			}
+            innerAnchor.set( 'target', '_blank' );
+            innerAnchor.appendText( elementValue );
+         }else {
+            newElement.appendText( elementValue );
+         }
 			
          var pluginElement = this.configurationXml.selectNode( 'plugin', configurationElement );
-			if( pluginElement ) this.addPluginDefinedByText( this.configurationXml.determineNodeText( pluginElement ), true );
-		}, this );
+         if( pluginElement ) this.addPluginDefinedByText( this.configurationXml.determineNodeText( pluginElement ), true );
+      }, this );
 	}.protect(),
 	
-	addPlugin : function( plugin, releaseOnload ){
-      if( plugin.css ) plugin.css.each( function( cssURI, index ){
-         this.styleSheets.add( cssURI );
-         Asset.css( cssURI ); 
+   addPlugin : function( plugin, releaseOnload ){
+	  this.logger.group( this.options.componentName + ".addPlugin", false );
+      
+	  if( plugin.css ) plugin.css.each( function( cssURI, index ){
+         new RemoteStyleSheet( cssURI, {
+            onReady: function() {
+               this.styleSheets.add( cssURI );
+               this.logger.debug( "Stylesheet: '" + cssURI + "' was added to the document." );
+            }.bind( this ),
+            
+            onError: function() {
+               throw new ResourceNotFoundException( styleSheetUri );
+            }.bind( this ),
+            
+            onStart: function() {
+               this.logger.debug( "Started to add: '" + cssURI + "' to the document." );
+            }.bind( this )
+         }).start();
       }, this );
       
       if( plugin.images ) plugin.images.each( function( imagesURI, index ){
@@ -165,22 +185,24 @@ var DesktopConfigurator = new Class({
       
       if( typeof plugin.onload == 'function' && releaseOnload ) 
          plugin.onload();
-	}.protect(),
+      
+      this.logger.groupEnd();
+   }.protect(),
 	
-	addPluginDefinedByText : function( pluginDefinition, releaseOnload ){
+   addPluginDefinedByText : function( pluginDefinition, releaseOnload ){
       var plugin = { css: [], images: [], js: [], onload: null };
       plugin = pluginDefinition != null ? eval( "(" + pluginDefinition + ")" ) : plugin;
-	   this.addPlugin( plugin, releaseOnload );
-	}.protect(),
+      this.addPlugin( plugin, releaseOnload );
+   }.protect(),
 	
-	appendNewHtmlElement : function( tagName, elementId, parentElement ) {
-		var newElement  = new Element( tagName, { id : elementId } );
-		parentElement.grab( newElement );
+   appendNewHtmlElement : function( tagName, elementId, parentElement ) {
+      var newElement  = new Element( tagName, { id : elementId } );
+      parentElement.grab( newElement );
 		
-		return newElement;
-	}.protect(),
+      return newElement;
+   }.protect(),
 	
-	appendNewHtmlElementFromConfigurationItem : function( configurationElement, parentElement ) {
+   appendNewHtmlElementFromConfigurationItem : function( configurationElement, parentElement ) {
 		var tagName = configurationElement.selectNodes( this.desktopStructure.getTagAttributeSelector() )[0].nodeValue;
 		var headerElementId = configurationElement.selectNodes( this.desktopStructure.getIdAttributeSelector() )[0].nodeValue;
 		return this.appendNewHtmlElement( tagName, headerElementId, parentElement );
@@ -190,20 +212,37 @@ var DesktopConfigurator = new Class({
       if( !this.logger.isConfigured() ) this.logger.configure( this.webUIConfiguration );
 	}.protect(),
 	
-	createColumns : function() {
-		var columnConfigurations = this.configurationXml.selectNodes( this.desktopStructure.getDesktopColumnsSelector() );
-		Array.each( columnConfigurations, function( columnConfiguration, index ){
-			var columnId = this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnIdSelector() );
-			var columnPlacement = this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnPlacementSelector() );
-			var columnWidth = parseInt( this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnWidthSelector() ));
-			var minimumWidth = parseInt( this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnMinimumWidthSelector() ));
-			var maximumWidth = parseInt( this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnMaximumWidthSelector() ));
+   createColumns : function() {
+      this.logger.group( this.options.componentName + ".createColumns", false );
+      var columnConfigurations = this.configurationXml.selectNodes( this.desktopStructure.getDesktopColumnsSelector() );
+      Array.each( columnConfigurations, function( columnConfiguration, index ){
+         var columnId = this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnIdSelector() );
+         var columnPlacement = this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnPlacementSelector() );
+         var columnWidth = parseInt( this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnWidthSelector() ));
+         var minimumWidth = parseInt( this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnMinimumWidthSelector() ));
+         var maximumWidth = parseInt( this.configurationXml.determineAttributeValue( columnConfiguration, this.desktopStructure.getDesktopColumnMaximumWidthSelector() ));
 			
-			var desktopColumn = new MUI.Column({ id: columnId, placement: columnPlacement, width: columnWidth, resizeLimit: [minimumWidth, maximumWidth] });
+         var desktopColumn = new MUI.Column({ id: columnId, placement: columnPlacement, width: columnWidth, resizeLimit: [minimumWidth, maximumWidth] });
 			
-			this.desktopStructure.getDesktopColumns().add( desktopColumn );
-		}, this );
-	}.protect(),
+         this.desktopStructure.getDesktopColumns().add( desktopColumn );
+      }, this );
+
+      this.logger.groupEnd();
+      this.configurationChain.callChain();
+   }.protect(),
+	
+   createConfigurationChain: function() {
+      this.configurationChain.chain(
+         this.loadResources,
+         this.createHtmlElements,
+         this.initializeMUI,
+         this.createColumns,
+         this.createPanels,
+         this.createWindows,
+         this.determineConfigurationStatus
+      );
+      this.logger.debug( "Configuration chain is: loadResouces -> createHtmlElements -> initializeMUI -> createColumns -> createPanels -> createWindows -> determineConfigurationStatus" );
+   }.protect(),
 	
 	createDocumentContainer : function() {
 		var documentContainer = this.appendNewHtmlElement( 'DIV', this.desktopStructure.getDocumentContainerId(), this.desktopStructure.getDesktopElement() );
@@ -247,12 +286,17 @@ var DesktopConfigurator = new Class({
 		this.desktopStructure.setHeaderElement( headerElement );
 	}.protect(),
 	
-	createHtmlElements : function() {
-		this.createHeader();
-		this.createWindowDocker();
-		this.createDocumentContainer();
-		this.createFooter();
-	}.protect(),
+   createHtmlElements : function() {
+      this.logger.group( this.options.componentName + ".createHtmlElements", false );
+      
+      this.createHeader();
+      this.createWindowDocker();
+      this.createDocumentContainer();
+      this.createFooter();
+
+      this.logger.groupEnd();
+      this.configurationChain.callChain();
+   },
 	
 	createNavigationBarElement : function() {
 		var xpathSelector = this.desktopStructure.getNavigationBarSelector();
@@ -264,42 +308,46 @@ var DesktopConfigurator = new Class({
 		this.addAdHocElementsToDesktop( navigationBarElement, configurationElement );
 	}.protect(),
 	
-	createPanels : function() {
-		var panelConfigurations = this.configurationXml.selectNodes( this.desktopStructure.getDesktopPanelsSelector() );
-		Array.each( panelConfigurations, function( panelConfiguration, index ){
+   createPanels : function() {
+      this.logger.group( this.options.componentName + ".createPanels", false );
+      var panelConfigurations = this.configurationXml.selectNodes( this.desktopStructure.getDesktopPanelsSelector() );
+	  Array.each( panelConfigurations, function( panelConfiguration, index ){
          var panelInterpreter = new PanelInterpreter( panelConfiguration );
          panelInterpreter.interpret();
          
-			var panelId = this.configurationXml.determineAttributeValue( panelConfiguration, this.desktopStructure.getDesktopPanelIdSelector() );
-			var columnReference = this.configurationXml.determineAttributeValue( panelConfiguration, this.desktopStructure.getDesktopPanelColumnSelector() );
-			var panelTitle = this.configurationXml.selectNodeText( this.desktopStructure.getDesktopPanelTitleSelector(), panelConfiguration );
-			panelTitle = this.resourceBundle.getText( panelTitle );
-			var contentURL = this.configurationXml.selectNodeText( this.desktopStructure.getDesktopPanelContentUrlSelector(), panelConfiguration );
-			var panelHeight = parseInt( this.configurationXml.determineAttributeValue( panelConfiguration, this.desktopStructure.getDesktopPanelHeightSelector() ));
-         panelHeight = panelHeight ? panelHeight : null;
+		 var panelId = this.configurationXml.determineAttributeValue( panelConfiguration, this.desktopStructure.getDesktopPanelIdSelector() );
+	     var columnReference = this.configurationXml.determineAttributeValue( panelConfiguration, this.desktopStructure.getDesktopPanelColumnSelector() );
+	     var panelTitle = this.configurationXml.selectNodeText( this.desktopStructure.getDesktopPanelTitleSelector(), panelConfiguration );
+	     panelTitle = this.resourceBundle.getText( panelTitle );
+	     var contentURL = this.configurationXml.selectNodeText( this.desktopStructure.getDesktopPanelContentUrlSelector(), panelConfiguration );
+	     var panelHeight = parseInt( this.configurationXml.determineAttributeValue( panelConfiguration, this.desktopStructure.getDesktopPanelHeightSelector() ));
+	     panelHeight = panelHeight ? panelHeight : null;
          
-			var require = { css: [], images: [], js: [], onload: null };
-			var requireText =	this.configurationXml.selectNodeText( this.desktopStructure.getDesktopPanelRequireSelector(), panelConfiguration );
-			require = requireText != null ? eval( "(" + requireText + ")" ) : require;
+	     var require = { css: [], images: [], js: [], onload: null };
+	     var requireText =	this.configurationXml.selectNodeText( this.desktopStructure.getDesktopPanelRequireSelector(), panelConfiguration );
+	     require = requireText != null ? eval( "(" + requireText + ")" ) : require;
 			
-			this.storeRequiredResources( require );
+	     this.storeRequiredResources( require );
 			
-			var desktopPanel = new MUI.Panel({ 
-				id: panelId, 
-				title: panelTitle, 
-				column: columnReference, 
-				contentURL: contentURL,
-				headerToolbox: panelInterpreter.getHeaderToolBox(),
-				headerToolboxOnload: null,
-				headerToolboxURL: panelInterpreter.getHeaderToolBoxURL(),
-				height: panelHeight,
-				require: require });
+	     var desktopPanel = new MUI.Panel({ 
+	        id: panelId, 
+	        title: panelTitle, 
+	        column: columnReference, 
+	        contentURL: contentURL,
+	        headerToolbox: panelInterpreter.getHeaderToolBox(),
+	        headerToolboxOnload: null,
+	        headerToolboxURL: panelInterpreter.getHeaderToolBoxURL(),
+	        height: panelHeight,
+	        require: require });
 			
-			if( panelInterpreter.getHeaderPlugin() ) this.addPlugin( panelInterpreter.getHeaderPlugin(), true );
+	     if( panelInterpreter.getHeaderPlugin() ) this.addPlugin( panelInterpreter.getHeaderPlugin(), true );
 			
-			this.desktopStructure.getDesktopPanels().add( desktopPanel );
-		}, this );
-	}.protect(),
+	     this.desktopStructure.getDesktopPanels().add( desktopPanel );
+	  }, this );
+	  
+	  this.logger.groupEnd();
+      this.configurationChain.callChain();
+   }.protect(),
 	
 	createTitleBarElement : function() {
 		var xpathSelector = this.desktopStructure.getTitleBarSelector();
@@ -331,21 +379,25 @@ var DesktopConfigurator = new Class({
 		}
 	}.protect(),
 	
-	createWindows : function() {
-	}.protect(),
+   createWindows : function() {
+      this.logger.group( this.options.componentName + ".createWindows", false );
+      
+      this.logger.groupEnd();
+      this.configurationChain.callChain();
+   }.protect(),
 	
-	destroyColumns: function() {
+   destroyColumns: function() {
       this.getDesktopColumns().clear();
-	}.protect(),
+   }.protect(),
 	
-	destroyHtmlElements: function( elementToDestroy ) {
+   destroyHtmlElements: function( elementToDestroy ) {
       elementToDestroy.getChildren('*').each( function( childElement, index ){
          this.destroyHtmlElements( childElement );
          
          if( childElement.removeEvents ) childElement.removeEvents();
          if( childElement.destroy ) childElement.destroy();
       }, this );
-	}.protect(),
+   }.protect(),
 	
 	destroyPanels: function() {
       this.getDesktopPanels().each( function( desktopPanel, index ) {
@@ -378,10 +430,19 @@ var DesktopConfigurator = new Class({
       this.scripts.clear();
    }.protect(),
    
-	destroyWindows: function() {
+   destroyWindows: function() {
       this.getDesktopWindows().clear();
-	}.protect(),
+   }.protect(),
 	
+   determineConfigurationStatus: function() {
+      this.logger.group( this.options.componentName + "determineConfigurationStatus", false );
+      
+      this.isConfigured = true;
+
+      this.logger.groupEnd( "determineConfigurationStatus" );
+      this.configurationChain.callChain();
+   }.protect(),
+   
    determineCurrentLocale : function() {
 	   if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
 	   else {
@@ -391,54 +452,86 @@ var DesktopConfigurator = new Class({
 	}.protect(),
 	
    initializeMUI : function() {
+      this.logger.group( this.options.componentName + "initializeMUI", false );
       var desktopStructure = this.desktopStructure;
       MUI.myChain = new Chain();
       
       MUI.myChain.chain(
-        	function(){
-        		MUI.Desktop.initialize({
-                  desktop : desktopStructure.determineDesktopElementId(),
-                  desktopHeader : desktopStructure.determineHeaderElementId(),
-                  desktopFooter : desktopStructure.determineFooterBarElementId(),
-                  desktopFooterWrapper : desktopStructure.determineFooterElementId(),
-                  desktopNavBar : desktopStructure.determineNavigationBarElementId(),
-                  pageWrapper : desktopStructure.determineDocumentContainerElementId()
+         function(){
+            MUI.Desktop.initialize({
+               desktop : desktopStructure.determineDesktopElementId(),
+               desktopHeader : desktopStructure.determineHeaderElementId(),
+               desktopFooter : desktopStructure.determineFooterBarElementId(),
+               desktopFooterWrapper : desktopStructure.determineFooterElementId(),
+               desktopNavBar : desktopStructure.determineNavigationBarElementId(),
+               pageWrapper : desktopStructure.determineDocumentContainerElementId()
             }); 
-        	},
+         },
          function(){ MUI.Dock.initialize(); }
       );
       
-		MUI.myChain.callChain();
+      MUI.myChain.callChain();
       this.desktop = MUI.Desktop;
       this.dock = MUI.Dock;
+      this.logger.groupEnd( "initializeMUI" );
+      this.configurationChain.callChain();
    }.protect(),
    
-	loadI18Resources : function() {
+   loadI18Resources : function() {
       if( !this.resourceBundle.isLoaded )
          this.resourceBundle.load( this.currentLocale );
-	}.protect(),
+   }.protect(),
 	
-	loadResources : function() {
+   loadResources : function() {
+      this.logger.group( this.options.componentName + ".loadResources", false );
       for( var i = 0; i < this.desktopStructure.getStyleSheetElements().length; i++ ) {
-         var styleSheet = this.desktopStructure.getStyleSheetByIndex( i );
-         Asset.css( styleSheet );
-         this.styleSheets.add( styleSheet );
-      }	   
-	}.protect(),
-	
+         var styleSheetUri = this.desktopStructure.getStyleSheetByIndex( i );
+         new RemoteStyleSheet( styleSheetUri, {
+            onReady: function( path, element ) {
+               if( this.pendingResourcesCounter == 7 )
+                  this.logger.group( "RemoteStyleSheet.onReady", false );
+               this.styleSheets.add( path );
+               this.logger.debug( "Stylesheet: '" + path + "' was added to the document." );
+               this.pendingResourcesCounter--;
+               if( this.pendingResourcesCounter == 0 ){
+                  this.logger.groupEnd();
+                  this.configurationChain.callChain();
+                  return;
+               }
+               //this.logger.groupEnd();
+            }.bind( this ),
+            
+            onError: function() {
+               throw new ResourceNotFoundException( styleSheetUri );
+            }.bind( this ),
+            
+            onStart: function() {
+               this.pendingResourcesCounter++;
+               this.logger.debug( "Started to add: '" + styleSheetUri + "' to the document." );
+            }.bind( this )
+         }).start();
+      }
+      this.logger.groupEnd();
+   }.protect(),
+   
    presetOptionsBasedOnWebUIConfiguration : function( webUIConfiguration ){
       if( webUIConfiguration != 'undefined' && webUIConfiguration != null ){
          this.options.skin = webUIConfiguration.getDefaultSkin();
          this.options.configurationURI = webUIConfiguration.getSkinConfiguration( this.options.skin );
       }
    }.protect(),
+   
+   proceedWithConfigurationChainWhenResourcesLoaded: function() {
+      if( this.pendingResourcesCounter > 0 ) return false;
+      else this.configurationChain.callChain();
+   }.protect(),
 
-	removeDesktopEvents : function(){
+   removeDesktopEvents : function(){
       this.getDesktopElement().removeEvents();
 	   window.removeEvents();
 	   document.removeEvents();
-	}.protect(),
-	
+   }.protect(),
+
    storeRequiredResources: function( reguire ){
       if( reguire.css ) reguire.css.each( function( cssURI, index ){
          this.styleSheets.add( cssURI );
@@ -451,5 +544,14 @@ var DesktopConfigurator = new Class({
       if( reguire.js ) reguire.js.each( function( javaScriptURI, index ){
          this.scripts.add( javaScriptURI );
       }, this );
-   }.protect()
+   }.protect(),
+   
+   waitForConfigurationReady: function( currentWait ) {
+      if( this.isConfigured ) return true;
+      if( currentWait > this.options.resourceLoadTimeout )
+         throw new ConfigurationTimeoutException( this.options.configurationURI, this.options.resourceLoadTimeout );
+      else {
+         this.waitForConfigurationReady( currentWait + this.options.waitStep ).delay( this.options.waitStep );
+      }
+   }
 });

@@ -65,7 +65,8 @@
                               failCallback="function() {alert('Logging error occured.')}"
                               threshold="info"/>
 				<wui:popUpAppender name="formattedPopUpAppender"
-                               layoutReference="formattedLayout" commandLineObjectExpansionDepth="10"
+                               layoutReference="formattedLayout" 
+                               commandLineObjectExpansionDepth="10"
                                complainAboutPopUpBlocking="true"
                                focusPopUp="true"
                                lazyInit="true"

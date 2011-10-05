@@ -33,6 +33,7 @@ var WebUIController = new Class({
       contextRootPrefix : "../../",
       errorPageUri : "Commons/FrontController/WebUiError.jsp",
       languageSelectorElementId : "LanguageSelectorWidget",
+      loggerGroupName : "WebUIController",
       urlRefreshPeriod : 3000,
       window : window
    },
@@ -72,16 +73,19 @@ var WebUIController = new Class({
       this.workproductTypeXslt = this.options.contextRootPrefix + this.options.artifactTypesXslt;
       this.loadWebUIConfiguration();
       this.configureLogger();
+
+      this.logger.group( this.options.componentName + ".setUp", false );
       this.determineCurrentUserLocale();
       this.determineDefaultSkin();
       this.loadResourceBundle();
       this.storeStateInUrl.periodical( this.options.urlRefreshPeriod, this );
 
       this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
+      this.logger.groupEnd();
    }.protect(),
 
    //public accessor and mutator methods
-	changeCaptions : function() {
+   changeCaptions : function() {
       if(rightMenu != null && rightMenu.changeCaptions != null)
          rightMenu.changeCaptions(self);
       if(documentManager != null && documentManager.changeCaptions != null)
@@ -109,6 +113,7 @@ var WebUIController = new Class({
    },
    
    configure : function() {
+      this.logger.group( this.options.componentName + ".configure", false );
       this.loadWebUIConfiguration();
       this.configureLogger();
       this.restoreStateFromUrl();
@@ -120,6 +125,7 @@ var WebUIController = new Class({
       this.storeComponentState();
       
       this.isConfigured = true;
+      this.logger.groupEnd();
    },
    
    destroy : function() {

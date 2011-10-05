@@ -1122,14 +1122,14 @@ JsHamcrest.Integration = (function() {
       self.assertThat = function ( actual, matcher, message ) {
         return JsHamcrest.Operators.assert( actual, matcher, {
           message: message,
-          fail: function(message) {
+          fail: function( message ) {
              var logger = Class.getInstanceOf( WebUILogger );
-             if( logger != null ) logger.log( WebUILogger.ERROR, message );
+             if( logger != null ) logger.error( message );
              else alert( message );
           },
-          pass: function(message) {
+          pass: function( message ) {
              var logger = Class.getInstanceOf( WebUILogger );
-             if( logger != null ) logger.log( WebUILogger.INFO, message );
+             if( logger != null ) logger.trace( message );
           }
         });
       };

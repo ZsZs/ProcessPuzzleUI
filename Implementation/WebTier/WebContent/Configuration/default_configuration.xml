@@ -47,7 +47,7 @@
 			</wui:loggers>
 			
 			<wui:layouts>
-				<wui:patternLayout name="formattedLayout" pattern="%d{HH:mm:ss} %-5p - %c: %m%n"/>
+				<wui:patternLayout name="formattedLayout" pattern="%d{HH:mm:ss,SSS} %p - %m"/>
 			</wui:layouts>
 
 			<wui:appenders>
@@ -57,18 +57,18 @@
 					commandLineObjectExpansionDepth="10"
 					complainAboutPopUpBlocking="true"
 					focusPopUp="true"
-					lazyInit="true"
+					lazyInit="false"
 					threshold="debug"
 					maxMessages="1000"
 					newestMessageAtTop="true"
-					height="600"
+					height="800"
 					reopenWhenClosed="true"
 					scrollToLatestMessage="true"
 					showCommandLine="true"
-					initiallyMinimized="true"
+					initiallyMinimized="false"
 					useDocumentWrite="false"
 					useOldPopUp="true"
-					width="800"/>
+					width="1600"/>
 			</wui:appenders>			
 		</wui:logging>
 	</wui:webUI>

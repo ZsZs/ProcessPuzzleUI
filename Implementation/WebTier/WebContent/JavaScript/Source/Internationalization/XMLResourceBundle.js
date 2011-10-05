@@ -22,6 +22,7 @@ var XMLResourceBundle = new Class( {
    Implements : Options,
 
    options : {
+      componentName : "XMLResourceBundle",
       defaultLocale : null,
       nameSpaces : "xmlns:pp='http://www.processpuzzle.com/'"
    },
@@ -37,7 +38,7 @@ var XMLResourceBundle = new Class( {
    this.cache;
    this.currentLocale = null;
    this.isLoaded = false;
-   this.logger = null;
+   this.logger = Class.getInstanceOf( WebUILogger );
    this.localeUtil = new LocaleUtil();
    this.parser = new XMLBundleParser();
    this.resourceBundleNames = new Array();
@@ -81,6 +82,7 @@ var XMLResourceBundle = new Class( {
 
    // public mutators methods
    load : function( locale ) {
+      this.logger.group( this.options.componentName + ".load", false );
       this.currentLocale = locale;
       this.cache = new ResourceCache();
       var fileList = this.determineFileNames( locale );
@@ -95,6 +97,7 @@ var XMLResourceBundle = new Class( {
          throw exception;
       }
       this.isLoaded = true;
+      this.logger.groupEnd();
    },
    
    release : function(){
