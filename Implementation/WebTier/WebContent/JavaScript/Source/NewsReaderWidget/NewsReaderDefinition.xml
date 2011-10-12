@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<newsReaderDefinition>
+   <name>Test news reader</name>
+   <description>This configuration supports testing the widget.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets>
+         <styleSheet>../NewsReaderWidget/NewsReaderWidget.css</styleSheet>
+      </styleSheets>
+
+      <images></images>
+      <scripts></scripts>
+   </resources>
+
+   <header tag="div" name="newsReaderHeader">
+      <elements>
+         <element tag="h1" class="headerText" name="headerText">NewsReaderWidget.headerText</element>
+      </elements>
+   </header>
+   
+   <body bind="rssResource.rssChannel">
+      <elements>
+         <element tag="h2" class="channelTitle" name="title" bind="title" />
+         <element tag="p" class="property" name="link" bind="link" />
+         <element tag="p" class="property" name="description" bind="description" />
+         <element tag="p" class="property" name="language" bind="language" />
+         <element tag="p" class="property" name="pubDate" bind="pubDate" />
+         <element tag="p" class="property" name="lastBuildDate" bind="lastBuildDate" />
+         <element tag="p" class="property" name="docs" bind="docs" />
+         <element tag="p" class="property" name="generator" bind="generator" />
+         <element tag="p" class="property" name="managingEditor" bind="managingEditor" />
+         <element tag="p" class="property" name="webMaster" bind="webMaster" />
+      </elements>
+   </body>
+   
+   <footer tag="div" name="newsReaderFooter">
+      <elements>
+         <element tag="h1" class="footerText" name="headerText" href="http://opensource.processpuzzle.com">Visit Open Source ProcessPuzzle</element>
+      </elements>
+   </footer>
+</newsReaderDefinition>

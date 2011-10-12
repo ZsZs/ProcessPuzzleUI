@@ -551,7 +551,7 @@ var DesktopConfigurator = new Class({
       if( currentWait > this.options.resourceLoadTimeout )
          throw new ConfigurationTimeoutException( this.options.configurationURI, this.options.resourceLoadTimeout );
       else {
-         this.waitForConfigurationReady( currentWait + this.options.waitStep ).delay( this.options.waitStep );
+         this.waitForConfigurationReady( currentWait + this.options.waitStep ).delay( this.options.waitStep, this );
       }
    }
 });

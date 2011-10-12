@@ -111,6 +111,7 @@
   	  var resourceBundle;
       var testWindow;
   	  var webUIConfiguration;
+      var webUILogger = null;
   	  var webUIController;
 
       function setUp() {
@@ -118,8 +119,8 @@
         else testWindow = window;
         
         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-        resourceBundle = new XMLResourceBundle( webUIConfiguration );
 		webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : "../WebUIController/SampleConfiguration.xml" }, testWindow );
+        resourceBundle = new XMLResourceBundle( webUIConfiguration );
       	desktopElement = $( DESKTOP_ELEMENT_ID );
       }
 
@@ -416,7 +417,7 @@
       //runs a test function during debugging
       function runTestFunction(){
 	    setUp();
-	    testConfigure_LoadsResources();
+	    testConfigure_CreatesDocumentContainer();
 		tearDown();
 	  }
 
@@ -426,5 +427,6 @@
 
 <body>
 	<div id='desktop'></div>
+	<div id="JavaScriptLogging"></div>
 </body>
 </html>

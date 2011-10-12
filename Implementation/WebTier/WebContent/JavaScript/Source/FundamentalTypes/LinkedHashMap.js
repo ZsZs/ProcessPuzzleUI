@@ -29,36 +29,66 @@ var LinkedHashMap = new Class({
 	
    // Constructor
    initialize : function() {
-   	this.parent();
+      this.parent();
+      this.firstEntry = null;
+      this.lastEntry = null;
    },
-
+   
+   //Public accessors and mutators
+   clear: function(){
+      this.firstEntry = null;
+      this.lastEntry = null;
+      this.parent();
+   },
+   
+   each : function( fn, bind ){
+      var iterator = this.iterator();
+      var index = 0;
+      while( iterator.hasNext() ){
+         var mapEntry = iterator.next();
+         fn.call( bind, mapEntry, index, this );
+         index++;
+      }
+   },
+   
    first : function() {
-   	return this.get( this.firstKey() );
+      return this.firstEntry.getValue();
    },
    
    firstKey : function() {
-   	if( this.length > 0 ) return this.findKeyBySerialIndex( 0 );
-   	else return null;
+      if( this.length > 0 ) return this.firstEntry.getKey();
+      else return null;
    },
    
+   iterator : function() {
+      return new LinkedHashIterator( this.firstEntry );
+   },
+
    last : function() {
-   	return this.get( this.lastKey() );
+      return this.lastEntry.getValue();
    },
    
    lastKey : function() {
-   	if( this.length > 0 ) return this.findKeyBySerialIndex( this.length -1 );
+   	if( this.length > 0 ) return this.lastEntry.getKey();
    	else return null;
    },
    
    next : function( referenceKey ){
-   	return this.get( this.nextKey( referenceKey ));
+      if( !referenceKey ) return null;
+      
+      var referenceEntry = this.getEntry( referenceKey );
+      var nextEntry = referenceEntry.getNextEntry(); 
+      if( nextEntry ) return nextEntry.getValue();
+      else return null;
    },
    
    nextKey : function( referenceKey ) {
-   	if( !referenceKey ) return null;
+      if( !referenceKey ) return null;
    	
-   	var referencedEntry = this.getEntry( referenceKey );
-   	return this.findKeyBySerialIndex( referencedEntry.getSerialIndex() +1 );
+      var referenceEntry = this.getEntry( referenceKey );
+      var nextEntry = referenceEntry.getNextEntry(); 
+      if( nextEntry ) return nextEntry.getKey();
+      else return null;
    },
    
    previous : function( referenceKey ){
@@ -74,7 +104,11 @@ var LinkedHashMap = new Class({
    
    // Private helper methods
    addEntry : function( hash, key, value, bucketIndex ) {
-      this.table[bucketIndex] = new LinkedEntry( hash, key, value, this.table[bucketIndex], this.length );
+      var newEntry = new LinkedEntry( hash, key, value, this.table[bucketIndex], this.length, this.lastEntry );
+      this.table[bucketIndex] = newEntry;
+      if( this.firstEntry == null ) this.firstEntry = newEntry;
+      if( this.lastEntry ) this.lastEntry.setNextEntry( newEntry );
+      this.lastEntry = newEntry;
       this.length++;
    }.protect(),
    
@@ -91,13 +125,33 @@ var LinkedHashMap = new Class({
 });
 
 var LinkedEntry = new Class( {
-	Extends : Entry,
+   Extends : Entry,
 	
-   initialize : function( hash, key, value, next, serialIndex ) {
-   	this.parent( hash, key, value, next );
+   initialize : function( hash, key, value, next, serialIndex, previousEntry ) {
+      this.parent( hash, key, value, next );
+      this.nextEntry = null;
+      this.previousEntry = previousEntry;
       this.serialIndex = serialIndex;
    },
 
-   getSerialIndex : function() { return this.serialIndex; }
+   getNextEntry: function() { return this.nextEntry; },
+   getSerialIndex : function() { return this.serialIndex; },
+   setNextEntry: function( nextEntry ) { this.nextEntry = nextEntry; }
+});
+
+var LinkedHashIterator = new Class({
+   initialize : function( firstEntry ) {
+      this.currentEntry = firstEntry;
+   },
+
+   hasNext : function() {
+      return this.currentEntry != null;
+   },
+
+   next : function() {
+      var nextEntry = this.currentEntry;
+      this.currentEntry = nextEntry.getNextEntry();
+      return nextEntry;
+   }
 });
 

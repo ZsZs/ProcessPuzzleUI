@@ -29,7 +29,7 @@ var RemoteStyleSheet = new Class( {
 
    _onready : function() {
       var args = [this.getPath(), this.getElement()];
-      this.fireEvent( 'ready', this.getPath(), this.getElement() );
+      this.fireEvent( 'ready', args );
    },
 
    _onerror : function() {

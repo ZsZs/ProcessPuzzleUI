@@ -85,6 +85,7 @@
 	  var resourceBundle;
 	  var testWindow;
   	  var webUIConfiguration = null;
+      var webUILogger = null;
   	  var widgetContainerElement;
   	  
       function setUp() {
@@ -93,6 +94,7 @@
         domDocument = document;
         messageBus = new WebUIMessageBus();
         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+		webUILogger = new WebUILogger( webUIConfiguration );
       	resourceBundle = new XMLResourceBundle( webUIConfiguration );
       	resourceBundle.load( locale );
       	browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle );
@@ -491,5 +493,6 @@
       <div id="firstChild">First child element.</div>
       <div id="lastChild">Last child element.</div>
     </div>
+	<div id="JavaScriptLogging"></div>
 </body>
 </html>

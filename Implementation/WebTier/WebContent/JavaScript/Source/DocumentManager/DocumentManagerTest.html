@@ -83,6 +83,7 @@
 	var documentManager;
 	var messageBus;
 	var stateManager;
+	webUILogger = new WebUILogger( webUIConfiguration );
 	
 	JsHamcrest.Integration.JsUnit();
 	
@@ -145,5 +146,6 @@
 <body>
    <h1>DocumentManager.js test page</h1>
    <div id='desktop'></div>
+   <div id="JavaScriptLogging"></div>
 </body>
 </html>

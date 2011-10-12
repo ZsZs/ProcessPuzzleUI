@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>Test page for DocumentElement.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+    <!--[if IE]>
+	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+    <![endif]-->  
+   
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
+	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
+	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+	
+	<script type="text/javascript">
+		window.addEvent('domready', function() {
+			runTestFunction();
+		});
+				
+		JsHamcrest.Integration.JsUnit();
+		
+		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+		var DOCUMENT_CONTAINER_ID = "SmartDocument";
+		var DOCUMENT_CONTENT_URI = "../SmartDocument/SampleDocumentContent.xml";
+		var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
+		var ELEMENT_DEFINITION_SELECTOR = "/smartDocumentDefinition/documentHeader/compositeElement/element";
+		var ELEMENT_BIND = "document.title";
+		var ELEMENT_NAME = "SmartDocumentTitle";
+		var ELEMENT_REFERENCE = "http://opensource.processpuzzle.com";
+		var ELEMENT_STYLE = "headerText";
+		var ELEMENT_TAG = "H1";
+		var ELEMENT_TEXT = "Sample Smart Document";
+		var TITLE_ELEMENT_DEFINITION_SELECTOR = "/smartDocumentDefinition/documentBody/compositeElement/element";
+		var TITLE_VALUE = "ProcessPuzzle";
+		
+		var bundle = null;
+		var documentContainerElement = null;
+		var documentContentResource = null;
+		var documentDefinition = null;
+		var documentElement = null;
+		var documentInternationalization = null;
+		var webUIConfiguration = null;
+        var webUILogger = null;
+		
+		function setUp(){
+		   webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+		   webUILogger = new WebUILogger( webUIConfiguration );
+		   bundle = new XMLResourceBundle( webUIConfiguration );
+           bundle.load( new Locale({ language : "en" }) );
+		   
+           documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+		   documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+		   var elementDefinition = documentDefinition.selectNode( ELEMENT_DEFINITION_SELECTOR );
+           documentElement = new DocumentElement( elementDefinition, bundle, documentContentResource );
+           documentContainerElement = $( DOCUMENT_CONTAINER_ID );
+		}
+
+		function tearDown(){
+		   bundle.release();
+		   bundle = null;
+		   
+		   if( documentElement.getStatus() > documentElement.options.possibleStates.INITIALIZED ) documentElement.destroy();
+		   documentElement = null;
+		   documentContainerElement = null;
+		}
+		
+		function testInitialize() {
+			assertThat( documentElement, not( nil() ));
+			assertThat( documentElement.getDefinitionElement(), not( nil() ));
+		}
+		
+		function testUnmarshall_SetsStatusToUnMarshalled(){
+		   //SETUP: see setUp() method
+		   //EXCERCISE:
+		   documentElement.unmarshall();
+		   
+		   //VERIFY:
+		   assertThat( documentElement.getStatus(), equalTo( documentElement.options.possibleStates.UNMARSHALLED ));
+		}
+		
+		function testUnmarshall_DeterminesElementProperties(){
+		   //SETUP: see setUp() method
+		   //EXCERCISE:
+		   documentElement.unmarshall();
+		   
+		   //VERIFY:
+		   assertThat( documentElement.getName(), equalTo( ELEMENT_NAME ));
+		   assertThat( documentElement.getTag().toUpperCase(), equalTo( ELEMENT_TAG ));
+		   assertThat( documentElement.getStyle(), equalTo( ELEMENT_STYLE ));
+		   assertThat( documentElement.getBind(), nil() );
+		   assertThat( documentElement.getText(), equalTo( ELEMENT_TEXT ));
+		   assertThat( documentElement.getReference(), equalTo( ELEMENT_REFERENCE ));
+		}
+		
+		function testConstract_SetsStatusToConstructed(){
+		   //SETUP: see setUp() method
+		   documentElement.unmarshall();
+		
+		   //EXCERCISE:
+		   documentElement.construct( documentContainerElement, "bottom" );
+		   
+		   //VERIFY:
+		   assertThat( documentElement.getStatus(), equalTo( documentElement.options.possibleStates.CONSTRUCTED ));
+		}
+				
+		function testConstruct_CreatesNewHtmlElement(){
+		   //SETUP: see also setUp() method
+		   documentElement.unmarshall();
+		   
+		   //EXCERCISE:
+		   documentElement.construct( documentContainerElement, "bottom" );
+		   
+		   //VERIFY:
+		   assertThat( documentElement.getHtmlElement(), not( nil() ));
+		   assertThat( documentElement.getHtmlElement().tagName.toUpperCase(), equalTo( ELEMENT_TAG ));
+		   assertThat( documentElement.getHtmlElement().get( 'id' ), equalTo( ELEMENT_NAME ));
+		   assertThat( documentElement.getHtmlElement().get( 'text' ), equalTo( ELEMENT_TEXT ));
+		   assertThat( documentElement.getHtmlElement().hasClass( ELEMENT_STYLE ), is( true ));
+		   assertThat( documentContainerElement.getChildren(), hasItem( documentElement.getHtmlElement() ));
+		   
+		   var nestedAnchorElement = documentElement.getHtmlElement().getElement( 'a' ); 
+		   assertThat( nestedAnchorElement, not( nil() ));
+		   assertThat( nestedAnchorElement.get( 'href' ), equalTo( documentElement.getReference() ));
+		}
+		
+		function testConstruct_RetrievesBindedData(){
+		   //SETUP: see also setUp() method
+           documentElement = new DocumentElement( documentDefinition.selectNode( TITLE_ELEMENT_DEFINITION_SELECTOR ), bundle, documentContentResource );
+		   documentElement.unmarshall();
+		   
+		   //EXCERCISE:
+		   documentElement.construct( documentContainerElement, "bottom" );
+		   
+		   //VERIFY:
+		   assertThat( documentElement.getHtmlElement().get( 'text' ), equalTo( TITLE_VALUE ));
+		}
+		
+		function testConstruct_WhenNotUnmarshalled_RaisesException(){
+		   //SETUP: see setUp() method
+		   
+		   //EXCERCISE, VERIFY:
+		   try{
+			   documentElement.construct( documentContainerElement, "bottom" );
+			   fail();
+		   }catch( e ){
+		      assertThat( instanceOf( e, UnconfiguredDocumentElementException ), is( true ));
+		   }
+		}
+		
+		function testDestroy_WhenUnmarshalled_ResetsProperties(){
+		   //SETUP: see also setUp() method
+		   documentElement.unmarshall();
+		   
+		   //EXCERCISE:
+		   documentElement.destroy();
+		   
+		   //VERIFY:
+		   assertThat( documentElement.getName(), nil() );
+		   assertThat( documentElement.getTag(), nil() );
+		   assertThat( documentElement.getStyle(), nil() );
+		   assertThat( documentElement.getBind(), nil() );
+		   assertThat( documentElement.getText(), nil() );
+		   assertThat( documentElement.getReference(), nil() );
+		}
+		
+		function testDestroy_WhenConstructed_RemovesHtmlElement(){
+		   //SETUP: see also setUp() method
+		   documentElement.unmarshall();
+		   documentElement.construct( documentContainerElement, "bottom" );
+		   assertThat( documentContainerElement.getChildren(), hasItem( documentElement.getHtmlElement() ));
+		   
+		   //EXCERCISE:
+		   documentElement.destroy();
+		   
+		   //VERIFY:
+		   assertThat( documentContainerElement.getChildren().length, equalTo( 0 ));
+		}
+		
+		function testDestroy_WhenNotUnmarshalled_RaisesException(){
+		   //SETUP: see setUp() method
+		   
+		   //EXCERCISE, VERIFY:
+		   try{
+			   documentElement.destroy();
+			   fail();
+		   }catch( e ){
+		      assertThat( instanceOf( e, UnconfiguredDocumentElementException ), is( true ));
+		   }
+		}
+		
+		//runs a test function during debugging
+		function runTestFunction(){
+			setUp();
+			testDestroy_WhenConstructed_RemovesHtmlElement();
+			tearDown();
+		}
+    </script>
+</head>
+
+<body>
+	<h1>DocumentElement.js test page</H1>
+	<p>This page contains tests for DocumentElement.js JavaScript class.</P>
+	<div id="SmartDocument">SmartDocument container.</div>
+	<div id="JavaScriptLogging"></div>
+</body>
+</html>

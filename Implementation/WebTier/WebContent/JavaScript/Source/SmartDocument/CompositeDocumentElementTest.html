@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+	<title>Test page for CompositeDocumentElement.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+    <!--[if IE]>
+	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+    <![endif]-->  
+   
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
+	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+	<script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
+	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+	
+	<script type="text/javascript">
+		window.addEvent('domready', function() {
+			runTestFunction();
+		});
+				
+		JsHamcrest.Integration.JsUnit();
+		
+		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+		var DOCUMENT_CONTAINER_ID = "SmartDocument";
+		var DOCUMENT_CONTENT_URI = "../SmartDocument/SampleDocumentContent.xml";
+		var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
+		var ELEMENT_SELECTOR = "/smartDocumentDefinition/documentBody";
+		var ELEMENT_BIND = "document.title";
+		var ELEMENT_NAME = "SmartDocumentTitle";
+		var ELEMENT_STYLE = "headerText";
+		var ELEMENT_TAG = "h1";
+		var ELEMENT_TEXT = "SmartDocument.headerText";
+		var NESTED_COMPOSITE_ELEMENT_NAME = "bodyWrapper";
+		var NESTED_SIMPLE_ELEMENT_NAME = "copyright";
+		
+		var bundle = null;
+		var compositeElement = null;
+		var documentContentResource = null;
+		var webUIConfiguration = null;
+        var webUILogger = null;
+		
+		function setUp(){
+		   webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+		   webUILogger = new WebUILogger( webUIConfiguration );
+		   bundle = new XMLResourceBundle( webUIConfiguration );
+           bundle.load( new Locale({ language : "en" }) );
+		   
+           documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+		   var documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+		   var elementDefinition = documentDefinition.selectNode( ELEMENT_SELECTOR );
+           compositeElement = new CompositeDocumentElement( elementDefinition, bundle, documentContentResource );
+           documentContainerElement = $( DOCUMENT_CONTAINER_ID );
+		}
+
+		function tearDown(){
+		   if( compositeElement.getStatus() > compositeElement.options.possibleStates.INITIALIZED ) compositeElement.destroy();
+           compositeElement = null;			
+		   documentContainerElement = null;
+		}
+		
+		function testInitialize() {
+			assertThat( compositeElement, not( nil() ));
+			assertThat( compositeElement.getElements(), not( nil() ));
+		}
+		
+		function testUnmarshall_UnmarshallsNestedElements(){
+		   //SETUP: see setUp() method
+		   //EXCERCISE:
+		   compositeElement.unmarshall();
+		   
+		   //VERIFY:
+		   assertThat( compositeElement.getElements().size(), equalTo( 2 ));
+		   assertThat( compositeElement.getElement( NESTED_COMPOSITE_ELEMENT_NAME ).getElements().size(), equalTo( 5 ));
+		}
+		
+		function testUnmarshall_WhenMaxOccuresIsGiven_InstantiatesMultipleElements(){
+		   //SETUP: see setUp() method
+		   //EXCERCISE:
+		   compositeElement.unmarshall();
+		   
+		   //VERIFY:
+		   assertThat( compositeElement.getElement( NESTED_COMPOSITE_ELEMENT_NAME ).getElements().size(), equalTo( 5 ));
+		}
+		
+		function testConstruct_ConstructsNestedElements(){
+		   //SETUP: see setUp() method
+		   compositeElement.unmarshall();
+		
+		   //EXCERCISE:
+		   compositeElement.construct( documentContainerElement, 'bottom' );
+		   
+		   //VERIFY:
+		   assertThat( documentContainerElement.getChildren(), hasItem( compositeElement.getHtmlElement() ));
+		   var bodyDiv = documentContainerElement.getElement( 'div' );
+		   assertThat( bodyDiv.getChildren(), hasItem( compositeElement.getElement( NESTED_COMPOSITE_ELEMENT_NAME ).getHtmlElement() ));
+		   assertThat( bodyDiv.getChildren(), hasItem( compositeElement.getElement( NESTED_SIMPLE_ELEMENT_NAME ).getHtmlElement() ));
+		}
+				
+		function testConstruct_WhenMaxOccuresIsGiven_ConstructsMultipleHtmlElements(){
+		   //SETUP: see setUp() method
+		   compositeElement.unmarshall();
+		
+		   //EXCERCISE:
+		   compositeElement.construct( documentContainerElement, 'bottom' );
+		   
+		   //VERIFY:
+		   var bodyDiv = documentContainerElement.getElementById( NESTED_COMPOSITE_ELEMENT_NAME );
+		   assertThat( bodyDiv.getChildren( 'ul' ).length, equalTo( 3 ));
+		}
+				
+		function testDestroy_WhenConstructed_DestroysHtmlElements(){
+		   //SETUP: see setUp() method
+		   compositeElement.unmarshall();
+		   compositeElement.construct( documentContainerElement, 'bottom' );
+		
+		   //EXCERCISE:
+		   compositeElement.destroy();
+		   
+		   //VERIFY:
+		   assertThat( documentContainerElement.getChildren().length, equalTo( 0 ));
+		}
+		
+		//runs a test function during debugging
+		function runTestFunction(){
+			setUp();
+			testConstruct_WhenMaxOccuresIsGiven_ConstructsMultipleHtmlElements();
+			tearDown();
+		}
+    </script>
+</head>
+
+<body>
+	<h1>CompositeDocumentElement.js test page</H1>
+	<p>This page contains tests for CompositeDocumentElement.js JavaScript class.</P>
+	<div id="SmartDocument">SmartDocument container.</div>
+	<div id="JavaScriptLogging"></div>
+</body>
+</html>

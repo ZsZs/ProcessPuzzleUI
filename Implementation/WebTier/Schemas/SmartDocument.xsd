@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  elementFormDefault="qualified">
+  <xs:element name="smartDocumentDefinition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="description"/>
+        <xs:element ref="version"/>
+        <xs:element ref="documentResources"/>
+        <xs:element ref="documentHeader"/>
+        <xs:element ref="documentBody"/>
+        <xs:element ref="documentFooter"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="version" type="xs:decimal"/>
+
+  <xs:element name="documentResources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="styleSheets"/>
+        <xs:element ref="images"/>
+        <xs:element ref="javascripts"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="styleSheets">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="styleSheet"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="styleSheet" type="xs:string"/>
+
+  <xs:element name="images">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="image"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="image">
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" use="optional" type="xs:NCName"/>
+      <xs:attribute name="title" use="optional" type="xs:NCName"/>
+	</xs:complexType>
+  </xs:element>
+
+  <xs:element name="javascripts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="javascript"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="javascript" type="xs:string"/>
+
+  <xs:element name="documentHeader">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="compositeElement">
+          <xs:attribute name="name" use="required" type="xs:NCName"/>
+          <xs:attribute name="tag" use="required" type="xs:NCName"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="documentBody">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="compositeElement">
+          <xs:attribute name="name" use="required" type="xs:NCName"/>
+          <xs:attribute name="tag" use="optional" type="xs:NCName"/>
+          <xs:attribute name="bind" use="optional" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="documentFooter">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="compositeElement">
+          <xs:attribute name="name" use="required" type="xs:NCName"/>
+          <xs:attribute name="tag" use="optional" type="xs:NCName"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="compositeElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="compositeElement"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="element"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="compositeElement">
+    <xs:complexType>
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="compositeElement"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="element"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="tag" use="required" type="xs:NCName"/>
+      <xs:attribute name="bind" use="optional" type="xs:string"/>
+      <xs:attribute name="minOccures" use="optional" type="xs:NCName"/>
+      <xs:attribute name="maxOccures" use="optional" type="xs:NCName"/>
+    </xs:complexType>
+</xs:element>
+  
+  <xs:element name="element">
+    <xs:complexType mixed="true">
+      <xs:attribute name="bind" use="optional" type="xs:string"/>
+      <xs:attribute name="elementStyle" use="optional" type="xs:NCName"/>
+      <xs:attribute name="href" type="xs:anyURI"/>
+      <xs:attribute name="name" use="optional" type="xs:NCName"/>
+      <xs:attribute name="tag" use="optional" type="xs:NCName"/>
+      <xs:attribute name="minOccures" use="optional" type="xs:NCName"/>
+      <xs:attribute name="maxOccures" use="optional" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

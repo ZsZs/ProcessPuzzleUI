@@ -843,7 +843,7 @@ JsHamcrest.Matchers.hasItem = function(matcherOrValue) {
   return new JsHamcrest.SimpleMatcher({
     matches: function(actual) {
       // Should be an array
-      if (!(actual instanceof Array)) {
+      if(!instanceOf( actual, Array )) {
         return false;
       }
 

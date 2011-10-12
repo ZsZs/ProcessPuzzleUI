@@ -10,6 +10,7 @@
 
     <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
+	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
     <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
     
 	<script language="JavaScript" src="../FundamentalTypes/WebUIException.js"></script>
@@ -21,6 +22,8 @@
 		window.addEvent('domready', function() {
 			runTestFunction();
 		});
+		
+		JsHamcrest.Integration.JsUnit();
 		
 		var sampleMap = null;
 		var ENTRY_ONE_KEY = "entryOneKey";
@@ -56,6 +59,14 @@
 			assertEquals( "Before 'clear' map's size is:", 3, sampleMap.size() );
 			sampleMap.clear();
 			assertEquals( "After 'clear' map's size is:", 0, sampleMap.size() );
+		}
+		
+		function testEach_PreservesInsertionOrder(){
+		   sampleMap.each( function( mapEntry, index ){
+		      if( index == 0 ) assertThat( mapEntry.getKey(), equalTo( ENTRY_ONE_KEY ));
+		      if( index == 1 ) assertThat( mapEntry.getKey(), equalTo( ENTRY_TWO_KEY ));
+		      if( index == 2 ) assertThat( mapEntry.getKey(), equalTo( ENTRY_THREE_KEY ));
+		   });
 		}
 		
 		function testFirst(){
@@ -95,7 +106,7 @@
 		//runs a test function during debugging
 		function runTestFunction(){
 			setUp();
-		    testNext();
+			testNext();
 			tearDown();
 		}
     </script>

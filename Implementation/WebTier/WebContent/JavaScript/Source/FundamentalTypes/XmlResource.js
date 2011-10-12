@@ -90,6 +90,10 @@ var XmlResource = new Class({
        return false;
    },
    
+   release : function(){
+      this.xmlDoc = null;
+   },
+   
    selectNode : function( selector, subNode ) {
       var selectedNodes = this.selectNodes( selector, subNode );
       if( selectedNodes )  return selectedNodes[0];
@@ -113,7 +117,7 @@ var XmlResource = new Class({
    selectNodeText : function( selector, subNode ) {
       var selectedElements = this.selectNodes( selector, subNode );
       if( selectedElements.length > 0 && selectedElements[0] ) {
-         return selectedElements[0].data;
+         return XmlResource.determineNodeText( selectedElements[0] );
       }else return null;
    }, 
    
