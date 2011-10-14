@@ -165,3 +165,5 @@ var DocumentElement = new Class({
       }
    }.protect()
 });
+
+DocumentElement.State = { INITIALIZED : 0, UNMARSHALLED : 1, CONSTRUCTED : 2 };

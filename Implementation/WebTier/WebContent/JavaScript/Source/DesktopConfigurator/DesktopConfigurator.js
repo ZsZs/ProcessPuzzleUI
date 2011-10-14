@@ -47,7 +47,7 @@ provides: [ProcessPuzzle.DesktopConfigurator]
 
 var DesktopConfigurator = new Class({
    Implements : [Options], 
-   Binds : ['createColumns', 'createHtmlElements', 'createPanels', 'createWindows', 'determineConfigurationStatus', 'initializeMUI', 'loadResources'],
+   Binds : ['createColumns', 'createHtmlElements', 'createPanels', 'createWindows', 'determineConfigurationStatus', 'initializeMUI', 'loadDocumentResources', 'onResourcesLoadReady'],
    options : {
       callChainDelay : 2000,
       componentName : "DesktopConfigurator",
@@ -55,6 +55,7 @@ var DesktopConfigurator = new Class({
       configurationURI : "DesktopConfiguration.xml",
       pluginOnloadDelay : 1000,
       resourceLoadTimeout : 5000,
+      resourcesSelector : "pp:desktopConfiguration/resources", 
       skin : "ProcessPuzzle",
       waitStep : 500
    },
@@ -76,23 +77,30 @@ var DesktopConfigurator = new Class({
 		this.logger = new WebUILogger( webUIConfiguration );
 		this.pendingResourcesCounter = 0;
 		this.resourceBundle = resourceBundle;
+		this.resources = null;
 		this.scripts = new ArrayList();
 		this.styleSheets = new ArrayList();
 		this.webUIConfiguration = webUIConfiguration;
 		
 		this.determineCurrentLocale();
 		this.loadI18Resources();
-		this.configureLogger();
-	},
+      this.configureLogger();
+      this.configurationChain.chain( 
+         this.loadDocumentResources,
+         this.createHtmlElements,
+         this.initializeMUI,
+         this.createColumns,
+         this.createPanels,
+         this.createWindows,
+         this.determineConfigurationStatus
+	  );
+   },
 		
 	//Public accessor and mutator methods
 	configure : function() {
-	   this.logger.group( this.options.componentName + ".configure", false );
-       this.logger.debug( "Configuration started." );
-	   this.createConfigurationChain();
+	   //this.logger.group( this.options.componentName + ".configure", false );
+       //this.logger.debug( "Configuration started." );
        this.configurationChain.callChain();
-       //this.waitForConfigurationReady( 0 );
-       this.logger.groupEnd();
 	},
 	
 	destroy : function() {
@@ -107,9 +115,15 @@ var DesktopConfigurator = new Class({
 	      this.isConfigured = false;
 	   }
        this.logger.groupEnd();
-	},
+   },
 	
+   onResourcesLoadReady: function(){
+      //this.logger.groupEnd();
+      this.configurationChain.callChain();      
+   },
+	   
    //Properties
+   getConfigurationChain : function() { return this.configurationChain; },
    getConfigurationXml : function() { return this.configurationXml; },
    getCurrentLocale : function() { return this.currentLocale; },
    getDesktop : function() { return this.desktop; },
@@ -121,8 +135,9 @@ var DesktopConfigurator = new Class({
    getHeaderElement : function() { return this.desktopStructure.getHeaderElement(); },
    getImages : function() { return this.images; },
    getInitializationChain : function() { return MUI.myChain; },
+   getResources : function() { return this.resources; },
    getScripts : function() { return this.scripts; },
-   getStyles : function() { return this.styleSheets; },
+   getStyles : function() { return this.resources.getStyleSheets(); },
 	
    //Private methods
    addAdHocElementsToDesktop : function( targetDesktopElement, sourceConfigurationElement ) {
@@ -411,6 +426,8 @@ var DesktopConfigurator = new Class({
 	}.protect(),
 	
    destroyResources : function() {
+      this.resources.release();
+      
       this.styleSheets.each( function( styleReference, index ){
          var linkElements = $$( "link[href='" + styleReference + "']" );
          linkElements.destroy();
@@ -477,43 +494,21 @@ var DesktopConfigurator = new Class({
       this.configurationChain.callChain();
    }.protect(),
    
+   loadDocumentResources: function(){
+      var resourcesElement = this.configurationXml.selectNode( this.options.resourcesSelector );
+      if( resourcesElement ) {
+         this.resources = new DocumentResources( resourcesElement );
+         this.resources.unmarshall();
+         this.resources.getResourceChain().chain( this.onResourcesLoadReady );
+         this.resources.load();
+      }
+   }.protect(),
+   
    loadI18Resources : function() {
       if( !this.resourceBundle.isLoaded )
          this.resourceBundle.load( this.currentLocale );
    }.protect(),
 	
-   loadResources : function() {
-      this.logger.group( this.options.componentName + ".loadResources", false );
-      for( var i = 0; i < this.desktopStructure.getStyleSheetElements().length; i++ ) {
-         var styleSheetUri = this.desktopStructure.getStyleSheetByIndex( i );
-         new RemoteStyleSheet( styleSheetUri, {
-            onReady: function( path, element ) {
-               if( this.pendingResourcesCounter == 7 )
-                  this.logger.group( "RemoteStyleSheet.onReady", false );
-               this.styleSheets.add( path );
-               this.logger.debug( "Stylesheet: '" + path + "' was added to the document." );
-               this.pendingResourcesCounter--;
-               if( this.pendingResourcesCounter == 0 ){
-                  this.logger.groupEnd();
-                  this.configurationChain.callChain();
-                  return;
-               }
-               //this.logger.groupEnd();
-            }.bind( this ),
-            
-            onError: function() {
-               throw new ResourceNotFoundException( styleSheetUri );
-            }.bind( this ),
-            
-            onStart: function() {
-               this.pendingResourcesCounter++;
-               this.logger.debug( "Started to add: '" + styleSheetUri + "' to the document." );
-            }.bind( this )
-         }).start();
-      }
-      this.logger.groupEnd();
-   }.protect(),
-   
    presetOptionsBasedOnWebUIConfiguration : function( webUIConfiguration ){
       if( webUIConfiguration != 'undefined' && webUIConfiguration != null ){
          this.options.skin = webUIConfiguration.getDefaultSkin();

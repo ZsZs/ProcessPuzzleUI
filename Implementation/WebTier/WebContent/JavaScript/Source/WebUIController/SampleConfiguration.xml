@@ -40,7 +40,7 @@
 		
 		<wui:logging>
 			<wui:loggers>
-				<wui:logger name="WebUI" level="debug" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="WebUI" level="info" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
 				<wui:logger name="ProcessPuzzle" level="info"><wui:appenderReference name="xmlAjaxAppender"/></wui:logger>
 				<wui:logger name="LoggerForUnitTest" level="info" isDefault="true"><wui:appenderReference name="formattedInPageAppender"/></wui:logger>
 			</wui:loggers>
@@ -64,6 +64,7 @@
                               requestSuccessCallback="function() { alert('Log was successfully sent') };"
                               failCallback="function() {alert('Logging error occured.')}"
                               threshold="info"/>
+                              
 				<wui:popUpAppender name="formattedPopUpAppender"
                                layoutReference="formattedLayout" 
                                commandLineObjectExpansionDepth="10"

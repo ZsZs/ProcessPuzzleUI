@@ -37,8 +37,23 @@ var DocumentScript = new Class({
    //Public mutators and accessor methods
    load: function(){
       this.parent();
-      this.resourceChain.callChain();
+      this.loadScript();
+   },
+
+   release: function(){
+      this.parent();
    },
 
    //Properties
+   
+   //Protected, private helper methods
+   loadScript: function(){
+      Asset.javascript( this.resourceUri, {
+         id: this.id,
+         onLoad: function(){
+            this.htmlElement = $$("script[src='" + this.resourceUri + "']");
+            this.resourceChain.callChain();
+         }.bind( this )
+     });      
+   }.protect()
 });

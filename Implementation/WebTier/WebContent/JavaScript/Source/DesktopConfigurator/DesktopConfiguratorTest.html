@@ -61,6 +61,11 @@
 	<script type="text/javascript" src="../LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
 	<script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
 	<script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
 	<script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
 	<script type="text/javascript" src="../TabWidget/Tab.js"></script>
 	<script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
@@ -109,31 +114,81 @@
   	  var desktopElement;
   	  var desktopConfigurator;
   	  var resourceBundle;
+      var testCaseChain = new Chain();
       var testWindow;
   	  var webUIConfiguration;
       var webUILogger = null;
   	  var webUIController;
 
-      function setUp() {
-        if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-        else testWindow = window;
+      function callTestCaseChain(){
+         testCaseChain.callChain();
+      }
+		
+      function beforeEachTest() {
+         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
+         else testWindow = window;
         
-        webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-		webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : "../WebUIController/SampleConfiguration.xml" }, testWindow );
-        resourceBundle = new XMLResourceBundle( webUIConfiguration );
-      	desktopElement = $( DESKTOP_ELEMENT_ID );
+         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+		 webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : "../WebUIController/SampleConfiguration.xml" }, testWindow );
+         resourceBundle = new XMLResourceBundle( webUIConfiguration );
+      	 desktopElement = $( DESKTOP_ELEMENT_ID );
+      	
+         testCaseChain.callChain();
+      }
+      
+      function instantiateConfiguratorWithEmptyConfiguration(){
+       	 desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
+       	 desktopConfigurator.getConfigurationChain().chain( callTestCaseChain );
+         testCaseChain.callChain();
+      }
+      
+      function instantiateConfiguratorWithHeaderOnlyConfiguration(){
+       	 desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
+       	 desktopConfigurator.getConfigurationChain().chain( callTestCaseChain );
+         testCaseChain.callChain();
+      }
+      
+      function instantiateConfiguratorWithDockerOnlyConfiguration(){
+       	 desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : DOCKER_ONLY_CONFIGURATION_PATH } );
+       	 desktopConfigurator.getConfigurationChain().chain( callTestCaseChain );
+         testCaseChain.callChain();
+      }
+      
+      function instantiateConfiguratorWithFullConfiguration(){
+         desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH } );
+       	 desktopConfigurator.getConfigurationChain().chain( callTestCaseChain );
+         testCaseChain.callChain();
+      }
+      
+      function instantiateConfiguratorWithFooterOnlyConfiguration(){
+       	 desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FOOTER_ONLY_CONFIGURATION_PATH } );
+       	 desktopConfigurator.getConfigurationChain().chain( callTestCaseChain );
+         testCaseChain.callChain();
+      }
+      
+      function configureDesktopConfigurator(){
+       	desktopConfigurator.configure();
       }
 
-      function tearDown() {
-      	if( desktopConfigurator ) desktopConfigurator.destroy();
-      	if( webUIController.isConfigured ) webUIController.destroy();
-		desktopConfigurator = null;
+      function afterEachTest() {
+      	 if( desktopConfigurator ) desktopConfigurator.destroy();
+      	 if( webUIController.isConfigured ) webUIController.destroy();
+		 desktopConfigurator = null;
+		 
+         testCaseChain.callChain();
       }
 
       function testInitialization_WhenOptionsAreGiven() {
-        desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
-      	
-		assertTrue( "Desktop Configurator ...", true );
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithEmptyConfiguration,
+		       initialization_WhenOptionsAreGiven, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function initialization_WhenOptionsAreGiven() {
+ 		assertTrue( "Desktop Configurator ...", true );
 		assertEquals( "Options overrides 'webUIConfiguration'", EMPTY_CONFIGURATION_PATH, desktopConfigurator.options.configurationURI );
 		assertNotNull( ".. loads xml desktop configuration.", desktopConfigurator.getConfigurationXml() ); 
 		assertEquals( ".. locates desktop element.", desktopElement, desktopConfigurator.getDesktopElement() );
@@ -153,28 +208,38 @@
       }
       
       function testConfigure_LoadsResources() {
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
-
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithEmptyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_LoadsResources, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_LoadsResources() {
       	//VERIFY:
 		assertTrue( "Desktop Configurator ...", true );
- 		assertEquals( "... maintains a list of styles sheets specified by the configuration:", 7, desktopConfigurator.getStyles().size() );
+ 		assertEquals( "... maintains a list of styles sheets specified by the configuration:", 8, desktopConfigurator.getResources().getResources().size() );
  		desktopConfigurator.getStyles().each( function( styleReference, index ){
- 			var linkElement = $$("link[href='" + styleReference + "']");
+ 			var linkElement = $$("link[href='" + styleReference.getResourceUri() + "']");
  			assertEquals( "... links style sheet to the current document.", 1, linkElement.length );
  		});
+ 		
+        testCaseChain.callChain();
       }
       
       function testConfigure_CreatesDocumentContainer() {
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : EMPTY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
-
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithEmptyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_CreatesDocumentContainer, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_CreatesDocumentContainer() {
       	//VERIFY:
 		assertTrue( "Desktop Configurator ...", true );
       	assertNotNull( ".. creates a DIV element for Document Container.", desktopElement.getElementById( DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID ) );
@@ -184,12 +249,16 @@
       }
       
       function testConfigure_WhenHeaderIsSpecified_CreatesHierarchyOfDivisions() {
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithHeaderOnlyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_WhenHeaderIsSpecified_CreatesHierarchyOfDivisions, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_WhenHeaderIsSpecified_CreatesHierarchyOfDivisions() {
       	//VERIFY:
 		var headerElement = desktopElement.getElementById( DESKTOP_HEADER_ELEMENT_ID );
 		assertTrue( "Desktop Configurator ...", true );
@@ -212,12 +281,16 @@
       }
       
       function testConfigure_WhenAdhocElementsAreSpecified() {
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithHeaderOnlyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_WhenAdhocElementsAreSpecified, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_WhenAdhocElementsAreSpecified() {
       	//VERIFY:
 		var headerElement = desktopElement.getElementById( DESKTOP_HEADER_ELEMENT_ID );
 		var headerElement = desktopElement.getElementById( DESKTOP_HEADER_ELEMENT_ID );
@@ -235,13 +308,16 @@
       }
       
       function testConfigure_WhenPluginIsSpecified_LoadsIt() {
-      	//SETUP:
-		var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : "../WebUIController/SampleConfiguration.xml" });
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithHeaderOnlyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_WhenPluginIsSpecified_LoadsIt, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_WhenPluginIsSpecified_LoadsIt() {
       	//VERIFY:
 		var menuElement = desktopElement.getElementById( DESKTOP_HEADER_MENU_ID );
 		assertTrue( "Desktop Configurator ...", true );
@@ -254,12 +330,16 @@
       }
       
       function testConfigure_WhenWindowDockerIsSpecified_CreatesHierarchyOfDivisions() {
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : DOCKER_ONLY_CONFIGURATION_PATH } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithDockerOnlyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_WhenWindowDockerIsSpecified_CreatesHierarchyOfDivisions, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_WhenWindowDockerIsSpecified_CreatesHierarchyOfDivisions() {
       	//VERIFY:
 		assertTrue( "Desktop Configurator ...", true );
 		var windowDockerElement = desktopElement.getElementById( DESKTOP_DOCKER_WRAPPER_ELEMENT_ID );
@@ -280,12 +360,16 @@
       }
       
       function testConfigure_WhenPanelHeaderIsSpecified_InsertsDivAndRunsPlugins(){
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithFullConfiguration,
+		       configureDesktopConfigurator,
+		       configure_WhenPanelHeaderIsSpecified_InsertsDivAndRunsPlugins, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_WhenPanelHeaderIsSpecified_InsertsDivAndRunsPlugins(){
       	//VERIFY:
 		assertTrue( "Desktop Configurator - when Panel Header is specified - ...", true );
 		var panelHeaderElement = desktopElement.getElement( 'div#documents-panel_headerToolbox' );
@@ -295,12 +379,16 @@
       }
       
       function testConfigure_WhenFooterIsSpecified_CreatesHierarchyOfDivisions() {
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FOOTER_ONLY_CONFIGURATION_PATH } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithFooterOnlyConfiguration,
+		       configureDesktopConfigurator,
+		       configure_WhenFooterIsSpecified_CreatesHierarchyOfDivisions, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_WhenFooterIsSpecified_CreatesHierarchyOfDivisions() {
       	//VERIFY:
 		assertTrue( "Desktop Configurator ...", true );
 		var footerElement = desktopElement.getElementById( DESKTOP_FOOTER_ELEMENT_ID );
@@ -314,13 +402,16 @@
       }
       
       function testConfigure_CreatesColumns() {
-      	inform( "testConfigure_CreatesColumns() started" );
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithFullConfiguration,
+		       configureDesktopConfigurator,
+		       configure_CreatesColumns, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_CreatesColumns() {
       	//VERIFY:
       	assertEquals( "Number of columns is:", 3, desktopConfigurator.getDesktopColumns().size() );
       	var leftColumn = desktopConfigurator.getDesktopColumns().get(0);
@@ -335,13 +426,16 @@
       }
       
       function testConfigure_CreatesPanels() {
-      	inform( "testConfigure_CreatesPanels() started" );
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : FULL_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
-      	
-      	//EXCERCISE:
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithFullConfiguration,
+		       configureDesktopConfigurator,
+		       configure_CreatesPanels, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function configure_CreatesPanels() {
       	//VERIFY:
       	assertEquals( "Number of panels is:", 5, desktopConfigurator.getDesktopPanels().size() );
       	
@@ -351,22 +445,26 @@
 		assertEquals( '../DesktopConfigurator/plugins/tree/css/style.css', require.css[0] );
 		assertEquals( '../DesktopConfigurator/plugins/tree/scripts/tree.js', require.js[0] );
 		var onloadScript = require.onload;
-//		onloadScript();
 		
       	var documentPanel = desktopConfigurator.getDesktopPanels().get(1)
 		assertEquals( "Panel's content url is:", DOCUMENT_PANEL_CONTENT_URL, documentPanel.options.contentURL );
 		      	
       	var consolePanel = desktopConfigurator.getDesktopPanels().get(2)
       	assertEquals( "Panel's 'title' is:", this.resourceBundle.getText( "DesktopConfigurator.Panel.consoleTitle" ), consolePanel.options.title );
-      	assertEquals( "Panes's height is: ", 100, consolePanel.options.height );
-      	
+      	assertEquals( "Panes's height is: ", 100, consolePanel.options.height );      	
       }
       
       function testDestroy_RemovesAllHtmlElements(){
-      	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle );
-      	desktopConfigurator.configure();
-      	
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithFullConfiguration,
+		       configureDesktopConfigurator,
+		       destroy_RemovesAllHtmlElements, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function destroy_RemovesAllHtmlElements(){
       	//EXCERCISE:
       	desktopConfigurator.destroy();
       	
@@ -378,9 +476,17 @@
       }
       
       function testDestroy_RemovesAllResources(){
+		 testCaseChain.chain( 
+		       beforeEachTest, 
+		       instantiateConfiguratorWithHeaderOnlyConfiguration,
+		       configureDesktopConfigurator,
+		       destroy_RemovesAllResources, 
+		       afterEachTest 
+		 ).callChain();
+      }
+      
+      function destroy_RemovesAllResources(){
       	//SETUP:
-      	desktopConfigurator = new DesktopConfigurator( webUIConfiguration, resourceBundle, { configurationURI : HEADER_ONLY_CONFIGURATION_PATH, desktopElementId : DESKTOP_ELEMENT_ID } );
-      	desktopConfigurator.configure();
       	var loadedStyleSheets = desktopConfigurator.getStyles().clone();
       	var loadedImages = desktopConfigurator.getImages().clone();
       	var loadedScripts = desktopConfigurator.getScripts().clone();
@@ -416,9 +522,9 @@
       
       //runs a test function during debugging
       function runTestFunction(){
-	    setUp();
-	    testConfigure_CreatesDocumentContainer();
-		tearDown();
+	    //setUp();
+	    testInitialization_WhenOptionsAreGiven();
+		//tearDown();
 	  }
 
     </script>
@@ -427,6 +533,5 @@
 
 <body>
 	<div id='desktop'></div>
-	<div id="JavaScriptLogging"></div>
 </body>
 </html>

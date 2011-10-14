@@ -59,6 +59,6 @@ var DocumentResource = new Class({
    //Properties
    getId: function() { return this.htmlElement.get( 'id' ); },
    getResourceType: function() { return this.options.type; },
-   getResourceUri: function() { return resourceUri; },
+   getResourceUri: function() { return this.resourceUri; },
    setResourceChain: function( resourceChain ) { this.resourceChain = resourceChain; }
 });

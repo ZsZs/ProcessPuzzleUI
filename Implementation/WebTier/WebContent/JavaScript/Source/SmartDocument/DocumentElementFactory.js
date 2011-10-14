@@ -38,6 +38,12 @@ var DocumentElementFactory = new Class({
       switch( definitionXmlElement.tagName.toUpperCase() ){
       case "COMPOSITEELEMENT": 
          newDocumentElement = new CompositeDocumentElement( definitionXmlElement, bundle, data, index ); break;
+      case "DOCUMENTBODY": 
+         newDocumentElement = new DocumentBody( definitionXmlElement, bundle, data ); break;
+      case "DOCUMENTFOOTER": 
+         newDocumentElement = new DocumentFooter( definitionXmlElement, bundle, data ); break;
+      case "DOCUMENTHEADER": 
+         newDocumentElement = new DocumentHeader( definitionXmlElement, bundle, data ); break;
       case "ELEMENT":
       default:
          newDocumentElement = new DocumentElement( definitionXmlElement, bundle, data, index ); break;

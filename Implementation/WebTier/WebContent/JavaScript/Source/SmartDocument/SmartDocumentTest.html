@@ -36,6 +36,7 @@
 	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
     <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
 	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
@@ -45,8 +46,12 @@
 	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
 	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
 	<script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
 	<script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
 	<script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
 	<script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
 	<script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
 	<script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
@@ -128,8 +133,7 @@
 		   smartDocument.unmarshall();
 		   
 		   //VERIFY:
-		   var associatedResources = smartDocument.getResources();
-		   assertThat( associatedResources.size(), equalTo( 3 ));
+		   assertThat( smartDocument.getResources().getResources().size(), equalTo( 3 ));
 		}
 		
 		function testUnmarshall_SetsUpResourceChain(){
@@ -138,14 +142,38 @@
 		   smartDocument.unmarshall();
 		   
 		   //VERIFY:
-		   assertThat( smartDocument.getResourceChain(), not( nil() ));
+		   assertThat( smartDocument.getResources().getResourceChain(), not( nil() ));
+		}
+		
+		function testUnmarshall_UnmarshallsHeaderBodyAndFooter(){
+		   //SETUP: see setUp()
+		   //EXCERCISE:
+		   smartDocument.unmarshall();
+		   
+		   //VERIFY:
+		   assertThat( smartDocument.getHeader().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
+		   assertThat( smartDocument.getBody().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
+		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
+		}
+		
+		function testConstruct_ConstructsHeaderBodyAndFooter(){
+		   //SETUP: see also setUp()
+		   smartDocument.unmarshall();
+		
+		   //EXCERCISE:
+		   smartDocument.construct();
+		   
+		   //VERIFY:
+		   assertThat( smartDocument.getHeader().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
+		   assertThat( smartDocument.getBody().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
+		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
 		}
 		
 		//runs a test function during debugging
 		function runTestFunction(){
 			setUp();
-			testUnmarshall_DeterminesDefintionProperties();
-			tearDown();
+			testConstruct_ConstructsHeaderBodyAndFooter();
+			//tearDown();
 		}
     </script>
 </head>

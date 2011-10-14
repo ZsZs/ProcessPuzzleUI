@@ -74,36 +74,64 @@
 		var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
 		var IMAGE_ID = "logoImage";
 		var IMAGE_URI = "../SmartDocument/Images/ProcessPuzzleLogo.jpg";
+		var SCRIPT_URI = "../SmartDocument/DummyScript.js";
 		var STYLE_SHEET_URI = "../SmartDocument/SmartDocument.css";
 		var documentDefinition = null;
 		var documentResources = null;
 		var webUIConfiguration = null;
 		var webUILogger = null;
 		
-		var testCaseChain = null;
+		var testCaseChain = new Chain();
 		
-		function setUp(){
+		function callTestCaseChain(){
+		   testCaseChain.callChain();
+		}
+		
+		function beforeEachTest(){
 		   webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
 		   webUILogger = new WebUILogger( webUIConfiguration );
 		   
 		   documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
-	       documentResources = new DocumentResources( documentDefinition );	       
+	       documentResources = new DocumentResources( documentDefinition.selectNode( "smartDocumentDefinition/documentResources" ) );
+	       
+	       testCaseChain.callChain();
+		}
+		
+		function beforeResourcesLoad(){
+		   documentResources.unmarshall();
+	       testCaseChain.callChain();
 		}
 
-		function tearDown(){
+		function resourcesLoad(){
+		   documentResources.getResourceChain().chain( callTestCaseChain );
+		   documentResources.load();
+		}
+
+		function afterEachTest(){
 		   documentResources.release();
 		   documentResources = null;
 
 		   documentDefinition.release();
 		   documentDefinition = null;
+	       
+	       testCaseChain.clearChain();
 		}
 		
 		function testInitialize() {
-			assertThat( documentResources, not( nil() ));
-			assertThat( documentResources.getResources(), not( nil() ));
+		   testCaseChain.chain( beforeEachTest, initialize_InstantiatesResourcesCollection, afterEachTest ).callChain();
+		}
+		
+		function initialize_InstantiatesResourcesCollection(){
+		   assertThat( documentResources, not( nil() ));
+		   assertThat( documentResources.getResources(), not( nil() ));
+		   testCaseChain.callChain();
 		}
 		
 		function testUnmarshall_DeterminesResources(){
+		   testCaseChain.chain( beforeEachTest, unmarshall_DeterminesResources, afterEachTest ).callChain();
+		}
+		
+		function unmarshall_DeterminesResources(){
 		   //SETUP: see setUp()
 		   //EXCERCISE:
 		   documentResources.unmarshall();
@@ -114,6 +142,10 @@
 		}
 		
 		function testUnmarshall_SetsUpResourceChain(){
+		   testCaseChain.chain( beforeEachTest, unmarshall_SetsUpResourceChain, afterEachTest ).callChain();
+		}
+		
+		function unmarshall_SetsUpResourceChain(){
 		   //SETUP: see setUp()
 		   //EXCERCISE:
 		   documentResources.unmarshall();
@@ -124,61 +156,59 @@
 		}
 		
 		function testLoad_LoadsStyleSheets(){
-		   //SETUP: see setUp()
-		   documentResources.unmarshall();
-		
-		   //EXCERCISE:
-		   documentResources.load();
-		
-		   //VERIFY:
-		   verify_LoadedStyleSheets();
+		   testCaseChain.chain( beforeEachTest, beforeResourcesLoad, resourcesLoad, load_LoadsStyleSheets, afterEachTest ).callChain();
 		}
-		
-		function verify_LoadedStyleSheets(){
+
+		function load_LoadsStyleSheets(){
  		   var linkElement = $$("link[href='" + STYLE_SHEET_URI + "']");
 		   assertThat( linkElement, not( nil() ));
 		   assertThat( linkElement.length, equalTo( 1 ));
+
+		   testCaseChain.callChain();
 		}
-		
+
 		function testLoad_LoadsImages(){
-		   //SETUP: see setUp()
-		   documentResources.unmarshall();
-		
-		   //EXCERCISE:
-		   documentResources.load();
-		
-		   //VERIFY:
-		   documentResources.getResourceChain().chain( verify_LoadedImages );
-		   documentResources.getResourceChain().chain( tearDown );
+		   testCaseChain.chain( beforeEachTest, beforeResourcesLoad, resourcesLoad, load_LoadsImages, afterEachTest ).callChain();
 		}
 		
-		function verify_LoadedImages(){
+		function load_LoadsImages(){
+		   //VERIFY:
  		   var imageElement = document.getElementById( IMAGE_ID );
-		   assertThat( imageElement, not( nil() ));
-		   assertThat( imageElement.length, equalTo( 1 ));
+		   //assertThat( imageElement, not( nil() ));
+		   //assertThat( imageElement.length, equalTo( 1 ));
 		   
-		   documentResources.getResourceChain().callChain();
+		   testCaseChain.callChain();
+		}
+		
+		function testLoad_LoadsScripts(){
+		   testCaseChain.chain( beforeEachTest, beforeResourcesLoad, resourcesLoad, load_LoadsScipts, afterEachTest ).callChain();
+		}
+		
+		function load_LoadsScipts(){
+ 		   var scriptElement = $$("script[src='" + SCRIPT_URI + "']");
+		   assertThat( scriptElement, not( nil() ));
+		   assertThat( scriptElement.length, equalTo( 1 ));
+		   
+		   testCaseChain.callChain();
 		}
 		
 		function testRelease_DestroysLoadedElements(){
-		   //SETUP: see setUp()
-		   documentResources.unmarshall();
-		   documentResources.load();
-		   assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 1 ));
+		   testCaseChain.chain( beforeEachTest, beforeResourcesLoad, resourcesLoad, release_DestroysLoadedElements, afterEachTest ).callChain();
+		}
 		
-		   //EXCERCISE:
+		function release_DestroysLoadedElements(){
+		   assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 1 ));
 		   documentResources.release();		   
-		   
-		   //VERIFY:
 		   assertThat( documentResources.getResources().size(), equalTo( 0 ));
 		   assertThat( documentResources.getResourceChain().$chain.length, equalTo( 0 ));
+		   testCaseChain.callChain();
 		}
 		
 		//runs a test function during debugging
 		function runTestFunction(){
-			setUp();
-			testLoad_LoadsImages();
-			//tearDown();
+			//beforeEachTest();
+			testLoad_LoadsScripts();
+			//afterEachTests();
 		}
     </script>
 </head>

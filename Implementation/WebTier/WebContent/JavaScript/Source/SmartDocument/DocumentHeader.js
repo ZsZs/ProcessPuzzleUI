@@ -38,8 +38,8 @@ var DocumentHeader = new Class({
    
    //Public mutators and accessor methods
    unmarshall: function(){
-      this.unmarshallHeaderProperties();
-   },
+      this.parent();
+   }
 
    //Properties
 });

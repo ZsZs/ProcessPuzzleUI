@@ -29,9 +29,9 @@ var DocumentResources = new Class({
    Binds: ['onResourcesLoadReady'],   
 
    options: {
-      documentImagesSelector: "smartDocumentDefinition/documentResources/images/image",
-      documentScriptsSelector: "smartDocumentDefinition/documentResources/javascripts/javascript",
-      documentStyleSheetsSelector: "smartDocumentDefinition/documentResources/styleSheets/styleSheet",
+      documentImagesSelector: "//images/image",
+      documentScriptsSelector: "//javascripts/javascript",
+      documentStyleSheetsSelector: "//styleSheets/styleSheet",
       type : null
    },
    
@@ -41,6 +41,7 @@ var DocumentResources = new Class({
       this.resourceUri = null;
       this.resourceChain = new Chain();
       this.resources = new ArrayList();
+      this.styleSheets = new ArrayList();
    },
    
    //Public mutators and accessor methods
@@ -61,6 +62,7 @@ var DocumentResources = new Class({
          documentResource.release();
       }, this );
       
+      this.styleSheets.clear();
       this.resources.clear();
       this.resourceChain.clearChain();
    },
@@ -75,6 +77,7 @@ var DocumentResources = new Class({
    getResources: function() { return this.resources; },
    getResourceType: function() { return this.options.type; },
    getResourceUri: function() { return resourceUri; },
+   getStyleSheets: function() { return this.styleSheets; },
    
    //Protected, private helper methods
    configureResourceChain: function() {
@@ -90,6 +93,7 @@ var DocumentResources = new Class({
          var documentResource = new resourceClass( resourceElement );
          documentResource.unmarshall();
          this.resources.add( documentResource );
+         if( instanceOf( documentResource, DocumentStyleSheet )) this.styleSheets.add( documentResource );
       }, this );
    }.protect(),
    

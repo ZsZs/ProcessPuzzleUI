@@ -1,12 +1,12 @@
 /*
-Name: DocumentImage
+Name: DocumentFooter
 
-Description: Represents an element in the <resources> part of the SmartDocumentDefinition.
+Description: Represents the body component of a SmartDocument.
 
 Requires:
 
 Provides:
-    - DocumentImage
+    - DocumentFooter
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -24,47 +24,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var DocumentImage = new Class({
-   Extends: DocumentResource,
-   Binds: ['load'],
+var DocumentFooter = new Class({
+   Extends: CompositeDocumentElement,
    
    options: {
-      titleSelector : "@title"
    },
    
    //Constructor
-   initialize: function( resourceElement ){
-      this.options.type = "Image";
-      this.parent( resourceElement );
-      this.title = null;
+   initialize: function( headerDefinitionElement, bundle, data ){
+      this.options.type = "DocumentFooter";
+      this.parent( headerDefinitionElement, bundle, data );
    },
    
    //Public mutators and accessor methods
-   load: function(){
-      this.parent();
-      this.loadImage();
-   },
-
-   release: function(){
-      this.parent();
-   },
-
    unmarshall: function(){
       this.parent();
-      this.title = XmlResource.selectNodeText( this.options.titleSelector, this.resourceElement );
-   },
+   }
 
    //Properties
-   getTitle: function() { return this.title; },
-   
-   //Protected, private helper methods
-   loadImage: function(){
-      Asset.image( this.resourceUri, {
-         id: this.id,
-         title: this.title,
-         onLoad: function(){
-            this.resourceChain.callChain();
-         }.bind( this )
-     });      
-   }.protect()
 });

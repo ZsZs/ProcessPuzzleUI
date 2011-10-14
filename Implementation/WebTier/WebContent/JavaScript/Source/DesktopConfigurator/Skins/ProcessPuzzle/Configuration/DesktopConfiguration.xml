@@ -19,7 +19,7 @@
 			<styleSheet>../DesktopConfigurator/Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
 		</styleSheets>
 		<images></images>
-		<scripts></scripts>
+		<javascripts></javascripts>
 	</resources>
 	
 	<header tag="div" name="desktopHeader">
