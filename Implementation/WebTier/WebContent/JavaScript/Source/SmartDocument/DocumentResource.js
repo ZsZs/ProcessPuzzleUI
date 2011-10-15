@@ -44,7 +44,6 @@ var DocumentResource = new Class({
    
    //Public mutators and accessor methods
    load: function(){
-      //this.resourceChain.callChain();
    },
    
    release: function(){

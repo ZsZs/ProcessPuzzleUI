@@ -47,7 +47,7 @@ provides: [ProcessPuzzle.DesktopConfigurator]
 
 var DesktopConfigurator = new Class({
    Implements : [Options], 
-   Binds : ['createColumns', 'createHtmlElements', 'createPanels', 'createWindows', 'determineConfigurationStatus', 'initializeMUI', 'loadDocumentResources', 'onResourcesLoadReady'],
+   Binds : ['createColumns', 'createHtmlElements', 'createPanels', 'createWindows', 'initializeMUI', 'loadDocumentResources', 'onConfigurationReady', 'onResourcesLoadReady'],
    options : {
       callChainDelay : 2000,
       componentName : "DesktopConfigurator",
@@ -61,29 +61,29 @@ var DesktopConfigurator = new Class({
    },
 	
 	//Constructor
-	initialize : function( webUIConfiguration, resourceBundle, options ) {
-	    this.presetOptionsBasedOnWebUIConfiguration( webUIConfiguration );
-		this.setOptions( options );
+   initialize : function( webUIConfiguration, resourceBundle, options ) {
+      this.presetOptionsBasedOnWebUIConfiguration( webUIConfiguration );
+      this.setOptions( options );
 
 	//Private instance variables
-		this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
-		this.configurationChain = new Chain();
-		this.desktop = null;
-		this.desktopStructure = new DesktopStructure( options, this.configurationXml );
-		this.dock = null;
-		this.images = new ArrayList();
-		this.isConfigured = false;
-		this.currentLocale = null;
-		this.logger = new WebUILogger( webUIConfiguration );
-		this.pendingResourcesCounter = 0;
-		this.resourceBundle = resourceBundle;
-		this.resources = null;
-		this.scripts = new ArrayList();
-		this.styleSheets = new ArrayList();
-		this.webUIConfiguration = webUIConfiguration;
+      this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
+      this.configurationChain = new Chain();
+      this.desktop = null;
+      this.desktopStructure = new DesktopStructure( options, this.configurationXml );
+      this.dock = null;
+      this.images = new ArrayList();
+      this.isConfigured = false;
+      this.currentLocale = null;
+      this.logger = new WebUILogger( webUIConfiguration );
+      this.pendingResourcesCounter = 0;
+      this.resourceBundle = resourceBundle;
+      this.resources = null;
+      this.scripts = new ArrayList();
+      this.styleSheets = new ArrayList();
+      this.webUIConfiguration = webUIConfiguration;
 		
-		this.determineCurrentLocale();
-		this.loadI18Resources();
+      this.determineCurrentLocale();
+      this.loadI18Resources();
       this.configureLogger();
       this.configurationChain.chain( 
          this.loadDocumentResources,
@@ -92,14 +92,14 @@ var DesktopConfigurator = new Class({
          this.createColumns,
          this.createPanels,
          this.createWindows,
-         this.determineConfigurationStatus
+         this.onConfigurationReady
 	  );
    },
 		
 	//Public accessor and mutator methods
 	configure : function() {
-	   //this.logger.group( this.options.componentName + ".configure", false );
-       //this.logger.debug( "Configuration started." );
+	   this.logger.group( this.options.componentName + ".configure", false );
+       this.logger.debug( "Configuration started." );
        this.configurationChain.callChain();
 	},
 	
@@ -116,9 +116,14 @@ var DesktopConfigurator = new Class({
 	   }
        this.logger.groupEnd();
    },
+   
+   onConfigurationReady: function(){
+      this.isConfigured = true;
+      this.logger.groupEnd();
+      this.configurationChain.callChain();      
+   },
 	
    onResourcesLoadReady: function(){
-      //this.logger.groupEnd();
       this.configurationChain.callChain();      
    },
 	   
@@ -451,15 +456,6 @@ var DesktopConfigurator = new Class({
       this.getDesktopWindows().clear();
    }.protect(),
 	
-   determineConfigurationStatus: function() {
-      this.logger.group( this.options.componentName + "determineConfigurationStatus", false );
-      
-      this.isConfigured = true;
-
-      this.logger.groupEnd( "determineConfigurationStatus" );
-      this.configurationChain.callChain();
-   }.protect(),
-   
    determineCurrentLocale : function() {
 	   if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
 	   else {

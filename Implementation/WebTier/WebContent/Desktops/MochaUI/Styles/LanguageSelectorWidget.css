@@ -1,6 +1,7 @@
 @CHARSET "UTF-8";
 
 #LanguageSelectorWidget {
+	float: right;
 	height: 30px;
 	line-height: normal;
 	overflow: hidden;

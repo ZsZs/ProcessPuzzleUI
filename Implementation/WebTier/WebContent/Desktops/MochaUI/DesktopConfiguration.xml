@@ -34,7 +34,7 @@
 			<elements>
 				<element tag="div" id="HorizontalMenuBar">
 					<plugin>{ 'css': ['Desktops/MochaUI/Styles/HorizontalMenuLayout.css'], 
-							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', componentName : 'HorizontalMenuBar' }).configure();} }
+							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', componentName : 'HorizontalMenuBar', showSubItems : true }).configure();} }
 					</plugin>
 				</element>
 				<element tag="div" id="LanguageSelectorWidget">

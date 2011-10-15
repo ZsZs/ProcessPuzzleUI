@@ -1,57 +1,114 @@
 @CHARSET "UTF-8";
 
-#HorizontalMenuBar {
-	position: relative;
-	left: 0px;
+/* Specified the menu widget container's properties */
+div#HorizontalMenuBar {
+	border: 0px;
 	height: 30px;
-	width: 100%;
+	left: 0px;
 	line-height: normal;
-	visibility: visible;
-	overflow: hidden;
-}
-
-#HorizontalMenuBar ul {
 	margin: 0px;
-	padding: 0px;
-	list-style-type: none;
 	overflow: hidden;
-}
-
-#HorizontalMenuBar li {
-	float: left;
-	margin-left: 3px;
-	margin-right: -8px;
 	padding: 0px;
+	position: relative;
+	visibility: visible;
+	width: 100%;
 }
 
-#HorizontalMenuBar a {
+/* Removes the bullets and resets the margin and padding. */
+div#HorizontalMenuBar ul {
+	list-style: none;
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+}
+
+div#HorizontalMenuBar li {
+	float: left;
+}
+
+div#HorizontalMenuBar a {
 	display: block;
-	margin-left: -9px;
-	margin-right: -9px;
-	padding-left: 25px;
-	padding-right: 25px;
-	padding-bottom: 8px;
-	padding-top: 8px;
-	color: black;
 	text-decoration: none;
+}	
+	
+/* First level submenu properties. */
+div#HorizontalMenuBar li ul {
+	background: #fff url(../Images/bg-dropdown.gif) repeat-y;
+	border: 1px solid #3f3f3f;
+	left: -999em;
+	margin-left:-1px;
+	padding: 2px;
+	position: absolute;
+	width:130px;
+	z-index: 8000;
+}
+
+div#HorizontalMenuBar ul li a {
+	color: #333;
 	font-weight: normal;
+	padding: 6px 10px 6px 10px;	
 }
 
-#HorizontalMenuBar li a:hover {
-	color: blue;
+div#HorizontalMenuBar ul li a:hover {
+	color: #333;
 }
 
-#HorizontalMenuBar .selectedMenuItem {
-	color: yellow;
-	margin-left: 3px;
-	margin-right: -7px;
+div#HorizontalMenuBar ul li a.arrow-right, div#HorizontalMenuBar ul li a:hover.arrow-right {
+   background-image: url(../Images/arrow-right.gif);
+   background-repeat: no-repeat;
+   background-position: right 7px;  
+} 
+
+div#HorizontalMenuBar li:hover ul ul,
+div#HorizontalMenuBar li.ieHover ul ul,
+div#HorizontalMenuBar li:hover ul ul ul,
+div#HorizontalMenuBar li.ieHover ul ul ul {
+	left: -999em;
 }
 
-#HorizontalMenuBar .selectedMenuItem a {
-	margin-left: -9px;
-	margin-right: -9px;
-	padding-left: 25px;
-	padding-right: 25px;
-	padding-bottom: 8px;
-	padding-top: 8px
+div#HorizontalMenuBar li ul ul { /* third-and-above-level lists */
+	margin: -22px 0 0 163px;
+}
+
+div#HorizontalMenuBar li ul li .check {
+   position: absolute;
+   top: 8px;
+   left: 6px;
+   width: 5px;
+   height: 5px;
+   background: #555;
+   overflow: hidden;
+   line-height: 1px;
+   font-size: 1px;
+}
+
+div#HorizontalMenuBar li ul li a {
+	color: #3f3f3f;
+	font-weight: normal;	
+	position: relative;
+	padding: 1px 9px 1px 25px;
+	width: 130px;
+}
+
+div#HorizontalMenuBar li ul li a:hover {
+   background: #6C98D9;
+   color: #fff;
+   -moz-border-radius: 2px;   
+}
+
+div#HorizontalMenuBar li ul li a:hover .check {
+   background: #fff;
+}
+
+div#HorizontalMenuBar li:hover ul,
+div#HorizontalMenuBar li.ieHover ul,
+div#HorizontalMenuBar li li.ieHover ul,
+div#HorizontalMenuBar li li li.ieHover ul,
+div#HorizontalMenuBar li li:hover ul,
+div#HorizontalMenuBar li li li:hover ul { /* lists nested under hovered list items */
+   left: auto;
+}
+
+div#HorizontalMenuBar li:hover { /* For IE7 */
+    position: static;
 }
