@@ -31,6 +31,7 @@ var CompositeDesktopElement = new Class({
    
    options: {
       subElementsSelector : "compositeElement | element",
+      tagName : "div",
       type : "CompositeDesktopElement"
    },
    
@@ -68,6 +69,7 @@ var CompositeDesktopElement = new Class({
    
    unmarshall: function(){
       this.parent();
+      if( !this.tag ) this.tag = this.options.tagName;
       var subElements = XmlResource.selectNodes( this.options.subElementsSelector, this.definitionElement );
       subElements.each( function( subElementDefinition, index ){
          this.unmarshallNestedElement( subElementDefinition );

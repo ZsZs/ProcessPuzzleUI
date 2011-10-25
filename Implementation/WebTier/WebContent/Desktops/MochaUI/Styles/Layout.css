@@ -35,9 +35,14 @@ body {
 
 /* Header */
 #desktopHeader {
-	background: url(../Images/HeaderBackground.jpg) repeat-x;
+	background: url(../Images/HeaderBackground.gif) repeat-x;
 	height: 75px;
 	overflow: hidden;
+}
+
+#desktopTitleBar {
+   height: 45px;
+   overflow: hidden;
 }
 
 #desktopTitlebarWrapper {
@@ -49,31 +54,28 @@ body {
 	overflow: hidden;
 }
 
-#desktopTitleBar {
-	height: 45px;
-	overflow: hidden;
-}
-
-#desktopTitleBar h1.applicationTitle {
+#desktopTitlebarWrapper h1.applicationTitle {
 	margin: 0;
 	padding: 0 5px 0 0;
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 25px;
 	font-weight: bold;
 	text-align: center;
-	color: blue;
+	color: white;
 }
 
-#desktopTitleBar h2.tagline {
+#desktopTitlebarWrapper h2.tagline {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;    
-	color: white;    
+	font-size: 10px;    
+	color: white; 
+	margin-top: -7px;   
 	font-weight: bold;
 	text-align: center;
 	text-transform: uppercase;
-	padding-right: 45px;
+	padding-right: 0px;
 	padding-left: 0px;
 	padding-bottom: 0px;
+	padding-top: 0px;
 }
 
 #desktopTitleBar h2.tagline .taglineEm {

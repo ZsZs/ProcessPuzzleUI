@@ -54,7 +54,7 @@ var DesktopPanelHeader = new Class({
    },
    
    destroy: function(){
-      
+      if( this.plugin ) this.plugin.destroy();
    },
    
    onPluginConstructed : function(){

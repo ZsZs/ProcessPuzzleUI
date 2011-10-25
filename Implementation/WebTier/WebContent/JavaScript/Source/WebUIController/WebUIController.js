@@ -49,7 +49,7 @@ var WebUIController = new Class({
       //private instance variables
       this.applicationConfiguration = null;
       this.artifactTypeLoader = null;
-      this.desktopConfigurator = null;
+      this.desktop = null;
       this.documentManager = null;
       this.infoPanelManager = null;
       this.isConfigured = false;
@@ -134,7 +134,7 @@ var WebUIController = new Class({
          this.documentManager.destroy();
          this.messageBus.tearDown();
          if( this.languageSelector ) this.languageSelector.destroy();
-         this.desktopConfigurator.destroy();
+         this.desktop.destroy();
          this.webUIConfiguration.release();
          this.resourceBundle.release();
          this.options.window.location.hash = "";
@@ -228,7 +228,7 @@ var WebUIController = new Class({
    getContextRootPrefix : function() { return this.contextRootPrefix; },
    getCurrentLocale : function () { return this.locale; },
    getCurrentSkin : function () { return this.skin; },
-   getDesktop : function() { return this.desktopConfigurator; },
+   getDesktop : function() { return this.desktop; },
    getDocumentManager : function() { return this.documentManager; },
    getInfoPanelManager : function() { return this.infoPanelManager; },
    getIsConfigured : function() { return this.isConfigured; },
@@ -264,8 +264,9 @@ var WebUIController = new Class({
 	
 	configureDesktop : function() {
 	   var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-	   this.desktopConfigurator = new DesktopConfigurator( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri } );
-	   this.desktopConfigurator.configure();
+	   this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri } );
+	   this.desktop.unmarshall();
+	   this.desktop.construct();
 	}.protect(),
 	
 	configureDocumentManager : function() {

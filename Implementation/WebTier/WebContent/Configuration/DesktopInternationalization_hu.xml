@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
 
   <Language name="hu">
-    <Resource key="DesktopConfigurator.desktopTitle" type="String"> </Resource>
+    <Resource key="DesktopConfigurator.desktopTitle" type="String">ProcessPuzzle</Resource>
     <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Munkafolyamat- és tartalomkezelő üzleti platform</Resource>
     <Resource key="DesktopConfigurator.navigationBar" type="String">Navigációs sáv</Resource>
     <Resource key="DesktopConfigurator.footerText" type="String">ProcessPuzzle-l támogatva - Minden jog fenntartva 2005-2011, IT Kódex Kft.</Resource>

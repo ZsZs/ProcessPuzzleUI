@@ -6,7 +6,7 @@
 	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
 
   <Language name="en">
-    <Resource key="DesktopConfigurator.desktopTitle" type="String"> </Resource>
+    <Resource key="DesktopConfigurator.desktopTitle" type="String">ProcessPuzzle</Resource>
     <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Workflow and Content Management Business Platform</Resource>
     <Resource key="DesktopConfigurator.navigationBar" type="String">Navigation Bar</Resource>
     <Resource key="DesktopConfigurator.footerText" type="String">Powered by ProcessPuzzle - Copyright 2005-2011, IT Codex Llc.</Resource>
