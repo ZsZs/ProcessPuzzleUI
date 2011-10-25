@@ -978,6 +978,14 @@ JsMockito.Integration = {
   },
 
   /**
+   * Make the public JsMockito API available to JsUnit
+   * @see JsMockito.Integration.importTo( JsUnitTestSuite.prototype )
+   */
+  JsUnit: function() {
+    JsMockito.Integration.importTo( window );
+  },
+
+  /**
    * Make the public JsMockito API available to JsUnitTest
    * @see JsMockito.Integration.importTo(JsUnitTest.Unit.Testcase.prototype)
    */

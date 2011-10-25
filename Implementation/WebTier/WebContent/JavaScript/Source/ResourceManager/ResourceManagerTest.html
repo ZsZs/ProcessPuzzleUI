@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+   <title>Test page for ResourceManager.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
+	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+	<script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
+	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
+	<script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
+		
+	<script type="text/javascript">
+		window.addEvent('domready', function() {
+		   testLoad_PreventsDuplicateScriptLoading();
+		});
+				
+		JsHamcrest.Integration.JsUnit();
+		
+		var CONFIGURATION_URI = "../ResourceManager/WebUIConfiguration.xml";
+		var DOCUMENT_DEFINITION_URI = "../ResourceManager/SmartDocumentDefinition.xml";
+		var IMAGE_ID = "logoImage";
+		var IMAGE_URI = "../SmartDocument/Images/ProcessPuzzleLogo.jpg";
+		var SCRIPT_URI = "../ResourceManager/DummyScript.js";
+		var STYLE_SHEET_URI = "../SmartDocument/SmartDocument.css";
+		var documentDefinition = null;
+		var resourceManager = null;
+		var testCaseChain = new Chain();
+      var testCaseFinished = false;
+      var testCaseMethod = null;
+      var testWindow;
+		var webUIConfiguration = null;
+		var webUILogger = null;
+		
+      function beforeEachTest(){
+         debug( "beforeEachTest() was started.");
+         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+		   
+         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
+         resourceManager = new ResourceManager( documentDefinition.selectNode( "smartDocumentDefinition/documentResources" ), {onResourcesLoaded : onResourcesLoaded } );
+	       
+         testCaseFinished = false;
+         testCaseChain.callChain();
+      }
+		
+      function onResourcesLoaded(){
+         debug( "onResourcesLoaded() was called.");
+		   testCaseChain.callChain();
+		}
+
+		function afterEachTest(){
+		   if( resourceManager ) resourceManager.release();
+		   resourceManager = null;
+
+		   if( documentDefinition ) documentDefinition.release();
+		   documentDefinition = null;
+	       
+         testCaseFinished = true;
+		   testCaseChain.clearChain();
+         debug( "afterEachTest() was finished.");
+		}
+		
+		function verifyTestCaseFinished(){
+		   inform( "verifyTestCaseFinished was called." );
+		   if( !testCaseFinished ) fail( "Test case '" + testCaseMethod + "' did not finished.");
+		}
+
+		function testInitialize() {
+         testCaseChain.clearChain();
+         testCaseMethod = "testInitialize";
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         assertThat( resourceManager, not( nil() ));
+		         assertThat( resourceManager.getResources(), not( nil() ));
+
+		         inform( "Verification of 'initialize' was finished.");
+		         testCaseChain.callChain();
+		      }, 
+		      afterEachTest 
+		   ).callChain();
+		}
+		
+		function testUnmarshall_DeterminesResources(){
+         testCaseChain.clearChain();
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         resourceManager.unmarshall();
+		         assertThat( resourceManager.getResources().size(), equalTo( 3 ));
+		         
+               inform( "Verification of 'unmarshall_DeterminesResources' was finished.");
+		         testCaseChain.callChain();
+		      }, 
+		      afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+		}
+		
+		function testLoad_LoadsStyleSheets(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               resourceManager.unmarshall();
+               resourceManager.load();
+            },
+            function(){
+               var linkElement = $$("link[href='" + STYLE_SHEET_URI + "']");
+               assertThat( linkElement, not( nil() ));
+               assertThat( linkElement.length, equalTo( 1 ));
+
+               inform( "Verification of 'load_LoadsStyleSheets' was finished.");
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+		}
+
+		function testLoad_LoadsImages(){
+         testCaseChain.clearChain();
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+		      function(){
+		         var imageElement = document.getElementById( IMAGE_ID );
+		         //assertNotNull( imageElement );
+		         //assertThat( imageElement.length, equalTo( 1 ));
+		         
+               inform( "Verification of 'load_LoadsImages' was finished.");
+		         testCaseChain.callChain();
+		      }.bind( document ), 
+		      afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+		}
+		
+		function testLoad_LoadsScripts(){
+	      testCaseChain.clearChain();
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+		      function(){
+		         var scriptElement = $$("script[src='" + SCRIPT_URI + "']");
+		         assertThat( scriptElement, not( nil() ));
+		         assertThat( scriptElement.length, equalTo( 1 ));
+		         
+               inform( "Verification of 'load_LoadsScripts' was finished.");
+		         testCaseChain.callChain();
+		      }, 
+		      afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+		}
+		
+      function testLoad_PreventsDuplicateScriptLoading(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+            function(){
+               assertThat( $$("link[href='../JsUnit/css/jsUnitStyle.css']").length, equalTo( 1 ));
+               assertThat( $$("script[src='../ResourceManager/ResourceManager.js']").length, equalTo( 1 ));
+	               
+               inform( "Verification of 'load_PreventsDuplicateScriptLoading' was finished.");
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+      }
+	      
+		function testRelease_DestroysLoadedElements(){
+         testCaseChain.clearChain();
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+		      function(){
+		         assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 1 ));
+		         resourceManager.release();        
+		         assertThat( resourceManager.getResources().size(), equalTo( 0 ));
+               assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 0 ));
+               assertThat( $$("script[src='" + SCRIPT_URI + "']").length, equalTo( 0 ));
+
+		         inform( "Verification of 'release_DestroysLoadedElements' was finished.");
+		         testCaseChain.callChain();
+		      }, 
+		      afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+		}		
+    </script>
+</head>
+
+<body>
+	<h1>ResourceManager.js test page</H1>
+	<p>This page contains tests for ResourceManager.js JavaScript class.</P>
+</body>
+</html>

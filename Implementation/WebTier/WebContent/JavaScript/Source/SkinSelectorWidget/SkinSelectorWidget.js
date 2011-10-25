@@ -50,7 +50,7 @@ var SkinSelectorWidget = new Class({
       this.createSpanElements();
       this.createSelectElement();
       this.createSelectElementOptions();
-      this.parent();
+      return this.parent();
    },
    
    destroy : function() {

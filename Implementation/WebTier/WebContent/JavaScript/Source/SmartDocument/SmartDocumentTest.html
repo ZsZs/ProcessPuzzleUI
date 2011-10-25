@@ -1,69 +1,69 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 
 <html>
 <head>
-	<title>Test page for SmartDocument.js</title>
-	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <title>Test page for SmartDocument.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 	
-	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
-    <!--[if IE]>
-	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
-    <![endif]-->  
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
    
-	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
-	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
-	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
-    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
-	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
-    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
-    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
-	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
-	<script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
-	<script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
-	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
-	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
-	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
 		
 	<script type="text/javascript">
 		window.addEvent('domready', function() {
@@ -72,7 +72,7 @@
 				
 		JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+		var CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
 		var DEFINITION_NAME = "Test Smart Document";
 		var DEFINITION_DESCRIPTION = "This configuration supports testing Smart Document.";
 		var DEFINITION_VERSION = "0.5";
@@ -81,6 +81,7 @@
 		var LANGUAGE = "hu";
 		var WIDGET_CONTAINER_ID = "SmartDocument";
 		
+		var callBackWasCalled = false;
 		var locale = new Locale({ language : LANGUAGE });
 		var messageBus = null;
 		var smartDocument = null;
@@ -92,10 +93,16 @@
 			messageBus = new WebUIMessageBus();
 			webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
 			webUILogger = new WebUILogger( webUIConfiguration );
-	      	resourceBundle = new XMLResourceBundle( webUIConfiguration );
-	      	resourceBundle.load( locale );
-	      	smartDocument = new SmartDocument( resourceBundle, { widgetContainerId : WIDGET_CONTAINER_ID, documentDefinitionUri : DOCUMENT_DEFINITION_URI, documentContentUri : DOCUMENT_DATA_URI } );
-	      	widgetContainerElement = smartDocument.getContainerElement();
+			resourceBundle = new XMLResourceBundle( webUIConfiguration );
+			resourceBundle.load( locale );
+			smartDocument = new SmartDocument( 
+			      resourceBundle, 
+			      { widgetContainerId : WIDGET_CONTAINER_ID, 
+			        documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
+			        documentContentUri : DOCUMENT_DATA_URI, 
+			        onDocumentReady : function(){ callBackWasCalled = true; }} );
+			widgetContainerElement = smartDocument.getContainerElement();
+			callBackWasCalled = false;
 		}
 
 		function tearDown(){
@@ -167,13 +174,14 @@
 		   assertThat( smartDocument.getHeader().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
 		   assertThat( smartDocument.getBody().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
 		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
+		   assertThat( callBackWasCalled, is( true ));
 		}
-		
+				
 		//runs a test function during debugging
 		function runTestFunction(){
 			setUp();
 			testConstruct_ConstructsHeaderBodyAndFooter();
-			//tearDown();
+			tearDown();
 		}
     </script>
 </head>
@@ -182,6 +190,5 @@
 	<h1>SmartDocument.js test page</H1>
 	<p>This page contains tests for SmartDocument.js JavaScript class.</P>
 	<div id="SmartDocument">SmartDocument container.</div>
-	<div id="JavaScriptLogging"></div>
 </body>
 </html>

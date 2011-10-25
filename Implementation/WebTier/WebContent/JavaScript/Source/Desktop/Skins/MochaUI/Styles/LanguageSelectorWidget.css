@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+#LanguageSelectorWidget {
+	height: 30px;
+	line-height: normal;
+	overflow: hidden;
+	position: absolute;
+	right: 20px;
+	top: 5px;
+	visibility: visible;
+}
+
+span.LanguageSelectorWrapper {
+	background: transparent;
+	display: inline-block;
+	height: 30px;
+	text-decoration: none;
+}
+
+span.LanguageSelectorWrapper span{
+	background-color: transparent;
+	display: inline-block;
+	height: 30px;
+}
+
+#LanguageSelector{
+	background-color: transparent;
+	color: blue;
+}
+

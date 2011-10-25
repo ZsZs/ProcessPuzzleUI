@@ -48,7 +48,7 @@
   </xs:element>
 
   <xs:element name="image">
-    <xs:complexType>
+    <xs:complexType mixed="true">
       <xs:attribute name="id" use="optional" type="xs:NCName"/>
       <xs:attribute name="title" use="optional" type="xs:NCName"/>
 	</xs:complexType>
@@ -57,10 +57,11 @@
   <xs:element name="javascripts">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="javascript"/>
+        <xs:element ref="javascript" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
   <xs:element name="javascript" type="xs:string"/>
 
   <xs:element name="documentHeader">

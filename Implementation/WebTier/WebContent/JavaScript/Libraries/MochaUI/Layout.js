@@ -45,7 +45,14 @@ MUI.Desktop = {
 		page:                'page',
 		desktopFooter:       'desktopFooterWrapper'
 	},
-	initialize: function(){
+	initialize: function( options ){
+	   this.options.desktop = options['desktop'] ? options['desktop'] : this.options.desktop;            
+       this.options.desktopHeader = options['desktopHeader'] ? options['desktopHeader'] : this.options.desktopHeader;            
+       this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
+       this.options.desktopNavBar = options['desktopNavBar'] ? options['desktopNavBar'] : this.options.desktopNavBar;            
+       this.options.pageWrapper = options['pageWrapper'] ? options['pageWrapper'] : this.options.pageWrapper;            
+       this.options.page = options['page'] ? options['page'] : this.options.page;            
+       this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
 
 		this.desktop         = $(this.options.desktop);
 		this.desktopHeader   = $(this.options.desktopHeader);

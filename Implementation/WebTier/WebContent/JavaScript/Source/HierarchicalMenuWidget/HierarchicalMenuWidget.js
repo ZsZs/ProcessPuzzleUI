@@ -71,7 +71,7 @@ var HierarchicalMenuWidget = new Class({
       this.createMenuElements( parentDefinitionElement, this.containerElement );
       this.currentItemId = this.defaultItemId;
       this.storeComponentState( parentDefinitionElement );
-      this.parent();
+      return this.parent();
    },
    
    destroy : function() {

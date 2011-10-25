@@ -45,7 +45,7 @@ var RemoteStyleSheet = new Class( {
    },
 
    createLinkElement : function() {
-      this.link = document.createElement( 'link' );
+      this.link = new Element( 'link' );
       this.link.type = 'text/css';
       this.link.rel = 'stylesheet';
       this.link.id = this.getID();

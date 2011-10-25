@@ -93,7 +93,7 @@ var XMLResourceBundle = new Class( {
          }
       }
       if (numOfSuccess == 0) {
-         var exception = new FileNotFoundException( "File: " + fileList.get( 0 ) + " not foud.", "XMLResourceBundle.loadFile()" );
+         var exception = new UndefinedXmlResourceException( fileList.get( 0 ) );
          throw exception;
       }
       this.isLoaded = true;

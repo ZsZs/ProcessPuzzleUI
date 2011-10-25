@@ -30,6 +30,7 @@
     <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
     <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
     <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
     
     <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
@@ -47,7 +48,6 @@
 	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
     <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	<script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
 	<script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
 	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
@@ -60,6 +60,11 @@
     <script type="text/javascript" src="../LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
     <script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
     <script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
+	<script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
     <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
     <script type="text/javascript" src="../TabWidget/Tab.js"></script>
     <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
@@ -83,15 +88,16 @@
 	var documentManager;
 	var messageBus;
 	var stateManager;
-	webUILogger = new WebUILogger( webUIConfiguration );
 	
 	JsHamcrest.Integration.JsUnit();
 	
 	function setUp() {
-        messageBus = new WebUIMessageBus();
-        stateManager = new ComponentStateManager();
 		controller = new WebUIController({ contextRootPrefix : "../../", configurationUri : CONFIGURATION_URI });
-		documentManager = new DocumentManager();
+		controller.configure();
+    	webUILogger = controller.getLogger();
+        stateManager = controller.getStateManager();
+        messageBus = controller.getMessageBus();
+		documentManager = controller.getDocumentManager();
 	}
 
 	function tearDown() {
@@ -106,8 +112,7 @@
 	}
 	
 	function testLoadDocument() {
-		//SETUP:
-		controller.configure();
+		//SETUP: see setUp()
 		
 		//EXCERCISE:
 		documentManager.loadDocument({ documentURI : SAMPLE_DOCUMENT_ONE });

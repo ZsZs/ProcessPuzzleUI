@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:desktopConfiguration 
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
+
+	<name>MochaUI</name>
+	<version>1.0</version>
+	<description>This is full flagged desktop configuration.</description>
+
+	<resources>
+		<styleSheets>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Content.css</styleSheet>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Core.css</styleSheet>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Dock.css</styleSheet>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Layout.css</styleSheet>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Panels.css</styleSheet>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Tabs.css</styleSheet>
+			<styleSheet>../DesktopConfigurator/Skins/MochaUI/Styles/Window.css</styleSheet>
+		</styleSheets>
+		<images></images>
+		<scripts></scripts>
+	</resources>
+	
+	<header tag="div" name="desktopHeader">
+		<titleBar tag="div" name="desktopTitleBar">
+			<elements>
+				<element tag="h1" class="applicationTitle">DesktopConfigurator.desktopTitle</element>
+				<element tag="h2" class="tagline">DesktopConfigurator.desktopSubTitle</element>
+			</elements>
+		</titleBar>
+		
+		<navigationBar tag="div" name="desktopNavigationBar">
+			<elements>
+				<element tag="div" id="HorizontalMenuBar">
+					<plugin>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/HorizontalMenuLayout.css'], 
+							  'js': ['../HierarchicalMenuWidget/HierarchicalMenuWidget.js'], 
+							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml', componentName : 'HorizontalMenuBar' }).configure();} }
+					</plugin>
+				</element>
+				<element tag="div" id="LanguageSelectorWidget">
+					<plugin>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/LanguageSelectorWidget.css'], 
+							  'js': ['../LanguageSelectorWidget/LanguageSelectorWidget.js'], 
+							  'onload': function(){ new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).configure();} }
+					</plugin>
+				</element>
+			</elements>
+		</navigationBar>
+	</header>
+	
+	<columns>
+		<column name='leftColumn' placement='left' width='200' minimumWidth='200' maximumWidth='200' />
+		<column name='mainColumn' placement='main' minimumWidth='100' maximumWidth='300' />
+		<column name='rightColumn' placement='right' width='220' minimumWidth='200' maximumWidth='300' />
+	</columns>
+	
+	<panels>
+		<panel name='content-browser' columnReference='leftColumn'>
+			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
+			<contentURL>../DesktopConfigurator/Skins/MochaUI/Pages/ContentBrowser.html</contentURL>
+			<require>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/VerticalMenuLayout.css'], 
+					   'js': ['../HierarchicalMenuWidget/HierarchicalMenuWidget.js'], 
+					   'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'content-browser', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml', contextItemId : 'YourMenu', componentName : 'VerticalMenuColumn', subscribeToWebUIMessages : [MenuSelectedMessage] }).configure();} }
+			</require>
+		</panel>
+		
+		<panel name='who-is-in' columnReference='leftColumn' height='100'>
+			<title>DesktopConfigurator.Panel.whoIsIn</title>
+		</panel>
+		
+		<panel name='documents-panel' columnReference='mainColumn' >
+			<title>DesktopConfigurator.Panel.documentsTitle</title>
+			<contentURL>../DesktopConfigurator/Skins/MochaUI/Pages/Welcome_hu.html</contentURL>
+		</panel>
+		
+		<panel name='console' columnReference='mainColumn' height='100'>
+			<title>DesktopConfigurator.Panel.consoleTitle</title>
+		</panel>
+		
+		<panel name='menu-panel' columnReference='rightColumn' >
+			<title>DesktopConfigurator.Panel.menusTitle</title>
+		</panel>
+		
+		<panel name='tips-panel' columnReference='rightColumn' height='150'>
+			<title>DesktopConfigurator.Panel.tipsTitle</title>
+		</panel>
+	</panels>
+	
+	<windowDocker tag="div" name="dockWrapper">
+	</windowDocker>
+	
+	<footer tag="div" name="desktopFooterWrapper">
+		<footerBar tag="div" name="desktopFooter">
+			<elements>
+				<element tag="div" class="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
+				<element tag="div" id="SkinSelectorWidget">
+					<plugin>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/SkinSelectorWidget.css'], 
+							  'js': ['../SkinSelectorWidget/SkinSelectorWidget.js'], 
+							  'onload': function(){ new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).configure();} }
+					</plugin>
+				</element>
+			</elements>
+		</footerBar>
+	</footer>
+</pp:desktopConfiguration>

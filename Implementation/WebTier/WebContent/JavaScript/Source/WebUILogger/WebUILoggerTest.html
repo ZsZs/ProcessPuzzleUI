@@ -34,7 +34,7 @@
   	  var APPENDER_TWO_NAME = "formattedPopUpAppender";
   	  var APPENDER_THREE_NAME = "formattedInPageAppender";
   	  var APPENDER_FOUR_NAME = "formattedConsoleAppender";
-  	  var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+  	  var CONFIGURATION_URI = "../WebUILogger/WebUIConfiguration.xml";
   	  var ERROR_MESSAGE = "An error message.";
   	  var INFO_MESSAGE = "An info message.";
   	  var LAYOUT_ONE_NAME = "formattedLayout";
@@ -111,8 +111,9 @@
       
       function testInitialization_InstantiatesLoggers() {
       	assertEquals( "Configuration contains:", 3, logger.getLoggers().length );
-      	assertEquals( "Returns the default logger's name.", "WebUI", logger.getName());
-      	assertEquals( "DEBUG", webUILogger.getLevel().name );
+      	assertEquals( "Returns the default logger's name.", LOGGER_THREE_NAME, logger.getName());
+      	assertEquals( "DEBUG", logger.getLevel().name );
+      	assertEquals( "INFO", webUILogger.getLevel().name );
       	assertEquals( "INFO", processPuzzleLogger.getLevel().name );
       	
       	assertEquals( popUpAppender, webUILogger.getEffectiveAppenders()[0] );
@@ -173,7 +174,7 @@
       //runs a test function during debugging
       function runTestFunction(){
 	    setUp();
-	    testInitialization_ConfiguresAppenders();
+	    testInitialization_InstantiatesLoggers();
 		tearDown();
 	  }
     </script>

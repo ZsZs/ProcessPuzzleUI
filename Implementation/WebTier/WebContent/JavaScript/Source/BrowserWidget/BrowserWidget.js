@@ -194,6 +194,7 @@ var BrowserWidget = new Class( {
 
 	configure : function() {
 		this.isConfigured = true;
+		return this;
 	},
 
 	createAnchor : function(elementProperties, nodeText, clickEventHandler) {

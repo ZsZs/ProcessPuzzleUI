@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+
+#SkinSelectorWidget {
+	display: inline;
+	float: right;
+	margin-top: -20px;
+}
+
+span.SkinSelectorWrapper {
+	background: transparent;
+	display: inline-block;
+	height: 30px;
+	text-decoration: none;
+}
+
+span.SkinSelectorWrapper span{
+	background-color: transparent;
+	display: inline-block;
+	height: 30px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 4px;
+}
+
+#SkinSelector{
+	background-color: transparent;
+	color: blue;
+}

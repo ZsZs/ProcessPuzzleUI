@@ -107,6 +107,7 @@ var WebUILogger = new Class({
    getDefaultLogger : function() { return this.defaultLogger; },
    getLayout : function( layoutName ) { return this.layouts.get( layoutName ); },
    getLayouts : function() { return this.layouts; },
+   getLevel : function() { return this.defaultLogger.getLevel(); },
    getLogger : function( loggerName ) { return this.loggers.get( loggerName ); },
    getLoggers : function() { return this.loggers; },
    getName : function() { return this.options.defaultLoggerName;},
@@ -129,7 +130,7 @@ var WebUILogger = new Class({
          var url = webUIConfiguration.getLoggingAppenderURL( appenderName );
          appender = new log4javascript.AjaxAppender( url );
          break;
-      case "WUI:BROWSERCONSOLAPPENDER": 
+      case "WUI:BROWSERCONSOLEAPPENDER": 
          appender = new log4javascript.BrowserConsoleAppender(); 
          break;
       case "WUI:INPAGEAPPENDER": 
@@ -169,8 +170,9 @@ var WebUILogger = new Class({
       var referencedAppender = this.appenders.get( webUIConfiguration.getLoggingLoggerAppenderReference( loggerName ));
       logger.addAppender( referencedAppender );
 
-      if( webUIConfiguration.getLoggingLoggerIsDefault( loggerName ))
-         this.defaultLogger = logger;
+      if( webUIConfiguration.getLoggingLoggerIsDefault( loggerName )){
+         this.options.defaultLoggerName = loggerName;
+      }
       
       return logger;
    }.protect(),

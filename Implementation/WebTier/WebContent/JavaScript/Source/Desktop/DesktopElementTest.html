@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Test page for DesktopElement.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
+   <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+	
+   <script type="text/javascript">
+		window.addEvent('domready', function() {
+		   testDestroy_WhenConstructed_RemovesHtmlElement();
+		});
+
+		JsHamcrest.Integration.JsUnit();
+		JsMockito.Integration.JsUnit();
+		 
+		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml";
+		var DESKTOP_CONTAINER_ID = "Desktop";
+		var ELEMENT_DEFINITION_WITH_LINK = "/pp:desktopConfiguration/header/titleBar/compositeElement/element[@id='desktopTitle']";
+		var ELEMENT_DEFINITION_WITH_PLUGIN = "/pp:desktopConfiguration/header/navigationBar/compositeElement/element[@id='HorizontalMenuBar']";
+		var ELEMENT_DEFINITION_WITHOUT_ID = "/pp:desktopConfiguration/header/titleBar/compositeElement/element[@elementStyle='tagline']";
+		var ELEMENT_ID = "desktopTitle";
+		var ELEMENT_REFERENCE = "http://processpuzzle.com";
+		var ELEMENT_STYLE = "applicationTitle";
+		var ELEMENT_TAG = "H1";
+		var ELEMENT_TEXT = "Desktop Title Bar";
+		var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
+		
+		var constructCallbackWasCalled = false;
+		var desktopContainerElement = null;
+		var desktopDefinition = null;
+		var desktopElementWithLink = null;
+		var desktopElementWithPlugin = null;
+		var desktopInternationalization = null;
+		var elementDefinitionWithLink = null;
+		var elementDefinitionWithoutId = null;
+		var elementDefinitionWithPlugin = null;
+		var testCaseChain = new Chain();
+		var testCaseFinished = false;
+		var testCaseMethod = null;
+		var webUIConfiguration = null;
+		var webUIController = null;
+      var webUILogger = null;
+		
+		function beforeEachTest(){
+		   webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI } );
+		   webUIConfiguration = webUIController.getWebUIConfiguration();
+		   webUILogger = webUIController.getLogger();
+		   resourceBundle = webUIController.getResourceBundle();
+		   desktopInternationalization = new XMLResourceBundle( webUIConfiguration );
+		   desktopInternationalization.load( new Locale({ language : "en" }) );
+		   
+		   desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/Desktop'" } );
+		   var elementDefinitionWithLink = desktopDefinition.selectNode( ELEMENT_DEFINITION_WITH_LINK );
+		   var elementDefinitionWithoutId = desktopDefinition.selectNode( ELEMENT_DEFINITION_WITHOUT_ID );
+		   var elementDefinitionWithPlugin = desktopDefinition.selectNode( ELEMENT_DEFINITION_WITH_PLUGIN );
+         desktopElementWithLink = new DesktopElement( elementDefinitionWithLink, desktopInternationalization, { onConstructed : onConstructed } );
+         desktopElementWithoutId = new DesktopElement( elementDefinitionWithoutId, desktopInternationalization, { onConstructed : onConstructed } );
+         desktopElementWithPlugin = new DesktopElement( elementDefinitionWithPlugin, desktopInternationalization, { onConstructed : onConstructed } );
+         desktopContainerElement = $( DESKTOP_CONTAINER_ID );
+           
+         testCaseFinished = false;
+         verifyTestCaseFinished.delay( 5000 );
+         testCaseChain.callChain();
+      }
+
+		function afterEachTest(){
+		   desktopDefinition.release();
+		   desktopInternationalization.release();
+		   
+		   if( desktopElementWithLink.getState() > DesktopElement.States.INITIALIZED ) desktopElementWithLink.destroy();
+		   desktopElementWithLink = null;
+		   desktopContainerElement = null;
+		   
+		   testCaseChain.callChain();		   
+		   testCaseFinished = true;
+		}
+		
+		function verifyTestCaseFinished(){ 
+		   if( !testCaseFinished ) fail( "Test case '" + testCaseMethod + "' did not finished.");
+		}
+
+		function onConstructed(){
+		   testCaseChain.callChain();
+		}		
+		
+		function testInitialize() {
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+				 assertThat( desktopElementWithLink, not( nil() ));
+				 assertThat( desktopElementWithLink.getDefinitionElement(), not( nil() ));
+			     testCaseChain.callChain();
+		      },
+		      afterEachTest ).callChain();
+		}
+		
+      function testUnmarshall_SetsStatusToUnMarshalled(){
+         testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         desktopElementWithLink.unmarshall();
+		         assertThat( desktopElementWithLink.getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
+		         testCaseChain.callChain();
+		      },
+		      afterEachTest ).callChain();
+      }
+		
+      function testUnmarshall_DeterminesElementProperties(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopElementWithLink.unmarshall();
+               assertThat( desktopElementWithLink.getId(), equalTo( ELEMENT_ID ));
+               assertThat( desktopElementWithLink.getTag().toUpperCase(), equalTo( ELEMENT_TAG ));
+               assertThat( desktopElementWithLink.getStyle(), equalTo( ELEMENT_STYLE ));
+               assertThat( desktopElementWithLink.getText(), equalTo( ELEMENT_TEXT ));
+               assertThat( desktopElementWithLink.getReference(), equalTo( ELEMENT_REFERENCE ));
+            },
+            afterEachTest ).callChain();
+		}
+		
+		function testUnmarshall_WhenIdNotGiven_GeneratesOne(){
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         desktopElementWithoutId.unmarshall();
+		         assertThat( desktopElementWithoutId.getId(), not( nil() ));
+		         assertThat( desktopElementWithoutId.getId(), containsString( desktopElementWithoutId.options.idPrefix ));
+	            testCaseChain.callChain();
+	         },
+	         afterEachTest ).callChain();
+		}
+		
+		function testUnmarshall_WhenPluginIsSpecified_InstantiatesAndUnmarshallsPluginObject(){
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         desktopElementWithPlugin.unmarshall();
+		         assertThat( desktopElementWithPlugin.getPlugin(), not( nil() ));
+		         assertThat( desktopElementWithPlugin.getPlugin().getState(), equalTo( DesktopPlugin.States.UNMARSHALLED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest ).callChain();
+		}
+		
+		function testConstract_SetsStatusToConstructed(){
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         desktopElementWithLink.unmarshall();
+		         desktopElementWithLink.construct( desktopContainerElement, "bottom" );
+		      },
+		      function(){
+		         assertThat( desktopElementWithLink.getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
+               testCaseChain.callChain();
+		      },	      
+            afterEachTest ).callChain();
+		}
+				
+      function testConstruct_CreatesNewHtmlElement(){
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         desktopElementWithLink.unmarshall();
+		         desktopElementWithLink.construct( desktopContainerElement, "bottom" );
+		      },
+		      function(){
+		         assertThat( desktopElementWithLink.getHtmlElement(), not( nil() ));
+		         assertThat( desktopElementWithLink.getHtmlElement().tagName.toUpperCase(), equalTo( ELEMENT_TAG ));
+		         assertThat( desktopElementWithLink.getHtmlElement().get( 'id' ), equalTo( ELEMENT_ID ));
+		         assertThat( desktopElementWithLink.getHtmlElement().get( 'text' ), equalTo( ELEMENT_TEXT ));
+		         assertThat( desktopElementWithLink.getHtmlElement().hasClass( ELEMENT_STYLE ), is( true ));
+		         assertThat( desktopContainerElement.getChildren(), hasItem( desktopElementWithLink.getHtmlElement() ));
+		         
+		         var nestedAnchorElement = desktopElementWithLink.getHtmlElement().getElement( 'a' ); 
+		         assertThat( nestedAnchorElement, not( nil() ));
+		         assertThat( nestedAnchorElement.get( 'href' ), equalTo( desktopElementWithLink.getReference() ));
+               testCaseChain.callChain();
+		      },
+            afterEachTest 
+         ).callChain();
+		}
+		
+		function testConstruct_WhenNotUnmarshalled_RaisesException(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               try{
+                  desktopElementWithLink.construct( desktopContainerElement, "bottom" );
+                  fail();
+               }catch( e ){
+                  assertThat( instanceOf( e, UnconfiguredDesktopElementException ), is( true ));
+                  testCaseChain.callChain();
+               }
+            },
+            afterEachTest 
+         ).callChain();
+		}
+		
+      function testConstruct_WhenPluginIsSpecified_CallsPluginConstruct(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopElementWithPlugin.unmarshall();
+               pluginLoadResourcesMethod = spy( desktopElementWithPlugin.getPlugin().loadResources ); 
+               pluginConstructMethod = spy( desktopElementWithPlugin.getPlugin().construct ); 
+               desktopElementWithPlugin.construct( desktopContainerElement, "bottom" );
+            },
+            function(){
+               verify( pluginLoadResourcesMethod );
+               verify( pluginConstructMethod );
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+		}
+		
+      function testDestroy_WhenUnmarshalled_ResetsProperties(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopElementWithLink.unmarshall();
+               desktopElementWithLink.construct( desktopContainerElement, "bottom" );
+            },
+            function(){
+               desktopElementWithLink.destroy();
+               
+               //VERIFY:
+               assertThat( desktopElementWithLink.getId(), nil() );
+               assertThat( desktopElementWithLink.getTag(), nil() );
+               assertThat( desktopElementWithLink.getStyle(), nil() );
+               assertThat( desktopElementWithLink.getBind(), nil() );
+               assertThat( desktopElementWithLink.getText(), nil() );
+               assertThat( desktopElementWithLink.getReference(), nil() );
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+		}
+		
+		function testDestroy_WhenConstructed_RemovesHtmlElement(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopElementWithLink.unmarshall();
+               desktopElementWithLink.construct( desktopContainerElement, "bottom" );
+            },
+            function(){
+               assertThat( desktopContainerElement.getChildren(), hasItem( desktopElementWithLink.getHtmlElement() ));
+               desktopElementWithLink.destroy();
+               assertThat( desktopContainerElement.getChildren().length, equalTo( 0 ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+		}
+		
+		function testDestroy_WhenNotUnmarshalled_RaisesException(){
+		   testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               try{
+                  desktopElementWithLink.destroy();
+                  fail();
+               }catch( e ){
+                  assertThat( instanceOf( e, UnconfiguredDesktopElementException ), is( true ));
+                  testCaseChain.callChain();
+               }
+            },
+            afterEachTest 
+         ).callChain();
+		}
+		
+    </script>
+</head>
+
+<body>
+	<h1>DesktopElement.js test page</H1>
+	<p>This page contains tests for DesktopElement.js JavaScript class.</P>
+	<div id="Desktop"></div>
+</body>
+</html>

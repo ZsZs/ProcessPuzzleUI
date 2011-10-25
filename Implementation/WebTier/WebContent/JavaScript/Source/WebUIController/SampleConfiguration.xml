@@ -40,9 +40,9 @@
 		
 		<wui:logging>
 			<wui:loggers>
-				<wui:logger name="WebUI" level="info" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="WebUI" level="info"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
 				<wui:logger name="ProcessPuzzle" level="info"><wui:appenderReference name="xmlAjaxAppender"/></wui:logger>
-				<wui:logger name="LoggerForUnitTest" level="info" isDefault="true"><wui:appenderReference name="formattedInPageAppender"/></wui:logger>
+				<wui:logger name="LoggerForUnitTest" level="debug" isDefault="true"><wui:appenderReference name="formattedConsoleAppender"/></wui:logger>
 			</wui:loggers>
 			
 			<wui:layouts>
@@ -52,47 +52,47 @@
 
 			<wui:appenders>
 				<wui:ajaxAppender name="xmlAjaxAppender"
-                              url="http://localhost"
-                              layoutReference="xmlLayout"
-							  lazyInit="false"
-                              sendAllOnUnload="no"
-                              postVariableName="logData"
-                              timedSending="true"
-                              waitForResponse="true"
                               batchSize="5"
-                              timerInterval="3000"
-                              requestSuccessCallback="function() { alert('Log was successfully sent') };"
                               failCallback="function() {alert('Logging error occured.')}"
-                              threshold="info"/>
+                              layoutReference="xmlLayout"
+							  lazyInit="true"
+                              postVariableName="logData"
+                              requestSuccessCallback="function() { alert('Log was successfully sent') };"
+                              sendAllOnUnload="no"
+                              threshold="info"
+                              timedSending="true"
+                              timerInterval="3000"
+                              waitForResponse="true"
+                              url="http://localhost"/>
                               
 				<wui:popUpAppender name="formattedPopUpAppender"
-                               layoutReference="formattedLayout" 
                                commandLineObjectExpansionDepth="10"
                                complainAboutPopUpBlocking="true"
                                focusPopUp="true"
-                               lazyInit="false"
-                               threshold="debug"
+                               height="600"
+                               initiallyMinimized="true"
+                               layoutReference="formattedLayout" 
+                               lazyInit="true"
                                maxMessages="1000"
                                newestMessageAtTop="true"
-                               height="600"
                                reopenWhenClosed="true"
                                scrollToLatestMessage="true"
                                showCommandLine="true"
-                               initiallyMinimized="false"
+                               threshold="debug"
                                useDocumentWrite="false"
                                useOldPopUp="true"
                                width="800"/>
 				<wui:inPageAppender name="formattedInPageAppender"
                                 containerElementId="JavaScriptLogging"
                                 height="600"
+                                initiallyMinimized="true"
                                 layoutReference="formattedLayout"
-                                lazyInit="false"
-                                initiallyMinimized="false"
+                                lazyInit="true"
                                 threshold="trace"
                                 useDocumentWrite="true"
                                 width="800"/>
 				<wui:browserConsoleAppender name="formattedConsoleAppender"
-                                        layoutReference="formattedLayout"/>
+                                            layoutReference="formattedLayout"/>
 			</wui:appenders>			
 		</wui:logging>
 	</wui:webUI>

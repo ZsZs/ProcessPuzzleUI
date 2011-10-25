@@ -118,6 +118,10 @@ Boolean.implement({
    }
 });
 
+function parseBoolean( booleanString ){
+   return new Boolean().parseBoolean( booleanString );
+} 
+
 // String
 String.implement({
    compareTo : function(str) {

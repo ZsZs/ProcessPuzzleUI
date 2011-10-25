@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Insert title here</title>
+	<link type="text/css" rel="stylesheet" href="Skins/ProcessPuzzle/Styles/Core.css" />
+	<link type="text/css" rel="stylesheet" href="Skins/ProcessPuzzle/Styles/Content.css" />
+	<link type="text/css" rel="stylesheet" href="Skins/ProcessPuzzle/Styles/Dock.css" />
+	<link type="text/css" rel="stylesheet" href="Skins/ProcessPuzzle/Styles/Layout.css" />
+	<link type="text/css" rel="stylesheet" href="Skins/ProcessPuzzle/Styles/Tabs.css" />
+	<link type="text/css" rel="stylesheet" href="Skins/ProcessPuzzle/Styles/Window.css" />
+	
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="../MooTools/mootools-more-1.3.js"></script>
+    
+    <script type="text/javascript" src="../MochaUI/Core.js"></script>
+    <script type="text/javascript" src="../MochaUI/Dock.js"></script>
+    <script type="text/javascript" src="../MochaUI/Layout.js"></script>
+    <script type="text/javascript" src="../MochaUI/Modal.js"></script>
+    <script type="text/javascript" src="../MochaUI/Tabs.js"></script>
+    <script type="text/javascript" src="../MochaUI/Window.js"></script>
+    
+	<script type="text/javascript" src="../Sarissa/sarissa.js"></script>  
+    <script type="text/javascript" src="../Sarissa/sarissa_ieemu_xpath.js"></script>
+    
+    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+    <script type="text/javascript" src="../CommonScripts/AssertUtil.js"></script>
+    <script type="text/javascript" src="../CommonScripts/UserException.js"></script>
+    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+    <script type="text/javascript" src="DesktopConfigurator.js"></script>
+    <script type="text/javascript" src="DesktopStructure.js"></script>
+</head>
+
+<body>
+	<DIV style="HEIGHT: 1042px" id=desktop>
+		<DIV id=desktopHeader>
+			<DIV id=desktopTitlebarWrapper>
+				<DIV id=desktopTitleBar>
+					<H1 class=applicationTitle>Desktop Title Bar</H1>
+					<H2 class=tagline>Desktop like browser interface.</H2></DIV>
+					<DIV id=desktopNavigationBar>
+					<DIV class=navigationBarText>This is the navigation bar.</DIV>
+				</DIV>
+			</DIV>
+		</DIV>
+		<DIV id=dockWrapper>
+			<DIV id=dock>
+				<DIV id=dockPlacement></DIV>
+				<DIV id=dockAutoHide></DIV>
+				<DIV id=dockSort>
+					<DIV id=dockClear class=clear></DIV>
+				</DIV>
+			</DIV>
+		</DIV>
+	
+		<DIV style="HEIGHT: 878px" id=pageWrapper>
+		<DIV style="WIDTH: 200px; HEIGHT: 878px" id=leftColumn class="column expanded">Column: leftColumn</DIV>
+		<DIV style="HEIGHT: 878px; CURSOR: e-resize" id=leftColumn_handle class=columnHandle>
+		<DIV id=leftColumn_handle_icon class=handleIcon></DIV></DIV>
+		<DIV style="WIDTH: 886px; HEIGHT: 878px" id=mainColumn class="column expanded rWidth">Column: mainColumn
+		<DIV id=console_wrapper class="panelWrapper expanded">
+		<DIV style="DISPLAY: block; CURSOR: move" id=console_header class=panel-header>
+		<DIV id=console_headerCollapseBox class=toolbox>
+		<DIV style="WIDTH: 16px; HEIGHT: 16px" id=console_collapseToggle class="panel-collapse icon16" title="Collapse Panel"></DIV></DIV>
+		<DIV id=console_headerContent class=panel-headerContent>
+		<H2 id=console_title>Console</H2></DIV></DIV>
+		<DIV style="HEIGHT: 848px; OVERFLOW: auto" id=console class="panel expanded bottomPanel">
+		<DIV style="PADDING-BOTTOM: 8px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; DISPLAY: block; PADDING-TOP: 8px" id=console_pad class=pad>Panel content</DIV></DIV>
+		<DIV style="DISPLAY: none" id=console_handle class="horizontalHandle detached">
+		<DIV id=console_handle_icon class=handleIcon></DIV></DIV></DIV></DIV>
+		<DIV style="HEIGHT: 878px; CURSOR: e-resize" id=rightColumn_handle class=columnHandle>
+		<DIV id=rightColumn_handle_icon class=handleIcon></DIV></DIV>
+		<DIV style="WIDTH: 220px; HEIGHT: 878px" id=rightColumn class="column expanded">Column: rightColumn
+		<DIV id=tips-panel_wrapper class="panelWrapper expanded">
+		<DIV style="DISPLAY: block; CURSOR: move" id=tips-panel_header class=panel-header>
+		<DIV id=tips-panel_headerCollapseBox class=toolbox>
+		<DIV style="WIDTH: 16px; HEIGHT: 16px" id=tips-panel_collapseToggle class="panel-collapse icon16" title="Collapse Panel"></DIV></DIV>
+		<DIV id=tips-panel_headerContent class=panel-headerContent>
+		<H2 id=tips-panel_title>Tips</H2></DIV></DIV>
+		<DIV style="HEIGHT: 848px; OVERFLOW: auto" id=tips-panel class="panel expanded bottomPanel">
+		<DIV style="PADDING-BOTTOM: 8px; PADDING-LEFT: 8px; PADDING-RIGHT: 8px; DISPLAY: block; PADDING-TOP: 8px" id=tips-panel_pad class=pad>Panel content</DIV></DIV>
+		<DIV style="DISPLAY: none" id=tips-panel_handle class="horizontalHandle detached">
+		<DIV id=tips-panel_handle_icon class=handleIcon></DIV></DIV></DIV></DIV></DIV>
+		<DIV id=desktopFooterWrapper>
+		<DIV id=desktopFooter>
+		<DIV class=footerText>Copyright 2005-2010, IT Codex Llc.</DIV></DIV></DIV>
+	</DIV>
+	<DIV style="FILTER: alpha(opacity=1); ZOOM: 1; DISPLAY: none; HEIGHT: 1042px; VISIBILITY: visible; opacity: 0.01" id=windowUnderlay></DIV>
+</body>
+</html>

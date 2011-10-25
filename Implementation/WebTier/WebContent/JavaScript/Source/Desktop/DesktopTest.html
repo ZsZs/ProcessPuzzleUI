@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Test page for Desktop.js</title>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+    
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]--> 
+    
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Core.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Dock.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Layout.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+    
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElementFactory.js"></script>
+   <script type="text/javascript" src="../Desktop/CompositeDesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/ConfigurationTimeoutException.js"></script>
+   <script type="text/javascript" src="../Desktop/Desktop.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopContentArea.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopFooter.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopFooterBar.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopNavigationBar.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopTitleBar.js"></script>
+   <script type="text/javascript" src="../Desktop/NoneExistingDesktopContainerElementException.js"></script>
+   <script type="text/javascript" src="../Desktop/plugins/tree/scripts/tree.js"></script>
+   <script type="text/javascript" src="../Desktop/ResourceNotFoundException.js"></script>
+   <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../LanguageSelectorWidget/LanguageChangedMessage.js"></script>
+   <script type="text/javascript" src="../LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
+   <script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
+   <script type="text/javascript" src="../TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+
+   <script type="text/javascript" >
+      window.addEvent( 'domready', function() {
+         testConstruct_ConstructsWholeDekstop();
+  	   });
+  	  
+      JsHamcrest.Integration.JsUnit();
+ 	  
+	  var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
+	  var DESKTOP_CONTAINER_ID = "desktop";
+  	  var DESKTOP_DOCKER_AUTOHIDE_ELEMENT_ID = 'dockAutoHide';
+  	  var DESKTOP_DOCKER_CLEAR_ELEMENT_ID = 'dockClear';
+  	  var DESKTOP_DOCKER_CONTROLS_ELEMENT_ID = 'dock';
+  	  var DESKTOP_DOCKER_PLACEMENT_ELEMENT_ID = 'dockPlacement';
+  	  var DESKTOP_DOCKER_SORT_ELEMENT_ID = 'dockSort';
+  	  var DESKTOP_DOCKER_WRAPPER_ELEMENT_ID = 'dockWrapper';
+  	  var DESKTOP_DOCKER_ELEMENT_ID = 'dock';
+  	  var DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID = 'pageWrapper';
+  	  var DESKTOP_ELEMENT_ID = 'desktop';
+  	  var DESKTOP_FOOTER_ELEMENT_ID = 'desktopFooterWrapper';
+  	  var DESKTOP_FOOTER_BAR_ELEMENT_ID = 'desktopFooter';
+  	  var DESKTOP_HEADER_ELEMENT_ID = 'desktopHeader';
+  	  var DESKTOP_HEADER_LANGUAGE_SELECTOR_ELEMENT_ID = 'LanguageSelectorWidget';
+  	  var DESKTOP_HEADER_MENU_ID = 'HorizontalMenuBar';
+  	  var DESKTOP_NAVIGATION_BAR_ID = 'desktopNavigationBar';
+  	  var DESKTOP_TITLE_BAR_WRAPPER_ID = 'desktopTitlebarWrapper';
+  	  var DESKTOP_TITLE_BAR_ID = 'desktopTitleBar';
+  	  var DOCKER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/WindowDockerOnlyConfiguration.xml';
+  	  var DOCUMENT_BROWSER_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/TreeView.html';
+  	  var DOCUMENT_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/HelloWorldContent.html';
+  	  var DOCUMENT_PANEL_ID = 'documents-panel';
+  	  var DOCUMENT_SELECTOR_ID = 'documentSelector';
+  	  var EMPTY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/EmptyConfiguration.xml';
+  	  var FOOTER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/FooterOnlyConfiguration.xml';
+  	  var FULL_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml';
+  	  var HEADER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/HeaderOnlyConfiguration.xml';
+      var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
+
+      var desktopConfiguration;
+      var desktopElement;
+      var desktop;
+      var resourceBundle;
+      var testCaseChain = new Chain();
+      var testWindow;
+      var webUIConfiguration;
+      var webUILogger = null;
+      var webUIController;
+
+      function beforeEachTest() {
+         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
+         else testWindow = window;
+        
+         webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI } );
+         webUIConfiguration = webUIController.getWebUIConfiguration();
+         webUILogger = webUIController.getLogger();
+         resourceBundle = webUIController.getResourceBundle();
+         desktop = new Desktop( webUIConfiguration, resourceBundle, { configurationURI : DESKTOP_CONFIGURATION_URI, onConstructed : onConstructed });
+         desktopConfiguration = desktop.getConfigurationXml();
+         desktopElement = $( DESKTOP_ELEMENT_ID );
+      	
+         testCaseChain.callChain();
+      }
+      
+      function onConstructed(){
+         testCaseChain.callChain();
+      }
+      
+      function afterEachTest() {
+         if( desktop ) desktop.destroy();
+         if( webUIController.isConfigured ) webUIController.destroy();
+         desktop = null;
+		 
+         testCaseChain.callChain();
+         testCaseChain.clearChain();
+      }
+      
+      function testInitialize_LoadsDesktopConfiguration(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               assertThat( desktop.getConfigurationXml(), not( nil() ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
+      }
+
+      function testUnmarshall_UnmarshallsDesktopComponents(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               desktop.unmarshall();
+               
+               assertThat( desktop.getName(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/name" )));
+               assertThat( desktop.getDescription(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/description" )));
+               assertThat( desktop.getVersion(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/version" )));
+               assertThat( desktop.getContainerId(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/containerId" )));
+               
+               assertThat( desktop.getResources().getState(), equalTo( DocumentResources.States.UNMARSHALLED ));
+               assertThat( desktop.getHeader().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
+               assertThat( desktop.getFooter().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
+               assertThat( desktop.getWindowDocker().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
+               
+               assertThat( desktop.getColumns().size(), equalTo( 3 ));
+               desktop.getColumns().each( function( columnEntry, index ){
+                  assertThat( columnEntry.getValue().getState(), equalTo( DesktopColumn.States.UNMARSHALLED ));
+               });
+               
+               assertThat( desktop.getPanels().size(), equalTo( 5 ));
+               desktop.getPanels().each( function( panelEntry, index ){
+                  assertThat( panelEntry.getValue().getState(), equalTo( DesktopPanel.States.UNMARSHALLED ));
+               });
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
+      }
+      
+      function testConstruct_ConstructsWholeDekstop(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               desktop.unmarshall();
+               desktop.construct();
+            },
+            function(){
+               assertThat( desktop.getState(), equalTo( DesktopPanel.States.CONSTRUCTED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
+      }
+      
+      function onConstructed(){
+         testCaseChain.callChain();
+      }
+
+    </script>
+    
+</head>
+
+<body>
+	<div id='desktopContainer'></div>
+</body>
+</html>
