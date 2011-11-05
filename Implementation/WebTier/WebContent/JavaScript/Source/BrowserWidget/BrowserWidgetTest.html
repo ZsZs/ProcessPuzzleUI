@@ -1,498 +1,255 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <title>Test page for BrowserWiget.js</title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<head>
+   <title>Test page for BrowserWiget.js</title>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
-    <!--[if IE]>
-	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
-    <![endif]-->  
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
    
-	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
-	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
-	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
-    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
-	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
-    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
-    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
 	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
-	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
-	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
-	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
-	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
 
-    <script type="text/javascript">
+   <script type="text/javascript">
       window.addEvent('domready', function() {
-	    runTestFunction();
-  	  });
+         runTestFunction();
+      });
 
-	  JsHamcrest.Integration.JsUnit();
-	  
-	  var ANCHOR_ID = "anchorId";
-	  var ANCHOR_TEXT = "a link";
-	  var CLICK_EVENT_HANDLER = function anchorClickEvent() { alert("You clicked me."); };
+	   JsHamcrest.Integration.JsUnit();
+	   
       var CHILD_ELEMENT_TYPE = "DIV";
-	  var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
-      var FIELDSET_IMAGE_ID = "fieldSetImageId";
-      var FORM_NAME = "newForm"
-      var FORM_METHOD_TYPE = "POST";
-      var HIDDEN_DIVISION_ID = "hiddenVisionId";
+	   var CONFIGURATION_URI = "../BrowserWidget/WebUIConfiguration.xml";
       var LANGUAGE = "hu";
-      var RESOURCE_KEY = "Print";
-  	  var RESOURCE_PATH = "../Internationalization/TestResources";
-  	  var ROW_LABEL = "row label:";
-  	  var ROW_VALUE = "row value";
-  	  var ROW_VALUE_ID = "rowValueId";
-  	  var SEARCHED_ELEMENT_ID = "searchedElementId";
-  	  var TABLE_COLUMN_ONE = "First Column";
-  	  var TABLE_COLUMN_TWO = "Second Column";
-  	  var TEXT_NODE_TEXT = "hello";
-  	  var WIDGET_CONTAINER_ID = "widgetContainer";
-  	  var browserWidget;
-  	  var domDocument;
-  	  var locale = new Locale( LANGUAGE );
-      var messageBus = null;
-	  var resourceBundle;
-	  var testWindow;
-  	  var webUIConfiguration = null;
-      var webUILogger = null;
-  	  var widgetContainerElement;
+  	   var RESOURCE_PATH = "../BrowserWidget/WidgetInternationalization";
+  	   var RESOURCE_KEY = "Widget.ItemOne";
+      var ROW_LABEL = "row label:";
+      var ROW_VALUE = "row value";
+      var ROW_VALUE_ID = "rowValueId";
+  	   var SEARCHED_ELEMENT_ID = "searchedElementId";
+  	   var WIDGET_CONTAINER_ID = "widgetContainer";
+      var WIDGET_DATA_URI = "../BrowserWidget/WidgetData.xml";
+  	   var WIDGET_DEFINITION_URI = "../BrowserWidget/WidgetDefinition.xml";
+  	   var browserWidget;
+  	   var domDocument;
+  	   var locale = new Locale( LANGUAGE );
+  	   var messageBus = null;
+  	   var resourceBundle;
+  	   var testWindow;
+  	   var webUIConfiguration = null;
+  	   var webUILogger = null;
+  	   var widgetContainerElement;
   	  
       function setUp() {
-		if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-		else testWindow = window;
-        domDocument = document;
-        messageBus = new WebUIMessageBus();
-        webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-		webUILogger = new WebUILogger( webUIConfiguration );
+         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
+         else testWindow = window;
+         domDocument = document;
+         messageBus = new WebUIMessageBus();
+         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
       	resourceBundle = new XMLResourceBundle( webUIConfiguration );
       	resourceBundle.load( locale );
       	browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle );
-      	widgetContainerElement = browserWidget.getContainerElement();
+      	widgetContainerElement = $( WIDGET_CONTAINER_ID );
       }
 
       function tearDown() {
-        widgetContainerElement.getChildren().each( function( element ) {
-          element.destroy();
-        });
+         widgetContainerElement.getChildren().each( function( element ) {
+            element.destroy();
+         });
         
-        messageBus.tearDown();
+         messageBus.tearDown();
       }
       
-      function testInitialization_WithoutArguments() {
-	    //SETUP:
-    	var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : "../WebUIController/SampleConfiguration.xml" }, testWindow );
+      function test_Initialization_WhenArgumentsAreGiven_DeducesAssociatedObjects() {
+         assertEquals( "Browser Widget uses the same locale as the ResourceBundle.", resourceBundle.getLocale(), browserWidget.getLocale() );
+         assertEquals( "Holds a reference to the WebUIMessageBus", messageBus, browserWidget.getMessageBus() );
+      }
+       
+      function test_Initialization_WhenNoArgumentsAreGiven_UsesWebUiController() {
+         //SETUP:
+         var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : CONFIGURATION_URI }, testWindow );
    	  
       	//EXCERCISE:
    	  	browserWidget = new BrowserWidget();
    	  
       	//VERIFY:
-        assertNotNull( "Browser widget successfully instantiated.", browserWidget );
-        assertNotNull( "Identifies container element.", widgetContainerElement );
-        assertEquals( "Browser Widget uses the Resource Bundle of WebUIController.", webUIController.getResourceBundle(), browserWidget.getResourceBundle() );
+         assertNotNull( "Browser widget successfully instantiated.", browserWidget );
+         assertNotNull( "Identifies container element.", widgetContainerElement );
+         assertEquals( "Browser Widget uses the Resource Bundle of WebUIController.", webUIController.getResourceBundle(), browserWidget.getResourceBundle() );
       }
       
-
-      function testInitialization_WithGivenArguments() {
-        assertNotNull( "Browser widget successfully instantiated.", browserWidget );
-        assertNotNull( "Identifies container element.", widgetContainerElement );
-        assertTrue( "Loads the resource bundle if it is not loaded.", browserWidget.getResourceBundle().isLoaded );
-        assertEquals( "Browser Widget uses the same locale as the ResourceBundle.", resourceBundle.getLocale(), browserWidget.getLocale() );
-        assertEquals( "Holds a reference to the WebUIMessageBus", messageBus, browserWidget.getMessageBus() );
+      function test_Initialization_FindsContainerElement() {
+         assertThat( browserWidget.getContainerElement(), equalTo( widgetContainerElement ) );
       }
       
-      function testInitialization_WhenMessageSubsciptionsAreGiven() {
-      	//SETUP, EXCERCISE:
-      	browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, resourceBundle );
-      	
-      	//VERIFY:
-      	assertEquals( "BrowserWidget is registered to message:", browserWidget.webUIMessageHandler, messageBus.getSubscribersToMessage( TestMessageOne ).get(0) );
-      	assertEquals( "BrowserWidget is registered to message:", browserWidget.webUIMessageHandler, messageBus.getSubscribersToMessage( TestMessageTwo ).get(0) );
+      function test_Initialization_LoadsI18Resources() {
+         assertThat( browserWidget.getResourceBundle().isLoaded, is( true ));
       }
       
-      function testInitialization_ContainerIdShouldBeValid() {
-      	try{
-      	  new BrowserWidget( { widgetContainerId : "blabla" } , resourceBundle );
-      		fail( "Exception was expected. 'containerId' parameter should identify a valid dom element." );
-      	}catch( e ) {
-      		assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
-      	}
+      function test_Initialization_InstantiatesElementFactory(){
+         assertThat( browserWidget.getElementFactory(), not( nil() ));
+         assertThat( instanceOf( browserWidget.getElementFactory(), WidgetElementFactory ), is( true ));
       }
       
-      function testInitialization_ResourceBundleShouldBeLoaded() {
-      	try{
-      	  new BrowserWidget( { widgetContainerId : WIDGET_CONTAINER_ID }, new XMLResourceBundle( webUIConfiguration ) );
-      		fail( "Exception was expected. 'resourceBundle' parameter can't be null or empty." );
-      	}catch( e ) {
-      		assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
-      	}
+      function test_Initialization_WhenDefinitionUriIsGiven_LoadsIt(){
+         //SETUP, EXCERCISE:
+         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, widgetDefinitionURI : WIDGET_DEFINITION_URI }, resourceBundle );
+         
+         //VERIFY:
+         assertThat( browserWidget.getDefinitionXml(), not( nil() ));
       }
       
-      function testAppendElement_AppendsGivenElementToContainer() {
-        //SETUP:
-        var aNewElement = new Element( CHILD_ELEMENT_TYPE );
-        
-        //EXCERCISE:
-        browserWidget.appendElement( aNewElement );
-        
-        //VERIFY:
-        assertEquals( widgetContainerElement.getLast(), aNewElement );  
+      function test_Initialization_WhenDataUriIsGiven_LoadsIt(){
+         //SETUP, EXCERCISE:
+         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, widgetDataURI : WIDGET_DATA_URI }, resourceBundle );
+         
+         //VERIFY:
+         assertThat( browserWidget.getDataXml(), not( nil() ));
       }
       
-      function testAppendNewForm_AppendsNewFormToContainer() {
-        //SETUP:
-        var parentForNewForm = new Element( CHILD_ELEMENT_TYPE );
-        browserWidget.appendElement( parentForNewForm );
-        
-        //EXCERCISE:
-        var appendedForm = browserWidget.appendNewForm( FORM_NAME, FORM_METHOD_TYPE, parentForNewForm );
-        
-        //VERIFY:
-        assertNotNull( appendedForm );
-        assertNotNull( widgetContainerElement.getElementById( FORM_NAME ) );
+      function test_Initialization_WhenMessageSubsciptionsAreGiven_SubscribesToMessages() {
+         //SETUP, EXCERCISE:
+         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, resourceBundle );
+         
+         //VERIFY:
+         assertEquals( "BrowserWidget is registered to message:", browserWidget.webUIMessageHandler, messageBus.getSubscribersToMessage( TestMessageOne ).get(0) );
+         assertEquals( "BrowserWidget is registered to message:", browserWidget.webUIMessageHandler, messageBus.getSubscribersToMessage( TestMessageTwo ).get(0) );
       }
       
-      function testAppendNewStaticRow_AppendsNewDivWithTwoSpans() {
-        //SETUP:
-        var parentForNewRow = new Element( CHILD_ELEMENT_TYPE );
-        browserWidget.appendElement( parentForNewRow );
-        
-        //EXCERCISE:
-        var theNewRow = browserWidget.appendNewStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID, parentForNewRow );
-
-        //VERIFY:
-        assertNotNull( "A new 'row' was created.", theNewRow );
-        assertEquals( theNewRow, parentForNewRow.getLast() );
+      function test_Initialization_ContainerIdShouldBeValid() {
+         try{
+           new BrowserWidget( { widgetContainerId : "blabla" } , resourceBundle );
+            fail( "Exception was expected. 'containerId' parameter should identify a valid dom element." );
+         }catch( e ) {
+            assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+         }
       }
       
-      function testCreateAnchor_CreatesNewAnchorElement() {
-        //SETUP:
-        //EXCERCISE:
-        var theNewAnchor = browserWidget.createAnchor( {'id' : ANCHOR_ID }, ANCHOR_TEXT, CLICK_EVENT_HANDLER );
-        
-        //VERIFY:
-        assertNotNull( "A new achor was created.", theNewAnchor );
-        assertEquals( "A", theNewAnchor.tagName.toUpperCase() );
-        assertEquals( ANCHOR_ID, theNewAnchor.get( 'id' ));
-        assertEquals( ANCHOR_TEXT, theNewAnchor.get( 'text' ));
-        assertEquals( "#", theNewAnchor.get( 'href' ));
-
-        var events = theNewAnchor.retrieve( 'events' );
-        var clickEventHandler = events['click'].keys[0];
-        assertEquals( CLICK_EVENT_HANDLER, clickEventHandler );
+      function test_Initialization_ResourceBundleShouldBeLoaded() {
+         try{
+           new BrowserWidget( { widgetContainerId : WIDGET_CONTAINER_ID }, new XMLResourceBundle( webUIConfiguration ) );
+            fail( "Exception was expected. 'resourceBundle' parameter can't be null or empty." );
+         }catch( e ) {
+            assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+         }
       }
       
-      function testCreateButton_CreatesNewInputElement() {
-        //SETUP:
-        //EXERCISE:
-        var theNewButton = browserWidget.createButton( null, RESOURCE_KEY, CLICK_EVENT_HANDLER );
-          
-        //VERIFY:
-        assertNotNull( "A new input element was created.", theNewButton );
-        assertEquals( "INPUT", theNewButton.tagName.toUpperCase() );
-        assertEquals( "button", theNewButton.get( 'type' ));
-        assertEquals( resourceBundle.getText( RESOURCE_KEY ), theNewButton.get( 'value' ));
-        assertTrue( theNewButton.hasClass( browserWidget.BUTTON_CLASS ) );
-        assertEquals( CLICK_EVENT_HANDLER, theNewButton.retrieve( 'events' )['click'].keys[0] );
-      }
-      
-      function testCreateCollapsibleArea_CreatesNewDivElement() {
-        //SETUP:
-        //EXCERCISE:
-        var theNewCollapsibleArea = browserWidget.createCollapsibleArea();
-        
-        //VERIFY:
-        assertNotNull( "A new division element was created.", theNewCollapsibleArea ); 
-        assertEquals( "DIV", theNewCollapsibleArea.tagName.toUpperCase() );
-        assertTrue( theNewCollapsibleArea.hasClass( browserWidget.READ_ONLY_CONTAINER_CLASS_NAME ) );
-      }
-      
-      function testCreateDivisionElement() {
-        //SETUP:
-        //EXCERCISE:
-        var theNewDivisionElement = browserWidget.createDivision();
-        
-        //VERIFY:
-        assertNotNull( "A new division element was created.", theNewDivisionElement ); 
-        assertEquals( "DIV", theNewDivisionElement.tagName.toUpperCase() );
-        assertTrue( theNewDivisionElement.hasClass( browserWidget.READ_ONLY_CONTAINER_CLASS_NAME ));
-      }
-      
-      function testCreateElement() {
-        //SETUP:
-        //EXCERCISE:
-        var theNewElement = browserWidget.createElement( 'div' );
-        
-        //VERIFY:
-        assertNotNull( "A new division element was created.", theNewElement ); 
-        assertEquals( "DIV", theNewElement.tagName.toUpperCase() );
-      }
-      
-      function testCreateFieldSet() {
-        //SETUP:
-        //EXCERCISE:
-        var theNewFieldSet = browserWidget.createFieldSet( FIELDSET_IMAGE_ID );
-        
-        //VERIFY:
-        assertNotNull( "A new FIELDSET element was created.", theNewFieldSet ); 
-        assertEquals( "FIELDSET", theNewFieldSet.tagName.toUpperCase() );
-        
-        assertEquals( browserWidget.FIELDSET_STYLE["border-color"], theNewFieldSet.getStyle( "border-color" ));
-        assertEquals( browserWidget.FIELDSET_STYLE["width"], theNewFieldSet.getStyle( "width" ));
-        
-        var legend = theNewFieldSet.getElement( "LEGEND" );
-        assertNotNull( "Fieldset has a LEGEND child element.", legend );
-        
-        var image = theNewFieldSet.getElement( "LEGEND IMG" );
-        assertNotNull( "LEGEND within FIELDSET element has an IMG child element.", image );
-        assertEquals( FIELDSET_IMAGE_ID, image.get( "id" ));
-        assertEquals( browserWidget.FIELDSET_IMAGE_SOURCE, image.get( "src" ));
-        assertEquals( browserWidget.FIELDSET_IMAGE_ALT, image.get( "alt" ));
-        assertEquals( browserWidget.FIELDSET_IMAGE_TITLE, image.get( "title" ));
-        assertEquals( browserWidget.FIELDSET_IMAGE_STYLE["cursor"], image.getStyle( "cursor" ));
-      }
-      
-      function testCreateForm() {
-        //EXCERCISE:
-        var theNewForm = browserWidget.createForm( FORM_NAME, FORM_METHOD_TYPE );
-        
-        //VERIFY:
-        assertNotNull( "A new form was created.", theNewForm );
-        assertEquals( "FORM", theNewForm.tagName.toUpperCase() );
-        assertEquals( FORM_NAME, theNewForm.id );
-        assertEquals( FORM_METHOD_TYPE, theNewForm.method.toUpperCase() );
-      }
-      
-      function testCreateHiddenDivision() {
-	    //SETUP:
-        //EXCERCISE:
-        var theHiddenDivision = browserWidget.createHiddenDivision( HIDDEN_DIVISION_ID );
-        
-        //VERIFY:
-        assertNotNull( "A new DIV element was created.", theHiddenDivision );
-        assertEquals( "DIV", theHiddenDivision.tagName.toUpperCase() );
-        assertEquals( HIDDEN_DIVISION_ID, theHiddenDivision.id );
-        assertEquals( "none", theHiddenDivision.getStyle( "display" ) );
-        assertTrue( theHiddenDivision.hasClass( browserWidget.READ_ONLY_CONTAINER_CLASS_NAME ));
-      }
-      
-      function testCreateRowLabel() {
-	    //SETUP:
-        //EXCERCISE:
-        var theRowLabel = browserWidget.createRowLabel( ROW_LABEL );
-        
-        //VERIFY:
-        assertElementExists( theRowLabel, "SPAN" );
-        assertTrue( theRowLabel.hasClass( browserWidget.LABEL_CLASS_NAME ) );
-        assertEquals( ROW_LABEL, theRowLabel.get( 'text' ) );
-      }
-
-      function testCreateRowValue() {
-	    //SETUP:
-        //EXCERCISE:
-        var theRowValue = browserWidget.createRowValue();
-        
-        //VERIFY:
-        assertElementExists( theRowValue, "SPAN" );
-        assertTrue( theRowValue.hasClass( browserWidget.VALUE_CLASS_NAME ) );
-      }
-      
-	  function testCreateStaticRow() {
-	    //SETUP:
-        //EXCERCISE:
-        var theNewRow = browserWidget.appendNewStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID );
-        var theLabelSpan = theNewRow.getFirst();
-        theLabelSpan = $( theLabelSpan );
-        var theValueSpan = theNewRow.getLast();
-        theValueSpan = $( theValueSpan );
-
-        //VERIFY:
-        assertElementExists( theNewRow, "DIV" );
-        assertTrue( theNewRow.hasClass( browserWidget.ROW_CLASS_NAME ));
-
-        assertEquals( "SPAN", theLabelSpan.tagName.toUpperCase() );
-        assertEquals( ROW_LABEL, theLabelSpan.get( 'text' ));
-        assertTrue( theLabelSpan.hasClass( browserWidget.LABEL_CLASS_NAME ));
-        
-        assertEquals( "SPAN", theValueSpan.tagName.toUpperCase() );
-        assertEquals( ROW_VALUE, theValueSpan.get( 'text' ));
-        assertEquals( ROW_VALUE_ID, theValueSpan.get( 'id' ));
-        assertTrue( theValueSpan.hasClass( browserWidget.VALUE_CLASS_NAME ));
-	  }
-	              
-      function testCreateTable() {
-	    //SETUP:
-	    var tableDefinition = defineTestTable();
-	    
-        //EXCERCISE:
-        var theNewTable = browserWidget.createTable( tableDefinition );
-        
-        //VERIFY:
-        assertNotNull( "A new TABLE element was created.", theNewTable );
-        assertEquals( "TABLE", theNewTable.tagName.toUpperCase() );
-        
-        assertNotNull( "The TABLE contains THEAD element.", theNewTable.getElement( "THEAD" ) );
-        assertNotNull( "The table head (THEAD) contains a TR element.", theNewTable.getElement( "THEAD TR" ) );
-        assertEquals( tableDefinition.getColumns().size(), theNewTable.getElements( "THEAD TR TH" ).length );
-        
-        theNewTable.getElements( "THEAD TR TH" ).each( function( tableHeader, index ){
-        	assertEquals( tableDefinition.getColumns().getColumnByIndex( index ).getCaption(), tableHeader.get( 'text' ));
-        });
-        
-        assertNotNull( "The TABLE contains TBODY element.", theNewTable.getElement( "TBODY" ) );
-		assertEquals( "The table body contains 2 TR elements.", 2, theNewTable.getElements( "TBODY TR" ).length );
-		assertEquals( "The 2 rows contains 4 TD elements.", 4, theNewTable.getElements( "TBODY TR TD" ).length );
-		theNewTable.getElements( "TBODY TR TD" ).each( function( tableData, index ){
-			assertEquals( index +1, tableData.get( 'text' ).toInt() );
-		}); 
-      }
-      
-      function testCreateText() {
-        //EXCERCISE:
-        var theNewText = browserWidget.createText( TEXT_NODE_TEXT );
-
-        //VERIFY:
-        assertNotNull( "A new text node was created.", theNewText );
-        assertEquals( "#TEXT", theNewText.nodeName.toUpperCase() );
-        assertEquals( TEXT_NODE_TEXT, theNewText.nodeValue );
-      }
-      
-      function testFindElementById() {
-	    //SETUP:
-	    var tableDefinition = defineTestTable();
-	    var testTable = browserWidget.appendNewTable( tableDefinition );
-	    var headRow = testTable.getElement( "THEAD TR" );
-	    headRow.set( 'id', SEARCHED_ELEMENT_ID );
-	    
-	    //EXCERCISE:
-	    //VERIFY:
-	    assertEquals( headRow, browserWidget.findElementById( SEARCHED_ELEMENT_ID ) );
-      }
-      
-      function testGetText() {
+      function test_GetText_UsesI18Resource() {
       	assertNotNull( browserWidget.getText( RESOURCE_KEY ) );
-        assertEquals( resourceBundle.getText( RESOURCE_KEY ), browserWidget.getText( RESOURCE_KEY ));
+         assertEquals( resourceBundle.getText( RESOURCE_KEY ), browserWidget.getText( RESOURCE_KEY ));
       }
       
-      function testRemoveChild() {
-      	//SETUP:
-      	var elementToRemove = browserWidget.appendNewDivision();
-      	elementToRemove.set( 'id', SEARCHED_ELEMENT_ID );
-      	assertNotNull( browserWidget.findElementById( SEARCHED_ELEMENT_ID ) );
+      function test_RemoveChild_DestroysNestedChildElements() {
+      	//SETUP: 
+      	var elementToRemove = browserWidget.getElementFactory().createStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID );
+      	assertNotNull( widgetContainerElement.getElementById( ROW_VALUE_ID ));
       	 
       	//EXCERCISE:
       	browserWidget.removeChild( elementToRemove );
       	
       	//VERIFY:
-      	assertNull( browserWidget.findElementById( SEARCHED_ELEMENT_ID ) );
+      	assertNull( widgetContainerElement.getElementById( ROW_VALUE_ID ) );
       }
       
-      function testRemoveWidget() {
+      function test_Destroy_DestroysAllCreatedElements() {
       	//SETUP:
-      	browserWidget.appendNewTable( defineTestTable() );
+         browserWidget.getElementFactory().createStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID );
+         browserWidget.construct();
       	assertTrue( widgetContainerElement.getChildren().length >= 1 );
       	
       	//EXCERCISE:
-      	browserWidget.removeWidget();
+      	browserWidget.destroy();
       	
       	//VERIFY:
       	assertTrue( widgetContainerElement.getChildren().length == 0 );
       }
 
-	   function testWebUIMessageHandler_WhenConfigured() {
-      	  //SETUP:
-	      var webUIMessageOne = new TestMessageOne();
-	      var webUIMessageTwo = new TestMessageTwo();
-      	  browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, resourceBundle );
-      	  browserWidget.configure();
+      function test_WebUIMessageHandler_WhenConfigured() {
+         //SETUP:
+         var webUIMessageOne = new TestMessageOne();
+         var webUIMessageTwo = new TestMessageTwo();
+         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, resourceBundle );
+         browserWidget.construct();
 	      
-	      //EXCERCISE:
-	      messageBus.notifySubscribers( webUIMessageOne );
+         //EXCERCISE:
+         messageBus.notifySubscribers( webUIMessageOne );
 	      
-	      //VERIFY:
-	      assertEquals( "BrowserWidget stores the last handled WebUIMessage.", webUIMessageOne, browserWidget.getLastMessage() ); 
-	      messageBus.notifySubscribers( webUIMessageTwo );
-	      assertEquals( "BrowserWidget stores the last handled WebUIMessage.", webUIMessageTwo, browserWidget.getLastMessage() ); 
-	   }
+         //VERIFY:
+         assertEquals( "BrowserWidget stores the last handled WebUIMessage.", webUIMessageOne, browserWidget.getLastMessage() ); 
+         messageBus.notifySubscribers( webUIMessageTwo );
+         assertEquals( "BrowserWidget stores the last handled WebUIMessage.", webUIMessageTwo, browserWidget.getLastMessage() ); 
+      }
    
-	   function testWebUIMessageHandler_WhenNotConfigured() {
-      	  //SETUP:
+	   function test_WebUIMessageHandler_WhenNotConfigured() {
+	      //SETUP:
 	      var webUIMessageOne = new TestMessageOne();
-      	  browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne] }, resourceBundle );
+	      browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne] }, resourceBundle );
 	      
 	      try{
-	      //EXCERCISE:
-			messageBus.notifySubscribers( webUIMessageOne );
-			fail( "UnconfiguredWidgetExceptions was expected!" );
+	         //EXCERCISE:
+            messageBus.notifySubscribers( webUIMessageOne );
+            fail( "UnconfiguredWidgetExceptions was expected!" );
 	      }catch( e ) {
-	      //VERIFY:
-	        assertTrue( instanceOf( e, UnconfiguredWidgetException ) );
+	         //VERIFY:
+            assertTrue( instanceOf( e, UnconfiguredWidgetException ) );
 	      }
 	   }
    
       //runs a test function during debugging
       function runTestFunction(){
-	    setUp();
-	    testInitialization_WithoutArguments();
-		tearDown();
-	  }
+         setUp();
+         test_Destroy_DestroysAllCreatedElements();
+         tearDown();
+      }
 	  
-	  //Private helper methods
-	  function assertElementExists( element, tagName ){
-	  	assertNotNull( "The given element exists.", element );
-	  	assertEquals( tagName, element.tagName.toUpperCase() );
-	  }
-	  
-	  function defineTestTable() {
-	    var tableDefinition = new TableDefinition( resourceBundle );
-	    tableDefinition.addColumn( TABLE_COLUMN_ONE );
-	    tableDefinition.addColumn( TABLE_COLUMN_TWO );
-	    tableDefinition.addRow( new Array( 1,2 ) );
-	    tableDefinition.addRow( new Array( 3,4 ) );
-	    
-	    return tableDefinition;
-	  }
-
     </script>
   </head>
 
 <body>
     <h1>BrowserWidget.js test page</h1>
     <p>The widget is below this paragrahp.</p>
-    <div id="widgetContainer">Widget container.
-      <div id="firstChild">First child element.</div>
-      <div id="lastChild">Last child element.</div>
-    </div>
-	<div id="JavaScriptLogging"></div>
+    <div id="widgetContainer"></div>
 </body>
 </html>

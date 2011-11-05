@@ -1,4 +1,4 @@
-/*!
+/*
 Distributed under the MIT License:
 
  * Copyright (c) 2010 IT Codex Llc.
