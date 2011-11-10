@@ -17,6 +17,7 @@
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
@@ -76,45 +77,49 @@
 		var DEFINITION_NAME = "Test Smart Document";
 		var DEFINITION_DESCRIPTION = "This configuration supports testing Smart Document.";
 		var DEFINITION_VERSION = "0.5";
+      var DOCUMENT_CONTAINER_ID = "SmartDocument";
 		var DOCUMENT_DATA_URI = "../SmartDocument/SampleDocumentContent.xml";
 		var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
 		var LANGUAGE = "hu";
-		var WIDGET_CONTAINER_ID = "SmartDocument";
+      var RESOURCE_ITEMS_SELECTOR = "/smartDocumentDefinition/documentResources/styleSheets/styleSheet | " + 
+                                    "/smartDocumentDefinition/documentResources/images/image | " +
+                                    "/smartDocumentDefinition/documentResources/javascripts/javascript"
 		
 		var callBackWasCalled = false;
+      var documentDefinition = null;
 		var locale = new Locale({ language : LANGUAGE });
 		var messageBus = null;
 		var smartDocument = null;
 		var webUIConfiguration = null;
 		var webUILogger = null;
-		var widgetContainerElement = null;
+		var doumentContainerElement = null;
 		
-		function setUp(){
-			messageBus = new WebUIMessageBus();
-			webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-			webUILogger = new WebUILogger( webUIConfiguration );
-			resourceBundle = new XMLResourceBundle( webUIConfiguration );
-			resourceBundle.load( locale );
-			smartDocument = new SmartDocument( 
-			      resourceBundle, 
-			      { widgetContainerId : WIDGET_CONTAINER_ID, 
-			        documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
-			        documentContentUri : DOCUMENT_DATA_URI, 
-			        onDocumentReady : function(){ callBackWasCalled = true; }} );
-			widgetContainerElement = smartDocument.getContainerElement();
-			callBackWasCalled = false;
-		}
+      function setUp(){
+         messageBus = new WebUIMessageBus();
+         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         resourceBundle = new XMLResourceBundle( webUIConfiguration );
+         resourceBundle.load( locale );
+         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
+         smartDocument = new SmartDocument( 
+            resourceBundle, 
+            { widgetContainerId : DOCUMENT_CONTAINER_ID, 
+              documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
+              documentContentUri : DOCUMENT_DATA_URI, 
+              onDocumentReady : function(){ callBackWasCalled = true; }} );
+         doumentContainerElement = $( DOCUMENT_CONTAINER_ID );
+         callBackWasCalled = false;
+      }
 
 		function tearDown(){
 			messageBus.tearDown();
 			smartDocument.destroy();
 			smartDocument = null;
-			widgetContainerElement = null;
+			doumentContainerElement = null;
 		}
 		
-		function testInitialize() {
+		function test_Initialize() {
 			assertThat( smartDocument, not( nil() ));
-			assertThat( widgetContainerElement, not( nil() ));
 			
 			assertThat( smartDocument.getDocumentDefinition(), not( nil() ));
 			assertThat( instanceOf( smartDocument.getDocumentDefinition(), XmlResource ), is( true ));
@@ -123,7 +128,7 @@
 			assertThat( instanceOf( smartDocument.getDocumentData(), XmlResource ), is( true ));
 		}
 		
-		function testUnmarshall_DeterminesDefintionProperties(){
+		function test_Unmarshall_DeterminesDefintionProperties(){
 		   //SETUP: see setUp()
 		   //EXCERCISE:
 		   smartDocument.unmarshall();
@@ -134,25 +139,16 @@
 		   assertThat( smartDocument.getVersion(), equalTo( DEFINITION_VERSION ));
 		}
 		
-		function testUnmarshall_DeterminesResources(){
+		function test_Unmarshall_DeterminesResources(){
 		   //SETUP: see setUp()
 		   //EXCERCISE:
 		   smartDocument.unmarshall();
 		   
 		   //VERIFY:
-		   assertThat( smartDocument.getResources().getResources().size(), equalTo( 3 ));
+		   assertThat( smartDocument.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
 		}
 		
-		function testUnmarshall_SetsUpResourceChain(){
-		   //SETUP: see setUp()
-		   //EXCERCISE:
-		   smartDocument.unmarshall();
-		   
-		   //VERIFY:
-		   assertThat( smartDocument.getResources().getResourceChain(), not( nil() ));
-		}
-		
-		function testUnmarshall_UnmarshallsHeaderBodyAndFooter(){
+		function test_Unmarshall_UnmarshallsHeaderBodyAndFooter(){
 		   //SETUP: see setUp()
 		   //EXCERCISE:
 		   smartDocument.unmarshall();
@@ -163,7 +159,7 @@
 		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
 		}
 		
-		function testConstruct_ConstructsHeaderBodyAndFooter(){
+		function test_Construct_ConstructsHeaderBodyAndFooter(){
 		   //SETUP: see also setUp()
 		   smartDocument.unmarshall();
 		
@@ -174,13 +170,14 @@
 		   assertThat( smartDocument.getHeader().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
 		   assertThat( smartDocument.getBody().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
 		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
+         assertThat( smartDocument.getContainerElement(), equalTo( doumentContainerElement ));
 		   assertThat( callBackWasCalled, is( true ));
 		}
 				
 		//runs a test function during debugging
 		function runTestFunction(){
 			setUp();
-			testConstruct_ConstructsHeaderBodyAndFooter();
+			test_Construct_ConstructsHeaderBodyAndFooter();
 			tearDown();
 		}
     </script>

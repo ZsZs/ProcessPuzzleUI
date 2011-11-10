@@ -105,7 +105,6 @@ var Desktop = new Class({
       this.dock = null;
       this.header;
       this.footer;
-      this.isConfigured = false;
       this.logger = new WebUILogger( webUIConfiguration );
       this.MUIDesktop = null;
       this.name;
@@ -127,7 +126,7 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.logger.group( this.options.componentName + ".configure", false );
+      this.logger.group( this.options.componentName + ".construct", false );
       this.configurationChain.chain( 
          this.loadResources,
          this.constructHeader,
@@ -141,37 +140,43 @@ var Desktop = new Class({
       ).callChain();
    },
 	
-	destroy : function() {
-       this.logger.group( this.options.componentName + ".destroy", false );
-	   if( this.isConfigured ){
-	      if( this.resources ) this.resources.release();
-	      if( this.header ) this.header.destroy();
-	      if( this.contentArea ) this.contentArea.destroy();
-	      if( this.footer ) this.footer.destroy();
-	      if( this.windowDocker ) this.windowDocker.destroy();
-	      this.destroyWindows();
-	      this.destroyPanels();
-	      this.destroyColumns();
-	      this.removeDesktopEvents();
-	      this.state = Desktop.States.INITIALIZED;
-	   }
-       this.logger.groupEnd();
+   destroy : function() {
+      this.logger.group( this.options.componentName + ".destroy", false );
+      if( this.state > Desktop.States.UNMARSHALLED ){
+         if( this.resources ) this.resources.release();
+         if( this.header ) this.header.destroy();
+         if( this.contentArea ) this.contentArea.destroy();
+         if( this.footer ) this.footer.destroy();
+         if( this.windowDocker ) this.windowDocker.destroy();
+         this.destroyWindows();
+         this.destroyPanels();
+         this.destroyColumns();
+         this.removeDesktopEvents();
+         this.state = Desktop.States.INITIALIZED;
+      }
+      this.logger.groupEnd( this.options.componentName + ".destroy" );
    },
    
    onFooterConstructed: function(){
+      this.logger.debug( this.options.componentName + ", loading desktop footer is finished." );
       this.configurationChain.callChain();
    },
    
    onHeaderConstructed: function(){
+      this.logger.debug( this.options.componentName + ", loading desktop header is finished." );
       this.configurationChain.callChain();
    },
    
    onPanelConstructed: function(){
       this.numberOfConstructedPanels++;
-      if( this.numberOfConstructedPanels == this.panels.size() ) this.configurationChain.callChain();
+      if( this.numberOfConstructedPanels == this.panels.size() ){
+         this.logger.debug( this.options.componentName + ", loading desktop panels is finished." );
+         this.configurationChain.callChain();
+      } 
    },
    
    onResourcesLoaded: function(){
+      this.logger.debug( this.options.componentName + ", loading desktop resources is finished." );
       this.configurationChain.callChain();      
    },
    
@@ -218,16 +223,19 @@ var Desktop = new Class({
    }.protect(),
    
    constructContentArea : function(){
+      this.logger.debug( this.options.componentName + ".constructContentArea() started." );
       if( this.contentArea ) this.contentArea.construct( this.containerElement, 'bottom' );
       this.configurationChain.callChain();      
    }.protect(),
     
    constructHeader : function(){
+      this.logger.debug( this.options.componentName + ".constructHeader() started." );
       if( this.header ) this.header.construct( this.containerElement, 'bottom' );
       else this.configurationChain.callChain();      
    }.protect(),
 	
    constructFooter : function(){
+      this.logger.debug( this.options.componentName + ".constructFooter() started." );
       if( this.footer ) this.footer.construct( this.containerElement, 'bottom');
       else this.configurationChain.callChain();      
    }.protect(),
@@ -243,6 +251,7 @@ var Desktop = new Class({
    }.protect(),
 	
    constructWindowDocker : function(){
+      this.logger.debug( this.options.componentName + ".constructWindowDocker() started." );
       if( this.windowDocker ) this.windowDocker.construct( this.containerElement, 'bottom' );
       this.configurationChain.callChain();      
    }.protect(),
@@ -252,31 +261,40 @@ var Desktop = new Class({
       this.configurationChain.callChain();
       this.state = Desktop.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
+      this.logger.groupEnd( this.options.componentName + ".construct" );
    }.protect(),
 	
    destroyColumns: function() {
-      this.getDesktopColumns().clear();
+      this.logger.debug( this.options.componentName + ".destroyColumns() started." );
+      this.columns.each( function( columnEntry, index ) {
+         var column = columnEntry.getValue();
+         column.destroy();
+      }, this );
+      this.columns.clear();
    }.protect(),
 	
    destroyPanels: function() {
-      this.panels().each( function( desktopPanel, index ) {
-         desktopPanel.destroy();
+      this.logger.debug( this.options.componentName + ".destroyPanels() started." );
+      this.panels.each( function( panelEntry, index ) {
+         var panel = panelEntry.getValue();
+         panel.destroy();
       }, this );
-      this.panels().clear();
+      this.panels.clear();
       this.numberOfConstructedPanels = 0;
-	}.protect(),
+   }.protect(),
 	
    destroyWindows: function() {
-      this.getDesktopWindows().clear();
+      this.logger.debug( this.options.componentName + ".destroyWindows() started." );
+      this.windows.clear();
    }.protect(),
 	
    determineCurrentLocale : function() {
-	   if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
-	   else {
-	      this.currentLocale = new Locale();
-	      this.currentLocale.parse( this.webUIConfiguration.getI18DefaultLocale() );
-	   }
-	}.protect(),
+      if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
+      else {
+         this.currentLocale = new Locale();
+         this.currentLocale.parse( this.webUIConfiguration.getI18DefaultLocale() );
+      }
+   }.protect(),
 	
    initializeMUI : function() {
       this.logger.debug( this.options.componentName + ".initializeMUI() started." );
@@ -302,6 +320,7 @@ var Desktop = new Class({
    }.protect(),
    
    loadResources: function(){
+      this.logger.debug( this.options.componentName + ".loadResources() started." );
       if( this.resources ) {
          this.resources.load();
       }else this.onResourcesLoaded();
@@ -325,9 +344,9 @@ var Desktop = new Class({
    }.protect(),
 
    removeDesktopEvents : function(){
-      this.getDesktopElement().removeEvents();
-	   window.removeEvents();
-	   document.removeEvents();
+      this.containerElement.removeEvents();
+      window.removeEvents();
+      document.removeEvents();
    }.protect(),
    
    unmarshallColumns: function(){

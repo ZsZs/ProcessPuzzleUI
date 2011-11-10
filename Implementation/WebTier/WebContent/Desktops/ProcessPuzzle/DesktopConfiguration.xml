@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
-	<name>DesktopConfiguration</name>
+	<name>ProcessPuzzle</name>
 	<version>1.0</version>
 	<description>This is full flagged desktop configuration.</description>
    <containerId>desktop</containerId>
@@ -20,40 +20,41 @@
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Window.css</styleSheet>
 		</styleSheets>
 		<images></images>
-		<scripts></scripts>
+		<javaScripts></javaScripts>
 	</resources>
 	
 	<header tag="div" id="desktopHeader">
 		<titleBar tag="div" id="desktopTitleBar">
-			<elements>
-				<element tag="h1" class="applicationTitle">DesktopConfigurator.desktopTitle</element>
-				<element tag="h2" class="tagline">DesktopConfigurator.desktopSubTitle</element>
-			</elements>
+         <element tag="div" id="desktopTitleLogo"></element>
+			<compositeElement id="desktopTitleWrapper" tag="div">
+			   <!-- <element tag="h1" elementStyle="applicationTitle">DesktopConfigurator.desktopTitle</element> -->
+				<element tag="h2" elementStyle="tagline">DesktopConfigurator.desktopSubTitle</element>
+			</compositeElement>
 		</titleBar>
 		
 		<navigationBar tag="div" id="desktopNavigationBar">
-			<elements>
+			<compositeElement id="navigationBarWrapper" tag="div">
 				<element tag="div" id="HorizontalMenuBar">
-					<plugin>
+					<plugin name="HorizontalMenu">
                   <resources>
                      <styleSheets>
                         <styleSheet>Desktops/ProcessPuzzle/Styles/HorizontalMenuLayout.css</styleSheet>
                      </styleSheets>
                   </resources>
-						<onLoad>function(){ return new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', componentName : 'HorizontalMenuBar' }).configure();}</onLoad>
+						<onLoad>function(){ return new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', componentName : 'HorizontalMenuBar' }).construct();}</onLoad>
 					</plugin>
 				</element>
 				<element tag="div" id="LanguageSelectorWidget">
-					<plugin>
+					<plugin name="LanguageSelector">
                   <resources>
                      <styleSheets>
                         <styleSheet>Desktops/ProcessPuzzle/Styles/LanguageSelectorWidget.css</styleSheet>
                      </styleSheets>
                   </resources>
-						<onLoad>function(){ return new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).configure();}</onLoad>
+						<onLoad>function(){ return new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).construct();}</onLoad>
 					</plugin>
 				</element>
-			</elements>
+			</compositeElement>
 		</navigationBar>
 	</header>
 	
@@ -63,19 +64,17 @@
    
    <footer tag="div" id="desktopFooterWrapper">
       <footerBar tag="div" id="desktopFooter">
-         <elements>
-            <element tag="div" class="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
-            <element tag="div" id="SkinSelectorWidget">
-               <plugin>
-                  <resources>
-                     <styleSheets>
-                        <styleSheet>Desktops/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
-                     </styleSheets>
-                  </resources>
-                  <onLoad>function(){ return new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).configure();}</onLoad>
-               </plugin>
-            </element>
-         </elements>
+         <element tag="div" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
+         <element tag="div" id="SkinSelectorWidget">
+            <plugin name="SkinSelector">
+               <resources>
+                  <styleSheets>
+                     <styleSheet>Desktops/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
+                  </styleSheets>
+               </resources>
+               <onLoad>function(){ return new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).construct();}</onLoad>
+            </plugin>
+         </element>
       </footerBar>
    </footer>
    
@@ -86,47 +85,47 @@
 	</columns>
 	
 	<panels>
-		<panel name='content-browser' columnReference='leftColumn'>
+		<panel name='menuPanel' columnReference='leftColumn'>
 			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
-			<contentURL>Desktops/ProcessPuzzle/Pages/ContentBrowser.html</contentURL>
-			<plugin>
+         <contentURL>Desktops/ProcessPuzzle/Pages/VerticalMenuColumn.html</contentURL>
+			<plugin name="VerticalMenu">
             <resources>
                <styleSheets>
                   <styleSheet>Desktops/ProcessPuzzle/Styles/VerticalMenuLayout.css</styleSheet>
                </styleSheets>
             </resources>
-            <onLoad>function(){ return new HierarchicalMenuWidget({ widgetContainerId : 'VerticalMenuColumn', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', contextItemId : 'YourMenu', componentName : 'VerticalMenuColumn', subscribeToWebUIMessages : [MenuSelectedMessage] }).configure();}</onLoad>
+            <onLoad>function(){ return new HierarchicalMenuWidget({ widgetContainerId : 'VerticalMenuColumn', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', contextItemId : 'YourMenu', componentName : 'VerticalMenuColumn', subscribeToWebUIMessages : [MenuSelectedMessage] }).construct();}</onLoad>
 			</plugin>
 		</panel>
 		
-		<panel name='who-is-in' columnReference='leftColumn' height='100'>
+		<panel name='who-is-in' columnReference='leftColumn' height='100' showHeader='true'>
 			<title>DesktopConfigurator.Panel.whoIsIn</title>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' >
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true'>
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
 			<contentURL>Desktops/ProcessPuzzle/Pages/Welcome_hu.html</contentURL>
-			<panelHeader>
-				<plugin>
+		</panel>
+		
+		<panel name='consolePanel' columnReference='mainColumn' height='100' showHeader='true'>
+			<title>DesktopConfigurator.Panel.consoleTitle</title>
+         <panelHeader toolBoxUrl="Desktops/ProcessPuzzle/Pages/EmptyToolboxContent.html">
+            <plugin name="ConsoleTabs">
                <resources>
                   <styleSheets>
-                     <styleSheet>Desktops/ProcessPuzzle/Styles/DocumentSelector.css</styleSheet>
+                     <styleSheet>Desktops/ProcessPuzzle/Styles/ConsoleTabs.css</styleSheet>
                   </styleSheets>
                </resources>
-   				<onLoad>function() { return new TabWidget({ widgetContainerId : 'documents-panel_headerToolbox', widgetDefinitionURI : 'Commons/JavaScript/TabWidget/TabsDefinition.xml'}).configure();</onLoad> 
-				</plugin>
-			</panelHeader>
+               <onLoad>function() { return new TabWidget({ widgetContainerId : 'consolePanel_headerToolbox', widgetDefinitionURI : 'JavaScript/Source/TabWidget/TabsDefinition.xml'}).construct(); }</onLoad> 
+            </plugin>
+         </panelHeader>
 		</panel>
 		
-		<panel name='console' columnReference='mainColumn' height='100'>
-			<title>DesktopConfigurator.Panel.consoleTitle</title>
-		</panel>
-		
-		<panel name='menu-panel' columnReference='rightColumn' >
+		<panel name='eventsPanel' columnReference='rightColumn' showHeader='true' >
 			<title>DesktopConfigurator.Panel.menusTitle</title>
 		</panel>
 		
-		<panel name='tips-panel' columnReference='rightColumn' height='150'>
+		<panel name='newsPanel' columnReference='rightColumn' height='150' showHeader='true'>
 			<title>DesktopConfigurator.Panel.tipsTitle</title>
 		</panel>
 	</panels>

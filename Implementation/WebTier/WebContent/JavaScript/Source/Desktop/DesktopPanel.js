@@ -28,10 +28,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopPanel = new Class({
    Implements: [Events, Options],
-   Binds: ['constructDocument', 'constructPlugin', 'constructHeader', 'determinePanelElement', 'instantiateMUIPanel', 'onDocumentReady', 'onHeaderConstructed', 'onMUIPanelLoaded', 'onPluginLoaded'],   
+   Binds: ['constructDocument', 'constructPlugin', 'constructHeader', 'determinePanelElement', 'instantiateMUIPanel', 'onDocumentReady', 'onHeaderConstructed', 'onMUIPanelLoaded', 'onPluginConstructed'],   
    
    options : {
       columnReferenceSelector : "columnReference",
+      componentName : "DesktopPanel",
       contentUrlSelector : "contentURL",
       documentContentUriSelector : "document/documentContentUri",
       documentDefinitionUriSelector : "document/documentDefinitionUri",
@@ -64,11 +65,13 @@ var DesktopPanel = new Class({
       this.documentWrapperTag;
       this.header;
       this.height;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.MUIPanel;
       this.MUIPanelLoaded = false;
       this.name;
       this.panelContentElement;
       this.panelElement;
+      this.plugin;
       this.resourceBundle = bundle;
       this.showHeader;
       this.title;
@@ -78,6 +81,7 @@ var DesktopPanel = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
       this.constructionChain.chain( 
          this.instantiateMUIPanel,
          this.determinePanelElement,
@@ -89,31 +93,34 @@ var DesktopPanel = new Class({
    },
    
    destroy: function(){
-      if( this.document ) {
-         this.document.destroy();
-         this.destroyDocumentWrapper();
-      }
-      if( this.header ) this.header.destroy();
-      if( this.plugin ) this.plugin.destory();
-      if( this.panelElement ) this.panelElement.destroy();
+      this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "' started." );
+      if( this.state == DesktopPanel.States.CONSTRUCTED ) this.destroyComponents();
+      this.resetProperties();
+      this.state = DesktopPanel.States.INITIALIZED;
    },
    
    onDocumentReady: function(){
-      this.constructionChain.callChain();
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s artifact finished." );
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
+      this.state = DesktopPanel.States.CONSTRUCTED;
       this.fireEvent('panelConstructed', this ); 
+      this.constructionChain.callChain();
    },
    
    onHeaderConstructed: function(){
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s header finished." );
       this.constructionChain.callChain();
    },
    
    onMUIPanelLoaded: function(){
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s MUIPanel finished." );
       this.MUIPanelLoaded = true;
       this.constructionChain.callChain();
    },
    
-   onPluginLoaded: function(){
-     this.constructionChain.callChain();
+   onPluginConstructed: function(){
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s plugin finished." );
+      this.constructionChain.callChain();
    },
    
    unmarshall: function(){
@@ -136,6 +143,7 @@ var DesktopPanel = new Class({
    getDocumentWrapperTag: function() { return this.documentWrapperTag; },
    getHeader: function() { return this.header; },
    getHeight: function() { return this.height; },
+   getLogger: function() { return this.logger; },
    getMUIPanel: function() { return this.MUIPanel; },
    getName: function() { return this.name; },
    getPlugin: function() { return this.plugin; },
@@ -156,7 +164,7 @@ var DesktopPanel = new Class({
    constructPlugin: function(){
       if( this.plugin ) {
          this.plugin.construct();
-      }else this.onPluginLoaded();
+      }else this.onPluginConstructed();
    }.protect(),
    
    constructHeader: function(){
@@ -167,6 +175,16 @@ var DesktopPanel = new Class({
    createDocumentWrapper: function(){
       this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, class : this.documentWrapperStyle } );
       this.panelContentElement.grab( this.documentWrapper );
+   }.protect(),
+   
+   destroyComponents: function(){
+      if( this.document ) {
+         this.document.destroy();
+         this.destroyDocumentWrapper();
+      }
+      if( this.header ) this.header.destroy();
+      if( this.plugin ) this.plugin.destroy();
+      if( this.panelElement ) this.panelElement.destroy();
    }.protect(),
    
    destroyDocumentWrapper: function(){
@@ -184,6 +202,7 @@ var DesktopPanel = new Class({
       
       this.MUIPanel = new MUI.Panel({ 
          column: this.columnReference,
+         content: "",
          contentURL: this.contentUrl,
          id: this.name,
          header: this.showHeader,
@@ -193,6 +212,20 @@ var DesktopPanel = new Class({
          height: this.height, 
          require: require,
          title: this.title });
+   }.protect(),
+   
+   resetProperties: function(){
+      this.columnReference = null;
+      this.contentUrl = null;
+      this.documentContentUri = null;
+      this.documentDefinitionUri = null;
+      this.documentWrapperId = null;
+      this.documentWrapperStyle = null;
+      this.documentWrapperTag = null;
+      this.height = null;
+      this.name = null;
+      this.showHeader = null;
+      this.title = null;
    }.protect(),
    
    unmarshallDocument: function(){
@@ -241,7 +274,7 @@ var DesktopPanel = new Class({
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
-         this.plugin = new DesktopPlugin( pluginDefinition, { onLoaded : this.onPluginLoaded } );
+         this.plugin = new DesktopPlugin( pluginDefinition, { onConstructed : this.onPluginConstructed } );
          this.plugin.unmarshall();
       }
    }.protect()

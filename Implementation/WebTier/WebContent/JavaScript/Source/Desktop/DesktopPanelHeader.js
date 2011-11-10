@@ -29,6 +29,7 @@ var DesktopPanelHeader = new Class({
    Binds: ['construct', 'onPluginConstructed'],   
    
    options: {
+      componentName : "DesktopPanelHeader",
       headerSelector : "panelHeader",
       pluginSelector : "plugin",
       toolboxContent : "../Desktop/EmptyToolboxContent.html",
@@ -41,6 +42,7 @@ var DesktopPanelHeader = new Class({
    initialize: function( definitionElement, options ){
       this.setOptions( options );
       this.definitionElement = definitionElement;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.state = DesktopPanelHeader.States.INITIALIZED;
       this.toolBox = null;
       this.toolBoxOnLoad = null;
@@ -49,6 +51,7 @@ var DesktopPanelHeader = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
+      this.logger.group( this.options.componentName + ".construct()" );
       if( this.plugin ) this.plugin.construct();
       else this.onPluginConstructed();
    },
@@ -59,6 +62,7 @@ var DesktopPanelHeader = new Class({
    
    onPluginConstructed : function(){
       this.state = DesktopPanelHeader.States.CONSTRUCTED;      
+      this.logger.groupEnd( this.options.componentName + ".construct()" );
       this.fireEvent( 'headerConstructed', this );
    },
    

@@ -48,6 +48,10 @@ var DocumentResource = new Class({
       if( !this.isResourceLoaded() ) this.loadResource();
    },
    
+   onResourceError: function(){
+      this.fireEvent( 'resourceError', this.resourceUri );
+   },
+   
    onResourceLoaded: function(){
       this.fireEvent( 'resourceLoaded', this );
    },

@@ -27,10 +27,39 @@ You should have received a copy of the GNU General Public License along with thi
 var DocumentStyleSheet = new Class({
    Extends: DocumentResource,
    
+   options: {
+      componentName : "DocumentStyleSheet",
+      idPrefix : 'css-preload-'
+   },
+   
    //Constructor
    initialize: function( resourceElement, options ){
       this.options.type = "StyleSheet";
       this.parent( resourceElement, options );
+      this.resourceRequest;
+   },
+   
+   load: function(){
+      this.resourceRequest = new Request({
+         url: this.resourceUri,
+         async: false,            
+         onSuccess: function( responseText, responseXML ){
+            this.parent();
+         }.bind( this ),
+         
+         onException: function( headerName, value ){
+            this.onResourceError();
+         }.bind( this ),
+         
+         onFailure: function( xhr ) {
+            this.onResourceError();
+         }.bind( this )
+      });
+      try{
+         this.resourceRequest.send();
+      }catch( e ){
+         throw new UndefinedDocumentResourceException( this.resourceUri, { cause: e, source : this.componentName } );
+      }
    },
    
    //Public mutators and accessor methods
@@ -55,13 +84,13 @@ var DocumentStyleSheet = new Class({
          }.bind( this ),
          
          onError: function() {
-            throw new ResourceNotFoundException( styleSheetUri );
+            this.logger.debug( "Error: Couldn't load style sheet '" + path + "'." );
+            this.onResourceError();
          }.bind( this ),
          
          onStart: function() {
             this.logger.debug( "Started to add: '" + this.resourceUri + "' to the document." );
          }.bind( this )
       }).start();
-      
    }.protect()
 });

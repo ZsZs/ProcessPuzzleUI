@@ -46,7 +46,7 @@ var LanguageSelectorWidget = new Class({
    },
 
    //Public accessor and mutator methods
-   configure : function() {
+   construct : function() {
       this.createSpanElements();
       this.createSelectElement();
       this.createSelectElementOptions();
@@ -72,22 +72,22 @@ var LanguageSelectorWidget = new Class({
    
    //Private helper methods
    createSelectElement : function(){
-      this.selectElement = this.appendNewSelect( { id : this.options.selectElementId }, this.selectElementContainer );
+      this.selectElement = this.elementFactory.create( 'select', null, this.selectElementContainer, WidgetElementFactory.Positions.LastChild, { id : this.options.selectElementId } );
       this.selectElement.addEvent( 'change', this.onSelection );
    }.protect(),
    
    createSelectElementOptions : function() {
-      var selectedOption = this.appendNewOption( "", this.getText( this.options.selectTextKey ), this.selectElement );
+      var selectedOption = this.elementFactory.createOption( "", this.options.selectTextKey, this.selectElement, WidgetElementFactory.Positions.LastChild );
       selectedOption.set( 'selected' );
       
       this.availableLocales.each( function( locale, index ){
-         this.appendNewOption( locale.getLanguage(), this.options.componentPrefix + "." + locale.getLanguage(), this.selectElement );
+         this.elementFactory.createOption( locale.getLanguage(), this.options.componentPrefix + "." + locale.getLanguage(), this.selectElement, WidgetElementFactory.Positions.LastChild );
       }, this );
    }.protect(),
    
    createSpanElements: function() {
-      var languageSelectorWrapper = this.appendNewSpan( {'class': this.options.wrapperElementStyle });
-      this.selectElementContainer = this.appendNewSpan( null, languageSelectorWrapper );
+      var languageSelectorWrapper = this.elementFactory.create( 'span', null, null, null, {'class': this.options.wrapperElementStyle });
+      this.selectElementContainer = this.elementFactory.create( 'span', null, languageSelectorWrapper );
    }.protect(),
    
    determineAvailableLocales : function(){

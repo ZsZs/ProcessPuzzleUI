@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Test page for HorizontalMenuLayout.css</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+   <link type="text/css" rel="stylesheet" href="JavaScript/Source/JsUnit/app/css/jsUnitStyle.css">
+   <link type="text/css" rel="stylesheet" href="Desktops/ProcessPuzzle/Styles/HorizontalMenuLayout.css">
+
+   <!--[if IE]>
+	   <script type="text/javascript" src="JavaScript/Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="JavaScript/Source/JsUnit/app/jsUnitCore.js"></script>
+   
+   <script type="text/javascript" src="JavaScript/Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   
+   <script type="text/javascript" src="JavaScript/Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+
+   <script type="text/javascript">
+   window.addEvent('domready', function() {
+      setUp();
+   });
+   
+   JsHamcrest.Integration.JsUnit();
+   
+   var CONFIGURATION_URI = "Configuration/default_configuration.xml";
+   var LANGUAGE = "hu";
+   var MENU_DEFINITION_URI = "JavaScript/Source/HierarchicalMenuWidget/MenuDefinition.xml";
+   var MENU_WIDGET_ID = "HierarchicalMenuWidget";
+   var callBackMessage = null;
+   var callBackWasCalled = false;
+   var componentStateManager = null;
+   var locale = new Locale({ language : LANGUAGE });
+   var menuWidget = null;
+   var messageBus = null;
+   var resourceBundle = null;
+   var webUIConfiguration = null;
+   var webUILogger = null;
+   var widgetContainerElement = null;
+
+   function setUp() {
+      messageBus = new WebUIMessageBus();
+      componentStateManager = new ComponentStateManager();
+      webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+      webUILogger = new WebUILogger( webUIConfiguration );
+      resourceBundle = new XMLResourceBundle( webUIConfiguration );
+      resourceBundle.load( locale );
+      widgetContainerElement = $( MENU_WIDGET_ID );
+      menuWidget = new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+      menuWidget.construct();
+   }
+   </script>
+</head>
+
+<body>
+   <h1>HorizontalMenuLayout.css test page</h1>
+   <dir id="HorizontalMenuBar"></dir>
+</body>
+</html>

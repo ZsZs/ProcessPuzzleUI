@@ -70,6 +70,12 @@ var XmlResource = new Class({
    },
    
    // Public accessor and mutator methods
+   createElement : function( tagName, properties ){
+      var newXmlElement = this.xmlDoc.createElement( tagName );
+      if( properties && properties['text'] ) newXmlElement.appendChild( this.xmlDoc.createTextNode( properties['text'] ) );
+      return newXmlElement;
+   },
+   
    determineAttributeValue : function( xmlElement, attributeName ) {
       return XmlResource.determineAttributeValue( xmlElement, attributeName );
    },

@@ -28,6 +28,7 @@ var DesktopFooter = new Class({
    Extends: CompositeDesktopElement,
    
    options: {
+      componentName : "DesktopFooter",
       subElementsSelector : "footerBar | compositeElement | element",
    },
    

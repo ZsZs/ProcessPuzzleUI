@@ -3485,10 +3485,10 @@ var inserters = {
 	},
 
 	bottom: function(context, element){
-		element.appendChild(context);
+	   if( element ) element.appendChild(context);
 	},
 
-	top: function(context, element){
+	top: function( context, element ){
 		element.insertBefore(context, element.firstChild);
 	}
 

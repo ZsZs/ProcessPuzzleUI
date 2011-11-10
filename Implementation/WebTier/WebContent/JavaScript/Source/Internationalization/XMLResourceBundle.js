@@ -82,7 +82,7 @@ var XMLResourceBundle = new Class( {
 
    // public mutators methods
    load : function( locale ) {
-      this.logger.group( this.options.componentName + ".load", false );
+      this.logger.debug( this.options.componentName + ".load() started." );
       this.currentLocale = locale;
       this.cache = new ResourceCache();
       var fileList = this.determineFileNames( locale );
@@ -97,7 +97,6 @@ var XMLResourceBundle = new Class( {
          throw exception;
       }
       this.isLoaded = true;
-      this.logger.groupEnd();
    },
    
    release : function(){

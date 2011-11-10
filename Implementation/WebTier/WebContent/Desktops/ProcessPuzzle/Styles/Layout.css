@@ -40,45 +40,53 @@ body {
 	background: url(../Images/HeaderBackground.jpg) repeat-x;
 }
 
-#desktopTitlebarWrapper {
-	height: 130px;
-	position: relative;	
-	background: url(../Images/TitleImage.jpg) no-repeat;
-	background-position: top;
-	background-position: right top;
-	overflow: hidden;
-}
-
 #desktopTitleBar {
-	padding: 7px 8px 6px 8px;
-	height: 100px;
-	background-position: 10px 10px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-	background-image: url("../Images/ProcessPuzzleLogo.gif")
+   height: 100px;
+   overflow: hidden;
+   background: url(../Images/TitleImage.jpg) no-repeat;
+   background-position: right top;
+   background-repeat: no-repeat;
 }
 
-#desktopTitleBar h1.applicationTitle {
+#desktopTitleLogo{
+   background: url(../Images/ProcessPuzzleLogo.gif) no-repeat;
+   background-position: left top;
+   height: 80px;
+   left: 10px;
+   position: absolute;
+   top: 10px;
+   width: 80px;
+}
+
+#desktopTitleWrapper {
+	margin: 0px;
+	left: 0px;
+	overflow: hidden;
+   position: relative;  
+   top: 0px;
+}
+
+#desktopTitleWrapper h1.applicationTitle {
 	margin: 0;
 	padding: 0 5px 0 0;
 	font-size: 20px;
 	line-height: 25px;
 	font-weight: bold;
 	text-align: center;
-	color: blue;
+	color: darkblue;
 }
 
-#desktopTitleBar h2.tagline {
+#desktopTitleWrapper h2.tagline {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 13px;    
 	color: white;    
 	font-weight: bold;
 	text-align: right;
 	text-transform: uppercase;
-	padding-right: 45px;
+	padding-right: 55px;
 	padding-left: 0px;
 	padding-bottom: 0px;
-	padding-top: 60px
+	padding-top: 65px
 }
 
 #desktopTitleBar h2.tagline .taglineEm {
@@ -87,13 +95,15 @@ body {
 }
 
 #desktopNavigationBar {
-	top: 100px;
-	height: 30px;
-	width: 100%;
-	margin: 0px;
-	padding: 0px;
-	position: absolute;
-	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
+   background: url(../Images/NavigationBarBackground.jpg) repeat-x;
+   height: 30px;
+   width: 100%;
+   margin: 0px;
+   padding: 0px;
+   position: absolute;
+   top: 100px;
+   overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */   
+   z-index: 0;
 }
 
 #desktopNavigationBar div.navigationBarText {

@@ -17,6 +17,7 @@
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
@@ -42,6 +43,11 @@
    <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
 	
@@ -52,7 +58,7 @@
 				
 		JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+		var CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
 		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
 		var PANEL_HEADER_SELECTOR = "/pp:desktopConfiguration/panels/panel[@name='console']/panelHeader";
 		var desktopConfiguration = null;

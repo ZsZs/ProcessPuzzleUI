@@ -31,6 +31,8 @@ var DesktopPlugin = new Class({
    Binds: ['callOnLoad', 'loadResources', 'onResourcesLoaded'],   
    
    options: {
+      componentName : "DesktopPlugin",
+      nameSelector : "@name",
       onLoadSelector : "onLoad",
       resourcesSelector : "resources"
    },
@@ -42,6 +44,8 @@ var DesktopPlugin = new Class({
       //Protected, private variables
       this.constructChain = new Chain();
       this.definitionElement = definitionElement;
+      this.logger = Class.getInstanceOf( WebUILogger );
+      this.name;
       this.onLoad;
       this.resources;
       this.state = DesktopPlugin.States.INITIALIZED;
@@ -52,6 +56,7 @@ var DesktopPlugin = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
       this.constructChain.callChain();
    },
    
@@ -73,6 +78,7 @@ var DesktopPlugin = new Class({
    },
    
    unmarshall: function(){
+      this.unmarshallProperties();
       this.unmarshallResources();
       this.unmarshallOnLoad();
       this.state = DesktopPlugin.States.UNMARSHALLED;
@@ -101,6 +107,10 @@ var DesktopPlugin = new Class({
          var functionAsText = XmlResource.selectNodeText( this.options.onLoadSelector, this.definitionElement );
          this.onLoad = eval( "(" + functionAsText + ")" );
       }
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionElement );
    }.protect(),
    
    unmarshallResources: function() {

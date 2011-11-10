@@ -38,12 +38,12 @@
 				<wui:skin name="MochaUI" relativePath="Desktops/MochaUI" configurationURI="Desktops/MochaUI/DesktopConfiguration.xml" />
 				<wui:skin name="ProcessPuzzle" relativePath="Desktops/ProcessPuzzle" configurationURI="Desktops/ProcessPuzzle/DesktopConfiguration.xml" />
 			</wui:availableSkins>
-			<wui:defaultSkin name="MochaUI"></wui:defaultSkin>
+			<wui:defaultSkin name="ProcessPuzzle"></wui:defaultSkin>
 		</wui:desktop>
 			
 		<wui:logging>
 			<wui:loggers>
-				<wui:logger name="WebUI" level="debug" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="WebUI" level="trace" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
 			</wui:loggers>
 			
 			<wui:layouts>
@@ -58,7 +58,7 @@
 					complainAboutPopUpBlocking="true"
 					focusPopUp="true"
 					lazyInit="false"
-					threshold="debug"
+					threshold="trace"
 					maxMessages="1000"
 					newestMessageAtTop="true"
 					height="800"
@@ -166,6 +166,8 @@
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
 			<in:resourceBundle>Configuration/DesktopInternationalization</in:resourceBundle>
+         <in:resourceBundle>JavaScript/Source/TabWidget/TabWidgetInternationalization</in:resourceBundle>
+         <in:resourceBundle>JavaScript/Source/HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

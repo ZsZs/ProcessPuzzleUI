@@ -23,8 +23,20 @@ FRONT_CONTROLLER = "CommandControllerServlet";
 
 // Main control class, responsible for managing and syncronizing the widgets.
 var WebUIController = new Class({
-   Implements: [Class.Singleton, Options],
-   Binds : ['changeLanguage', 'loadDocument', 'webUIMessageHandler'],
+   Implements: [Class.Singleton, Events, Options],
+   Binds : ['changeLanguage', 
+            'constructDesktop',
+            'configureDocumentManager',
+            'configureLogger',
+            'determineCurrentUserLocale',
+            'loadDocument', 
+            'loadInternationalizations',
+            'loadWebUIConfiguration',
+            'onDesktopConstructed', 
+            'restoreStateFromUrl',
+            'storeComponentState',
+            'subscribeToWebUIMessages',
+            'webUIMessageHandler'],
    
    options: {
       artifactTypesXslt : "Commons/JavaScript/WebUIController/TransformBusinessDefinitionToArtifactTypes.xsl",
@@ -49,6 +61,7 @@ var WebUIController = new Class({
       //private instance variables
       this.applicationConfiguration = null;
       this.artifactTypeLoader = null;
+      this.configurationChain = new Chain();
       this.desktop = null;
       this.documentManager = null;
       this.infoPanelManager = null;
@@ -77,7 +90,7 @@ var WebUIController = new Class({
       this.logger.group( this.options.componentName + ".setUp", false );
       this.determineCurrentUserLocale();
       this.determineDefaultSkin();
-      this.loadResourceBundle();
+      this.loadInternationalizations();
       this.storeStateInUrl.periodical( this.options.urlRefreshPeriod, this );
 
       this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
@@ -99,6 +112,7 @@ var WebUIController = new Class({
    },
    
    changeLanguage : function( locale ){
+      this.logger.debug( this.options.componentName + ".changeLanguage()." );
       this.destroy();
       this.locale = locale;
       this.configure();
@@ -107,29 +121,32 @@ var WebUIController = new Class({
    },
    
    changeSkin : function( newSkinName ){
+      this.logger.debug( this.options.componentName + ".changeSkin()." );
       this.destroy();
       this.skin = newSkinName;
       this.configure();
    },
    
    configure : function() {
-      this.logger.group( this.options.componentName + ".configure", false );
-      this.loadWebUIConfiguration();
-      this.configureLogger();
-      this.restoreStateFromUrl();
-      this.determineCurrentUserLocale();
-      this.loadResourceBundle();
-      this.configureDesktop();
-      this.configureDocumentManager();
-      this.subscribeToWebUIMessages();
-      this.storeComponentState();
+      this.logger.group( this.options.componentName + ".configure()", false );
+      this.configurationChain.chain( 
+         this.loadWebUIConfiguration,
+         this.configureLogger,
+         this.restoreStateFromUrl,
+         this.determineCurrentUserLocale,
+         this.loadInternationalizations,
+         this.constructDesktop,
+         this.configureDocumentManager,
+         this.subscribeToWebUIMessages,
+         this.storeComponentState
+      ).callChain();
       
-      this.isConfigured = true;
-      this.logger.groupEnd();
+      this.logger.groupEnd( this.options.componentName + ".configure()" );
    },
    
    destroy : function() {
       if( this.isConfigured ){
+         this.logger.group( this.options.componentName + ".destroy()", false );
          this.locale = null;
          this.documentManager.destroy();
          this.messageBus.tearDown();
@@ -139,10 +156,12 @@ var WebUIController = new Class({
          this.resourceBundle.release();
          this.options.window.location.hash = "";
          this.isConfigured = false;
+         this.logger.groupEnd( this.options.componentName + ".destroy()" );
       }
    },
    
    loadDocument : function( documentProperties ){
+      this.logger.debug( this.options.componentName + ".loadDocument()." );
       this.documentManager.loadDocument( documentProperties );
       this.currentDocumentProperties = documentProperties;
    },
@@ -157,31 +176,24 @@ var WebUIController = new Class({
       return documentManager.loadDocumentByName( documentType, name, viewNameToActivate ); 
 	},
 	
-	loadDocumentByUri : function ( documentType, name, uri, viewNameToActivate ) {
+   loadDocumentByUri : function ( documentType, name, uri, viewNameToActivate ) {
       this.logger.debug( "Document load by uri was requested. uri:" + uri + ", type:" + documentType + ", view:" + viewNameToActivate );
       return documentManager.loadDocumentUri( documentType, name, uri, viewNameToActivate ); 
-	},
-	
-	loadInfoPanelDocumentById : function ( documentType, name, id, viewNameToActivate ) {
    },
-   
-	loadInfoPanelDocumentByName : function ( documentType, name ) {
-      this.logger.debug( "Info Panel Document by name load was requested. name:" + name + ", type:" + documentType );
-      return infoPanelManager.loadDocumentByName( documentType, name, null );
-	},
 	
-	loadInfoPanelDocumentByUri : function ( documentType, name, uri ) {
-      this.logger.debug( "Info Panel Document by uri load was requested. uri: " + uri + ", type:" + documentType );
-      return infoPanelManager.loadDocumentByUri( documentType, name, uri, null );
-	},
+   onDesktopConstructed : function(){
+      this.logger.debug( this.options.componentName + ", constructing desktop is finished." );
+      this.configurationChain.callChain();
+   },
 	
-	reloadActiveDocument : function () {
+   reloadActiveDocument : function () {
       var documentType = self.getActiveDocument().getDocumentType();
       var documentName = self.getActiveDocument().getDocumentName();
       self.loadDocument(documentType, documentName );
-	},
+   },
 	
    restoreStateFromUrl : function(){
+      this.logger.debug( this.options.componentName + ".restoreStateFromUrl() started." );
       if( this.options.window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
@@ -192,6 +204,7 @@ var WebUIController = new Class({
             this.logger.debug( "restoreStateFromUrl() exception: " + e );
          }
       }
+      this.configurationChain.callChain();
    },
    
    storeStateInUrl : function() {
@@ -202,11 +215,6 @@ var WebUIController = new Class({
 	   }
    },
    
-	unloadInfoPanelDocument : function ( documentName ) {
-      this.logger.debug( "Info Panel Document should be unloaded.", documentName );
-      infoPanelManager.unLoadDocument( documentName );
-	},
-
    webUIMessageHandler: function( webUIMessage ){
       if( !this.isConfigured ) throw new UnconfiguredWebUIControllerException({ source : 'WebUIController.webUIMessageHandler()' });
       
@@ -253,69 +261,71 @@ var WebUIController = new Class({
    setApplicationConfiguration : function( newConfiguration ) { this.applicationConfiguration = newConfiguration; },
 	
    //private methods
-   buildLanguageSelector : function() {
-      this.languageSelector = new LanguageSelectorWidget( this.options.languageSelectorElementId, this.resourceBundle, this.webUIConfiguration, this.changeLanguage );
-      this.languageSelector.build();
-   }.protect(),
-   
-	configureLogger : function() {		
+   configureLogger : function() {		
       this.logger =  new WebUILogger( this.webUIConfiguration );
-	}.protect(),
+      this.logger.debug( this.options.componentName + ".configureLogger() started." );
+      this.configurationChain.callChain();
+   }.protect(),
 	
-	configureDesktop : function() {
-	   var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-	   this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri } );
-	   this.desktop.unmarshall();
-	   this.desktop.construct();
-	}.protect(),
+   constructDesktop : function() {
+      this.logger.debug( this.options.componentName + ".constructDesktop() started." );
+      var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
+      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri, onConstructed : this.onDesktopConstructed } );
+      this.desktop.unmarshall();
+      this.desktop.construct();
+   }.protect(),
 	
-	configureDocumentManager : function() {
-	   this.documentManager = new DocumentManager();
-	   this.documentManager.configure( this.locale );
-	}.protect(),
+   configureDocumentManager : function() {
+      this.logger.debug( this.options.componentName + ".configureDocumentManager() started." );
+      this.documentManager = new DocumentManager();
+      this.documentManager.configure( this.locale );
+      this.configurationChain.callChain();
+   }.protect(),
 	
-	determineCurrentHash: function() {
-	   if( this.options.window.location.hash.indexOf( "#" ) != -1 )
-	      return this.options.window.location.hash.substring(1);
-	   else return "";
-	}.protect(),
+   determineCurrentHash: function() {
+      if( this.options.window.location.hash.indexOf( "#" ) != -1 )
+         return this.options.window.location.hash.substring(1);
+      else return "";
+   }.protect(),
 	
-	determineCurrentUserLocale : function() {
-	   if( this.locale == null ){
-	      var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
-	      if( storedState ) {
-	         var localeString = storedState['locale'];
+   determineCurrentUserLocale : function() {
+      this.logger.debug( this.options.componentName + ".determineCurrentUserLocale() started." );
+      if( this.locale == null ){
+         var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
+         if( storedState ) {
+            var localeString = storedState['locale'];
             this.locale = new Locale();
             this.locale.parse( localeString );
-	      }else {
-	         this.locale = new Locale();
-	         this.locale.parse( this.webUIConfiguration.getI18DefaultLocale() );
-	      }
-	   }
-	}.protect(),
+         }else {
+            this.locale = new Locale();
+            this.locale.parse( this.webUIConfiguration.getI18DefaultLocale() );
+         }
+      }
+      this.configurationChain.callChain();
+   }.protect(),
 	
    determineDefaultSkin : function(){
       this.skin = this.webUIConfiguration.getDefaultSkin();
    }.protect(),
 
-	getTextInternal : function ( key, defaultValue ) {
-		if( this.resourceBundle == null)
-			if( defaultValue != null ) return defaultValue;
-			else return key;
-		var returnValue;
-		try {
-			returnValue = this.resourceBundle.getText(key);
-		} catch (e) {
-			if( e instanceof IllegalArgumentException ) {
-				if(defaultValue != null) return defaultValue;
-				return key;
-			} else {
-				var exception = new UserException( "Unknown problem occured.", "WebUIController getText()" );
-				throw exception;
-			}
-		}
-		return returnValue;	
-	}.protect(),
+   getTextInternal : function ( key, defaultValue ) {
+      if( this.resourceBundle == null)
+         if( defaultValue != null ) return defaultValue;
+         else return key;
+      var returnValue;
+      try {
+         returnValue = this.resourceBundle.getText(key);
+      } catch (e) {
+         if( e instanceof IllegalArgumentException ) {
+            if(defaultValue != null) return defaultValue;
+            return key;
+         } else {
+            var exception = new UserException( "Unknown problem occured.", "WebUIController getText()" );
+            throw exception;
+         }
+      }
+      return returnValue;	
+   }.protect(),
 	
    loadArtifactTypeLoader : function ( theArtifactTypeLoader ) {
       artifactTypeLoader = theArtifactTypeLoader;
@@ -346,12 +356,8 @@ var WebUIController = new Class({
       this.logger.debug( "Info Pane Manager loaded." );
    }.protect(),
    
-   loadMenuManager : function ( menuWidget ) {
-      rightMenu = menuWidget;
-      this.logger.debug( "Menu Manager loaded." );
-   },
-   
-   loadResourceBundle : function () {
+   loadInternationalizations : function () {
+      this.logger.debug( this.options.componentName + ".loadInternationalizations() started." );
       try{
          this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
          this.resourceBundle.load( this.locale );
@@ -359,39 +365,48 @@ var WebUIController = new Class({
       }catch( e ) {
          this.showWebUIExceptionPage( e );
       }
+      this.configurationChain.callChain();
    }.protect(),
    
-	loadWebUIConfiguration : function() {
+   loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );
       }catch( e ){
          alert( "Couldn't load Browser Front-End configuration: " + this.options.configurationUri );
       }
-	}.protect(),
+      this.configurationChain.callChain();
+   }.protect(),
 
-	setLanguage : function( newLanguage ) {
-		prefferedLanguage=newLanguage;
-		if(newLanguage != null) {
-			var locale = new Locale(newLanguage);
-			if(applicationConfiguration != null) {
-				applicationConfiguration.setLocale(locale);
-				this.loadResourceBundle(applicationConfiguration.getBundlePath(),locale);
-			}
-		}
-	}.protect(),
+   setLanguage : function( newLanguage ) {
+      this.logger.debug( this.options.componentName + ".setLanguage() started." );
+      prefferedLanguage = newLanguage;
+      if(newLanguage != null) {
+         var locale = new Locale(newLanguage);
+         if( applicationConfiguration != null) {
+            applicationConfiguration.setLocale(locale);
+            this.loadInternationalizations(applicationConfiguration.getBundlePath(),locale);
+         }
+      }
+   }.protect(),
 	
-	showWebUIExceptionPage : function( e ) {
-		top.BrowserInterfaceException = e;
-		//window.location.href = this.options.contextRootPrefix + this.options.errorPageUri;
-	}.protect(),
+   showWebUIExceptionPage : function( e ) {
+      top.BrowserInterfaceException = e;
+      //window.location.href = this.options.contextRootPrefix + this.options.errorPageUri;
+   }.protect(),
 	
    storeComponentState : function() {
+      this.logger.debug( this.options.componentName + ".storeComponentState() started." );
       this.stateManager.storeCurrentState( this.options.componentName, {locale : this.locale.toString()} );
+      this.isConfigured = true;
+      this.fireEvent( 'configured', this );
+      this.configurationChain.callChain();
    }.protect(),
    
    subscribeToWebUIMessages: function() {
+      this.logger.debug( this.options.componentName + ".subscribeToWebUIMessages() started." );
       this.messageBus.subscribeToMessage( LanguageChangedMessage, this.webUIMessageHandler );
       this.messageBus.subscribeToMessage( SkinChangedMessage, this.webUIMessageHandler );
-	   this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
+      this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
+      this.configurationChain.callChain();
    }.protect()
 });

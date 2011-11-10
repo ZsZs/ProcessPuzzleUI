@@ -26,8 +26,8 @@ You should have received a copy of the GNU General Public License along with thi
 var UndefinedXmlResourceException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Given xml resource: '{resourceName}' dosn't exist or can't be accessed.",
-      name: "UnconfiguredWidgetException"
+      description: "Given xml resource: '{resourceName}' doesn't exist or can't be accessed.",
+      name: "UndefinedXmlResourceException"
    },
    
    //Constructor

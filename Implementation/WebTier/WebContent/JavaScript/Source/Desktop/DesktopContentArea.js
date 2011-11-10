@@ -28,6 +28,7 @@ var DesktopContentArea = new Class({
    Extends: CompositeDesktopElement,
    
    options: {
+      componentName : "DesktopContentArea",
    },
    
    //Constructor

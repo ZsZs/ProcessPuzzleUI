@@ -29,6 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 var DesktopColumn = new Class({
    Implements: Options,
    options : {
+      componentName : "DesktopColumn",
       maximumWidthSelector : "maximumWidth",
       minimumWidthSelector : "minimumWidth",
       nameSelector : "name",
@@ -40,6 +41,7 @@ var DesktopColumn = new Class({
    initialize: function( definitionElement, options ){
       this.setOptions( options );
       this.definitionElement = definitionElement;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.maximumWidth;
       this.minimumWidth;
       this.MUIColumn;
@@ -51,6 +53,7 @@ var DesktopColumn = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
       this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });
    },
    

@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var ResourceManager = new Class({
    Implements: [Events, Options],
-   Binds: ['onResourceLoaded'],   
+   Binds: ['onResourceError', 'onResourceLoaded'],   
 
    options: {
       documentImagesSelector: "images/image",
@@ -36,9 +36,9 @@ var ResourceManager = new Class({
    },
    
    //Constructor
-   initialize: function( documentDefinition, options ){
+   initialize: function( resourceDefinition, options ){
       this.setOptions( options );
-      this.documentDefinition = documentDefinition;
+      this.resourceDefinition = resourceDefinition;
       this.numberOfResourcesLoaded = 0;
       this.resourceUri = null;
       this.resources = new ArrayList();
@@ -53,6 +53,10 @@ var ResourceManager = new Class({
             documentResource.load();
          }, this );
       }else this.onResourceLoaded();
+   },
+   
+   onResourceError: function( resourceUri ){
+      this.fireEvent( 'resourceError', resourceUri );
    },
    
    onResourceLoaded: function(){
@@ -87,9 +91,9 @@ var ResourceManager = new Class({
    
    //Protected, private helper methods
    unmarshallResource: function( selector, resourceClass ) {
-      var resourceElements = this.documentDefinition.selectNodes( selector );
+      var resourceElements = XmlResource.selectNodes( selector, this.resourceDefinition );
       resourceElements.each( function( resourceElement, index ){
-         var documentResource = new resourceClass( resourceElement, { onResourceLoaded : this.onResourceLoaded } );
+         var documentResource = new resourceClass( resourceElement, { onResourceLoaded : this.onResourceLoaded, onResourceError : this.onResourceError } );
          documentResource.unmarshall();
          this.resources.add( documentResource );
          if( instanceOf( documentResource, DocumentStyleSheet )) this.styleSheets.add( documentResource );

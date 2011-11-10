@@ -1128,8 +1128,8 @@ JsHamcrest.Integration = (function() {
              else alert( message );
           },
           pass: function( message ) {
-             var logger = Class.getInstanceOf( WebUILogger );
-             if( logger != null ) logger.trace( message );
+             //var logger = Class.getInstanceOf( WebUILogger );
+             //if( logger != null ) logger.trace( message );
           }
         });
       };

@@ -40,9 +40,9 @@
 		
 		<wui:logging>
 			<wui:loggers>
-				<wui:logger name="WebUI" level="debug"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="WebUI" level="trace" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
 				<wui:logger name="ProcessPuzzle" level="info"><wui:appenderReference name="xmlAjaxAppender"/></wui:logger>
-				<wui:logger name="LoggerForUnitTest" level="info" isDefault="true"><wui:appenderReference name="formattedConsoleAppender"/></wui:logger>
+				<wui:logger name="LoggerForUnitTest" level="info"><wui:appenderReference name="formattedConsoleAppender"/></wui:logger>
 			</wui:loggers>
 			
 			<wui:layouts>
@@ -55,7 +55,7 @@
                               batchSize="5"
                               failCallback="function() {alert('Logging error occured.')}"
                               layoutReference="xmlLayout"
-							  lazyInit="true"
+							         lazyInit="true"
                               postVariableName="logData"
                               requestSuccessCallback="function() { alert('Log was successfully sent') };"
                               sendAllOnUnload="no"
@@ -78,7 +78,7 @@
                                reopenWhenClosed="true"
                                scrollToLatestMessage="true"
                                showCommandLine="true"
-                               threshold="debug"
+                               threshold="trace"
                                useDocumentWrite="false"
                                useOldPopUp="true"
                                width="800"/>
@@ -109,6 +109,7 @@
 			<in:resourceBundle>../Desktop/DesktopInternationalization</in:resourceBundle>
          <in:resourceBundle>../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
          <in:resourceBundle>../TabWidget/TabWidgetInternationalization</in:resourceBundle>
+         <in:resourceBundle>../ToolBarWidget/ToolBarInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

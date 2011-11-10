@@ -1,102 +1,103 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Test page for TabWidget.js</title>
-	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>Test page for TabWidget.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-	<link rel="stylesheet" type="text/css" href="../TabWidget/tab.css">
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <link rel="stylesheet" type="text/css" href="../TabWidget/tab.css">
 
-	<script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 	
-    <!--[if IE]>
-	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
-    <![endif]-->  
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
    
-	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
-	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
-	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
-	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
-	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    
-	<script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
-	<script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-	<script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
-	<script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
-	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
-	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
-	<script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
-	<script type="text/javascript" src="../TabWidget/Tab.js"></script>
-	<script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
-	<script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
-	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
-	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
-	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
+   <script type="text/javascript" src="../TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
  	
-	<script type="text/javascript">
-		window.addEvent('domready', function() {
-			runTestFunction();
-		});
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestFunction();
+      });
 
-		JsHamcrest.Integration.JsUnit();
+      JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
-		var LANGUAGE = "hu";
-		var TAB_WIDGET_ID = "TabWidget";
-		var callBackMessage = null;
-		var callBackWasCalled = false;
-		var containerElement;
-		var locale = new Locale({ language : LANGUAGE });
-		var resourceBundle = null;
-		var tabWidget;
-		var testWindow;
-		var webUIController;
+      var LANGUAGE = "hu";
+      var TAB_WIDGET_ID = "TabWidget";
+      var TABS_DEFINITION_URI = "TabsDefinition.xml";
+      var WEBUI_CONFIGURATION_URI = "../TabWidget/WebUIConfiguration.xml";
+      var callBackMessage = null;
+      var callBackWasCalled = false;
+      var containerElement;
+      var locale = new Locale({ language : LANGUAGE });
+      var resourceBundle = null;
+      var tabWidget;
+      var testWindow;
+      var webUIController;
+      var webUILogger;
 		
-		function setUp() {
-			if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-			else testWindow = window;
+      function setUp() {
+         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
+         else testWindow = window;
 			
-			messageBus = new WebUIMessageBus();
-			componentStateManager = new ComponentStateManager();
+         messageBus = new WebUIMessageBus();
+         componentStateManager = new ComponentStateManager();
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         webUIController = new WebUIController({ configurationUri : WEBUI_CONFIGURATION_URI }, testWindow );
 			
-			webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+         resourceBundle = new XMLResourceBundle( webUIConfiguration );
+         resourceBundle.load( locale );
 			
-			webUIController = new WebUIController({ configurationUri : CONFIGURATION_URI }, testWindow );
-			
-			resourceBundle = new XMLResourceBundle( webUIConfiguration );
-			resourceBundle.load( locale );
-			
-			containerElement = $( TAB_WIDGET_ID );
-			tabWidget = new TabWidget({ widgetDefinitionURI : null }, resourceBundle );
-		}
+         containerElement = $( TAB_WIDGET_ID );
+         tabWidget = new TabWidget( { WidgetDefinitionURI : TABS_DEFINITION_URI }, resourceBundle );
+      }
 
 		function tearDown(){
-			if( tabWidget && tabWidget.isConfigured ) 
-				tabWidget.destroy();
+			if( tabWidget ) tabWidget.destroy();
 			messageBus.tearDown();
 			componentStateManager.reset();
 			tabWidget = null;
@@ -106,7 +107,7 @@
 			callBackWasCalled = false;
 		}
 
-		function testInitialization_WhenConstructorArgumentsAreGiven() {
+		function test_Initialization_WhenConstructorArgumentsAreGiven() {
 			//SETUP:
 			//EXCERCISE:
    	  
@@ -117,7 +118,7 @@
 			assertFalse( "... in invisible.", tabWidget.isVisible );
 		}
 
-		function testInitialization_WhenConstructorArgumentsAreMissing(){
+		function test_Initialization_WhenConstructorArgumentsAreMissing(){
 			//SETUP:
 			//EXCERCISE:
 			var anotherWidget = new TabWidget();
@@ -130,19 +131,19 @@
 			assertEquals( "... uses the same locale as webUIContoller.", webUIController.getLocale(), anotherWidget.getLocale() );
 		}
 		
-		function testConfigureForVisibility(){
+		function test_Construct_SetsVisibility(){
 			//SETUP:
 			//EXCERCISE:
-			tabWidget.configure();
+			tabWidget.construct();
 			
 			//VERIFY:
 			assertTrue( "Just showed widget is visible.", tabWidget.isVisible );
 		}
 		
-		function testConfigureForUnorderedList() {
+		function test_Construct_CreatesUnorderedList() {
 			//SETUP:
 			//EXCERCISE:
-			tabWidget.configure();
+			tabWidget.construct();
 			
 			//VERIFY:
 			assertTrue( "When tabwidget is configured...", true );
@@ -156,7 +157,7 @@
 			tabWidget.addNewTab( "Tab2","Tab2Caption" );
 			
 			//EXCERCISE:
-			tabWidget.configure();
+			tabWidget.construct();
 			
 			//VERIFY:
 			assertEquals( "When we show the widget, the first tab is active.", "Tab1", tabWidget.getActiveTab().getName() );
@@ -164,7 +165,7 @@
 		
 		function testConfigureForCloseButton(){
 			tabWidget.setCloseButtonVisibility( true );
-			tabWidget.configure();
+			tabWidget.construct();
 			assertTrue( "The close button should be visible.", tabWidget.isCloseButtonVisible() );
 			assertEquals( "... another UL element in appended to the widget container.", 2, containerElement.getElements( 'UL' ).length );
 			assertTrue( "... the append element's class is:", containerElement.getElements( 'UL' )[1].hasClass( tabWidget.options.BUTTONCLASSNAME ));
@@ -172,7 +173,7 @@
 
 		function testConfigureForPrintButton(){
 			tabWidget.setPrintButtonVisibility( true );
-			tabWidget.configure();
+			tabWidget.construct();
 			assertTrue( "The print button should be visible.", tabWidget.isPrintButtonVisible() );
 			assertEquals( "... another UL element in appended to the widget container.", 2, containerElement.getElements( 'UL' ).length );
 			assertTrue( "... the append element's class is:", containerElement.getElements( 'UL' )[1].hasClass( tabWidget.options.BUTTONCLASSNAME ));
@@ -183,7 +184,7 @@
 			var predefinedTabWidget = new TabWidget({ widgetDefinitionURI : 'TabsDefinition.xml' }, resourceBundle );
 			
 			//EXCERCISE:
-			predefinedTabWidget.configure();
+			predefinedTabWidget.construct();
 			
 			//VERIFY:
 			assertTrue( "TabsDefinition defines...", true );
@@ -203,14 +204,14 @@
 		}
 
 		function testAddNewTabForListItemExistance(){
-			tabWidget.configure();
+			tabWidget.construct();
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			assertNotNull( "If we add a new tab a new <a> will be inserted into do 'document'.", containerElement.getElements( "a#tab_Tab1" )[0] );
 			assertNotNull( "If we add a new tab a new <li> will be inserted into do 'document'.", containerElement.getElements( "li a#tab_Tab1" )[0] );
 		}
 
 		function testAddNewTabForAcitivityWith2Tabs(){
-			tabWidget.configure();
+			tabWidget.construct();
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			tabWidget.addNewTab( "Tab2","Tab2Caption" );
 			assertEquals( "New the second tab is the active tab.", "Tab2", tabWidget.getActiveTab().getName() );
@@ -262,7 +263,7 @@
 
 		function testRemoveTabForListItemTabExistance(){
 			//SETUP:
-			tabWidget.configure();
+			tabWidget.construct();
 			tabWidget.addNewTab( "Tab1","Tab1Caption" );
 			assertNotNull( $( 'tab_Tab1' ));
 			
@@ -275,7 +276,7 @@
 		
 		function testWebUIMessageHandler() {
 			//SETUP:
-			tabWidget.configure();
+			tabWidget.construct();
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
 			var message = new TabSelectedMessage({ tabId : "Tab1" });
@@ -290,7 +291,7 @@
 
 		function testClickEventHandling() {
 			//SETUP:
-			tabWidget.configure();
+			tabWidget.construct();
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
 			var tabId = tabWidget.getTabByName( "Tab1" ).getId();
@@ -307,7 +308,7 @@
 			//SETUP:
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			tabWidget.setCloseButtonVisibility( true );
-			tabWidget.configure();
+			tabWidget.construct();
 			
 			//EXCERCISE:			
 			tabWidget.destroy();
@@ -322,7 +323,7 @@
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
 			tabWidget.addNewTab( "Tab3", "Tab3Caption" );
-			tabWidget.configure();
+			tabWidget.construct();
 			
 			//EXCERCISE:			
 			tabWidget.removeAllTabs();
@@ -347,7 +348,7 @@
 		function testOnClose(){
 			//SETUP:
 			tabWidget.setCloseButtonVisibility( true );
-			tabWidget.configure();
+			tabWidget.construct();
 			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
 			var button = $( tabWidget.getCloseButtonId() );
 			
@@ -362,8 +363,8 @@
 		//runs a test function during debugging
 		function runTestFunction(){
 			setUp();
-			testInitialization_WhenConstructorArgumentsAreGiven();
-			tearDown();
+			test_Construct_CreatesUnorderedList();
+			//tearDown();
 		}
 	</script>
 </head>

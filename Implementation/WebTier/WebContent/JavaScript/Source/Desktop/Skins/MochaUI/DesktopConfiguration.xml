@@ -35,13 +35,13 @@
 				<element tag="div" id="HorizontalMenuBar">
 					<plugin>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/HorizontalMenuLayout.css'], 
 							  'js': ['../HierarchicalMenuWidget/HierarchicalMenuWidget.js'], 
-							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml', componentName : 'HorizontalMenuBar' }).configure();} }
+							  'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml', componentName : 'HorizontalMenuBar' }).construct();} }
 					</plugin>
 				</element>
 				<element tag="div" id="LanguageSelectorWidget">
 					<plugin>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/LanguageSelectorWidget.css'], 
 							  'js': ['../LanguageSelectorWidget/LanguageSelectorWidget.js'], 
-							  'onload': function(){ new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).configure();} }
+							  'onload': function(){ new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).construct();} }
 					</plugin>
 				</element>
 			</elements>
@@ -60,7 +60,7 @@
 			<contentURL>../DesktopConfigurator/Skins/MochaUI/Pages/ContentBrowser.html</contentURL>
 			<require>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/VerticalMenuLayout.css'], 
 					   'js': ['../HierarchicalMenuWidget/HierarchicalMenuWidget.js'], 
-					   'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'content-browser', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml', contextItemId : 'YourMenu', componentName : 'VerticalMenuColumn', subscribeToWebUIMessages : [MenuSelectedMessage] }).configure();} }
+					   'onload': function(){ new HierarchicalMenuWidget({ widgetContainerId : 'content-browser', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml', contextItemId : 'YourMenu', componentName : 'VerticalMenuColumn', subscribeToWebUIMessages : [MenuSelectedMessage] }).construct();} }
 			</require>
 		</panel>
 		
@@ -96,7 +96,7 @@
 				<element tag="div" id="SkinSelectorWidget">
 					<plugin>{ 'css': ['../DesktopConfigurator/Skins/MochaUI/Styles/SkinSelectorWidget.css'], 
 							  'js': ['../SkinSelectorWidget/SkinSelectorWidget.js'], 
-							  'onload': function(){ new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).configure();} }
+							  'onload': function(){ new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).construct();} }
 					</plugin>
 				</element>
 			</elements>

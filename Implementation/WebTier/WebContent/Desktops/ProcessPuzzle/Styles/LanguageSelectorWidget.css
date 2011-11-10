@@ -2,7 +2,8 @@
 
 #LanguageSelectorWidget {
 	display: inline;
-	padding-top: 6px;
+   height: 30px;
+   padding-top: 6px;
 	padding-bottom: 5px;
 	padding-left: 100px;
 	padding-right: 20px;

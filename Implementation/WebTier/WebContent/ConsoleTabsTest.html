@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>Test page for ConsoleTabs.css</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+   <link rel="stylesheet" type="text/css" href="JavaScript/Source/JsUnit/css/jsUnitStyle.css">
+   <link rel="stylesheet" type="text/css" href="Desktops/ProcessPuzzle/Styles/ConsoleTabs.css">
+
+   <script type="text/javascript" src="JavaScript/Source/JsUnit/app/jsUnitCore.js"></script>
+	
+   <!--[if IE]>
+      <script type="text/javascript" src="JavaScript/Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="JavaScript/Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="JavaScript/Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="JavaScript/Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="JavaScript/Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/WebUIException.js"></script>
+   
+   <script type="text/javascript" src="JavaScript/Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/TabWidget/DuplicatedTabException.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+ 	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         setUp();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+		
+      var LANGUAGE = "hu";
+      var TAB_WIDGET_ID = "TabWidget";
+      var TABS_DEFINITION_URI = "JavaScript/Source/TabWidget/TabsDefinition.xml";
+      var WEBUI_CONFIGURATION_URI = "Configuration/default_configuration.xml";
+      var callBackMessage = null;
+      var callBackWasCalled = false;
+      var containerElement;
+      var locale = new Locale({ language : LANGUAGE });
+      var resourceBundle = null;
+      var tabWidget;
+      var testWindow;
+      var webUIController;
+      var webUILogger;
+		
+      function setUp() {
+         messageBus = new WebUIMessageBus();
+         componentStateManager = new ComponentStateManager();
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         webUIController = new WebUIController({ configurationUri : WEBUI_CONFIGURATION_URI }, testWindow );
+			
+         resourceBundle = new XMLResourceBundle( webUIConfiguration );
+         resourceBundle.load( locale );
+			
+         containerElement = $( TAB_WIDGET_ID );
+         tabWidget = new TabWidget( { widgetContainerId : 'consolePanel_headerToolbox', widgetDefinitionURI : TABS_DEFINITION_URI }, resourceBundle );
+         tabWidget.construct();
+      }
+
+	</script>
+</head>
+
+<body>
+	<h1>ConsoleTabs.css test page</h1>
+	<p>This page contains tests for ConsoleTabs.css CSS.</p>
+
+	<div id="consolePanel_headerToolbox"></div>
+</body>
+</html>

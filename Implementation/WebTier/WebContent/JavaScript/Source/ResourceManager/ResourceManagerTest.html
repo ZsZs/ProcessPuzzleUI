@@ -25,65 +25,71 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
-	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
-	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
    <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
-	<script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
-	<script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
-	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
-	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
-	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/TestMessageOne.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/TestMessageTwo.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
 		
-	<script type="text/javascript">
-		window.addEvent('domready', function() {
-		   testLoad_PreventsDuplicateScriptLoading();
-		});
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         test_Load_WhenOneOfTheResourcesUnAvailable_FiresError();
+      });
 				
-		JsHamcrest.Integration.JsUnit();
+      JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../ResourceManager/WebUIConfiguration.xml";
-		var DOCUMENT_DEFINITION_URI = "../ResourceManager/SmartDocumentDefinition.xml";
-		var IMAGE_ID = "logoImage";
-		var IMAGE_URI = "../SmartDocument/Images/ProcessPuzzleLogo.jpg";
-		var SCRIPT_URI = "../ResourceManager/DummyScript.js";
-		var STYLE_SHEET_URI = "../SmartDocument/SmartDocument.css";
-		var documentDefinition = null;
-		var resourceManager = null;
-		var testCaseChain = new Chain();
+      var CONFIGURATION_URI = "../ResourceManager/WebUIConfiguration.xml";
+      var DOCUMENT_DEFINITION_URI = "../ResourceManager/SmartDocumentDefinition.xml";
+      var IMAGE_ID = "logoImage";
+      var IMAGE_URI = "../SmartDocument/Images/ProcessPuzzleLogo.jpg";
+      var RESOURCE_ITEMS_SELECTOR = "/smartDocumentDefinition/documentResources/styleSheets/styleSheet | " + 
+                                    "/smartDocumentDefinition/documentResources/images/image | " +
+                                    "/smartDocumentDefinition/documentResources/javascripts/javascript"
+      var SCRIPT_URI = "../ResourceManager/DummyScript.js";
+      var STYLE_SHEET_URI = "../SmartDocument/SmartDocument.css";
+      var STYLESHEETS_SELECTOR = "/smartDocumentDefinition/documentResources/styleSheets";
+      var documentDefinition = null;
+      var onResourceErrorWasCalled = false;
+      var onResourceLoadedWasCalled = false;
+      var resourceManager = null;
+      var testCaseChain = new Chain();
       var testCaseFinished = false;
       var testCaseMethod = null;
       var testWindow;
-		var webUIConfiguration = null;
-		var webUILogger = null;
+      var webUIConfiguration = null;
+      var webUILogger = null;
 		
       function beforeEachTest(){
          debug( "beforeEachTest() was started.");
@@ -91,68 +97,78 @@
          webUILogger = new WebUILogger( webUIConfiguration );
 		   
          documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
-         resourceManager = new ResourceManager( documentDefinition.selectNode( "smartDocumentDefinition/documentResources" ), {onResourcesLoaded : onResourcesLoaded } );
+         resourceManager = new ResourceManager( documentDefinition.selectNode( "smartDocumentDefinition/documentResources" ), {onResourcesLoaded : onResourcesLoaded, onResourceError : onResourceError } );
 	       
          testCaseFinished = false;
+         onResourceErrorWasCalled = false;
+         onResourceLoadedWasCalled = false;
          testCaseChain.callChain();
       }
+      
+      function onResourceError(){
+         debug( "onResourceError() was called.");
+         onResourceErrorWasCalled = true;
+         testCaseChain.callChain();
+      }
+
 		
       function onResourcesLoaded(){
          debug( "onResourcesLoaded() was called.");
-		   testCaseChain.callChain();
-		}
+         onResourceLoadedWasCalled = true;
+         testCaseChain.callChain();
+      }
 
-		function afterEachTest(){
-		   if( resourceManager ) resourceManager.release();
-		   resourceManager = null;
+      function afterEachTest(){
+         if( resourceManager ) resourceManager.release();
+         resourceManager = null;
 
-		   if( documentDefinition ) documentDefinition.release();
-		   documentDefinition = null;
+         if( documentDefinition ) documentDefinition.release();
+         documentDefinition = null;
 	       
          testCaseFinished = true;
-		   testCaseChain.clearChain();
+         testCaseChain.clearChain();
          debug( "afterEachTest() was finished.");
-		}
+      }
 		
-		function verifyTestCaseFinished(){
-		   inform( "verifyTestCaseFinished was called." );
-		   if( !testCaseFinished ) fail( "Test case '" + testCaseMethod + "' did not finished.");
-		}
+      function verifyTestCaseFinished(){
+         inform( "verifyTestCaseFinished was called." );
+         if( !testCaseFinished ) fail( "Test case '" + testCaseMethod + "' did not finished.");
+      }
 
-		function testInitialize() {
+      function test_Initialize() {
          testCaseChain.clearChain();
          testCaseMethod = "testInitialize";
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-		      function(){
-		         assertThat( resourceManager, not( nil() ));
-		         assertThat( resourceManager.getResources(), not( nil() ));
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( resourceManager, not( nil() ));
+               assertThat( resourceManager.getResources(), not( nil() ));
 
-		         inform( "Verification of 'initialize' was finished.");
-		         testCaseChain.callChain();
-		      }, 
-		      afterEachTest 
-		   ).callChain();
-		}
+               inform( "Verification of 'initialize' was finished.");
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
+         ).callChain();
+      }
 		
-		function testUnmarshall_DeterminesResources(){
+      function test_Unmarshall_DeterminesResources(){
          testCaseChain.clearChain();
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-		      function(){
-		         resourceManager.unmarshall();
-		         assertThat( resourceManager.getResources().size(), equalTo( 3 ));
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               resourceManager.unmarshall();
+               assertThat( resourceManager.getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
 		         
                inform( "Verification of 'unmarshall_DeterminesResources' was finished.");
-		         testCaseChain.callChain();
-		      }, 
-		      afterEachTest 
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
          );
          testCaseChain.chain.bind( document );
          testCaseChain.callChain();
-		}
+      }
 		
-		function testLoad_LoadsStyleSheets(){
+      function test_Load_LoadsStyleSheets(){
          testCaseChain.clearChain();
          testCaseChain.chain( 
             beforeEachTest, 
@@ -162,6 +178,7 @@
             },
             function(){
                var linkElement = $$("link[href='" + STYLE_SHEET_URI + "']");
+               assertThat( onResourceLoadedWasCalled, is( true ));
                assertThat( linkElement, not( nil() ));
                assertThat( linkElement.length, equalTo( 1 ));
 
@@ -172,47 +189,49 @@
          );
          testCaseChain.chain.bind( document );
          testCaseChain.callChain();
-		}
+      }
 
-		function testLoad_LoadsImages(){
+      function test_Load_LoadsImages(){
          testCaseChain.clearChain();
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-		      function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-		      function(){
-		         var imageElement = document.getElementById( IMAGE_ID );
-		         //assertNotNull( imageElement );
-		         //assertThat( imageElement.length, equalTo( 1 ));
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+            function(){
+               var imageElement = document.getElementById( IMAGE_ID );
+               //assertNotNull( imageElement );
+               //assertThat( imageElement.length, equalTo( 1 ));
 		         
+               assertThat( onResourceLoadedWasCalled, is( true ));
                inform( "Verification of 'load_LoadsImages' was finished.");
-		         testCaseChain.callChain();
-		      }.bind( document ), 
-		      afterEachTest 
+               testCaseChain.callChain();
+            }.bind( document ), 
+            afterEachTest 
          );
          testCaseChain.chain.bind( document );
          testCaseChain.callChain();
-		}
+      }
 		
-		function testLoad_LoadsScripts(){
-	      testCaseChain.clearChain();
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-		      function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-		      function(){
-		         var scriptElement = $$("script[src='" + SCRIPT_URI + "']");
-		         assertThat( scriptElement, not( nil() ));
-		         assertThat( scriptElement.length, equalTo( 1 ));
+      function test_Load_LoadsScripts(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+            function(){
+               var scriptElement = $$("script[src='" + SCRIPT_URI + "']");
+               assertThat( onResourceLoadedWasCalled, is( true ));
+               assertThat( scriptElement, not( nil() ));
+               assertThat( scriptElement.length, equalTo( 1 ));
 		         
                inform( "Verification of 'load_LoadsScripts' was finished.");
-		         testCaseChain.callChain();
-		      }, 
-		      afterEachTest 
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
          );
          testCaseChain.chain.bind( document );
          testCaseChain.callChain();
-		}
+      }
 		
-      function testLoad_PreventsDuplicateScriptLoading(){
+      function test_Load_PreventsDuplicateScriptLoading(){
          testCaseChain.clearChain();
          testCaseChain.chain( 
             beforeEachTest, 
@@ -230,27 +249,48 @@
          testCaseChain.callChain();
       }
 	      
-		function testRelease_DestroysLoadedElements(){
+      function test_Load_WhenOneOfTheResourcesUnAvailable_FiresError(){
          testCaseChain.clearChain();
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-		      function(){
-		         assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 1 ));
-		         resourceManager.release();        
-		         assertThat( resourceManager.getResources().size(), equalTo( 0 ));
-               assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 0 ));
-               assertThat( $$("script[src='" + SCRIPT_URI + "']").length, equalTo( 0 ));
-
-		         inform( "Verification of 'release_DestroysLoadedElements' was finished.");
-		         testCaseChain.callChain();
-		      }, 
-		      afterEachTest 
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               var unavailableResource = documentDefinition.createElement( 'styleSheet', { text : "UnAvailableStyleSheet.css" } );
+               var styleSheetsElement = documentDefinition.selectNode( STYLESHEETS_SELECTOR );
+               Sarissa.updateContentFromNode( unavailableResource, styleSheetsElement );
+               resourceManager.unmarshall(); 
+               resourceManager.load(); 
+            }, 
+            function(){
+               assertThat( onResourceErrorWasCalled, is( true ));
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
          );
          testCaseChain.chain.bind( document );
          testCaseChain.callChain();
-		}		
-    </script>
+      }
+         
+      function test_Release_DestroysLoadedElements(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
+            function(){
+               assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 1 ));
+               resourceManager.release();        
+               assertThat( resourceManager.getResources().size(), equalTo( 0 ));
+               assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 0 ));
+               assertThat( $$("script[src='" + SCRIPT_URI + "']").length, equalTo( 0 ));
+
+               inform( "Verification of 'release_DestroysLoadedElements' was finished.");
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
+         );
+         testCaseChain.chain.bind( document );
+         testCaseChain.callChain();
+      }		
+   </script>
 </head>
 
 <body>

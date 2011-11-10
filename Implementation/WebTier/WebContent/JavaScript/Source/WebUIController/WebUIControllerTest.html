@@ -14,7 +14,7 @@
    </script>
 
    <!--[if IE]>
-	   <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
    <![endif]-->  
    
    <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
@@ -40,20 +40,36 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
     
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
-   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-   <script type="text/javascript" src="../DesktopConfigurator/ConfigurationTimeoutException.js"></script>
-   <script type="text/javascript" src="../DesktopConfigurator/DesktopConfigurator.js"></script>
-   <script type="text/javascript" src="../DesktopConfigurator/DesktopStructure.js"></script>
-   <script type="text/javascript" src="../DesktopConfigurator/PanelInterpreter.js"></script>
-   <script type="text/javascript" src="../DesktopConfigurator/plugins/tree/scripts/tree.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElementFactory.js"></script>
+   <script type="text/javascript" src="../Desktop/CompositeDesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/ConfigurationTimeoutException.js"></script>
+   <script type="text/javascript" src="../Desktop/Desktop.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopContentArea.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopFooter.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopFooterBar.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopNavigationBar.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopTitleBar.js"></script>
+   <script type="text/javascript" src="../Desktop/NoneExistingDesktopContainerElementException.js"></script>
+   <script type="text/javascript" src="../Desktop/plugins/tree/scripts/tree.js"></script>
+   <script type="text/javascript" src="../Desktop/ResourceNotFoundException.js"></script>
+   <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
    <script type="text/javascript" src="../DocumentManager/DocumentManager.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
@@ -65,8 +81,20 @@
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
    <script type="text/javascript" src="../LanguageSelectorWidget/LanguageChangedMessage.js"></script>
    <script type="text/javascript" src="../LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
    <script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
@@ -81,238 +109,277 @@
 	
    <script type="text/javascript" >
       window.addEvent('domready', function() {
-      	 runTestFunction();
+         testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted();
       });
   	  
-		JsHamcrest.Integration.JsUnit();
+      JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
-		var SAMPLE_DOCUMENT_ONE = "../WebUIController/Content/SampleContentOne";
-		var componentStateManager = null;
-		var controller;
-		var docSelectorDiv = document.getElementById("DocumentSelector");
-		var docViewSelectorDiv = document.getElementById("DocumentViewSelector");
-		var infoPanelSelectorDiv = document.getElementById("InfoPanelSelector");
-		var messageBus = null;
-		var menuDiv = document.getElementById("RightMenu");
-		var testWindow;
+      var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
+      var DESKTOP_CONTAINER_ELEMENT_ID = "desktopContainer";
+      var SAMPLE_DOCUMENT_ONE = "../WebUIController/Content/SampleContentOne";
+      var componentStateManager = null;
+      var controller;
+      var docSelectorDiv = document.getElementById("DocumentSelector");
+      var docViewSelectorDiv = document.getElementById("DocumentViewSelector");
+      var infoPanelSelectorDiv = document.getElementById("InfoPanelSelector");
+      var messageBus = null;
+      var menuDiv = document.getElementById("RightMenu");
+      var testCaseChain = new Chain();
+      var testWindow;
 		
-		function setUp() {
-			if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-			else testWindow = window;
+      function beforeEachTest() {
+         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
+         else testWindow = window;
 			
-	      messageBus = new WebUIMessageBus();
-			controller = new WebUIController({ contextRootPrefix : "../../", configurationUri : CONFIGURATION_URI }, testWindow );
-			componentStateManager = Class.getInstanceOf( ComponentStateManager );
-		}
+         inform( "beforeEachTest" );
+         messageBus = new WebUIMessageBus();
+         controller = new WebUIController({ contextRootPrefix : "../../", configurationUri : CONFIGURATION_URI, onConfigured : onConfigured }, testWindow );
+         componentStateManager = Class.getInstanceOf( ComponentStateManager );
+         testCaseChain.callChain();
+      }
 
-		function tearDown(){
-			controller.destroy();
-			//controller.destroyInstance();
+      function onConfigured(){
+         testCaseChain.callChain();
+      }
+	      
+      function afterEachTest(){
+         controller.destroy();
+         componentStateManager.reset();
+         messageBus.tearDown();
 			
-			componentStateManager.reset();
-			//componentStateManager.destroyInstance();
-			
-			messageBus.tearDown();
-			//messageBus.destroyInstance();
-			
-			testWindow.location.hash = "";
-		};
+         testWindow.location.hash = "";
+         testCaseChain.callChain();
+         testCaseChain.clearChain();
+         inform( "afterEachTest" );
+      };
 		
-		function testInitialization() {
-			assertTrue( "WebUIController...", true );
-			assertNotNull( "... instantiates WebUIMessageBus.", controller.getMessageBus() );
-			assertNotNull( "... instantiates ComponentStateManager.", controller.getStateManager() );
-			assertFalse( "... initialization doesn't configure the browser front-end.", controller.getIsConfigured() );
+      function test_Initialization_InstantiatesComponents() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               assertTrue( "WebUIController...", true );
+               assertNotNull( "... instantiates WebUIMessageBus.", controller.getMessageBus() );
+               assertNotNull( "... instantiates ComponentStateManager.", controller.getStateManager() );
+               assertFalse( "... initialization doesn't configure the browser front-end.", controller.getIsConfigured() );
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-		function testConfigure() {
-			controller.configure();
-			assertTrue( "When WebUIController is configured...", true );
-			
-			assertNotNull( "... loads configuration.", controller.getWebUIConfiguration() );
-			assertNotNull( "... initializes a logger.", controller.getLogger() );
-			assertEquals( "... initializes with default locale.", "hu", controller.getCurrentLocale().getLanguage() );
-			assertNotNull( "... loads resource bundles.", controller.getResourceBundle() );
-			
-			//assertTrue( "... Language Selector is configured.", controller.getLanguageSelector().isConfigured );
-			assertTrue( "... desktop is configured.", controller.getDesktop().isConfigured ); 
-			assertTrue( "... the whole browser front-end is configured.", controller.isConfigured );
+      function test_Configure() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               assertTrue( "When WebUIController is configured...", true );
+               assertNotNull( "... loads configuration.", controller.getWebUIConfiguration() );
+               assertNotNull( "... initializes a logger.", controller.getLogger() );
+               assertEquals( "... initializes with default locale.", "hu", controller.getCurrentLocale().getLanguage() );
+               assertNotNull( "... loads resource bundles.", controller.getResourceBundle() );
+            
+               //assertTrue( "... Language Selector is configured.", controller.getLanguageSelector().isConfigured );
+               assertThat( controller.getDesktop().getState(), equalTo( Desktop.States.CONSTRUCTED ) ); 
+               assertTrue( "... the whole browser front-end is configured.", controller.isConfigured );
 
-			assertEquals( "... registers itself to 'MenuSelectedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( MenuSelectedMessage ).get(0) );
-			assertEquals( "... registers itself to 'LanguageChangedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( LanguageChangedMessage ).get(0) );
-			
-			assertEquals( "... instantiates a configures DocumentManager.", Class.getInstanceOf( DocumentManager ), controller.getDocumentManager() );
+               assertEquals( "... registers itself to 'MenuSelectedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( MenuSelectedMessage ).get(0) );
+               assertEquals( "... registers itself to 'LanguageChangedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( LanguageChangedMessage ).get(0) );
+            
+               assertEquals( "... instantiates a configures DocumentManager.", Class.getInstanceOf( DocumentManager ), controller.getDocumentManager() );
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-		function testChangeLanguage() {
-			//SETUP:
-			controller.configure();
-			controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
+      function test_ChangeLanguage() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
 			
-			//EXCERCISE:			
-			var noneDefaultLanguage = new Locale({ language : 'en' });
-			controller.changeLanguage( noneDefaultLanguage );
+               var noneDefaultLanguage = new Locale({ language : 'en' });
+               controller.changeLanguage( noneDefaultLanguage );
 			
-			//VERIFY:
-			assertEquals( "Given locale becomes the current.", noneDefaultLanguage, controller.getCurrentLocale() );
-			assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
-			//assertEquals( "... but is presented in the changed language.", "Sample Content One", $('documents-panel').getElements( "H1" )[0].childNodes[0].nodeValue );
+               assertEquals( "Given locale becomes the current.", noneDefaultLanguage, controller.getCurrentLocale() );
+               assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
+               //assertEquals( "... but is presented in the changed language.", "Sample Content One", $('documents-panel').getElements( "H1" )[0].childNodes[0].nodeValue );
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
+      }
+		
+      function test_Destroy(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.getMessageBus().subscribeToMessage( TestMessageOne, eventHandlerOne );
+               controller.configure();
+            },
+            function(){
+               debug( "before destroy()" );
+               controller.destroy();
+			
+               debug( "destroy() verification started." );
+               assertTrue( "After WebUIController.destoy()...", true );
+               assertFalse( "... not regarded to be configured.", controller.isConfigured );
+               debug( "Desktop state: " + controller.getDesktop().getState() );
+               assertThat( controller.getDesktop().getState(), equalTo( Desktop.States.INITIALIZED ));
+               assertFalse( "... WebUIConfiguration is not loaded.", controller.getWebUIConfiguration().isLoaded );
+               assertFalse( "... XMLResourcebundle is not loaded.", controller.getResourceBundle().isLoaded );
+               assertEquals( "tears down message bus.", 0, controller.getMessageBus().getMessageListSize() );
+               assertThat( $( DESKTOP_CONTAINER_ELEMENT_ID ).getChildren( '*' ).length, equalTo( 0 ));
+               debug( "destroy() verification finished." );
+               testCaseChain.callChain.delay( 1000, this );
+            },
+            afterEachTest
+         ).callChain();
+      }
+		
+      function test_LoadDocument() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               controller.loadDocument({ documentURI : SAMPLE_DOCUMENT_ONE });
+
+               var documentsPanel = $('documents-panel');
+               assertTrue( "After WebUIController.loadDocument()...", true );
+               assertEquals( "... stores current document URI", SAMPLE_DOCUMENT_ONE, controller.currentDocumentProperties['documentURI'] );
+               //assertEquals( "... adds page content.", "Minta tartalom - 1", Sarissa.getText( documentsPanel.getElements( "H1" )[0] ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-		function testDestroy(){
-			//SETUP:
-      		controller.getMessageBus().subscribeToMessage( TestMessageOne, eventHandlerOne );
-			controller.configure();
+      function test_RestoreStateFromUrl() {
+         if( Browser.chrome || Browser.safary ) return; //Unfotunatelly Chrome and Safari dosn't handles location.hash of frames well.
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               //EXCERCISE:
+               testWindow.location.hash = "!" + "WebUIController: {locale: 'hu'}; HierarchicalMenuWidget: {currentItemId: 'mainItemThree', contextItemId: 'MenuWidget'}";
+               controller.restoreStateFromUrl();
 			
-			//EXCERCISE:
-			controller.destroy();
-			
-			//VERIFY:
-			assertTrue( "After WebUIController.destoy()...", true );
-			assertFalse( "... not regarded to be configured.", controller.isConfigured );
-			assertFalse( "... Desktop isn't configured.", controller.getDesktop().isConfigured );
-			assertFalse( "... WebUIConfiguration is not loaded.", controller.getWebUIConfiguration().isLoaded );
-			assertFalse( "... XMLResourcebundle is not loaded.", controller.getResourceBundle().isLoaded );
-      		assertEquals( "tears down message bus.", 0, controller.getMessageBus().getMessageListSize() );
+               //VERIFY:
+               assertEquals( "mainItemThree", componentStateManager.retrieveCurrentState( "HierarchicalMenuWidget" )['currentItemId'] );
+               assertTrue( instanceOf( messageBus.getLastMessage(), WebUIStateRestoredMessage ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-		function testLoadDocument() {
-			//SETUP:
-			controller.configure();
+      function testStoreStateInUrl() {
+         if( Browser.chrome || Browser.safary ) return; //Unfotunatelly Chrome and Safari dosn't handles location.hash of frames well.
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               //EXCERCISE:
+               controller.storeStateInUrl();
 			
-			//EXCERCISE:
-			controller.loadDocument({ documentURI : SAMPLE_DOCUMENT_ONE });
-			
-			//VERIFY:
-			var documentsPanel = $('documents-panel');
-			assertTrue( "After WebUIController.loadDocument()...", true );
-			assertEquals( "... stores current document URI", SAMPLE_DOCUMENT_ONE, controller.currentDocumentProperties['documentURI'] );
-//			assertEquals( "... adds page content.", "Minta tartalom - 1", Sarissa.getText( documentsPanel.getElements( "H1" )[0] ));
-		}
-		
-		function testRestoreStateFromUrl() {
-			if( Browser.chrome || Browser.safary ) return; //Unfotunatelly Chrome and Safari dosn't handles location.hash of frames well.
-			
-			//SETUP:
-			controller.configure();
-			
-			//EXCERCISE:
-			testWindow.location.hash = "!" + "WebUIController: {locale: 'hu'}; HierarchicalMenuWidget: {currentItemId: 'mainItemThree', contextItemId: 'MenuWidget'}";
-			controller.restoreStateFromUrl();
-			
-			//VERIFY:
-			assertEquals( "mainItemThree", componentStateManager.retrieveCurrentState( "HierarchicalMenuWidget" )['currentItemId'] );
-			assertTrue( instanceOf( messageBus.getLastMessage(), WebUIStateRestoredMessage ));
-		}
-		
-		function testStoreStateInUrl() {
-			if( Browser.chrome || Browser.safary ) return; //Unfotunatelly Chrome and Safari dosn't handles location.hash of frames well.
-			
-			//SETUP:
-			controller.configure();
-			
-			//EXCERCISE:
-			controller.storeStateInUrl();
-			
-			//VERIFY:
-			assertTrue( "storeStateInUrl()...", true );
-			assertEquals( "...stores current document (relative) uri in location hash.", testWindow.location.hash.substring(2), controller.getStateManager().toString() );
+               //VERIFY:
+               assertTrue( "storeStateInUrl()...", true );
+               assertEquals( "...stores current document (relative) uri in location hash.", testWindow.location.hash.substring(2), controller.getStateManager().toString() );
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
       
-		function testWebUIMessageHandler_WhenLanguageChangedMessage_Broadcasted() {
-			//SETUP:
-			controller.configure();
-			controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
+      function testWebUIMessageHandler_WhenLanguageChangedMessage_Broadcasted() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
 			
-			//EXCERCISE:
-			var previousLocale = controller.getCurrentLocale();
-			var newLocale = new Locale({ language : 'en' });
-			var message = new LanguageChangedMessage({newLocale : newLocale, previousLocale : previousLocale, originator : 'WebUIControllerTest' });
-			messageBus.notifySubscribers( message );
+               //EXCERCISE:
+               var previousLocale = controller.getCurrentLocale();
+               var newLocale = new Locale({ language : 'en' });
+               var message = new LanguageChangedMessage({newLocale : newLocale, previousLocale : previousLocale, originator : 'WebUIControllerTest' });
+               messageBus.notifySubscribers( message );
 			
-			//VERIFY:
-			assertEquals( "Given locale becomes the current.", 'en', controller.getCurrentLocale().getLanguage() );
-			assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
+               //VERIFY:
+               assertEquals( "Given locale becomes the current.", 'en', controller.getCurrentLocale().getLanguage() );
+               assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-		function testWebUIMessageHandler_WhenLoadDocumentAction_Specified() {
-			//SETUP:
-			controller.configure();
+      function testWebUIMessageHandler_WhenLoadDocumentAction_Specified() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               //EXCERCISE:
+               var message = new MenuSelectedMessage({actionType : 'loadDocument', documentURI : SAMPLE_DOCUMENT_ONE });
+               messageBus.notifySubscribers( message );
 			
-			//EXCERCISE:
-			var message = new MenuSelectedMessage({actionType : 'loadDocument', documentURI : SAMPLE_DOCUMENT_ONE });
-			messageBus.notifySubscribers( message );
-			
-			//VERIFY:
-			var documentsPanel = $('documents-panel');
-			assertTrue( "After WebUIController.loadDocument()...", true );
-			assertEquals( "... stores current document URI", SAMPLE_DOCUMENT_ONE, controller.currentDocumentProperties['documentURI'] );
-			//assertEquals( "... adds page content.", "Minta tartalom - 1", Sarissa.getText( documentsPanel.getElements( "H1" )[0] ));
+               //VERIFY:
+               var documentsPanel = $('documents-panel');
+               assertTrue( "After WebUIController.loadDocument()...", true );
+               assertEquals( "... stores current document URI", SAMPLE_DOCUMENT_ONE, controller.currentDocumentProperties['documentURI'] );
+               //assertEquals( "... adds page content.", "Minta tartalom - 1", Sarissa.getText( documentsPanel.getElements( "H1" )[0] ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-		function testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted() {
-			//SETUP:
-			controller.configure();
-			controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
+      function testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted() {
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
+               controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
 			
-			//EXCERCISE:
-			var previousSkin = controller.getCurrentSkin();
-			var message = new SkinChangedMessage({newSkin : 'MochaUI', previousSkin : previousSkin, originator : 'WebUIControllerTest' });
-			messageBus.notifySubscribers( message );
+               //EXCERCISE:
+               var previousSkin = controller.getCurrentSkin();
+               var message = new SkinChangedMessage({newSkin : 'MochaUI', previousSkin : previousSkin, originator : 'WebUIControllerTest' });
+               messageBus.notifySubscribers( message );
 			
-			//VERIFY:
-			assertEquals( "Given skin becomes the current.", 'MochaUI', controller.getCurrentSkin() );
-			assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
+               //VERIFY:
+               assertEquals( "Given skin becomes the current.", 'MochaUI', controller.getCurrentSkin() );
+               assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
 		}
 		
-	    function eventHandlerOne( eventMessage ){
-	       if( instanceOf( eventMessage, TestMessageTwo ) )
-	          eventHandlerTwoWasCalled = true;
-	    }
+      function eventHandlerOne( eventMessage ){
+         if( instanceOf( eventMessage, TestMessageTwo ) )
+            eventHandlerTwoWasCalled = true;
+      }
       
-/*
-		function testLoadDocumentManager(){
-			assertNotNull("'DocumentManager' should be available.", controller.getDocumentManager());	
-		}
-
-		function testLoadInfoManager(){
-			assertNotNull("'InfoPanelManager' should be available.", controller.getInfoPanelManager());	
-		}
-
-		function testLoadMenuManager(){
-			assertNotNull("'RightMenu' should be available.", controller.getRightMenu());	
-		}
-
-		function testLoadDocumentForListItemTabExistance(){
-			controller.loadDocument("SimpleDocument", "TestDocument", "");
-			assertNotNull("If we add a new tab a new <li> will be inserted into do 'document'.", document.getElementById("tab_TestDocument"));
-		}
-
-		function testLoadResourceBundle() {
-			assertNotNull("After loading the resource bundle we can retrieve resouces.", controller.getText("res_1"));
-		}
-		
-		function testInternationalize_languageNotSet() {
-			assertNull("The preffered language is null.", controller.getPrefferedLanguage());
-		}		
-
-		function testInternationalize_settedLanguage() {
-			controller.setLanguage('hu');
-			assertEquals("The preffered language is 'hu'.", 'hu', controller.getPrefferedLanguage());
-		}
-*/
-
-      //runs a test function during debugging
-      function runTestFunction(){
-	    setUp();
-	    testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted();
-		tearDown();
-	  }
 	</script>
 </head>
 
 <body>
-	<div id='desktop'></div>
+	<div id='desktopContainer'></div>
 </body>
 </html>

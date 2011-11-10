@@ -1,16 +1,19 @@
 @CHARSET "UTF-8";
 
 #SkinSelectorWidget {
-	display: inline;
 	float: right;
-	margin-top: -20px;
+   height: 30px;
+   margin-top: -26px;
+	position: relative;
+	right: 20px;
+   top: 0px;
 }
 
 span.SkinSelectorWrapper {
 	background: transparent;
 	display: inline-block;
-	height: 30px;
-	text-decoration: none;
+   height: 30px;
+   text-decoration: none;
 }
 
 span.SkinSelectorWrapper span{

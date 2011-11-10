@@ -35,6 +35,7 @@
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
     
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
@@ -59,6 +60,7 @@
    <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
@@ -92,6 +94,8 @@
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -100,39 +104,39 @@
 
    <script type="text/javascript" >
       window.addEvent( 'domready', function() {
-         testConstruct_ConstructsWholeDekstop();
-  	   });
+         //test_Initialize_LoadsDesktopConfiguration();
+      });
   	  
       JsHamcrest.Integration.JsUnit();
  	  
-	  var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
-	  var DESKTOP_CONTAINER_ID = "desktop";
-  	  var DESKTOP_DOCKER_AUTOHIDE_ELEMENT_ID = 'dockAutoHide';
-  	  var DESKTOP_DOCKER_CLEAR_ELEMENT_ID = 'dockClear';
-  	  var DESKTOP_DOCKER_CONTROLS_ELEMENT_ID = 'dock';
-  	  var DESKTOP_DOCKER_PLACEMENT_ELEMENT_ID = 'dockPlacement';
-  	  var DESKTOP_DOCKER_SORT_ELEMENT_ID = 'dockSort';
-  	  var DESKTOP_DOCKER_WRAPPER_ELEMENT_ID = 'dockWrapper';
-  	  var DESKTOP_DOCKER_ELEMENT_ID = 'dock';
-  	  var DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID = 'pageWrapper';
-  	  var DESKTOP_ELEMENT_ID = 'desktop';
-  	  var DESKTOP_FOOTER_ELEMENT_ID = 'desktopFooterWrapper';
-  	  var DESKTOP_FOOTER_BAR_ELEMENT_ID = 'desktopFooter';
-  	  var DESKTOP_HEADER_ELEMENT_ID = 'desktopHeader';
-  	  var DESKTOP_HEADER_LANGUAGE_SELECTOR_ELEMENT_ID = 'LanguageSelectorWidget';
-  	  var DESKTOP_HEADER_MENU_ID = 'HorizontalMenuBar';
-  	  var DESKTOP_NAVIGATION_BAR_ID = 'desktopNavigationBar';
-  	  var DESKTOP_TITLE_BAR_WRAPPER_ID = 'desktopTitlebarWrapper';
-  	  var DESKTOP_TITLE_BAR_ID = 'desktopTitleBar';
-  	  var DOCKER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/WindowDockerOnlyConfiguration.xml';
-  	  var DOCUMENT_BROWSER_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/TreeView.html';
-  	  var DOCUMENT_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/HelloWorldContent.html';
-  	  var DOCUMENT_PANEL_ID = 'documents-panel';
-  	  var DOCUMENT_SELECTOR_ID = 'documentSelector';
-  	  var EMPTY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/EmptyConfiguration.xml';
-  	  var FOOTER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/FooterOnlyConfiguration.xml';
-  	  var FULL_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml';
-  	  var HEADER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/HeaderOnlyConfiguration.xml';
+      var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
+      var DESKTOP_CONTAINER_ID = "desktop";
+      var DESKTOP_DOCKER_AUTOHIDE_ELEMENT_ID = 'dockAutoHide';
+      var DESKTOP_DOCKER_CLEAR_ELEMENT_ID = 'dockClear';
+      var DESKTOP_DOCKER_CONTROLS_ELEMENT_ID = 'dock';
+      var DESKTOP_DOCKER_PLACEMENT_ELEMENT_ID = 'dockPlacement';
+      var DESKTOP_DOCKER_SORT_ELEMENT_ID = 'dockSort';
+      var DESKTOP_DOCKER_WRAPPER_ELEMENT_ID = 'dockWrapper';
+      var DESKTOP_DOCKER_ELEMENT_ID = 'dock';
+      var DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID = 'pageWrapper';
+      var DESKTOP_ELEMENT_ID = 'desktop';
+      var DESKTOP_FOOTER_ELEMENT_ID = 'desktopFooterWrapper';
+      var DESKTOP_FOOTER_BAR_ELEMENT_ID = 'desktopFooter';
+      var DESKTOP_HEADER_ELEMENT_ID = 'desktopHeader';
+      var DESKTOP_HEADER_LANGUAGE_SELECTOR_ELEMENT_ID = 'LanguageSelectorWidget';
+      var DESKTOP_HEADER_MENU_ID = 'HorizontalMenuBar';
+      var DESKTOP_NAVIGATION_BAR_ID = 'desktopNavigationBar';
+      var DESKTOP_TITLE_BAR_WRAPPER_ID = 'desktopTitlebarWrapper';
+      var DESKTOP_TITLE_BAR_ID = 'desktopTitleBar';
+      var DOCKER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/WindowDockerOnlyConfiguration.xml';
+      var DOCUMENT_BROWSER_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/TreeView.html';
+      var DOCUMENT_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/HelloWorldContent.html';
+      var DOCUMENT_PANEL_ID = 'documents-panel';
+      var DOCUMENT_SELECTOR_ID = 'documentSelector';
+      var EMPTY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/EmptyConfiguration.xml';
+      var FOOTER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/FooterOnlyConfiguration.xml';
+      var FULL_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml';
+      var HEADER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/HeaderOnlyConfiguration.xml';
       var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
 
       var desktopConfiguration;
@@ -148,6 +152,7 @@
       function beforeEachTest() {
          if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
          else testWindow = window;
+         inform( "beforeEachTest" );
         
          webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI } );
          webUIConfiguration = webUIController.getWebUIConfiguration();
@@ -171,9 +176,10 @@
 		 
          testCaseChain.callChain();
          testCaseChain.clearChain();
+         inform( "afterEachTest" );
       }
       
-      function testInitialize_LoadsDesktopConfiguration(){
+      function test_Initialize_LoadsDesktopConfiguration(){
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -184,7 +190,7 @@
          ).callChain();
       }
 
-      function testUnmarshall_UnmarshallsDesktopComponents(){
+      function test_Unmarshall_UnmarshallsDesktopComponents(){
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -195,7 +201,7 @@
                assertThat( desktop.getVersion(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/version" )));
                assertThat( desktop.getContainerId(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/containerId" )));
                
-               assertThat( desktop.getResources().getState(), equalTo( DocumentResources.States.UNMARSHALLED ));
+               assertThat( desktop.getResources().getState(), equalTo( ResourceManager.States.UNMARSHALLED ));
                assertThat( desktop.getHeader().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
                assertThat( desktop.getFooter().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
                assertThat( desktop.getWindowDocker().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
@@ -215,7 +221,7 @@
          ).callChain();
       }
       
-      function testConstruct_ConstructsWholeDekstop(){
+      function test_Construct_ConstructsWholeDekstop(){
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -230,15 +236,13 @@
          ).callChain();
       }
       
-      function onConstructed(){
-         testCaseChain.callChain();
-      }
-
     </script>
     
 </head>
 
 <body>
+   <h1>Desktop.js test page</H1>
+   <p>This page contains tests for Desktop.js JavaScript class.</P>
 	<div id='desktopContainer'></div>
 </body>
 </html>

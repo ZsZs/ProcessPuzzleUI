@@ -27,14 +27,70 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var ToolBarButton = new Class({
-   Extends : BrowserWidget,
+   Implements : Options,
    
    options : {
+      captionSelector : "caption",
+      iconImageSelector : "iconImage",
+      nameSelector : "@name"
    },
 
    //Constructor
-   initialize: function( definition, resourceBundle, options ){
-      this.parent( options, resourceBundle, definition );
-   }
+   initialize: function( definition, elementFactory, options ){
+      this.setOptions( options );
+      this.anchorElement;
+      this.definitionXml = definition;
+      this.caption;
+      this.factory = elementFactory;
+      this.iconImageUri;
+      this.imageElement;
+      this.listItemElement;
+      this.name = new Date().getTime();
+      this.parentElement;
+      this.spanElement;
+      this.state = ToolBarButton.States.INITIALIZED;
+   },
    
+   //Public accessor and mutator methods
+   construct: function( parentElement ){
+      assertThat( parentElement, not( nil() ));
+      this.parentElement = parentElement;
+      this.instantiateHtmlElements();
+      this.state = ToolBarButton.States.CONSTRUCTED;
+   },
+   
+   destroy: function(){
+      if( this.anchorElement ) this.anchorElement.destroy();
+      if( this.listItemElement ) this.listItemElement.destroy();
+      if( this.spanElement ) this.spanElement.destroy();
+      this.state = ToolBarButton.States.INITIALIZED;
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.state = ToolBarButton.States.UNMARSHALLED;
+   },
+   
+   //Properties
+   getCaption: function() { return this.caption; },
+   getIconImage: function() { return this.iconImageUri; },
+   getName: function() { return this.name; },
+   getParentElement: function() { return this.parentElement; },
+   getState: function() { return this.state; },
+   
+   //Protected, private helper methods
+   instantiateHtmlElements: function(){
+      this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
+      this.achorElement = this.factory.createAnchor( null, null, null, this.listItemElement, WidgetElementFactory.Positions.lastChild );
+      this.spanElement = this.factory.create( 'span', this.caption, this.achorElement, WidgetElementFactory.Positions.lastChild );
+      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.firstChild, { src : this.iconImageUri, alt : this.caption });
+   },
+   
+   unmarshallProperties: function(){
+      this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
+      this.iconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml );
+      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
+   }.protect(),
 });
+
+ToolBarButton.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

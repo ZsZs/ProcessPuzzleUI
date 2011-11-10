@@ -60,10 +60,10 @@ var HierarchicalMenuWidget = new Class({
    changeLanguage : function( locale ){
       this.locale = locale;
       this.destroy();
-      this.configure();
+      this.construct();
    },
    
-   configure : function( configurationOptions ) {
+   construct : function( configurationOptions ) {
       this.updateOptions( configurationOptions );
       this.i18Resource.load( this.locale );
       var parentDefinitionElement = this.determineParentDefinitionElement();
@@ -106,7 +106,7 @@ var HierarchicalMenuWidget = new Class({
       if( instanceOf( webUIMessage, MenuSelectedMessage )){
          if( webUIMessage.getActionType() == 'loadMenu' ){
             this.destroy();
-            this.configure( { contextItemId : webUIMessage.getContextItemId() } );
+            this.construct( { contextItemId : webUIMessage.getContextItemId() } );
          }
       }
    },
@@ -124,8 +124,7 @@ var HierarchicalMenuWidget = new Class({
    }.protect(),
    
    createLIElement : function(  parentDefinitionElement, elementId, parentElement ) {
-      var liElement = this.appendNewListItem( { id : elementId }, parentElement );
-      return liElement;
+      return this.elementFactory.create( "li", null, parentElement, WidgetElementFactory.Positions.LastChild, { id : elementId } );
    }.protect(),
    
    createLIElements : function( parentDefinitionElement, parentElement ) {
@@ -138,7 +137,7 @@ var HierarchicalMenuWidget = new Class({
          var listItemElement = this.createLIElement(  parentDefinitionElement, itemId, parentElement );
          var caption = this.determineMenuItemCaption( parentDefinitionElement, i );
          var menuWidget = this;
-         this.appendNewAnchor( { href : this.options.href, target : this.options.target }, caption, function() { menuWidget.onSelection( this ); }, listItemElement );
+         this.elementFactory.createAnchor( caption, null, function() { menuWidget.onSelection( this ); }, listItemElement, WidgetElementFactory.Positions.LastChild, { href : this.options.href, target : this.options.target } );
          
          listItemElements.put( itemId, listItemElement );
          if( this.determineMenuItemIsDefault(  parentDefinitionElement, itemId )) { 
@@ -163,14 +162,13 @@ var HierarchicalMenuWidget = new Class({
    }.protect(),
    
    createULElement : function( parentDefinitionElement, parentElement ) {
-      var ULElement = this.appendNewUnOrderedList({ id : this.determineListId(  parentDefinitionElement ) }, parentElement );
-      return ULElement;
+      return this.elementFactory.create( 'ul', null, parentElement, WidgetElementFactory.Positions.LastChild, { id : this.determineListId(  parentDefinitionElement ) } );
    }.protect(),
    
    determineInitializationArguments : function( options ){
-      if( !options || !options.menuDefinitionURI ){
+      if( !options || !options.widgetDefinitionURI ){
          var webUIController = Class.getInstanceOf( WebUIController );
-         this.options.menuDefinitionURI = webUIController.getWebUIConfiguration().getMenuDefinitionURI();
+         this.options.widgetDefinitionURI = webUIController.getWebUIConfiguration().getMenuDefinitionURI();
       }
    }.protect(),
    

@@ -7,6 +7,7 @@
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
    <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <link rel="stylesheet" type="text/css" href="../ToolBarWidget/ToolBar.css">
    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
    <!--[if IE]>
@@ -36,16 +37,15 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 
-   <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
-   <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
@@ -70,14 +70,15 @@
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
 
-      var TOOLBAR_DEFINITION_URI = "../Desktop/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml";
+      var LANGUAGE = "hu";
+      var TOOLBAR_DEFINITION_URI = "../ToolBarWidget/ToolBarDefinition.xml";
       var TOOLBAR_CONTAINER_ID = "ToolBarContainer";
       var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
 
+      var locale = new Locale({ language : LANGUAGE });
       var toolBar = null;
-      var desktopContainerElement = null;
+      var toolBarContainerEelement = null;
       var toolBarDefinition = null;
-      var pageWrapperElement = null;
       var testCaseChain = new Chain();
       var webUIConfiguration = null;
       var webUIController = null;
@@ -86,26 +87,63 @@
       function setUp(){
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
-
+         toolBarInternationalization = new XMLResourceBundle( webUIConfiguration );
+         toolBarInternationalization.load( locale );
          toolBarDefinition = new XmlResource( TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
-         toolBar = new ToolBarWidget( elementDefinition );
-         desktopContainerElement = $( TOOLBAR_CONTAINER_ID );
+         
+         toolBar = new ToolBarWidget( { widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
+         toolBarContainerEelement = $( TOOLBAR_CONTAINER_ID );
       }
 
       function tearDown(){
          toolBarDefinition.release();
          toolBar.destroy();
-         desktopContainerElement = null;
       }
 
-      function testInitialization(){
-         assertThat( toolBar.getState(), equalTo( DesktopColumn.States.INITIALIZED ));
+      function test_Initialization_SetsState(){
+         assertThat( toolBar.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+      }
+      
+      function test_Unmarshall_DeterminesProperties(){
+         toolBar.unmarshall();
+         assertThat( toolBar.getName(), equalTo( toolBarDefinition.selectNodeText( "/pp:toolBarDefinition/name" )));
+         assertThat( toolBar.getDescription(), equalTo( toolBarDefinition.selectNodeText( "/pp:toolBarDefinition/description" )));
+         assertThat( toolBar.getListStyle(), equalTo( toolBarDefinition.selectNodeText( "/pp:toolBarDefinition/buttons/@elementStyle" )));
+      }
+
+      function test_Unmarshall_UnmarshallsButtons(){
+         toolBar.unmarshall();
+         assertThat( toolBar.getButtons().size(), equalTo( toolBarDefinition.selectNodes( "/pp:toolBarDefinition/buttons/button" ).length ));
+         toolBar.getButtons().each( function( buttonEntry, index ){
+            var toolBarButton = buttonEntry.getValue();
+            assertThat( toolBarButton.getState(), equalTo( ToolBarButton.States.UNMARSHALLED ));
+         }, this );
+      }
+      
+      function test_Construct_InstantiatesWrapperDIVWithId(){
+         toolBar.unmarshall();
+         toolBar.construct();
+         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
+      }
+
+      function test_Construct_InstantiatesWrapperDIVWithId(){
+         toolBar.unmarshall();
+         toolBar.construct();
+         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
+         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ), not( nil() ));
+      }
+
+      function test_Construct_InstantiatesWrapperULVWithStyle(){
+         toolBar.unmarshall();
+         toolBar.construct();
+         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ), not( nil() ));
+         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ).hasClass( toolBar.getListStyle() ), is( true ));
       }
 
       //runs a test function during debugging
       function runTestCase(){
          setUp();
-         test_ConstructInstantiatesMUIColumn();
+         test_Construct_InstantiatesWrapperDIVWithId();
          tearDown();
       }
    </script>

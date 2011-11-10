@@ -28,6 +28,7 @@ var TabWidget = new Class( {
       backgroundImage : "Images/bg.gif",
       buttonPrefix : "button_",
       closeButtonCaptionKey : "TabWidget.Close",
+      componentName : "TabWidget",
       printButtonCaptionKey : "TabWidget.Print",
       showCloseButton : false,
       showCloseButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showCloseButton",
@@ -77,7 +78,7 @@ var TabWidget = new Class( {
 
       var newTab = new Tab( tabName, this.getText( tabCaption ), this.containerElement, objectToSelect );
       if( this.isVisible )
-         newTab.configure();
+         newTab.construct();
       this.tabs.put( tabName, newTab );
 
       if( doNotActivate == null || (doNotActivate != null && doNotActivate == false) )
@@ -93,14 +94,15 @@ var TabWidget = new Class( {
       }
    },
 
-   configure : function( doNotActivate ) {
-      if( this.isVisible )
-         return;
+   construct : function( doNotActivate ) {
+      if( this.isVisible ) return;
+      this.logger.group( this.options.componentName + ".construct", false );
       this.insertULElement();
       this.processWidgetDefinition();
-      this.configureTabs( doNotActivate );
-      this.configureButtons();
+      this.constructTabs( doNotActivate );
+      this.constructButtons();
       this.isVisible = true;
+      this.logger.groupEnd( this.options.componentName + ".construct" );
       return this.parent();
    },
 
@@ -209,63 +211,27 @@ var TabWidget = new Class( {
    },
 
    // Properties
-   activeTabId : function() {
-      return(tabs.getCountOfObjects() > 0 ? activeTab.getId() : "undefined");
-   },
-   isCloseButtonVisible : function() {
-      return this.options.showCloseButton;
-   },
-   isPrintButtonVisible : function() {
-      return this.options.showPrintButton;
-   },
-   isVisible : function() {
-      return this.isVisible;
-   },
-   getActiveTab : function() {
-      return this.activeTab;
-   },
-   getCloseButtonId : function() {
-      return this.options.buttonPrefix + this.options.closeButtonCaptionKey;
-   },
-   getPrintButtonId : function() {
-      return this.options.buttonPrefix + this.options.printButtonCaptionKey;
-   },
-   getTabByName : function( tabName ) {
-      return this.tabs.get( tabName );
-   },
-   getTabCount : function() {
-      return this.tabs.size();
-   },
-   getTabExist : function( tabName ) {
-      return tabs.exists( tabName );
-   },
-   setCloseButtonVisibility : function( value ) {
-      this.options.showCloseButton = value;
-   },
-   setPrintButtonVisibility : function( value ) {
-      this.options.showPrintButton = value;
-   },
-   setBackgroundImage : function( image ) {
-      backgroundImage = (image == null ? backgroundImage : image);
-   },
-   setTabLefImage : function( image ) {
-      tabLeftImage = (image == null ? tabLeftImage : image);
-   },
-   setTabRightImage : function( image ) {
-      tabRightImage = (image == null ? tabRightImage : image);
-   },
-   setTabLeftOnImage : function( image ) {
-      tabLeftOnImage = (image == null ? tabLeftOnImage : image);
-   },
-   setTabRightOnImage : function( image ) {
-      tabRightOnImage = (image == null ? tabRightOnImage : image);
-   },
+   activeTabId : function() { return(tabs.getCountOfObjects() > 0 ? activeTab.getId() : "undefined"); },
+   isCloseButtonVisible : function() { return this.options.showCloseButton; },
+   isPrintButtonVisible : function() { return this.options.showPrintButton; },
+   getActiveTab : function() { return this.activeTab; },
+   getCloseButtonId : function() { return this.options.buttonPrefix + this.options.closeButtonCaptionKey; },
+   getPrintButtonId : function() { return this.options.buttonPrefix + this.options.printButtonCaptionKey; },
+   getTabByName : function( tabName ) { return this.tabs.get( tabName ); },
+   getTabCount : function() { return this.tabs.size(); },
+   getTabExist : function( tabName ) { return tabs.exists( tabName ); },
+   setCloseButtonVisibility : function( value ) { this.options.showCloseButton = value; },
+   setPrintButtonVisibility : function( value ) { this.options.showPrintButton = value; },
+   setBackgroundImage : function( image ) { backgroundImage = (image == null ? backgroundImage : image); },
+   setTabLefImage : function( image ) { tabLeftImage = (image == null ? tabLeftImage : image); },
+   setTabRightImage : function( image ) { tabRightImage = (image == null ? tabRightImage : image); },
+   setTabLeftOnImage : function( image ) { tabLeftOnImage = (image == null ? tabLeftOnImage : image); },
+   setTabRightOnImage : function( image ) { tabRightOnImage = (image == null ? tabRightOnImage : image); },
 
    // Private methods
-   configureButtons : function() {
+   constructButtons : function() {
       if( this.options.showCloseButton || this.options.showPrintButton ){
-         this.buttonsContainerElement = this.appendNewUnOrderedList( {
-            'class' : this.options.BUTTONCLASSNAME} );
+         this.buttonsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
          if( this.options.showCloseButton )
             this.createButton( this.options.closeButtonCaptionKey, this.onClose );
          if( this.options.showPrintButton )
@@ -273,11 +239,11 @@ var TabWidget = new Class( {
       }
    }.protect(),
 
-   configureTabs : function( doNotActivate ) {
+   constructTabs : function( doNotActivate ) {
       this.tabs.each( function( mapEntry, index ) {
-         var tabName = mapEntry.getKey();
+         //var tabName = mapEntry.getKey();
          var tab = mapEntry.getValue();
-         tab.configure();
+         tab.construct();
       }, this );
 
       if( (doNotActivate == null || (doNotActivate != null && doNotActivate == false)) && (this.tabs.size() > 0) )
@@ -285,11 +251,11 @@ var TabWidget = new Class( {
    }.protect(),
 
    createButton : function( caption, onClickHandler ) {
-      var listItem = this.appendNewListItem( null, this.buttonsContainerElement );
+      var listItem = this.elementFactory.create( 'li', null, this.buttonsContainerElement, WidgetElementFactory.Positions.LastChild );
       var anchorProperties = {
          href : "#",
-         id : this.options.buttonPrefix + caption};
-      var anchor = this.appendNewAnchor( anchorProperties, caption.replace( / /g, String.fromCharCode( 160 ) ), onClickHandler, listItem );
+         id : this.options.buttonPrefix + caption };
+      this.elementFactory.createAnchor( caption.replace( / /g, String.fromCharCode( 160 ) ), null, onClickHandler, listItem, WidgetElementFactory.Positions.LastChild, anchorProperties );
    }.protect(),
 
    determineShowCloseButton : function() {
@@ -367,8 +333,7 @@ var TabWidget = new Class( {
    }.protect(),
 
    insertULElement : function() {
-      this.tabsContainerElement = this.appendNewUnOrderedList( {
-         'class' : this.options.TABCLASSNAME} );
+      this.tabsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.TABCLASSNAME } );
    }.protect(),
 
    removeUnorderedListTag : function() {

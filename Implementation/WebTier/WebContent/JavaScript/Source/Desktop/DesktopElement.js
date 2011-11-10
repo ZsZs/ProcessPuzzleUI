@@ -29,6 +29,7 @@ var DesktopElement = new Class({
    Binds: ['createHtmlElement', 'constructed', 'constructPlugin', 'injectHtmlElement', 'loadPluginResources', 'onPluginConstructed', 'onPluginResourcesLoaded'],   
    
    options: {
+      componentName : "DesktopElement",
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       pluginSelector : "plugin",
@@ -48,8 +49,9 @@ var DesktopElement = new Class({
       
       this.constructionChain = new Chain();
       this.contextElement;
-      this.id;
       this.htmlElement;
+      this.id;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.plugin;
       this.reference;
       this.resourceBundle = bundle;
@@ -65,6 +67,7 @@ var DesktopElement = new Class({
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
       if( this.status != DesktopElement.States.UNMARSHALLED ) throw new UnconfiguredDesktopElementException( 'destroy', 'initialized' );
+      this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
       assertThat( contextElement, not( nil() ));
       this.contextElement = contextElement;
       this.where = where;
@@ -74,7 +77,8 @@ var DesktopElement = new Class({
    
    destroy: function(){
       if( this.status == DesktopElement.States.INITIALIZED ) throw new UnconfiguredDesktopElementException( 'destroy', 'initialized' );
-      
+
+      if( this.plugin ) this.plugin.destroy();
       if( this.status == DesktopElement.States.CONSTRUCTED ) this.deleteHtmlelement();
       if( this.status <= DesktopElement.States.CONSTRUCTED )this.resetProperties();
       this.status = DesktopElement.States.INITIALIZED;

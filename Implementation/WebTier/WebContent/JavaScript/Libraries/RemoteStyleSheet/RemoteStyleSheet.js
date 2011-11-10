@@ -1,8 +1,8 @@
 //Author: Year of Moo
 
 var RemoteStyleSheet = new Class( {
-
    Implements : [Options, Events],
+   Binds: ['_checker'],
 
    options : {
       delay : 100,
@@ -64,7 +64,7 @@ var RemoteStyleSheet = new Class( {
          for( var i = 0; i < stylesheets.length; i++ ){
             var file = stylesheets[i];
             var owner = file.ownerNode ? file.ownerNode : file.owningElement;
-            if( owner && owner.id == this.getID() ){
+            if( owner && owner.id == this.getID()  && target.sheet.cssRules.length > 0 ){
                this._onready();
                return;
             }
@@ -80,21 +80,28 @@ var RemoteStyleSheet = new Class( {
    },
 
    start : function() {
-
-      var fn;
+      var callChecker = false;
       this.link = this.createLinkElement();
       if( Browser.ie || Browser.opera ){
          this.link.onload = this._onready.bind( this );
          this.link.onerror = this._onerror.bind( this );
       }else{
-         fn = this._checker.bind( this );
+         callChecker = true;
       }
 
-      document.getElement( 'head' ).appendChild( this.link );
-      this._onstart();
+      try{
+         document.getElement( 'head' ).appendChild( this.link );
+         this._onstart();
+      }catch( e ){
+         this._onerror( e );
+      }
 
-      if( fn ){
-         fn();
+      if( callChecker ){ 
+         try{
+            this._checker();
+         }catch( e ){
+            alert( e );
+         }
       }
    }
 

@@ -46,7 +46,7 @@ var SkinSelectorWidget = new Class({
    },
 
    //Public accessor and mutator methods
-   configure : function() {
+   construct : function() {
       this.createSpanElements();
       this.createSelectElement();
       this.createSelectElementOptions();
@@ -71,22 +71,22 @@ var SkinSelectorWidget = new Class({
    
    //Private helper methods
    createSelectElement : function(){
-      this.selectElement = this.appendNewSelect( { id : this.options.selectElementId }, this.selectElementContainer );
+      this.selectElement = this.elementFactory.create( 'select', null, this.selectElementContainer, WidgetElementFactory.Positions.FirstChild, { id : this.options.selectElementId } );
       this.selectElement.addEvent( 'change', this.onSelection );
    }.protect(),
    
    createSelectElementOptions : function() {
-      var selectedOption = this.appendNewOption( "", this.getText( this.options.selectTextKey ), this.selectElement );
+      var selectedOption = this.elementFactory.createOption( "", this.options.selectTextKey, this.selectElement, WidgetElementFactory.Positions.LastChild );
       selectedOption.set( 'selected' );
       
       this.availableSkins.each( function( skinEntry, index ){
-         this.appendNewOption( skinEntry.getKey(), skinEntry.getKey(), this.selectElement );
+         this.elementFactory.createOption( skinEntry.getKey(), skinEntry.getKey(), this.selectElement, WidgetElementFactory.Positions.LastChild );
       }, this );
    }.protect(),
    
    createSpanElements: function() {
-      var skinSelectorWrapper = this.appendNewSpan( {'class': this.options.wrapperElementStyle });
-      this.selectElementContainer = this.appendNewSpan( null, skinSelectorWrapper );
+      var skinSelectorWrapper = this.elementFactory.create( 'span', null, null, null, {'class': this.options.wrapperElementStyle });
+      this.selectElementContainer = this.elementFactory.create( 'span', null, skinSelectorWrapper, WidgetElementFactory.Positions.LastChild );
    }.protect(),
    
    determineAvailableSkins : function(){

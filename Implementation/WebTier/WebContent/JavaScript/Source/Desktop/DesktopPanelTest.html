@@ -37,10 +37,13 @@
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/CompositeDesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
    <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
@@ -75,6 +78,8 @@
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -82,7 +87,7 @@
 	
 	<script type="text/javascript">
 		window.addEvent('domready', function() {
-		   testConstruct_InstantiatesMUIPanel();
+		   //testConstruct_ConstructsHeader();
 		});
 
 		JsHamcrest.Integration.JsUnit();
@@ -108,9 +113,10 @@
 		var toolBox = null;
 		var webUIConfiguration = null;
 		var webUIController = null;
-        var webUILogger = null;
+		var webUILogger = null;
 		
 		function beforeEachTest(){
+		   inform( "beforeEachTest" );
 		   webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI } );
 		   webUIConfiguration = webUIController.getWebUIConfiguration(); //new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
 		   webUILogger = webUIController.getLogger(); //new WebUILogger( webUIConfiguration );
@@ -142,6 +148,7 @@
 		}
 
 		function afterEachTest(){
+		   inform( "afterEachTest" );
 		   desktopDefinition.release();
 		   panel.destroy();
 		   column.destroy();
@@ -150,10 +157,11 @@
 		   testCaseChain.clearChain();
 		}
 		
-		function testInitialization(){
+		function test_Initialization_DeterminesLoggerAndSetsState(){
 		   testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
+	            assertThat( panel.getLogger(), equalTo( webUILogger ));
 		         assertThat( panel.getState(), equalTo( DesktopPanel.States.INITIALIZED ));
 		         testCaseChain.callChain();
 		      }, 
@@ -180,7 +188,6 @@
 		         panel.unmarshall();
 		         assertThat( panel.getColumnReference(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@columnReference" ).value ));
 		         assertThat( panel.getContentUrl(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/contentURL" ) ));
-		         assertThat( panel.getHeader(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/panelHeader" ) ));
 		         assertThat( panel.getHeight(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@height" ).value ));
 		         assertThat( panel.getName(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@name" ).value ));
 		         assertThat( panel.getPlugin(), nil() );
@@ -191,6 +198,20 @@
 		      }, 
 		      afterEachTest 
 		   ).callChain();
+		}
+		
+		function test_Unmarshall_UnmarshallsPanelHeader(){
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         panel.unmarshall();
+		         
+		         assertThat( panel.getHeader(), not( nil() ));
+		         assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.UNMARSHALLED ));
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
+         ).callChain();
 		}
 		
 		function test_Unmarshall_DeterminesDocumentProperties(){
@@ -221,8 +242,20 @@
 		      },
 		      afterEachTest 
 		   ).callChain();  
-		}		
+		}
 		
+      function testConstruct_ConstructsHeader(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            constructPanel,
+            function(){
+               assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ));
+               testCaseChain.callChain();       
+            },
+            afterEachTest 
+         ).callChain();  
+      }
+      
 		function testConstruct_ConstructsSmartDocument(){
 		   testCaseChain.chain( 
 		      beforeEachTest, 

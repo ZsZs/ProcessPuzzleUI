@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+#TestToolbar{
+	float: left;
+	font:normal 12px Trebuchet MS,Arial;
+	margin: 0px;
+	padding: 0px;
+}
+
+#TestToolbar ul {
+   float:left;
+   line-height:30px;
+   list-style:none;
+   margin:0;
+   padding:0 10px 0 10px;
+   width:500px;	
+}
+
+#TestToolbar li {
+	display: inline;
+	padding: 0px;
+}
+
+#TestToolbar a {
+   float:left;
+   padding:0 3px 0 3px;
+   text-decoration:none;
+}
+
+#TestToolbar a span {
+   display:block;
+   float:none; 
+   padding:0 10px 0 7px;
+}
+
+#TestToolbar a span img{
+   border:none;
+   margin:8px 4px 0 0;
+}
+
+#TestToolbar a:hover {
+   background: url(Images/left.png) no-repeat left center;
+}
+
+#TestToolbar a:hover span {
+   background:url(Images/right.png) no-repeat right center;
+}

@@ -25,6 +25,8 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
    
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
@@ -69,11 +71,13 @@
    var messageBus = null;
    var webUIConfiguration = null;
    var webUIController = null;
+   var webUILogger = null;
    var widgetContainerElement = null;
    
    function setUp() {
       messageBus = new WebUIMessageBus();
       webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+      webUILogger = new WebUILogger( webUIConfiguration );
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( locale );
       skinSelector = new SkinSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
@@ -116,7 +120,7 @@
    function testConfigure_CreatesSelectElementWithOptions() {
       //SETUP:
       //EXCERCISE:
-      skinSelector.configure();
+      skinSelector.construct();
       
       //VERIFY:
       var selectElement = widgetContainerElement.getElementById( ELEMENT_SELECTOR );
@@ -127,7 +131,7 @@
    
    function testOnSelection_NotifiesMessageBusSubscribers() {
       //SETUP:
-      skinSelector.configure();
+      skinSelector.construct();
       messageBus.subscribeToMessage( SkinChangedMessage, onSkinChangeCallback );
       
       //EXCERCISE:

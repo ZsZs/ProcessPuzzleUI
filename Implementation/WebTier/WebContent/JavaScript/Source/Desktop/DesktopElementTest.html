@@ -50,11 +50,11 @@
    <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -63,13 +63,13 @@
 	
    <script type="text/javascript">
 		window.addEvent('domready', function() {
-		   testDestroy_WhenConstructed_RemovesHtmlElement();
+		   test_Destroy_WhenConstructed_RemovesHtmlElement();
 		});
 
 		JsHamcrest.Integration.JsUnit();
 		JsMockito.Integration.JsUnit();
 		 
-		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml";
+		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
 		var DESKTOP_CONTAINER_ID = "Desktop";
 		var ELEMENT_DEFINITION_WITH_LINK = "/pp:desktopConfiguration/header/titleBar/compositeElement/element[@id='desktopTitle']";
 		var ELEMENT_DEFINITION_WITH_PLUGIN = "/pp:desktopConfiguration/header/navigationBar/compositeElement/element[@id='HorizontalMenuBar']";
@@ -139,18 +139,19 @@
 		   testCaseChain.callChain();
 		}		
 		
-		function testInitialize() {
+		function test_Initialize() {
 		   testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
-				 assertThat( desktopElementWithLink, not( nil() ));
-				 assertThat( desktopElementWithLink.getDefinitionElement(), not( nil() ));
-			     testCaseChain.callChain();
+		         assertThat( desktopElementWithLink, not( nil() ));
+		         assertThat( desktopElementWithLink.getDefinitionElement(), not( nil() ));
+		         testCaseChain.callChain();
 		      },
-		      afterEachTest ).callChain();
+		      afterEachTest 
+		   ).callChain();
 		}
 		
-      function testUnmarshall_SetsStatusToUnMarshalled(){
+      function test_Unmarshall_SetsStatusToUnMarshalled(){
          testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
@@ -161,7 +162,7 @@
 		      afterEachTest ).callChain();
       }
 		
-      function testUnmarshall_DeterminesElementProperties(){
+      function test_Unmarshall_DeterminesElementProperties(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -175,7 +176,7 @@
             afterEachTest ).callChain();
 		}
 		
-		function testUnmarshall_WhenIdNotGiven_GeneratesOne(){
+		function test_Unmarshall_WhenIdNotGiven_GeneratesOne(){
 		   testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
@@ -187,7 +188,7 @@
 	         afterEachTest ).callChain();
 		}
 		
-		function testUnmarshall_WhenPluginIsSpecified_InstantiatesAndUnmarshallsPluginObject(){
+		function test_Unmarshall_WhenPluginIsSpecified_InstantiatesAndUnmarshallsPluginObject(){
 		   testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
@@ -199,7 +200,7 @@
             afterEachTest ).callChain();
 		}
 		
-		function testConstract_SetsStatusToConstructed(){
+		function test_Construct_SetsStatusToConstructed(){
 		   testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
@@ -213,7 +214,7 @@
             afterEachTest ).callChain();
 		}
 				
-      function testConstruct_CreatesNewHtmlElement(){
+      function test_Construct_CreatesNewHtmlElement(){
 		   testCaseChain.chain( 
 		      beforeEachTest, 
 		      function(){
@@ -237,7 +238,7 @@
          ).callChain();
 		}
 		
-		function testConstruct_WhenNotUnmarshalled_RaisesException(){
+		function test_Construct_WhenNotUnmarshalled_RaisesException(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -253,7 +254,7 @@
          ).callChain();
 		}
 		
-      function testConstruct_WhenPluginIsSpecified_CallsPluginConstruct(){
+      function test_Construct_WhenPluginIsSpecified_CallsPluginConstruct(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -271,7 +272,7 @@
          ).callChain();
 		}
 		
-      function testDestroy_WhenUnmarshalled_ResetsProperties(){
+      function test_Destroy_WhenUnmarshalled_ResetsProperties(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -294,7 +295,7 @@
          ).callChain();
 		}
 		
-		function testDestroy_WhenConstructed_RemovesHtmlElement(){
+		function test_Destroy_WhenConstructed_RemovesHtmlElement(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -304,14 +305,14 @@
             function(){
                assertThat( desktopContainerElement.getChildren(), hasItem( desktopElementWithLink.getHtmlElement() ));
                desktopElementWithLink.destroy();
-               assertThat( desktopContainerElement.getChildren().length, equalTo( 0 ));
+               assertThat.delay( 1000, this, desktopContainerElement.getChildren().length, equalTo( 0 ));
                testCaseChain.callChain();
             },
             afterEachTest 
          ).callChain();
 		}
 		
-		function testDestroy_WhenNotUnmarshalled_RaisesException(){
+		function test_Destroy_WhenNotUnmarshalled_RaisesException(){
 		   testCaseChain.chain( 
             beforeEachTest, 
             function(){

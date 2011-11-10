@@ -32,8 +32,8 @@
 		<wui:desktop>
 			<wui:menu definitionURI="../HierarchicalMenuWidget/MenuDefinition.xml"></wui:menu>
 			<wui:availableSkins>
-				<wui:skin name="MochaUI" relativePath="../DesktopConfigurator/Skins/MochaUI" configurationURI="../DesktopConfigurator/Skins/MochaUI/DesktopConfiguration.xml" />
-				<wui:skin name="ProcessPuzzle" relativePath="../DesktopConfigurator/Skins/ProcessPuzzle" configurationURI="../DesktopConfigurator/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml" />
+				<wui:skin name="MochaUI" relativePath="../DesktopConfigurator/Skins/MochaUI" configurationURI="../Desktop/Skins/MochaUI/DesktopConfiguration.xml" />
+				<wui:skin name="ProcessPuzzle" relativePath="../DesktopConfigurator/Skins/ProcessPuzzle" configurationURI="../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml" />
 			</wui:availableSkins>
 			<wui:defaultSkin name="ProcessPuzzle" />
 		</wui:desktop>
@@ -106,7 +106,7 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-			<in:resourceBundle>../DesktopConfigurator/DesktopInternationalization</in:resourceBundle>
+			<in:resourceBundle>../Desktop/DesktopInternationalization</in:resourceBundle>
 			<in:resourceBundle>../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
 			<in:resourceBundle>../Internationalization/TestResources</in:resourceBundle>
 			<in:resourceBundle>../Internationalization/TestResourcesTwo</in:resourceBundle>

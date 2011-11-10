@@ -50,6 +50,7 @@ var BrowserWidget = new Class( {
       this.locale;
       this.logger;
       this.messageBus;
+      this.state;
       this.webUIController = null;
 
       // initialize object
@@ -68,12 +69,14 @@ var BrowserWidget = new Class( {
       ;
       
       this.elementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource, elementFactoryOptions );
+      this.state = BrowserWidget.States.INITIALIZED;
    },
 
    // public accessor and mutator methods
 
    construct : function() {
       this.isConstructed = true;
+      this.state = BrowserWidget.States.CONSTRUCTED;
       return this;
    },
 
@@ -106,6 +109,11 @@ var BrowserWidget = new Class( {
          contextElement.removeChild( childElement );
       }
    },
+   
+   unmarshall : function(){
+      this.state = BrowserWidget.States.UNMARSHALLED;
+      return this;
+   },
 
    updateText : function( theContainerElement, parentElementId, newTextValue ) {
       var parentElement = theContainerElement.findElementById( theContainerElement, parentElementId );
@@ -130,6 +138,7 @@ var BrowserWidget = new Class( {
    getLogger : function() { return this.logger; },
    getMessageBus : function() { return this.messageBus; },
    getResourceBundle : function() { return this.i18Resource; },
+   getState : function() { return this.state; },
 
    // Private helper methods
    configureLogger : function() {
@@ -199,4 +208,6 @@ var BrowserWidget = new Class( {
       }
    }.protect()
 
-} );
+});
+
+BrowserWidget.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

@@ -23,6 +23,7 @@ var Tab = new Class({
    Binds: ['onClickEventHandler', 'webUIMessageHandler'],
    
    options: {
+      componentName: "Tab",
       currentTabId: "current",
       idPrefix: "tab_",
       tabsStyle: "Tabs"
@@ -30,27 +31,27 @@ var Tab = new Class({
    
    //Constructor
    initialize: function( theName, theCaption, theWidgetElement, theObjectToSelect ) {
-   	//check parameter assertions
-   	if( theCaption == null || theCaption == "") throw new IllegalArgumentException( "caption", theCaption );
-   	if( theName == null || theName == "") throw new IllegalArgumentException( "name", theName );	
-   	if( theWidgetElement == null ) throw new IllegalArgumentException( "widgetElement", theWidgetElement );
-   	if( theObjectToSelect && theObjectToSelect.activate == null ) throw new IllegalArgumentException( "objectToSelect", theObjectToSelect );
+      //check parameter assertions
+      if( theCaption == null || theCaption == "") throw new IllegalArgumentException( "caption", theCaption );
+      if( theName == null || theName == "") throw new IllegalArgumentException( "name", theName );	
+      if( theWidgetElement == null ) throw new IllegalArgumentException( "widgetElement", theWidgetElement );
+      if( theObjectToSelect && theObjectToSelect.activate == null ) throw new IllegalArgumentException( "objectToSelect", theObjectToSelect );
 
-   	//private instance variables
-   	this.active = false;
-   	this.anchorElement;
-   	this.caption = theCaption;
-   	this.id = this.options.idPrefix + theName;
-   	this.listItemElement;
-      this.logger = null;
+      //private instance variables
+      this.active = false;
+      this.anchorElement;
+      this.caption = theCaption;
+      this.id = this.options.idPrefix + theName;
+      this.listItemElement;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.messageBus =  Class.getInstanceOf( WebUIMessageBus );
-   	this.name = theName;
-   	this.objectToSelect = theObjectToSelect;
-   	this.visible = false;
-   	this.widgetElement = theWidgetElement;
+      this.name = theName;
+      this.objectToSelect = theObjectToSelect;
+      this.visible = false;
+      this.widgetElement = theWidgetElement;
    },
    
-	//public mutators methods
+   //public mutators methods
    activate: function() {
       if( this.isVisible() ) {
          this.active = true;
@@ -69,7 +70,7 @@ var Tab = new Class({
       }
    },
    
-   configure: function(){
+   construct: function(){
       this.insertNewLIElement();
       this.visible = true;
    },
@@ -135,6 +136,7 @@ var Tab = new Class({
 		this.listItemElement.appendChild( this.anchorElement );
 		
 		parentULElement.grab( this.listItemElement, 'top' );
+		this.logger.trace( this.options.componentName + ".insertNewLIElement added a 'LI' element to represent tab: " + this.name );
 	}.protect(),
 
 	removeLIElement: function() {

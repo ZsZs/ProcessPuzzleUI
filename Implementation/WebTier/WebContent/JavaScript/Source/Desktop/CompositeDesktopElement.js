@@ -30,6 +30,7 @@ var CompositeDesktopElement = new Class({
    Binds: ['onNestedElementConstructed'],
    
    options: {
+      componentName : "CompositeDesktopElement",
       subElementsSelector : "compositeElement | element",
       tagName : "div",
       type : "CompositeDesktopElement"

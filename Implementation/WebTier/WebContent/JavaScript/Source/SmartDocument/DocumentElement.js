@@ -55,7 +55,7 @@ var DocumentElement = new Class({
       this.htmlElement;
       this.reference;
       this.resourceBundle = bundle;
-      this.status = this.options.possibleStates.INITIALIZED;
+      this.status = DocumentElement.State.INITIALIZED;
       this.style;
       this.tag;
       this.text;
@@ -63,21 +63,21 @@ var DocumentElement = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      if( this.status != this.options.possibleStates.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
+      if( this.status != DocumentElement.State.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       assertThat( contextElement, not( nil() ));
       
       this.retrieveData();
       this.createHtmlElement();
       this.injectHtmlElement( contextElement, where );
-      this.status = this.options.possibleStates.CONSTRUCTED;
+      this.status = DocumentElement.State.CONSTRUCTED;
    },
    
    destroy: function(){
-      if( this.status == this.options.possibleStates.INITIALIZED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
+      if( this.status == DocumentElement.State.INITIALIZED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       
-      if( this.status == this.options.possibleStates.CONSTRUCTED ) this.deleteHtmlelement();
-      if( this.status <= this.options.possibleStates.CONSTRUCTED )this.resetProperties();
-      this.status = this.options.possibleStates.INITIALIZED;
+      if( this.status == DocumentElement.State.CONSTRUCTED ) this.deleteHtmlelement();
+      if( this.status <= DocumentElement.State.CONSTRUCTED )this.resetProperties();
+      this.status = DocumentElement.State.INITIALIZED;
    },
    
    unmarshall: function(){
@@ -92,7 +92,7 @@ var DocumentElement = new Class({
       this.text = XmlResource.determineNodeText( this.definitionElement );
       if( this.resourceBundle ) this.text = this.resourceBundle.getText( this.text );
       this.determineDataElementsNumber();
-      this.status = this.options.possibleStates.UNMARSHALLED;
+      this.status = DocumentElement.State.UNMARSHALLED;
    },
 
    //Properties

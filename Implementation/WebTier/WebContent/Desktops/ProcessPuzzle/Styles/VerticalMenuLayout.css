@@ -1,4 +1,6 @@
 @CHARSET "UTF-8";
+
+/* Hide automatically generated Panel padding. */
 #VerticalMenuColumn ul {
 	position: relative;
 	visibility: visible;

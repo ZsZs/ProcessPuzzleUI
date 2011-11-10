@@ -55,11 +55,11 @@
    <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -73,7 +73,7 @@
 		JsHamcrest.Integration.JsUnit();
 		JsMockito.Integration.JsUnit();
 		 
-		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml";
+		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
 		var DESKTOP_CONTAINER_ID = "desktop";
 		var COLUMN_DEFINITION = "/pp:desktopConfiguration/columns/column[@name='leftColumn']";
 		var PAGE_WRAPPER_ID = "pageWrapper";
@@ -106,7 +106,7 @@
 		   desktopContainerElement = null;
 		}
 		
-		function testInitialization(){
+		function test_Initialization(){
 		   assertThat( column.getState(), equalTo( DesktopColumn.States.INITIALIZED ));
 		}
 		
@@ -149,7 +149,7 @@
 		//runs a test function during debugging
 		function runTestCase(){
 			setUp();
-			test_ConstructInstantiatesMUIColumn();
+			test_Initialization();
 			tearDown();
 		}
     </script>

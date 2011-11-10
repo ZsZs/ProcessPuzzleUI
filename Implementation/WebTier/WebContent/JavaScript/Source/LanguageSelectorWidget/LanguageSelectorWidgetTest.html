@@ -23,6 +23,7 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
    
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
@@ -63,11 +64,13 @@
    var messageBus = null;
    var webUIConfiguration = null;
    var webUIController = null;
+   var webUILogger = null;
    var widgetContainerElement = null;
    
    function setUp() {
       messageBus = new WebUIMessageBus();
       webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+      webUILogger = new WebUILogger( webUIConfiguration );
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( locale );
       languageSelector = new LanguageSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
@@ -111,7 +114,7 @@
    function testConfigure_CreatesSelectElementWithOptions() {
       //SETUP:
       //EXCERCISE:
-      languageSelector.configure();
+      languageSelector.construct();
       
       //VERIFY:
       var selectElement = widgetContainerElement.getElementById( ELEMENT_SELECTOR );
@@ -122,7 +125,7 @@
    
    function testOnSelection_NotifiesMessageBusSubscribers() {
       //SETUP:
-      languageSelector.configure();
+      languageSelector.construct();
       messageBus.subscribeToMessage( LanguageChangedMessage, onLanguageChangeCallback );
       
       //EXCERCISE:

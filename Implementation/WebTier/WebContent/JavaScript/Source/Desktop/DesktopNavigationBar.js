@@ -28,6 +28,7 @@ var DesktopNavigationBar = new Class({
    Extends: CompositeDesktopElement,
    
    options: {
+      componentName : "DesktopNavigationBar",
       subElementsSelector : "compositeElement | element",
       type : "DesktopHeader"
    },

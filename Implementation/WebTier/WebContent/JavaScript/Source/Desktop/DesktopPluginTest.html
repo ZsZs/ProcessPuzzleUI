@@ -2,144 +2,154 @@
 
 <html>
 <head>
-	<title>Test page for DesktopPlugin.js</title>
-	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <title>Test page for DesktopPlugin.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 	
-	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
-    <!--[if IE]>
-        <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
-    <![endif]-->  
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
    
-	<script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
-	<script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
-	<script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
-    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
-	<script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
-	<script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
-    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
-	<script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
-	<script type="text/javascript" src="../Singleton/Singleton.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-	<script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
-	<script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
-	<script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
-	<script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
-	<script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
-	<script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
-    <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
-	<script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-	<script type="text/javascript" src="../Internationalization/Locale.js"></script>
-	<script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
-	<script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
-	<script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentResource.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentResources.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentImage.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentScript.js"></script>
-	<script type="text/javascript" src="../SmartDocument/DocumentStyleSheet.js"></script>
-	<script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
-	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
-	<script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
-	<script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
+   <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
 	
 	<script type="text/javascript">
 		window.addEvent('domready', function() {
-		   testLoad_LoadsResources();
-		});
+		   //test_Construct_LoadsResources();
+      });
 
-		JsHamcrest.Integration.JsUnit();
-		JsMockito.Integration.JsUnit();
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
 		 
-		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml";
-		var DESKTOP_CONTAINER_ID = "Desktop";
-		var ELEMENT_DEFINITION_WITH_PLUGIN = "/pp:desktopConfiguration/header/navigationBar/compositeElement/element[@id='HorizontalMenuBar']/plugin";
-		var PLUGIN_STYLE_SHEET = "../HierarchicalMenuWidget/HorizontalLayout.css";
+      var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
+      var DESKTOP_CONTAINER_ID = "Desktop";
+      var ELEMENT_DEFINITION_WITH_PLUGIN = "/pp:desktopConfiguration/header/navigationBar/compositeElement/element[@id='HorizontalMenuBar']/plugin";
+      var PLUGIN_STYLE_SHEET = "../HierarchicalMenuWidget/HorizontalLayout.css";
+      var RESOURCE_ITEMS_SELECTOR = ELEMENT_DEFINITION_WITH_PLUGIN + "/resources/styleSheets/styleSheet | " + 
+		                              ELEMENT_DEFINITION_WITH_PLUGIN + "/resources/images/image | " +
+		                              ELEMENT_DEFINITION_WITH_PLUGIN + "/resources/javaScripts/javaScript"
 		var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
 		
-		var loadCallbackWasCalled = false;
-		var desktopContainerElement = null;
-		var desktopDefinition = null;
-		var elementDefinitionWithPlugin = null;
-		var plugin = null;
-		var testCaseChain = new Chain();
-		var webUIConfiguration = null;
-		var webUIController = null;
-        var webUILogger = null;
+      var loadCallbackWasCalled = false;
+      var desktopContainerElement = null;
+      var desktopDefinition = null;
+      var elementDefinitionWithPlugin = null;
+      var plugin = null;
+      var testCaseChain = new Chain();
+      var webUIConfiguration = null;
+      var webUIController = null;
+      var webUILogger = null;
 		
-		function beforeEachTest(){
-		   webUIController = new WebUIController( { configurationUri : WEBUI_CONFIGURATION_URI } );
-		   webUIConfiguration = webUIController.getApplicationConfiguration(); //new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
-		   webUILogger = webUIController.getLogger(); //new WebUILogger( webUIConfiguration );
+      function beforeEachTest(){
+         inform( "beforeEachTest" );
+         webUIController = new WebUIController( { configurationUri : WEBUI_CONFIGURATION_URI } );
+         webUIConfiguration = webUIController.getApplicationConfiguration(); //new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = webUIController.getLogger(); //new WebUILogger( webUIConfiguration );
 		   
-		   desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/Desktop'" } );
-		   var elementDefinitionWithPlugin = desktopDefinition.selectNode( ELEMENT_DEFINITION_WITH_PLUGIN );
-           plugin = new DesktopPlugin( elementDefinitionWithPlugin, { onResourcesLoaded : onResourcesLoaded, onConstructed : onConstructed } );
-           desktopContainerElement = $( DESKTOP_CONTAINER_ID );
+         desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/Desktop'" } );
+         var elementDefinitionWithPlugin = desktopDefinition.selectNode( ELEMENT_DEFINITION_WITH_PLUGIN );
+         plugin = new DesktopPlugin( elementDefinitionWithPlugin, { onResourcesLoaded : onResourcesLoaded, onConstructed : onConstructed } );
+         desktopContainerElement = $( DESKTOP_CONTAINER_ID );
            
-           testCaseChain.callChain();
-		}
+         testCaseChain.callChain();
+      }
 		
-		function onResourcesLoaded(){
-           testCaseChain.callChain();
-		}
+      function onResourcesLoaded(){
+         testCaseChain.callChain();
+      }
 		
-		function onConstructed(){
-           testCaseChain.callChain();
-		}
+      function onConstructed(){
+         testCaseChain.callChain();
+      }
 
-		function afterEachTest(){
-		   desktopDefinition.release();
-		   plugin.destroy();
-		   desktopContainerElement = null;
-		   loadCallbackWasCalled = false;
-		   testCaseChain.clearChain();
+      function afterEachTest(){
+         desktopDefinition.release();
+         plugin.destroy();
+         desktopContainerElement = null;
+         loadCallbackWasCalled = false;
+         testCaseChain.clearChain();
            
-           testCaseChain.callChain();
-		}
+         testCaseChain.callChain();
+         inform( "afterEachTest" );
+      }
 		
-		function testInitialization(){
-		   testCaseChain.chain( beforeEachTest, initialization_SetsState, afterEachTest ).callChain();
+		function test_Initialization(){
+		   testCaseChain.chain( 
+		      beforeEachTest, 
+		      function(){
+		         assertThat( plugin.getState(), equalTo( DesktopPlugin.States.INITIALIZED ));
+		         testCaseChain.callChain();
+		      }, 
+		      afterEachTest 
+		   ).callChain();
 		}
 		
 		function initialization_SetsState(){
-		   assertThat( plugin.getState(), equalTo( DesktopPlugin.States.INITIALIZED ));
-           testCaseChain.callChain();
 		}
 		
-		function testUnmarshall_DeterminesResources(){
-		   testCaseChain.chain( beforeEachTest, unmarshall_DeterminesResources, afterEachTest ).callChain();
+		function test_Unmarshall_DeterminesResources(){
+		   testCaseChain.chain( 
+		      beforeEachTest,
+		      function(){
+		         plugin.unmarshall();
+		         assertThat( plugin.getResources(), not( nil() ));
+		         assertThat( plugin.getResources().getResources().size(), equalTo( desktopDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));		           
+		         testCaseChain.callChain();
+		      },
+		      afterEachTest
+		   ).callChain();
 		}
 		
-		function unmarshall_DeterminesResources(){
-		   //SETUP: see beforeEachTest()
-		   //EXCERCISE:
-		   plugin.unmarshall();
-		   
-		   //VERIFY:
-		   assertThat( plugin.getResources(), not( nil() ));
-		   assertThat( plugin.getResources().getResources().size(), equalTo( 4 ));
-           
-           testCaseChain.callChain();
-		}
-				
-		function testUnmarshall_EvaluatesOnLoadFunction(){
+		function test_Unmarshall_EvaluatesOnLoadFunction(){
 		   testCaseChain.chain( beforeEachTest, function(){
 			   //SETUP: see setUp()
 			   //EXCERCISE:
@@ -149,52 +159,56 @@
 			   assertThat( plugin.getOnLoad(), not( nil() ));
 			   assertThat( typeOf( plugin.getOnLoad() ), equalTo('function') );
 	           
-	           testCaseChain.callChain();
+	         testCaseChain.callChain();
 		   }, afterEachTest ).callChain();
 		}
 		
-		function testLoad_LoadsResources(){
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-		      function(){
-				 plugin.unmarshall();
-				 plugin.construct();
-		   	  },
-		   	  function(){
-		   	     assertThat( plugin.getState(), equalTo( DesktopPlugin.States.LOADED ));
-		   	     assertThat( plugin.getResources().getResources().size(), equalTo( 3 ));
-		   	  },
-		   	  function(){
-		   	     assertThat( plugin.getState(), equalTo( DesktopPlugin.States.CONSTRUCTED ));
-	             testCaseChain.callChain();
-		   	  },
-		   	  afterEachTest ).callChain();
-		}
+      function test_Construct_LoadsResources(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+               assertThat( plugin.getState(), equalTo( DesktopPlugin.States.LOADED ));
+               assertThat( plugin.getResources().getResources().size(), equalTo( desktopDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
+            },
+            function(){
+               assertThat( plugin.getState(), equalTo( DesktopPlugin.States.CONSTRUCTED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
 				
-		function testDestroy_ReleasesResourcesAndDestroysPlugin(){
-		   testCaseChain.chain( 
-		      beforeEachTest, 
-		      function(){
-				  plugin.unmarshall();
-				  plugin.load();
-		   	   },
-		   	   function(){
-		   	      var widgetDestroy = spy( plugin.getWidget().destroy );
-				  plugin.destroy();
+      function test_Destroy_ReleasesResourcesAndDestroysPlugin(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+               //No operation after 'onResourcesLoaded'
+            },
+            function(){
+               var widgetDestroy = spy( plugin.getWidget().destroy );
+               plugin.destroy();
 				  
-				  assertThat( $$("link[href='" + PLUGIN_STYLE_SHEET + "']").length, equalTo( 0 ));
-				  verify( widgetDestroy );
-				  
-                  testCaseChain.callChain();
-		   	   },
-		   	   afterEachTest ).callChain();
-		}
+               assertThat( $$("link[href='" + PLUGIN_STYLE_SHEET + "']").length, equalTo( 0 ));
+               verify( widgetDestroy );
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
 				
 		function loadCallback(){
 		   assertThat( plugin.getState(), equalTo( DesktopPlugin.States.LOADED )); 
 		   assertThat( instanceOf( plugin.getWidget(), HierarchicalMenuWidget ), is( true ));
 		   assertThat( $$("link[href='" + PLUGIN_STYLE_SHEET + "']").length, equalTo( 1 ));
-           testCaseChain.callChain();
+         testCaseChain.callChain();
 		}		
     </script>
 </head>

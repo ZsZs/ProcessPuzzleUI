@@ -28,6 +28,7 @@ var DesktopTitleBar = new Class({
    Extends: CompositeDesktopElement,
    
    options: {
+      componentName : "DesktopTitleBar",
       subElementsSelector : "compositeElement | element",
       type : "DesktopHeader"
    },

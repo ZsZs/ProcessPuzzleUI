@@ -1,0 +1,74 @@
+
+#consolePanel_headerToolbox ul.Tabs {
+	background-color: transparent;
+	float: left;
+   list-style: none;
+   margin: 0px;
+	overflow: hidden;
+	padding: 0px;
+}
+
+#consolePanel_headerToolbox ul.Buttons {
+   float: right;
+   margin:0;
+   list-style:none;
+	padding-top:3px;
+	padding-right:5px;
+	padding-bottom:inherit;
+	padding-left:5px;
+}
+
+#consolePanel_headerToolbox ul.Tabs li {
+   float:left;
+   background:url("../Images/DocumentTab-Left.gif") no-repeat left top;
+   margin-left: 0px;
+	padding-left: 10px;    
+}
+
+#consolePanel_headerToolbox ul.Buttons li {
+   float:right;
+   margin:0;
+	padding-top:0px;
+	padding-right:0;
+	padding-bottom:0;
+	padding-left:5px;
+}
+
+#consolePanel_headerToolbox ul.Tabs a {
+   display:block;
+   background:url("../Images/DocumentTab-Right.gif") no-repeat right top;
+   color:#765;
+   font-size: smaller;
+   font-weight:bold;
+	padding-bottom: 4px;
+	padding-left: 0px;
+	padding-right: 22px;
+	padding-top: 4px;
+   text-decoration: none;
+}
+
+#consolePanel_headerToolbox ul.Buttons a {
+    display:block;
+    background-image:none;
+    text-decoration:underline;
+    font-weight:bold;
+    color:#765;
+}
+
+#consolePanel_headerToolbox #current {
+    background-image:url("../Images/DocumentTab-Left-Selected.gif");
+}
+
+#consolePanel_headerToolbox #current a {
+    background-image:url("../Images/DocumentTab-Right-Selected.gif");
+    padding-bottom:5px;
+    color:#333;
+}
+
+#consolePanel_headerToolbox a:hover {
+    color:#FF0000;
+}
+
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+#consolePanel_headerToolbox a {float:none;}
+/* End IE5-Mac hack */

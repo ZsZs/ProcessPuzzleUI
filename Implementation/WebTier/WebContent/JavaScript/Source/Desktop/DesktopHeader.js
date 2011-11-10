@@ -28,6 +28,7 @@ var DesktopHeader = new Class({
    Extends: CompositeDesktopElement,
    
    options: {
+      componentName : "DesktopHeader",
       subElementsSelector : "titleBar | navigationBar | compositeElement | element",
       type : "DesktopHeader"
    },
@@ -55,4 +56,6 @@ var DesktopHeader = new Class({
    //Properties
    getNavigationBarId: function() { return this.navigationBarId; },
    getTitleBarId: function() { return this.titleBarId; }
+   
+   //Protected, private helper methods
 });
