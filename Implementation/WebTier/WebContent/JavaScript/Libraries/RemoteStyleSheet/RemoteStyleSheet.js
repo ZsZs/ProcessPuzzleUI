@@ -64,7 +64,7 @@ var RemoteStyleSheet = new Class( {
          for( var i = 0; i < stylesheets.length; i++ ){
             var file = stylesheets[i];
             var owner = file.ownerNode ? file.ownerNode : file.owningElement;
-            if( owner && owner.id == this.getID()  && target.sheet.cssRules.length > 0 ){
+            if( owner && owner.id == this.getID() ){
                this._onready();
                return;
             }

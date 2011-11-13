@@ -92,7 +92,7 @@
       var webUILogger = null;
 		
       function beforeEachTest(){
-         debug( "beforeEachTest() was started.");
+         inform( "beforeEachTest()");
          webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
 		   
@@ -108,7 +108,6 @@
       function onResourceError(){
          debug( "onResourceError() was called.");
          onResourceErrorWasCalled = true;
-         testCaseChain.callChain();
       }
 
 		
@@ -119,6 +118,7 @@
       }
 
       function afterEachTest(){
+         inform( "afterEachTest()");
          if( resourceManager ) resourceManager.release();
          resourceManager = null;
 
@@ -127,7 +127,6 @@
 	       
          testCaseFinished = true;
          testCaseChain.clearChain();
-         debug( "afterEachTest() was finished.");
       }
 		
       function verifyTestCaseFinished(){
@@ -256,7 +255,7 @@
             function(){
                var unavailableResource = documentDefinition.createElement( 'styleSheet', { text : "UnAvailableStyleSheet.css" } );
                var styleSheetsElement = documentDefinition.selectNode( STYLESHEETS_SELECTOR );
-               Sarissa.updateContentFromNode( unavailableResource, styleSheetsElement );
+               documentDefinition.injectElement( unavailableResource, STYLESHEETS_SELECTOR );
                resourceManager.unmarshall(); 
                resourceManager.load(); 
             }, 

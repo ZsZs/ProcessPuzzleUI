@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Pura Vida Costa Rica</name>
+   <description>Short introduction of Costa Rica.</description>
+   <version>0.5</version>
+   
+   <documentResources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </documentResources>
+
+   <documentBody tag="div" name="smartDocumentBody">
+      <element tag="h1" name="title" bind="/rss/channel/title"/>
+      <element tag="p" name="introduction"></element>
+      <element tag="div" name="photoAlbum">
+      </element>
+   </documentBody>
+   
+</smartDocumentDefinition>

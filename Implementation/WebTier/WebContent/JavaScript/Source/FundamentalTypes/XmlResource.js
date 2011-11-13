@@ -84,6 +84,16 @@ var XmlResource = new Class({
       return XmlResource.determineNodeText( xmlElement );
    },
    
+   injectElement : function( elementToInject, contextSelector, position ){
+      assertThat( elementToInject, not( nil() ));
+      assertThat( contextSelector, not( nil() ));
+      
+      var contextElement = this.selectNode( contextSelector );
+      if( !contextElement ) throw new XPathSelectionException( contextSelector, this.options.url );
+      
+      contextElement.appendChild( elementToInject );
+   },
+   
    isSuccess: function() { // Determines if an XMLHttpRequest was successful or not
        try {
            // IE error sometimes returns 1223 when it should be 204 so treat it as success, see #1450
@@ -255,3 +265,10 @@ function RemoveWhitespaceNodesFromXML( xml ) {
       } else RemoveWhitespaceNodesFromXML(xml.childNodes[i]);
    }
 }
+
+XmlResource.Positions = {
+      Before : 0,
+      After : 1,
+      FirstChild : 2,
+      LastChild : 3,
+      Undefined : 4 };

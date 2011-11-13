@@ -10,7 +10,7 @@
    
    <documentResources>
       <styleSheets>
-         <styleSheet>../SmartDocument/SmartDocument.css</styleSheet>
+         <styleSheet>DummyCSS.css</styleSheet>
          <styleSheet>../JsUnit/css/jsUnitStyle.css</styleSheet>
       </styleSheets>
 

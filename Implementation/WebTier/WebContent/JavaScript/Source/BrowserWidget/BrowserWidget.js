@@ -22,8 +22,8 @@
 // Abstract root class of all widgets. Provides standardized way for different
 // HTML element creation.
 var BrowserWidget = new Class( {
-   Implements : Options,
-   Binds : 'webUIMessageHandler',
+   Implements : [Events, Options],
+   Binds : ['onConstructed', 'onDestroyed', 'webUIMessageHandler'],
 
    options : {
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
@@ -43,6 +43,7 @@ var BrowserWidget = new Class( {
       this.containerElement;
       this.dataXml;
       this.definitionXml;
+      this.description;
       this.elementFactory = null;
       this.i18Resource = null;
       this.isConstructed = false;
@@ -50,6 +51,7 @@ var BrowserWidget = new Class( {
       this.locale;
       this.logger;
       this.messageBus;
+      this.name;
       this.state;
       this.webUIController = null;
 
@@ -75,8 +77,6 @@ var BrowserWidget = new Class( {
    // public accessor and mutator methods
 
    construct : function() {
-      this.isConstructed = true;
-      this.state = BrowserWidget.States.CONSTRUCTED;
       return this;
    },
 
@@ -89,6 +89,8 @@ var BrowserWidget = new Class( {
                childElement.destroy();
          } );
          this.isConstructed = false;
+         this.state = BrowserWidget.States.INITIALIZED;
+         this.onDestroyed();
       }
    },
 
@@ -100,6 +102,18 @@ var BrowserWidget = new Class( {
          text = key;
       }
       return text;
+   },
+   
+   onConstructed : function(){
+      this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
+      this.isConstructed = true;
+      this.state = BrowserWidget.States.CONSTRUCTED;
+      this.fireEvent( 'constructed', this );
+   },
+   
+   onDestroyed : function(){
+      this.logger.trace( this.options.componentName + ".onDestroyed() of '" + this.name + "'." );
+      this.fireEvent( 'destroyed', this );
    },
 
    removeChild : function( childElement, parentElement ) {
@@ -131,12 +145,14 @@ var BrowserWidget = new Class( {
    getContainerElement : function() { return this.containerElement; },
    getDataXml : function() { return this.dataXml; },
    getDefinitionXml : function() { return this.definitionXml; },
+   getDescription: function() { return this.description; },
    getElementFactory : function() { return this.elementFactory; },
    getHtmlDOMDocument : function() { return this.options.domDocument; },
    getLastMessage : function() { return this.lastHandledMessage; },
    getLocale : function() { return this.locale; },
    getLogger : function() { return this.logger; },
    getMessageBus : function() { return this.messageBus; },
+   getName: function() { return this.name; },
    getResourceBundle : function() { return this.i18Resource; },
    getState : function() { return this.state; },
 
@@ -206,8 +222,12 @@ var BrowserWidget = new Class( {
             this.messageBus.subscribeToMessage( messageClass, this.webUIMessageHandler );
          }, this );
       }
-   }.protect()
+   }.protect(),
 
+   unmarshallProperties: function(){
+      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
+      this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
+   }
 });
 
 BrowserWidget.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

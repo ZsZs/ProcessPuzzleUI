@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:widgetDefinition
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <name>PhotoGalery</name>
+   <description>Photo Galery presents a set of images, and their thumb nails.</description>
+   <properties>
+      <accessKeys>shift+h</accessKeys>
+      <automaticallyLinkSlideToFullSizedImage>true</automaticallyLinkSlideToFullSizedImage>
+      <centerImages>true</centerImages>
+      <effectDuration>1500</effectDuration>
+      <firstSlide>7</firstSlide>
+      <galeryLink>http://www.tourism-costarica.com</galeryLink>
+      <height>300</height>
+      <imageFolderUri>Album</imageFolderUri>
+      <loopShow>true</loopShow>
+      <overlapImages>true</overlapImages>
+      <resizeImages>true</resizeImages>
+      <showController>true</showController>
+      <showImageCaptions>true</showImageCaptions>
+      <showSlidesRandom>true</showSlidesRandom>
+      <showThumbnails>true</showThumbnails>
+      <skipTransition>WhenPaused | OnStart</skipTransition>
+      <slideChangeDelay>3000</slideChangeDelay>
+      <slideTransition>elastic:in:out</slideTransition>
+      <startPaused>true</startPaused>
+      <thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</thumbnailFileNameRule>
+      <width>450</width>
+   </properties>
+</pp:widgetDefinition>

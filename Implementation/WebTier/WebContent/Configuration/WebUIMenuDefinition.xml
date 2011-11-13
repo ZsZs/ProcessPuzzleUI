@@ -10,8 +10,12 @@
 			<messageProperties>{actionType : 'loadMenu', contextItemId : 'YourMenu'}</messageProperties>
 					
 			<menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.sampleDocument" isDefault="true">
-				<messageProperties>{actionType : 'loadDocument', documentURI : 'Documents/SampleDocument'}</messageProperties>			
+				<messageProperties>{actionType : 'loadDocument', documentURI : 'Content/SampleDocument'}</messageProperties>			
 			</menuItem>			
+               
+         <menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.puraVida" isDefault="true">
+            <messageProperties>{actionType : 'loadDocument', documentURI : 'Content/PuraVida'}</messageProperties>         
+         </menuItem>       
 		</menuItem>
 		
 		<menuItem menuItemId="Administration" caption="HierarchicalMenuWidget.administration">

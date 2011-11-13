@@ -57,6 +57,7 @@ var ResourceManager = new Class({
    
    onResourceError: function( resourceUri ){
       this.fireEvent( 'resourceError', resourceUri );
+      this.onResourceLoaded();
    },
    
    onResourceLoaded: function(){

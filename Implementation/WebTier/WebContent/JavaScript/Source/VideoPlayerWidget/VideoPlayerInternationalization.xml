@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="ArtifactEditor.alignCenter" type="String">Center</Resource>
+    <Resource key="ArtifactEditor.alignJustify" type="String">Justify</Resource>
+    <Resource key="ArtifactEditor.alignLeft" type="String">Left</Resource>
+    <Resource key="ArtifactEditor.alignRight" type="String">Right</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="ArtifactEditor.alignCenter" type="String">Középre</Resource>
+    <Resource key="ArtifactEditor.alignJustify" type="String">Sorkizárt</Resource>
+    <Resource key="ArtifactEditor.alignLeft" type="String">Balra</Resource>
+    <Resource key="ArtifactEditor.alignRight" type="String">Jobbra</Resource>
+  </Language>
+</pp:Resources>

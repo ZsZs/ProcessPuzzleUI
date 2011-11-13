@@ -23,9 +23,9 @@
   <xs:element name="documentResources">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="styleSheets"/>
-        <xs:element ref="images"/>
-        <xs:element ref="javascripts"/>
+        <xs:element ref="styleSheets" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="images" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="javaScripts" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -33,7 +33,7 @@
   <xs:element name="styleSheets">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="styleSheet"/>
+        <xs:element ref="styleSheet" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -42,7 +42,7 @@
   <xs:element name="images">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="image"/>
+        <xs:element ref="image" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -54,15 +54,15 @@
 	</xs:complexType>
   </xs:element>
 
-  <xs:element name="javascripts">
+  <xs:element name="javaScripts">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="javascript" maxOccurs="unbounded"/>
+        <xs:element ref="javaScript" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="javascript" type="xs:string"/>
+  <xs:element name="javaScript" type="xs:string"/>
 
   <xs:element name="documentHeader">
     <xs:complexType>

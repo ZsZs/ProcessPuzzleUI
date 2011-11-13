@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="PhotoGalery.tabacon" type="String">Hotel Tabacon - Vulcano Poas</Resource>
+    <Resource key="PhotoGalery.baldi" type="String">Hotel Baldi - Vulcano Poas</Resource>
+    <Resource key="PhotoGalery.alignLeft" type="String">Left</Resource>
+    <Resource key="PhotoGalery.alignRight" type="String">Right</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="PhotoGalery.tabacon" type="String">Tabacon szálloda - Poas vulkán</Resource>
+    <Resource key="PhotoGalery.alignJustify" type="String">Baldi szálloda - Poas vulkán</Resource>
+    <Resource key="PhotoGalery.alignLeft" type="String">Balra</Resource>
+    <Resource key="PhotoGalery.alignRight" type="String">Jobbra</Resource>
+  </Language>
+</pp:Resources>
