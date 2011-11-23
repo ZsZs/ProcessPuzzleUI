@@ -33,28 +33,32 @@ var DocumentElementFactory = new Class({
    initialize: function(){
    },
 
-   create: function( definitionXmlElement, bundle, data, index ){
+   create: function( definitionXmlElement, bundle, data, options ){
       var newDocumentElement;
       switch( definitionXmlElement.tagName.toUpperCase() ){
+      case "COMPOSITEDATAELEMENT": 
+         newDocumentElement = new CompositeDataElement( definitionXmlElement, bundle, data, options ); break;
       case "COMPOSITEELEMENT": 
-         newDocumentElement = new CompositeDocumentElement( definitionXmlElement, bundle, data, index ); break;
+         newDocumentElement = new CompositeDocumentElement( definitionXmlElement, bundle, data, options ); break;
+      case "DATAELEMENT": 
+         newDocumentElement = new DataElement( definitionXmlElement, bundle, data, options ); break;
       case "DOCUMENTBODY": 
-         newDocumentElement = new DocumentBody( definitionXmlElement, bundle, data ); break;
+         newDocumentElement = new DocumentBody( definitionXmlElement, bundle, data, options ); break;
       case "DOCUMENTFOOTER": 
-         newDocumentElement = new DocumentFooter( definitionXmlElement, bundle, data ); break;
+         newDocumentElement = new DocumentFooter( definitionXmlElement, bundle, data, options ); break;
       case "DOCUMENTHEADER": 
-         newDocumentElement = new DocumentHeader( definitionXmlElement, bundle, data ); break;
+         newDocumentElement = new DocumentHeader( definitionXmlElement, bundle, data, options ); break;
       case "ELEMENT":
       default:
-         newDocumentElement = new DocumentElement( definitionXmlElement, bundle, data, index ); break;
+         newDocumentElement = new DocumentElement( definitionXmlElement, bundle, options ); break;
       }
       
       return newDocumentElement;
    }
 });
 
-DocumentElementFactory.create = function(  definitionXmlElement, bundle, data, index ){
+DocumentElementFactory.create = function(  definitionXmlElement, bundle, data, options ){
    var factory = new DocumentElementFactory();
-   var element = factory.create( definitionXmlElement, bundle, data, index );
+   var element = factory.create( definitionXmlElement, bundle, data, options );
    return element;
 };

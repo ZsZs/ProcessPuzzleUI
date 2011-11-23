@@ -60,6 +60,14 @@ var DocumentImage = new Class({
       Asset.image( this.resourceUri, {
          id: this.id,
          title: this.title,
+         onAbort: function(){
+            this.onResourceError();
+         }.bind( this ),
+         
+         onError: function(){
+            this.onResourceError();
+         }.bind( this ),
+         
          onLoad: function(){
             this.onResourceLoaded();
          }.bind( this )

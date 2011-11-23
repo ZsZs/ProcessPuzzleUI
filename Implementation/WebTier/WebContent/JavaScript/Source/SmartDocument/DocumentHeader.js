@@ -28,12 +28,12 @@ var DocumentHeader = new Class({
    Extends: CompositeDocumentElement,
    
    options: {
+      componentName : "DocumentHeader"
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, data ){
-      this.options.type = "DocumentHeader";
-      this.parent( headerDefinitionElement, bundle, data );
+   initialize: function( headerDefinitionElement, bundle, data, options ){
+      this.parent( headerDefinitionElement, bundle, data, options );
    },
    
    //Public mutators and accessor methods

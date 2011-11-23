@@ -28,7 +28,17 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopPanel = new Class({
    Implements: [Events, Options],
-   Binds: ['constructDocument', 'constructPlugin', 'constructHeader', 'determinePanelElement', 'instantiateMUIPanel', 'onDocumentReady', 'onHeaderConstructed', 'onMUIPanelLoaded', 'onPluginConstructed'],   
+   Binds: ['constructDocument', 
+           'constructPlugin', 
+           'constructHeader', 
+           'determinePanelElement', 
+           'instantiateMUIPanel', 
+           'onDocumentError', 
+           'onDocumentReady', 
+           'onHeaderConstructed', 
+           'onHeaderConstructionError',
+           'onMUIPanelLoaded', 
+           'onPluginConstructed'],   
    
    options : {
       columnReferenceSelector : "columnReference",
@@ -63,6 +73,7 @@ var DesktopPanel = new Class({
       this.documentWrapperId;
       this.documentWrapperStyle;
       this.documentWrapperTag;
+      this.error = false;
       this.header;
       this.height;
       this.logger = Class.getInstanceOf( WebUILogger );
@@ -99,6 +110,12 @@ var DesktopPanel = new Class({
       this.state = DesktopPanel.States.INITIALIZED;
    },
    
+   onDocumentError: function(){
+      this.revertConstruction();
+      this.error = true;
+      this.fireEvent( 'panelError' );
+   },
+   
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s artifact finished." );
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
@@ -110,6 +127,12 @@ var DesktopPanel = new Class({
    onHeaderConstructed: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s header finished." );
       this.constructionChain.callChain();
+   },
+   
+   onHeaderConstructionError: function(){
+      this.revertConstruction();
+      this.error = true;
+      this.fireEvent( 'panelError' );
    },
    
    onMUIPanelLoaded: function(){
@@ -151,6 +174,7 @@ var DesktopPanel = new Class({
    getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
+   isSuccess: function() { return !this.error; },
    
    //Protected, private helper methods
    constructDocument: function(){
@@ -173,7 +197,7 @@ var DesktopPanel = new Class({
    }.protect(),
    
    createDocumentWrapper: function(){
-      this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, class : this.documentWrapperStyle } );
+      this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, 'class' : this.documentWrapperStyle } );
       this.panelContentElement.grab( this.documentWrapper );
    }.protect(),
    
@@ -188,7 +212,7 @@ var DesktopPanel = new Class({
    }.protect(),
    
    destroyDocumentWrapper: function(){
-      this.documentWrapper.destroy();
+      if( this.documentWrapper ) this.documentWrapper.destroy();
    }.protect(),
    
    determinePanelElement: function(){
@@ -228,6 +252,12 @@ var DesktopPanel = new Class({
       this.title = null;
    }.protect(),
    
+   revertConstruction: function(){
+      this.destroyComponents();
+      this.resetProperties();
+      this.state = DesktopPanel.States.INITIALIZED;
+   }.protect(),
+   
    unmarshallDocument: function(){
       this.documentContentUri = XmlResource.selectNodeText( this.options.documentContentUriSelector, this.definitionElement );
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement );
@@ -239,7 +269,8 @@ var DesktopPanel = new Class({
             widgetContainerId : this.documentWrapperId, 
             documentDefinitionUri : this.documentDefinitionUri, 
             documentContentUri : this.documentContentUri,
-            onDocumentReady : this.onDocumentReady 
+            onDocumentReady : this.onDocumentReady,
+            onDocumentError : this.onDocumentError
          });
          this.document.unmarshall();
       }
@@ -248,7 +279,7 @@ var DesktopPanel = new Class({
    unmarshallHeaderToolbox: function() {
       var headerDefinition = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
       if( headerDefinition ){
-         this.header = new DesktopPanelHeader( headerDefinition, { onHeaderConstructed : this.onHeaderConstructed } );
+         this.header = new DesktopPanelHeader( headerDefinition, this.resourceBundle, { onHeaderConstructed : this.onHeaderConstructed } );
          this.header.unmarshall();
       }
    }.protect(),
@@ -256,7 +287,7 @@ var DesktopPanel = new Class({
    unmarshallPanelHeader: function(){
       var headerConfigurationElement = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
       if( headerConfigurationElement ){
-          this.header = new DesktopPanelHeader( headerConfigurationElement, { onHeaderConstructed : this.onHeaderConstructed });
+          this.header = new DesktopPanelHeader( headerConfigurationElement, this.resourceBundle, { onHeaderConstructed : this.onHeaderConstructed, onHeaderConstructionError : this.onHeaderConstructionError });
           this.header.unmarshall();
       }
    }.protect(),
@@ -274,7 +305,7 @@ var DesktopPanel = new Class({
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
-         this.plugin = new DesktopPlugin( pluginDefinition, { onConstructed : this.onPluginConstructed } );
+         this.plugin = new DocumentPlugin( pluginDefinition, this.resourceBundle, { onConstructed : this.onPluginConstructed } );
          this.plugin.unmarshall();
       }
    }.protect()

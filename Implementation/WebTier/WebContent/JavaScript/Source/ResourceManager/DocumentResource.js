@@ -39,13 +39,18 @@ var DocumentResource = new Class({
       this.id = null;
       this.htmlElement = null;
       this.resourceElement = resourceElement;
+      this.resourceAvailable = false;
       this.resourceUri = null;
       this.logger = Class.getInstanceOf( WebUILogger );
    },
    
    //Public mutators and accessor methods
    load: function(){
-      if( !this.isResourceLoaded() ) this.loadResource();
+      if( !this.isResourceLoaded() ){
+         this.checkResourceAvailability();
+         if( this.resourceAvailable ) this.loadResource();
+         else this.onResourceError();
+      }else this.onResourceLoaded();
    },
    
    onResourceError: function(){
@@ -69,4 +74,26 @@ var DocumentResource = new Class({
    getId: function() { return this.htmlElement.get( 'id' ); },
    getResourceType: function() { return this.options.type; },
    getResourceUri: function() { return this.resourceUri; },
+   
+   //Protected, private helper methods
+   checkResourceAvailability: function(){
+      this.remoteResource = new RemoteResource( this.resourceUri, {
+         async: false,            
+         onSuccess: function( responseText, responseXML ){ 
+            this.resourceAvailable = true; 
+         }.bind( this ),
+         onException: function( headerName, value ){ 
+            this.resourceAvailable = false; 
+         }.bind( this ),
+         onFailure: function( xhr ) { 
+            this.resourceAvailable = false; 
+         }.bind( this )
+      });
+      
+      try{
+         this.remoteResource.retrieve();
+      }catch( e ){
+         throw new UndefinedDocumentResourceException( this.resourceUri, { cause: e, source : this.componentName } );
+      }
+   }.protect()
 });

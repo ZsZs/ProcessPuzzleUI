@@ -8,7 +8,7 @@
    <description>This configuration supports testing Smart Document.</description>
    <version>0.5</version>
    
-   <documentResources>
+   <resources>
       <styleSheets>
          <styleSheet>../SmartDocument/SmartDocument.css</styleSheet>
       </styleSheets>
@@ -17,43 +17,43 @@
          <image id="logoImage" title="ProcessPuzzle">../SmartDocument/Images/ProcessPuzzleLogo.jpg</image>
       </images>
       
-      <javascripts>
-         <javascript>../SmartDocument/DummyScript.js</javascript>
-      </javascripts>
-   </documentResources>
+      <javaScripts>
+         <javaScript>../ResourceManager/DummyScript.js</javaScript>
+      </javaScripts>
+   </resources>
 
-   <documentHeader tag="div" name="smartDocumentHeader">
-      <compositeElement tag="div" name="headerWrapper">
-         <element tag="h1" elementStyle="headerText" name="SmartDocumentTitle" href="http://opensource.processpuzzle.com">SmartDocument.headerText</element>
+   <documentHeader tag="div" id="smartDocumentHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1" elementStyle="headerText" id="SmartDocumentTitle" href="http://opensource.processpuzzle.com">SmartDocument.headerText</element>
       </compositeElement>
    </documentHeader>
    
-   <documentBody tag="div" name="smartDocumentBody">
-      <compositeElement tag="div" name="bodyWrapper">
-         <element tag="h2" elementStyle="channelTitle" name="title" bind="/rss/channel/title"/>
-         <compositeElement tag="ul" name="channelProperties">
-	         <element tag="li" elementStyle="property" name="link" bind="/rss/channel/link"/>
-	         <element tag="li" elementStyle="property" name="description" bind="/rss/channel/description"/>
-	         <element tag="li" elementStyle="property" name="language" bind="/rss/channel/language"/>
-	         <element tag="li" elementStyle="property" name="pubDate" bind="/rss/channel/pubDate"/>
-	         <element tag="li" elementStyle="property" name="lastBuildDate" bind="/rss/channel/lastBuildDate"/>
-	         <element tag="li" elementStyle="property" name="docs" bind="/rss/channel/docs"/>
-	         <element tag="li" elementStyle="property" name="generator" bind="/rss/channel/generator"/>
-	         <element tag="li" elementStyle="property" name="managingEditor" bind="/rss/channel/managingEditor"/>
-	         <element tag="li" elementStyle="property" name="webMaster" bind="/rss/channel/webMaster"/>
+   <documentBody tag="div" id="smartDocumentBody">
+      <compositeElement tag="div" id="bodyWrapper">
+         <dataElement tag="h2" elementStyle="channelTitle" id="title" bind="/rss/channel/title"/>
+         <compositeElement tag="ul" id="channelProperties">
+	         <dataElement tag="li" elementStyle="property" id="link" bind="/rss/channel/link"/>
+	         <dataElement tag="li" elementStyle="property" id="description" bind="/rss/channel/description"/>
+	         <dataElement tag="li" elementStyle="property" id="language" bind="/rss/channel/language"/>
+	         <dataElement tag="li" elementStyle="property" id="pubDate" bind="/rss/channel/pubDate"/>
+	         <dataElement tag="li" elementStyle="property" id="lastBuildDate" bind="/rss/channel/lastBuildDate"/>
+	         <dataElement tag="li" elementStyle="property" id="docs" bind="/rss/channel/docs"/>
+	         <dataElement tag="li" elementStyle="property" id="generator" bind="/rss/channel/generator"/>
+	         <dataElement tag="li" elementStyle="property" id="managingEditor" bind="/rss/channel/managingEditor"/>
+	         <dataElement tag="li" elementStyle="property" id="webMaster" bind="/rss/channel/webMaster"/>
          </compositeElement>
-         <element  tag="h4" name="channelItems">SmartDocument.itemsTitle</element>
-         <compositeElement tag="ul" name="channelItemsContainer" bind="/rss/channel/item" maxOccures="unbounded">
-	         <element tag="li" elementStyle="title" name="itemTitle" bind="/rss/channel/item[{index}]/title"/>
-	         <element tag="li" elementStyle="description" name="itemDescription" bind="/rss/channel/item[{index}]/description"/>
-         </compositeElement>
+         <element  tag="h4" id="channelItems">SmartDocument.itemsTitle</element>
+         <compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
+	         <dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
+	         <dataElement tag="li" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+         </compositeDataElement>
       </compositeElement>
-      <element tag="p" name="copyright" href="http://www.processpuzzle.com">SmartDocument.copyright</element>
+      <element tag="p" id="copyright" href="http://www.processpuzzle.com">SmartDocument.copyright</element>
    </documentBody>
    
-   <documentFooter tag="div" name="newsReaderFooter">
-      <compositeElement tag="div" name="footerWrapper">
-         <element tag="h1" elementStyle="footerText" name="headerText" href="http://opensource.processpuzzle.com">Visit Open Source ProcessPuzzle</element>
+   <documentFooter tag="div" id="newsReaderFooter">
+      <compositeElement tag="div" id="footerWrapper">
+         <element tag="h1" elementStyle="footerText" id="headerText" href="http://opensource.processpuzzle.com">Visit Open Source ProcessPuzzle</element>
       </compositeElement>
    </documentFooter>
 </smartDocumentDefinition>

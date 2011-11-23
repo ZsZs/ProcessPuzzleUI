@@ -76,16 +76,16 @@
       languageSelector = new LanguageSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
       widgetContainerElement = languageSelector.getContainerElement();
 
-	  callBackWasCalled = false;
+      callBackWasCalled = false;
    }
 
    function tearDown() {
       messageBus.tearDown();
-	  callBackWasCalled = false;
-	  callBackMessage = null;
+      callBackWasCalled = false;
+      callBackMessage = null;
    }
 
-   function testInitialization_WhenConstructorArgumentsAreGiven() {
+   function test_initialization_WhenConstructorArgumentsAreGiven() {
       assertEquals( $( WIDGET_CONTAINER_ID ), languageSelector.getContainerElement() );
       assertEquals( "Initialization determines available locales.", 2, languageSelector.getAvailableLocales().size() ); 
       assertEquals( "hu", languageSelector.getAvailableLocales().get( 0 ).getLanguage() );
@@ -93,7 +93,7 @@
       assertEquals( "GB", languageSelector.getAvailableLocales().get( 1 ).getCountry() );
    }
    
-   function testInitialization_WhenConstructorArgumentsAreMissing() {
+   function test_initialization_WhenConstructorArgumentsAreMissing() {
       //SETUP:
       var webUIController = new WebUIController({ configurationUri : "../WebUIController/SampleConfiguration.xml" });
       
@@ -111,7 +111,7 @@
       webUIController.destroy();
    }
    
-   function testConfigure_CreatesSelectElementWithOptions() {
+   function test_configure_CreatesSelectElementWithOptions() {
       //SETUP:
       //EXCERCISE:
       languageSelector.construct();
@@ -123,7 +123,14 @@
       //assertEquals( languageSelector.onSelection, selectElement.hasEvent( 'change' ));
    }
    
-   function testOnSelection_NotifiesMessageBusSubscribers() {
+   function test_destory_destroysCreatedHtmlElements(){
+      languageSelector.construct();
+      languageSelector.destroy();
+      
+      assertThat( widgetContainerElement.getChildren( '*' ).length, equalTo( 0 ));
+   }
+   
+   function test_onSelection_NotifiesMessageBusSubscribers() {
       //SETUP:
       languageSelector.construct();
       messageBus.subscribeToMessage( LanguageChangedMessage, onLanguageChangeCallback );
@@ -145,7 +152,7 @@
    //runs a test function during debugging
    function runTestFunction(){
       setUp();
-      testOnSelection_NotifiesMessageBusSubscribers();
+      test_destory_destroysCreatedHtmlElements();
       tearDown();
    }
    </script>

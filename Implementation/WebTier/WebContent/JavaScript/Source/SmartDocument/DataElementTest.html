@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Test page for DataElement.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+   <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementBehaviour.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestFunction();
+      });
+				
+      JsHamcrest.Integration.JsUnit();
+		
+      var WEBUI_CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
+      var DOCUMENT_CONTAINER_ID = "SmartDocument";
+      var DOCUMENT_CONTENT_URI = "../SmartDocument/UserProfile.xml";
+      var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
+      var ELEMENT_DEFINITION_SELECTOR = "/smartDocumentDefinition/documentBody/compositeElement/dataElement[@id='currentUser']";
+      var MULTIPLE_DATA_SELECTOR = "/smartDocumentDefinition/documentBody/compositeElement/compositeElement/dataElement[@id='userAddresses']";
+		
+      var bundle = null;
+      var documentContainerElement = null;
+      var documentContentResource = null;
+      var documentDefinition = null;
+		var dataElement = null;
+		var documentInternationalization = null;
+		var webUIConfiguration = null;
+		var webUILogger = null;
+		
+      function setUp(){
+         inform( "beforEachTest" );
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         bundle = new XMLResourceBundle( webUIConfiguration );
+         bundle.load( new Locale({ language : "en" }) );
+		   
+         documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+         dataElement = new DataElement( documentDefinition.selectNode( ELEMENT_DEFINITION_SELECTOR ), bundle );
+         documentContainerElement = $( DOCUMENT_CONTAINER_ID );
+      }
+
+      function tearDown(){
+         bundle.release();
+         bundle = null;
+		   
+         if( dataElement.getState() > DocumentElement.States.INITIALIZED ) dataElement.destroy();
+         dataElement = null;
+         documentContainerElement = null;
+         inform( "afterEachTest" );
+      }
+		
+      function test_initialize() {
+         assertThat( dataElement, not( nil() ));
+         assertThat( dataElement.getDefinitionElement(), not( nil() ));
+      }
+		
+      function test_unmarshall_determinesElementProperties(){
+         //SETUP: see setUp() method
+         //EXCERCISE:
+         dataElement.unmarshall();
+		   
+         //VERIFY:
+         assertThat( dataElement.getBind(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@bind" )));
+         assertThat( dataElement.getSource(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@source" ) ));
+         assertThat( dataElement.getMaxOccures(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@maxOccures" ) ));
+         assertThat( dataElement.getMinOccures(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@minOccures" ) ));
+      }
+		
+      function test_unmarshall_whenMaxOccuresLargetThanOne_determinesNumberOfDataElements(){
+         dataElement = new DataElement( documentDefinition.selectNode( MULTIPLE_DATA_SELECTOR ), bundle );
+         dataElement.unmarshall();
+         
+         assertThat( dataElement.getDataElementsNumber(), equalTo( documentContentResource.selectNodes( "userProfile/addresses/address" ).length ));
+      }
+		
+      function test_unmarshall_whenMaxOccuresLargetThanOne_instantiatesSiblingElements(){
+         dataElement = new DataElement( documentDefinition.selectNode( MULTIPLE_DATA_SELECTOR ), bundle );
+         dataElement.unmarshall();
+         
+         assertThat( dataElement.getSiblings().size(), equalTo( documentContentResource.selectNodes( "userProfile/addresses/address" ).length -1 ));
+      }
+      
+      function test_construct_retrievesBindedData(){
+         //SETUP: see also setUp() method
+         dataElement.unmarshall();
+		   
+         //EXCERCISE:
+         dataElement.construct( documentContainerElement, "bottom" );
+		   
+         //VERIFY:
+         assertThat( dataElement.getDataXml().xmlAsText, equalTo( documentContentResource.xmlAsText ));
+         assertThat( dataElement.getHtmlElement().get( 'text' ), equalTo( documentContentResource.selectNodeText( "/userProfile/userName" )));
+      }
+      
+      function test_construct_whenMaxOccuresLargetThanOne_createsMultipleElements(){
+         dataElement = new DataElement( documentDefinition.selectNode( MULTIPLE_DATA_SELECTOR ), bundle );
+         dataElement.unmarshall();
+         dataElement.construct( documentContainerElement, "bottom" );
+         
+         assertThat( documentContainerElement.getChildren().length, equalTo( documentContentResource.selectNodes( "userProfile/addresses/address" ).length ))
+      }
+		
+      function test_destroy_whenUnmarshalled_resetsProperties(){
+         //SETUP: see also setUp() method
+         dataElement.unmarshall();
+		   
+         //EXCERCISE:
+         dataElement.destroy();
+		   
+         //VERIFY:
+         assertThat( dataElement.getBind(), nil() );
+         assertThat( dataElement.getMaxOccures(), nil() );
+         assertThat( dataElement.getMinOccures(), nil() );
+         assertThat( dataElement.getSource(), nil() );
+      }
+		
+      function test_destroy_whenConstructed_removesHtmlElement(){
+         //SETUP: see also setUp() method
+         dataElement.unmarshall();
+         dataElement.construct( documentContainerElement, "bottom" );
+         assertThat( documentContainerElement.getChildren(), hasItem( dataElement.getHtmlElement() ));
+		   
+         //EXCERCISE:
+         dataElement.destroy();
+		   
+         //VERIFY:
+         assertThat( documentContainerElement.getChildren().length, equalTo( 0 ));
+      }
+		
+      function test_destroy_whenNotUnmarshalled_raisesException(){
+         //SETUP: see setUp() method
+		   
+         //EXCERCISE, VERIFY:
+         try{
+            dataElement.destroy();
+            fail();
+         }catch( e ){
+            assertThat( instanceOf( e, UnconfiguredDocumentElementException ), is( true ));
+         }
+      }
+		
+      //runs a test function during debugging
+      function runTestFunction(){
+         setUp();
+         test_unmarshall_whenMaxOccuresLargetThanOne_instantiatesSiblingElements();
+         tearDown();
+      }
+      </script>
+</head>
+
+<body>
+   <h1>DataElement.js test page</H1>
+   <p>This page contains tests for DataElement.js JavaScript class.</P>
+   <div id="SmartDocument"></div>
+</body>
+</html>

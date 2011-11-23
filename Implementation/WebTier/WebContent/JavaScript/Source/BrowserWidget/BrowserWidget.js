@@ -77,11 +77,12 @@ var BrowserWidget = new Class( {
    // public accessor and mutator methods
 
    construct : function() {
+      if( this.state < BrowserWidget.States.CONSTRUCTED ) this.onConstructed();
       return this;
    },
 
    destroy : function() {
-      if( this.isConstructed ){
+      if( this.state == BrowserWidget.States.CONSTRUCTED ){
          this.containerElement.getElements( '*' ).each( function( childElement, index ) {
             if( childElement.removeEvents )
                childElement.removeEvents();

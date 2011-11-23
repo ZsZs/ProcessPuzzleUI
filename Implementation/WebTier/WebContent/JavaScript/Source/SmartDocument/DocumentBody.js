@@ -28,15 +28,23 @@ var DocumentBody = new Class({
    Extends: CompositeDocumentElement,
    
    options: {
+      componentName : "DocumentBody"
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, data ){
-      this.options.type = "DocumentBody";
-      this.parent( headerDefinitionElement, bundle, data );
+   initialize: function( headerDefinitionElement, bundle, data, options ){
+      this.parent( headerDefinitionElement, bundle, data, options );
    },
    
    //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.parent( contextElement, where );
+   },
+   
+   constructed: function(){
+      this.parent();
+   },
+   
    unmarshall: function(){
       this.parent();
    }

@@ -39,33 +39,35 @@
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopElementFactory.js"></script>
-   <script type="text/javascript" src="../Desktop/CompositeDesktopElement.js"></script>
-   <script type="text/javascript" src="../Desktop/ConfigurationTimeoutException.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementBehaviour.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDataElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
    <script type="text/javascript" src="../Desktop/Desktop.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopContentArea.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopFooter.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopFooterBar.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopNavigationBar.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopContentArea.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopDocument.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopTitleBar.js"></script>
-   <script type="text/javascript" src="../Desktop/NoneExistingDesktopContainerElementException.js"></script>
-   <script type="text/javascript" src="../Desktop/plugins/tree/scripts/tree.js"></script>
-   <script type="text/javascript" src="../Desktop/ResourceNotFoundException.js"></script>
    <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-   <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
@@ -81,30 +83,15 @@
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
-   <script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
-   <script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
-   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
-   <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
-   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
-   <script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
-   <script type="text/javascript" src="../TabWidget/Tab.js"></script>
-   <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
-   <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
-   <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
-   <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
-   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
-   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
 
    <script type="text/javascript" >
       window.addEvent( 'domready', function() {
-         //test_Initialize_LoadsDesktopConfiguration();
+         test_unmarshall_unmarshallsDesktopComponents();
       });
   	  
       JsHamcrest.Integration.JsUnit();
@@ -179,7 +166,7 @@
          inform( "afterEachTest" );
       }
       
-      function test_Initialize_LoadsDesktopConfiguration(){
+      function test_initialize_loadsDesktopConfiguration(){
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -190,7 +177,7 @@
          ).callChain();
       }
 
-      function test_Unmarshall_UnmarshallsDesktopComponents(){
+      function test_unmarshall_unmarshallsDesktopComponents(){
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -221,7 +208,7 @@
          ).callChain();
       }
       
-      function test_Construct_ConstructsWholeDekstop(){
+      function test_construct_constructsWholeDekstop(){
          testCaseChain.chain(
             beforeEachTest,
             function(){

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<up:userProfile
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:up="http://www.processpuzzle.com/UserProfile">
+   <userName>john.smith</userName>
+</up:userProfile>

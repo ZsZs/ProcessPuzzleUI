@@ -352,7 +352,7 @@ var Desktop = new Class({
    unmarshallColumns: function(){
       var columnDefinitionElements = this.configurationXml.selectNodes( this.options.columnSelector );
       columnDefinitionElements.each( function( columnDefinition, index ){
-         var desktopColumn = new DesktopColumn( columnDefinition );
+         var desktopColumn = new DesktopColumn( columnDefinition, { componentContainerId : this.containerId } );
          desktopColumn.unmarshall();
          this.columns.put( desktopColumn.getName(), desktopColumn );
       }, this );
@@ -379,7 +379,7 @@ var Desktop = new Class({
    unmarshallFooter: function(){
       var footerDefinitionElement = this.configurationXml.selectNode( this.options.footerSelector );
       if( footerDefinitionElement ){
-         this.footer = new DesktopFooter( footerDefinitionElement, this.resourceBundle, { onConstructed : this.onFooterConstructed } );
+         this.footer = new DesktopDocument( footerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed } );
          this.footer.unmarshall();
       }
    }.protect(),
@@ -387,7 +387,7 @@ var Desktop = new Class({
    unmarshallHeader: function(){
       var headerDefinitionElement = this.configurationXml.selectNode( this.options.headerSelector );
       if( headerDefinitionElement ){
-         this.header = new DesktopHeader( headerDefinitionElement, this.resourceBundle, { onConstructed : this.onHeaderConstructed } );
+         this.header = new DesktopDocument( headerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed } );
          this.header.unmarshall();
       }
    }.protect(),

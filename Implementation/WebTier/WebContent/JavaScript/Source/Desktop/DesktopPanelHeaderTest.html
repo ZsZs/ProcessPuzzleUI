@@ -29,13 +29,15 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
@@ -48,6 +50,7 @@
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
 	
@@ -73,7 +76,7 @@
            
 		   desktopConfiguration = new XmlResource( DESKTOP_CONFIGURATION_URI );
 		   panelHeaderDefinition = desktopConfiguration.selectNode( PANEL_HEADER_SELECTOR );
-		   panelHeader = new DesktopPanelHeader( panelHeaderDefinition, { onHeaderConstructed : verifyConstruction } );
+		   panelHeader = new DesktopPanelHeader( panelHeaderDefinition, bundle, { onHeaderConstructed : verifyConstruction } );
 		}
 
 		function tearDown(){

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+   <title>Test page for ResourceManager.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+		
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         test_send();
+      });
+		
+      var resourceRequest;
+      
+      function beforeEachTest(){
+      }
+      
+      function onResourceError(){
+         debug( "onResourceError() was called.");
+         onResourceErrorWasCalled = true;
+      }
+
+		
+      function onResourcesLoaded(){
+         debug( "onResourcesLoaded() was called.");
+         onResourceLoadedWasCalled = true;
+         testCaseChain.callChain();
+      }
+
+      function afterEachTest(){
+      }
+		
+      function test_send() {
+         Request.implement({
+            isSuccess: function() { // Determines if an XMLHttpRequest was successful or not
+               try {
+                   // IE error sometimes returns 1223 when it should be 204 so treat it as success, see #1450
+                   return !this.status && location.protocol === "file:" ||
+                       // Opera returns 0 when status is 304
+                       ( this.status >= 200 && this.status < 300 ) ||
+                       this.status === 304 || this.status === 1223 || this.status === 0;
+               } catch(e) {}
+
+               return false;
+           }
+         });
+
+         resourceRequest = new Request({
+            url: "DummyCSS.css",
+            async: true,
+            noChache: true,
+            onComplete: function( responseAsText ){
+               console.log( "complete" );
+            }.bind( this ),
+            
+            onException: function( headerName, value ){
+               console.log( "exception" );
+            }.bind( this ),
+            
+            onFailure: function( xhr ) {
+               console.log( "failure" );
+            }.bind( this ),
+            
+            onLoadStart: function( event, xhr ){
+               console.log( "loadStart" );
+            }.bind( this ),
+            
+            onProgress: function( event, xhr ){
+               console.log( "progress" );
+            }.bind( this ),
+            
+            onRequest: function(){
+               console.log( "request" );
+            }.bind( this ),
+            
+            onSuccess: function( responseText, responseXML ){
+               console.log( "success" );
+            }.bind( this ),
+            
+         });
+         
+         try{
+            resourceRequest.send();
+         }catch( e ){
+            console.log( e );
+         }
+      }
+		
+   </script>
+</head>
+
+<body>
+	<h1>ResourceManager.js test page</H1>
+	<p>This page contains tests for ResourceManager.js JavaScript class.</P>
+</body>
+</html>

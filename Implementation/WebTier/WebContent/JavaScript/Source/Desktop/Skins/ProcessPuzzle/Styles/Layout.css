@@ -79,6 +79,12 @@ body {
 	font-weight: bold;
 }
 
+#desktopTitleBar h3.currentUser {
+   font-size: 12px;
+   text-align: center;
+   color: #004080;
+}
+
 #desktopNavigationBar {
 	background: url(../Images/NavigationBarBackground.jpg) repeat-x;
 	height: 30px;

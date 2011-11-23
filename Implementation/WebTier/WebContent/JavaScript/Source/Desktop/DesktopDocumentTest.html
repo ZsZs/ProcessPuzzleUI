@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Test page for DesktopDocument.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+   <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopDocument.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../LanguageSelectorWidget/LanguageChangedMessage.js"></script>
+   <script type="text/javascript" src="../LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
+	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         //test_construct_constructsDocument();
+      });
+				
+      JsHamcrest.Integration.JsUnit();
+		
+      var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
+      var DESKTOP_CONTAINER_ID = "Desktop";
+      var HEADER_DEFINITION_SELECTOR = "/pp:desktopConfiguration/header";
+      var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
+		
+      var desktopInternationalization = null;
+      var desktopDefinition = null;
+      var desktopDocument = null;
+      var headerDefinition = null;
+      var testCaseChain = new Chain();
+      var webUIConfiguration = null;
+      var webUILogger = null;
+		
+      function beforeEachTest(){
+         inform( "beforeEachTest" );
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         desktopInternationalization = new XMLResourceBundle( webUIConfiguration );
+         desktopInternationalization.load( new Locale({ language : "en" }) );
+           
+         desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI );
+         headerDefinition = desktopDefinition.selectNode( HEADER_DEFINITION_SELECTOR );
+         desktopDocument = new DesktopDocument( headerDefinition, desktopInternationalization, { componentContainerId : DESKTOP_CONTAINER_ID, onConstructed : onConstructed } );
+         testCaseChain.callChain();
+      }
+      
+      function onConstructed(){
+         testCaseChain.callChain();
+      }
+
+      function afterEachTest(){
+         if( desktopDocument.getState() > DesktopElement.States.INITIALIZED ) desktopDocument.destroy();
+         desktopDocument = null;
+         testCaseChain.clearChain();
+         inform( "afterEachTest" );
+      }
+		
+      function test_initialize() {
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( desktopDocument, not( nil() ));
+               assertThat( desktopDocument.getDefinitionElement(), not( nil() ));
+               assertThat( desktopDocument.getState(), equalTo( DesktopElement.States.INITIALIZED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+      
+      function test_initialize_determinesContainerElement(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( desktopDocument.getContainerElement(), equalTo( $( desktopDocument.getContainerElementId() )));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+		
+      function test_unmarshall_determinesHeaderProperties(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopDocument.unmarshall();
+		   
+               //VERIFY:
+               assertThat( desktopDocument.getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
+               assertThat( desktopDocument.getDocumentDefinitionUri(), equalTo( desktopDefinition.selectNodeText( HEADER_DEFINITION_SELECTOR + "/@documentDefinition" )));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+      
+      function test_unmarshall_instantiatesAndUnmarshallsDocument(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopDocument.unmarshall();
+         
+               //VERIFY:
+               assertThat( instanceOf( desktopDocument.getDocument(), SmartDocument ), is( true ));
+               assertThat( desktopDocument.getDocument().getState(), equalTo( SmartDocument.States.UNMARSHALLED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+      
+      function test_construct_constructsDocument(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopDocument.unmarshall();
+               desktopDocument.construct();
+            },
+            function(){
+               //VERIFY:
+               assertThat( desktopDocument.getDocument().getState(), equalTo( SmartDocument.States.CONSTRUCTED ));
+               assertThat( $( DESKTOP_CONTAINER_ID ).getChildren( '*' ).length, greaterThan( 0 ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+      
+      function test_destroy_destroysDocument(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               desktopDocument.unmarshall();
+               desktopDocument.construct();
+            },
+            function(){
+               desktopDocument.destroy();
+               
+               //VERIFY:
+               assertThat( desktopDocument.getState(), equalTo( DesktopElement.States.INITIALIZED ));
+               assertThat( desktopDocument.getDocument(), nil() );
+               assertThat( $( DESKTOP_CONTAINER_ID ).getChildren( '*' ).length, equalTo( 0 ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+   </script>
+</head>
+
+<body>
+	<h1>DesktopDocument.js test page</H1>
+	<p>This page contains tests for DesktopDocument.js JavaScript class.</P>
+	<div id="Desktop">ProcessPuzzleUI desktop container.</div>
+</body>
+</html>

@@ -36,9 +36,8 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
-   <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
@@ -60,6 +59,7 @@
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -95,7 +95,7 @@
 		   
 		   desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/Desktop'" } );
 		   var elementDefinition = desktopDefinition.selectNode( COLUMN_DEFINITION );
-		   column = new DesktopColumn( elementDefinition );
+		   column = new DesktopColumn( elementDefinition, { componentContainerId : DESKTOP_CONTAINER_ID } );
 		   desktopContainerElement = $( DESKTOP_CONTAINER_ID );
 		   pageWrapperElement = $( PAGE_WRAPPER_ID );
 		}
@@ -106,8 +106,8 @@
 		   desktopContainerElement = null;
 		}
 		
-		function test_Initialization(){
-		   assertThat( column.getState(), equalTo( DesktopColumn.States.INITIALIZED ));
+		function test_initialize(){
+		   assertThat( column.getState(), equalTo( DesktopElement.States.INITIALIZED ));
 		}
 		
 		function test_Unmarshall_SetsState(){
@@ -116,10 +116,10 @@
 		   column.unmarshall();
 		   
 		   //VERIFY:
-		   assertThat( column.getState(), equalTo( DesktopColumn.States.UNMARSHALLED ));
+		   assertThat( column.getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
 		}
 				
-		function test_Unmarshall_DeterminesProperties(){
+		function test_unmarshall_determinesProperties(){
 		   //SETUP: see setUp()
 		   //EXCERCISE:
 		   column.unmarshall();
@@ -132,26 +132,26 @@
 		   assertThat( column.getMaximumWidth(), equalTo( desktopDefinition.selectNode( COLUMN_DEFINITION + "/@maximumWidth" ).value ));
 		}
 		
-		function test_ConstructInstantiatesMUIColumn(){
-		   //SETUP: see setUp()
-		   column.unmarshall();
+      function test_construct_instantiatesMUIColumn(){
+         //SETUP: see setUp()
+         column.unmarshall();
 		
-		   //EXCERCISE:
-		   MUI.myChain = new Chain();
-		   MUI.myChain.chain( function(){MUI.Desktop.initialize({ desktop : DESKTOP_CONTAINER_ID, pageWrapper : PAGE_WRAPPER_ID });} );
-	       MUI.myChain.callChain();
-		   column.construct();
+         //EXCERCISE:
+         MUI.myChain = new Chain();
+         MUI.myChain.chain( function(){MUI.Desktop.initialize({ desktop : DESKTOP_CONTAINER_ID, pageWrapper : PAGE_WRAPPER_ID });} );
+         MUI.myChain.callChain();
+         column.construct();
 		   
-		   //VERIFY:
-		   assertThat( column.getMUIColumn(), not( nil() ));
-		}
+         //VERIFY:
+         assertThat( column.getMUIColumn(), not( nil() ));
+      }
 				
-		//runs a test function during debugging
-		function runTestCase(){
-			setUp();
-			test_Initialization();
-			tearDown();
-		}
+      //runs a test function during debugging
+      function runTestCase(){
+         setUp();
+         test_construct_instantiatesMUIColumn();
+         tearDown();
+      }
     </script>
 </head>
 

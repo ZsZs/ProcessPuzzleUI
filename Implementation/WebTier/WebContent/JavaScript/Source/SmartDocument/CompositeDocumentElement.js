@@ -3,10 +3,11 @@ Name: CompositeDocumentElement
 
 Description: Represents a composite constituent element of a SmartDocument which can have nested elements.
 
-Requires:
+Requires: 
+    - DocumentElement
 
 Provides:
-    - DocumentElement
+    - CompositeDocumentElement
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -26,16 +27,20 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDocumentElement = new Class({
    Extends: DocumentElement,
+   Binds: ['onNestedElementConstructed', 'onNestedElementConstructionError'],
    
    options: {
-      subElementsSelector : "compositeElement | element"
+      componentName : "CompositeDocumentElement",
+      subElementsSelector : "compositeElement | element | compositeDataElement | dataElement",
+      tagName : "div"
    },
    
    //Constructor
-   initialize: function( definitionElement, bundle, data, index ){
-      this.options.type = "CompositeDocumentElement";
-      this.parent( definitionElement, bundle, data, index );
+   initialize: function( definitionElement, bundle, dataXml, options ){
+      this.parent( definitionElement, bundle, options );
+      this.dataXml = dataXml;
       this.elements = new LinkedHashMap();
+      this.numberOfConstructedNestedElements = 0;
    },
    
    //Public mutators and accessor methods
@@ -44,23 +49,35 @@ var CompositeDocumentElement = new Class({
       this.constructNestedElements( contextElement, where );
    },
    
+   constructed: function(){
+      if( this.numberOfConstructedNestedElements == this.elements.size() ) this.parent();
+      else this.constructionChain.chain( this.constructed );
+   },
+   
    destroy: function(){
       this.elements.each( function( elementsEntry, index ){
          var nestedElement = elementsEntry.getValue();
          nestedElement.destroy();
       }, this );
+      this.numberOfConstructedNestedElements = 0;
       this.parent();
    },
    
-   unmarshall: function( dataElementIndex ){
+   onNestedElementConstructed: function( documentElement ){
+      this.numberOfConstructedNestedElements++;
+      this.constructionChain.callChain();
+   },
+   
+   onNestedElementConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+      this.fireEvent( 'constructionError', this.error );
+   },
+   
+   unmarshall: function(){
       this.parent();
-      var subElements = XmlResource.selectNodes( this.options.subElementsSelector, this.definitionElement );
-      subElements.each( function( subElementDefinition, index ){
-         var nestedDocumentElement = this.unmarshallNestedElement( subElementDefinition, dataElementIndex );
-         for( var i = 1; i < nestedDocumentElement.getDataElementsNumber(); i++ ){
-            this.unmarshallNestedElement( subElementDefinition, i );
-         }
-      }, this );
+      if( !this.tag ) this.tag = this.options.tagName;
+      this.unmarshallNestedElements();
    },
 
    //Properties
@@ -69,7 +86,7 @@ var CompositeDocumentElement = new Class({
    
    //Protected, private helper methods
    addElement: function( documentElement ){
-      this.elements.put( documentElement.getName(), documentElement );
+      this.elements.put( documentElement.getId(), documentElement );
    }.protect(),
    
    constructNestedElements: function( contextElement, where ){
@@ -79,11 +96,32 @@ var CompositeDocumentElement = new Class({
       }, this );      
    }.protect(),
    
-   unmarshallNestedElement: function( subElementDefinition, index ){
-      var nestedDocumentElement = DocumentElementFactory.create( subElementDefinition, this.resourceBundle, this.data, index );
-      nestedDocumentElement.unmarshall( index );
-      this.addElement( nestedDocumentElement );
-      return nestedDocumentElement;
+   instantiateDocumentElement: function( elementDefinition ){
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError } );
+   }.protect(),
+   
+   revertConstruction: function(){
+      this.elements.each( function( elementsEntry, index ){
+         var nestedElement = elementsEntry.getValue();
+         nestedElement.destroy();
+      }, this );
+      this.elements.clear();
+      this.numberOfConstructedNestedElements = 0;
+      this.parent();
+   }.protect(),
+   
+   unmarshallNestedElement: function( subElementDefinition, options ){
+      var nestedDesktopElement = this.instantiateDocumentElement( subElementDefinition );
+      nestedDesktopElement.unmarshall();
+      this.addElement( nestedDesktopElement );
+      return nestedDesktopElement;
+   }.protect(),
+   
+   unmarshallNestedElements: function(){
+      var subElements = XmlResource.selectNodes( this.options.subElementsSelector, this.definitionElement );
+      subElements.each( function( subElementDefinition, index ){
+         this.unmarshallNestedElement( subElementDefinition );
+      }, this );
    }.protect()
    
 });

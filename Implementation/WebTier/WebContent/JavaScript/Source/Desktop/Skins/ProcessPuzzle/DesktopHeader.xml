@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Desktop Header Document</name>
+   <description>Header part of ProcessPuzzle desktop.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="desktopHeader">
+      <compositeElement tag="div" id="desktopTitleBar">
+         <compositeElement tag="div" id="desktopTitleBarWrapper">
+            <element id='desktopTitle' tag="h1" elementStyle="applicationTitle" href="http://processpuzzle.com">DesktopConfigurator.desktopTitle</element>
+            <element tag="h2" elementStyle="tagline">DesktopConfigurator.desktopSubTitle</element>
+         </compositeElement>
+      </compositeElement>
+      
+      <compositeElement tag="div" id="desktopNavigationBar">
+         <compositeElement id="navigationBarWrapper" tag="div">
+            <element id="HorizontalMenuBar" tag="div">
+               <plugin>
+                  <resources>
+                     <styleSheets><styleSheet>../HierarchicalMenuWidget/HorizontalLayout.css</styleSheet></styleSheets>
+                     <images><image>../HierarchicalMenuWidget/Images/HorizontalMenuBackground-Left-Normal.gif</image></images>
+                  </resources>
+                  <widget name="HierarchicalMenuWidget">
+                     <options>
+                        <option name="widgetContainerId" value="HorizontalMenuBar"/>
+                        <option name="widgetDefinitionURI" value="../HierarchicalMenuWidget/MenuDefinition.xml"/>
+                     </options>
+                  </widget>
+               </plugin>
+            </element>
+            <element tag="div" id="navigationBarText" elementStyle="navigationBarText">DesktopConfigurator.navigationBar</element>
+            <element tag="div" id="LanguageSelectorWidget">
+               <plugin>
+                  <resources>
+                     <styleSheets><styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/LanguageSelectorWidget.css</styleSheet></styleSheets>
+                  </resources>
+                  <widget name="LanguageSelectorWidget">
+                     <options>
+                        <option name="widgetContainerId" value="LanguageSelectorWidget"/>
+                     </options>
+                  </widget>
+               </plugin>
+            </element>
+         </compositeElement>
+      </compositeElement>
+   </documentBody>
+</smartDocumentDefinition>

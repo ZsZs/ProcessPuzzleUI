@@ -8,16 +8,16 @@
    <description>Short introduction of Costa Rica.</description>
    <version>0.5</version>
    
-   <documentResources>
+   <resources>
       <styleSheets></styleSheets>
       <images></images>
       <javaScripts></javaScripts>
-   </documentResources>
+   </resources>
 
-   <documentBody tag="div" name="smartDocumentBody">
-      <element tag="h1" name="title" bind="/rss/channel/title"/>
-      <element tag="p" name="introduction"></element>
-      <element tag="div" name="photoAlbum">
+   <documentBody tag="div" id="smartDocumentBody">
+      <dataElement tag="h1" id="title" bind="/rss/channel/title"/>
+      <element tag="p" id="introduction"></element>
+      <element tag="div" id="photoAlbum">
       </element>
    </documentBody>
    

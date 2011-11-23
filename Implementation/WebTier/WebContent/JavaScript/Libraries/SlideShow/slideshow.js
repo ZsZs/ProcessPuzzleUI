@@ -82,30 +82,25 @@
             initialize : function( el, data, options ) {
                this.setOptions( options );
                this.el = document.id( el );
-               if( !this.el )
-                  return;
+               if( !this.el ) return;
+               
                var match = window.location.href.match( this.options.match );
                this.slide = this._slide = this.options.match && match ? match[1].toInt() : this.options.slide;
                this.counter = this.timeToNextTransition = this.timeToTransitionComplete = 0;
                this.direction = 'left';
                this.cache = {};
                this.paused = false;
-               if( !this.options.overlap )
-                  this.options.duration *= 2;
+               if( !this.options.overlap ) this.options.duration *= 2;
                var anchor = this.el.getElement( 'a' ) || new Element( 'a' );
-               if( !this.options.href )
-                  this.options.href = anchor.get( 'href' ) || '';
-               if( this.options.hu.length && !this.options.hu.test( /\/$/ ) )
-                  this.options.hu += '/';
-               if( this.options.fast === true )
-                  this.options.fast = WhenPaused | WhenPlaying;
+               if( !this.options.href ) this.options.href = anchor.get( 'href' ) || '';
+               if( this.options.hu.length && !this.options.hu.test( /\/$/ ) ) this.options.hu += '/';
+               if( this.options.fast === true ) this.options.fast = WhenPaused | WhenPlaying;
 
                // styles
-
-               var keys = 'slideshow first prev play pause next last images captions controller thumbnails hidden visible inactive active loader'.split( ' ' ), values = keys
-                     .map( function( key, i ) {
-                        return this.options.classes[i] || key;
-                     }, this );
+               var keys = 'slideshow first prev play pause next last images captions controller thumbnails hidden visible inactive active loader'.split( ' ' );
+               var values = keys.map( function( key, i ) {
+                  return this.options.classes[i] || key;
+               }, this );
                this.classes = values.associate( keys );
                this.classes.get = function() {
                   var str = '.' + this.slideshow;
@@ -115,7 +110,6 @@
                }.bind( this.classes );
 
                // data
-
                if( !data ){
                   this.options.hu = '';
                   data = {};
@@ -133,7 +127,6 @@
                   return;
 
                // events
-
                this.events = {};
                this.events.push = function( type, fn ) {
                   if( !this[type] )
@@ -146,13 +139,12 @@
                this.accesskeys = {};
                for( action in this.options.accesskeys ){
                   var obj = this.options.accesskeys[action];
-                  this.accesskeys[action] = accesskey = {
-                     'label' : obj.label};
+                  this.accesskeys[action] = accesskey = { 'label' : obj.label };
                   ['shift', 'control', 'alt'].each( function( modifier ) {
                      var re = new RegExp( modifier, 'i' );
                      accesskey[modifier] = obj.key.test( re );
                      obj.key = obj.key.replace( re, '' );
-                  } );
+                  });
                   accesskey.key = obj.key.trim();
                }
 
@@ -164,36 +156,29 @@
                }.bind( this ) );
 
                // required elements
-
-               var el = this.el.getElement( this.classes.get( 'images' ) ), img = this.el.getElement( 'img' ) || new Element( 'img' ), images = el ? el.empty()
-                     : new Element( 'div', {
-                        'class' : this.classes.get( 'images' ).substr( 1 )} ).inject( this.el ), div = images.getSize();
+               var el = this.el.getElement( this.classes.get( 'images' ) );
+               var img = this.el.getElement( 'img' ) || new Element( 'img' );
+               var images = el ? el.empty() : new Element( 'div', { 'class' : this.classes.get( 'images' ).substr( 1 ) }).inject( this.el );
+               var div = images.getSize();
                this.height = this.options.height || div.y;
                this.width = this.options.width || div.x;
-               images.set( {
-                  'styles' : {
-                     'height' : this.height,
-                     'width' : this.width}} );
+               images.set( { 'styles' : { 'height' : this.height, 'width' : this.width}} );
                this.el.store( 'images', images );
                this.a = this.image = img;
-               if( Browser.ie && Browser.version >= 7 )
-                  this.a.style.msInterpolationMode = 'bicubic';
-               this.a.set( 'styles', {
-                  'display' : 'none'} );
+               if( Browser.ie && Browser.version >= 7 ) this.a.style.msInterpolationMode = 'bicubic';
+               this.a.set( 'styles', { 'display' : 'none' });
                this.b = this.a.clone();
                [this.a, this.b].each( function( img ) {
                   anchor.clone().cloneEvents( anchor ).grab( img ).inject( images );
-               } );
+               });
 
                // optional elements
-
                this.options.captions && new Caption( this );
                this.options.controller && new Controller( this );
                this.options.loader && new Loader( this );
                this.options.thumbnails && new Thumbnails( this );
 
                // begin show
-
                this._preload( this.options.fast & OnStart );
             },
 
@@ -320,14 +305,12 @@
 
             load : function( data ) {
                this.firstrun = true;
-               this.showed = {
-                  'array' : [],
-                  'i' : 0};
+               this.showed = { 'array' : [], 'i' : 0 };
                if( typeOf( data ) == 'array' ){
                   this.options.captions = false;
                   data = new Array( data.length ).associate( data.map( function( image, i ) {
                      return image + '?' + i
-                  } ) );
+                  }));
                }
                this.data = {
                   'images' : [],
@@ -398,9 +381,9 @@
              * Private method: preload Preloads the next slide in the show, once
              * loaded triggers the show, updates captions, thumbnails, etc.
              */
-
             _preload : function( fast ) {
-               var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' ), cached = loaded = !!this.cache[src];
+               var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' );
+               var cached = loaded = !!this.cache[src];
                if( !cached ){
                   if( !this.preloader )
                      this.preloader = new Asset.image( src, {
@@ -412,6 +395,7 @@
                         }} );
                   loaded = this.preloader.retrieve( 'loaded' ) && this.preloader.get( 'width' );
                }
+               
                if( loaded && Date.now() > this.timeToNextTransition && Date.now() > this.timeToTransitionComplete ){
                   var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' );
                   if( this.preloader ){
@@ -467,7 +451,6 @@
             /**
              * Private method: show Does the slideshow effect.
              */
-
             _show : function( fast ) {
                if( !this.image.retrieve( 'morph' ) ){
                   var options = this.options.overlap ? {
@@ -575,8 +558,7 @@
              */
 
             _complete : function() {
-               if( this.firstrun && this.options.paused )
-                  this.pause( 1 );
+               if( this.firstrun && this.options.paused ) this.pause( 1 );
                this.firstrun = false;
                this.fireEvent( 'complete' );
             }} );

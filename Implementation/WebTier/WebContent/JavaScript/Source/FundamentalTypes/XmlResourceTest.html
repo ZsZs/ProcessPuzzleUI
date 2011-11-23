@@ -43,7 +43,7 @@
          xmlResource = null;
       }
 
-      function test_Initialization_RetrievesXmlResource() {
+      function test_initialize_retrievesXmlResource() {
          //SETUP:
          //EXCERCISE:
          //VERIFY:
@@ -54,7 +54,7 @@
          assertEquals( RESOURCE_LOCATOR_ONE, xmlResource.getUri() );
       }
 
-      function test_Initialization_WhenResourceLocationIsWrong_ThrowsException() {
+      function test_initialize_whenResourceLocationIsWrong_throwsException() {
          try{
             new XmlResource( "dummy.xml" );
             fail( "Exception was expected. 'uri' parameter can't be null, empty or invalid." );
@@ -63,41 +63,45 @@
          }
       }
       
-      function test_CreateElement(){
+      function test_createElement(){
          var newElement = xmlResource.createElement( NEW_ELEMENT_NAME, { text : NEW_ELEMENT_TEXT });
-         assertThat( newElement.get( 'tag' ).toUpperCase(), equalTo( NEW_ELEMENT_NAME.toUpperCase() ) );
+         assertThat( String.from( newElement.nodeName ).toUpperCase(), equalTo( NEW_ELEMENT_NAME.toUpperCase() ) );
          assertThat(  Sarissa.getText( newElement ), equalTo( NEW_ELEMENT_TEXT ));
       }
 
-      function test_DetermineAttributeValue() {
+      function test_determineAttributeValue() {
          var closeCommandElement = xmlResource.selectNode( "/pp:Resources/Resource[@key='CloseActiveDocumentCommand']" );
          assertEquals( "CloseActiveDocumentCommand", xmlResource.determineAttributeValue( closeCommandElement, "key" ) );
       }
 
-      function test_DetermineNodeText() {
+      function test_determineNodeText() {
          var closeCommandElement = xmlResource.selectNode( "/pp:Resources/Resource[@key='CloseActiveDocumentCommand']" );
          assertEquals( "Close", xmlResource.determineNodeText( closeCommandElement ) );
       }
       
-      function test_InjectElement(){
+      function test_injectElement(){
          var newElement = xmlResource.createElement( NEW_ELEMENT_NAME, { text : NEW_ELEMENT_TEXT });
          xmlResource.injectElement( newElement, INJECTION_POINT, XmlResource.Positions.LastChild );
-         assertThat( xmlResource.selectNode( INJECTION_POINT ).getElement( NEW_ELEMENT_NAME ), not( nil() ));
+         assertThat( xmlResource.selectNode( INJECTION_POINT ).getElementsByTagName( NEW_ELEMENT_NAME ), not( nil() ));
       }
 
-      function test_SelectNode() {
+      function test_selectNodes() {
+         assertThat( typeOf( xmlResource.selectNodes( "/pp:Resources/Resource" )), equalTo( 'array' ));
+      }
+
+      function test_selectNode() {
          //SETUP: see setUp()
          //EXCERCISE, VERIFY:
          assertEquals( "Close", xmlResource.selectNode( "/pp:Resources/Resource[@key='CloseActiveDocumentCommand']/text()" ).nodeValue );
       }
 
-      function test_SelectNodeText() {
+      function test_selectNodeText() {
          var subNodes = xmlResource.selectNodes( "/pp:Resources/Language[@name='hu']" );
 
          assertEquals( "Nyomtatás", xmlResource.selectNodeText( "Resource", subNodes[0] ) );
       }
 
-      function test_Refresh() {
+      function test_refresh() {
          //SETUP:
          //EXCERCISE:
          xmlResource.refreshResource();
@@ -107,7 +111,7 @@
          assertEquals( RESOURCE_LOCATOR_ONE, xmlResource.getUri() );
       }
 
-      function test_Refresh_WhenParseOnCompleteIsFalse() {
+      function test_refresh_WhenParseOnCompleteIsFalse() {
          //SETUP:
          xmlResource = new XmlResource( RESOURCE_LOCATOR_ONE, {
             nameSpaces : "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'",
@@ -124,7 +128,7 @@
       //runs a test function during debugging
       function runTestFunction() {
          setUp();
-         test_InjectElement();
+         test_selectNodes();
          tearDown();
       }
    </script>

@@ -70,19 +70,19 @@
 		var documentHeader = null;
 		var headerDefinition = null;
 		
-		function setUp(){
-		   webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-		   webUILogger = new WebUILogger( webUIConfiguration );
-		   bundle = new XMLResourceBundle( webUIConfiguration );
-           bundle.load( new Locale({ language : "en" }) );
+      function setUp(){
+         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         bundle = new XMLResourceBundle( webUIConfiguration );
+         bundle.load( new Locale({ language : "en" }) );
            
-		   documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
-		   headerDefinition = documentDefinition.selectNode( "/smartDocumentDefinition/documentHeader" );
-	       documentHeader = new DocumentHeader( headerDefinition, bundle );
-		}
+         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
+         headerDefinition = documentDefinition.selectNode( "/smartDocumentDefinition/documentHeader" );
+         documentHeader = new DocumentHeader( headerDefinition, bundle );
+      }
 
 		function tearDown(){
-		   if( documentHeader.getStatus() > documentHeader.options.possibleStates.INITIALIZED ) documentHeader.destroy();
+		   if( documentHeader.getState() > DocumentElement.States.INITIALIZED ) documentHeader.destroy();
            documentHeader = null;
 		}
 		

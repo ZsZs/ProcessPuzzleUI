@@ -13,7 +13,7 @@
       <firstSlide>7</firstSlide>
       <galeryLink>http://www.tourism-costarica.com</galeryLink>
       <height>300</height>
-      <imageFolderUri>Album</imageFolderUri>
+      <imageFolderUri>../PhotoGaleryWidget/Album</imageFolderUri>
       <loopShow>true</loopShow>
       <overlapImages>true</overlapImages>
       <resizeImages>true</resizeImages>

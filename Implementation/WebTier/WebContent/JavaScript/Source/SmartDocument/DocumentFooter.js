@@ -28,12 +28,12 @@ var DocumentFooter = new Class({
    Extends: CompositeDocumentElement,
    
    options: {
+      componentName : "DocumentFooter"
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, data ){
-      this.options.type = "DocumentFooter";
-      this.parent( headerDefinitionElement, bundle, data );
+   initialize: function( headerDefinitionElement, bundle, data, options ){
+      this.parent( headerDefinitionElement, bundle, data, options );
    },
    
    //Public mutators and accessor methods

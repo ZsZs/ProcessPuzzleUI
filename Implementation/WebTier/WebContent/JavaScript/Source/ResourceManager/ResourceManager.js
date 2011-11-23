@@ -30,7 +30,7 @@ var ResourceManager = new Class({
 
    options: {
       documentImagesSelector: "images/image",
-      documentScriptsSelector: "javascripts/javascript",
+      documentScriptsSelector: "javaScripts/javaScript",
       documentStyleSheetsSelector: "styleSheets/styleSheet",
       type : null
    },
@@ -38,8 +38,10 @@ var ResourceManager = new Class({
    //Constructor
    initialize: function( resourceDefinition, options ){
       this.setOptions( options );
-      this.resourceDefinition = resourceDefinition;
+      
+      this.error = null;
       this.numberOfResourcesLoaded = 0;
+      this.resourceDefinition = resourceDefinition;
       this.resourceUri = null;
       this.resources = new ArrayList();
       this.state = ResourceManager.States.INITIALIZED;
@@ -56,13 +58,14 @@ var ResourceManager = new Class({
    },
    
    onResourceError: function( resourceUri ){
-      this.fireEvent( 'resourceError', resourceUri );
-      this.onResourceLoaded();
+      this.error = new UndefinedDocumentResourceException( resourceUri );
+      this.fireEvent( 'resourceError', this.error );
+      this.onResourceLoaded( resourceUri );
    },
    
-   onResourceLoaded: function(){
+   onResourceLoaded: function( resource ){
       this.numberOfResourcesLoaded++;
-      if( this.numberOfResourcesLoaded >= this.resources.size() ){
+      if( this.resources.size() > 0 && this.numberOfResourcesLoaded >= this.resources.size() ){
          this.state = ResourceManager.States.LOADED;
          this.fireEvent( 'resourcesLoaded', this );
       }
@@ -84,11 +87,13 @@ var ResourceManager = new Class({
    },
 
    //Properties
+   getError: function() { return this.error; },
    getResources: function() { return this.resources; },
    getResourceType: function() { return this.options.type; },
    getResourceUri: function() { return resourceUri; },
    getState: function() { return this.state; },
    getStyleSheets: function() { return this.styleSheets; },
+   isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
    unmarshallResource: function( selector, resourceClass ) {

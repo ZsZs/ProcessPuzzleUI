@@ -3,8 +3,9 @@
 <html>
 <head>
    <title>Test page for SmartDocument.js</title>
-   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	
    <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
@@ -30,6 +31,7 @@
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
@@ -39,6 +41,8 @@
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
@@ -51,12 +55,18 @@
    <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/UndefinedDocumentResourceException.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementBehaviour.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElement.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDataElement.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../SmartDocument/MissingBindVariableException.js"></script>
    <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script> 
@@ -66,35 +76,39 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
 		
-	<script type="text/javascript">
-		window.addEvent('domready', function() {
-			runTestFunction();
-		});
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         //test_construct_whenErrorOccured_revertsConstructionAndFiresError();
+      });
 				
-		JsHamcrest.Integration.JsUnit();
+      JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
-		var DEFINITION_NAME = "Test Smart Document";
-		var DEFINITION_DESCRIPTION = "This configuration supports testing Smart Document.";
-		var DEFINITION_VERSION = "0.5";
+      var CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
+      var DEFINITION_NAME = "Test Smart Document";
+      var DEFINITION_DESCRIPTION = "This configuration supports testing Smart Document.";
+      var DEFINITION_VERSION = "0.5";
       var DOCUMENT_CONTAINER_ID = "SmartDocument";
-		var DOCUMENT_DATA_URI = "../SmartDocument/SampleDocumentContent.xml";
-		var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
-		var LANGUAGE = "hu";
-      var RESOURCE_ITEMS_SELECTOR = "/smartDocumentDefinition/documentResources/styleSheets/styleSheet | " + 
-                                    "/smartDocumentDefinition/documentResources/images/image | " +
-                                    "/smartDocumentDefinition/documentResources/javascripts/javascript"
+      var DOCUMENT_DATA_URI = "../SmartDocument/SampleDocumentContent.xml";
+      var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
+      var ERRONEOUS_DOCUMENT_DEFINITION_URI = "../SmartDocument/ErroneousDocumentDefinition.xml";
+      var LANGUAGE = "hu";
+      var RESOURCE_ITEMS_SELECTOR = "/smartDocumentDefinition/resources/styleSheets/styleSheet | " + 
+                                    "/smartDocumentDefinition/resources/images/image | " +
+                                    "/smartDocumentDefinition/resources/javaScripts/javaScript"
 		
-		var callBackWasCalled = false;
+      var callBackWasCalled = false;
+      var doumentContainerElement = null;
       var documentDefinition = null;
-		var locale = new Locale({ language : LANGUAGE });
-		var messageBus = null;
-		var smartDocument = null;
-		var webUIConfiguration = null;
-		var webUILogger = null;
-		var doumentContainerElement = null;
+      var locale = new Locale({ language : LANGUAGE });
+      var messageBus = null;
+      var smartDocument = null;
+      var testCaseChain = new Chain();
+      var webUIConfiguration = null;
+      var webUIController = null;
+      var webUILogger = null;
 		
-      function setUp(){
+      function beforeEachTest(){
+         inform( "beforeEachTest" );
          messageBus = new WebUIMessageBus();
          webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
@@ -103,83 +117,145 @@
          documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI );
          smartDocument = new SmartDocument( 
             resourceBundle, 
-            { widgetContainerId : DOCUMENT_CONTAINER_ID, 
-              documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
-              documentContentUri : DOCUMENT_DATA_URI, 
-              onDocumentReady : function(){ callBackWasCalled = true; }} );
+            {  widgetContainerId : DOCUMENT_CONTAINER_ID, 
+               documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
+               documentContentUri : DOCUMENT_DATA_URI, 
+               onDocumentReady : onDocumentReady, 
+               onDocumentError : onDocumentError 
+            });
          doumentContainerElement = $( DOCUMENT_CONTAINER_ID );
          callBackWasCalled = false;
+         testCaseChain.callChain();
+      }
+      
+      function onDocumentError(){
+         testCaseChain.callChain();
       }
 
-		function tearDown(){
-			messageBus.tearDown();
-			smartDocument.destroy();
-			smartDocument = null;
-			doumentContainerElement = null;
-		}
+      function onDocumentReady(){
+         testCaseChain.callChain();
+      }
+
+      function afterEachTest(){
+         messageBus.tearDown();
+         if( smartDocument.getState() > SmartDocument.States.INITIALIZED ) smartDocument.destroy();
+         smartDocument = null;
+         doumentContainerElement = null;
+         testCaseChain.clearChain();
+         inform( "afterEachTest" );
+      }
 		
-		function test_Initialize() {
-			assertThat( smartDocument, not( nil() ));
+      function test_initialization(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( smartDocument, not( nil() ));
+               assertThat( smartDocument.getDocumentDefinition(), not( nil() ));
+               assertThat( instanceOf( smartDocument.getDocumentDefinition(), XmlResource ), is( true ));
 			
-			assertThat( smartDocument.getDocumentDefinition(), not( nil() ));
-			assertThat( instanceOf( smartDocument.getDocumentDefinition(), XmlResource ), is( true ));
-			
-			assertThat( smartDocument.getDocumentData(), not( nil() ));
-			assertThat( instanceOf( smartDocument.getDocumentData(), XmlResource ), is( true ));
-		}
+               assertThat( smartDocument.getDocumentData(), not( nil() ));
+               assertThat( instanceOf( smartDocument.getDocumentData(), XmlResource ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
 		
-		function test_Unmarshall_DeterminesDefintionProperties(){
-		   //SETUP: see setUp()
-		   //EXCERCISE:
-		   smartDocument.unmarshall();
+      function test_unmarshall_determinesDefintionProperties(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               smartDocument.unmarshall();
 		   
-		   //VERIFY:
-		   assertThat( smartDocument.getName(), equalTo( DEFINITION_NAME ));
-		   assertThat( smartDocument.getDescription(), equalTo( DEFINITION_DESCRIPTION ));
-		   assertThat( smartDocument.getVersion(), equalTo( DEFINITION_VERSION ));
-		}
+               //VERIFY:
+               assertThat( smartDocument.getName(), equalTo( DEFINITION_NAME ));
+               assertThat( smartDocument.getDescription(), equalTo( DEFINITION_DESCRIPTION ));
+               assertThat( smartDocument.getVersion(), equalTo( DEFINITION_VERSION ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
 		
-		function test_Unmarshall_DeterminesResources(){
-		   //SETUP: see setUp()
-		   //EXCERCISE:
-		   smartDocument.unmarshall();
+      function test_unmarshall_determinesResources(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               smartDocument.unmarshall();
 		   
-		   //VERIFY:
-		   assertThat( smartDocument.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
-		}
+               //VERIFY:
+               assertThat( smartDocument.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
 		
-		function test_Unmarshall_UnmarshallsHeaderBodyAndFooter(){
-		   //SETUP: see setUp()
-		   //EXCERCISE:
-		   smartDocument.unmarshall();
+      function test_unmarshall_unmarshallsHeaderBodyAndFooter(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               smartDocument.unmarshall();
 		   
-		   //VERIFY:
-		   assertThat( smartDocument.getHeader().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
-		   assertThat( smartDocument.getBody().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
-		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.UNMARSHALLED ));
-		}
+               //VERIFY:
+               assertThat( smartDocument.getHeader().getState(), equalTo( DocumentElement.States.UNMARSHALLED ));
+               assertThat( smartDocument.getBody().getState(), equalTo( DocumentElement.States.UNMARSHALLED ));
+               assertThat( smartDocument.getFooter().getState(), equalTo( DocumentElement.States.UNMARSHALLED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
 		
-		function test_Construct_ConstructsHeaderBodyAndFooter(){
-		   //SETUP: see also setUp()
-		   smartDocument.unmarshall();
-		
-		   //EXCERCISE:
-		   smartDocument.construct();
-		   
-		   //VERIFY:
-		   assertThat( smartDocument.getHeader().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
-		   assertThat( smartDocument.getBody().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
-		   assertThat( smartDocument.getFooter().getStatus(), equalTo( DocumentElement.State.CONSTRUCTED ));
-         assertThat( smartDocument.getContainerElement(), equalTo( doumentContainerElement ));
-		   assertThat( callBackWasCalled, is( true ));
-		}
-				
-		//runs a test function during debugging
-		function runTestFunction(){
-			setUp();
-			test_Construct_ConstructsHeaderBodyAndFooter();
-			tearDown();
-		}
+      function test_construct_constructsHeaderBodyAndFooter(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               smartDocument.unmarshall();
+               smartDocument.construct();
+            },
+            function(){
+               assertThat( smartDocument.getHeader().getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
+               assertThat( smartDocument.getBody().getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
+               assertThat( smartDocument.getFooter().getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
+               assertThat( smartDocument.getContainerElement(), equalTo( doumentContainerElement ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
+      
+      function test_construct_whenErrorOccured_revertsConstructionAndFiresError(){
+         testCaseChain.clearChain();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               smartDocument = new SmartDocument( 
+                     resourceBundle, 
+                     {  widgetContainerId : DOCUMENT_CONTAINER_ID, 
+                        documentDefinitionUri : ERRONEOUS_DOCUMENT_DEFINITION_URI, 
+                        documentContentUri : DOCUMENT_DATA_URI, 
+                        onDocumentReady : onDocumentReady, 
+                        onDocumentError : onDocumentError 
+                     });
+               smartDocument.unmarshall();
+               smartDocument.construct();
+            },
+            function(){
+               assertThat( smartDocument.getState(), equalTo( SmartDocument.States.INITIALIZED ));
+               assertThat( smartDocument.getHeader().getState(), equalTo( DocumentElement.States.INITIALIZED ));
+               assertThat( smartDocument.getBody().getState(), equalTo( DocumentElement.States.INITIALIZED ));
+               assertThat( smartDocument.getFooter().getState(), equalTo( DocumentElement.States.INITIALIZED ));
+               assertThat( doumentContainerElement.getChildren().length, equalTo( 0 ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         ).callChain();
+      }
     </script>
 </head>
 

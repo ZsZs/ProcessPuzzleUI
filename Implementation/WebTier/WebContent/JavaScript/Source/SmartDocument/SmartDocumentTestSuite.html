@@ -5,6 +5,7 @@
 	<title>SmartDocument Test Suite</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	
 	<link type="text/css" rel="stylesheet" href="../JsUnit/css/jsUnitStyle.css">
     <script type="text/javascript"  src="../JsUnit/app/jsUnitCore.js"></script>
@@ -12,9 +13,12 @@
 	<script type="text/javascript">
 		function suite() {
 		  var newsuite = new top.jsUnitTestSuite();
+        newsuite.addTestPage("../../Source/SmartDocument/CompositeDataElementTest.html");
 		  newsuite.addTestPage("../../Source/SmartDocument/CompositeDocumentElementTest.html");
-		  newsuite.addTestPage("../../Source/SmartDocument/DocumentElementTest.html");
+        newsuite.addTestPage("../../Source/SmartDocument/DataElementTest.html");
+        newsuite.addTestPage("../../Source/SmartDocument/DocumentElementTest.html");
 		  newsuite.addTestPage("../../Source/SmartDocument/DocumentHeaderTest.html");
+        newsuite.addTestPage("../../Source/SmartDocument/DocumentPluginTest.html");
 		  newsuite.addTestPage("../../Source/SmartDocument/SmartDocumentTest.html");
 		  return newsuite;
 		}

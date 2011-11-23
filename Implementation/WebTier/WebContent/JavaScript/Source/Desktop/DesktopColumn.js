@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var DesktopColumn = new Class({
-   Implements: Options,
+   Extends: DesktopElement,
    options : {
       componentName : "DesktopColumn",
       maximumWidthSelector : "maximumWidth",
@@ -39,25 +39,23 @@ var DesktopColumn = new Class({
 
    //Constructor
    initialize: function( definitionElement, options ){
-      this.setOptions( options );
-      this.definitionElement = definitionElement;
-      this.logger = Class.getInstanceOf( WebUILogger );
+      this.parent( definitionElement, null, options );
       this.maximumWidth;
       this.minimumWidth;
       this.MUIColumn;
       this.name;
       this.placement;
-      this.state = DesktopColumn.States.INITIALIZED;
       this.width;
    },
    
    //Public accessor and mutator methods
    construct: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
       this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });
+      this.parent();
    },
    
    destroy: function(){
+      this.parent();
    },
    
    unmarshall: function(){
@@ -66,8 +64,7 @@ var DesktopColumn = new Class({
       this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );
       this.placement = XmlResource.determineAttributeValue( this.definitionElement, this.options.placementSelector );
       this.width = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.widthSelector ));
-      
-      this.state = DesktopColumn.States.UNMARSHALLED;
+      this.parent();
    },
    
    //Properties
@@ -82,5 +79,3 @@ var DesktopColumn = new Class({
    //Protected, private helper methods
    
 });
-
-DesktopColumn.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

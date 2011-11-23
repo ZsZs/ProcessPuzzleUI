@@ -122,6 +122,9 @@ var XmlResource = new Class({
       var foundXmlNodes = null;
       try {
          var foundXmlNodes = subjectNode.selectNodes( selector );
+         if( typeOf( foundXmlNodes ) == 'collection' ){
+            foundXmlNodes =  Array.from( foundXmlNodes );
+         }
       }catch(e) {
          //console.log( e );
          //console.log( "Namespaces: " + subjectNode.getProperty( "SelectionNamespaces" ));
@@ -186,6 +189,9 @@ XmlResource.selectNodes = function( selector, xmlElement ){
 	var selectedElements = null;
 	try{
 		selectedElements = xmlElement.selectNodes( selector );
+		if( typeOf( selectedElements ) == 'collection' ){
+		   selectedElements = Array.from( selectedElements );
+		}
 	}catch( e ){
 		log4javascript.getDefaultLogger().debug( "Selector: '" + selector + "' caused excection: " + e.message );
 		return null;

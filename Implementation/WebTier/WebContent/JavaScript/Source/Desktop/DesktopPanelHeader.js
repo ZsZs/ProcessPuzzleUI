@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopPanelHeader = new Class({
    Implements: [Events, Options],
-   Binds: ['construct', 'onPluginConstructed'],   
+   Binds: ['construct', 'onPluginConstructed', 'onPluginConstructionError'],   
    
    options: {
       componentName : "DesktopPanelHeader",
@@ -39,9 +39,11 @@ var DesktopPanelHeader = new Class({
    },
    
    //Constructor
-   initialize: function( definitionElement, options ){
+   initialize: function( definitionElement, internationalization, options ){
       this.setOptions( options );
       this.definitionElement = definitionElement;
+      this.error = false;
+      this.internationalization = internationalization;
       this.logger = Class.getInstanceOf( WebUILogger );
       this.state = DesktopPanelHeader.States.INITIALIZED;
       this.toolBox = null;
@@ -66,12 +68,19 @@ var DesktopPanelHeader = new Class({
       this.fireEvent( 'headerConstructed', this );
    },
    
+   onPluginConstructionError: function(){
+      this.error = true;
+      this.revertConstruction();
+      this.state = DesktopPanelHeader.States.INITIALIZED;
+      this.fireEvent( 'headerConstructionError', this );
+   },
+   
    unmarshall: function(){
       this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
       if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.toolboxContent;
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
-         this.plugin = new DesktopPlugin( pluginDefinition, { onConstructed : this.onPluginConstructed });
+         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionFailed : this.onPluginConstructionError });
          this.plugin.unmarshall();
       }
       this.state = DesktopPanelHeader.States.UNMARSHALLED;      
@@ -82,7 +91,12 @@ var DesktopPanelHeader = new Class({
    getHeaderToolBox: function() { return this.plugin != null; },
    getPlugin: function() { return this.plugin; },
    getState: function() { return this.state; },
-   getToolBoxUrl: function() { return this.toolBoxUrl; }
+   getToolBoxUrl: function() { return this.toolBoxUrl; },
+   
+   //Protected, private helper methods
+   revertConstruction: function(){
+      if( this.plugin ) this.plugin.destroy();
+   }
 });
 
 DesktopPanelHeader.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

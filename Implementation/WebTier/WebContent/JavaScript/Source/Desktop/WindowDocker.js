@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var WindowDocker = new Class({
-   Extends: CompositeDesktopElement,
+   Extends: CompositeDocumentElement,
    
    options: {
       dockerAutoHideId : 'dockAutoHide',

@@ -36,30 +36,7 @@ var DocumentStyleSheet = new Class({
    initialize: function( resourceElement, options ){
       this.options.type = "StyleSheet";
       this.parent( resourceElement, options );
-      this.resourceRequest;
-   },
-   
-   load: function(){
-      this.resourceRequest = new Request({
-         url: this.resourceUri,
-         async: false,            
-         onSuccess: function( responseText, responseXML ){
-            this.parent();
-         }.bind( this ),
-         
-         onException: function( headerName, value ){
-            this.onResourceError();
-         }.bind( this ),
-         
-         onFailure: function( xhr ) {
-            this.onResourceError();
-         }.bind( this )
-      });
-      try{
-         this.resourceRequest.send();
-      }catch( e ){
-         throw new UndefinedDocumentResourceException( this.resourceUri, { cause: e, source : this.componentName } );
-      }
+      this.remoteResource;
    },
    
    //Public mutators and accessor methods

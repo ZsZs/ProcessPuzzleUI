@@ -102,7 +102,8 @@ var LanguageSelectorWidget = new Class({
    determineInitializationArguments : function(){
       if( !this.webUIConfiguration ){
          var webUIController = Class.getInstanceOf( WebUIController );
-         this.webUIConfiguration = webUIController.getWebUIConfiguration();
+         if( webUIController ) this.webUIConfiguration = webUIController.getWebUIConfiguration();
+         else this.webUIConfiguration = Class.getInstanceOf( WebUIConfiguration );
       }
    }.protect()
    

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 var WebUIConfiguration = new Class({
-   Implements: [Options], 
+   Implements: [Class.Singleton, Options], 
    options: {
 	  appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
 	  appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
@@ -85,7 +85,8 @@ var WebUIConfiguration = new Class({
    },
    
    //Constructor
-   initialize : function( configurationURI, options ) {
+   initialize: function( configurationURI, options ) { return this.check() || this.setUp( configurationURI, options ); },
+   setUp : function( configurationURI, options ) {
       this.setOptions( options );
       
       //Private instance variables

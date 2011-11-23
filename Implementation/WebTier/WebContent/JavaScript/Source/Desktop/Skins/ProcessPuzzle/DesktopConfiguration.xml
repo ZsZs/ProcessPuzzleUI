@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
-	<name>ProcessPuzzleUI</name>
+	<name>ProcessPuzzle</name>
 	<version>1.0</version>
 	<description>This is full flagged desktop configuration.</description>
 	<containerId>desktopContainer</containerId>
@@ -22,58 +22,13 @@
 		<javascripts></javascripts>
 	</resources>
 	
-	<header tag="div" id="desktopHeader">
-		<titleBar tag="div" id="desktopTitleBar">
-			<compositeElement tag="div" id="desktopTitleBarWrapper">
-				<element id='desktopTitle' tag="h1" elementStyle="applicationTitle" href="http://processpuzzle.com">DesktopConfigurator.desktopTitle</element>
-				<element tag="h2" elementStyle="tagline">DesktopConfigurator.desktopSubTitle</element>
-			</compositeElement>
-		</titleBar>
-		
-		<navigationBar tag="div" id="desktopNavigationBar">
-			<compositeElement id="navigationBarWrapper" tag="div">
-				<element id="HorizontalMenuBar" tag="div">
-					<plugin>
-						<resources>
-						   <styleSheets><styleSheet>../HierarchicalMenuWidget/HorizontalLayout.css</styleSheet></styleSheets>
-						   <images><image>../HierarchicalMenuWidget/Images/HorizontalMenuBackground-Left-Normal.gif</image></images>
-						</resources>
-						<onLoad>function(){ return new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : '../HierarchicalMenuWidget/MenuDefinition.xml'}).construct();}</onLoad>
-					</plugin>
-				</element>
-				<element tag="div" id="navigationBarText" elementStyle="navigationBarText">DesktopConfigurator.navigationBar</element>
-				<element tag="div" id="LanguageSelectorWidget">
-					<plugin>
-					   <resources>
-					      <styleSheets><styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/LanguageSelectorWidget.css</styleSheet></styleSheets>
-					   </resources>
-					   <onLoad>function(){ return new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).construct();}</onLoad>
-					</plugin>
-				</element>
-
-			</compositeElement>
-		</navigationBar>
-	</header>
+	<header documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopHeader.xml" />
 	
-	<windowDocker tag="div" id="dockWrapper"></windowDocker>
+	<windowDocker tag="div" id="dockWrapper" />
 	
-	<contentArea tag="div" id="pageWrapper"></contentArea>
+	<contentArea tag="div" id="pageWrapper" />
 	
-	<footer tag="div" id="desktopFooterWrapper">
-		<footerBar tag="div" id="desktopFooter">
-			<element tag="div" id="footerText" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
-			<element tag="div" id="SkinSelectorWidget">
-				<plugin>
-				   <resources>
-				      <styleSheets>
-				         <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
-				      </styleSheets>
-				   </resources>
-				   <onLoad>function(){ return new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).construct();}</onLoad>
-				</plugin>
-			</element>
-		</footerBar>
-	</footer>
+	<footer documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopFooter.xml" />
 	
 	<columns>
 		<column name='leftColumn' placement='left' width='200' minimumWidth='100' maximumWidth='300' />
@@ -96,10 +51,14 @@
                   <styleSheets>
                      <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentToolBar.css</styleSheet>
                   </styleSheets>
-                  <javascripts>
-                  </javascripts>
+                  <javaScripts></javaScripts>
                </resources>
-               <onLoad>function() { return new ToolBarWidget({ widgetContainerId : 'documents-panel_headerToolbox', widgetDefinitionURI : '../ToolBarWidget/ToolBarDefinition.xml'}).unmarshall().construct(); }</onLoad>
+               <widget name="ToolBarWidget">
+                  <options>
+                     <option name="widgetContainerId" value="documents-panel_headerToolbox"/>
+                     <option name="widgetDefinitionURI" value="../ToolBarWidget/ToolBarDefinition.xml"/>
+                  </options>
+               </widget>
             </plugin>
          </panelHeader>
 			<document tag='div' id='panelDocumentWrapper' elementStyle='panelDocumentWrapper'>
@@ -116,10 +75,14 @@
                   <styleSheets>
                      <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentSelector.css</styleSheet>
                   </styleSheets>
-                  <javascripts>
-                  </javascripts>
+                  <javaScripts></javaScripts>
                </resources>
-               <onLoad>function() { return new TabWidget({ widgetContainerId : 'console_headerToolbox', widgetDefinitionURI : '../TabWidget/TabsDefinition.xml'}).construct(); }</onLoad>
+               <widget name="TabWidget">
+                  <options>
+                     <option name="widgetContainerId" value="console_headerToolbox" />
+                     <option name="widgetDefinitionURI" value="../TabWidget/TabsDefinition.xml" />
+                  </options>
+               </widget>
             </plugin>
          </panelHeader>
 		</panel>
