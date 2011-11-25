@@ -29,6 +29,9 @@ var RemoteResource = new Class({
    Extends: Request,
    
    options: {
+      async : true,
+      method : 'get',
+      nameSpaces: "xmlns:pp='http://www.processpuzzle.com'"
    },
    
    // Constructor
@@ -38,14 +41,13 @@ var RemoteResource = new Class({
       
       this.parent( options );
       this.options.url = uri;
-      this.options.method = 'get';
    },
    
    //Public accessors and mutators
    isSuccess: function() { // Determines if an XMLHttpRequest was successful or not
       try {
           // IE error sometimes returns 1223 when it should be 204 so treat it as success, see #1450
-          return ( location.protocol === "file:" && !this.status && this.status === 0 && this.xhr.response && this.xhr.response.length > 0 ) ||
+          return ( location.protocol === "file:" && !this.status && this.status === 0 ) ||
               // Opera returns 0 when status is 304
               ( this.status >= 200 && this.status < 300 ) ||
               ( this.status === 304 ) || 
@@ -57,9 +59,10 @@ var RemoteResource = new Class({
   
   retrieve: function(){
      try{
-        this.send();
+        this.send( this.options.url );
      }catch( e ){
         if( e.name == "NS_ERROR_FILE_NOT_FOUND" ) this.failure();
+        else if( e.name == "Error" ) this.failure();
         else throw new e ;
      }
   },

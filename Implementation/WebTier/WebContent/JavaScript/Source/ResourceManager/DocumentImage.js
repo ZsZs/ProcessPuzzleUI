@@ -26,6 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentImage = new Class({
    Extends: DocumentResource,
+   Binds: ['loadResource'],   
    
    options: {
       titleSelector : "@title"

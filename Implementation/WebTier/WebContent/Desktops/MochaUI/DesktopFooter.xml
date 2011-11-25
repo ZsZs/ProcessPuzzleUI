@@ -16,21 +16,21 @@
 
    <documentBody tag="div" id="desktopFooterWrapper">
       <compositeElement tag="div" id="desktopFooter">
-         <element tag="div" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
-         <element tag="div" id="SkinSelectorWidget">
-            <plugin>
-               <resources>
-                  <styleSheets>
-                     <styleSheet>Desktops/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
-                  </styleSheets>
-               </resources>
-               <widget name="SkinSelectorWidget">
-                  <options>
-                     <option name="widgetContainerId" value="SkinSelectorWidget"/>
-                  </options>
-               </widget>
-            </plugin>
-         </element>
+         <compositeElement>
+            <element tag="div" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
+            <element tag="div" id="SkinSelectorWidget">
+               <plugin>
+                  <resources>
+                     <styleSheets><styleSheet>Desktops/MochaUI/Styles/SkinSelectorWidget.css</styleSheet></styleSheets>
+                  </resources>
+                  <widget name="SkinSelectorWidget">
+                     <options>
+                        <option name="widgetContainerId" value="SkinSelectorWidget" />
+                     </options>
+                  </widget>
+               </plugin>
+            </element>
+         </compositeElement>
       </compositeElement>
    </documentBody>
 </smartDocumentDefinition>

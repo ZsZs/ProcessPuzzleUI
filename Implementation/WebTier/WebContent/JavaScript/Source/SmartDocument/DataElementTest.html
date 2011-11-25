@@ -74,7 +74,7 @@
 		var webUILogger = null;
 		
       function setUp(){
-         inform( "beforEachTest" );
+         //inform( "beforEachTest" );
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
          bundle = new XMLResourceBundle( webUIConfiguration );
@@ -93,7 +93,7 @@
          if( dataElement.getState() > DocumentElement.States.INITIALIZED ) dataElement.destroy();
          dataElement = null;
          documentContainerElement = null;
-         inform( "afterEachTest" );
+         //inform( "afterEachTest" );
       }
 		
       function test_initialize() {

@@ -95,7 +95,6 @@ var DocumentPlugin = new Class({
    onWidgetConstructed: function(){
       this.state = DocumentPlugin.States.CONSTRUCTED;
       this.fireEvent( 'constructed', this );
-      this.constructChain.callChain();
    },
    
    onWidgetError: function( error ){
@@ -125,9 +124,9 @@ var DocumentPlugin = new Class({
    //Protected, pirvated helper methods
    instantiateWidget: function(){
       if( this.widgetName ){
-         var widgetClass = eval( this.widgetName );
-         var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed } );
          try{
+            var widgetClass = eval( this.widgetName );
+            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed } );
             this.widget = new widgetClass( mergedOptions, this.internationalization );
             this.widget.unmarshall();
             this.widget.construct();

@@ -64,6 +64,7 @@ var WebUIController = new Class({
       this.configurationChain = new Chain();
       this.desktop = null;
       this.documentManager = null;
+      this.error;
       this.infoPanelManager = null;
       this.isConfigured = false;
       this.languageSelector = null;
@@ -166,15 +167,15 @@ var WebUIController = new Class({
       this.currentDocumentProperties = documentProperties;
    },
    
-	loadDocumentById : function ( documentType, name, id, viewNameToActivate ) {
+   loadDocumentById : function ( documentType, name, id, viewNameToActivate ) {
       this.logger.debug( "Document load by id was requested. id:" + id + ", type:" + documentType + ", view:" + viewNameToActivate );
       return documentManager.loadDocumentById( documentType, name, id, viewNameToActivate ); 
-	},
+   },
 	
-	loadDocumentByName : function ( documentType, name, viewNameToActivate ) {
+   loadDocumentByName : function ( documentType, name, viewNameToActivate ) {
       this.logger.debug( "Document load by name was requested. name:" + name + ", type:" + documentType + ", view:" + viewNameToActivate );
       return documentManager.loadDocumentByName( documentType, name, viewNameToActivate ); 
-	},
+   },
 	
    loadDocumentByUri : function ( documentType, name, uri, viewNameToActivate ) {
       this.logger.debug( "Document load by uri was requested. uri:" + uri + ", type:" + documentType + ", view:" + viewNameToActivate );
@@ -184,6 +185,11 @@ var WebUIController = new Class({
    onDesktopConstructed : function(){
       this.logger.debug( this.options.componentName + ", constructing desktop is finished." );
       this.configurationChain.callChain();
+   },
+   
+   onError: function( error ){
+      this.error = error;
+      this.showWebUIExceptionPage( this.error );
    },
 	
    reloadActiveDocument : function () {
@@ -270,9 +276,13 @@ var WebUIController = new Class({
    constructDesktop : function() {
       this.logger.debug( this.options.componentName + ".constructDesktop() started." );
       var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri, onConstructed : this.onDesktopConstructed } );
+      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri, onConstructed : this.onDesktopConstructed, onError : this.onError } );
       this.desktop.unmarshall();
-      this.desktop.construct();
+      try{
+         this.desktop.construct();
+      }catch( e ){
+         this.onError( e );
+      }
    }.protect(),
 	
    configureDocumentManager : function() {
@@ -363,7 +373,7 @@ var WebUIController = new Class({
          this.resourceBundle.load( this.locale );
          this.logger.debug( "Resource bundles: " + this.options.contextRootPrefix + this.resourceBundle.getResourceBundleNames() + " was loaded." );
       }catch( e ) {
-         this.showWebUIExceptionPage( e );
+         this.onError( e );
       }
       this.configurationChain.callChain();
    }.protect(),
@@ -372,7 +382,7 @@ var WebUIController = new Class({
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );
       }catch( e ){
-         alert( "Couldn't load Browser Front-End configuration: " + this.options.configurationUri );
+         this.onError( e );
       }
       this.configurationChain.callChain();
    }.protect(),
@@ -389,9 +399,19 @@ var WebUIController = new Class({
       }
    }.protect(),
 	
-   showWebUIExceptionPage : function( e ) {
-      top.BrowserInterfaceException = e;
-      //window.location.href = this.options.contextRootPrefix + this.options.errorPageUri;
+   showWebUIExceptionPage : function( exception ) {
+      var bodyElement = $$( 'body' );
+      var warningHeader = new Element( 'h1' );
+      warningHeader.appendText( "Error Occured" );
+      bodyElement.grab( warningHeader );
+      
+      var warningNameElement = new Element( 'h3' );
+      warningNameElement.appendText( exception.name );
+      bodyElement.grab( warningNameElement );
+      
+      var messageElement = new Element( 'p' );
+      messageElement.appendText( exception.message );
+      bodyElement.grab( messageElement );
    }.protect(),
 	
    storeComponentState : function() {

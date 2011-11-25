@@ -57,7 +57,7 @@ var CompositeDocumentElement = new Class({
    destroy: function(){
       this.elements.each( function( elementsEntry, index ){
          var nestedElement = elementsEntry.getValue();
-         nestedElement.destroy();
+         if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
       }, this );
       this.numberOfConstructedNestedElements = 0;
       this.parent();
@@ -103,7 +103,7 @@ var CompositeDocumentElement = new Class({
    revertConstruction: function(){
       this.elements.each( function( elementsEntry, index ){
          var nestedElement = elementsEntry.getValue();
-         nestedElement.destroy();
+         if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
       }, this );
       this.elements.clear();
       this.numberOfConstructedNestedElements = 0;

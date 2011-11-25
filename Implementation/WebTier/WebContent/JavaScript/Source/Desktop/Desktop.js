@@ -62,30 +62,34 @@ var Desktop = new Class({
             'constructWindows', 
             'initializeMUI', 
             'loadResources',
+            'onError',
+            'onContentAreaConstructed',
             'onFooterConstructed',
             'onHeaderConstructed',
             'onPanelConstructed',
-            'onResourcesLoaded'],
+            'onResourceError',
+            'onResourcesLoaded',
+            'onWindowDockerConstructed'],
    options : {
       callChainDelay : 2000,
       componentName : "Desktop",
-      columnSelector : "pp:desktopConfiguration/columns/column",
-      configurationXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      columnSelector : "/desktopConfiguration/columns/column",
+      configurationXmlNameSpace : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'",
       configurationURI : "DesktopConfiguration.xml",
-      containerIdSelector : "pp:desktopConfiguration/containerId",
-      contentAreaSelector : "pp:desktopConfiguration/contentArea",
+      containerIdSelector : "/desktopConfiguration/containerId",
+      contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
-      descriptionSelector : "pp:desktopConfiguration/description",
-      footerSelector : "pp:desktopConfiguration/footer",
-      headerSelector : "pp:desktopConfiguration/header",
-      nameSelector : "pp:desktopConfiguration/name",
-      panelSelector : "pp:desktopConfiguration/panels/panel",
+      descriptionSelector : "/desktopConfiguration/description",
+      footerSelector : "/desktopConfiguration/footer",
+      headerSelector : "/desktopConfiguration/header",
+      nameSelector : "/desktopConfiguration/name",
+      panelSelector : "/desktopConfiguration/panels/panel",
       pluginOnloadDelay : 1000,
       resourceLoadTimeout : 5000,
-      resourcesSelector : "pp:desktopConfiguration/resources", 
+      resourcesSelector : "/desktopConfiguration/resources", 
       skin : "ProcessPuzzle",
-      versionSelector : "pp:desktopConfiguration/version",
-      windowDockerSelector : "pp:desktopConfiguration/windowDocker"
+      versionSelector : "/desktopConfiguration/version",
+      windowDockerSelector : "/desktopConfiguration/windowDocker"
    },
 	
 	//Constructor
@@ -103,8 +107,9 @@ var Desktop = new Class({
       this.currentLocale = null;
       this.description;
       this.dock = null;
-      this.header;
+      this.error;
       this.footer;
+      this.header;
       this.logger = new WebUILogger( webUIConfiguration );
       this.MUIDesktop = null;
       this.name;
@@ -157,27 +162,45 @@ var Desktop = new Class({
       this.logger.groupEnd( this.options.componentName + ".destroy" );
    },
    
+   onContentAreaConstructed: function(){
+      this.logger.debug( this.options.componentName + ", constructing desktop content area is finished." );
+      this.callNextConfigurationStep();
+   },
+   
+   onError: function( error ){
+      this.error = error;
+   },
+   
    onFooterConstructed: function(){
       this.logger.debug( this.options.componentName + ", loading desktop footer is finished." );
-      this.configurationChain.callChain();
+      this.callNextConfigurationStep();
    },
    
    onHeaderConstructed: function(){
       this.logger.debug( this.options.componentName + ", loading desktop header is finished." );
-      this.configurationChain.callChain();
+      this.callNextConfigurationStep();
    },
    
    onPanelConstructed: function(){
       this.numberOfConstructedPanels++;
       if( this.numberOfConstructedPanels == this.panels.size() ){
          this.logger.debug( this.options.componentName + ", loading desktop panels is finished." );
-         this.configurationChain.callChain();
+         this.callNextConfigurationStep();
       } 
+   },
+   
+   onResourceError: function( error ){
+      this.error = error;
    },
    
    onResourcesLoaded: function(){
       this.logger.debug( this.options.componentName + ", loading desktop resources is finished." );
-      this.configurationChain.callChain();      
+      this.callNextConfigurationStep();      
+   },
+   
+   onWindowDockerConstructed: function(){
+      this.logger.debug( this.options.componentName + ", constructing desktop window docker is finished." );
+      this.callNextConfigurationStep();
    },
    
    unmarshall: function(){
@@ -207,8 +230,17 @@ var Desktop = new Class({
    getState : function() { return this.state; },
    getVersion : function() { return this.version; },
    getWindowDocker : function() { return this.windowDocker; },
+   isSuccess: function() { return this.error == null; },
 	
    //Private methods
+   callNextConfigurationStep: function(){
+      if( this.isSuccess() ) this.configurationChain.callChain();
+      else{
+         this.revertConstruction();
+         this.fireEvent( 'error', this.error );
+      }
+   }.protect(),
+   
    configureLogger : function() {
       if( !this.logger.isConfigured() ) this.logger.configure( this.webUIConfiguration );
    }.protect(),
@@ -217,27 +249,31 @@ var Desktop = new Class({
       this.logger.debug( this.options.componentName + ".constructColumns() started." );
       this.columns.each( function( columnEntry, index ){
          var column = columnEntry.getValue();
-         column.construct();
+         try{
+            column.construct();
+         }catch( e ){
+            this.onError( e );
+         }
       }, this );
-      this.configurationChain.callChain();
+      this.callNextConfigurationStep();
    }.protect(),
    
    constructContentArea : function(){
       this.logger.debug( this.options.componentName + ".constructContentArea() started." );
-      if( this.contentArea ) this.contentArea.construct( this.containerElement, 'bottom' );
-      this.configurationChain.callChain();      
+      if( this.contentArea ) this.contentArea.construct();
+      else this.callNextConfigurationStep();      
    }.protect(),
     
    constructHeader : function(){
       this.logger.debug( this.options.componentName + ".constructHeader() started." );
-      if( this.header ) this.header.construct( this.containerElement, 'bottom' );
-      else this.configurationChain.callChain();      
+      if( this.header ) this.header.construct();
+      else this.callNextConfigurationStep();      
    }.protect(),
 	
    constructFooter : function(){
       this.logger.debug( this.options.componentName + ".constructFooter() started." );
-      if( this.footer ) this.footer.construct( this.containerElement, 'bottom');
-      else this.configurationChain.callChain();      
+      if( this.footer ) this.footer.construct();
+      else this.callNextConfigurationStep();      
    }.protect(),
     
    constructPanels : function() {
@@ -245,20 +281,24 @@ var Desktop = new Class({
       if( this.panels.size() > 0 ){
          this.panels.each( function( panelEntry, index ){
             var panel = panelEntry.getValue();
-            panel.construct();
+            try{
+               panel.construct();
+            }catch( e ){
+               this.onError( e );
+            }
          }, this );
-      } else this.configurationChain.callChain();
+      } else this.callNextConfigurationStep();
    }.protect(),
 	
    constructWindowDocker : function(){
       this.logger.debug( this.options.componentName + ".constructWindowDocker() started." );
-      if( this.windowDocker ) this.windowDocker.construct( this.containerElement, 'bottom' );
-      this.configurationChain.callChain();      
+      if( this.windowDocker ) this.windowDocker.construct();
+      else this.callNextConfigurationStep();      
    }.protect(),
     
    constructWindows : function() {
       this.logger.debug( this.options.componentName + ".constructWindows() started." );      
-      this.configurationChain.callChain();
+      this.callNextConfigurationStep();
       this.state = Desktop.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
       this.logger.groupEnd( this.options.componentName + ".construct" );
@@ -316,7 +356,7 @@ var Desktop = new Class({
       MUI.myChain.callChain();
       this.MUIDesktop = MUI.Desktop;
       this.dock = MUI.Dock;
-      this.configurationChain.callChain();
+      this.callNextConfigurationStep();
    }.protect(),
    
    loadResources: function(){
@@ -340,13 +380,26 @@ var Desktop = new Class({
    
    proceedWithConfigurationChainWhenResourcesLoaded: function() {
       if( this.pendingResourcesCounter > 0 ) return false;
-      else this.configurationChain.callChain();
+      else this.callNextConfigurationStep();
    }.protect(),
 
    removeDesktopEvents : function(){
       this.containerElement.removeEvents();
       window.removeEvents();
       document.removeEvents();
+   }.protect(),
+   
+   revertConstruction: function(){
+      if( this.resources ) this.resources.release();
+      if( this.header ) this.header.destroy();
+      if( this.contentArea ) this.contentArea.destroy();
+      if( this.footer ) this.footer.destroy();
+      if( this.windowDocker ) this.windowDocker.destroy();
+      this.destroyWindows();
+      this.destroyPanels();
+      this.destroyColumns();
+      this.removeDesktopEvents();
+      this.state = Desktop.States.INITIALIZED;      
    }.protect(),
    
    unmarshallColumns: function(){
@@ -361,7 +414,7 @@ var Desktop = new Class({
    unmarshallDesktopContentArea: function(){
       var areaDefinitionElement = this.configurationXml.selectNode( this.options.contentAreaSelector );
       if( areaDefinitionElement ){
-         this.contentArea = new DesktopContentArea( areaDefinitionElement, this.resourceBundle );
+         this.contentArea = new DesktopContentArea( areaDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onContentAreaConstructed, onConstructionError : this.onError } );
          this.contentArea.unmarshall();
       }
    }.protect(),
@@ -379,7 +432,7 @@ var Desktop = new Class({
    unmarshallFooter: function(){
       var footerDefinitionElement = this.configurationXml.selectNode( this.options.footerSelector );
       if( footerDefinitionElement ){
-         this.footer = new DesktopDocument( footerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed } );
+         this.footer = new DesktopFooter( footerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed, onError : this.onError } );
          this.footer.unmarshall();
       }
    }.protect(),
@@ -387,7 +440,7 @@ var Desktop = new Class({
    unmarshallHeader: function(){
       var headerDefinitionElement = this.configurationXml.selectNode( this.options.headerSelector );
       if( headerDefinitionElement ){
-         this.header = new DesktopDocument( headerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed } );
+         this.header = new DesktopHeader( headerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed, onError : this.onError } );
          this.header.unmarshall();
       }
    }.protect(),
@@ -404,7 +457,7 @@ var Desktop = new Class({
    unmarshallResources: function(){
       var resourcesElement = this.configurationXml.selectNode( this.options.resourcesSelector );
       if( resourcesElement ) {
-         this.resources = new ResourceManager( resourcesElement, { onResourcesLoaded : this.onResourcesLoaded } );
+         this.resources = new ResourceManager( resourcesElement, { onResourcesLoaded : this.onResourcesLoaded, onResourceError : this.onResourceError } );
          this.resources.unmarshall();
       }
    }.protect(),
@@ -412,11 +465,10 @@ var Desktop = new Class({
    unmarshallWindowDocker: function(){
       var windowDockerDefinitionElement = this.configurationXml.selectNode( this.options.windowDockerSelector );
       if( windowDockerDefinitionElement ){
-         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle );
+         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed } );
          this.windowDocker.unmarshall();         
       }
    }.protect()
-
 });
 
 Desktop.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

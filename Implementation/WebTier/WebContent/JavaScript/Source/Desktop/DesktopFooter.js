@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var DesktopFooter = new Class({
-   Extends: CompositeDocumentElement,
+   Extends: DesktopDocument,
    
    options: {
       componentName : "DesktopFooter",
@@ -33,22 +33,22 @@ var DesktopFooter = new Class({
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, data ){
-      this.options.type = "DesktopFooter";
-      this.parent( headerDefinitionElement, bundle, data );
+   initialize: function( headerDefinitionElement, bundle, options ){
+      this.parent( headerDefinitionElement, bundle, options );
       this.footerId;
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.parent( contextElement, where );
+   construct: function(){
+      this.parent();
    },
    
    unmarshall: function(){
       this.parent();
-      this.footerId = this.elements.first().getId();
+      this.footerId = this.document.getBody().elements.first().getId();
    },
 
    //Properties
+   getId: function() { return this.document.getBody().getId(); },
    getFooterId: function() { return this.footerId; }
 });

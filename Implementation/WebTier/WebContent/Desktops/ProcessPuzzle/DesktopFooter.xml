@@ -16,7 +16,7 @@
 
    <documentBody tag="div" id="desktopFooterWrapper">
       <compositeElement tag="div" id="desktopFooter">
-         <element tag="div" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
+         <element tag="div" id="footerText" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
          <element tag="div" id="SkinSelectorWidget">
             <plugin>
                <resources>
@@ -26,7 +26,7 @@
                </resources>
                <widget name="SkinSelectorWidget">
                   <options>
-                     <option name="widgetContainerId" value="SkinSelectorWidget"/>
+                     <option name="widgetContainerId" value="'SkinSelectorWidget'"/>
                   </options>
                </widget>
             </plugin>

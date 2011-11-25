@@ -76,14 +76,14 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //test_construct_constructsDocument();
+         //test_destroy_destroysDocument();
       });
 				
       JsHamcrest.Integration.JsUnit();
 		
       var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
       var DESKTOP_CONTAINER_ID = "Desktop";
-      var HEADER_DEFINITION_SELECTOR = "/pp:desktopConfiguration/header";
+      var HEADER_DEFINITION_SELECTOR = "/desktopConfiguration/header";
       var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
 		
       var desktopInternationalization = null;
@@ -103,11 +103,15 @@
            
          desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI );
          headerDefinition = desktopDefinition.selectNode( HEADER_DEFINITION_SELECTOR );
-         desktopDocument = new DesktopDocument( headerDefinition, desktopInternationalization, { componentContainerId : DESKTOP_CONTAINER_ID, onConstructed : onConstructed } );
+         desktopDocument = new DesktopDocument( headerDefinition, desktopInternationalization, { componentContainerId : DESKTOP_CONTAINER_ID, onConstructed : onConstructed, onError : onError } );
          testCaseChain.callChain();
       }
       
       function onConstructed(){
+         testCaseChain.callChain();
+      }
+      
+      function onError(){
          testCaseChain.callChain();
       }
 

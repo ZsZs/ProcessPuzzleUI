@@ -38,7 +38,8 @@ var DesktopPanel = new Class({
            'onHeaderConstructed', 
            'onHeaderConstructionError',
            'onMUIPanelLoaded', 
-           'onPluginConstructed'],   
+           'onPluginConstructed',
+           'onPluginError'],   
    
    options : {
       columnReferenceSelector : "columnReference",
@@ -50,6 +51,7 @@ var DesktopPanel = new Class({
       documentWrapperStyleSelector : "document/@elementStyle",
       documentWrapperTagSelector : "document/@tag",
       headerSelector : "panelHeader",
+      heightDefault : 125,
       heightSelector : "height",
       nameSelector : "name",
       panelIdPostfix : "_wrapper",
@@ -73,7 +75,7 @@ var DesktopPanel = new Class({
       this.documentWrapperId;
       this.documentWrapperStyle;
       this.documentWrapperTag;
-      this.error = false;
+      this.error;
       this.header;
       this.height;
       this.logger = Class.getInstanceOf( WebUILogger );
@@ -110,10 +112,11 @@ var DesktopPanel = new Class({
       this.state = DesktopPanel.States.INITIALIZED;
    },
    
-   onDocumentError: function(){
+   onDocumentError: function( error ){
+      this.error = error;
       this.revertConstruction();
-      this.error = true;
-      this.fireEvent( 'panelError' );
+      this.fireEvent( 'panelError', error );
+      this.fireEvent('panelConstructed', this ); 
    },
    
    onDocumentReady: function(){
@@ -121,7 +124,6 @@ var DesktopPanel = new Class({
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
       this.state = DesktopPanel.States.CONSTRUCTED;
       this.fireEvent('panelConstructed', this ); 
-      this.constructionChain.callChain();
    },
    
    onHeaderConstructed: function(){
@@ -129,10 +131,11 @@ var DesktopPanel = new Class({
       this.constructionChain.callChain();
    },
    
-   onHeaderConstructionError: function(){
+   onHeaderConstructionError: function( error ){
+      this.error = error;
       this.revertConstruction();
-      this.error = true;
-      this.fireEvent( 'panelError' );
+      this.fireEvent( 'panelError', this.error );
+      this.fireEvent('panelConstructed', this ); 
    },
    
    onMUIPanelLoaded: function(){
@@ -144,6 +147,13 @@ var DesktopPanel = new Class({
    onPluginConstructed: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s plugin finished." );
       this.constructionChain.callChain();
+   },
+   
+   onPluginError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+      this.fireEvent( 'panelError', this.error );
+      this.fireEvent('panelConstructed', this ); 
    },
    
    unmarshall: function(){
@@ -174,7 +184,7 @@ var DesktopPanel = new Class({
    getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
-   isSuccess: function() { return !this.error; },
+   isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
    constructDocument: function(){
@@ -224,18 +234,26 @@ var DesktopPanel = new Class({
    instantiateMUIPanel: function(){
       var require = { css: [], images: [], js: [], onload: this.onMUIPanelLoaded };
       
-      this.MUIPanel = new MUI.Panel({ 
-         column: this.columnReference,
-         content: "",
-         contentURL: this.contentUrl,
-         id: this.name,
-         header: this.showHeader,
-         headerToolbox: this.header ? true : false,
-         headerToolboxOnload: null,
-         headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
-         height: this.height, 
-         require: require,
-         title: this.title });
+      try{
+         this.MUIPanel = new MUI.Panel({ 
+            column: this.columnReference,
+            content: "",
+            contentURL: this.contentUrl,
+            id: this.name,
+            header: this.showHeader,
+            headerToolbox: this.header ? true : false,
+            headerToolboxOnload: null,
+            headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
+            height: this.height, 
+            require: require,
+            title: this.title 
+         });
+      }catch( exception ){
+         this.error = exception;
+         this.revertConstruction();
+         this.fireEvent( 'panelError', this.error );
+         this.fireEvent('panelConstructed', this ); 
+      }
    }.protect(),
    
    resetProperties: function(){
@@ -295,7 +313,7 @@ var DesktopPanel = new Class({
    unmarshallPanelProperties: function(){
       this.columnReference = XmlResource.determineAttributeValue( this.definitionElement, this.options.columnReferenceSelector );
       this.contentUrl = XmlResource.selectNodeText( this.options.contentUrlSelector, this.definitionElement );
-      this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector ));
+      this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector, this.options.heightDefault ));
       this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );
       this.showHeader = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.showHeaderSelector ));
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.definitionElement );
@@ -305,7 +323,7 @@ var DesktopPanel = new Class({
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
-         this.plugin = new DocumentPlugin( pluginDefinition, this.resourceBundle, { onConstructed : this.onPluginConstructed } );
+         this.plugin = new DocumentPlugin( pluginDefinition, this.resourceBundle, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginError } );
          this.plugin.unmarshall();
       }
    }.protect()

@@ -30,13 +30,13 @@ var DocumentElement = new Class({
    
    options: {
       componentName : "DesktopElement",
+      defaultTag : "div",
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       pluginSelector : "plugin",
       referenceSelector : "@href",
       styleSelector : "@elementStyle",
-      tagSelector : "@tag",
-      type : null
+      tagSelector : "@tag"
    },
    
    //Constructor
@@ -206,6 +206,7 @@ var DocumentElement = new Class({
    
    unmarshallTag: function(){
       this.tag = this.definitionElementAttribute( this.options.tagSelector );
+      if( !this.tag ) this.tag = this.options.defaultTag;
    }.protect(),
    
    unmarshallText: function(){

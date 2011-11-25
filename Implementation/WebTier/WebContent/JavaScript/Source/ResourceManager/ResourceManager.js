@@ -54,7 +54,10 @@ var ResourceManager = new Class({
          this.resources.each( function( documentResource, index ){
             documentResource.load();
          }, this );
-      }else this.onResourceLoaded();
+      }else{
+         this.state = ResourceManager.States.LOADED;
+         this.fireEvent( 'resourcesLoaded', this );
+      }
    },
    
    onResourceError: function( resourceUri ){

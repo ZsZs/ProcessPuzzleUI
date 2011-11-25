@@ -168,9 +168,10 @@ var XmlResource = new Class({
 });
 
 //Static methods
-XmlResource.determineAttributeValue = function( xmlElement, attributeName ) {
+XmlResource.determineAttributeValue = function( xmlElement, attributeName, defaultValue ) {
    var attributeElement = xmlElement.selectNodes( "@" + attributeName );
    if( attributeElement && attributeElement.length == 1 ) return attributeElement[0].nodeValue;
+   else if( defaultValue ) return defaultValue;
    else return null;
 };
 

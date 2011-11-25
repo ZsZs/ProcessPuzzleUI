@@ -75,8 +75,12 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
 	
 	<script type="text/javascript">
-      window.addEvent('domready', function() {
-         //test_construct_whenWidgetConstructionFails_firesError();
+      window.addEvent( 'domready', function() {
+//          test_initialization();
+//          test_unmarshall_determinesResources();
+//          test_unmarshall_determinesWidgetProperties();
+//         test_construct_loadsResources();
+//         test_construct_instantiatesWidget();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -101,9 +105,16 @@
       var pluginDefinitionElement = null;
       var plugin = null;
       var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
+      var testSuiteChain = new Chain();
+      var waitTries = 0;
       var webUIConfiguration = null;
       var webUIController = null;
       var webUILogger = null;
+      
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
 		
       function beforeEachTest(){
          inform( "beforeEachTest" );
@@ -117,7 +128,8 @@
          var pluginDefinitionElement = documentDefinition.selectNode( PLUGIN_DEFINITION_ELEMENT );
          plugin = new DocumentPlugin( pluginDefinitionElement, internationalization, { onResourcesLoaded : onResourcesLoaded, onConstructed : onConstructed, onConstructionError : onConstructionError } );
          desktopContainerElement = $( DOCUMENT_CONTAINER_ID );
-           
+          
+         testCaseIsRunning = true;
          testCaseChain.callChain();
       }
 		
@@ -139,10 +151,10 @@
          plugin.destroy();
          desktopContainerElement = null;
          loadCallbackWasCalled = false;
-         testCaseChain.clearChain();
            
-         testCaseChain.callChain();
          inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
       }
 		
       function test_initialization(){
@@ -153,10 +165,8 @@
                testCaseChain.callChain();
             }, 
             afterEachTest 
-         ).callChain();
-      }
-		
-      function initialization_SetsState(){
+         );
+         runTestCase();
       }
 		
       function test_unmarshall_determinesResources(){
@@ -165,25 +175,25 @@
             function(){
                plugin.unmarshall();
                assertThat( plugin.getResources(), not( nil() ));
-               assertThat( plugin.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));		           
+               assertThat( plugin.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));               
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function test_unmarshall_determinesWidgetProperties(){
          testCaseChain.chain( beforeEachTest, function(){
-            //SETUP: see setUp()
-            //EXCERCISE:
             plugin.unmarshall();
-			   
+            
             //VERIFY:
             assertThat( plugin.getWidgetName(), equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/@name" ) ));
             assertThat( plugin.getWidgetOptions()['widgetContainerId'], equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/options/option[@name='widgetContainerId']/@value" )) );
-	           
+              
             testCaseChain.callChain();
-         }, afterEachTest ).callChain();
+         }, afterEachTest );
+         runTestCase();
       }
 		
       function test_construct_loadsResources(){
@@ -194,7 +204,6 @@
                plugin.construct();
             },
             function(){
-               assertThat( plugin.getState(), equalTo( DocumentPlugin.States.LOADED ));
                assertThat( plugin.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
             },
             function(){
@@ -202,7 +211,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
 				
       function test_construct_instantiatesWidget(){
@@ -219,7 +229,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
             
       function test_construct_whenResourceLoadFails_firesError(){
@@ -238,6 +249,7 @@
             },
             afterEachTest 
          ).callChain();
+         runTestCase();
       }
             
       function test_construct_whenWidgetConstructionFails_firesError(){
@@ -256,6 +268,7 @@
             },
             afterEachTest 
          ).callChain();
+         runTestCase();
       }
             
       function test_destroy_releasesResourcesAndDestroysPlugin(){
@@ -271,13 +284,14 @@
             function(){
                var widgetDestroy = spy( plugin.getWidget().destroy );
                plugin.destroy();
-				  
+              
                assertThat( $$("link[href='" + PLUGIN_STYLE_SHEET + "']").length, equalTo( 0 ));
                verify( widgetDestroy );
                testCaseChain.callChain();
             },
             afterEachTest 
          ).callChain();
+         runTestCase();
       }
 				
       function loadCallback(){

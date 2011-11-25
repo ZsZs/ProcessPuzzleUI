@@ -3,6 +3,7 @@
 <head>
    <title>Test page for Desktop.js</title>
    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
 
    <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
@@ -56,6 +57,8 @@
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopContentArea.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopDocument.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopFooter.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
    <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
@@ -83,6 +86,14 @@
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
+   <script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
+   <script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
+   <script type="text/javascript" src="../TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -91,7 +102,7 @@
 
    <script type="text/javascript" >
       window.addEvent( 'domready', function() {
-         test_unmarshall_unmarshallsDesktopComponents();
+         test_construct_constructsWholeDekstop();
       });
   	  
       JsHamcrest.Integration.JsUnit();
@@ -145,7 +156,7 @@
          webUIConfiguration = webUIController.getWebUIConfiguration();
          webUILogger = webUIController.getLogger();
          resourceBundle = webUIController.getResourceBundle();
-         desktop = new Desktop( webUIConfiguration, resourceBundle, { configurationURI : DESKTOP_CONFIGURATION_URI, onConstructed : onConstructed });
+         desktop = new Desktop( webUIConfiguration, resourceBundle, { configurationURI : DESKTOP_CONFIGURATION_URI, onConstructed : onConstructed, onError : onError });
          desktopConfiguration = desktop.getConfigurationXml();
          desktopElement = $( DESKTOP_ELEMENT_ID );
       	
@@ -153,6 +164,10 @@
       }
       
       function onConstructed(){
+         testCaseChain.callChain();
+      }
+      
+      function onError(){
          testCaseChain.callChain();
       }
       
@@ -195,7 +210,7 @@
                
                assertThat( desktop.getColumns().size(), equalTo( 3 ));
                desktop.getColumns().each( function( columnEntry, index ){
-                  assertThat( columnEntry.getValue().getState(), equalTo( DesktopColumn.States.UNMARSHALLED ));
+                  assertThat( columnEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
                });
                
                assertThat( desktop.getPanels().size(), equalTo( 5 ));

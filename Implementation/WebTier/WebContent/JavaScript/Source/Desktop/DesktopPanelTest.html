@@ -99,8 +99,8 @@
 
    var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
    var DESKTOP_CONTAINER_ID = "desktop";
-   var COLUMN_DEFINITION = "/pp:desktopConfiguration/columns/column[@name='mainColumn']";
-   var PANEL_DEFINITION = "/pp:desktopConfiguration/panels/panel[@name='documents-panel']";
+   var COLUMN_DEFINITION = "/desktopConfiguration/columns/column[@name='mainColumn']";
+   var PANEL_DEFINITION = "/desktopConfiguration/panels/panel[@name='documents-panel']";
    var PANEL_DOCUMENT_WRAPPER_ID = "panelDocumentWrapper";
    var PAGE_WRAPPER_ID = "pageWrapper";
    var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
@@ -127,7 +127,7 @@
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( new Locale({ language : "hu" }) );
 
-      desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com/Desktop'"} );
+      desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'"} );
       columnDefinition = desktopDefinition.selectNode( COLUMN_DEFINITION );
       column = new DesktopColumn( columnDefinition, { componentContainerId : PAGE_WRAPPER_ID } );
       panelDefinition = desktopDefinition.selectNode( PANEL_DEFINITION );

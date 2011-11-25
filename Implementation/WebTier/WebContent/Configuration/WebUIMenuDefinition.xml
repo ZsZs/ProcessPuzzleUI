@@ -9,7 +9,7 @@
 		<menuItem menuItemId="YourMenu" caption="HierarchicalMenuWidget.yourMenu" isDefault="true">
 			<messageProperties>{actionType : 'loadMenu', contextItemId : 'YourMenu'}</messageProperties>
 					
-			<menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.sampleDocument" isDefault="true">
+			<menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.smartDocument" isDefault="true">
 				<messageProperties>{actionType : 'loadDocument', documentURI : 'Content/SampleDocument'}</messageProperties>			
 			</menuItem>			
                

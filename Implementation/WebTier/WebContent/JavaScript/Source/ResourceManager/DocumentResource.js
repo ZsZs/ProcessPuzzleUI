@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentResource = new Class({
    Implements: [Events, Options],
-   Binds: ['onResourceLoaded'],   
+   Binds: ['checkResourceAvailability', 'onResourceLoaded'],   
    
    options: {
       idSelector : "@id",
@@ -36,20 +36,20 @@ var DocumentResource = new Class({
    //Constructor
    initialize: function( resourceElement, options ){
       this.setOptions( options );
+      this.availabilityCheckIsRunning;
       this.id = null;
       this.htmlElement = null;
       this.resourceElement = resourceElement;
       this.resourceAvailable = false;
       this.resourceUri = null;
+      this.loadChain = new Chain();
       this.logger = Class.getInstanceOf( WebUILogger );
    },
    
    //Public mutators and accessor methods
    load: function(){
       if( !this.isResourceLoaded() ){
-         this.checkResourceAvailability();
-         if( this.resourceAvailable ) this.loadResource();
-         else this.onResourceError();
+         this.loadChain.chain( this.checkResourceAvailability, this.loadResource ).callChain();
       }else this.onResourceLoaded();
    },
    
@@ -80,17 +80,28 @@ var DocumentResource = new Class({
       this.remoteResource = new RemoteResource( this.resourceUri, {
          async: false,            
          onSuccess: function( responseText, responseXML ){ 
-            this.resourceAvailable = true; 
+            this.resourceAvailable = true;
+            this.availabilityCheckIsRunning = false;
+            this.loadChain.callChain();
          }.bind( this ),
          onException: function( headerName, value ){ 
-            this.resourceAvailable = false; 
+            this.loadChain.clearChain();
+            if( this.availabilityCheckIsRunning ) {
+               this.availabilityCheckIsRunning = false;
+               this.onResourceError(); 
+            }
          }.bind( this ),
          onFailure: function( xhr ) { 
-            this.resourceAvailable = false; 
+            this.loadChain.clearChain();
+            if( this.availabilityCheckIsRunning ) {
+               this.availabilityCheckIsRunning = false;
+               this.onResourceError(); 
+            }
          }.bind( this )
       });
       
       try{
+         this.availabilityCheckIsRunning = true;
          this.remoteResource.retrieve();
       }catch( e ){
          throw new UndefinedDocumentResourceException( this.resourceUri, { cause: e, source : this.componentName } );

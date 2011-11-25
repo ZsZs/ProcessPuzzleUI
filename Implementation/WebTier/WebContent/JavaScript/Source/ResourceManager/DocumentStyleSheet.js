@@ -26,6 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentStyleSheet = new Class({
    Extends: DocumentResource,
+   Binds: ['loadResource'],   
    
    options: {
       componentName : "DocumentStyleSheet",
@@ -61,7 +62,7 @@ var DocumentStyleSheet = new Class({
          }.bind( this ),
          
          onError: function() {
-            this.logger.debug( "Error: Couldn't load style sheet '" + path + "'." );
+            this.logger.debug( "Error: Couldn't load style sheet '" + this.resourceUri + "'." );
             this.onResourceError();
          }.bind( this ),
          

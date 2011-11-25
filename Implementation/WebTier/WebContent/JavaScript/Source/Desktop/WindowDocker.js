@@ -25,23 +25,23 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var WindowDocker = new Class({
-   Extends: CompositeDocumentElement,
+   Extends: DesktopElement,
    
    options: {
+      componentName : "WindowDocker",
       dockerAutoHideId : 'dockAutoHide',
       dockerClearId : 'dockClear',
       dockerClearClass : 'clear',
       dockerControlsId : 'dock',
       dockerPlacementId : 'dockPlacement',
-      dockerSelector : '/pp:desktopConfiguration/windowDocker',
+      dockerSelector : '/desktopConfiguration/windowDocker',
       dockerSortId : 'dockSort',
       dockerWrapperId : 'dockWrapper'
    },
    
    //Constructor
-   initialize: function( definitionElement, bundle, data ){
-      this.options.type = "WindowDocker";
-      this.parent( definitionElement, bundle, data );
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
       this.dockerAutoHideElement;
       this.dockerClearElement;
       this.dockerControlsElement;
@@ -50,20 +50,21 @@ var WindowDocker = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.parent( contextElement, where );
-      
+   construct: function(){
       this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
       this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
       this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
       this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
       this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
 
+      this.createHtmlElement();
       this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
       this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
       this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
       this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
       this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
+      
+      this.parent();
    },
    
    destroy: function(){
@@ -75,6 +76,7 @@ var WindowDocker = new Class({
    },
    
    unmarshall: function(){
+      this.unmarshallElementProperties();
       this.parent();
    }
 

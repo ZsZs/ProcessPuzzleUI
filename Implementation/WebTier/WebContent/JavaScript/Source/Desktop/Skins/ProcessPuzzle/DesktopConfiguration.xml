@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:desktopConfiguration 
-	xmlns:pp="http://www.processpuzzle.com/Desktop"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
+<desktopConfiguration 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopConfiguration.xsd">
 
 	<name>ProcessPuzzle</name>
 	<version>1.0</version>
@@ -19,30 +20,30 @@
 			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
 		</styleSheets>
 		<images></images>
-		<javascripts></javascripts>
+		<javaScripts></javaScripts>
 	</resources>
 	
-	<header documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopHeader.xml" />
+	<header documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopHeader.xml"/>
 	
-	<windowDocker tag="div" id="dockWrapper" />
+	<windowDocker tag="div" id="dockWrapper"/>
 	
-	<contentArea tag="div" id="pageWrapper" />
+	<contentArea tag="div" id="pageWrapper"/>
 	
-	<footer documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopFooter.xml" />
+	<footer documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopFooter.xml"/>
 	
 	<columns>
-		<column name='leftColumn' placement='left' width='200' minimumWidth='100' maximumWidth='300' />
-		<column name='mainColumn' placement='main' />
-		<column name='rightColumn' placement='right' width='220' minimumWidth='200' maximumWidth='300' />
+		<column name="leftColumn" placement="left" width="200" minimumWidth="100" maximumWidth="300"/>
+		<column name="mainColumn" placement="main"/>
+		<column name="rightColumn" placement="right" width="220" minimumWidth="200" maximumWidth="300"/>
 	</columns>
 	
 	<panels>
-		<panel name='documents-browser' columnReference='leftColumn' height='250'>
+		<panel name="documents-browser" columnReference="leftColumn" height="250">
 			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
 			<contentURL>../Desktop/Content/TreeView.html</contentURL>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' height='400'>
+		<panel name="documents-panel" columnReference="mainColumn" showHeader="true" height="400">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
 			<contentURL>../Desktop/Content/HelloWorldContent.html</contentURL>
          <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
@@ -61,13 +62,13 @@
                </widget>
             </plugin>
          </panelHeader>
-			<document tag='div' id='panelDocumentWrapper' elementStyle='panelDocumentWrapper'>
+			<document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper">
 			    <documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</documentDefinitionUri>
 			    <documentContentUri>../Desktop/SampleDocumentContent.xml</documentContentUri>
 			</document>
 		</panel>
 		
-		<panel name='console' columnReference='mainColumn' height='100' showHeader='true'>
+		<panel name="console" columnReference="mainColumn" height="100" showHeader="true">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
             <plugin>
@@ -79,19 +80,19 @@
                </resources>
                <widget name="TabWidget">
                   <options>
-                     <option name="widgetContainerId" value="console_headerToolbox" />
-                     <option name="widgetDefinitionURI" value="../TabWidget/TabsDefinition.xml" />
+                     <option name="widgetContainerId" value="console_headerToolbox"/>
+                     <option name="widgetDefinitionURI" value="../TabWidget/TabsDefinition.xml"/>
                   </options>
                </widget>
             </plugin>
          </panelHeader>
 		</panel>
 		
-		<panel name='menu-panel' columnReference='rightColumn' showHeader='true'>
+		<panel name="menu-panel" columnReference="rightColumn" showHeader="true">
 			<title>DesktopConfigurator.Panel.menusTitle</title>
 		</panel>
 		
-		<panel name='tips-panel' columnReference='rightColumn' height='150' showHeader='true'>
+		<panel name="tips-panel" columnReference="rightColumn" height="150" showHeader="true">
 			<title>DesktopConfigurator.Panel.tipsTitle</title>
 		</panel>
 	</panels>
@@ -99,4 +100,4 @@
 	<windows>
 		<window></window>
 	</windows>
-</pp:desktopConfiguration>
+</desktopConfiguration>

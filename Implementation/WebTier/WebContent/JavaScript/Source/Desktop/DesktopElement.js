@@ -31,7 +31,10 @@ var DesktopElement = new Class({
    options: {
       componentContainerId: "Desktop",
       componentName: "DesktopElement",
+      defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      idSelector : "@id",
+      tagSelector : "@tag"
    },
    
    //Constructor
@@ -40,9 +43,13 @@ var DesktopElement = new Class({
       this.constructionChain = new Chain();
       this.containerElement;
       this.definitionElement = definitionElement;
+      this.error;
+      this.htmlElement;
+      this.id;
       this.internationalization = internationalization;
       this.logger;
       this.state = DesktopElement.States.UNINITIALIZED;
+      this.tag;
       
       this.setUp();
    },
@@ -66,6 +73,12 @@ var DesktopElement = new Class({
       this.state = DesktopElement.States.INITIALIZED;
    },
    
+   onConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+      this.fireEvent( 'error', this.error );
+   },
+   
    unmarshall: function(){
       this.state = DesktopElement.States.UNMARSHALLED;
    },
@@ -74,7 +87,9 @@ var DesktopElement = new Class({
    getContainerElement: function() { return this.containerElement; },
    getContainerElementId: function() { return this.options.componentContainerId; }, 
    getDefinitionElement: function() { return this.definitionElement; },
+   getId: function() { return this.id; },
    getState: function() { return this.state; },
+   isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
    compileConstructionChain: function(){
@@ -90,11 +105,38 @@ var DesktopElement = new Class({
          this.logger = this.webUIController.getLogger();
    }.protect(),
    
+   createHtmlElement: function(){
+      if( this.tag ){
+         this.htmlElement = new Element( this.tag );
+         if( this.id ) this.htmlElement.set( 'id', this.id );
+         this.htmlElement.inject( this.containerElement );
+      }
+   }.protect(),
+   
+   definitionElementAttribute: function( selector ){
+      var attributeNode = XmlResource.selectNode( selector, this.definitionElement );
+      if( attributeNode ) return attributeNode.value;
+      else return null;
+   }.protect(),
+   
+   revertConstruction: function(){
+      this.state = DesktopElement.States.INITIALIZED;
+   }.protect(),
+   
    setUp: function(){
       this.configureLogger();
       this.containerElement = $( this.options.componentContainerId );
       if( this.containerElement == null ) throw new IllegalArgumentException( "Parameter 'componetContainerId' in invalid." );
       this.state = DesktopElement.States.INITIALIZED;
+   }.protect(),
+   
+   unmarshallElementProperties: function(){
+      this.id = this.definitionElementAttribute( this.options.idSelector );
+      if( !this.id ) this.id = this.options.idPrefix + (new Date().getTime());
+      if( this.dataElementsIndex > 0 ) this.id += "#" + this.dataElementsIndex; 
+      
+      this.tag = this.definitionElementAttribute( this.options.tagSelector );
+      if( !this.tag ) this.tag = this.options.defaultTag;
    }.protect()
 });
 

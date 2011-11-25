@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopDocument = new Class({
    Extends: DesktopElement,
-   Binds: ['constructHeaderDocument', 'instantiateDocument', 'onDocumentReady'],
+   Binds: ['constructDocument', 'instantiateDocument', 'onDocumentError', 'onDocumentReady'],
    
    options: {
       componentName : "DesktopDocument",
@@ -53,6 +53,10 @@ var DesktopDocument = new Class({
       this.parent();
    },
    
+   onDocumentError: function( error ){
+      this.onConstructionError( error );
+   },
+   
    onDocumentReady: function(){
       this.constructionChain.callChain();      
    },
@@ -69,10 +73,10 @@ var DesktopDocument = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructHeaderDocument, this.constructed );
+      this.constructionChain.chain( this.constructDocument, this.constructed );
    }.protect(),
    
-   constructHeaderDocument: function(){
+   constructDocument: function(){
       this.document.construct();
    }.protect(),
    
@@ -81,10 +85,17 @@ var DesktopDocument = new Class({
          widgetContainerId : this.options.componentContainerId, 
          documentDefinitionUri : this.documentDefinitionUri, 
          documentContentUri : this.documentDataUri, 
-         onDocumentReady : this.onDocumentReady 
+         onDocumentReady : this.onDocumentReady,
+         onDocumentError : this.onDocumentError
       });
       this.document.unmarshall();
    }.protect(),
+   
+   revertConstruction: function(){
+      if( this.document && this.document.getState() > SmartDocument.States.INITIALIZED ) this.document.destroy();
+      this.document = null;
+      this.parent();
+   },
    
    unmarshallProperties: function(){
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement, [this.options.definitionXmlNameSpace, this.options.documentDefinitionNameSpace] );

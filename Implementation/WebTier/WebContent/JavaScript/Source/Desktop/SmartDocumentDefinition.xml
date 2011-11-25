@@ -14,11 +14,9 @@
       </styleSheets>
 
       <images>
-         <image id="logoImage" title="ProcessPuzzle">../SmartDocument/Images/ProcessPuzzleLogo.jpg</image>
       </images>
       
       <javaScripts>
-         <javaScript>../ResourceManager/DummyScript.js</javaScript>
       </javaScripts>
    </resources>
 

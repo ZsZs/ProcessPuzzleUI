@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  elementFormDefault="qualified" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration">
+
+  <xs:element name="desktopConfiguration">
+    <xs:complexType>
+      <xs:sequence>
+	    <xs:element name="name" type="xs:NCName"/>
+		<xs:element name="version" type="xs:decimal"/>
+		<xs:element name="description" type="xs:string"/>
+		<xs:element name="containerId" type="xs:NCName"/>
+		<xs:element ref="resources"/>
+		<xs:element ref="header"/>
+		<xs:element ref="windowDocker"/>
+		<xs:element ref="contentArea"/>
+		<xs:element ref="footer"/>
+		<xs:element ref="columns"/>
+		<xs:element ref="panels"/>
+		<xs:element ref="windows"/>
+	  </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+
+  <xs:element name="header">
+    <xs:complexType>
+      <xs:attribute name="documentDefinition" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="windowDocker">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="tag" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="contentArea">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="tag" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="footer">
+    <xs:complexType>
+      <xs:attribute name="documentDefinition" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="columns">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="column"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="column">
+    <xs:complexType>
+      <xs:attribute name="maximumWidth" type="xs:integer"/>
+      <xs:attribute name="minimumWidth" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="placement" use="required" type="xs:NCName"/>
+      <xs:attribute name="width" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="panels">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="panel"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="panel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="title"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="contentURL"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="panelHeader"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="plugin"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="document"/>
+      </xs:sequence>
+      <xs:attribute name="columnReference" use="required" type="xs:NCName"/>
+      <xs:attribute name="height" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="showHeader" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="contentURL" type="xs:string"/>
+  <xs:element name="panelHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="plugin"/>
+      </xs:sequence>
+      <xs:attribute name="toolBoxUrl" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="plugin">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="resources"/>
+        <xs:element ref="widget"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="widget">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="options"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="options">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="option"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="option">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="documentDefinitionUri"/>
+        <xs:element ref="documentContentUri"/>
+      </xs:sequence>
+      <xs:attribute name="elementStyle" use="required" type="xs:NCName"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="tag" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="documentDefinitionUri" type="xs:string"/>
+  <xs:element name="documentContentUri" type="xs:string"/>
+  <xs:element name="windows">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="window"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="window">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="resources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="styleSheets" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="images" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="javaScripts" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="styleSheets">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="styleSheet" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="styleSheet" type="xs:string"/>
+
+  <xs:element name="images">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="image" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="image">
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" use="optional" type="xs:NCName"/>
+      <xs:attribute name="title" use="optional" type="xs:NCName"/>
+	</xs:complexType>
+  </xs:element>
+
+  <xs:element name="javaScripts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="javaScript" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="javaScript" type="xs:string"/>
+</xs:schema>

@@ -24,6 +24,9 @@
    <script language="JavaScript" src="../FundamentalTypes/OptionsResource.js"></script>
    <script language="JavaScript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script language="JavaScript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script language="JavaScript" src="../WebUIMessageBud/WebUIMessage.js"></script>
+   <script language="JavaScript" src="../WebUIMessageBud/TestMessageOne.js"></script>
+   <script language="JavaScript" src="../WebUIMessageBud/TestMessageTwo.js"></script>
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
@@ -56,7 +59,8 @@
 		   optionsResource.unmarshall();
 		   assertThat( optionsResource.getOptions(), not( nil() ));
 		   assertThat( optionsResource.getOptions()['widgetContainerId'], equalTo( "HorizontalMenuBar" ));
-         assertThat( optionsResource.getOptions()['widgetDefinitionURI'], equalTo( "../HierarchicalMenuWidget/MenuDefinition.xml" ));
+		   assertThat( optionsResource.getOptions()['widgetDefinitionURI'], equalTo( "../HierarchicalMenuWidget/MenuDefinition.xml" ));
+		   assertThat( optionsResource.getOptions()['arrayOfValues'].length, equalTo( 2 ));
 		}
 		
 		

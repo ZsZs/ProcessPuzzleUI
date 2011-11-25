@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:desktopConfiguration 
-	xmlns:pp="http://www.processpuzzle.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
+<pd:desktopConfiguration 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:pd="http://www.processpuzzle.com/Desktop"
+   xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
 	<name>MochaUI</name>
 	<version>1.0</version>
@@ -102,4 +103,4 @@
 			</elements>
 		</footerBar>
 	</footer>
-</pp:desktopConfiguration>
+</pd:desktopConfiguration>

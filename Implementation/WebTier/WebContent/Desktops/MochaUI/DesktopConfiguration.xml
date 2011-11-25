@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:desktopConfiguration 
-	xmlns:pp="http://www.processpuzzle.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/DesktopConfiguration.xsd" >
+<desktopConfiguration 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopConfiguration.xsd">
 
 	<name>MochaUI Desktop</name>
 	<version>1.0</version>
@@ -23,55 +24,13 @@
 		<javaScripts></javaScripts>
 	</resources>
 	
-	<header tag="div" id="desktopHeader">
-		<titleBar tag="div" id="desktopTitleBar">
-			<compositeElement id="desktopTitlebarWrapper" tag="div">
-				<element tag="h1" elementStyle="applicationTitle">DesktopConfigurator.desktopTitle</element>
-				<element tag="h2" elementStyle="tagline">DesktopConfigurator.desktopSubTitle</element>
-			</compositeElement>
-		</titleBar>
-		
-		<navigationBar tag="div" id="desktopNavigationBar">
-			<compositeElement>
-				<element tag="div" id="HorizontalMenuBar">
-					<plugin>
-                  <resources>
-                     <styleSheets><styleSheet>Desktops/MochaUI/Styles/HorizontalMenuLayout.css</styleSheet></styleSheets>
-                  </resources>
-						<onLoad>function(){ return new HierarchicalMenuWidget({ widgetContainerId : 'HorizontalMenuBar', widgetDefinitionURI : 'Configuration/WebUIMenuDefinition.xml', componentName : 'HorizontalMenuBar', showSubItems : true }).construct();}</onLoad>
-					</plugin>
-				</element>
-				<element tag="div" id="LanguageSelectorWidget">
-					<plugin>
-                  <resources>
-                     <styleSheets><styleSheet>Desktops/MochaUI/Styles/LanguageSelectorWidget.css</styleSheet></styleSheets>
-                  </resources>
-						<onLoad>function(){ new LanguageSelectorWidget({ widgetContainerId : 'LanguageSelectorWidget'}).construct();}</onLoad>
-					</plugin>
-				</element>
-			</compositeElement>
-		</navigationBar>
-	</header>
+   <header documentDefinition="Desktops/ProcessPuzzle/DesktopHeader.xml"/>
 	
-   <windowDocker tag="div" id="dockWrapper"></windowDocker>
+   <windowDocker tag="div" id="dockWrapper" />
 
-   <contentArea tag="div" id="pageWrapper"></contentArea>
+   <contentArea tag="div" id="pageWrapper" />
 
-   <footer tag="div" id="desktopFooterWrapper">
-      <footerBar tag="div" id="desktopFooter">
-         <compositeElement>
-            <element tag="div" elementStyle="footerText" href="http://processpuzzle.com">DesktopConfigurator.footerText</element>
-            <element tag="div" id="SkinSelectorWidget">
-               <plugin>
-                  <resources>
-                     <styleSheets><styleSheet>Desktops/MochaUI/Styles/SkinSelectorWidget.css</styleSheet></styleSheets>
-                  </resources>
-                  <onLoad>function(){ return new SkinSelectorWidget({ widgetContainerId : 'SkinSelectorWidget'}).construct();}</onLoad>
-               </plugin>
-            </element>
-         </compositeElement>
-      </footerBar>
-   </footer>
+   <footer documentDefinition="Desktops/ProcessPuzzle/DesktopFooter.xml"/>
    
 	<columns>
 		<column name='mainColumn' placement='main' minimumWidth='100' maximumWidth='300' />
@@ -97,4 +56,8 @@
 		</panel>
 	</panels>
 	
-</pp:desktopConfiguration>
+   <windows>
+      <window/>
+   </windows>
+
+</desktopConfiguration>

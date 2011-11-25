@@ -18,7 +18,8 @@
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Ki van bent?</Resource>
 
     <Resource key="HierarchicalMenuWidget.yourMenu" type="String">Te menüd</Resource>
-    <Resource key="HierarchicalMenuWidget.yourMenu.sampleDocument" type="String">Példa dokumentum</Resource>
+    <Resource key="HierarchicalMenuWidget.yourMenu.smartDocument" type="String">Okos dokumentum</Resource>
+    <Resource key="HierarchicalMenuWidget.yourMenu.puraVida" type="String">Fotó album</Resource>
 
     <Resource key="HierarchicalMenuWidget.administration" type="String">Adminisztráció</Resource>
     <Resource key="HierarchicalMenuWidget.administration.users" type="String">Felhasználók</Resource>

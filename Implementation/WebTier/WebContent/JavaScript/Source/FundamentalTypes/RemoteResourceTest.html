@@ -14,6 +14,8 @@
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
     
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
@@ -21,7 +23,7 @@
 
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         test_retrieve_whenResourceNotExists_firesFailureEvent();
+         test_retrieve_whenLocalResourceExists_firesSuccessEvent();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -55,30 +57,11 @@
          inform( "afterEachTest" );
       }
 
-//       function test_retrieve_whenRemoteResourceExists_firesSuccessEvent() {
-//          testCaseChain.chain(
-//             beforeEachTest,
-//             function(){
-//                remoteResource = new RemoteResource( "http://processpuzzle.com/Schemas/BusinessDefinition.xsd", { 
-//                   onFailure: onFailure,
-//                   onSuccess: onSuccess
-//                });
-//                remoteResource.retrieve();
-//             },
-//             function(){
-//                assertThat( onSuccessWasCalled, is( true )); 
-//                assertThat( onFailureWasCalled, is( false )); 
-//                testCaseChain.callChain();
-//             },
-//             afterEachTest
-//          ).callChain();
-//       }
-      
       function test_retrieve_whenLocalResourceExists_firesSuccessEvent() {
          testCaseChain.chain(
             beforeEachTest,
             function(){
-               remoteResource = new RemoteResource( "../ResourceManager/DummyCSS.css", { 
+               remoteResource = new RemoteResource( "../Internationalization/TestResources.xml", { 
                   onFailure: onFailure,
                   onSuccess: onSuccess
                });
