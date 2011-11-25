@@ -17,6 +17,7 @@
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
 
+    <Resource key="HierarchicalMenuWidget.yourMenu" type="String">Your Menu</Resource>
     <Resource key="HierarchicalMenuWidget.yourMenu.smartDocument" type="String">Smart Document</Resource>
     <Resource key="HierarchicalMenuWidget.yourMenu.puraVida" type="String">Photo Album</Resource>
 
@@ -28,5 +29,10 @@
     <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
 
     <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
+    
+    <Resource key="StaticDocument.paragraph" type="String">This is an example Smart Document which contains only static elements. This features facilitates of creating document templates.</Resource>
+    <Resource key="StaticDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
+    <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
+    <Resource key="StaticDocument.title" type="String">Static Document</Resource>
   </Language>
 </pp:Resources>

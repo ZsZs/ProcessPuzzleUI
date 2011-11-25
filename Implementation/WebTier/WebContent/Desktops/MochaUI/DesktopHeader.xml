@@ -5,7 +5,7 @@
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
    xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
    <name>Desktop Header Document</name>
-   <description>Header part of ProcessPuzzle desktop.</description>
+   <description>Header part of MochaUI desktop.</description>
    <version>0.5</version>
    
    <resources>
@@ -31,11 +31,10 @@
                   </resources>
                   <widget name="HierarchicalMenuWidget">
                      <options>
-                        <option name="widgetContainerId" value="HorizontalMenuBar" />
-                        <option name="widgetDefinitionURI" value="Configuration/WebUIMenuDefinition.xml" />
-                        <option name="componentName" value="HorizontalMenuBar" />
+                        <option name="widgetContainerId" value="'HorizontalMenuBar'" />
+                        <option name="widgetDefinitionURI" value="'Configuration/WebUIMenuDefinition.xml'" />
+                        <option name="componentName" value="'HorizontalMenuBar'" />
                         <option name="showSubItems" value="true" />
-                        <option name="" value="" />
                      </options>
                   </widget>
                </plugin>
@@ -47,7 +46,7 @@
                   </resources>
                   <widget name="LanguageSelectorWidget">
                      <options>
-                        <option name="widgetContainerId" value="LanguageSelectorWidget" />
+                        <option name="widgetContainerId" value="'LanguageSelectorWidget'" />
                      </options>
                   </widget>
                </plugin>

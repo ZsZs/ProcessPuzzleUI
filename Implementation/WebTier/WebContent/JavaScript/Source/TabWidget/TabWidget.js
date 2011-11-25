@@ -111,13 +111,17 @@ var TabWidget = new Class( {
          this.tabs.each( function( entry, index ) {
             entry.getValue().destroy();
          }, this );
-         this.tabsContainerElement.removeEvents();
-         this.tabsContainerElement.destroy();
+         if( this.tabsContainerElement.destroy ){
+            this.tabsContainerElement.removeEvents();
+            this.tabsContainerElement.destroy();
+         }else this.tabsContainerElement.removeNode();
       }
 
       if( this.buttonsContainerElement ){
-         this.buttonsContainerElement.removeEvents();
-         this.buttonsContainerElement.destroy();
+         if( this.buttonsContainerElement.destroy ){
+            this.buttonsContainerElement.removeEvents();
+            this.buttonsContainerElement.destroy();
+         }else this.buttonsContainerElement.removeNode();
       }
 
       this.parent();

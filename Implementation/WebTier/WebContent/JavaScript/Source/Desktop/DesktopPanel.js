@@ -218,7 +218,10 @@ var DesktopPanel = new Class({
       }
       if( this.header ) this.header.destroy();
       if( this.plugin ) this.plugin.destroy();
-      if( this.panelElement ) this.panelElement.destroy();
+      if( this.panelElement ) {
+         if( this.panelElement.destroy ) this.panelElement.destroy();
+         else this.panelElement.removeNode();
+      }
    }.protect(),
    
    destroyDocumentWrapper: function(){
@@ -227,6 +230,7 @@ var DesktopPanel = new Class({
    
    determinePanelElement: function(){
       this.panelElement = $( this.name + this.options.panelIdPostfix );
+      this.panelElement = $( this.panelElement );     //required by Internet Explorer
       this.panelContentElement = $( this.name );
       this.constructionChain.callChain();
    }.protect(),

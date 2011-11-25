@@ -57,7 +57,7 @@ var BrowserWidget = new Class( {
 
       // initialize object
       this.deduceInitializationArguments( options, resourceBundle );
-      this.containerElement = $( this.options.widgetContainerId );
+      this.containerElement = document.id( $( this.options.widgetContainerId ));
       this.configureLogger();
       this.configureMessageBus();
       this.loadWidgetDefinition();
@@ -83,6 +83,7 @@ var BrowserWidget = new Class( {
 
    destroy : function() {
       if( this.state == BrowserWidget.States.CONSTRUCTED ){
+         this.containerElement = document.id( this.containerElement );
          this.containerElement.getElements( '*' ).each( function( childElement, index ) {
             if( childElement.removeEvents )
                childElement.removeEvents();

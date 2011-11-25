@@ -24,13 +24,13 @@
 		<javaScripts></javaScripts>
 	</resources>
 	
-   <header documentDefinition="Desktops/ProcessPuzzle/DesktopHeader.xml"/>
+   <header documentDefinition="Desktops/MochaUI/DesktopHeader.xml"/>
 	
    <windowDocker tag="div" id="dockWrapper" />
 
    <contentArea tag="div" id="pageWrapper" />
 
-   <footer documentDefinition="Desktops/ProcessPuzzle/DesktopFooter.xml"/>
+   <footer documentDefinition="Desktops/MochaUI/DesktopFooter.xml"/>
    
 	<columns>
 		<column name='mainColumn' placement='main' minimumWidth='100' maximumWidth='300' />

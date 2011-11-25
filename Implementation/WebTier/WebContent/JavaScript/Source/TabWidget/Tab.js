@@ -139,14 +139,19 @@ var Tab = new Class({
 		this.logger.trace( this.options.componentName + ".insertNewLIElement added a 'LI' element to represent tab: " + this.name );
 	}.protect(),
 
-	removeLIElement: function() {
-		if( this.listItemElement != null) {
-			this.anchorElement.removeEvents();
-			this.anchorElement = null;
-			this.listItemElement.destroy();
-			this.listItemElement = null;
-		}
-		else throw new UnconfiguredWidgetException( {message : "Can't remove tab's parent LI element.", source : "Tab.removeLIElement"} );
+    removeLIElement: function() {
+       if( this.listItemElement != null) {
+          if( this.anchorElement.destroy ){
+             this.anchorElement.removeEvents();
+             this.anchorElement.destroy();
+          }else this.anchorElement.removeNode();
+          this.anchorElement = null;
+          
+          if( this.listItemElement.destroy ) this.listItemElement.destroy();
+          else this.listItemElement.removeNode();
+          this.listItemElement = null;
+       }
+       else throw new UnconfiguredWidgetException( {message : "Can't remove tab's parent LI element.", source : "Tab.removeLIElement"} );
 	}.protect(),
 
 	replaceObjectToSelect: function( theObjectToSelect ) {

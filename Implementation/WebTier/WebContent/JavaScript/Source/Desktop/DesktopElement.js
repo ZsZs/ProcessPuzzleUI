@@ -70,6 +70,7 @@ var DesktopElement = new Class({
    },
    
    destroy: function(){
+      if( this.htmlElement ) this.htmlElement.destroy();
       this.state = DesktopElement.States.INITIALIZED;
    },
    

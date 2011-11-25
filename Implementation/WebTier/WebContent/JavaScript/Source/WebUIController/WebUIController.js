@@ -82,6 +82,7 @@ var WebUIController = new Class({
       this.stateManager = new ComponentStateManager();
       this.userName = null;
       this.userLocation = null;
+      this.warningContainer;
       this.webUIConfiguration = null;
       this.webUIException = null;
       this.workproductTypeXslt = this.options.contextRootPrefix + this.options.artifactTypesXslt;
@@ -381,6 +382,7 @@ var WebUIController = new Class({
    loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );
+         if( !this.webUIConfiguration.isLoaded ) this.webUIConfiguration.load();
       }catch( e ){
          this.onError( e );
       }
@@ -401,17 +403,20 @@ var WebUIController = new Class({
 	
    showWebUIExceptionPage : function( exception ) {
       var bodyElement = $$( 'body' );
+      this.warningContainer = new Element( 'div', { id: 'warning'} );
+      bodyElement.grab( this.warningContainer, 'top' );
+      
       var warningHeader = new Element( 'h1' );
       warningHeader.appendText( "Error Occured" );
-      bodyElement.grab( warningHeader );
+      this.warningContainer.grab( warningHeader );
       
       var warningNameElement = new Element( 'h3' );
       warningNameElement.appendText( exception.name );
-      bodyElement.grab( warningNameElement );
+      this.warningContainer.grab( warningNameElement );
       
       var messageElement = new Element( 'p' );
       messageElement.appendText( exception.message );
-      bodyElement.grab( messageElement );
+      this.warningContainer.grab( messageElement );
    }.protect(),
 	
    storeComponentState : function() {
