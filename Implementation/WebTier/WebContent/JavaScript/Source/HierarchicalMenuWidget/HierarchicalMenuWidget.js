@@ -69,10 +69,10 @@ var HierarchicalMenuWidget = new Class({
       var parentDefinitionElement = this.determineParentDefinitionElement();
       this.selectedElementClass = this.determineSelectedElementClass();
       this.createMenuElements( parentDefinitionElement, this.containerElement );
-      this.currentItemId = this.defaultItemId;
+      if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
       this.storeComponentState( parentDefinitionElement );
       this.parent();
-      this.fireDefaultSelection();
+      this.fireCurrentSelection();
    },
    
    destroy : function() {
@@ -213,7 +213,7 @@ var HierarchicalMenuWidget = new Class({
       return this.definitionXml.selectNode( selectorExpression );
    }.protect(),
    
-   fireDefaultSelection: function(){
+   fireCurrentSelection: function(){
       var currentAnchorElement = $( this.currentItemId ).getChildren( 'a' )[0];
       this.onSelection( currentAnchorElement );
    }.protect(),
