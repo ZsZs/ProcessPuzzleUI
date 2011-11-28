@@ -21,7 +21,7 @@
             <plugin>
                <resources>
                   <styleSheets>
-                     <styleSheet>Desktops/MochaUI/Styles/SkinSelectorWidget.css</styleSheet>
+                     <styleSheet>Desktops/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
                   </styleSheets>
                </resources>
                <widget name="SkinSelectorWidget">

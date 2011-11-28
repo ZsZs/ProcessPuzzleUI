@@ -42,8 +42,10 @@ h2, h3, h4 {
 }
 
 h1 {
-	text-align: center;
 	color: teal;
+   padding-bottom: 10px;
+   padding-top: 10px;
+   text-align: center;
 }
 	
 h2 {

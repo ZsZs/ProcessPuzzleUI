@@ -30,15 +30,18 @@ var DocumentManager = new Class({
    },
    
    //Constructors
-   initialize: function( options ) { return this.check() || this.setUp( options ); },
-   setUp: function( options ){
-      this.setOptions( options );
+   initialize: function( internationalization, webUIConfiguration, options ) { return this.check() || this.setUp( options ); },
+   setUp: function( internationalization, webUIConfiguration, options ){
+      this.setOptions( internationalization, webUIConfiguration, options );
 
       //private instance variables
-      this.controller = Class.getInstanceOf( WebUIController );
-      this.currentDocumentProperties = null;
-      this.locale = null;
-      this.stateManager = Class.getInstanceOf( ComponentStateManager );
+      this.currentDocumentProperties;
+      this.internationalization = internationalization;
+      this.locale;
+      this.stateManager;
+      this.webUIConfiguration = webUIConfiguration;
+      
+      this.initializeFields();
    },
    
    changeLanguage: function( locale ){
@@ -65,7 +68,7 @@ var DocumentManager = new Class({
       MUI.updateContent({
          element: $( this.options.documentsPanelId ),
          url: documentFullURI,
-         title: this.controller.getText( this.options.documentsPanelTitleKey ),
+         title: this.internationalization.getText( this.options.documentsPanelTitleKey ),
          padding: { top: 8, right: 8, bottom: 8, left: 8 }
       });
       
@@ -80,11 +83,20 @@ var DocumentManager = new Class({
       }
    },
    
+   tearDown: function(){
+      this.destroyInstance();
+   },
+   
    //Properties
-   getController: function() { return this.controller; },
+   getConfiguration: function() { return this.webUIConfiguration; },
    getStateManager: function() { return this.stateManager; },
    
    //Protected, private helper methods
+   initializeFields: function(){
+      if( !this.webUIConfiguration ) this.webUIConfiguration = Class.getInstanceOf( WebUIConfiguration );
+      this.stateManager = Class.getInstanceOf( ComponentStateManager );
+   }.protect(),
+   
    storeComponentState : function() {
       this.stateManager.storeCurrentState( this.options.componentName, this.currentDocumentProperties );
    }.protect()   

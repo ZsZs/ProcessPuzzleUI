@@ -17,9 +17,12 @@
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
 
-    <Resource key="HierarchicalMenuWidget.yourMenu" type="String">Your Menu</Resource>
-    <Resource key="HierarchicalMenuWidget.yourMenu.smartDocument" type="String">Smart Document</Resource>
-    <Resource key="HierarchicalMenuWidget.yourMenu.puraVida" type="String">Photo Album</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Photo Album</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
 
     <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
     <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>

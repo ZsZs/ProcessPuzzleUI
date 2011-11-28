@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Photo Galery Document</name>
+   <description>Demonstrates Photo Galery widget embeded into a Smart Document.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentHeader tag="div" id="photoGaleryDocumentHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1">PhotoGaleryDocument.title</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="smartDocumentBody">
+      <element tag="p">PhotoGaleryDocument.paragraph</element>
+      <element tag="div" id="PhotoGaleryContainer" elementStyle="slideshow">
+         <plugin>
+            <widget name="PhotoGaleryWidget">
+               <options>
+                  <option name="widgetContainerId" value="PhotoGaleryContainer"/>
+                  <option name="widgetDefinitionURI" value="Content/PhotoGaleryDefinition.xml"/>
+                  <option name="widgetDataURI" value="Content/PhotoGaleryData.xml"/>
+               </options>
+            </widget>
+         </plugin>
+      </element>
+   </documentBody>
+   
+   <documentFooter tag="div" id="photoGaleryDocumentFooter">
+      <compositeElement tag="div" id="footerWrapper">
+         <element tag="h3">PhotoGaleryDocument.footer</element>
+      </compositeElement>
+   </documentFooter>
+</smartDocumentDefinition>

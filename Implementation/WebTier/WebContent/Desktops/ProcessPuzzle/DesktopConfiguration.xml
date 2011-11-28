@@ -19,6 +19,7 @@
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Panels.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Tabs.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Window.css</styleSheet>
+         <styleSheet>Desktops/ProcessPuzzle/Styles/PhotoGalery.css</styleSheet>
 		</styleSheets>
 		<images></images>
 		<javaScripts></javaScripts>
@@ -64,9 +65,8 @@
 			<title>DesktopConfigurator.Panel.whoIsIn</title>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true'>
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleDocumentLoadEvents="true">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
-			<contentURL>Desktops/ProcessPuzzle/Pages/Welcome_hu.html</contentURL>
 		</panel>
 		
 		<panel name='consolePanel' columnReference='mainColumn' height='100' showHeader='true'>

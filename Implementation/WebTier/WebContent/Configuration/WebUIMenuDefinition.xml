@@ -6,15 +6,27 @@
 	<menuWidget selectedItemClass="selectedMenuItem" />
 	
 	<menuItem menuItemId="MenuWidget">
-		<menuItem menuItemId="YourMenu" caption="HierarchicalMenuWidget.yourMenu" isDefault="true">
+		<menuItem menuItemId="YourMenu" caption="HierarchicalMenuWidget.documentExamples" isDefault="true">
 			<messageProperties>{actionType : 'loadMenu', contextItemId : 'YourMenu'}</messageProperties>
 					
-			<menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.smartDocument" isDefault="true">
-				<messageProperties>{actionType : 'loadDocument', documentURI : 'Content/SampleDocument'}</messageProperties>			
+         <menuItem menuItemId="YourMenu-Html" caption="HierarchicalMenuWidget.documentExamples.htmlContent" isDefault="true">
+            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+         </menuItem>       
+               
+			<menuItem menuItemId="YourMenu-Static" caption="HierarchicalMenuWidget.documentExamples.staticDocument" isDefault="false">
+				<messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/StaticDocument.xml', documentType : SmartDocument.Types.SMART }</messageProperties>			
 			</menuItem>			
                
-         <menuItem menuItemId="YourMenu-ItemOne" caption="HierarchicalMenuWidget.yourMenu.puraVida" isDefault="true">
-            <messageProperties>{actionType : 'loadDocument', documentURI : 'Content/PuraVida'}</messageProperties>         
+         <menuItem menuItemId="YourMenu-Dynamic" caption="HierarchicalMenuWidget.documentExamples.dynamicDocument" isDefault="false">
+            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DynamicDocument.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+         </menuItem>
+         
+         <menuItem menuItemId="YourMenu-PhotoAlbum" caption="HierarchicalMenuWidget.documentExamples.photoAlbum" isDefault="false">
+            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/PhotoGaleryDocument.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+         </menuItem>
+         
+         <menuItem menuItemId="YourMenu-VideoAlbum" caption="HierarchicalMenuWidget.documentExamples.videoAlbum" isDefault="false">
+            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/VideoGaleryDocument.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
          </menuItem>       
 		</menuItem>
 		

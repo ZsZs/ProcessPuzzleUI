@@ -23,6 +23,8 @@ var MenuSelectedMessage = new Class({
    options: {
       actionType: null,
       description: "A message about the event that a menu item was selected.",
+      documentContentURI: null,
+      documentType: SmartDocument.Types.SMART,
       documentURI: null,
       contextItemId : null,
       name: "Menu Selected Message"
@@ -39,6 +41,8 @@ var MenuSelectedMessage = new Class({
    //Properties
    getActionType: function() { return this.options.actionType; },
    getContextItemId: function() { return this.options.contextItemId; },
+   getDocumentContentURI: function() { return this.options.documentContentURI; },
+   getDocumentType: function() { return this.options.documentType; },
    getDocumentURI: function() { return this.options.documentURI; }
 });
 

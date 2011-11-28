@@ -32,9 +32,10 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
    
-   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
    
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
@@ -50,6 +51,7 @@
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
    <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
@@ -72,7 +74,7 @@
    <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../SmartDocument/MissingBindVariableException.js"></script>
-   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
@@ -91,7 +93,8 @@
 
 <script type="text/javascript">
    window.addEvent( 'domready', function() {
-      test_construct_constructsSmartDocument();
+//       test_construct_whenSpecified_subscribesForMenuSelectedMessage();
+//       test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument();
    });
 
    JsHamcrest.Integration.JsUnit();
@@ -100,41 +103,53 @@
    var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
    var DESKTOP_CONTAINER_ID = "desktop";
    var COLUMN_DEFINITION = "/desktopConfiguration/columns/column[@name='mainColumn']";
+   var HTML_DOCUMENT_URI = "../Desktop/HtmlDocument";
+   var SMART_DOCUMENT_URI = "../Desktop/StaticDocument.xml";
    var PANEL_DEFINITION = "/desktopConfiguration/panels/panel[@name='documents-panel']";
    var PANEL_DOCUMENT_WRAPPER_ID = "panelDocumentWrapper";
    var PAGE_WRAPPER_ID = "pageWrapper";
    var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
 
-   var column = null;
-   var columnDefinition = null;
-   var desktopContainerElement = null;
-   var desktopDefinition = null;
-   var panelDefinition = null;
-   var pageWrapperElement = null;
-   var panel = null;
-   var resourceBundle = null;
+   var column;
+   var columnDefinition;
+   var componentStateManager;
+   var desktopContainerElement;
+   var desktopDefinition;
+   var loadedDocument;
+   var messageBus;
+   var panelDefinition;
+   var pageWrapperElement;
+   var panel;
+   var resourceBundle;
    var testCaseChain = new Chain();
-   var toolBox = null;
-   var webUIConfiguration = null;
-   var webUIController = null;
-   var webUILogger = null;
+   var testCaseIsRunning = false;
+   var toolBox;
+   var webUIConfiguration;
+   var webUIController;
+   var webUILogger;
 
+   function runTestCase(){
+      if( !testCaseIsRunning ) testCaseChain.callChain();
+   }
+   
    function beforeEachTest() {
       inform( "beforeEachTest" );
-      //webUIController = new WebUIController( { contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI} );
       webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
       webUILogger = new WebUILogger( webUIConfiguration );
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( new Locale({ language : "hu" }) );
+      messageBus = new WebUIMessageBus();
+      componentStateManager = new ComponentStateManager();
 
       desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'"} );
       columnDefinition = desktopDefinition.selectNode( COLUMN_DEFINITION );
       column = new DesktopColumn( columnDefinition, { componentContainerId : PAGE_WRAPPER_ID } );
       panelDefinition = desktopDefinition.selectNode( PANEL_DEFINITION );
-      panel = new DesktopPanel( panelDefinition, resourceBundle, { onPanelConstructed : onPanelConstructed} );
+      panel = new DesktopPanel( panelDefinition, resourceBundle, { onPanelConstructed : onPanelConstructed, onDocumentLoaded : onDocumentLoaded } );
       desktopContainerElement = $( DESKTOP_CONTAINER_ID );
       pageWrapperElement = $( PAGE_WRAPPER_ID );
 
+      testCaseIsRunning = true;
       testCaseChain.callChain();
    }
 
@@ -152,34 +167,53 @@
       panel.construct();
    }
 
+   function onDocumentLoaded( documentUri ) {
+      loadedDocument = documentUri;
+      testCaseChain.callChain();
+   }
+
    function onPanelConstructed() {
       testCaseChain.callChain();
    }
 
    function afterEachTest() {
-      inform( "afterEachTest" );
       desktopDefinition.release();
       panel.destroy();
       column.destroy();
       desktopContainerElement = null;
+      loadedDocument = null;
 
-      testCaseChain.clearChain();
+      inform( "afterEachTest" );
+      testCaseIsRunning = false;
+      testCaseChain.callChain();
    }
 
-   function test_initialization_determinesLoggerAndSetsState() {
-      testCaseChain.chain( beforeEachTest, function() {
-         assertThat( panel.getLogger(), equalTo( webUILogger ) );
-         assertThat( panel.getState(), equalTo( DesktopPanel.States.INITIALIZED ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+   function test_initialize_linksToRelatedComponentsAndSetsState() {
+      testCaseChain.chain( 
+         beforeEachTest, 
+         function() {
+            assertThat( panel.getLogger(), equalTo( webUILogger ) );
+            assertThat( panel.getMessageBus(), equalTo( messageBus ) );
+            assertThat( panel.getComponentStateManager(), equalTo( componentStateManager ) );
+            assertThat( panel.getState(), equalTo( DesktopPanel.States.INITIALIZED ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest 
+      );
+      runTestCase();
    }
-
+   
    function test_unmarshall_setsState() {
-      testCaseChain.chain( beforeEachTest, function() {
-         panel.unmarshall();
-         assertThat( panel.getState(), equalTo( DesktopPanel.States.UNMARSHALLED ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+      testCaseChain.chain( 
+         beforeEachTest, 
+         function() {
+            panel.unmarshall();
+            assertThat( panel.getState(), equalTo( DesktopPanel.States.UNMARSHALLED ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest
+      );
+      runTestCase();
    }
 
    function test_unmarshall_determinesPanelProperties() {
@@ -194,54 +228,151 @@
          assertThat( panel.getShowHeader(), equalTo( parseBoolean( desktopDefinition.selectNode( PANEL_DEFINITION + "/@showHeader" ).value ) ) );
          assertThat( panel.getTitle(), equalTo( resourceBundle.getText( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/title" ) ) ) );
          testCaseChain.callChain();
-      }, afterEachTest ).callChain();
-   }
+      }, 
+      afterEachTest
+   );
+   runTestCase();
+}
 
    function test_unmarshall_unmarshallsPanelHeader() {
-      testCaseChain.chain( beforeEachTest, function() {
-         panel.unmarshall();
+      testCaseChain.chain( 
+         beforeEachTest, 
+         function() {
+            panel.unmarshall();
 
-         assertThat( panel.getHeader(), not( nil() ) );
-         assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.UNMARSHALLED ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+            assertThat( panel.getHeader(), not( nil() ) );
+            assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.UNMARSHALLED ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest
+      );
+      runTestCase();
    }
 
    function test_unmarshall_determinesDocumentProperties() {
-      testCaseChain.chain( beforeEachTest, function() {
-         panel.unmarshall();
-         assertThat( panel.getDocument(), not( nil() ) );
-         assertThat( instanceOf( panel.getDocument(), SmartDocument ), is( true ) );
-         assertThat( panel.getDocumentDefintionUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentDefinitionUri" ) ) );
-         assertThat( panel.getDocumentContentUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
-         assertThat( panel.getDocumentWrapperId(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@id" ) ) );
-         assertThat( panel.getDocumentWrapperStyle(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@elementStyle" ) ) );
-         assertThat( panel.getDocumentWrapperTag(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@tag" ) ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+      testCaseChain.chain( 
+         beforeEachTest, 
+         function() {
+            panel.unmarshall();
+            assertThat( panel.getDocument(), not( nil() ) );
+            assertThat( instanceOf( panel.getDocument(), SmartDocument ), is( true ) );
+            assertThat( panel.getDocumentDefintionUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( panel.getDocumentContentUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
+            assertThat( panel.getDocumentWrapperId(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@id" ) ) );
+            assertThat( panel.getDocumentWrapperStyle(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@elementStyle" ) ) );
+            assertThat( panel.getDocumentWrapperTag(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@tag" ) ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest
+      );
+      runTestCase();
    }
 
    function test_construct_instantiatesMUIPanel() {
-      testCaseChain.chain( beforeEachTest, constructPanel, function() {
-         assertThat( panel.getMUIPanel(), not( nil() ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+      testCaseChain.chain( 
+         beforeEachTest, 
+         constructPanel, 
+         function() {
+            assertThat( panel.getMUIPanel(), not( nil() ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest
+      );
+      runTestCase();
    }
 
    function test_construct_constructsHeader() {
-      testCaseChain.chain( beforeEachTest, constructPanel, function() {
-         assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+      testCaseChain.chain( 
+         beforeEachTest, 
+         constructPanel, 
+         function() {
+            assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest
+      );
+      runTestCase();
    }
 
    function test_construct_constructsSmartDocument() {
-      testCaseChain.chain( beforeEachTest, constructPanel, function() {
-         assertThat( panel.getDocument(), not( nil() ) );
-         assertThat( $( PANEL_DOCUMENT_WRAPPER_ID ), not( nil() ) );
-         testCaseChain.callChain();
-      }, afterEachTest ).callChain();
+      testCaseChain.chain( 
+         beforeEachTest, 
+         constructPanel, 
+         function() {
+            assertThat( panel.getDocument(), not( nil() ) );
+            assertThat( $( PANEL_DOCUMENT_WRAPPER_ID ), not( nil() ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest 
+      );
+      runTestCase();
    }
+      
+   function test_construct_whenSpecified_subscribesForMenuSelectedMessage(){
+      testCaseChain.chain( 
+         beforeEachTest,
+         function(){
+            panel.options.handleDocumentLoadEvents = true;
+            constructPanel();
+         },
+         function(){
+            //documentLoaded event was fired
+         },
+         function() {
+            assertThat( messageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( panel.webUIMessageHandler ), is( true ));
+            testCaseChain.callChain();
+         },
+         afterEachTest
+      );
+      runTestCase();
+   }
+
+   function test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument(){
+      testCaseChain.chain( 
+         beforeEachTest,
+         function(){
+            panel.options.handleDocumentLoadEvents = true;
+            constructPanel();
+         },
+         function(){
+            assertThat( loadedDocument, equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
+         },
+         function(){
+            var message = new MenuSelectedMessage({actionType : 'loadDocument', documentType : SmartDocument.Types.HTML, documentURI : HTML_DOCUMENT_URI });
+            messageBus.notifySubscribers( message );
+         },
+         function() {
+            assertThat( panel.getDocumentContentUri(), equalTo( HTML_DOCUMENT_URI ));
+            testCaseChain.callChain();
+         },
+         afterEachTest
+      );
+      runTestCase();
+   }
+
+   function test_webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument(){
+      testCaseChain.chain( 
+         beforeEachTest,
+         function(){
+            panel.options.handleDocumentLoadEvents = true;
+            constructPanel();
+         },
+         function(){
+            assertThat( loadedDocument, equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
+         },
+         function(){
+            var message = new MenuSelectedMessage({actionType : 'loadDocument', documentType : SmartDocument.Types.SMART, documentURI : SMART_DOCUMENT_URI });
+            messageBus.notifySubscribers( message );
+         },
+         function() {
+            assertThat( panel.getDocumentDefintionUri(), equalTo( SMART_DOCUMENT_URI ));
+            testCaseChain.callChain();
+         },
+         afterEachTest
+      );
+      runTestCase();
+   }
+
 </script>
 </head>
 

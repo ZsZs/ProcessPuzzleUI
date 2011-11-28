@@ -18,6 +18,6 @@ Required by:
 
 
 
-#documents-panel {
-	overflow: hidden;
-}
+#documents-panel { overflow: hidden; }
+
+.panelDocumentWrapper { margin: 5px; }

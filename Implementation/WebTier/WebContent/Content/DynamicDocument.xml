@@ -14,19 +14,19 @@
       <javaScripts></javaScripts>
    </resources>
 
-   <documentHeader tag="div" id="staticDocumentHeader">
+   <documentHeader tag="div" id="dynamicDocumentHeader">
       <compositeElement tag="div" id="headerWrapper">
-         <element tag="h1">StaticDocument.title</element>
+         <element tag="h1">DynamicDocument.title</element>
       </compositeElement>
    </documentHeader>
    
    <documentBody tag="div" id="smartDocumentBody">
-      <element tag="p">StaticDocument.paragraph</element>
+      <element tag="p">DynamicDocument.paragraph</element>
    </documentBody>
    
-   <documentFooter tag="div" id="staticDocumentFooter">
+   <documentFooter tag="div" id="dinamicDocumentFooter">
       <compositeElement tag="div" id="footerWrapper">
-         <element tag="h3">StaticDocument.footer</element>
+         <element tag="h3">DynamicDocument.footer</element>
       </compositeElement>
    </documentFooter>
 </smartDocumentDefinition>

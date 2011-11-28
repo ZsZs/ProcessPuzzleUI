@@ -175,9 +175,14 @@ XmlResource.determineAttributeValue = function( xmlElement, attributeName, defau
    else return null;
 };
 
-XmlResource.determineNodeText = function( xmlElement ) {
-   if( xmlElement ) return Sarissa.getText( xmlElement );
-   else return null;
+XmlResource.determineNodeText = function( xmlElement, defaultValue ) {
+   var nodeText = null;
+   if( xmlElement ) {
+      nodeText = Sarissa.getText( xmlElement );
+      if( !nodeText ) nodeText = defaultValue;
+   }
+   
+   return nodeText;
 };
 
 XmlResource.selectNode = function( selector, xmlElement ){
@@ -200,9 +205,10 @@ XmlResource.selectNodes = function( selector, xmlElement ){
 	return selectedElements;
 };
 
-XmlResource.selectNodeText = function( selector, xmlElement, nameSpaces ) {
+XmlResource.selectNodeText = function( selector, xmlElement, nameSpaces, defaultValue ) {
    var selectedElement = XmlResource.selectNode( selector, xmlElement, nameSpaces );
-   return XmlResource.determineNodeText( selectedElement );
+   if( !selectedElement && defaultValue ) return defaultValue;
+   else return XmlResource.determineNodeText( selectedElement, defaultValue );
 };
 
 Browser.Request = function(){

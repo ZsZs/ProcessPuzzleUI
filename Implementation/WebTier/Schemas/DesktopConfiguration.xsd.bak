@@ -83,7 +83,6 @@
       <xs:attribute name="height" type="xs:integer"/>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <xs:attribute name="showHeader" type="xs:boolean"/>
-      <xs:attribute name="handleDocumentLoadEvents" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="title" type="xs:string"/>

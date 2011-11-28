@@ -431,7 +431,7 @@ var WebUIController = new Class({
       this.logger.debug( this.options.componentName + ".subscribeToWebUIMessages() started." );
       this.messageBus.subscribeToMessage( LanguageChangedMessage, this.webUIMessageHandler );
       this.messageBus.subscribeToMessage( SkinChangedMessage, this.webUIMessageHandler );
-      this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
+      //this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
       this.configurationChain.callChain();
    }.protect()
 });

@@ -19,6 +19,7 @@
 			<styleSheet>Desktops/MochaUI/Styles/Panels.css</styleSheet>
 			<styleSheet>Desktops/MochaUI/Styles/Tabs.css</styleSheet>
 			<styleSheet>Desktops/MochaUI/Styles/Window.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/PhotoGalery.css</styleSheet>
 		</styleSheets>
 		<images></images>
 		<javaScripts></javaScripts>
@@ -38,9 +39,8 @@
 	</columns>
 	
 	<panels>
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true'>
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleDocumentLoadEvents="true">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
-			<contentURL>Desktops/MochaUI/Pages/Welcome_hu.html</contentURL>
 		</panel>
 		
 		<panel name='console' columnReference='mainColumn' height='100' showHeader='true'>

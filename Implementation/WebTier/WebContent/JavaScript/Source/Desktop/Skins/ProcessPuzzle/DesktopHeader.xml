@@ -32,8 +32,8 @@
                   </resources>
                   <widget name="HierarchicalMenuWidget">
                      <options>
-                        <option name="widgetContainerId" value="HorizontalMenuBar"/>
-                        <option name="widgetDefinitionURI" value="../HierarchicalMenuWidget/MenuDefinition.xml"/>
+                        <option name="widgetContainerId" value="'HorizontalMenuBar'"/>
+                        <option name="widgetDefinitionURI" value="'../HierarchicalMenuWidget/MenuDefinition.xml'"/>
                      </options>
                   </widget>
                </plugin>
@@ -46,7 +46,7 @@
                   </resources>
                   <widget name="LanguageSelectorWidget">
                      <options>
-                        <option name="widgetContainerId" value="LanguageSelectorWidget"/>
+                        <option name="widgetContainerId" value="'LanguageSelectorWidget'"/>
                      </options>
                   </widget>
                </plugin>

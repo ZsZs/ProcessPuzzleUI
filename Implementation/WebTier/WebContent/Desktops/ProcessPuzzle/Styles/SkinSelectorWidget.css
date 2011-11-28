@@ -3,7 +3,10 @@
 #SkinSelectorWidget {
 	display: inline;
 	float: right;
-	margin-top: -15px;
+	margin: -21px;
+	position: relative;
+	right: 20px;
+	top: 0px;
 }
 
 span.SkinSelectorWrapper {

@@ -43,7 +43,7 @@
 			<contentURL>../Desktop/Content/TreeView.html</contentURL>
 		</panel>
 		
-		<panel name="documents-panel" columnReference="mainColumn" showHeader="true" height="400">
+		<panel name="documents-panel" columnReference="mainColumn" showHeader="true" height="400" handleDocumentLoadEvents="true">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
 			<contentURL>../Desktop/Content/HelloWorldContent.html</contentURL>
          <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
@@ -56,8 +56,8 @@
                </resources>
                <widget name="ToolBarWidget">
                   <options>
-                     <option name="widgetContainerId" value="documents-panel_headerToolbox"/>
-                     <option name="widgetDefinitionURI" value="../ToolBarWidget/ToolBarDefinition.xml"/>
+                     <option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'../ToolBarWidget/ToolBarDefinition.xml'"/>
                   </options>
                </widget>
             </plugin>
@@ -80,8 +80,8 @@
                </resources>
                <widget name="TabWidget">
                   <options>
-                     <option name="widgetContainerId" value="console_headerToolbox"/>
-                     <option name="widgetDefinitionURI" value="../TabWidget/TabsDefinition.xml"/>
+                     <option name="widgetContainerId" value="'console_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'../TabWidget/TabsDefinition.xml'"/>
                   </options>
                </widget>
             </plugin>
