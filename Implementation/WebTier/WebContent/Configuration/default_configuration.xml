@@ -167,7 +167,6 @@
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
 			<in:resourceBundle>Configuration/DesktopInternationalization</in:resourceBundle>
          <in:resourceBundle>JavaScript/Source/TabWidget/TabWidgetInternationalization</in:resourceBundle>
-         <in:resourceBundle>JavaScript/Source/HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

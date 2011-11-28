@@ -71,7 +71,8 @@ var HierarchicalMenuWidget = new Class({
       this.createMenuElements( parentDefinitionElement, this.containerElement );
       this.currentItemId = this.defaultItemId;
       this.storeComponentState( parentDefinitionElement );
-      return this.parent();
+      this.parent();
+      this.fireDefaultSelection();
    },
    
    destroy : function() {
@@ -186,7 +187,12 @@ var HierarchicalMenuWidget = new Class({
       return this.definitionXml.selectNode( this.options.menuItemIdSelector, menuItemDefinitions[menuItemIndex] ).value;
    }.protect(),
    
-   determineMenuItemIsDefault : function(  parentDefinitionElement, itemId ) { return this.determineMenuItemProperty( this.options.menuItemIsDefaultSelector, itemId, parentDefinitionElement ); }.protect(),
+   determineMenuItemIsDefault : function(  parentDefinitionElement, itemId ) {
+      var isDefaultValue = this.determineMenuItemProperty( this.options.menuItemIsDefaultSelector, itemId, parentDefinitionElement );
+      if( isDefaultValue ) return parseBoolean( isDefaultValue );
+      return false;
+   }.protect(),
+   
    determineMenuItemProperty : function( selectorTemplate, itemId, parentDefinitionElement ){
       var selectorExpression = selectorTemplate.substitute({ menuItemId : itemId });
       var selectedNode = this.definitionXml.selectNode( selectorExpression, parentDefinitionElement );
@@ -205,6 +211,11 @@ var HierarchicalMenuWidget = new Class({
    determineParentDefinitionElement: function(){
       var selectorExpression = this.options.parentItemSelector.substitute({ menuItemId : this.options.contextItemId });
       return this.definitionXml.selectNode( selectorExpression );
+   }.protect(),
+   
+   fireDefaultSelection: function(){
+      var currentAnchorElement = $( this.currentItemId ).getChildren( 'a' )[0];
+      this.onSelection( currentAnchorElement );
    }.protect(),
    
    storeComponentState : function() {
