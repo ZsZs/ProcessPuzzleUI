@@ -17,11 +17,13 @@
    <documentHeader tag="div" id="photoGaleryDocumentHeader">
       <compositeElement tag="div" id="headerWrapper">
          <element tag="h1">PhotoGaleryDocument.title</element>
+         <element tag="h2">PhotoGaleryDocument.subTitle</element>
       </compositeElement>
    </documentHeader>
    
    <documentBody tag="div" id="smartDocumentBody">
-      <element tag="p">PhotoGaleryDocument.paragraph</element>
+      <element tag="p">PhotoGaleryDocument.introduction</element>
+      <element tag="p">PhotoGaleryDocument.exampleDescription</element>
       <element tag="div" id="PhotoGaleryContainer" elementStyle="slideshow">
          <plugin>
             <widget name="PhotoGaleryWidget">
@@ -35,7 +37,7 @@
       </element>
    </documentBody>
    
-   <documentFooter tag="div" id="photoGaleryDocumentFooter">
+   <documentFooter tag="div" id="photoGaleryDocumentFooter" elementStyle="documentFooter">
       <compositeElement tag="div" id="footerWrapper">
          <element tag="h3">PhotoGaleryDocument.footer</element>
       </compositeElement>

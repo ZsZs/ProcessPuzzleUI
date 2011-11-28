@@ -18,7 +18,7 @@
 			</menuItem>			
                
          <menuItem menuItemId="YourMenu-Dynamic" caption="HierarchicalMenuWidget.documentExamples.dynamicDocument" isDefault="false">
-            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DynamicDocument.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
          </menuItem>
          
          <menuItem menuItemId="YourMenu-PhotoAlbum" caption="HierarchicalMenuWidget.documentExamples.photoAlbum" isDefault="false">

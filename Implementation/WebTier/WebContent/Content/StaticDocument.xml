@@ -21,7 +21,8 @@
    </documentHeader>
    
    <documentBody tag="div" id="smartDocumentBody">
-      <element tag="p">StaticDocument.paragraph</element>
+      <element tag="p">StaticDocument.introduction</element>
+      <element tag="p">StaticDocument.exampleDescription</element>
    </documentBody>
    
    <documentFooter tag="div" id="staticDocumentFooter">

@@ -81,7 +81,7 @@
                <widget name="TabWidget">
                   <options>
                      <option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
-                     <option name="widgetDefinitionURI" value="'JavaScript/Source/TabWidget/TabsDefinition.xml'"/>
+                     <option name="widgetDefinitionURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
                   </options>
                </widget> 
             </plugin>

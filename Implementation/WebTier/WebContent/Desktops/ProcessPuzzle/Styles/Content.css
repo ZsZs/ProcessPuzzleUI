@@ -250,3 +250,8 @@ hr {
 .nobr {
 	white-space: nowrap;
 }
+
+.documentFooter {
+	position: static;
+	bottom: 10px;
+}

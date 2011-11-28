@@ -32,9 +32,34 @@
     <Resource key="LanguageSelectorWidget.select" type="String">Válasszon nyelvet:</Resource>
 
     <Resource key="SkinSelectorWidget.select" type="String">Válasszon megjelenést:</Resource>
+
+    <Resource key="DynamicDocument.exampleDescription" type="String">Az alábbi szöveg egy RSS.xml tartalmának a beolvasásával jelenik meg. Mivel hír (item) ismétlődő elem, ezért ebből annyi jelenik meg amennyit a tartalomforrás magában foglal.</Resource>
+    <Resource key="DynamicDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
+    <Resource key="DynamicDocument.introduction" type="String">Ez a példa egy olyan Okos dokumentum, amely a tartalmat egy xml adatforrásból jeleníti meg. 
+    Amennyiben a dokumentum definícióban ez engedélyezett, az ismétlődő tartalmi elemeket a dokumentum is többször jeleníti meg. Ez a tartalom, szerkeszthető, módosítható.
+    A nemzetköziesítés a tartalom xml nyelvi változataival történik.</Resource>
+    <Resource key="DynamicDocument.itemsTitle" type="String">Hírek:</Resource>
+    <Resource key="DynamicDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    <Resource key="DynamicDocument.title" type="String">Dinamikus dokumentum</Resource>
+    <Resource key="DynamicDocument.RSS.link" type="String">hivatkozás: </Resource>
+    <Resource key="DynamicDocument.RSS.description" type="String">leírás: </Resource>
+    <Resource key="DynamicDocument.RSS.language" type="String">nyelv: </Resource>
+    <Resource key="DynamicDocument.RSS.pubDate" type="String">publikálva: </Resource>
+    <Resource key="DynamicDocument.RSS.lastBuildDate" type="String">generálva: </Resource>
+    <Resource key="DynamicDocument.RSS.docs" type="String">cím: </Resource>
+    <Resource key="DynamicDocument.RSS.generator" type="String">generátor: </Resource>
+    <Resource key="DynamicDocument.RSS.managingEditor" type="String">főszerkesztő: </Resource>
+    <Resource key="DynamicDocument.RSS.webMaster" type="String">webmester: </Resource>
     
-    <Resource key="StaticDocument.paragraph" type="String">Ez egy olyan Okos dokumentum, amely csak statikus elemeket tartalmaz. Ezen tulajdonságok jellemzően dokumentum sablon létrehozásához használhatók.</Resource>
+    <Resource key="PhotoGaleryDocument.title" type="String">Dokumentum beépülő modullal</Resource>
+    <Resource key="PhotoGaleryDocument.introduction" type="String">Egy okos dokumentumba tetszőleges számú modul építhető be. A beépülő modulok többnyire speciális módon jelenítenek meg tartamat.</Resource>
+    <Resource key="PhotoGaleryDocument.exampleDescription" type="String">A lenti példa egy slide show modul bepítését szemlélteti.</Resource>
+    <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
+    <Resource key="PhotoGaleryDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    
+    <Resource key="StaticDocument.exampleDescription" type="String">Ennek a dokumentumnak az összes eleme példa a statikus tartalom megjelenítésére.</Resource>
     <Resource key="StaticDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
+    <Resource key="StaticDocument.introduction" type="String">Ez a példa egy olyan Okos dokumentum, amely csak statikus elemeket tartalmaz. Ezen tulajdonságok jellemzően dokumentum sablon létrehozásához használhatók.</Resource>
     <Resource key="StaticDocument.subTitle" type="String">Okos dokumentum példa</Resource>
     <Resource key="StaticDocument.title" type="String">Statikus dokumentum</Resource>
   </Language>

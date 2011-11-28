@@ -9,7 +9,7 @@
    <version>0.5</version>
    
    <resources>
-      <styleSheets></styleSheets>
+      <styleSheets><styleSheet>Desktops/ProcessPuzzle/Styles/DynamicDocument.css</styleSheet></styleSheets>
       <images></images>
       <javaScripts></javaScripts>
    </resources>
@@ -17,11 +17,31 @@
    <documentHeader tag="div" id="dynamicDocumentHeader">
       <compositeElement tag="div" id="headerWrapper">
          <element tag="h1">DynamicDocument.title</element>
+         <element tag="h2">DynamicDocument.subTitle</element>
       </compositeElement>
    </documentHeader>
    
    <documentBody tag="div" id="smartDocumentBody">
-      <element tag="p">DynamicDocument.paragraph</element>
+      <element tag="p">DynamicDocument.introduction</element>
+      <element tag="p">DynamicDocument.exampleDescription</element>
+      
+      <dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
+      <compositeElement tag="ul" id="channelProperties">
+         <compositeElement tag="li" elementStyle="property" id="link" >DynamicDocument.RSS.link<dataElement tag="a" bind="/rss/channel/link"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="description" >DynamicDocument.RSS.description<dataElement tag="span" bind="/rss/channel/description"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="language" >DynamicDocument.RSS.language<dataElement tag="span" bind="/rss/channel/language"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="pubDate" >DynamicDocument.RSS.pubDate<dataElement tag="span" bind="/rss/channel/pubDate"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="lastBuildDate" >DynamicDocument.RSS.lastBuildDate<dataElement tag="span" bind="/rss/channel/lastBuildDate"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="docs" >DynamicDocument.RSS.docs<dataElement tag="span" bind="/rss/channel/docs"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="generator" >DynamicDocument.RSS.generator<dataElement tag="span" bind="/rss/channel/generator"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="managingEditor" >DynamicDocument.RSS.managingEditor<dataElement tag="span" bind="/rss/channel/managingEditor"/></compositeElement>
+         <compositeElement tag="li" elementStyle="property" id="webMaster" >DynamicDocument.RSS.webMaster<dataElement tag="span" bind="/rss/channel/webMaster"/></compositeElement>
+      </compositeElement>
+      <element  tag="h3" id="channelItems">DynamicDocument.itemsTitle</element>
+      <compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
+         <dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
+         <dataElement tag="li" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+      </compositeDataElement>
    </documentBody>
    
    <documentFooter tag="div" id="dinamicDocumentFooter">

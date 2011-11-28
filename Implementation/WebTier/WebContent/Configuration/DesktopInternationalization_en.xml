@@ -33,9 +33,36 @@
 
     <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
     
-    <Resource key="StaticDocument.paragraph" type="String">This is an example Smart Document which contains only static elements. This features facilitates of creating document templates.</Resource>
+    <Resource key="DynamicDocument.exampleDescription" type="String">The list below is the content of an RSS.xml content source. As the item is a repeated element, more than one news is displayed.</Resource>
+    <Resource key="DynamicDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
+    <Resource key="DynamicDocument.introduction" type="String">This example - SmartDocument - retrieves it's content from content xml file. If specified, recurring content elements are repeated automatically.
+    The content elements can be edited, modified. Internationalization happens with selecting different language versions of content xml file.</Resource>
+    <Resource key="DynamicDocument.itemsTitle" type="String">News:</Resource>
+    <Resource key="DynamicDocument.subTitle" type="String">Smart Document Example</Resource>
+    <Resource key="DynamicDocument.title" type="String">Dynamic Document</Resource>
+    <Resource key="DynamicDocument.RSS.link" type="String">link: </Resource>
+    <Resource key="DynamicDocument.RSS.description" type="String">description: </Resource>
+    <Resource key="DynamicDocument.RSS.language" type="String">language: </Resource>
+    <Resource key="DynamicDocument.RSS.pubDate" type="String">publicated: </Resource>
+    <Resource key="DynamicDocument.RSS.lastBuildDate" type="String">genarated: </Resource>
+    <Resource key="DynamicDocument.RSS.docs" type="String">url: </Resource>
+    <Resource key="DynamicDocument.RSS.generator" type="String">generator: </Resource>
+    <Resource key="DynamicDocument.RSS.managingEditor" type="String">managing editor: </Resource>
+    <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
+    
+    <Resource key="StaticDocument.exampleDescription" type="String">All of this document's elements are examples to display static content.</Resource>
     <Resource key="StaticDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
+    <Resource key="StaticDocument.introduction" type="String">This example - SmartDocument - contains only static elements defined in the definition xml. 
+    As there is no editable values in this document the definition doesn't refers to any content xml. 
+    Text values in the definition xml are automatically translated. This features facilitates of creating document templates.</Resource>
     <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
     <Resource key="StaticDocument.title" type="String">Static Document</Resource>
+    
+    <Resource key="PhotoGaleryDocument.title" type="String">Dokumentum beépülő modullal</Resource>
+    <Resource key="PhotoGaleryDocument.introduction" type="String">Egy okos dokumentumba tetszőleges számú modul építhető be. A beépülő modulok többnyire speciális módon jelenítenek meg tartamat.</Resource>
+    <Resource key="PhotoGaleryDocument.exampleDescription" type="String">A lenti példa egy slide show modul bepítését szemlélteti.</Resource>
+    <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
+    <Resource key="PhotoGaleryDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    
   </Language>
 </pp:Resources>

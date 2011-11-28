@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="ConsoleTabs.properties" type="String">Properties</Resource>
+    <Resource key="ConsoleTabs.comments" type="String">Comments</Resource>
+    <Resource key="ConsoleTabs.todo" type="String">To Do</Resource>
+    <Resource key="ConsoleTabs.Print" type="String">Print</Resource>
+    <Resource key="ConsoleTabs.Close" type="String">Close</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="ConsoleTabs.properties" type="String">Tulajdonságok</Resource>
+    <Resource key="ConsoleTabs.comments" type="String">Megjegyzések</Resource>
+    <Resource key="ConsoleTabs.todo" type="String">Saját feladatok</Resource>
+    <Resource key="ConsoleTabs.Print" type="String">Nyomtat</Resource>
+    <Resource key="ConsoleTabs.Close" type="String">Bezár</Resource>
+  </Language>
+</pp:Resources>
