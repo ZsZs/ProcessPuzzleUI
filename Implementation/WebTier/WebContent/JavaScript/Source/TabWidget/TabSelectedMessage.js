@@ -21,7 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 var TabSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
+      actionType: null,
+      contextItemId : null,
       description: "A message about the event that a tab was selected.",
+      documentContentURI: null,
+      documentType: SmartDocument.Types.SMART,
+      documentURI: null,
       name: "TabSelectedMessage",
       tabId: null
    },
@@ -35,6 +40,11 @@ var TabSelectedMessage = new Class({
    //Public accessors
    
    //Properties
-   getTabId: function() { return this.options.tabId; }
+   getActionType: function() { return this.options.actionType; },
+   getContextItemId: function() { return this.options.contextItemId; },
+   getDocumentContentURI: function() { return this.options.documentContentURI; },
+   getDocumentType: function() { return this.options.documentType; },
+   getDocumentURI: function() { return this.options.documentURI; },
+   getId: function() { return this.options.tabId; }
 });
 

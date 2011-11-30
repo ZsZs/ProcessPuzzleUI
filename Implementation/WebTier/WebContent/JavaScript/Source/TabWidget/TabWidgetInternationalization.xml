@@ -8,6 +8,7 @@
     <Resource key="TabWidget.tabOne" type="String">Tab One</Resource>
     <Resource key="TabWidget.tabTwo" type="String">Tab Two</Resource>
     <Resource key="TabWidget.tabThree" type="String">Tab Three</Resource>
+    <Resource key="TabWidget.addedTab" type="String">Added tab</Resource>
     <Resource key="TabWidget.Print" type="String">Print</Resource>
     <Resource key="TabWidget.Close" type="String">Close</Resource>
   </Language>
@@ -16,6 +17,7 @@
     <Resource key="TabWidget.tabOne" type="String">Fül egy</Resource>
     <Resource key="TabWidget.tabTwo" type="String">Fül kettő</Resource>
     <Resource key="TabWidget.tabThree" type="String">Fül három</Resource>
+    <Resource key="TabWidget.addedTab" type="String">Hozzáadott fül</Resource>
     <Resource key="TabWidget.Print" type="String">Nyomtat</Resource>
     <Resource key="TabWidget.Close" type="String">Bezár</Resource>
   </Language>

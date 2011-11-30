@@ -2,8 +2,7 @@
 
 /**
  * ProcessPuzzle User Interface Backend agnostic, desktop like configurable,
- * browser font-end based on MochaUI. Copyright (C) 2011 Joe Kueser, Zsolt
- * Zsuffa
+ * browser font-end based on MochaUI. Copyright (C) 2011 Zsolt Zsuffa
  * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -40,6 +39,7 @@ var BrowserWidget = new Class( {
       this.setOptions( options );
 
       // private instance variables
+      this.componentStateManager;
       this.containerElement;
       this.dataXml;
       this.definitionXml;
@@ -58,6 +58,7 @@ var BrowserWidget = new Class( {
       // initialize object
       this.deduceInitializationArguments( options, resourceBundle );
       this.containerElement = document.id( $( this.options.widgetContainerId ));
+      this.configureComponentStateManager();
       this.configureLogger();
       this.configureMessageBus();
       this.loadWidgetDefinition();
@@ -159,6 +160,11 @@ var BrowserWidget = new Class( {
    getState : function() { return this.state; },
 
    // Private helper methods
+   configureComponentStateManager : function() {
+      if( this.webUIController == null ) this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
+      else this.componentStateManager = this.webUIController.getStateManager();
+   }.protect(),
+
    configureLogger : function() {
       if( this.webUIController == null ){
          this.logger = Class.getInstanceOf( WebUILogger );
@@ -169,10 +175,8 @@ var BrowserWidget = new Class( {
    }.protect(),
 
    configureMessageBus : function() {
-      if( this.webUIController == null )
-         this.messageBus = Class.getInstanceOf( WebUIMessageBus );
-      else
-         this.messageBus = this.webUIController.getMessageBus();
+      if( this.webUIController == null ) this.messageBus = Class.getInstanceOf( WebUIMessageBus );
+      else this.messageBus = this.webUIController.getMessageBus();
 
       this.subscribeToWebUIMessages();
    }.protect(),

@@ -109,18 +109,18 @@
          toolBar.destroy();
       }
 
-      function test_Initialization_SetsState(){
+      function test_initialization_setsState(){
          assertThat( toolBarButton.getState(), equalTo( ToolBarButton.States.INITIALIZED ));
       }
       
-      function test_Unmarshall_DeterminesProperties(){
+      function test_unmarshall_determinesProperties(){
          toolBarButton.unmarshall();
          assertThat( toolBarButton.getCaption(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/caption" )));
          assertThat( toolBarButton.getIconImage(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/iconImage" )));
          assertThat( toolBarButton.getName(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/@name" )));
       }
 
-      function test_Construct_InstantiatesLiAndSpanElements(){
+      function test_construct_instantiatesLiAndSpanElements(){
          toolBarButton.unmarshall();
          toolBarButton.construct( toolBarContainerElement.getElement('ul'));
          assertThat( toolBarContainerElement.getElementById( toolBarButton.getName() ).get( 'tag' ), equalTo( 'li' ));
@@ -129,7 +129,7 @@
       //runs a test function during debugging
       function runTestCase(){
          setUp();
-         test_Construct_InstantiatesLiAndSpanElements();
+         test_construct_instantiatesLiAndSpanElements();
          tearDown();
       }
    </script>

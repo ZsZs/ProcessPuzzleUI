@@ -133,11 +133,12 @@ var XmlResource = new Class({
       return foundXmlNodes;
    },
    
-   selectNodeText : function( selector, subNode ) {
+   selectNodeText : function( selector, subNode, defaultValue ) {
       var selectedElements = this.selectNodes( selector, subNode );
       if( selectedElements.length > 0 && selectedElements[0] ) {
          return XmlResource.determineNodeText( selectedElements[0] );
-      }else return null;
+      }else if( defaultValue ) return defaultValue;
+      else return null;
    }, 
    
    refreshResource: function(){

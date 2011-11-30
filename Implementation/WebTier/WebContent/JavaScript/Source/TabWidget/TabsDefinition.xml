@@ -4,9 +4,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 	<tabWidget tabWidgetId="TabWidget" selectedTabClass="selectedTab" showCloseButton="true" showPrintButton="true">
-		<tab tabId="tabOne" caption="TabWidget.tabOne"></tab>
-		<tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true"></tab>
-		<tab tabId="tabThree" caption="TabWidget.tabThree"></tab>
+		<tab tabId="tabOne" caption="TabWidget.tabOne">
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+      </tab>
+		<tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true">
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+      </tab>
+		<tab tabId="tabThree" caption="TabWidget.tabThree">
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+      </tab>
 	</tabWidget>
 	
 </pp:tabWidgetDefinition>

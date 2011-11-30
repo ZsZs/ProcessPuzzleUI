@@ -29,13 +29,17 @@ var TabWidget = new Class( {
       buttonPrefix : "button_",
       closeButtonCaptionKey : "TabWidget.Close",
       componentName : "TabWidget",
+      idDefault : "TabWidget",
+      idSelector : "/pp:tabWidgetDefinition/tabWidget/@tabWidgetId",
       printButtonCaptionKey : "TabWidget.Print",
-      showCloseButton : false,
+      selectedTabClassDefault : "selectedTab",
+      selectedTabClassSelector : "/pp:tabWidgetDefinition/tabWidget/@selectedTabClass",
+      showCloseButtonDefault : false,
       showCloseButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showCloseButton",
-      showPrintButton : false,
+      showPrintButtonDefault : false,
       showPrintButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showPrintButton",
-      subscribeToWebUIMessages : [TabSelectedMessage],
       tabCaptionSelector : "@caption",
+      tabDefinitionSelector : "/pp:tabWidgetDefinition/tabWidget/tab",
       tabIdSelector : "@tabId",
       tabIsDefaultSelector : "@isDefault",
       tabLeftImage : "Images/DocumentTab-Left.gif",
@@ -44,7 +48,6 @@ var TabWidget = new Class( {
       tabRightOnImage : "Images/DocumentTab-Right-Selected.gif",
       tabsSelector : "tab",
       widgetContainerId : "TabWidget",
-      widgetContainerIdSelector : "/pp:tabWidgetDefinition/tabWidget/@tabWidgetId",
       widgetDefinitionSelector : "/pp:tabWidgetDefinition/tabWidget",
       widgetDefinitionURI : "TabsDefinition.xml"},
 
@@ -55,34 +58,36 @@ var TabWidget = new Class( {
 
       // Private instance variables
       this.activeTab = null;
-      this.buttonsContainerElement = null;
+      this.buttonsContainerElement;
+      this.id;
       this.isVisible = false;
+      this.selectedTabClass;
+      this.showCloseButton;
+      this.showPrintButton;
       this.tabs = new LinkedHashMap();
       this.tabsContainerElement;
    },
 
    // Public accessor and mutator methods
    activateTab : function( tabName ) {
-      if( this.activeTab != null )
-         this.activeTab.deActivate();
-      this.tabs.get( tabName ).activate();
-      this.activeTab = this.tabs.get( tabName );
-      // this.notify( new TabActivationEvent( this, activeTab,
-      // "TabActivationEvent" ));
+      if( this.activeTab != null ) this.activeTab.deActivate();
+      
+      var tabToActivate = this.tabs.get( tabName ); 
+      tabToActivate.activate();
+      this.activeTab = tabToActivate;
+      this.notifySubscribers();
    },
 
-   addNewTab : function( tabName, tabCaption, objectToSelect, doNotActivate ) {
-      if( this.tabs.get( tabName ) != null )
-         throw new DuplicatedTabException( {
-            tabName : tabName} );
+   addTab : function( id, caption, doNotActivate ) {
+      if( this.state <= BrowserWidget.States.INITIALIZED ) throw new UnconfiguredWidgetException();
+      if( this.tabs.get( id ) != null ) throw new DuplicatedTabException({ tabName : id });
 
-      var newTab = new Tab( tabName, this.getText( tabCaption ), this.containerElement, objectToSelect );
-      if( this.isVisible )
-         newTab.construct();
-      this.tabs.put( tabName, newTab );
+      var newTab = new Tab( null, this.i18Resource, { id : id, caption : caption, onTabSelected : this.onTabSelected });
+      this.tabs.put( newTab.getId(), newTab );
+      if( this.state == BrowserWidget.States.CONSTRUCTED ) newTab.construct( this.tabsContainerElement );
 
       if( doNotActivate == null || (doNotActivate != null && doNotActivate == false) )
-         this.activateTab( tabName );
+         this.activateTab( id );
    },
 
    changeCaptions : function( controller ) {
@@ -97,13 +102,13 @@ var TabWidget = new Class( {
    construct : function( doNotActivate ) {
       if( this.isVisible ) return;
       this.logger.group( this.options.componentName + ".construct", false );
-      this.insertULElement();
-      this.processWidgetDefinition();
+      this.createHtmlElements();
       this.constructTabs( doNotActivate );
       this.constructButtons();
       this.isVisible = true;
+      this.parent();
+      this.activateDefaultTab();
       this.logger.groupEnd( this.options.componentName + ".construct" );
-      return this.parent();
    },
 
    destroy : function() {
@@ -169,6 +174,12 @@ var TabWidget = new Class( {
    onPrint : function() {
    },
 
+   onTabSelected : function( selectedTab ) {
+      if( !selectedTab.getId().equals( this.activeTab.getId() ) ){
+         this.activateTab( selectedTab.getId() );
+      }
+   },
+
    removeAllTabs : function() {
       this.tabs.each( function( entry, index ) {
          var tab = entry.getValue();
@@ -179,51 +190,41 @@ var TabWidget = new Class( {
       this.activeTab = null;
    },
 
-   removeTab : function( tabName ) {
-      var nextTab = this.tabs.next( this.activeTab.getName() );
-      var previousTab = this.tabs.previous( this.activeTab.getName() );
+   removeTab : function( tabId ) {
+      if( this.state <= BrowserWidget.States.INITIALIZED ) throw new UnconfiguredWidgetException();
+      
+      var nextTab = this.tabs.next( this.activeTab.getId() );
+      var previousTab = this.tabs.previous( this.activeTab.getId() );
 
-      if( nextTab != null && !nextTab.getName().equals( tabName ) )
-         this.activateTab( nextTab.getName() );
-      else if( previousTab != null && !previousTab.getName().equals( tabName ) )
-         this.activateTab( previousTab.getName() );
+      if( nextTab != null && !nextTab.getId().equals( tabId )) this.activateTab( nextTab.getId() );
+      else if( previousTab != null && !previousTab.getId().equals( tabId )) this.activateTab( previousTab.getId() );
 
-      this.tabs.get( tabName ).destroy();
-      this.tabs.remove( tabName );
-      if( this.tabs.size() == 0 )
-         this.activeTab = null;
+      this.tabs.get( tabId ).destroy();
+      this.tabs.remove( tabId );
+      if( this.tabs.size() == 0 ) this.activeTab = null;
    },
 
-   replaceDocumentOfTab : function( tabName, objectToSelect ) {
-      if( logger.getLevel() == log4javascript.Level.TRACE )
-         logger.trace( "Replace document of the tab.", tabName, objectToSelect );
-      var tab = tabs.item( tabName );
-      if( tab == 'undefined' )
-         throw new UndefinedItemException( tabName );
-
-      tab.replaceObjectToSelect( objectToSelect );
-   },
-
-   webUIMessageHandler : function( webUIMessage ) {
-      if( !webUIMessage.getTabId().equals( this.activeTab.getId() ) ){
-         this.activeTab.deActivate();
-         this.activeTab = this.tabs.get( webUIMessage.getTabId() );
-         this.activeTab.activate();
-      }
-
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.unmarshallTabs();
       this.parent();
    },
 
    // Properties
    activeTabId : function() { return(tabs.getCountOfObjects() > 0 ? activeTab.getId() : "undefined"); },
-   isCloseButtonVisible : function() { return this.options.showCloseButton; },
-   isPrintButtonVisible : function() { return this.options.showPrintButton; },
    getActiveTab : function() { return this.activeTab; },
    getCloseButtonId : function() { return this.options.buttonPrefix + this.options.closeButtonCaptionKey; },
+   getId : function() { return this.id; },
    getPrintButtonId : function() { return this.options.buttonPrefix + this.options.printButtonCaptionKey; },
-   getTabByName : function( tabName ) { return this.tabs.get( tabName ); },
+   getSelectedTabClass : function() { return this.selectedTabClass; },
+   getShowCloseButton : function() { return this.showCloseButton; },
+   getShowPrintButton : function() { return this.showPrintButton; },
+   getTabById : function( tabId ) { return this.tabs.get( tabId ); },
    getTabCount : function() { return this.tabs.size(); },
-   getTabExist : function( tabName ) { return tabs.exists( tabName ); },
+   getTabExist : function( tabId ) { return tabs.exists( tabId ); },
+   getTabs : function() { return this.tabs; },
+   isCloseButtonVisible : function() { return this.showCloseButton; },
+   isPrintButtonVisible : function() { return this.showPrintButton; },
    setCloseButtonVisibility : function( value ) { this.options.showCloseButton = value; },
    setPrintButtonVisibility : function( value ) { this.options.showPrintButton = value; },
    setBackgroundImage : function( image ) { backgroundImage = (image == null ? backgroundImage : image); },
@@ -233,93 +234,34 @@ var TabWidget = new Class( {
    setTabRightOnImage : function( image ) { tabRightOnImage = (image == null ? tabRightOnImage : image); },
 
    // Private methods
+   activateDefaultTab : function(){
+      if( this.activeTab ) this.activateTab( this.activeTab.getId() );
+      else this.activateTab( this.tabs.get( this.tabs.firstKey() ).getId() );
+   }.protect(),
+
    constructButtons : function() {
-      if( this.options.showCloseButton || this.options.showPrintButton ){
+      if( this.showCloseButton || this.showPrintButton ){
          this.buttonsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
-         if( this.options.showCloseButton )
-            this.createButton( this.options.closeButtonCaptionKey, this.onClose );
-         if( this.options.showPrintButton )
-            this.createButton( this.options.printButtonCaptionKey, this.onPrint );
+         if( this.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
+         if( this.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
       }
    }.protect(),
 
-   constructTabs : function( doNotActivate ) {
-      this.tabs.each( function( mapEntry, index ) {
-         //var tabName = mapEntry.getKey();
-         var tab = mapEntry.getValue();
-         tab.construct();
+   constructTabs : function() {
+      this.tabs.each( function( tabEntry, index ) {
+         var tab = tabEntry.getValue();
+         tab.construct( this.tabsContainerElement );
       }, this );
-
-      if( (doNotActivate == null || (doNotActivate != null && doNotActivate == false)) && (this.tabs.size() > 0) )
-         this.activateTab( this.tabs.get( this.tabs.firstKey() ).getName() );
    }.protect(),
 
    createButton : function( caption, onClickHandler ) {
       var listItem = this.elementFactory.create( 'li', null, this.buttonsContainerElement, WidgetElementFactory.Positions.LastChild );
-      var anchorProperties = {
-         href : "#",
-         id : this.options.buttonPrefix + caption };
+      var anchorProperties = { href : "#", id : this.options.buttonPrefix + caption };
       this.elementFactory.createAnchor( caption.replace( / /g, String.fromCharCode( 160 ) ), null, onClickHandler, listItem, WidgetElementFactory.Positions.LastChild, anchorProperties );
    }.protect(),
 
-   determineShowCloseButton : function() {
-      return this.definitionXml.selectNode( this.options.showCloseButtonSelector ).nodeValue;
-   }.protect(),
-
-   determineShowPrintButton : function() {
-      return this.definitionXml.selectNode( this.options.showPrintButtonSelector ).nodeValue;
-   }.protect(),
-
-   determineTabDefinition : function( parentDefinitionElement, index ) {
-      return this.definitionXml.selectNodes( this.options.tabsSelector, parentDefinitionElement )[index];
-   }.protect(),
-
-   determineTabDefinitions : function( parentDefinitionElement ) {
-      return this.definitionXml.selectNodes( this.options.tabsSelector, parentDefinitionElement );
-   }.protect(),
-
-   determineTabCaption : function( tabDefinition ) {
-      var tabCaption = this.definitionXml.selectNode( this.options.tabCaptionSelector, tabDefinition ).nodeValue;
-      return this.getText( tabCaption );
-   }.protect(),
-
-   determineTabId : function( tabDefinition ) {
-      return this.definitionXml.selectNode( this.options.tabIdSelector, tabDefinition ).nodeValue;
-   }.protect(),
-
-   determineTabIsDefault : function( tabDefinition ) {
-      var node = this.definitionXml.selectNode( this.options.tabIsDefaultSelector, tabDefinition );
-      if( node )
-         return node.nodeValue;
-      else
-         return false;
-   }.protect(),
-
-   determineTabWidgetId : function() {
-      return this.definitionXml.selectNode( this.options.widgetContainerIdSelector ).nodeValue;
-   }.protect(),
-
-   determineWidgetDefinitionElement : function() {
-      return this.definitionXml.selectNode( this.options.widgetDefinitionSelector );
-   }.protect(),
-
-   processWidgetDefinition : function() {
-      if( this.definitionXml == null )
-         return;
-
-      var widgetDefinitionElement = this.determineWidgetDefinitionElement();
-      this.options.widgetContainerId = this.determineTabWidgetId();
-      this.options.showCloseButton = this.determineShowCloseButton();
-      this.options.showPrintButton = this.determineShowPrintButton();
-
-      for( var i = 0; i < this.determineTabDefinitions( widgetDefinitionElement ).length; i++ ){
-         var tabDefinition = this.determineTabDefinition( widgetDefinitionElement, i );
-         var id = this.determineTabId( tabDefinition );
-         var caption = this.determineTabCaption( tabDefinition );
-         var isDefault = this.determineTabIsDefault( tabDefinition );
-         var tab = new Tab( id, caption, this.containerElement );
-         this.tabs.put( id, tab );
-      }
+   createHtmlElements : function() {
+      this.tabsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.TABCLASSNAME } );
    }.protect(),
 
    hideButtons : function() {
@@ -335,9 +277,16 @@ var TabWidget = new Class( {
       }else
          throw new UserException( "Division not defined", "TabWidget._RemoveUnorderedListTag()" );
    }.protect(),
-
-   insertULElement : function() {
-      this.tabsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.TABCLASSNAME } );
+   
+   notifySubscribers : function(){
+      var argumentText = this.activeTab.getMessageProperties();
+      var arguments = argumentText != null ? eval( "(" + argumentText + ")" ) : {};
+      arguments['originator'] = this.options.componentName;
+      arguments['tabId'] = this.activeTab.getId();
+      
+      var tabSelectedMessage = new TabSelectedMessage( arguments );
+      this.messageBus.notifySubscribers( tabSelectedMessage );
+      
    }.protect(),
 
    removeUnorderedListTag : function() {
@@ -353,7 +302,7 @@ var TabWidget = new Class( {
       }else
          throw new UserException( "Division not defined", "TabWidget._RemoveUnorderedListTag()" );
    }.protect(),
-
+   
    saveComponentState : function( delimiter ) {
       var save = "";
       if( this.activeTab != null )
@@ -365,6 +314,23 @@ var TabWidget = new Class( {
          save = save + delimiter + atab.caption + delimiter + atab.state + delimiter + atab.id;
       }
       return save;
-   }.protect()
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.id = this.definitionXml.selectNodeText( this.options.idSelector, null, this.options.idDefault );
+      this.selectedTabClass = this.definitionXml.selectNodeText( this.options.selectedTabClassSelector, null, this.options.selectedTabClassDefault );
+      this.showCloseButton = parseBoolean( this.definitionXml.selectNodeText( this.options.showCloseButtonSelector, null, this.options.showCloseButtonDefault ));
+      this.showPrintButton = parseBoolean( this.definitionXml.selectNodeText( this.options.showCloseButtonSelector, null, this.options.showCloseButtonDefault ));
+   }.protect(),
 
-} );
+   unmarshallTabs : function() {
+      var tabDefinitions = this.definitionXml.selectNodes( this.options.tabDefinitionSelector );
+      tabDefinitions.each( function( tabDefinition, index ){
+         var newTab = new Tab( tabDefinition, this.i18Resource, { onTabSelected : this.onTabSelected });
+         newTab.unmarshall();
+         this.tabs.put( newTab.getId(), newTab );
+         if( newTab.isDefault() ) this.activeTab = newTab;
+      }, this );
+   }.protect(),
+
+});

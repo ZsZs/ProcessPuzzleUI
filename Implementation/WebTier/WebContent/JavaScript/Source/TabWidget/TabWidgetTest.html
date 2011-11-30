@@ -24,18 +24,19 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
-   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-   <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
@@ -67,311 +68,177 @@
 		
       var LANGUAGE = "hu";
       var TAB_WIDGET_ID = "TabWidget";
-      var TABS_DEFINITION_URI = "TabsDefinition.xml";
       var WEBUI_CONFIGURATION_URI = "../TabWidget/WebUIConfiguration.xml";
+      var WIDGET_DEFINITION_URI = "TabsDefinition.xml";
       var callBackMessage = null;
       var callBackWasCalled = false;
       var containerElement;
+      var definitionXml;
       var locale = new Locale({ language : LANGUAGE });
-      var resourceBundle = null;
+      var resourceBundle;
       var tabWidget;
-      var testWindow;
-      var webUIController;
+      var webUIConfiguration;
       var webUILogger;
 		
       function setUp() {
-         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-         else testWindow = window;
-			
          messageBus = new WebUIMessageBus();
          componentStateManager = new ComponentStateManager();
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
-         webUIController = new WebUIController({ configurationUri : WEBUI_CONFIGURATION_URI }, testWindow );
 			
          resourceBundle = new XMLResourceBundle( webUIConfiguration );
          resourceBundle.load( locale );
 			
          containerElement = $( TAB_WIDGET_ID );
-         tabWidget = new TabWidget( { WidgetDefinitionURI : TABS_DEFINITION_URI }, resourceBundle );
+         tabWidget = new TabWidget( { widgetDefinitionURI : WIDGET_DEFINITION_URI }, resourceBundle  );
+         definitionXml = tabWidget.getDefinitionXml();
       }
 
-		function tearDown(){
-			if( tabWidget ) tabWidget.destroy();
-			messageBus.tearDown();
-			componentStateManager.reset();
-			tabWidget = null;
-			webUIConfiguration = null;
-			resourceBundle = null;
-			callBackMessage = null;
-			callBackWasCalled = false;
-		}
+      function tearDown(){
+         if( tabWidget ) tabWidget.destroy();
+         messageBus.tearDown();
+         componentStateManager.reset();
+         tabWidget = null;
+         webUIConfiguration = null;
+         resourceBundle = null;
+         callBackMessage = null;
+         callBackWasCalled = false;
+      }
 
-		function test_Initialization_WhenConstructorArgumentsAreGiven() {
-			//SETUP:
-			//EXCERCISE:
-   	  
-			//VERIFY:
-			assertTrue( "TabWidget when initialized...", true );
-			assertEquals( "... retains a pointer to the WebUIMessageBus.", messageBus, tabWidget.getMessageBus() );
-			assertNotNull( "... subscribes to 'TabSelectedMessage'.", messageBus.getSubscribersToMessage( TabSelectedMessage ));
-			assertFalse( "... in invisible.", tabWidget.isVisible );
-		}
-
-		function test_Initialization_WhenConstructorArgumentsAreMissing(){
-			//SETUP:
-			//EXCERCISE:
-			var anotherWidget = new TabWidget();
-			
-			//VERIFY:
-			assertTrue( "TabWidget when initialized by WebUIController...", true );
-			assertTrue( "... loads Tab Definition XML.", anotherWidget.getDefinitionXml().isSuccess() );
-			assertEquals( "... uses the same message bus as webUIContoller.", webUIController.getMessageBus(), anotherWidget.getMessageBus() );
-			assertEquals( "... uses the same logger as webUIContoller.", webUIController.getLogger(), anotherWidget.getLogger() );
-			assertEquals( "... uses the same locale as webUIContoller.", webUIController.getLocale(), anotherWidget.getLocale() );
-		}
+      function test_unmarshall_determinesProperties(){
+         tabWidget.unmarshall();
+		   
+         var definitionXml = tabWidget.getDefinitionXml();
+         assertThat( tabWidget.getId(), equalTo( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@tabWidgetId' )));
+         assertThat( tabWidget.getSelectedTabClass(), equalTo( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@selectedTabClass' )));
+         assertThat( tabWidget.getShowCloseButton(), equalTo( parseBoolean( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@showCloseButton' ))));
+         assertThat( tabWidget.getShowPrintButton(), equalTo( parseBoolean( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@showPrintButton' ))));
+      }
+      
+      function test_unmarshall_instantiatesTabs(){
+         tabWidget.unmarshall();
+         
+         assertThat( tabWidget.getTabs().size(), equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length ));
+      }
 		
-		function test_Construct_SetsVisibility(){
-			//SETUP:
-			//EXCERCISE:
-			tabWidget.construct();
-			
-			//VERIFY:
-			assertTrue( "Just showed widget is visible.", tabWidget.isVisible );
-		}
-		
-		function test_Construct_CreatesUnorderedList() {
-			//SETUP:
-			//EXCERCISE:
-			tabWidget.construct();
-			
-			//VERIFY:
-			assertTrue( "When tabwidget is configured...", true );
-			assertEquals( "... UL element in appended to the widget container.", 1, containerElement.getElements( 'UL' ).length );
-			assertTrue( "... the append element's class is:", containerElement.getElements( 'UL' )[0].hasClass( tabWidget.options.TABCLASSNAME ));
-		}
+      function test_construct_createsUnorderedListsAndConstructsTabs() {
+         tabWidget.unmarshall();
+         tabWidget.construct();
 
-		function testConfigureForFirstTabsAcitivity(){
-			//SETUP:
-			tabWidget.addNewTab( "Tab1","Tab1Caption" );
-			tabWidget.addNewTab( "Tab2","Tab2Caption" );
-			
-			//EXCERCISE:
-			tabWidget.construct();
-			
-			//VERIFY:
-			assertEquals( "When we show the widget, the first tab is active.", "Tab1", tabWidget.getActiveTab().getName() );
-		}
-		
-		function testConfigureForCloseButton(){
-			tabWidget.setCloseButtonVisibility( true );
-			tabWidget.construct();
-			assertTrue( "The close button should be visible.", tabWidget.isCloseButtonVisible() );
-			assertEquals( "... another UL element in appended to the widget container.", 2, containerElement.getElements( 'UL' ).length );
-			assertTrue( "... the append element's class is:", containerElement.getElements( 'UL' )[1].hasClass( tabWidget.options.BUTTONCLASSNAME ));
-		}
+         assertThat( containerElement.getElements( 'UL' ).length, equalTo( 2 ));
+         assertThat( containerElement.getElements( 'UL' )[0].hasClass( tabWidget.options.TABCLASSNAME ), is( true ));
+         assertThat( containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length ));
+         assertThat( containerElement.getElements( 'UL' )[1].hasClass( tabWidget.options.BUTTONCLASSNAME ), is( true ));
+      }
 
-		function testConfigureForPrintButton(){
-			tabWidget.setPrintButtonVisibility( true );
-			tabWidget.construct();
-			assertTrue( "The print button should be visible.", tabWidget.isPrintButtonVisible() );
-			assertEquals( "... another UL element in appended to the widget container.", 2, containerElement.getElements( 'UL' ).length );
-			assertTrue( "... the append element's class is:", containerElement.getElements( 'UL' )[1].hasClass( tabWidget.options.BUTTONCLASSNAME ));
-		}
-		
-		function testConfigure_WhenTabDefinitionIsGiven(){
-			//SETUP:
-			var predefinedTabWidget = new TabWidget({ widgetDefinitionURI : 'TabsDefinition.xml' }, resourceBundle );
-			
-			//EXCERCISE:
-			predefinedTabWidget.construct();
-			
-			//VERIFY:
-			assertTrue( "TabsDefinition defines...", true );
-			assertEquals( 3, predefinedTabWidget.getTabCount() );
-			assertTrue( "... loads Tab Definition XML.", predefinedTabWidget.getDefinitionXml().isSuccess() );
-		}
+      function test_construct_activatesDefaultTab(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+      }
 
-		function testAddNewTabForTabCount() {
-			var countOfTabs = tabWidget.getTabCount();
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			assertEquals( "Adding a tab to the widget increments the tab count.", countOfTabs + 1, tabWidget.getTabCount() );
-		}
+      function test_construct_whenEnabled_createsCloseAndPrintButton(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         assertThat( tabWidget.isCloseButtonVisible(), is( true ));
+         assertThat( tabWidget.isPrintButtonVisible(), is( true ));
+         assertThat( containerElement.getElements( 'UL' )[1].getChildren( 'li' ).length, equalTo( 2 ));
+      }
 
-		function testAddNewTabForAcitivity(){
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			assertEquals( "The newly added tab is the active tab.", "Tab1", tabWidget.getActiveTab().getName() );
-		}
+      function test_addTab_whenWidgetIsConstructed_instantiatesNewTabAndConstructs(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         tabWidget.addTab( "newTab", "TabWidget.addedTab" );
+         
+         assertThat( tabWidget.getTabs().size(), equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length + 1 ));
+         assertThat( containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length +1 ));
+         assertThat( tabWidget.getTabById( "newTab" ).isActive(), is( true ));
+      }
 
-		function testAddNewTabForListItemExistance(){
-			tabWidget.construct();
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			assertNotNull( "If we add a new tab a new <a> will be inserted into do 'document'.", containerElement.getElements( "a#tab_Tab1" )[0] );
-			assertNotNull( "If we add a new tab a new <li> will be inserted into do 'document'.", containerElement.getElements( "li a#tab_Tab1" )[0] );
-		}
+      function test_addTab_whenOnlyInitialized_throwsException() {
+         try{
+            tabWidget.addTab( "newTab", "newTabCaption" );
+            fail( "Expected exception." );
+         }catch( e ){ 
+            assertThat( instanceOf( e, UnconfiguredWidgetException ), is( true ));
+         }
+      }
 
-		function testAddNewTabForAcitivityWith2Tabs(){
-			tabWidget.construct();
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2","Tab2Caption" );
-			assertEquals( "New the second tab is the active tab.", "Tab2", tabWidget.getActiveTab().getName() );
-		}
+      function test_removeTab_destroysHtmlElements(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         
+         tabWidget.removeTab( "tab_tabTwo" );
+         
+         assertThat( containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length -1 ));
+      }
 
-		function testAddNewTabForObjectToSelect() {
-			var aObject = new Object();
-			aObject.activate = function () {};
+      function test_removeTab_whenActiveTabHasNext_activatesNext(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         tabWidget.removeTab( "tab_tabTwo" );
+	         
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabThree" ));
+      }
 
-			tabWidget.addNewTab( "Tab1", "Tab1Caption", aObject );
-			var aTab = tabWidget.getTabByName( "Tab1" );
-			assertEquals( "The newly created tab's target object is the same what we passed to.", aObject, aTab.getObjectToSelect() );
-		}
+      function test_removeTab_whenActiveTabIsLast_activatesPrevious(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         tabWidget.activateTab( "tab_tabThree" );
+         tabWidget.removeTab( "tab_tabThree" );
+	            
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+      }
 
-		function testAddNewTabForUniquness(){
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			try { 
-				tabWidget.addNewTab( "Tab1","Tab1Caption" );
-				fail("No exception was thrown but 'DuplicatedItemException' was expected.");
-			}
-			catch(e) {
-				assertTrue( "addNewTab() throws 'DuplicatedItemException' if a tab with the same name already exists.", instanceOf( e, DuplicatedTabException ));
-				return;
-			}
-		}
+      function test_removeTab_whenOnlyInitialized_throwsException(){
+         try{
+            tabWidget.removeTab( "tab_tabTwo" );
+            fail( "Expected exception." );
+         }catch( e ){ 
+            assertThat( instanceOf( e, UnconfiguredWidgetException ), is( true ));
+         }
+      }
+      
+      function test_activateTab_deactivatesPreviousAndActivatesTheGiven(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+         
+         tabWidget.activateTab( "tab_tabOne" );
+         
+         assertThat( tabWidget.getTabById( "tab_tabTwo" ).isActive(), is( false ));
+         assertThat( tabWidget.getTabById( "tab_tabOne" ).isActive(), is( true ));
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+      }
 
-		function testRemoveTabForTabCount() {
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			var countOfTabs = tabWidget.getTabCount();
-			tabWidget.removeTab( "Tab1" );
-			assertEquals( "Removing a tab decrements the tab count.", countOfTabs - 1, tabWidget.getTabCount() );
-		}
+      function test_onTabSelected_activatesTabAndNotifiesSubscribers(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         
+         messageBus.subscribeToMessage( TabSelectedMessage, onTabSelectedMessage );
+         tabWidget.onTabSelected( tabWidget.getTabById( "tab_tabOne" ));
+         
+         assertThat( callBackWasCalled, is( true ));
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+      }
+      
+      function onTabSelectedMessage( message ){
+         callBackWasCalled = true;
+         assertThat( message.getId(), equalTo( "tab_tabOne" ));
+      }
 
-		function testRemoveTabForActivity() {
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
-
-			tabWidget.removeTab( "Tab1" );
-			assertEquals( "After removal of the first tab, the second one is the active tab.", "Tab2", tabWidget.getActiveTab().getName());
-		}
-
-		function testRemoveTabForRemovingTheLastTab() {
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
-
-			tabWidget.removeTab( "Tab2" );
-			assertEquals( "After removal of the last tab, the first one is the active tab.", "Tab1", tabWidget.getActiveTab().getName());
-		}
-
-		function testRemoveTabForListItemTabExistance(){
-			//SETUP:
-			tabWidget.construct();
-			tabWidget.addNewTab( "Tab1","Tab1Caption" );
-			assertNotNull( $( 'tab_Tab1' ));
-			
-			//EXCERCISE:
-			tabWidget.removeTab( "Tab1" );
-			
-			//VERIFY:
-			assertNull( "If we remove an existing tab the <li> should be removed from the 'document'.", $( "tab_Tab1" ));
-		}
-		
-		function testWebUIMessageHandler() {
-			//SETUP:
-			tabWidget.construct();
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
-			var message = new TabSelectedMessage({ tabId : "Tab1" });
-			
-			//EXCERCISE:
-			tabWidget.webUIMessageHandler( message );
-
-			//VERIFY:
-			assertEquals( "The tab, specified in the message should be active.", "Tab1", tabWidget.getActiveTab().getName() );
-			assertFalse( "The previously active tab should be deactivated.", tabWidget.getTabByName( "Tab2" ).isActive() );
-		}
-
-		function testClickEventHandling() {
-			//SETUP:
-			tabWidget.construct();
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
-			var tabId = tabWidget.getTabByName( "Tab1" ).getId();
-			assertEquals( "Tab2", tabWidget.getActiveTab().getName() );
-			
-			//EXCERCISE:
-			$( tabId ).fireEvent( 'click' );
-			
-			//VERIFY:
-			assertEquals( "Clicking on the first tab activates it.", "Tab1", tabWidget.getActiveTab().getName() );
-		}
-
-		function testDestroy_ForULElement() {
-			//SETUP:
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.setCloseButtonVisibility( true );
-			tabWidget.construct();
-			
-			//EXCERCISE:			
-			tabWidget.destroy();
-			
-			//VERIFY:
-			var tabDivElement = $( "TabWidget" );
-			assertFalse( "Hiding tabwidget also removed the html ul tag from the document.", tabDivElement.hasChildNodes() );
-		}
-		
-		function testRemoveAllTabs(){
-			//SETUP:
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
-			tabWidget.addNewTab( "Tab3", "Tab3Caption" );
-			tabWidget.construct();
-			
-			//EXCERCISE:			
-			tabWidget.removeAllTabs();
-			
-			//VERIFY:
-			assertEquals( "After removing all tabs: 0 tabs must left.", 0, tabWidget.getTabCount() );
-			assertNull( "After removing all tabs: activeTab must be null", tabWidget.getActiveTab() );
-		}
-
-		function testActivateTab(){
-			//SETUP:
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			tabWidget.addNewTab( "Tab2", "Tab2Caption" );
-			
-			//EXCERCISE:			
-			tabWidget.activateTab( "Tab1" );
-			
-			//VERIFY:
-			assertEquals( "We activated the first tab.", "Tab1", tabWidget.getActiveTab().getName() );
-		}
-
-		function testOnClose(){
-			//SETUP:
-			tabWidget.setCloseButtonVisibility( true );
-			tabWidget.construct();
-			tabWidget.addNewTab( "Tab1", "Tab1Caption" );
-			var button = $( tabWidget.getCloseButtonId() );
-			
-			//EXCERCISE:			
-			button.fireEvent( 'click' );
-			
-			//VERIFY:
-			assertEquals( "After removing all tabs: 0 tabs must left.", 0, tabWidget.getTabCount() );
-			assertNull( "After removing all tabs: activeTab must be null", tabWidget.getActiveTab() );
-		}
-		
-		//runs a test function during debugging
-		function runTestFunction(){
-			setUp();
-			test_Construct_CreatesUnorderedList();
-			//tearDown();
-		}
-	</script>
+      //runs a test function during debugging
+      function runTestFunction(){
+         setUp();
+         test_activateTab_deactivatesPreviousAndActivatesTheGiven();
+         tearDown();
+      }
+   </script>
 </head>
 
 <body>
-	<h1>tabWidgetTest.js test page</h1>
-	<p>This page contains tests for tabWidgetigatorTest.js javascript class.</p>
+	<h1>TabWidgetTest.js test page</h1>
+	<p>This page contains tests for TabWidgetigatorTest.js javascript class.</p>
 
 	<div id="TabWidget"></div>
 

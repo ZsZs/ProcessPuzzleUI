@@ -1,168 +1,156 @@
 //Tab.js
 /**
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+ * ProcessPuzzle User Interface Backend agnostic, desktop like configurable,
+ * browser font-end based on MochaUI. Copyright (C) 2012 Zsolt Zsuffa
+ * 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+var Tab = new Class( {
+   Implements : [Events, Options],
+   Binds : ['onSelection'],
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+   options : {
+      caption : null,
+      captionSelector : "@caption",
+      componentName : "Tab",
+      currentTabId : "current",
+      id : null,
+      idPrefix : "tab_",
+      idSelector : "@tabId",
+      isDefaultSelector : "@isDefault",
+      messagePropertiesSelector : "messageProperties",
+      tabsStyle : "Tabs"},
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+   // Constructor
+   initialize : function( definition, internationalization, options ) {
+      // check parameter assertions
+      assertThat( internationalization, not( nil() ));
 
-var Tab = new Class({
-   Implements : Options,
-   Binds: ['onClickEventHandler', 'webUIMessageHandler'],
-   
-   options: {
-      componentName: "Tab",
-      currentTabId: "current",
-      idPrefix: "tab_",
-      tabsStyle: "Tabs"
-   },
-   
-   //Constructor
-   initialize: function( theName, theCaption, theWidgetElement, theObjectToSelect ) {
-      //check parameter assertions
-      if( theCaption == null || theCaption == "") throw new IllegalArgumentException( "caption", theCaption );
-      if( theName == null || theName == "") throw new IllegalArgumentException( "name", theName );	
-      if( theWidgetElement == null ) throw new IllegalArgumentException( "widgetElement", theWidgetElement );
-      if( theObjectToSelect && theObjectToSelect.activate == null ) throw new IllegalArgumentException( "objectToSelect", theObjectToSelect );
+      this.setOptions( options );
 
-      //private instance variables
+      // private instance variables
       this.active = false;
       this.anchorElement;
-      this.caption = theCaption;
-      this.id = this.options.idPrefix + theName;
+      this.caption = this.options.caption ? internationalization.getText( this.options.caption ) : null;
+      this.defaultTab;
+      this.definitionElement = definition;
+      this.id = this.options.id;
+      this.internationalization = internationalization;
       this.listItemElement;
       this.logger = Class.getInstanceOf( WebUILogger );
-      this.messageBus =  Class.getInstanceOf( WebUIMessageBus );
-      this.name = theName;
-      this.objectToSelect = theObjectToSelect;
+      this.messageProperties;
       this.visible = false;
-      this.widgetElement = theWidgetElement;
    },
-   
-   //public mutators methods
-   activate: function() {
-      if( this.isVisible() ) {
+
+   // public mutators methods
+   activate : function() {
+      if( this.isVisible() ){
          this.active = true;
          this.setListItemId( this.options.currentTabId );
-         if( this.objectToSelect && this.objectToSelect.activate ) this.objectToSelect.activate();
       }
    },
-   
-   changeCaption: function( controller ) {
-      this.caption = controller.getText( this.name );
-      if( this.anchorElement != null && this.anchorText != null) {
+
+   changeCaption : function( controller ) {
+      this.caption = controller.getText( this.id );
+      if( this.anchorElement != null && this.anchorText != null ){
          this.anchorElement.removeChild( this.anchorText );
-         var nb_caption = caption.replace(/ /g,String.fromCharCode( 160 ));
+         var nb_caption = caption.replace( / /g, String.fromCharCode( 160 ) );
          this.anchorText = document.createTextNode( nb_caption );
          this.anchorElement.appendChild( this.anchorText );
       }
    },
-   
-   construct: function(){
-      this.insertNewLIElement();
+
+   construct : function( parentElement ) {
+      assertThat( parentElement, not( nil() ));
+      this.createHtmlElements( parentElement );
       this.visible = true;
    },
 
-   deActivate: function() {
-      if( this.isVisible() ) {
+   deActivate : function() {
+      if( this.isVisible() ){
          this.active = false;
          this.setListItemId( "" );
-         if( this.objectToSelect && this.objectToSelect.deActivate ) this.objectToSelect.deActivate();
       }
    },
-   
-   destroy: function() {
+
+   destroy : function() {
       if( this.isVisible() ) this.removeLIElement();
       this.visible = false;
       this.active = false;
    },
-   
-   equals: function( otherTab ){
-   	if( !instanceOf( otherTab, Tab )) return false;
-   	return this.id.equals( otherTab.id );
-   },
-   
-   mayDeActivate: function() {
-      if( this.objectToSelect && this.objectToSelect.mayDeActivate && !this.objectToSelect.mayDeActivate() ) return false;
-      else return true;
+
+   equals : function( otherTab ) {
+      if( !instanceOf( otherTab, Tab ) ) return false;
+      return this.id.equals( otherTab.id );
    },
 
-   onSelection: function( theTab ) {
-   	this.activate();
-      this.messageBus.notifySubscribers( new TabSelectedMessage( { tabId : this.name } ));
+   onSelection : function() {
+      this.activate();
+      this.fireEvent( 'tabSelected', this );
    },
-   
-   replaceObjectToSelect: function() {
+
+   unmarshall : function() {
+      this.unmarshallProperties();
    },
-   
-   //Properties
-   getCaption: function() { return this.caption; },
-   getId: function() { return this.id; },
-   getName: function() { return this.name; },
-   getObjectToSelect: function() { return this.objectToSelect; },
-   isActive: function() { return this.active; },
-   isVisible: function() { return this.visible; },
 
-	//private helper methods
-	insertNewLIElement: function() {
-		if( !this.widgetElement ) throw new UnconfiguredWidgetException( {message : "Can't find tabwidget container element.", source : "Tab.createLIElement"} );
-		
-		//locate the <ul class='Tab"> list within tab division
-		var ulElements = this.widgetElement.getElements( "UL." + this.options.tabsStyle );
-		if( ulElements.length < 1 ) throw new UnconfiguredWidgetException( {message : "Can't find new tab's parent UL element.", source : "Tab.createLIElement"} );
-		var parentULElement = ulElements[0];
-		
-		var nb_caption = this.caption.replace(/ /g,String.fromCharCode(160));
-		this.anchorElement = new Element( 'a' );
-		this.anchorElement.appendText( nb_caption );
-		this.anchorElement.set( 'href', '#' );
-		this.anchorElement.set( 'id', this.id );
-		var thisTab = this;
-		this.anchorElement.addEvent( 'click', function() { thisTab.onSelection( this ); } );
+   // Properties
+   getCaption : function() { return this.caption; },
+   getId : function() { return this.id; },
+   getMessageProperties: function() { return this.messageProperties; },
+   isActive : function() { return this.active; },
+   isDefault : function() { return this.defaultTab; },
+   isVisible : function() { return this.visible; },
 
-		this.listItemElement = new Element( 'li' );
-		this.listItemElement.appendChild( this.anchorElement );
-		
-		parentULElement.grab( this.listItemElement, 'top' );
-		this.logger.trace( this.options.componentName + ".insertNewLIElement added a 'LI' element to represent tab: " + this.name );
-	}.protect(),
+   // private helper methods
+   createHtmlElements : function( parentElement ) {
+      var nb_caption = this.caption.replace( / /g, String.fromCharCode( 160 ) );
+      this.anchorElement = new Element( 'a', { 'id' : this.id, 'href' : '#', events : { click : this.onSelection }});
+      this.anchorElement.appendText( nb_caption );
 
-    removeLIElement: function() {
-       if( this.listItemElement != null) {
-          if( this.anchorElement.destroy ){
-             this.anchorElement.removeEvents();
-             this.anchorElement.destroy();
-          }else this.anchorElement.removeNode();
-          this.anchorElement = null;
-          
-          if( this.listItemElement.destroy ) this.listItemElement.destroy();
-          else this.listItemElement.removeNode();
-          this.listItemElement = null;
-       }
-       else throw new UnconfiguredWidgetException( {message : "Can't remove tab's parent LI element.", source : "Tab.removeLIElement"} );
-	}.protect(),
+      this.listItemElement = new Element( 'li' );
+      this.listItemElement.appendChild( this.anchorElement );
 
-	replaceObjectToSelect: function( theObjectToSelect ) {
-		if( this.logger.getLevel() == log4javascript.Level.TRACE ) this.logger.trace( "Trying replace object:", theObjectToSelect );
-		this.objectToSelect = theObjectToSelect;
-	}.protect(),
-	
-	setListItemId: function( listItemId ) {
-		if( this.listItemElement != null ) {
-			this.listItemElement.set( 'id', listItemId );
-		}
-		else throw new UnconfiguredWidgetException( {message : "Can't set undefined LI element's id.", source : "Tab.setListItemId"} );
-	}.protect()
-});
+      parentElement.grab( this.listItemElement, 'bottom' );
+      this.logger.trace( this.options.componentName + ".createHtmlElements added a 'LI' element to represent tab: " + this.id );
+   }.protect(),
+
+   removeLIElement : function() {
+      if( this.listItemElement != null ){
+         if( this.anchorElement.destroy ){
+            this.anchorElement.removeEvents();
+            this.anchorElement.destroy();
+         }else this.anchorElement.removeNode();
+         
+         this.anchorElement = null;
+
+         if( this.listItemElement.destroy ) this.listItemElement.destroy();
+         else this.listItemElement.removeNode();
+         this.listItemElement = null;
+      }else throw new UnconfiguredWidgetException({ message : "Can't remove tab's parent LI element.", source : "Tab.removeLIElement" });
+   }.protect(),
+
+   setListItemId : function( listItemId ) {
+      if( this.listItemElement != null ){
+         this.listItemElement.set( 'id',  listItemId );
+      }else
+         throw new UnconfiguredWidgetException( { message : "Can't set undefined LI element's id.", source : "Tab.setListItemId" });
+   }.protect(),
+
+   unmarshallProperties : function() {
+      this.id = this.options.idPrefix + XmlResource.selectNodeText( this.options.idSelector, this.definitionElement );
+      this.caption = this.internationalization.getText( XmlResource.selectNodeText( this.options.captionSelector, this.definitionElement ));
+      this.defaultTab = parseBoolean( XmlResource.selectNodeText( this.options.isDefaultSelector, this.definitionElement, null, false ) );
+      this.messageProperties = XmlResource.selectNodeText( this.options.messagePropertiesSelector, this.definitionElement );
+   }.protect()} );
