@@ -32,7 +32,7 @@ var DesktopPanelHeader = new Class({
       componentName : "DesktopPanelHeader",
       headerSelector : "panelHeader",
       pluginSelector : "plugin",
-      toolboxContent : "../Desktop/EmptyToolboxContent.html",
+      toolboxContent : null,        //"../Desktop/EmptyToolboxContent.html",
       toolboxSelector : "toolBox",
       toolBoxUrlSelector : "@toolBoxUrl",
       type : "DesktopPanel"

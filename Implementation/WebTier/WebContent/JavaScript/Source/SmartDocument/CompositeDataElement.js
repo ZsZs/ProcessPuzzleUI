@@ -61,6 +61,11 @@ var CompositeDataElement = new Class({
       this.parent();
    },
    
+   instantiateDocumentElement: function( elementDefinition ){
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { 
+         onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError, variables : this.options.variables });
+   }.protect(),
+   
    unmarshall: function( dataElementIndex ){
       this.unmarshallDataProperties();
       this.loadDataSource();

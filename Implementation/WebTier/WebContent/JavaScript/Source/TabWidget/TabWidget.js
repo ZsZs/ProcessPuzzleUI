@@ -100,11 +100,11 @@ var TabWidget = new Class( {
       }
    },
 
-   construct : function( doNotActivate ) {
+   construct : function() {
       if( this.isVisible ) return;
       this.logger.group( this.options.componentName + ".construct", false );
       this.createHtmlElements();
-      this.constructTabs( doNotActivate );
+      this.constructTabs();
       this.constructButtons();
       this.isVisible = true;
       this.parent();

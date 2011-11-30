@@ -115,7 +115,7 @@ var DataElementBehaviour = new Class({
    retrieveData: function(){
       if( this.bind && this.dataXml && instanceOf( this.dataXml, XmlResource ) ){
          var dataSelector = this.bind.substitute( this.options.variables );
-         this.text = this.dataXml.selectNodeText( dataSelector );
+         this.text = this.dataXml.selectNodeText( dataSelector ).trim();
       }      
    }.protect(),
    

@@ -38,9 +38,9 @@
          <compositeElement tag="li" elementStyle="property" id="webMaster" >DynamicDocument.RSS.webMaster<dataElement tag="span" bind="/rss/channel/webMaster"/></compositeElement>
       </compositeElement>
       <element  tag="h3" id="channelItems">DynamicDocument.itemsTitle</element>
-      <compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
-         <dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
-         <dataElement tag="li" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+      <compositeDataElement tag="div" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
+         <dataElement tag="h4" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
+         <dataElement tag="p" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
       </compositeDataElement>
    </documentBody>
    

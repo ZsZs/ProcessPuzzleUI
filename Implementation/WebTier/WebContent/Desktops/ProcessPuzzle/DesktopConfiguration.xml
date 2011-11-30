@@ -71,7 +71,7 @@
 		
 		<panel name='consolePanel' columnReference='mainColumn' height='100' showHeader='true' handleTabSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
-         <panelHeader toolBoxUrl="Desktops/ProcessPuzzle/Pages/EmptyToolboxContent.html">
+         <panelHeader>
             <plugin>
                <resources>
                   <styleSheets>

@@ -23,15 +23,6 @@
    <documentBody tag="div" id="smartDocumentBody">
       <element tag="p">PhotoGaleryDocument.paragraph</element>
       <element tag="div" id="PhotoGaleryContainer" elementStyle="slideshow">
-         <plugin>
-            <widget name="PhotoGaleryWidget">
-               <options>
-                  <option name="widgetContainerId" value="PhotoGaleryContainer"/>
-                  <option name="widgetDefinitionURI" value="Content/PhotoGaleryDefinition.xml"/>
-                  <option name="widgetDataURI" value="Content/PhotoGaleryData.xml"/>
-               </options>
-            </widget>
-         </plugin>
       </element>
    </documentBody>
    

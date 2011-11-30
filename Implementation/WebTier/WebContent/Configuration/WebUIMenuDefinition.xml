@@ -34,7 +34,7 @@
 			<messageProperties>{actionType : 'loadMenu', contextItemId : 'Administration'}</messageProperties>
 					
 			<menuItem menuItemId="Administration-Users" caption="HierarchicalMenuWidget.administration.users" isDefault="true">
-				<messageProperties>{actionType : 'loadDocument', documentURI : 'Commons/BusinessImplementation/SystemAdministration/UserList_ListView.jsp'}</messageProperties>			
+            <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
 			</menuItem>
 						
 		</menuItem>
