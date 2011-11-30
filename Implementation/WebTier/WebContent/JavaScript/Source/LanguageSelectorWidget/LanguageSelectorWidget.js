@@ -23,6 +23,7 @@ var LanguageSelectorWidget = new Class({
    Binds : ['onSelection'],
    
    options : {
+      componentName : "LanguageSelectorWidget",
       componentPrefix : "LanguageSelectorWidget",
       selectElementId : "LanguageSelector",
       selectTextKey : "LanguageSelectorWidget.select",

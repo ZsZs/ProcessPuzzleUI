@@ -33,6 +33,12 @@
 
     <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
     
+    <Resource key="DocumentComments.introduction" type="String">Comments of the active document.</Resource>
+    <Resource key="DocumentComments.title" type="String">Comments</Resource>
+    
+    <Resource key="DocumentProperties.introduction" type="String">Properties of the active document.</Resource>
+    <Resource key="DocumentProperties.title" type="String">Document Properties</Resource>
+    
     <Resource key="DynamicDocument.exampleDescription" type="String">The list below is the content of an RSS.xml content source. As the item is a repeated element, more than one news is displayed.</Resource>
     <Resource key="DynamicDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
     <Resource key="DynamicDocument.introduction" type="String">This example - SmartDocument - retrieves it's content from content xml file. If specified, recurring content elements are repeated automatically.
@@ -57,6 +63,9 @@
     Text values in the definition xml are automatically translated. This features facilitates of creating document templates.</Resource>
     <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
     <Resource key="StaticDocument.title" type="String">Static Document</Resource>
+    
+    <Resource key="PersonalToDoList.introduction" type="String">To Do list of the logged in user.</Resource>
+    <Resource key="PersonalToDoList.title" type="String">Personal To Do List</Resource>
     
     <Resource key="PhotoGaleryDocument.title" type="String">Dokumentum beépülő modullal</Resource>
     <Resource key="PhotoGaleryDocument.introduction" type="String">Egy okos dokumentumba tetszőleges számú modul építhető be. A beépülő modulok többnyire speciális módon jelenítenek meg tartamat.</Resource>

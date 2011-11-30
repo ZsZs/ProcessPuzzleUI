@@ -33,6 +33,12 @@
 
     <Resource key="SkinSelectorWidget.select" type="String">Válasszon megjelenést:</Resource>
 
+    <Resource key="DocumentComments.introduction" type="String">Megjegyzések a kiválasztott dokumentumhoz.</Resource>
+    <Resource key="DocumentComments.title" type="String">Megjegyzések</Resource>
+    
+    <Resource key="DocumentProperties.introduction" type="String">A kiválasztott dokumentum tulajdonságai.</Resource>
+    <Resource key="DocumentProperties.title" type="String">Dokumentum tulajdonságok</Resource>
+    
     <Resource key="DynamicDocument.exampleDescription" type="String">Az alábbi szöveg egy RSS.xml tartalmának a beolvasásával jelenik meg. Mivel hír (item) ismétlődő elem, ezért ebből annyi jelenik meg amennyit a tartalomforrás magában foglal.</Resource>
     <Resource key="DynamicDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
     <Resource key="DynamicDocument.introduction" type="String">Ez a példa egy olyan Okos dokumentum, amely a tartalmat egy xml adatforrásból jeleníti meg. 
@@ -56,6 +62,9 @@
     <Resource key="PhotoGaleryDocument.exampleDescription" type="String">A lenti példa egy slide show modul bepítését szemlélteti.</Resource>
     <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
     <Resource key="PhotoGaleryDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    
+    <Resource key="PersonalToDoList.introduction" type="String">A bejelentkezett személy feladat listája.</Resource>
+    <Resource key="PersonalToDoList.title" type="String">Személyes feladat lista</Resource>
     
     <Resource key="StaticDocument.exampleDescription" type="String">Ennek a dokumentumnak az összes eleme példa a statikus tartalom megjelenítésére.</Resource>
     <Resource key="StaticDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>

@@ -25,6 +25,7 @@ var BrowserWidget = new Class( {
    Binds : ['onConstructed', 'onDestroyed', 'webUIMessageHandler'],
 
    options : {
+      componentName : "BrowserWidget",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       domDocument : this.document,
@@ -167,6 +168,10 @@ var BrowserWidget = new Class( {
    getState : function() { return this.state; },
 
    // Private helper methods
+   compileStateSpecification: function(){
+      //Abstract method, should be overwrite!
+   }.protect(),
+   
    configureComponentStateManager : function() {
       if( this.webUIController == null ) this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       else this.componentStateManager = this.webUIController.getStateManager();
@@ -227,6 +232,10 @@ var BrowserWidget = new Class( {
             this.logger.debug( "Widget definition: '" + this.options.widgetDefinitionURI + "' not found." );
          }
       }
+   }.protect(),
+   
+   parseStateSpecification: function(){
+      //Abstract method, should be overwrite!
    }.protect(),
 
    subscribeToWebUIMessages : function() {

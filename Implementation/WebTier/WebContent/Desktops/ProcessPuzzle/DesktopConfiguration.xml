@@ -54,7 +54,7 @@
                   <option name="widgetContainerId" value="'VerticalMenuColumn'"/>
                   <option name="widgetDefinitionURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
                   <option name="contextItemId" value="'YourMenu'"/>
-                  <option name="componentName " value="'VerticalMenuColumn'"/>
+                  <option name="componentName " value="'verticalMenuColumn'"/>
                   <option name="subscribeToWebUIMessages " value="[MenuSelectedMessage]"/>
                </options>
             </widget>
@@ -65,11 +65,11 @@
 			<title>DesktopConfigurator.Panel.whoIsIn</title>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleDocumentLoadEvents="true">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
 		</panel>
 		
-		<panel name='consolePanel' columnReference='mainColumn' height='100' showHeader='true'>
+		<panel name='consolePanel' columnReference='mainColumn' height='100' showHeader='true' handleTabSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader toolBoxUrl="Desktops/ProcessPuzzle/Pages/EmptyToolboxContent.html">
             <plugin>
@@ -80,6 +80,7 @@
                </resources>
                <widget name="TabWidget">
                   <options>
+                     <option name="componentName " value="'consoleTabs'"/>
                      <option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
                      <option name="widgetDefinitionURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
                   </options>

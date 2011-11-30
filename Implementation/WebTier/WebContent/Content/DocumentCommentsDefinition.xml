@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Comments Document</name>
+   <description>Shows comments of associated with the selected content.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentHeader tag="div" id="commentsHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h3">DocumentComments.title</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="commentsBody">
+      <element tag="p">DocumentComments.introduction</element>
+   </documentBody>   
+</smartDocumentDefinition>

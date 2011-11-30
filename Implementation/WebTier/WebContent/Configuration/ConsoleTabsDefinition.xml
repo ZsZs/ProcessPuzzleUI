@@ -4,9 +4,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 	<tabWidget tabWidgetId="ConsoleTabs" selectedTabClass="selectedTab" showCloseButton="false" showPrintButton="false">
-		<tab tabId="tabOne" caption="ConsoleTabs.properties"></tab>
-		<tab tabId="tabTwo" caption="ConsoleTabs.comments" isDefault="true"></tab>
-		<tab tabId="tabThree" caption="ConsoleTabs.todo"></tab>
+		<tab tabId="ConsoleTab.properties" caption="ConsoleTabs.properties">
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentPropertiesDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+      </tab>
+		<tab tabId="ConsoleTab.comments" caption="ConsoleTabs.comments" isDefault="true">
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentCommentsDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+      </tab>
+		<tab tabId="ConsoleTab.todo" caption="ConsoleTabs.todo">
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/PersonalToDoListDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+      </tab>
 	</tabWidget>
 	
 </pp:tabWidgetDefinition>

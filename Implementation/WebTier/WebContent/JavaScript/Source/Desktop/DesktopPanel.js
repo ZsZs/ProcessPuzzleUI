@@ -59,8 +59,10 @@ var DesktopPanel = new Class({
       documentWrapperStyleSelector : "document/@elementStyle",
       documentWrapperTag : "div",
       documentWrapperTagSelector : "document/@tag",
-      handleDocumentLoadEvents : false,
-      handleDocumentLoadEventsSelector : "handleDocumentLoadEvents",
+      handleMenuSelectedEvents : false,
+      handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
+      handleTabSelectedEvents : false,
+      handleTabSelectedEventsSelector : "handleTabSelectedEvents",
       headerSelector : "panelHeader",
       heightDefault : 125,
       heightSelector : "height",
@@ -70,6 +72,7 @@ var DesktopPanel = new Class({
       panelIdPostfix : "_wrapper",
       pluginSelector : "plugin",
       showHeaderSelector : "showHeader",
+      storeStateSelector : "storeState",
       titleSelector : "title",
       widthSelector : "width"
    },
@@ -91,7 +94,8 @@ var DesktopPanel = new Class({
       this.documentWrapperStyle;
       this.documentWrapperTag;
       this.error;
-      this.handleDocumentLoadEvents;
+      this.handleMenuSelectedEvents;
+      this.handleTabSelectedEvents;
       this.header;
       this.height;
       this.lastHandledMessage;
@@ -105,6 +109,7 @@ var DesktopPanel = new Class({
       this.plugin;
       this.resourceBundle = bundle;
       this.showHeader;
+      this.storeState = false;
       this.title;
       
       this.state = DesktopPanel.States.INITIALIZED;
@@ -189,7 +194,7 @@ var DesktopPanel = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( this.state != DesktopPanel.States.CONSTRUCTED ) return;
       
-      if( instanceOf( webUIMessage, MenuSelectedMessage ) && webUIMessage.getActionType() == 'loadDocument' ){
+      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) && webUIMessage.getActionType() == 'loadDocument' ) {
          this.destroyDocument();
          this.destroyDocumentWrapper();
          this.cleanUpPanelContent();
@@ -370,16 +375,23 @@ var DesktopPanel = new Class({
    }.protect(),
    
    storeComponentState : function() {
-      var componentState;
-      if( this.documentContentType == SmartDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
-      else componentState = { uri : this.documentDefinitionUri, type : this.documentContentType };
-      this.componentStateManager.storeCurrentState( this.options.componentName, componentState );
+      if( this.storeState ){
+         var componentState;
+         if( this.documentContentType == SmartDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
+         else componentState = { uri : this.documentDefinitionUri, type : this.documentContentType };
+         this.componentStateManager.storeCurrentState( this.options.componentName, componentState );
+      }
    }.protect(),
    
    subscribeToWebUIMessages: function() {
-      if( this.handleDocumentLoadEvents ){
+      if( this.handleMenuSelectedEvents ){
          this.logger.debug( this.options.componentName + ".subscribeToWebUIMessages() started." );
          this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
+      }
+      
+      if( this.handleTabSelectedEvents ){
+         this.logger.debug( this.options.componentName + ".subscribedToWebUIMessages() started." );
+         this.messageBus.subscribeToMessage( TabSelectedMessage, this.webUIMessageHandler );
       }
       this.constructionChain.callChain();
    }.protect(),
@@ -424,9 +436,12 @@ var DesktopPanel = new Class({
       this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector, this.options.heightDefault ));
       this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );
       this.showHeader = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.showHeaderSelector ));
-      this.handleDocumentLoadEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleDocumentLoadEventsSelector, this.options.handleDocumentLoadEvents ));
+      this.handleMenuSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleMenuSelectedEventsSelector, this.options.handleMenuSelectedEvents ));
+      this.handleTabSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleTabSelectedEventsSelector, this.options.handleTabSelectedEvents ));
+      this.storeState = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.storeStateSelector, false ));
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.definitionElement );
       if( this.resourceBundle ) this.title = this.resourceBundle.getText( this.title );
+      this.options.componentName = this.name;
    }.protect(),
   
    unmarshallPlugin: function(){

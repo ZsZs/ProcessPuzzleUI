@@ -62,7 +62,7 @@ var ComponentStateManager = new Class({
    },
    
    storeCurrentState : function( componentName, currentState ){
-      this.stateMachine.put( componentName, currentState );
+      if( componentName && currentState ) this.stateMachine.put( componentName, currentState );
    },
    
    toString: function(){

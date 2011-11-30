@@ -82,8 +82,10 @@
       <xs:attribute name="columnReference" use="required" type="xs:NCName"/>
       <xs:attribute name="height" type="xs:integer"/>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="handleMenuSelectedEvents" type="xs:boolean"/>
+      <xs:attribute name="handleTabSelectedEvents" type="xs:boolean"/>
       <xs:attribute name="showHeader" type="xs:boolean"/>
-      <xs:attribute name="handleDocumentLoadEvents" type="xs:boolean"/>
+      <xs:attribute name="storeState" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="title" type="xs:string"/>
