@@ -20,7 +20,7 @@
 
 var TabWidget = new Class( {
    Extends : BrowserWidget,
-   Binds : ['onClose', 'webUIMessageHandler'],
+   Binds : ['onClose', 'onTabSelected'],
 
    options : {
       TABCLASSNAME : "Tabs",
@@ -75,6 +75,7 @@ var TabWidget = new Class( {
       var tabToActivate = this.tabs.get( tabName ); 
       tabToActivate.activate();
       this.activeTab = tabToActivate;
+      this.storeComponentState();
       this.notifySubscribers();
    },
 
@@ -167,7 +168,7 @@ var TabWidget = new Class( {
 
    onClose : function() {
       if( this.activeTab ){
-         this.removeTab( this.activeTab.getName() );
+         this.removeTab( this.activeTab.getId() );
       }
    },
 
@@ -239,6 +240,10 @@ var TabWidget = new Class( {
       else this.activateTab( this.tabs.get( this.tabs.firstKey() ).getId() );
    }.protect(),
 
+   compileStateSpecification : function(){
+      this.stateSpecification = { currentTabId : this.activeTab.getId() };
+   }.protect(),
+   
    constructButtons : function() {
       if( this.showCloseButton || this.showPrintButton ){
          this.buttonsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
@@ -289,6 +294,12 @@ var TabWidget = new Class( {
       
    }.protect(),
 
+   parseStateSpecification: function(){
+      if( this.stateSpecification ){
+         this.currentItemId = this.stateSpecification['currentTabId'];
+      }
+   }.protect(),
+   
    removeUnorderedListTag : function() {
       if( htmlDivElement != null ){
          var tabLists = htmlDivElement.getElementsByTagName( "ul" );

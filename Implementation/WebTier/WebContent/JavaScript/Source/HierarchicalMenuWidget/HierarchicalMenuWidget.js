@@ -47,13 +47,10 @@ var HierarchicalMenuWidget = new Class({
       this.parent( options, resourceBundle );
       this.determineInitializationArguments( options, resourceBundle );
       
-      this.componentStateManager = new ComponentStateManager();
       this.currentItemId = null;
       this.selectedElementClass = null;
       this.self = this;
-      this.ulElement = null;
-      
-      this.restoreState();
+      this.ulElement = null;      
    },
    
    //Public accessor and mutator methods
@@ -70,7 +67,6 @@ var HierarchicalMenuWidget = new Class({
       this.selectedElementClass = this.determineSelectedElementClass();
       this.createMenuElements( parentDefinitionElement, this.containerElement );
       if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
-      this.storeComponentState( parentDefinitionElement );
       this.parent();
       this.fireCurrentSelection();
    },
@@ -94,14 +90,6 @@ var HierarchicalMenuWidget = new Class({
       this.messageBus.notifySubscribers( new MenuSelectedMessage( arguments ));
    },
    
-   restoreState : function() {
-      var stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
-      if( stateSpecification ){
-         this.currentItemId = stateSpecification['currentItemId'];
-         this.options.contextItemId = stateSpecification['contextItemId'];
-      }
-   },
-   
    webUIMessageHandler: function( webUIMessage ){
       this.parent( webUIMessage );
       if( instanceOf( webUIMessage, MenuSelectedMessage )){
@@ -116,6 +104,10 @@ var HierarchicalMenuWidget = new Class({
    getSelectedElementClass : function() { return this.selectedElementClass; },
    
    //Private helper methods
+   compileStateSpecification : function(){
+      this.stateSpecification = { currentItemId : this.currentItemId, contextItemId : this.options.contextItemId };
+   }.protect(),
+   
    configureSelectedItem : function( listItemElements, defaultItemId ) {
       if( this.currentItemId && listItemElements.get( this.currentItemId ) ){
          listItemElements.get( this.currentItemId ).addClass( this.selectedElementClass );
@@ -218,14 +210,16 @@ var HierarchicalMenuWidget = new Class({
       this.onSelection( currentAnchorElement );
    }.protect(),
    
-   storeComponentState : function() {
-      var stateSpecification = { currentItemId : this.currentItemId, contextItemId : this.options.contextItemId }; 
-      this.componentStateManager.storeCurrentState( this.options.componentName, stateSpecification );
+   parseStateSpecification: function(){
+      if( this.stateSpecification ){
+         this.currentItemId = this.stateSpecification['currentItemId'];
+         this.options.contextItemId = this.stateSpecification['contextItemId'];
+      }
    }.protect(),
    
    updateOptions: function( configurationOptions ) {
       if( configurationOptions && configurationOptions['contextItemId'] ) 
          this.options.contextItemId = configurationOptions['contextItemId'];
-      else this.restoreState();
+      else this.restoreComponentState();
    }.protect()
 });

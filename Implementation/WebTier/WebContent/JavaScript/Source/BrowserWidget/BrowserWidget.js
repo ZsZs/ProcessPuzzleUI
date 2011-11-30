@@ -46,13 +46,13 @@ var BrowserWidget = new Class( {
       this.description;
       this.elementFactory = null;
       this.i18Resource = null;
-      this.isConstructed = false;
       this.lastHandledMessage = null;
       this.locale;
       this.logger;
       this.messageBus;
       this.name;
       this.state;
+      this.stateSpecification;
       this.webUIController = null;
 
       // initialize object
@@ -72,11 +72,11 @@ var BrowserWidget = new Class( {
       ;
       
       this.elementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource, elementFactoryOptions );
+      this.restoreComponentState();
       this.state = BrowserWidget.States.INITIALIZED;
    },
 
    // public accessor and mutator methods
-
    construct : function() {
       if( this.state < BrowserWidget.States.CONSTRUCTED ) this.onConstructed();
       return this;
@@ -91,7 +91,6 @@ var BrowserWidget = new Class( {
             if( childElement.destroy )
                childElement.destroy();
          } );
-         this.isConstructed = false;
          this.state = BrowserWidget.States.INITIALIZED;
          this.onDestroyed();
       }
@@ -109,7 +108,7 @@ var BrowserWidget = new Class( {
    
    onConstructed : function(){
       this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
-      this.isConstructed = true;
+      this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
       this.fireEvent( 'constructed', this );
    },
@@ -127,6 +126,16 @@ var BrowserWidget = new Class( {
       }
    },
    
+   restoreComponentState : function() {
+      this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+      this.parseStateSpecification();
+   },
+   
+   storeComponentState : function() {
+      this.compileStateSpecification();
+      this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+   }.protect(),
+   
    unmarshall : function(){
       this.state = BrowserWidget.States.UNMARSHALLED;
       return this;
@@ -138,9 +147,7 @@ var BrowserWidget = new Class( {
    },
 
    webUIMessageHandler : function( webUIMessage ) {
-      if( !this.isConstructed )
-         throw new UnconfiguredWidgetException( {
-            source : 'BrowserWidget.webUIMessageHandler()'} );
+      if( this.state != BrowserWidget.States.CONSTRUCTED ) throw new UnconfiguredWidgetException( { source : 'BrowserWidget.webUIMessageHandler()'} );
       this.lastHandledMessage = webUIMessage;
    },
 

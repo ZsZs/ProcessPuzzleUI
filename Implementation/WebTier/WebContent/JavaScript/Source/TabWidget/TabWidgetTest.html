@@ -72,6 +72,7 @@
       var WIDGET_DEFINITION_URI = "TabsDefinition.xml";
       var callBackMessage = null;
       var callBackWasCalled = false;
+      var componentStateManager;
       var containerElement;
       var definitionXml;
       var locale = new Locale({ language : LANGUAGE });
@@ -211,6 +212,15 @@
          assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
       }
 
+      function test_activateTab_storesState(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         
+         tabWidget.activateTab( "tab_tabOne" );
+         
+         assertThat( componentStateManager.retrieveCurrentState( tabWidget.options.componentName ).currentTabId, equalTo( "tab_tabOne" ));
+      }
+
       function test_onTabSelected_activatesTabAndNotifiesSubscribers(){
          tabWidget.unmarshall();
          tabWidget.construct();
@@ -230,7 +240,7 @@
       //runs a test function during debugging
       function runTestFunction(){
          setUp();
-         test_activateTab_deactivatesPreviousAndActivatesTheGiven();
+         test_activateTab_storesState();
          tearDown();
       }
    </script>
