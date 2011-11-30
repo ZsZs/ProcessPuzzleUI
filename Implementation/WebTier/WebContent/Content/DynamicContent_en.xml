@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rss-2_0.xsd">
+  <channel>
+    <title>ProcessPuzzle</title>
+    <link>http://processpuzzle.com</link>
+    <description>ProcessPuzzle company news</description>
+    <language>en-us</language>
+    <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+    <lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
+    <docs>http://processpuzzle.com/rss</docs>
+    <generator>ProcessPuzzle RSS Generator 2.0</generator>
+    <managingEditor>Zsolt Zsuffa, zsolt.zsuffa@example.com</managingEditor>
+    <webMaster>Peter Krima, peter.krima@example.com</webMaster>    
+    
+    <item>
+		<title>HONNIA furniture design service lunched</title>
+		<link>http://honnia.hu/news</link>
+		<description>Cerasus Llc. lunched a new woldwide available furniture design service based on ProcessPuzzle.</description>
+		<pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
+		<guid>http://processpuzzle.com#item573</guid>
+    </item>  
+    
+    <item>
+		<title>ProcessPuzzle NewsReaderWidget is ready to use</title>
+		<link>http://processpuzzle.com/news</link>
+		<description>IT Codex Llc. released a new browser wiget for it's well known ProcessPuzzle framework.</description>
+		<pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
+		<guid>http://processpuzzle.com#item575</guid>
+    </item>  
+  </channel>  
+</rss>
+

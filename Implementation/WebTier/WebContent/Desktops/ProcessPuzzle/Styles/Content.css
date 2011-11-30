@@ -35,6 +35,7 @@ body {
 /* Typography */
 	
 h2, h3, h4 {
+   color: teal;
 	margin: 0;
 	padding: 0 0 5px 0;
 	font-size: 12px;

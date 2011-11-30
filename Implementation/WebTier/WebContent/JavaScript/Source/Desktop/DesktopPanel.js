@@ -53,7 +53,7 @@ var DesktopPanel = new Class({
       documentContentUriSelector : "document/documentContentUri",
       documentDefinitionUriSelector : "document/documentDefinitionUri",
       documentNameSeparator : "_",
-      documentWrapperId : "panelDocumentWrapper_" + (new Date().getTime()),
+      documentWrapperId : "_documentWrapper_" + (new Date().getTime()),
       documentWrapperIdSelector : "document/@id",
       documentWrapperStyle : "panelDocumentWrapper",
       documentWrapperStyleSelector : "document/@elementStyle",
@@ -333,7 +333,7 @@ var DesktopPanel = new Class({
       MUI.updateContent({
          element: $( this.name ),
          onContentLoaded : this.onDocumentReady,
-         padding: { top: 8, right: 8, bottom: 8, left: 8 },
+         padding: { top: 0, right: 5, bottom: 0, left: 5 },
          title: this.title,
          url: documentFullURI
       });
@@ -399,7 +399,7 @@ var DesktopPanel = new Class({
    unmarshallDocument: function(){
       this.documentContentUri = XmlResource.selectNodeText( this.options.documentContentUriSelector, this.definitionElement );
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement );
-      this.documentWrapperId = XmlResource.selectNodeText( this.options.documentWrapperIdSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperId );
+      this.documentWrapperId = XmlResource.selectNodeText( this.options.documentWrapperIdSelector, this.definitionElement, this.options.nameSpaces, this.name + this.options.documentWrapperId );
       this.documentWrapperStyle = XmlResource.selectNodeText( this.options.documentWrapperStyleSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperStyle );
       this.documentWrapperTag = XmlResource.selectNodeText( this.options.documentWrapperTagSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperTag );
       if( this.documentDefinitionUri ){
