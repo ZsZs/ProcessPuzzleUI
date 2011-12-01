@@ -93,6 +93,8 @@
 
 <script type="text/javascript">
    window.addEvent( 'domready', function() {
+      test_construct_constructsHeaderWithPlugin();
+//       test_construct_constructsSmartDocument();
 //       test_construct_whenSpecified_subscribesForMenuSelectedMessage();
 //       test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument();
    });
@@ -217,22 +219,24 @@
    }
 
    function test_unmarshall_determinesPanelProperties() {
-      testCaseChain.chain( beforeEachTest, function() {
-         panel.unmarshall();
-         assertThat( panel.getColumnReference(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@columnReference" ).value ) );
-         assertThat( panel.getContentUrl(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/contentURL" ) ) );
-         assertThat( panel.getHeight(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@height" ).value ) );
-         assertThat( panel.getName(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@name" ).value ) );
-         assertThat( panel.getPlugin(), nil() );
-         assertThat( panel.getToolBox(), not( nil() ) );
-         assertThat( panel.getShowHeader(), equalTo( parseBoolean( desktopDefinition.selectNode( PANEL_DEFINITION + "/@showHeader" ).value ) ) );
-         assertThat( panel.getTitle(), equalTo( resourceBundle.getText( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/title" ) ) ) );
-         testCaseChain.callChain();
-      }, 
-      afterEachTest
-   );
-   runTestCase();
-}
+      testCaseChain.chain( 
+         beforeEachTest, 
+         function() {
+            panel.unmarshall();
+            assertThat( panel.getColumnReference(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@columnReference" ).value ) );
+            assertThat( panel.getContentUrl(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/contentURL" ) ) );
+            assertThat( panel.getHeight(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@height" ).value ) );
+            assertThat( panel.getName(), equalTo( desktopDefinition.selectNode( PANEL_DEFINITION + "/@name" ).value ) );
+            assertThat( panel.getPlugin(), nil() );
+            assertThat( panel.getToolBox(), not( nil() ) );
+            assertThat( panel.getShowHeader(), equalTo( parseBoolean( desktopDefinition.selectNode( PANEL_DEFINITION + "/@showHeader" ).value ) ) );
+            assertThat( panel.getTitle(), equalTo( resourceBundle.getText( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/title" ) ) ) );
+            testCaseChain.callChain();
+         }, 
+         afterEachTest
+      );
+      runTestCase();
+   }
 
    function test_unmarshall_unmarshallsPanelHeader() {
       testCaseChain.chain( 
@@ -273,22 +277,32 @@
          beforeEachTest, 
          constructPanel, 
          function() {
+            //after documentLoaded event
             assertThat( panel.getMUIPanel(), not( nil() ) );
+         },
+         function(){
+            //after panelConstructed event
             testCaseChain.callChain();
-         }, 
+            testCaseChain.callChain();
+         },
          afterEachTest
       );
       runTestCase();
    }
 
-   function test_construct_constructsHeader() {
+   function test_construct_constructsHeaderWithPlugin() {
       testCaseChain.chain( 
          beforeEachTest, 
          constructPanel, 
          function() {
+            //after documentLoaded event
             assertThat( panel.getHeader().getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ) );
-            testCaseChain.callChain();
          }, 
+         function(){
+            //after panelConstructed event
+            assertThat( panel.getState(), equalTo( DesktopPanel.States.CONSTRUCTED ));
+            testCaseChain.callChain();
+         },
          afterEachTest
       );
       runTestCase();
@@ -299,10 +313,13 @@
          beforeEachTest, 
          constructPanel, 
          function() {
+            //after documentLoaded event
             assertThat( panel.getDocument(), not( nil() ) );
             assertThat( $( PANEL_DOCUMENT_WRAPPER_ID ), not( nil() ) );
-            testCaseChain.callChain();
-         }, 
+         },
+         function(){
+            //after panelConstructed event
+         },
          afterEachTest 
       );
       runTestCase();

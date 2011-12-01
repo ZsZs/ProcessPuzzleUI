@@ -2,11 +2,11 @@
 
 <html>
 <head>
-	<title>Test page for DesktopPanelHeader.js</title>
-	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <title>Test page for DesktopPanelHeader.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 	
-	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
 
    <!--[if IE]>
@@ -57,27 +57,27 @@
    <script type="text/javascript">
       window.addEvent('domready', function() {
          runTestFunction();
-		});
+      });
 				
-		JsHamcrest.Integration.JsUnit();
+      JsHamcrest.Integration.JsUnit();
 		
-		var CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
-		var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
-		var PANEL_HEADER_SELECTOR = "/desktopConfiguration/panels/panel[@name='console']/panelHeader";
-		var desktopConfiguration = null;
-		var panelHeader = null;
-		var panelHeaderDefinition = null;
+      var CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
+      var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
+      var PANEL_HEADER_SELECTOR = "/desktopConfiguration/panels/panel[@name='console']/panelHeader";
+      var desktopConfiguration = null;
+      var panelHeader = null;
+      var panelHeaderDefinition = null;
 		
-		function setUp(){
-		   webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-		   webUILogger = new WebUILogger( webUIConfiguration );
-		   bundle = new XMLResourceBundle( webUIConfiguration );
-		   bundle.load( new Locale({ language : "en" }) );
+      function setUp(){
+         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         bundle = new XMLResourceBundle( webUIConfiguration );
+         bundle.load( new Locale({ language : "en" }) );
            
-		   desktopConfiguration = new XmlResource( DESKTOP_CONFIGURATION_URI );
-		   panelHeaderDefinition = desktopConfiguration.selectNode( PANEL_HEADER_SELECTOR );
-		   panelHeader = new DesktopPanelHeader( panelHeaderDefinition, bundle, { onHeaderConstructed : verifyConstruction } );
-		}
+         desktopConfiguration = new XmlResource( DESKTOP_CONFIGURATION_URI );
+         panelHeaderDefinition = desktopConfiguration.selectNode( PANEL_HEADER_SELECTOR );
+         panelHeader = new DesktopPanelHeader( panelHeaderDefinition, bundle, { onHeaderConstructed : verifyConstruction } );
+      }
 
 		function tearDown(){
 		   if( panelHeader.getState() > DesktopPanelHeader.States.INITIALIZED ) panelHeader.destroy();

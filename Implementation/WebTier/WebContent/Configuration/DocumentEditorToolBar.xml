@@ -3,9 +3,9 @@
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    
-   <name>DocumentEditorToolbar</name>
+   <name>DocumentEditorToolBar</name>
    <description>Provides user interface for editing smart documents</description>
-   <buttons elementStyle="testToolBar">
+   <buttons elementStyle="toolBar">
       <button name="alignLeft">
          <caption>DocumentEditorToolBar.alignLeft</caption>
          <iconImage>Desktops/ProcessPuzzle/Images/AlignLeft.gif</iconImage>

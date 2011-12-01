@@ -1,13 +1,14 @@
 @CHARSET "UTF-8";
 
-#TestToolbar{
+#DocumentEditorToolBar{
 	float: left;
 	font:normal 12px Trebuchet MS,Arial;
+	height: 30px;
 	margin: 0px;
 	padding: 0px;
 }
 
-#TestToolbar ul {
+#DocumentEditorToolBar ul {
    float:left;
    line-height:30px;
    list-style:none;
@@ -16,32 +17,35 @@
    width:500px;	
 }
 
-#TestToolbar li {
+#DocumentEditorToolBar li {
 	display: inline;
 	padding: 0px;
 }
 
-#TestToolbar a {
+#DocumentEditorToolBar a {
    float:left;
-   padding:0 3px 0 3px;
    text-decoration:none;
 }
 
-#TestToolbar a span {
+#DocumentEditorToolBar a span {
    display:block;
    float:none; 
-   padding:0 10px 0 7px;
+   padding-left: 5px;
+   padding-right: 5px;
 }
 
-#TestToolbar a span img{
+#DocumentEditorToolBar a span img{
    border:none;
-   margin:8px 4px 0 0;
+   float:left;
+   position: relative;
+   top: 6px;
 }
 
-#TestToolbar a:hover {
-   background: url(Images/ToolBarButtonBackground-Left.png) no-repeat left center;
+#DocumentEditorToolBar a:hover {
+   background: url(../Images/ToolBarButtonBackground-Left.png) no-repeat left center;
+   color: white;
 }
 
-#TestToolbar a:hover span {
-   background:url(Images/ToolBarButtonBackground-Right.png) no-repeat right center;
+#DocumentEditorToolBar a:hover span {
+   background:url(../Images/ToolBarButtonBackground-Right.png) no-repeat right center;
 }

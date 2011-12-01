@@ -301,17 +301,19 @@ var DesktopPanel = new Class({
    }.protect(),
    
    instantiateMUIPanel: function(){
-      var require = { css: [], images: [], js: [], onload: this.onMUIPanelLoaded };
+      //var require = { css: [], images: [], js: [], onload: this.onMUIPanelLoaded };
+      var require = { css: [], images: [], js: [] };
       
       try{
          this.MUIPanel = new MUI.Panel({ 
             column: this.columnReference,
             content: "",
+            onContentLoaded: this.header ? null : this.onMUIPanelLoaded,
             contentURL: this.contentUrl,
             id: this.name,
             header: this.showHeader,
             headerToolbox: this.header ? true : false,
-            headerToolboxOnload: null,
+            headerToolboxOnload: this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
             height: this.height, 
             require: require,
