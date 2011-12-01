@@ -19,6 +19,7 @@
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Layout.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Panels.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Tabs.css</styleSheet>
+         <styleSheet>Desktops/ProcessPuzzle/Styles/ToolBar.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Window.css</styleSheet>
          <styleSheet>Desktops/ProcessPuzzle/Styles/PhotoGalery.css</styleSheet>
 		</styleSheets>
@@ -68,9 +69,21 @@
 		
 		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
+         <panelHeader>
+            <plugin>
+               <resources></resources>
+               <widget name="ToolBarWidget">
+                  <options>
+                     <option name="componentName " value="'documentEditorToolBar'"/>
+                     <option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
+                  </options>
+               </widget>
+            </plugin>
+         </panelHeader>
 		</panel>
 		
-		<panel name='consolePanel' columnReference='mainColumn' height='100' showHeader='true' handleTabSelectedEvents="true" storeState="false">
+		<panel name='consolePanel' columnReference='mainColumn' height='200' showHeader='true' handleTabSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader>
             <plugin>

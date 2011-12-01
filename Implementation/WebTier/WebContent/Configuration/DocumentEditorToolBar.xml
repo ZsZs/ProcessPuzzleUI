@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:toolBarDefinition
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <name>DocumentEditorToolbar</name>
+   <description>Provides user interface for editing smart documents</description>
+   <buttons elementStyle="testToolBar">
+      <button name="alignLeft">
+         <caption>DocumentEditorToolBar.alignLeft</caption>
+         <iconImage>Desktops/ProcessPuzzle/Images/AlignLeft.gif</iconImage>
+      </button>
+      <button name="alignCenter">
+         <caption>DocumentEditorToolBar.alignCenter</caption>
+         <iconImage>Desktops/ProcessPuzzle/Images/AlignCenter.gif</iconImage>
+      </button>
+      <button name="alignRight">
+         <caption>DocumentEditorToolBar.alignRight</caption>
+         <iconImage>Desktops/ProcessPuzzle/Images/AlignRight.gif</iconImage>
+      </button>
+      <button name="alignJustify">
+         <caption>DocumentEditorToolBar.alignJustify</caption>
+         <iconImage>Desktops/ProcessPuzzle/Images/AlignJustify.gif</iconImage>
+      </button>
+   </buttons>
+</pp:toolBarDefinition>

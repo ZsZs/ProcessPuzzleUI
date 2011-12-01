@@ -36,6 +36,11 @@
     <Resource key="DocumentComments.introduction" type="String">Megjegyzések a kiválasztott dokumentumhoz.</Resource>
     <Resource key="DocumentComments.title" type="String">Megjegyzések</Resource>
     
+    <Resource key="DocumentEditorToolBar.alignCenter" type="String">Középre</Resource>
+    <Resource key="DocumentEditorToolBar.alignJustify" type="String">Sorkizárt</Resource>
+    <Resource key="DocumentEditorToolBar.alignLeft" type="String">Balra</Resource>
+    <Resource key="DocumentEditorToolBar.alignRight" type="String">Jobbra</Resource>
+    
     <Resource key="DocumentProperties.introduction" type="String">A kiválasztott dokumentum tulajdonságai.</Resource>
     <Resource key="DocumentProperties.title" type="String">Dokumentum tulajdonságok</Resource>
     

@@ -36,6 +36,11 @@
     <Resource key="DocumentComments.introduction" type="String">Comments of the active document.</Resource>
     <Resource key="DocumentComments.title" type="String">Comments</Resource>
     
+    <Resource key="DocumentEditorToolBar.alignCenter" type="String">Center</Resource>
+    <Resource key="DocumentEditorToolBar.alignJustify" type="String">Justify</Resource>
+    <Resource key="DocumentEditorToolBar.alignLeft" type="String">Left</Resource>
+    <Resource key="DocumentEditorToolBar.alignRight" type="String">Right</Resource>
+    
     <Resource key="DocumentProperties.introduction" type="String">Properties of the active document.</Resource>
     <Resource key="DocumentProperties.title" type="String">Document Properties</Resource>
     
