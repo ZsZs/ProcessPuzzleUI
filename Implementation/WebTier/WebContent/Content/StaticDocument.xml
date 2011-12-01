@@ -17,6 +17,7 @@
    <documentHeader tag="div" id="staticDocumentHeader">
       <compositeElement tag="div" id="headerWrapper">
          <element tag="h1">StaticDocument.title</element>
+         <element tag="h2">StaticDocument.subTitle</element>
       </compositeElement>
    </documentHeader>
    

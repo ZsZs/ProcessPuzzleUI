@@ -9,6 +9,15 @@
     <Resource key="SmartDocument.itemsTitle" type="String">Items</Resource>
     <Resource key="SmartDocument.copyright" type="String">Copyright IT Codex Llc.</Resource>
     <Resource key="SmartDocument.addresses" type="String">Addresses:</Resource>
+    <Resource key="DynamicDocument.RSS.link" type="String">link: </Resource>
+    <Resource key="DynamicDocument.RSS.description" type="String">description: </Resource>
+    <Resource key="DynamicDocument.RSS.language" type="String">language: </Resource>
+    <Resource key="DynamicDocument.RSS.pubDate" type="String">publicated: </Resource>
+    <Resource key="DynamicDocument.RSS.lastBuildDate" type="String">genarated: </Resource>
+    <Resource key="DynamicDocument.RSS.docs" type="String">url: </Resource>
+    <Resource key="DynamicDocument.RSS.generator" type="String">generator: </Resource>
+    <Resource key="DynamicDocument.RSS.managingEditor" type="String">managing editor: </Resource>
+    <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
   </Language>
 
   <Language name="hu">
@@ -16,5 +25,14 @@
     <Resource key="SmartDocument.itemsTitle" type="String">Element</Resource>
     <Resource key="SmartDocument.copyright" type="String">Minden jog fenntartva, IT Kódex Kft.</Resource>
     <Resource key="SmartDocument.addresses" type="String">Címek:</Resource>
+    <Resource key="DynamicDocument.RSS.link" type="String">hivatkozás: </Resource>
+    <Resource key="DynamicDocument.RSS.description" type="String">leírás: </Resource>
+    <Resource key="DynamicDocument.RSS.language" type="String">nyelv: </Resource>
+    <Resource key="DynamicDocument.RSS.pubDate" type="String">publikálva: </Resource>
+    <Resource key="DynamicDocument.RSS.lastBuildDate" type="String">generálva: </Resource>
+    <Resource key="DynamicDocument.RSS.docs" type="String">cím: </Resource>
+    <Resource key="DynamicDocument.RSS.generator" type="String">generátor: </Resource>
+    <Resource key="DynamicDocument.RSS.managingEditor" type="String">főszerkesztő: </Resource>
+    <Resource key="DynamicDocument.RSS.webMaster" type="String">webmester: </Resource>
   </Language>
 </pp:Resources>

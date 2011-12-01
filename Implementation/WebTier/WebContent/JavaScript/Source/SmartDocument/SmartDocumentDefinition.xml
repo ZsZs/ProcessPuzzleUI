@@ -35,17 +35,17 @@
             <dataElement tag="li" id="userAddresses" source="../SmartDocument/UserProfile.xml" bind="/userProfile/addresses/address[{index}]" minOccures="0" maxOccures="unbounded" />
          </compositeElement>
          <dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
-         <compositeElement tag="ul" id="channelProperties">
-	         <dataElement tag="li" elementStyle="property" id="link" bind="/rss/channel/link"/>
-	         <dataElement tag="li" elementStyle="property" id="description" bind="/rss/channel/description"/>
-	         <dataElement tag="li" elementStyle="property" id="language" bind="/rss/channel/language"/>
-	         <dataElement tag="li" elementStyle="property" id="pubDate" bind="/rss/channel/pubDate"/>
-	         <dataElement tag="li" elementStyle="property" id="lastBuildDate" bind="/rss/channel/lastBuildDate"/>
-	         <dataElement tag="li" elementStyle="property" id="docs" bind="/rss/channel/docs"/>
-	         <dataElement tag="li" elementStyle="property" id="generator" bind="/rss/channel/generator"/>
-	         <dataElement tag="li" elementStyle="property" id="managingEditor" bind="/rss/channel/managingEditor"/>
-	         <dataElement tag="li" elementStyle="property" id="webMaster" bind="/rss/channel/webMaster"/>
-         </compositeElement>
+         <formElement id="channelProperties" method="post" bind="/rss/channel">
+	         <formField id="link" label="DynamicDocument.RSS.link" bind="/rss/channel/link"/>
+	         <formField id="description" label="DynamicDocument.RSS.description" bind="/rss/channel/description"/>
+	         <formField id="language" label="DynamicDocument.RSS.language" bind="/rss/channel/language"/>
+	         <formField id="pubDate" label="DynamicDocument.RSS.pubDate" bind="/rss/channel/pubDate"/>
+	         <formField id="lastBuildDate" label="DynamicDocument.RSS.lastBuildDate" bind="/rss/channel/lastBuildDate"/>
+	         <formField id="docs" label="DynamicDocument.RSS.docs" bind="/rss/channel/docs"/>
+	         <formField id="generator" label="DynamicDocument.RSS.generator" bind="/rss/channel/generator"/>
+	         <formField id="managingEditor" label="DynamicDocument.RSS.managingEditor" bind="/rss/channel/managingEditor"/>
+	         <formField id="webMaster" label="DynamicDocument.RSS.webMaster" bind="/rss/channel/webMaster"/>
+         </formElement>
          <element  tag="h4" id="channelItems">SmartDocument.itemsTitle</element>
          <compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
 	         <dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>

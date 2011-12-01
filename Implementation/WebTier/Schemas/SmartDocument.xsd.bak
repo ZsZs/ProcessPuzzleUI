@@ -148,7 +148,7 @@
   </xs:complexType>
 
   <xs:complexType name="FormField">
-    <xs:attribute name="id" use="required" type="xs:NCName"/>
+    <xs:attribute name="id" use="optional" type="xs:NCName"/>
     <xs:attribute name="label" use="required" type="xs:NCName"/>
     <xs:attribute name="bind" use="required" type="xs:string"/>
   </xs:complexType>

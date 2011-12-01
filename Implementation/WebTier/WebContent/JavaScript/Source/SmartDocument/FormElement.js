@@ -1,5 +1,5 @@
 /*
-Name: CompositeDataElement
+Name: FormElement
 
 Description: Represents a composite constituent element of a SmartDocument which retrieves and presents data from a given data source.
 
@@ -7,7 +7,7 @@ Requires:
     - CompositeDocumentElement, DocumentElement
 
 Provides:
-    - CompositeDataElement
+    - FormElement
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -25,56 +25,48 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var CompositeDataElement = new Class({
-   Extends: CompositeDocumentElement,
-   Implements: DataElementBehaviour,
+var FormElement = new Class({
+   Extends: CompositeDataElement,
    
    options: {
-      componentName : "CompositeDataElement"
+      componentName : "FormElement",
+      methodSelector : "method"
    },
    
    //Constructor
    initialize: function( definitionElement, bundle, dataXml, options ){
       this.parent( definitionElement, bundle, dataXml, options );
-      this.contextElement;
-      this.bind;
-      this.dataElementsNumber = 1;
-      this.maxOccures;
-      this.minOccures;
-      this.siblings = new ArrayList();
-      this.source;
-      this.where;
+      this.method;
    },
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      this.contextElement = contextElement;
-      this.where = where;
-      this.retrieveData();
-      this.constructSiblings();
       this.parent( contextElement, where );
    },
    
    destroy: function(){
-      this.destroySiblings();
       this.parent();
    },
    
-   instantiateDocumentElement: function( elementDefinition ){
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { 
-         onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError, variables : this.options.variables });
-   }.protect(),
-   
    unmarshall: function( dataElementIndex ){
-      this.unmarshallDataProperties();
-      this.loadDataSource();
-      this.determineDataElementsNumber();
-      this.instantiateSiblings();
+      this.unmarshallProperties();
       this.parent();
    },
 
    //Properties
+   getMethod: function() { return this.method; },
    
    //Protected, private helper methods
+   constructNestedElements : function(){
+      this.parent( this.htmlElement, this.where );
+   }.protect(),
    
+   createHtmlElement : function(){
+      this.htmlElement = this.elementFactory.createForm( this.id, this.method, this.contextElement, WidgetElementFactory.Positions.LastChild );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.method = this.resourceBundle.getText( XmlResource.determineAttributeValue( this.definitionElement, this.options.methodSelector ));
+   }   
 });

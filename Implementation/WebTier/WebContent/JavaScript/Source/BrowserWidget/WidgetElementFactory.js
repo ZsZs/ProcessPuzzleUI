@@ -107,7 +107,7 @@ var WidgetElementFactory = new Class( {
 
    createForm : function( formName, methodType, contextElement, position, elementProperties ) {
       assertThat( formName, not( nil() ));
-      assertThat( methodType == "POST" || methodType == "GET", is( true ) );
+      assertThat( methodType.toUpperCase() == "POST" || methodType.toUpperCase() == "GET", is( true ) );
       
       var newForm = this.create( 'FORM', null, contextElement, position, this.mergeProperties( { id : formName, method : methodType }, elementProperties ) );
       return newForm;

@@ -49,6 +49,7 @@ var DocumentElement = new Class({
       
       this.constructionChain = new Chain();
       this.contextElement;
+      this.elementFactory;
       this.error = null;
       this.htmlElement;
       this.id;
@@ -72,6 +73,7 @@ var DocumentElement = new Class({
       assertThat( contextElement, not( nil() ));
       this.contextElement = contextElement;
       this.where = where;
+      this.elementFactory = new WidgetElementFactory( contextElement, this.resourceBundle );
       
       this.constructionChain.callChain();
    },

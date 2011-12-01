@@ -48,6 +48,10 @@ var DocumentElementFactory = new Class({
          newDocumentElement = new DocumentFooter( definitionXmlElement, bundle, data, options ); break;
       case "DOCUMENTHEADER": 
          newDocumentElement = new DocumentHeader( definitionXmlElement, bundle, data, options ); break;
+      case "FORMELEMENT": 
+         newDocumentElement = new FormElement( definitionXmlElement, bundle, data, options ); break;
+      case "FORMFIELD": 
+         newDocumentElement = new FormField( definitionXmlElement, bundle, data, options ); break;
       case "ELEMENT":
       default:
          newDocumentElement = new DocumentElement( definitionXmlElement, bundle, options ); break;
