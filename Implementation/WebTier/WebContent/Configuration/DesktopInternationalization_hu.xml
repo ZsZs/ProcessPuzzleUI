@@ -43,6 +43,11 @@
     
     <Resource key="DocumentProperties.introduction" type="String">A kiválasztott dokumentum tulajdonságai.</Resource>
     <Resource key="DocumentProperties.title" type="String">Dokumentum tulajdonságok</Resource>
+    <Resource key="DocumentProperties.properties.uri" type="String">azonosító:</Resource>
+    <Resource key="DocumentProperties.properties.title" type="String">cím:</Resource>
+    <Resource key="DocumentProperties.properties.subject" type="String">tárgy:</Resource>
+    <Resource key="DocumentProperties.properties.created" type="String">létrehozva:</Resource>
+    <Resource key="DocumentProperties.properties.lastModified" type="String">utoljára módosítva:</Resource>
     
     <Resource key="DynamicDocument.exampleDescription" type="String">Az alábbi szöveg egy RSS.xml tartalmának a beolvasásával jelenik meg. Mivel hír (item) ismétlődő elem, ezért ebből annyi jelenik meg amennyit a tartalomforrás magában foglal.</Resource>
     <Resource key="DynamicDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>

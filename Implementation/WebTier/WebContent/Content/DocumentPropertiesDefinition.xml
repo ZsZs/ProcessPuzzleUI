@@ -21,6 +21,12 @@
    </documentHeader>
    
    <documentBody tag="div" id="propertiesBody">
-      <element tag="p">DocumentProperties.introduction</element>
+      <formElement id="documentProperties" method="post" bind="/documentProperties">
+         <formField id="link" label="DocumentProperties.properties.uri" bind="/documentProperties/uri"/>
+         <formField id="description" label="DocumentProperties.properties.title" bind="/documentProperties/title"/>
+         <formField id="language" label="DocumentProperties.properties.subject" bind="/documentProperties/subject"/>
+         <formField id="pubDate" label="DocumentProperties.properties.created" bind="/documentProperties/created"/>
+         <formField id="lastBuildDate" label="DocumentProperties.properties.lastModified" bind="/documentProperties/lastModified"/>
+      </formElement>
    </documentBody>   
 </smartDocumentDefinition>

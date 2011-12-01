@@ -5,7 +5,7 @@
 	
 	<tabWidget tabWidgetId="ConsoleTabs" selectedTabClass="selectedTab" showCloseButton="false" showPrintButton="false">
 		<tab tabId="ConsoleTab.properties" caption="ConsoleTabs.properties">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentPropertiesDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentPropertiesDefinition.xml', documentContentURI : 'Content/DocumentProperties', documentType : SmartDocument.Types.SMART }</messageProperties>         
       </tab>
 		<tab tabId="ConsoleTab.comments" caption="ConsoleTabs.comments" isDefault="true">
          <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentCommentsDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         

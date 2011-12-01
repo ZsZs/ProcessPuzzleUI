@@ -43,6 +43,11 @@
     
     <Resource key="DocumentProperties.introduction" type="String">Properties of the active document.</Resource>
     <Resource key="DocumentProperties.title" type="String">Document Properties</Resource>
+    <Resource key="DocumentProperties.properties.uri" type="String">uri:</Resource>
+    <Resource key="DocumentProperties.properties.title" type="String">title:</Resource>
+    <Resource key="DocumentProperties.properties.subject" type="String">subject:</Resource>
+    <Resource key="DocumentProperties.properties.created" type="String">created:</Resource>
+    <Resource key="DocumentProperties.properties.lastModified" type="String">last modified:</Resource>
     
     <Resource key="DynamicDocument.exampleDescription" type="String">The list below is the content of an RSS.xml content source. As the item is a repeated element, more than one news is displayed.</Resource>
     <Resource key="DynamicDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
