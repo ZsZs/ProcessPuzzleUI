@@ -1,10 +1,1 @@
 @CHARSET "UTF-8";
-
-#channelProperties{
-	border-style: outset;
-   list-style-type: none;
-}
-
-#channelProperties .property{
-   font-weight: bold;
-}

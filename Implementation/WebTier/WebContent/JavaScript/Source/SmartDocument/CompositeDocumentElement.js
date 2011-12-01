@@ -40,13 +40,14 @@ var CompositeDocumentElement = new Class({
       this.parent( definitionElement, bundle, options );
       this.dataXml = dataXml;
       this.elements = new LinkedHashMap();
+      this.nestedElementsContext;
       this.numberOfConstructedNestedElements = 0;
    },
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
       this.parent( contextElement, where );
-      this.constructNestedElements( contextElement, where );
+      this.constructNestedElements();
    },
    
    constructed: function(){
@@ -89,10 +90,12 @@ var CompositeDocumentElement = new Class({
       this.elements.put( documentElement.getId(), documentElement );
    }.protect(),
    
-   constructNestedElements: function( contextElement, where ){
+   constructNestedElements: function( contextElement ){
+      if( contextElement ) this.nestedElementsContext = contextElement;
+      else this.nestedElementsContext = this.htmlElement;
       this.elements.each( function( elementsEntry, index ){
          var nestedElement = elementsEntry.getValue();
-         nestedElement.construct( this.htmlElement );
+         nestedElement.construct( this.nestedElementsContext );
       }, this );      
    }.protect(),
    

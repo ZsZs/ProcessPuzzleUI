@@ -1,0 +1,360 @@
+div.readOnlyContainer {
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-bottom-style: none;
+	display: block;
+	font-family: Verdana;
+   width: 600px;
+}
+
+div.editableContainer {
+	width: 600px;
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-bottom-style: none;
+	font-family: Verdana;
+}
+
+div.modalWindowContainer {
+	width: 300px;
+	border-style: solid;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+	border-top-style: none;
+	border-bottom-style: none;
+	font-family: Verdana;
+}
+
+div.editableContainer input [type='text'] {
+	background-color: #FFF3CD;
+}
+
+div.editableContainer select {
+	background-color: #FFF3CD;
+}
+
+div.readOnlyContainer select {
+	background-color: #FFF3CD;
+}
+
+div.row {
+	clear: both;
+	padding-top: 3px;
+}
+
+div.row span.label {
+	float: left;
+	width: 150px;
+	text-align: right;
+	font-weight: bold;
+	/*font-style: italic;*/
+	color: teal
+}
+
+div.row span.rep {
+	float: left;
+	width: 100px;
+	text-align: right;
+	font-weight: bold;
+	color: #800040
+}
+
+div.row span.formw {
+	float: left;
+	width: auto;
+	margin-left: 5px
+}
+
+div.row span.formw label {
+	vertical-align: top;
+}
+
+span.formw textarea {
+	background-color: #FFF3CD;
+	font-family: arial;
+}
+
+input.buttonSmall {
+	background-color: transparent;
+	background-image: url("../Images/buttonSmall.jpg");
+	background-repeat: no-repeat;
+	font-family: Tahoma;
+	font-weight: normal;
+	height: 22px;
+	width: 106px;
+	border: 0px;
+}
+
+input.buttonLarge {
+	background-color: transparent;
+	background-image: url("../Images/buttonLarge.jpg");
+	background-repeat: no-repeat;
+	height: 22px;
+	width: 217px;
+	border: 0px;
+}
+
+.upload {
+	position: relative;
+	top: 0px;
+	left: 0px;
+	/*width:106px;
+	height:22px;*/
+	-moz-opacity: 0;
+	filter: alpha(opacity :   0);
+	-khtml-opacity: 0;
+	z-index: 1;
+}
+
+input.fakeText {
+	position: relative;
+	top: 0px;
+	left: -250px;
+	z-index: 0;
+	background-color: #FFF3CD;
+}
+
+input.fakeBrowse {
+	position: relative;
+	top: -23px;
+	left: 160px;
+	z-index: 0;
+	background-color: transparent;
+	background-image: url("../Images/buttonSmall.jpg");
+	background-repeat: no-repeat;
+	height: 22px;
+	width: 106px;
+	border: 0px;
+}
+
+input.buttonUpload {
+	position: relative;
+	top: -23px;
+	left: 160px;
+	background-color: transparent;
+	background-image: url("../Images/buttonSmall.jpg");
+	background-repeat: no-repeat;
+	height: 22px;
+	width: 106px;
+	border: 0px;
+}
+
+input.textBox {
+	background-color: #FFF3CD;
+}
+
+input {
+	background-color: #FFF3CD;
+}
+
+input.textBoxSmall {
+	background-color: #FFF3CD;
+	width: 100%;
+}
+
+input.checkBox {
+	color: yellow;
+}
+
+div.editableContainer table {
+	border: 1;
+	border-style: solid;
+	border-color: gray;
+	border-collapse: collapse;
+}
+
+div.editableContainer table th {
+	padding: 5px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+	cursor: pointer;
+}
+
+div.editableContainer table thead {
+	padding: 5px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+	font-family: Verdana;
+	font-size: 10px;
+	background-color: #D49063;
+	color: #FFFFFF;
+}
+
+div.editableContainer table tbody {
+	padding: 5px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+	font-family: Verdana;
+	font-size: 9px;
+}
+
+div.editableContainer table td {
+	text-align: center;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+}
+
+div.editableContainer table tr.odd {
+	background-color: #FDF2CB;
+}
+
+div.editableContainer table tr.even {
+	background-color: #F2F1D9;
+}
+
+div.readOnlyContainer table {
+	border: 1;
+	border-style: solid;
+	border-color: gray;
+	border-collapse: collapse;
+}
+
+div.readOnlyContainer table th {
+	padding: 5px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+	cursor: pointer;
+}
+
+div.readOnlyContainer table thead {
+	padding: 5px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+	font-family: Verdana;
+	font-size: 10px;
+	background-color: #D49063;
+	color: #FFFFFF;
+}
+
+div.readOnlyContainer table tbody {
+	padding: 5px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+	font-family: Verdana;
+	font-size: 9px;
+}
+
+div.readOnlyContainer table td {
+	text-align: center;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin: 3px;
+	border: 1px;
+	border-style: solid;
+	border-color: gray;
+}
+
+div.readOnlyContainer table tr.odd {
+	background-color: #FDF2CB;
+}
+
+div.readOnlyContainer table tr.even {
+	background-color: #F2F1D9;
+}
+
+/*span.formw text {
+	background-color:#FFF3CD;
+}*/
+div.spacer {
+	clear: both;
+}
+
+#centerrow .div .row {
+	text-align: center;
+}
+
+th.smaller,td.smaller {
+	font-size: xx-small;
+	height: 100%;
+	width: 20px;
+	text-align: right;
+}
+
+td.smallerNoSideBorder {
+	font-size: xx-small;
+	height: 100%;
+	width: 20px;
+	text-align: right;
+	border-left-style: none;
+	border-right-style: none;
+}
+
+select {
+	font-family: Verdana;
+	font-style: normal;
+	background-color: #FFF3CD;
+}
+
+span.dt {
+	font-family: Verdana;
+	font-style: normal;
+	font-weight: bold;
+	font-size: x-small;
+	background-color: #D49063;
+	color: #FFFFFF;
+}
+
+div.row span.left {
+	float: left;
+	width: 300px;
+	text-align: left;
+	font-weight: bold;
+	color: #800040
+}
+
+div.row span.right {
+	float: right;
+	width: auto;
+	margin-left: 5px;
+}
+
+div.row span.rolelabel {
+	float: left;
+	width: 15px;
+	margin-left: 10px;
+	text-align: right;
+	font-weight: bold;
+	color: #800040
+}
+
+/* Sortable tables */
+table.sortable a.sortheader {
+	background-color: #D49063;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: none;
+	display: block;
+}
+/* table.sortable span.sortarrow {
+    color: black;
+    text-decoration: none;*/

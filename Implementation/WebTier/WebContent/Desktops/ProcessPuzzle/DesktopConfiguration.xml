@@ -15,6 +15,7 @@
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Content.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Core.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Dock.css</styleSheet>
+         <styleSheet>Desktops/ProcessPuzzle/Styles/Form.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Layout.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Panels.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Tabs.css</styleSheet>

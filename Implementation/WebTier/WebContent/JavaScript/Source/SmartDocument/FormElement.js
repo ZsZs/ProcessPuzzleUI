@@ -36,6 +36,8 @@ var FormElement = new Class({
    //Constructor
    initialize: function( definitionElement, bundle, dataXml, options ){
       this.parent( definitionElement, bundle, dataXml, options );
+      this.controlsContainerElement;
+      this.fieldsContainerElement;
       this.method;
    },
    
@@ -58,11 +60,13 @@ var FormElement = new Class({
    
    //Protected, private helper methods
    constructNestedElements : function(){
-      this.parent( this.htmlElement, this.where );
+      this.parent( this.fieldsContainerElement );
    }.protect(),
    
    createHtmlElement : function(){
       this.htmlElement = this.elementFactory.createForm( this.id, this.method, this.contextElement, WidgetElementFactory.Positions.LastChild );
+      this.controlsContainerElement = this.htmlElement.getChildren()[1];
+      this.fieldsContainerElement = this.htmlElement.getChildren()[0];
       this.constructionChain.callChain();
    }.protect(),
    

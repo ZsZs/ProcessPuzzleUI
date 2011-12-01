@@ -34,6 +34,7 @@ var WidgetElementFactory = new Class( {
       appendByDefault : true,
       buttonClassName : "buttonSmall", 
       defaultPosition : 3,
+      formFieldsContainerClassName : "editableContainer",
       fieldSetImageAlt : "Show/Hide",
       fieldSetImageSource : "images/expver.png",
       fieldSetImageStyle : { 'cursor' : 'pointer' },
@@ -109,7 +110,9 @@ var WidgetElementFactory = new Class( {
       assertThat( formName, not( nil() ));
       assertThat( methodType.toUpperCase() == "POST" || methodType.toUpperCase() == "GET", is( true ) );
       
-      var newForm = this.create( 'FORM', null, contextElement, position, this.mergeProperties( { id : formName, method : methodType }, elementProperties ) );
+      var newForm = this.create( 'FORM', null, contextElement, position, this.mergeProperties( { id : formName, name : 'form', method : methodType }, elementProperties ) );
+      this.create( 'DIV', null, newForm, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.formFieldsContainerClassName } );
+      this.create( 'DIV', null, newForm, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.readOnlyContainerClassName } );
       return newForm;
    },
 
