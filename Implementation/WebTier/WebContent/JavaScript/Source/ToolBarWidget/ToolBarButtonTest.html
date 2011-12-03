@@ -72,24 +72,28 @@
 
       var LANGUAGE = "hu";
       var TOOLBAR_DEFINITION_URI = "../ToolBarWidget/ToolBarDefinition.xml";
-      var TOOLBAR_CONTAINER_ID = "ToolBarContainer";
+      var TOOLBAR_CONTAINER_ID = "TestToolbar";
       var TOOLBAR_BUTTON_SELECTOR = "/pp:toolBarDefinition/buttons/button[@name='alignLeft']";
       var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
 
+      var componentStateManager;
       var locale = new Locale({ language : LANGUAGE });
-      var toolBar = null;
-      var toolBarButton = null;
-      var toolBarContainerEelement = null;
-      var toolBarButtonDefinition = null;
-      var toolBarDefinition = null;
+      var toolBar;
+      var toolBarButton;
+      var toolBarContainerEelement;
+      var toolBarButtonDefinition;
+      var toolBarDefinition;
       var testCaseChain = new Chain();
-      var webUIConfiguration = null;
-      var webUIController = null;
-      var webUILogger = null;
+      var webUIConfiguration;
+      var webUIController;
+      var webUILogger;
+      var webUIMessageBus;
 
       function setUp(){
+         componentStateManger = new ComponentStateManager();
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
+         webUIMessageBus = new WebUIMessageBus();
          toolBarInternationalization = new XMLResourceBundle( webUIConfiguration );
          toolBarInternationalization.load( locale );
          toolBarDefinition = new XmlResource( TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
@@ -130,7 +134,7 @@
       function runTestCase(){
          setUp();
          test_construct_instantiatesLiAndSpanElements();
-         tearDown();
+         //tearDown();
       }
    </script>
 </head>
@@ -138,7 +142,7 @@
 <body>
    <h1>ToolBarButton.js test page</H1>
    <p>This page contains tests for ToolBarButton.js JavaScript class.</P>
-   <div id="ToolBarContainer">
+   <div id="TestToolbar">
       <ul></ul>
    </div>
 </body>

@@ -5,22 +5,114 @@
    
    <name>DocumentEditorToolBar</name>
    <description>Provides user interface for editing smart documents</description>
+   <showCaptions>false</showCaptions>
    <buttons elementStyle="toolBar">
+      <button name="bold">
+         <caption>DocumentEditorToolBar.bold</caption>
+         <iconImage>Desktops/Images/TextEditor/bold.png</iconImage>
+         <messageProperties>{ actionType : 'bold' }</messageProperties>         
+      </button>
+      
+      <button name="italic">
+         <caption>DocumentEditorToolBar.italic</caption>
+         <iconImage>Desktops/Images/TextEditor/italic.png</iconImage>
+         <messageProperties>{ actionType : 'italic' }</messageProperties>         
+      </button>
+      
+      <button name="underline">
+         <caption>DocumentEditorToolBar.underline</caption>
+         <iconImage>Desktops/Images/TextEditor/underline.png</iconImage>
+         <messageProperties>{ actionType : 'underline' }</messageProperties>         
+      </button>
+      
+      <button name="strikethrough">
+         <caption>DocumentEditorToolBar.strikethrough</caption>
+         <iconImage>Desktops/Images/TextEditor/strikethrough.png</iconImage>
+         <messageProperties>{ actionType : 'strikethrough' }</messageProperties>         
+      </button>
+      
+      <button name="unorderedList">
+         <caption>DocumentEditorToolBar.unorderedList</caption>
+         <iconImage>Desktops/Images/TextEditor/insertunorderedlist.png</iconImage>
+         <messageProperties>{ actionType : 'unorderedList' }</messageProperties>         
+      </button>
+      
+      <button name="orderedList">
+         <caption>DocumentEditorToolBar.orderedList</caption>
+         <iconImage>Desktops/Images/TextEditor/insertorderedlist.png</iconImage>
+         <messageProperties>{ actionType : 'orderedList' }</messageProperties>         
+      </button>
+      
+      <button name="indent">
+         <caption>DocumentEditorToolBar.indent</caption>
+         <iconImage>Desktops/Images/TextEditor/indent.png</iconImage>
+         <messageProperties>{ actionType : 'indent' }</messageProperties>         
+      </button>
+      
+      <button name="outdent">
+         <caption>DocumentEditorToolBar.outdent</caption>
+         <iconImage>Desktops/Images/TextEditor/outdent.png</iconImage>
+         <messageProperties>{ actionType : 'outdent' }</messageProperties>         
+      </button>
+      
       <button name="alignLeft">
          <caption>DocumentEditorToolBar.alignLeft</caption>
-         <iconImage>Desktops/ProcessPuzzle/Images/AlignLeft.gif</iconImage>
+         <iconImage>Desktops/Images/TextEditor/justifyleft.png</iconImage>
+         <messageProperties>{ actionType : 'alignLeft' }</messageProperties>         
       </button>
+      
       <button name="alignCenter">
          <caption>DocumentEditorToolBar.alignCenter</caption>
-         <iconImage>Desktops/ProcessPuzzle/Images/AlignCenter.gif</iconImage>
+         <iconImage>Desktops/Images/TextEditor/justifycenter.png</iconImage>
+         <messageProperties>{ actionType : 'alignCenter' }</messageProperties>         
       </button>
+      
       <button name="alignRight">
          <caption>DocumentEditorToolBar.alignRight</caption>
-         <iconImage>Desktops/ProcessPuzzle/Images/AlignRight.gif</iconImage>
+         <iconImage>Desktops/Images/TextEditor/justifyright.png</iconImage>
+         <messageProperties>{ actionType : 'alignRight' }</messageProperties>         
       </button>
+      
       <button name="alignJustify">
          <caption>DocumentEditorToolBar.alignJustify</caption>
-         <iconImage>Desktops/ProcessPuzzle/Images/AlignJustify.gif</iconImage>
+         <iconImage>Desktops/Images/TextEditor/justifyfull.png</iconImage>
+         <messageProperties>{ actionType : 'alignJustify' }</messageProperties>         
+      </button>
+      
+      <button name="undo">
+         <caption>DocumentEditorToolBar.undo</caption>
+         <iconImage>Desktops/Images/TextEditor/undo.png</iconImage>
+         <messageProperties>{ actionType : 'undo' }</messageProperties>         
+      </button>
+      
+      <button name="redo">
+         <caption>DocumentEditorToolBar.redo</caption>
+         <iconImage>Desktops/Images/TextEditor/redo.png</iconImage>
+         <messageProperties>{ actionType : 'redo' }</messageProperties>         
+      </button>
+      
+      <button name="addLink">
+         <caption>DocumentEditorToolBar.addLink</caption>
+         <iconImage>Desktops/Images/TextEditor/createlink.png</iconImage>
+         <messageProperties>{ actionType : 'addLink' }</messageProperties>         
+      </button>
+      
+      <button name="removeLink">
+         <caption>DocumentEditorToolBar.removeLink</caption>
+         <iconImage>Desktops/Images/TextEditor/unlink.png</iconImage>
+         <messageProperties>{ actionType : 'removeLink' }</messageProperties>         
+      </button>
+      
+      <button name="addImage">
+         <caption>DocumentEditorToolBar.addImage</caption>
+         <iconImage>Desktops/Images/TextEditor/urlimage.png</iconImage>
+         <messageProperties>{ actionType : 'addImage' }</messageProperties>         
+      </button>
+      
+      <button name="toggleView">
+         <caption>DocumentEditorToolBar.toggleView</caption>
+         <iconImage>Desktops/Images/TextEditor/toggleview.png</iconImage>
+         <messageProperties>{ actionType : 'toggleView' }</messageProperties>         
       </button>
    </buttons>
 </pp:toolBarDefinition>

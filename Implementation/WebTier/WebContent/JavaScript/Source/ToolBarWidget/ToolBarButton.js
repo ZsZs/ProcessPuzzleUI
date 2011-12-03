@@ -30,9 +30,12 @@ var ToolBarButton = new Class({
    Implements : Options,
    
    options : {
+      buttonStyle : "toolBarButton",
       captionSelector : "caption",
       iconImageSelector : "iconImage",
-      nameSelector : "@name"
+      nameSelector : "@name",
+      showCaption : false,
+      toolTipStyle : "toolBarToolTip"
    },
 
    //Constructor
@@ -49,6 +52,7 @@ var ToolBarButton = new Class({
       this.parentElement;
       this.spanElement;
       this.state = ToolBarButton.States.INITIALIZED;
+      this.toolTipElement;
    },
    
    //Public accessor and mutator methods
@@ -60,10 +64,15 @@ var ToolBarButton = new Class({
    },
    
    destroy: function(){
+      if( this.imageElement ) this.imageElement.destroy();
+      if( this.spanElement ) this.spanElement.destroy();
       if( this.anchorElement ) this.anchorElement.destroy();
       if( this.listItemElement ) this.listItemElement.destroy();
-      if( this.spanElement ) this.spanElement.destroy();
       this.state = ToolBarButton.States.INITIALIZED;
+   },
+   
+   onSelection: function(){
+      
    },
    
    unmarshall: function(){
@@ -80,10 +89,12 @@ var ToolBarButton = new Class({
    
    //Protected, private helper methods
    instantiateHtmlElements: function(){
+      var buttonTitle = this.options.showCaption ? this.caption : "";
       this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
-      this.achorElement = this.factory.createAnchor( null, null, null, this.listItemElement, WidgetElementFactory.Positions.lastChild );
-      this.spanElement = this.factory.create( 'span', this.caption, this.achorElement, WidgetElementFactory.Positions.lastChild );
-      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.firstChild, { src : this.iconImageUri, alt : this.caption });
+      this.anchorElement = this.factory.createAnchor( buttonTitle, null, this.onSelection, this.listItemElement, WidgetElementFactory.Positions.lastChild );
+      this.spanElement = this.factory.create( 'span', null, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.buttonStyle });
+      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.iconImageUri, alt : buttonTitle });
+      this.toolTipElement = this.factory.create( 'span', this.caption, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.toolTipStyle });
    },
    
    unmarshallProperties: function(){

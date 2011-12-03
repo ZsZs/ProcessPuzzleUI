@@ -74,16 +74,20 @@
       var TOOLBAR_CONTAINER_ID = "ToolBarContainer";
       var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
 
+      var componentStateManager;
       var locale = new Locale({ language : LANGUAGE });
-      var toolBar = null;
-      var toolBarContainerEelement = null;
-      var toolBarDefinition = null;
+      var toolBar;
+      var toolBarContainerEelement;
+      var toolBarDefinition;
       var testCaseChain = new Chain();
-      var webUIConfiguration = null;
-      var webUIController = null;
-      var webUILogger = null;
+      var webUIConfiguration;
+      var webUIController;
+      var webUILogger;
+      var webUIMessageBus;
 
       function setUp(){
+         componentStateManger = new ComponentStateManager();
+         webUIMessageBus = new WebUIMessageBus();
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
          toolBarInternationalization = new XMLResourceBundle( webUIConfiguration );
@@ -125,7 +129,7 @@
          assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
       }
 
-      function test_Construct_InstantiatesWrapperDIVWithId(){
+      function test_construct_instantiatesWrapperDIVWithId(){
          toolBar.unmarshall();
          toolBar.construct();
          assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
@@ -142,8 +146,8 @@
       //runs a test function during debugging
       function runTestCase(){
          setUp();
-         test_Construct_InstantiatesWrapperDIVWithId();
-         tearDown();
+         test_construct_instantiatesWrapperDIVWithId();
+         //tearDown();
       }
    </script>
 </head>

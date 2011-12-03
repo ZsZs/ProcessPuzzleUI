@@ -5,16 +5,44 @@
 	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
 
   <Language name="en">
+    <Resource key="ToolBarWidget.bold" type="String">Bold</Resource>
+    <Resource key="ToolBarWidget.italic" type="String">Italic</Resource>
+    <Resource key="ToolBarWidget.underline" type="String">Underline</Resource>
+    <Resource key="ToolBarWidget.strikethrough" type="String">Strikethrough</Resource>
+    <Resource key="ToolBarWidget.unorderedList" type="String">Unordered List</Resource>
+    <Resource key="ToolBarWidget.orderedList" type="String">OrderedList</Resource>
+    <Resource key="ToolBarWidget.indent" type="String">Indent</Resource>
+    <Resource key="ToolBarWidget.outdent" type="String">Outdent</Resource>
     <Resource key="ToolBarWidget.alignCenter" type="String">Center</Resource>
     <Resource key="ToolBarWidget.alignJustify" type="String">Justify</Resource>
     <Resource key="ToolBarWidget.alignLeft" type="String">Left</Resource>
     <Resource key="ToolBarWidget.alignRight" type="String">Right</Resource>
+    <Resource key="ToolBarWidget.undo" type="String">Undo</Resource>
+    <Resource key="ToolBarWidget.redo" type="String">Redo</Resource>
+    <Resource key="ToolBarWidget.addLink" type="String">Add Link</Resource>
+    <Resource key="ToolBarWidget.removeLink" type="String">Remove Link</Resource>
+    <Resource key="ToolBarWidget.addImage" type="String">Add Image</Resource>
+    <Resource key="ToolBarWidget.toggleView" type="String">Toggle View</Resource>
   </Language>
   
   <Language name="hu">
+    <Resource key="ToolBarWidget.bold" type="String">Félkövér</Resource>
+    <Resource key="ToolBarWidget.italic" type="String">Dőlt</Resource>
+    <Resource key="ToolBarWidget.underline" type="String">Aláhúzott</Resource>
+    <Resource key="ToolBarWidget.strikethrough" type="String">Áthúzott</Resource>
+    <Resource key="ToolBarWidget.unorderedList" type="String">Lista</Resource>
+    <Resource key="ToolBarWidget.orderedList" type="String">Számozott lista</Resource>
+    <Resource key="ToolBarWidget.indent" type="String">Behúzás balra</Resource>
+    <Resource key="ToolBarWidget.outdent" type="String">Behúzás jobbra</Resource>
     <Resource key="ToolBarWidget.alignCenter" type="String">Középre</Resource>
     <Resource key="ToolBarWidget.alignJustify" type="String">Sorkizárt</Resource>
     <Resource key="ToolBarWidget.alignLeft" type="String">Balra</Resource>
     <Resource key="ToolBarWidget.alignRight" type="String">Jobbra</Resource>
+    <Resource key="ToolBarWidget.undo" type="String">Visszavon</Resource>
+    <Resource key="ToolBarWidget.redo" type="String">Mégis</Resource>
+    <Resource key="ToolBarWidget.addLink" type="String">Hivatkozás</Resource>
+    <Resource key="ToolBarWidget.removeLink" type="String">Hivatkozás visszavonása</Resource>
+    <Resource key="ToolBarWidget.addImage" type="String">Kép hozzáadása</Resource>
+    <Resource key="ToolBarWidget.toggleView" type="String">Nézet</Resource>
   </Language>
 </pp:Resources>

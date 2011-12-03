@@ -34,7 +34,8 @@ var ToolBarWidget = new Class({
       componentName : "ToolBarWidget",
       descriptionSelector : "/pp:toolBarDefinition/description", 
       listStyleSelector : "/pp:toolBarDefinition/buttons/@elementStyle",
-      nameSelector : "/pp:toolBarDefinition/name"
+      nameSelector : "/pp:toolBarDefinition/name",
+      showCaptionsSelector : "/pp:toolBarDefinition/showCaptions"
    },
 
    //Constructor
@@ -48,6 +49,7 @@ var ToolBarWidget = new Class({
       this.name;
       this.listElement;
       this.listStyle;
+      this.showCaptions = false;
       this.wrapperElement;
    },
    
@@ -93,7 +95,7 @@ var ToolBarWidget = new Class({
    unmarshallButtons: function(){
       var buttonDefinitions = this.definitionXml.selectNodes( this.options.buttonsSelector );
       buttonDefinitions.each( function( buttonDefinition, index ){
-         var toolBarButton = new ToolBarButton( buttonDefinition, this.elementFactory );
+         var toolBarButton = new ToolBarButton( buttonDefinition, this.elementFactory, { showCaption : this.showCaptions } );
          toolBarButton.unmarshall();
          this.buttons.put( toolBarButton.getName(), toolBarButton );
       }, this );
@@ -103,5 +105,6 @@ var ToolBarWidget = new Class({
       this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
       this.listStyle = this.definitionXml.selectNodeText( this.options.listStyleSelector );
       this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
+      this.showCaptions = parseBoolean( this.definitionXml.selectNodeText( this.options.showCaptionsSelector, null, false ));
    }
 });

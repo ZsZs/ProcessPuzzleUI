@@ -303,7 +303,7 @@ var DesktopPanel = new Class({
    instantiateMUIPanel: function(){
       //var require = { css: [], images: [], js: [], onload: this.onMUIPanelLoaded };
       var require = { css: [], images: [], js: [] };
-      
+      var panelTitle = this.header && this.header.getPlugin() ? "" : this.title;
       try{
          this.MUIPanel = new MUI.Panel({ 
             column: this.columnReference,
@@ -316,8 +316,8 @@ var DesktopPanel = new Class({
             headerToolboxOnload: this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
             height: this.height, 
-            require: require,
-            title: this.title 
+            //require: require,
+            title: panelTitle 
          });
       }catch( exception ){
          this.error = exception;

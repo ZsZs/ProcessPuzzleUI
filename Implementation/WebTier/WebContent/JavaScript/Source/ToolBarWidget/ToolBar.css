@@ -1,19 +1,21 @@
 @CHARSET "UTF-8";
 
-#TestToolbar{
+#TestToolbar {
 	float: left;
-	font:normal 12px Trebuchet MS,Arial;
-	margin: 0px;
+	font: normal 12px Trebuchet MS, Arial;
+	height: 30px; margin : 0px;
 	padding: 0px;
+	margin: 0px;
 }
 
 #TestToolbar ul {
-   float:left;
-   line-height:30px;
-   list-style:none;
-   margin:0;
-   padding:0 10px 0 10px;
-   width:500px;	
+	float: left;
+	line-height: 30px;
+	list-style: none;
+	height: 30px;
+	margin: 0;
+	padding: 0 10px 0 10px;
+	width: 800px;
 }
 
 #TestToolbar li {
@@ -22,26 +24,69 @@
 }
 
 #TestToolbar a {
-   float:left;
-   padding:0 3px 0 3px;
-   text-decoration:none;
+	float: left;
+	padding-left: 3px;
+	padding-right: 2px;
+	text-decoration: none;
+   width:20px;
+   z-index: 10;
 }
 
-#TestToolbar a span {
-   display:block;
-   float:none; 
-   padding:0 10px 0 7px;
+#TestToolbar a span.toolBarButton {
+	display: block;
+	float: none; 
 }
 
-#TestToolbar a span img{
-   border:none;
-   margin:8px 4px 0 0;
+#TestToolbar a img {
+	border: none;
+	position: relative;
+	top: 0px;
 }
+
+* html a:hover { background: transparent; }
 
 #TestToolbar a:hover {
-   background: url(Images/left.png) no-repeat left center;
+	background: url(Images/left.png) no-repeat left center;
+	background-position: left top;
+	color: blue;
 }
 
-#TestToolbar a:hover span {
-   background:url(Images/right.png) no-repeat right center;
+#TestToolbar a:hover span.toolBarButton {
+	background: url(Images/right.png) no-repeat right;
+	background-position: top right;
+}
+
+
+#TestToolbar a span.toolBarToolTip {
+   border-radius: 5px;
+	box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+	cursor: help;
+   left: -100em;
+   margin-left: -99em;
+   opacity: 0;
+   padding: 5px;
+   position: relative;
+   text-decoration: none !important;
+   top: 0.5em;
+   width: 99em;
+   white-space:nowrap;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
+	-moz-transition-property: opacity;
+	-moz-transition-duration: 1s;
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 1s;
+	-o-transition-property: opacity;
+	-o-transition-duration: 1s;
+}
+
+
+#TestToolbar a:hover span.toolBarToolTip {
+   font-family: Calibri, Tahoma, Geneva, sans-serif;
+   left: 0em;
+   margin-left: 0;
+   opacity: 1;
+   z-index: 99;
 }

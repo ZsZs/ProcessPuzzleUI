@@ -36,10 +36,24 @@
     <Resource key="DocumentComments.introduction" type="String">Comments of the active document.</Resource>
     <Resource key="DocumentComments.title" type="String">Comments</Resource>
     
+    <Resource key="DocumentEditorToolBar.bold" type="String">Bold</Resource>
+    <Resource key="DocumentEditorToolBar.italic" type="String">Italic</Resource>
+    <Resource key="DocumentEditorToolBar.underline" type="String">Underline</Resource>
+    <Resource key="DocumentEditorToolBar.strikethrough" type="String">Strikethrough</Resource>
+    <Resource key="DocumentEditorToolBar.unorderedList" type="String">Unordered List</Resource>
+    <Resource key="DocumentEditorToolBar.orderedList" type="String">OrderedList</Resource>
+    <Resource key="DocumentEditorToolBar.indent" type="String">Indent</Resource>
+    <Resource key="DocumentEditorToolBar.outdent" type="String">Outdent</Resource>
     <Resource key="DocumentEditorToolBar.alignCenter" type="String">Center</Resource>
     <Resource key="DocumentEditorToolBar.alignJustify" type="String">Justify</Resource>
     <Resource key="DocumentEditorToolBar.alignLeft" type="String">Left</Resource>
     <Resource key="DocumentEditorToolBar.alignRight" type="String">Right</Resource>
+    <Resource key="DocumentEditorToolBar.undo" type="String">Undo</Resource>
+    <Resource key="DocumentEditorToolBar.redo" type="String">Redo</Resource>
+    <Resource key="DocumentEditorToolBar.addLink" type="String">Add Link</Resource>
+    <Resource key="DocumentEditorToolBar.removeLink" type="String">Remove Link</Resource>
+    <Resource key="DocumentEditorToolBar.addImage" type="String">Add Image</Resource>
+    <Resource key="DocumentEditorToolBar.toggleView" type="String">Toggle View</Resource>
     
     <Resource key="DocumentProperties.introduction" type="String">Properties of the active document.</Resource>
     <Resource key="DocumentProperties.title" type="String">Document Properties</Resource>

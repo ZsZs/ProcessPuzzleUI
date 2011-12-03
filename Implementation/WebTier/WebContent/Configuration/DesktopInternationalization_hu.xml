@@ -36,11 +36,25 @@
     <Resource key="DocumentComments.introduction" type="String">Megjegyzések a kiválasztott dokumentumhoz.</Resource>
     <Resource key="DocumentComments.title" type="String">Megjegyzések</Resource>
     
+    <Resource key="DocumentEditorToolBar.bold" type="String">Félkövér</Resource>
+    <Resource key="DocumentEditorToolBar.italic" type="String">Dőlt</Resource>
+    <Resource key="DocumentEditorToolBar.underline" type="String">Aláhúzott</Resource>
+    <Resource key="DocumentEditorToolBar.strikethrough" type="String">Áthúzott</Resource>
+    <Resource key="DocumentEditorToolBar.unorderedList" type="String">Lista</Resource>
+    <Resource key="DocumentEditorToolBar.orderedList" type="String">Számozott lista</Resource>
+    <Resource key="DocumentEditorToolBar.indent" type="String">Behúzás balra</Resource>
+    <Resource key="DocumentEditorToolBar.outdent" type="String">Behúzás jobbra</Resource>
     <Resource key="DocumentEditorToolBar.alignCenter" type="String">Középre</Resource>
     <Resource key="DocumentEditorToolBar.alignJustify" type="String">Sorkizárt</Resource>
     <Resource key="DocumentEditorToolBar.alignLeft" type="String">Balra</Resource>
     <Resource key="DocumentEditorToolBar.alignRight" type="String">Jobbra</Resource>
-    
+    <Resource key="DocumentEditorToolBar.undo" type="String">Visszavon</Resource>
+    <Resource key="DocumentEditorToolBar.redo" type="String">Mégis</Resource>
+    <Resource key="DocumentEditorToolBar.addLink" type="String">Hivatkozás</Resource>
+    <Resource key="DocumentEditorToolBar.removeLink" type="String">Hivatkozás visszavonása</Resource>
+    <Resource key="DocumentEditorToolBar.addImage" type="String">Kép hozzáadása</Resource>
+    <Resource key="DocumentEditorToolBar.toggleView" type="String">Nézet</Resource>
+
     <Resource key="DocumentProperties.introduction" type="String">A kiválasztott dokumentum tulajdonságai.</Resource>
     <Resource key="DocumentProperties.title" type="String">Dokumentum tulajdonságok</Resource>
     <Resource key="DocumentProperties.properties.uri" type="String">azonosító:</Resource>
