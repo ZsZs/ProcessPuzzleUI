@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:toolBarDefinition
+<toolBarDefinition
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopToolBar.xsd">
    
    <name>DocumentEditorToolBar</name>
    <description>Provides user interface for editing smart documents</description>
@@ -31,6 +32,8 @@
          <messageProperties>{ actionType : 'strikethrough' }</messageProperties>         
       </button>
       
+      <divider/>
+      
       <button name="unorderedList">
          <caption>DocumentEditorToolBar.unorderedList</caption>
          <iconImage>Desktops/Images/TextEditor/insertunorderedlist.png</iconImage>
@@ -54,6 +57,8 @@
          <iconImage>Desktops/Images/TextEditor/outdent.png</iconImage>
          <messageProperties>{ actionType : 'outdent' }</messageProperties>         
       </button>
+      
+      <divider/>
       
       <button name="alignLeft">
          <caption>DocumentEditorToolBar.alignLeft</caption>
@@ -79,6 +84,8 @@
          <messageProperties>{ actionType : 'alignJustify' }</messageProperties>         
       </button>
       
+      <divider/>
+      
       <button name="undo">
          <caption>DocumentEditorToolBar.undo</caption>
          <iconImage>Desktops/Images/TextEditor/undo.png</iconImage>
@@ -90,6 +97,8 @@
          <iconImage>Desktops/Images/TextEditor/redo.png</iconImage>
          <messageProperties>{ actionType : 'redo' }</messageProperties>         
       </button>
+      
+      <divider/>
       
       <button name="addLink">
          <caption>DocumentEditorToolBar.addLink</caption>
@@ -115,4 +124,4 @@
          <messageProperties>{ actionType : 'toggleView' }</messageProperties>         
       </button>
    </buttons>
-</pp:toolBarDefinition>
+</toolBarDefinition>

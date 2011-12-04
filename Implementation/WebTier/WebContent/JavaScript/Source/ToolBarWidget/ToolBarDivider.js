@@ -1,14 +1,14 @@
 /*
 Name: 
-    - ToolBarButton
+    - ToolBarDivider
 
 Description: 
-    - Represents a button in a toolbar. It's a component of a ToolBar. 
+    - Represents a divider in a tool bar. It's a component of a ToolBar. 
 
 Requires:
 
 Provides:
-    - ToolBarButton
+    - ToolBarDivider
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -26,34 +26,26 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-var ToolBarButton = new Class({
-   Implements : [Events, Options],
-   Binds: ['onSelection'],
+var ToolBarDivider = new Class({
+   Implements : Options,
    
    options : {
-      buttonStyle : "toolBarButton",
-      captionSelector : "caption",
+      dividerStyle : "toolBarDivider",
       iconImageSelector : "iconImage",
-      messagePropertiesSelector : "messageProperties",
-      nameSelector : "@name",
-      showCaption : false,
-      toolTipStyle : "toolBarToolTip"
+      dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
+      namePrefix : "divider_"
    },
 
    //Constructor
    initialize: function( definition, elementFactory, options ){
       this.setOptions( options );
-      this.anchorElement;
       this.definitionXml = definition;
-      this.caption;
       this.factory = elementFactory;
-      this.iconImageUri;
+      this.dividerIconImageUri;
       this.imageElement;
       this.listItemElement;
-      this.messageProperties;
-      this.name = new Date().getTime();
+      this.name = UniqueId.generate( this.options.namePrefix );
       this.parentElement;
-      this.spanElement;
       this.state = ToolBarButton.States.INITIALIZED;
       this.toolTipElement;
    },
@@ -67,16 +59,14 @@ var ToolBarButton = new Class({
    },
    
    destroy: function(){
-      if( this.toolTipElement ) this.toolTipElement.destroy();
       if( this.imageElement ) this.imageElement.destroy();
       if( this.spanElement ) this.spanElement.destroy();
-      if( this.anchorElement ) this.anchorElement.destroy();
       if( this.listItemElement ) this.listItemElement.destroy();
       this.state = ToolBarButton.States.INITIALIZED;
    },
    
    onSelection: function(){
-      this.fireEvent( 'onSelection', this );
+      
    },
    
    unmarshall: function(){
@@ -85,29 +75,19 @@ var ToolBarButton = new Class({
    },
    
    //Properties
-   getCaption: function() { return this.caption; },
-   getIconImage: function() { return this.iconImageUri; },
-   getMessageProperties: function() { return this.messageProperties; },
+   getIconImage: function() { return this.dividerIconImageUri; },
    getName: function() { return this.name; },
    getParentElement: function() { return this.parentElement; },
    getState: function() { return this.state; },
    
    //Protected, private helper methods
    instantiateHtmlElements: function(){
-      var buttonTitle = this.options.showCaption ? this.caption : "";
       this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
-      this.anchorElement = this.factory.createAnchor( buttonTitle, null, this.onSelection, this.listItemElement, WidgetElementFactory.Positions.lastChild );
-      this.spanElement = this.factory.create( 'span', null, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.buttonStyle });
-      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.iconImageUri, alt : buttonTitle });
-      this.toolTipElement = this.factory.create( 'span', this.caption, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.toolTipStyle });
+      this.spanElement = this.factory.create( 'span', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.dividerStyle });
+      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.dividerIconImageUri });
    },
    
    unmarshallProperties: function(){
-      this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
-      this.iconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml );
-      this.messageProperties = XmlResource.selectNodeText( this.options.messagePropertiesSelector, this.definitionXml );
-      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
+      this.dividerIconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml, null, this.options.dividerIconImageUri );
    }.protect(),
 });
-
-ToolBarButton.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

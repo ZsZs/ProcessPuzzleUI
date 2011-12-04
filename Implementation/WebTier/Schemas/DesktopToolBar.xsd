@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+   elementFormDefault="qualified" 
+   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+   xmlns:pp="http://www.processpuzzle.com">
+
+  <xs:element name="toolBarDefinition">
+  	<xs:complexType>
+       <xs:sequence>
+         <xs:element name="name" type="xs:NCName"/>
+         <xs:element name="description" type="xs:string"/>
+         <xs:element name="showCaptions" type="xs:boolean"/>
+         <xs:element name="buttons" type="Buttons"/>
+	   </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="Buttons">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element ref="button" minOccurs="1" maxOccurs="unbounded" />
+      <xs:element ref="divider" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+    <xs:attribute name="elementStyle" use="required" type="xs:NCName"/>
+  </xs:complexType>
+
+  <xs:element name="button">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="caption"/>
+        <xs:element ref="iconImage"/>
+        <xs:element ref="messageProperties"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="caption" type="xs:NCName"/>
+  <xs:element name="messageProperties" type="xs:string"/>
+  <xs:element name="divider">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="iconImage" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="iconImage" type="xs:string"/>
+</xs:schema>

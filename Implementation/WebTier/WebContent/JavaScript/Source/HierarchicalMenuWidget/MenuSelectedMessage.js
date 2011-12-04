@@ -22,7 +22,7 @@ var MenuSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
       actionType: null,
-      description: "A message about the event that a menu item was selected.",
+      description: "A message about the event that a menu or tool bar item was selected.",
       documentContentURI: null,
       documentType: SmartDocument.Types.SMART,
       documentURI: null,

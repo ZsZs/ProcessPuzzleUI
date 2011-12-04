@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<toolBarDefinition 
+<pp:toolBarDefinition 
 	xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopToolBar.xsd">
    
    <name>TestToolbar</name>
@@ -132,4 +132,4 @@
          <messageProperties>{ actionType : 'toggleView' }</messageProperties>         
       </button>
    </buttons>
-</toolBarDefinition>
+</pp:toolBarDefinition>

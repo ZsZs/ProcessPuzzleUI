@@ -23,6 +23,12 @@
 	padding: 0px;
 }
 
+#TestToolbar span.toolBarDivider{
+	display: inline;
+	float: left;
+	margin-right: 3px;
+}
+
 #TestToolbar a {
 	float: left;
 	padding-left: 3px;

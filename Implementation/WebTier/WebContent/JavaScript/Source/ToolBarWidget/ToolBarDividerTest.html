@@ -1,7 +1,8 @@
 <!DOCTYPE html>
+
 <html>
 <head>
-   <title>Test page for ToolBarWidget.js</title>
+   <title>Test page for ToolBarDivider.js</title>
    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
@@ -32,10 +33,9 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
-   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
@@ -48,9 +48,7 @@
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
-   <script type="text/javascript" src="../FundamentalTypes/UniqueId.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
-   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
    <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
@@ -59,7 +57,6 @@
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarDivider.js"></script>
-   <script type="text/javascript" src="../ToolBarWidget/ToolBarButtonFactory.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
@@ -76,14 +73,16 @@
 
       var LANGUAGE = "hu";
       var TOOLBAR_DEFINITION_URI = "../ToolBarWidget/ToolBarDefinition.xml";
-      var TOOLBAR_CONTAINER_ID = "ToolBarContainer";
+      var TOOLBAR_CONTAINER_ID = "TestToolbar";
+      var TOOLBAR_BUTTON_SELECTOR = "/toolBarDefinition/buttons/divider[1]";
       var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
 
       var componentStateManager;
       var locale = new Locale({ language : LANGUAGE });
-      var receivedMessage;
       var toolBar;
+      var toolBarDivider;
       var toolBarContainerEelement;
+      var toolBarDividerDefinition;
       var toolBarDefinition;
       var testCaseChain = new Chain();
       var webUIConfiguration;
@@ -93,93 +92,57 @@
 
       function setUp(){
          componentStateManger = new ComponentStateManager();
-         webUIMessageBus = new WebUIMessageBus();
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
+         webUIMessageBus = new WebUIMessageBus();
          toolBarInternationalization = new XMLResourceBundle( webUIConfiguration );
          toolBarInternationalization.load( locale );
          toolBarDefinition = new XmlResource( TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
+         toolBarDividerDefinition = toolBarDefinition.selectNode( TOOLBAR_BUTTON_SELECTOR );
          
          toolBar = new ToolBarWidget( { widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
-         toolBarContainerEelement = $( TOOLBAR_CONTAINER_ID );
-      }
-      
-      function onButtonSelected( message ){
-         receivedMessage = message;
+         
+         toolBarDivider = new ToolBarDivider( toolBarDividerDefinition, toolBar.getElementFactory() );
+         toolBarContainerElement = $( TOOLBAR_CONTAINER_ID );
       }
 
       function tearDown(){
          toolBarDefinition.release();
+         toolBarDivider.destroy();
          toolBar.destroy();
-         receivedMessage = null;
       }
 
       function test_initialization_setsState(){
-         assertThat( toolBar.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+         assertThat( toolBarDivider.getState(), equalTo( ToolBarButton.States.INITIALIZED ));
       }
       
       function test_unmarshall_determinesProperties(){
-         toolBar.unmarshall();
-         assertThat( toolBar.getName(), equalTo( toolBarDefinition.selectNodeText( "/toolBarDefinition/name" )));
-         assertThat( toolBar.getDescription(), equalTo( toolBarDefinition.selectNodeText( "/toolBarDefinition/description" )));
-         assertThat( toolBar.getListStyle(), equalTo( toolBarDefinition.selectNodeText( "/toolBarDefinition/buttons/@elementStyle" )));
+         toolBarDivider.unmarshall();
+         assertThat( toolBarDivider.getIconImage(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/iconImage" )));
       }
 
-      function test_unmarshall_unmarshallsButtonsAndDividers(){
-         toolBar.unmarshall();
-         
-         var numberOfButtons = toolBarDefinition.selectNodes( "/toolBarDefinition/buttons/button" ).length;
-         var numberOfDividers = toolBarDefinition.selectNodes( "/toolBarDefinition/buttons/divider" ).length;
-         
-         assertThat( toolBar.getButtons().size(), equalTo( numberOfButtons + numberOfDividers ));
-         toolBar.getButtons().each( function( buttonEntry, index ){
-            var toolBarButton = buttonEntry.getValue();
-            assertThat( toolBarButton.getState(), equalTo( ToolBarButton.States.UNMARSHALLED ));
-         }, this );
-      }
-      
-      function test_construct_instantiatesWrapperDIVWithId(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
-      }
-
-      function test_construct_instantiatesWrapperDIVWithId(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ), not( nil() ));
-      }
-
-      function test_construct_instantiatesWrapperULVWithStyle(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ), not( nil() ));
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ).hasClass( toolBar.getListStyle() ), is( true ));
-      }
-      
-      function test_onButtonSelection_instantiatesAndSendsMenuSelectedMessage(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         webUIMessageBus.subscribeToMessage( MenuSelectedMessage, onButtonSelected );
-         toolBar.onButtonSelection( toolBar.getButtons().get( toolBarDefinition.selectNodeText( "/toolBarDefinition/buttons/button[@name='alignLeft']/@name" )));
-         
-         assertThat( instanceOf( receivedMessage, MenuSelectedMessage ), is( true ));
-         assertThat( receivedMessage.getOriginator(), equalTo( toolBar.getName() ));
+      function test_construct_instantiatesLiAndSpanElements(){
+         toolBarDivider.unmarshall();
+         toolBarDivider.construct( toolBarContainerElement.getElement('ul'));
+         assertThat( toolBarContainerElement.getChildren( 'ul li' ).length, equalTo( 1 ));
+         assertThat( toolBarContainerElement.getChildren( 'ul li span' ).length, equalTo( 1 ));
+         assertThat( toolBarContainerElement.getChildren( 'ul li span img' ).length, equalTo( 1 ));
       }
 
       //runs a test function during debugging
       function runTestCase(){
          setUp();
-         test_onButtonSelection_instantiatesAndSendsMenuSelectedMessage();
+         test_construct_instantiatesLiAndSpanElements();
          tearDown();
       }
    </script>
 </head>
 
 <body>
-   <h1>ToolBarWidget.js test page</H1>
-   <p>This page contains tests for ToolBarWidget.js JavaScript class.</P>
-   <div id="ToolBarContainer"></div>
+   <h1>ToolBarDivider.js test page</H1>
+   <p>This page contains tests for ToolBarDivider.js JavaScript class.</P>
+   <div id="TestToolbar">
+      <ul></ul>
+   </div>
 </body>
 </html>

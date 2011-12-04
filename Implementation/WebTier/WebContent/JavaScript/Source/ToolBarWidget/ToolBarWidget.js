@@ -30,12 +30,13 @@ You should have received a copy of the GNU General Public License along with thi
 var ToolBarWidget = new Class({
    Extends : BrowserWidget,
    options : {
-      buttonsSelector : "/pp:toolBarDefinition/buttons/button",
+      buttonsSelector : "/toolBarDefinition/buttons/button | /toolBarDefinition/buttons/divider",
       componentName : "ToolBarWidget",
-      descriptionSelector : "/pp:toolBarDefinition/description", 
-      listStyleSelector : "/pp:toolBarDefinition/buttons/@elementStyle",
-      nameSelector : "/pp:toolBarDefinition/name",
-      showCaptionsSelector : "/pp:toolBarDefinition/showCaptions"
+      descriptionSelector : "/toolBarDefinition/description", 
+      dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
+      listStyleSelector : "/toolBarDefinition/buttons/@elementStyle",
+      nameSelector : "/toolBarDefinition/name",
+      showCaptionsSelector : "/toolBarDefinition/showCaptions"
    },
 
    //Constructor
@@ -46,6 +47,7 @@ var ToolBarWidget = new Class({
       //Private attributes
       this.buttons = new LinkedHashMap();
       this.description;
+      this.dividers = new ArrayList();
       this.name;
       this.listElement;
       this.listStyle;
@@ -61,10 +63,19 @@ var ToolBarWidget = new Class({
    },
    
    destroy: function(){
+      this.destroyButtons();
+      this.destroyDividers();
       if( this.listElement ) this.listElement.destroy();
       if( this.wrapperElement ) this.wrapperElement.destroy();
-      this.buttons.clear();
       this.parent();
+   },
+   
+   onButtonSelection: function( button ){
+      var argumentText = button.getMessageProperties();
+      var arguments = argumentText != null ? eval( "(" + argumentText + ")" ) : null;
+      arguments['originator'] = this.name;
+      
+      this.messageBus.notifySubscribers( new MenuSelectedMessage( arguments ));
    },
    
    unmarshall: function(){
@@ -92,10 +103,27 @@ var ToolBarWidget = new Class({
       this.listElement = this.elementFactory.create( 'ul', null, this.wrapperElement, WidgetElementFactory.Positions.LastChild, { 'class' : this.listStyle } );
    }.protect(),
    
+   destroyButtons: function(){
+      this.buttons.each( function( buttonEntry, index ) {
+         var button = buttonEntry.getValue();
+         button.destroy();
+      }, this );
+      
+      this.buttons.clear();
+   }.protect(),
+   
+   destroyDividers: function(){
+      this.buttons.each( function( divider, index ) {
+         divider.destroy();
+      }, this );
+      
+      this.buttons.clear();
+   }.protect(),
+   
    unmarshallButtons: function(){
       var buttonDefinitions = this.definitionXml.selectNodes( this.options.buttonsSelector );
       buttonDefinitions.each( function( buttonDefinition, index ){
-         var toolBarButton = new ToolBarButton( buttonDefinition, this.elementFactory, { showCaption : this.showCaptions } );
+         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
          toolBarButton.unmarshall();
          this.buttons.put( toolBarButton.getName(), toolBarButton );
       }, this );

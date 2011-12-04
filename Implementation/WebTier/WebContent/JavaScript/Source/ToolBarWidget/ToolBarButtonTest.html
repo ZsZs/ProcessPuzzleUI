@@ -73,7 +73,7 @@
       var LANGUAGE = "hu";
       var TOOLBAR_DEFINITION_URI = "../ToolBarWidget/ToolBarDefinition.xml";
       var TOOLBAR_CONTAINER_ID = "TestToolbar";
-      var TOOLBAR_BUTTON_SELECTOR = "/pp:toolBarDefinition/buttons/button[@name='alignLeft']";
+      var TOOLBAR_BUTTON_SELECTOR = "/toolBarDefinition/buttons/button[@name='alignLeft']";
       var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
 
       var componentStateManager;
@@ -100,8 +100,6 @@
          toolBarButtonDefinition = toolBarDefinition.selectNode( TOOLBAR_BUTTON_SELECTOR );
          
          toolBar = new ToolBarWidget( { widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
-         //toolBar.unmarshall();
-         //toolBar.construct();
          
          toolBarButton = new ToolBarButton( toolBarButtonDefinition, toolBar.getElementFactory() );
          toolBarContainerElement = $( TOOLBAR_CONTAINER_ID );
@@ -121,6 +119,7 @@
          toolBarButton.unmarshall();
          assertThat( toolBarButton.getCaption(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/caption" )));
          assertThat( toolBarButton.getIconImage(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/iconImage" )));
+         assertThat( toolBarButton.getMessageProperties(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/messageProperties" )));
          assertThat( toolBarButton.getName(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/@name" )));
       }
 
@@ -134,7 +133,7 @@
       function runTestCase(){
          setUp();
          test_construct_instantiatesLiAndSpanElements();
-         //tearDown();
+         tearDown();
       }
    </script>
 </head>

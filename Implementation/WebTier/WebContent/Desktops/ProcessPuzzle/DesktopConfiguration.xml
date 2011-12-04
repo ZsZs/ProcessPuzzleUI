@@ -75,6 +75,7 @@
                <widget name="ToolBarWidget">
                   <options>
                      <option name="componentName " value="'documentEditorToolBar'"/>
+                     <option name="dividerIconImageUri" value="'Desktops/ProcessPuzzle/Images/ToolboxDivider.jpg'"/>
                      <option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
                      <option name="widgetDefinitionURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
                   </options>

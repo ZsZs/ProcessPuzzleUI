@@ -14,7 +14,7 @@
       <imageFolderUri>Content/Album</imageFolderUri>
       <showController>true</showController>
       <showImageCaptions>true</showImageCaptions>
-      <showSlidesRandom>true</showSlidesRandom>
+      <showSlidesRandom>false</showSlidesRandom>
       <showThumbnails>true</showThumbnails>
       <skipTransition>WhenPaused | OnStart</skipTransition>
       <slideChangeDelay>3000</slideChangeDelay>
