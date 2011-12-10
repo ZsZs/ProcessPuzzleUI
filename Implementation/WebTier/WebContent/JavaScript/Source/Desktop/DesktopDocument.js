@@ -82,7 +82,7 @@ var DesktopDocument = new Class({
    
    instantiateDocument: function(){
       this.document = new SmartDocument( this.internationalization, {  
-         widgetContainerId : this.options.componentContainerId, 
+         documentContainerId : this.options.componentContainerId, 
          documentDefinitionUri : this.documentDefinitionUri, 
          documentContentUri : this.documentDataUri, 
          onDocumentReady : this.onDocumentReady,
@@ -92,7 +92,7 @@ var DesktopDocument = new Class({
    }.protect(),
    
    revertConstruction: function(){
-      if( this.document && this.document.getState() > SmartDocument.States.INITIALIZED ) this.document.destroy();
+      if( this.document && this.document.getState() > AbstractDocument.States.INITIALIZED ) this.document.destroy();
       this.document = null;
       this.parent();
    },

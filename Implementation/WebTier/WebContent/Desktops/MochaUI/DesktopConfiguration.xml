@@ -39,7 +39,7 @@
 	</columns>
 	
 	<panels>
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleDocumentLoadEvents="true">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
 		</panel>
 		

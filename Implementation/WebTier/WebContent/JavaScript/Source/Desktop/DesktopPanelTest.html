@@ -24,6 +24,8 @@
    <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
    <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
    <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.Extras.js"></script>
    <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
@@ -34,13 +36,15 @@
    
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
    
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../DocumentEditor/DocumentEditor.js"></script>
+   <script type="text/javascript" src="../DocumentEditor/DocumentEditorDialog.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
@@ -50,8 +54,10 @@
    <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UniqueId.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../HtmlDocument/HtmlDocument.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
    <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
@@ -74,6 +80,7 @@
    <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../SmartDocument/MissingBindVariableException.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
@@ -84,7 +91,10 @@
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../TextAreaEditor/TextAreaEditor.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButtonFactory.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarDivider.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
@@ -93,10 +103,10 @@
 
 <script type="text/javascript">
    window.addEvent( 'domready', function() {
-      test_construct_constructsHeaderWithPlugin();
+//      test_construct_constructsHeaderWithPlugin();
 //       test_construct_constructsSmartDocument();
 //       test_construct_whenSpecified_subscribesForMenuSelectedMessage();
-//       test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument();
+       test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument();
    });
 
    JsHamcrest.Integration.JsUnit();
@@ -105,7 +115,7 @@
    var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
    var DESKTOP_CONTAINER_ID = "desktop";
    var COLUMN_DEFINITION = "/desktopConfiguration/columns/column[@name='mainColumn']";
-   var HTML_DOCUMENT_URI = "../Desktop/HtmlDocument";
+   var HTML_DOCUMENT_URI = "../Desktop/HtmlDocument.xml";
    var SMART_DOCUMENT_URI = "../Desktop/StaticDocument.xml";
    var PANEL_DEFINITION = "/desktopConfiguration/panels/panel[@name='documents-panel']";
    var PANEL_DOCUMENT_WRAPPER_ID = "panelDocumentWrapper";
@@ -129,6 +139,7 @@
    var webUIConfiguration;
    var webUIController;
    var webUILogger;
+   var webUIMessageBus;
 
    function runTestCase(){
       if( !testCaseIsRunning ) testCaseChain.callChain();
@@ -138,6 +149,7 @@
       inform( "beforeEachTest" );
       webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
       webUILogger = new WebUILogger( webUIConfiguration );
+      webUIMessageBus = new WebUIMessageBus();
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( new Locale({ language : "hu" }) );
       messageBus = new WebUIMessageBus();
@@ -182,6 +194,7 @@
       desktopDefinition.release();
       panel.destroy();
       column.destroy();
+      webUIMessageBus.tearDown();
       desktopContainerElement = null;
       loadedDocument = null;
 
@@ -355,11 +368,11 @@
             assertThat( loadedDocument, equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
          },
          function(){
-            var message = new MenuSelectedMessage({actionType : 'loadDocument', documentType : SmartDocument.Types.HTML, documentURI : HTML_DOCUMENT_URI });
+            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.HTML, documentURI : HTML_DOCUMENT_URI });
             messageBus.notifySubscribers( message );
          },
          function() {
-            assertThat( panel.getDocumentContentUri(), equalTo( HTML_DOCUMENT_URI ));
+            assertThat( panel.getDocumentDefinitionUri(), equalTo( HTML_DOCUMENT_URI ));
             testCaseChain.callChain();
          },
          afterEachTest
@@ -378,7 +391,7 @@
             assertThat( loadedDocument, equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
          },
          function(){
-            var message = new MenuSelectedMessage({actionType : 'loadDocument', documentType : SmartDocument.Types.SMART, documentURI : SMART_DOCUMENT_URI });
+            var message = new MenuSelectedMessage({ activiyType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : SMART_DOCUMENT_URI });
             messageBus.notifySubscribers( message );
          },
          function() {

@@ -11,25 +11,25 @@
       <button name="bold">
          <caption>DocumentEditorToolBar.bold</caption>
          <iconImage>Desktops/Images/TextEditor/bold.png</iconImage>
-         <messageProperties>{ actionType : 'bold' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.BOLD }</messageProperties>         
       </button>
       
       <button name="italic">
          <caption>DocumentEditorToolBar.italic</caption>
          <iconImage>Desktops/Images/TextEditor/italic.png</iconImage>
-         <messageProperties>{ actionType : 'italic' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ITALIC }</messageProperties>         
       </button>
       
       <button name="underline">
          <caption>DocumentEditorToolBar.underline</caption>
          <iconImage>Desktops/Images/TextEditor/underline.png</iconImage>
-         <messageProperties>{ actionType : 'underline' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDERLINE }</messageProperties>         
       </button>
       
       <button name="strikethrough">
          <caption>DocumentEditorToolBar.strikethrough</caption>
          <iconImage>Desktops/Images/TextEditor/strikethrough.png</iconImage>
-         <messageProperties>{ actionType : 'strikethrough' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.STRIKETHROUGH }</messageProperties>         
       </button>
       
       <divider/>
@@ -37,25 +37,25 @@
       <button name="unorderedList">
          <caption>DocumentEditorToolBar.unorderedList</caption>
          <iconImage>Desktops/Images/TextEditor/insertunorderedlist.png</iconImage>
-         <messageProperties>{ actionType : 'unorderedList' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNORDERED_LIST }</messageProperties>         
       </button>
       
       <button name="orderedList">
          <caption>DocumentEditorToolBar.orderedList</caption>
          <iconImage>Desktops/Images/TextEditor/insertorderedlist.png</iconImage>
-         <messageProperties>{ actionType : 'orderedList' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ORDERED_LIST }</messageProperties>         
       </button>
       
       <button name="indent">
          <caption>DocumentEditorToolBar.indent</caption>
          <iconImage>Desktops/Images/TextEditor/indent.png</iconImage>
-         <messageProperties>{ actionType : 'indent' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.INDENT }</messageProperties>         
       </button>
       
       <button name="outdent">
          <caption>DocumentEditorToolBar.outdent</caption>
          <iconImage>Desktops/Images/TextEditor/outdent.png</iconImage>
-         <messageProperties>{ actionType : 'outdent' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.OUTDENT }</messageProperties>         
       </button>
       
       <divider/>
@@ -63,25 +63,25 @@
       <button name="alignLeft">
          <caption>DocumentEditorToolBar.alignLeft</caption>
          <iconImage>Desktops/Images/TextEditor/justifyleft.png</iconImage>
-         <messageProperties>{ actionType : 'alignLeft' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_LEFT }</messageProperties>         
       </button>
       
       <button name="alignCenter">
          <caption>DocumentEditorToolBar.alignCenter</caption>
          <iconImage>Desktops/Images/TextEditor/justifycenter.png</iconImage>
-         <messageProperties>{ actionType : 'alignCenter' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_CENTER }</messageProperties>         
       </button>
       
       <button name="alignRight">
          <caption>DocumentEditorToolBar.alignRight</caption>
          <iconImage>Desktops/Images/TextEditor/justifyright.png</iconImage>
-         <messageProperties>{ actionType : 'alignRight' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_RIGHT }</messageProperties>         
       </button>
       
       <button name="alignJustify">
          <caption>DocumentEditorToolBar.alignJustify</caption>
          <iconImage>Desktops/Images/TextEditor/justifyfull.png</iconImage>
-         <messageProperties>{ actionType : 'alignJustify' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_JUSTIFY }</messageProperties>         
       </button>
       
       <divider/>
@@ -89,13 +89,13 @@
       <button name="undo">
          <caption>DocumentEditorToolBar.undo</caption>
          <iconImage>Desktops/Images/TextEditor/undo.png</iconImage>
-         <messageProperties>{ actionType : 'undo' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDO }</messageProperties>         
       </button>
       
       <button name="redo">
          <caption>DocumentEditorToolBar.redo</caption>
          <iconImage>Desktops/Images/TextEditor/redo.png</iconImage>
-         <messageProperties>{ actionType : 'redo' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REDO }</messageProperties>         
       </button>
       
       <divider/>
@@ -103,25 +103,25 @@
       <button name="addLink">
          <caption>DocumentEditorToolBar.addLink</caption>
          <iconImage>Desktops/Images/TextEditor/createlink.png</iconImage>
-         <messageProperties>{ actionType : 'addLink' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_LINK }</messageProperties>         
       </button>
       
       <button name="removeLink">
          <caption>DocumentEditorToolBar.removeLink</caption>
          <iconImage>Desktops/Images/TextEditor/unlink.png</iconImage>
-         <messageProperties>{ actionType : 'removeLink' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REMOVE_LINK }</messageProperties>         
       </button>
       
       <button name="addImage">
          <caption>DocumentEditorToolBar.addImage</caption>
          <iconImage>Desktops/Images/TextEditor/urlimage.png</iconImage>
-         <messageProperties>{ actionType : 'addImage' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_IMAGE }</messageProperties>         
       </button>
       
       <button name="toggleView">
          <caption>DocumentEditorToolBar.toggleView</caption>
          <iconImage>Desktops/Images/TextEditor/toggleview.png</iconImage>
-         <messageProperties>{ actionType : 'toggleView' }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.TOGGLE_VIEW }</messageProperties>         
       </button>
    </buttons>
 </toolBarDefinition>

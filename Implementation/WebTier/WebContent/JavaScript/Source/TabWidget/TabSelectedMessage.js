@@ -25,7 +25,7 @@ var TabSelectedMessage = new Class({
       contextItemId : null,
       description: "A message about the event that a tab was selected.",
       documentContentURI: null,
-      documentType: SmartDocument.Types.SMART,
+      documentType: AbstractDocument.Types.SMART,
       documentURI: null,
       name: "TabSelectedMessage",
       tabId: null
@@ -41,6 +41,7 @@ var TabSelectedMessage = new Class({
    
    //Properties
    getActionType: function() { return this.options.actionType; },
+   getActivityType: function() { return this.options.activityType; },
    getContextItemId: function() { return this.options.contextItemId; },
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },

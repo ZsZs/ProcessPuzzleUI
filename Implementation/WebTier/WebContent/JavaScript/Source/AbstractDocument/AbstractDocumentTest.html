@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Test page for AbstractDocument.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	
+   <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+	
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../DocumentEditor/DocumentEditor.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../HtmlDocument/HtmlDocument.js"></script>
+   <script type="text/javascript" src="../Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../ResourceManager/UndefinedDocumentResourceException.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
+	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestFunction();
+      });
+				
+      JsHamcrest.Integration.JsUnit();
+		
+      var WEBUI_CONFIGURATION_URI = "../HtmlDocument/WebUIConfiguration.xml";
+      var DOCUMENT_CONTAINER_ID = "abstractDocument";
+      var DOCUMENT_CONTENT_URI = "../AbstractDocument/HtmlDocument_en.html";
+      var DOCUMENT_DEFINITION_URI = "../AbstractDocument/HtmlDocumentDefinition.xml";
+		
+      var abstractDocument;
+      var bundle;
+      var documentContainerElement;
+      var documentContentResource;
+      var documentDefinition;
+		var documentInternationalization;
+		var webUIConfiguration;
+		var webUILogger;
+		var webUIMessageBus;
+		
+      function setUp(){
+         //inform( "beforEachTest" );
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         webUIMessageBus = new WebUIMessageBus();
+         bundle = new XMLResourceBundle( webUIConfiguration );
+         bundle.load( new Locale({ language : "en" }) );
+		   
+         documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
+         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
+         documentContainerElement = $( DOCUMENT_CONTAINER_ID );
+         abstractDocument = new AbstractDocument( bundle, { 
+            documentContentUri : DOCUMENT_CONTENT_URI, 
+            documentContainerId : DOCUMENT_CONTAINER_ID,
+            documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
+            rootElementName : "/htmlDocumentDefinition" });
+      }
+
+      function tearDown(){
+         bundle.release();
+         bundle = null;
+		   
+         if( abstractDocument.getState() > AbstractDocument.States.INITIALIZED ) abstractDocument.destroy();
+         abstractDocument = null;
+         documentContainerElement = null;
+         //inform( "afterEachTest" );
+      }
+      
+      function test_initialize_determinesFieldValues(){
+         assertThat( abstractDocument.getLogger(), equalTo( webUILogger ));
+         assertThat( abstractDocument.getMessageBus(), equalTo( webUIMessageBus ));
+      }
+		
+      function test_initialize_loadsDocumentDefinitionAndContent() {
+         assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
+         assertThat( instanceOf( abstractDocument.getDocumentDefinition(), XmlResource ), is( true ));
+         assertThat( instanceOf( abstractDocument.getDocumentContent(), XmlResource ), is( true ));
+      }
+		
+      function test_unmarshall_determinesProperties(){
+         abstractDocument.unmarshall();
+		   
+         assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.UNMARSHALLED ));
+         assertThat( abstractDocument.getDescription(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/description" )));
+         assertThat( abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( documentDefinition.selectNodeText( "/htmlDocumentDefinition/handleMenuSelectedEvents" ))));
+         assertThat( abstractDocument.getName(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/name" )));
+         assertThat( abstractDocument.getVersion(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/version" )));
+      }
+		
+      function test_unmarshall_whenSpecified_instantiatesAndUnmarshallsResources(){
+         abstractDocument.unmarshall();
+         
+         assertThat( abstractDocument.getResources(), not( nil() ));
+      }
+      
+      function test_construct_instantiatesElementFactoryAndDocumentEditor(){
+         abstractDocument.unmarshall();
+         abstractDocument.construct();
+         
+         assertThat( instanceOf( abstractDocument.getEditor(), DocumentEditor), is( true ));
+         assertThat( instanceOf( abstractDocument.getHtmlElementFactory(), WidgetElementFactory ), is( true ));
+      }
+      
+      function test_construct_subscribesToMenuSelectedEvents(){
+         abstractDocument.unmarshall();
+         abstractDocument.construct();
+         
+         assertThat( webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( abstractDocument.webUIMessageHandler ), is( true ));
+      }
+      
+      function test_destroy_whenUnmarshalled_resetsProperties(){
+         //SETUP: see also setUp() method
+         abstractDocument.unmarshall();
+		   
+         //EXCERCISE:
+         abstractDocument.destroy();
+		   
+         //VERIFY:
+         assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
+         assertThat( abstractDocument.getDescription(), nil() );
+         assertThat( abstractDocument.getName(), nil() );
+         assertThat( abstractDocument.getVersion(), nil() );
+      }
+				
+      //runs a test function during debugging
+      function runTestFunction(){
+         setUp();
+         test_construct_instantiatesElementFactoryAndDocumentEditor();
+         tearDown();
+      }
+      </script>
+</head>
+
+<body>
+   <h1>AbstractDocument.js test page</H1>
+   <p>This page contains tests for AbstractDocument.js JavaScript class.</P>
+   <div id="abstractDocument"></div>
+</body>
+</html>

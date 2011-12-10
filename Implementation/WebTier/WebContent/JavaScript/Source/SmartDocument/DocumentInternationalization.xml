@@ -6,7 +6,7 @@
 
   <Language name="en">
     <Resource key="SmartDocument.headerText" type="String">Sample Smart Document</Resource>
-    <Resource key="SmartDocument.itemsTitle" type="String">Items</Resource>
+    <Resource key="SmartDocument.itemsTitle" type="String">News</Resource>
     <Resource key="SmartDocument.copyright" type="String">Copyright IT Codex Llc.</Resource>
     <Resource key="SmartDocument.addresses" type="String">Addresses:</Resource>
     <Resource key="DynamicDocument.RSS.link" type="String">link: </Resource>
@@ -22,7 +22,7 @@
 
   <Language name="hu">
     <Resource key="SmartDocument.headerText" type="String">Okos dokumentum</Resource>
-    <Resource key="SmartDocument.itemsTitle" type="String">Element</Resource>
+    <Resource key="SmartDocument.itemsTitle" type="String">Hírek</Resource>
     <Resource key="SmartDocument.copyright" type="String">Minden jog fenntartva, IT Kódex Kft.</Resource>
     <Resource key="SmartDocument.addresses" type="String">Címek:</Resource>
     <Resource key="DynamicDocument.RSS.link" type="String">hivatkozás: </Resource>

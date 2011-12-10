@@ -87,7 +87,7 @@ var DesktopPanel = new Class({
       this.definitionElement = definitionElement;
       this.document;
       this.documentContentUri;
-      this.documentContentType = SmartDocument.Types.HTML;
+      this.documentContentType = AbstractDocument.Types.HTML;
       this.documentDefinitionUri;
       this.documentWrapper;
       this.documentWrapperId;
@@ -194,19 +194,14 @@ var DesktopPanel = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( this.state != DesktopPanel.States.CONSTRUCTED ) return;
       
-      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) && webUIMessage.getActionType() == 'loadDocument' ) {
+      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) && webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT ) {
          this.destroyDocument();
          this.destroyDocumentWrapper();
          this.cleanUpPanelContent();
-         
-         switch( webUIMessage.getDocumentType() ){
-            case SmartDocument.Types.HTML: this.loadHtmlDocument( webUIMessage ); break;
-            case SmartDocument.Types.SMART: this.loadSmartDocument( webUIMessage ); break;
-         }
+         this.loadDocument( webUIMessage );
       }
       this.lastHandledMessage = webUIMessage;
    },
-
 
    //Properties
    getColumnReference: function() { return this.columnReference; },
@@ -214,7 +209,7 @@ var DesktopPanel = new Class({
    getContentUrl: function() { return this.contentUrl; },
    getDocument: function() { return this.document; },
    getDocumentContentUri: function() { return this.documentContentUri; },
-   getDocumentDefintionUri: function() { return this.documentDefinitionUri; },
+   getDocumentDefinitionUri: function() { return this.documentDefinitionUri; },
    getDocumentWrapperId: function() { return this.documentWrapperId; },
    getDocumentWrapperStyle: function() { return this.documentWrapperStyle; },
    getDocumentWrapperTag: function() { return this.documentWrapperTag; },
@@ -245,14 +240,12 @@ var DesktopPanel = new Class({
       if( this.document ) {
          this.createDocumentWrapper();
          this.document.construct();
-      }
-      else this.onDocumentReady();
+      }else this.constructionChain.callChain();
    }.protect(),
    
    constructPlugin: function(){
-      if( this.plugin ) {
-         this.plugin.construct();
-      }else this.onPluginConstructed();
+      if( this.plugin ) this.plugin.construct();
+      else this.constructionChain.callChain();
    }.protect(),
    
    constructHeader: function(){
@@ -300,9 +293,16 @@ var DesktopPanel = new Class({
       this.fireEvent('panelConstructed', this ); 
    }.protect(),
    
+   instantiateDocument: function( webUIMessage, documentOptions ){
+      var newDocument = null;
+      switch( webUIMessage.getDocumentType() ){
+      case AbstractDocument.Types.HTML: newDocument = new HtmlDocument( this.resourceBundle, documentOptions ); break;
+      case AbstractDocument.Types.SMART: newDocument = new SmartDocument( this.resourceBundle, documentOptions ); break;
+      }
+      return newDocument;
+   }.protect(),
+   
    instantiateMUIPanel: function(){
-      //var require = { css: [], images: [], js: [], onload: this.onMUIPanelLoaded };
-      var require = { css: [], images: [], js: [] };
       var panelTitle = this.header && this.header.getPlugin() ? "" : this.title;
       try{
          this.MUIPanel = new MUI.Panel({ 
@@ -316,7 +316,6 @@ var DesktopPanel = new Class({
             headerToolboxOnload: this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
             height: this.height, 
-            //require: require,
             title: panelTitle 
          });
       }catch( exception ){
@@ -341,12 +340,12 @@ var DesktopPanel = new Class({
       });
    }.protect(),
    
-   loadSmartDocument: function( webUIMessage ){
+   loadDocument: function( webUIMessage ){
       this.documentDefinitionUri = webUIMessage.getDocumentURI();
       this.documentContentUri = webUIMessage.getDocumentContentURI();
-      this.documentContentType = webUIMessage.getDocumentType(); 
-      this.document = new SmartDocument( this.resourceBundle, { 
-         widgetContainerId : this.documentWrapperId, 
+      this.documentContentType = webUIMessage.getDocumentType();
+      this.document = this.instantiateDocument( webUIMessage, { 
+         documentContainerId : this.documentWrapperId, 
          documentDefinitionUri : webUIMessage.getDocumentURI(), 
          documentContentUri : this.documentContentUri,
          onDocumentReady : this.onDocumentReady,
@@ -379,7 +378,7 @@ var DesktopPanel = new Class({
    storeComponentState : function() {
       if( this.storeState ){
          var componentState;
-         if( this.documentContentType == SmartDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
+         if( this.documentContentType == AbstractDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
          else componentState = { uri : this.documentDefinitionUri, type : this.documentContentType };
          this.componentStateManager.storeCurrentState( this.options.componentName, componentState );
       }
@@ -406,7 +405,7 @@ var DesktopPanel = new Class({
       this.documentWrapperTag = XmlResource.selectNodeText( this.options.documentWrapperTagSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperTag );
       if( this.documentDefinitionUri ){
          this.document = new SmartDocument( this.resourceBundle, { 
-            widgetContainerId : this.documentWrapperId, 
+            documentContainerId : this.documentWrapperId, 
             documentDefinitionUri : this.documentDefinitionUri, 
             documentContentUri : this.documentContentUri,
             onDocumentReady : this.onDocumentReady,

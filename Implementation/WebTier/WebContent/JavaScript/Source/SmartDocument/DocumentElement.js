@@ -88,11 +88,6 @@ var DocumentElement = new Class({
       this.status = DocumentElement.States.INITIALIZED;
    },
    
-   constructPlugin: function(){
-      if( this.plugin ){ this.plugin.construct();
-      }else this.constructionChain.callChain();
-   },
-   
    constructed: function(){
       this.status = DocumentElement.States.CONSTRUCTED;
       this.fireEvent( 'constructed', this );
@@ -135,6 +130,11 @@ var DocumentElement = new Class({
    isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
+   constructPlugin: function(){
+      if( this.plugin ){ this.plugin.construct();
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
    createHtmlElement: function(){
       if( this.tag ){
          this.htmlElement = new Element( this.tag );

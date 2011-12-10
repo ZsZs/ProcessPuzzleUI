@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentPlugin = new Class({
    Implements: [Events, Options],
-   Binds: ['instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed'],   
+   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed'],   
    
    options: {
       componentName : "DocumentPlugin",
@@ -56,7 +56,7 @@ var DocumentPlugin = new Class({
       this.widgetName;
       this.widgetOptions;
       
-      this.constructChain.chain( this.loadResources, this.instantiateWidget );
+      this.constructChain.chain( this.loadResources, this.instantiateWidget, this.finalizeConstruction );
    },
    
    //Public mutators and accessor methods
@@ -93,8 +93,7 @@ var DocumentPlugin = new Class({
    },
    
    onWidgetConstructed: function(){
-      this.state = DocumentPlugin.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this );
+      this.constructChain.callChain();
    },
    
    onWidgetError: function( error ){
@@ -122,6 +121,12 @@ var DocumentPlugin = new Class({
    isSuccess: function() { return this.error == null; },
 
    //Protected, pirvated helper methods
+   finalizeConstruction: function(){
+      this.constructChain.clearChain();
+      this.state = DocumentPlugin.States.CONSTRUCTED;
+      this.fireEvent( 'constructed', this );
+   }.protect(),
+   
    instantiateWidget: function(){
       if( this.widgetName ){
          try{

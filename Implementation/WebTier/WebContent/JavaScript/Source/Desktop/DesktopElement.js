@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopElement = new Class({
    Implements: [Events, Options],
-   Binds: ['constructed'],
+   Binds: ['constructed', 'onConstructionError'],
    
    options: {
       componentContainerId: "Desktop",

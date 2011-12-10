@@ -119,7 +119,7 @@
          assertThat( aTab.getId(), equalTo( aTab.options.idPrefix + XmlResource.selectNodeText( "@tabId", tabDefinition )));
          assertThat( aTab.getCaption(), equalTo( resourceBundle.getText( XmlResource.selectNodeText( "@caption", tabDefinition ))));
          assertThat( aTab.isDefault(), equalTo( parseBoolean( XmlResource.selectNodeText( "@isDefault", tabDefinition ))));
-         assertThat( aTab.getMessageProperties(), equalTo( "{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }" ));
+         assertThat( aTab.getMessageProperties(), equalTo( "{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }" ));
       }
             
       function test_construct_createsLiAndAnchorElements() {         

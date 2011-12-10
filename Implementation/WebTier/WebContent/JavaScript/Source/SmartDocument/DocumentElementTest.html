@@ -68,8 +68,9 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-//          test_construct_whenPluginResourceIsUnavailable_firesError();
-//          test_destroy_whenUnmarshalled_ResetsProperties();
+//         test_construct_whenPluginIsSpecified_CallsPluginConstruct();
+//         test_construct_whenPluginResourceIsUnavailable_firesError();
+//         test_destroy_whenUnmarshalled_ResetsProperties();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -83,19 +84,20 @@
       var ERRONEOUS_DOCUMENT_DEFINITION_URI = "../SmartDocument/ErroneousDocumentDefinition.xml";
       var WEBUI_CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
 		
+      var componentStateManager;
       var constructCallbackWasCalled = false;
-      var documentContainerElement = null;
-      var documentDefinition = null;
-      var documentElementWithLink = null;
-      var documentElementWithoutId = null;
-      var documentElementWithPlugin = null;
-      var desktopInternationalization = null;
+      var documentContainerElement;
+      var documentDefinition;
+      var documentElementWithLink;
+      var documentElementWithoutId;
+      var documentElementWithPlugin;
+      var desktopInternationalization;
       var testCaseChain = new Chain();
       var testCaseIsRunning = false;
-      var testCaseMethod = null;
-      var webUIConfiguration = null;
-      var webUIController = null;
-      var webUILogger = null;
+      var testCaseMethod;
+      var webUIConfiguration;
+      var webUIController;
+      var webUILogger;
 		
       function runTestCase(){
          if( !testCaseIsRunning ) testCaseChain.callChain();
@@ -103,6 +105,7 @@
       
       function beforeEachTest(){
          inform( "beforeEachTest" );
+         componentStateManager = new ComponentStateManager();
          webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI } );
          webUIConfiguration = webUIController.getWebUIConfiguration();
          webUILogger = webUIController.getLogger();
@@ -120,6 +123,7 @@
       }
 
       function afterEachTest(){
+         componentStateManager.reset();
          documentDefinition.release();
          desktopInternationalization.release();
 		   
@@ -281,6 +285,7 @@
                documentElementWithPlugin.construct( documentContainerElement, "bottom" );
             },
             function(){
+               assertThat( documentElementWithPlugin.getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
                verify( pluginLoadResourcesMethod );
                verify( pluginConstructMethod );
                testCaseChain.callChain();
@@ -288,7 +293,7 @@
             afterEachTest 
          );
          runTestCase();
-		}
+      }
 		
       function test_construct_whenPluginResourceIsUnavailable_firesError(){
          testCaseChain.chain( 

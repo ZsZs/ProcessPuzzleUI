@@ -57,7 +57,7 @@
               </resources>
               <widget name="LanguageSelectorWidget">
                  <options>
-                    <option name="widgetContainerId" value="languageSelector"/>
+                    <option name="widgetContainerId" value="'languageSelector'"/>
                  </options>
               </widget>
            </plugin>
@@ -66,7 +66,7 @@
            <plugin>
              <widget name="SkinSelectorWidget">
                  <options>
-                    <option name="widgetContainerId" value="noneExistingElement"/>
+                    <option name="widgetContainerId" value="'noneExistingElement'"/>
                  </options>
              </widget>
            </plugin>

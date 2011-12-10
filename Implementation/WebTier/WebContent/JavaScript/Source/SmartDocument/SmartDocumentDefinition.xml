@@ -71,7 +71,7 @@
               </resources>
               <widget name="LanguageSelectorWidget">
                  <options>
-                    <option name="widgetContainerId" value="languageSelector"/>
+                    <option name="widgetContainerId" value="'languageSelector'"/>
                  </options>
               </widget>
            </plugin>

@@ -5,13 +5,13 @@
 	
 	<tabWidget tabWidgetId="ConsoleTabs" selectedTabClass="selectedTab" showCloseButton="false" showPrintButton="false">
 		<tab tabId="ConsoleTab.properties" caption="ConsoleTabs.properties">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentPropertiesDefinition.xml', documentContentURI : 'Content/DocumentProperties', documentType : SmartDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DocumentPropertiesDefinition.xml', documentContentURI : 'Content/DocumentProperties', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 		<tab tabId="ConsoleTab.comments" caption="ConsoleTabs.comments" isDefault="true">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/DocumentCommentsDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DocumentCommentsDefinition.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 		<tab tabId="ConsoleTab.todo" caption="ConsoleTabs.todo">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/PersonalToDoListDefinition.xml', documentType : SmartDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/PersonalToDoListDefinition.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 	</tabWidget>
 	

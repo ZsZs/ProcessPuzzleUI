@@ -36,6 +36,7 @@
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
@@ -80,7 +81,7 @@
 //          test_unmarshall_determinesResources();
 //          test_unmarshall_determinesWidgetProperties();
 //         test_construct_loadsResources();
-//         test_construct_instantiatesWidget();
+         test_construct_instantiatesWidget();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -189,7 +190,7 @@
             
             //VERIFY:
             assertThat( plugin.getWidgetName(), equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/@name" ) ));
-            assertThat( plugin.getWidgetOptions()['widgetContainerId'], equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/options/option[@name='widgetContainerId']/@value" )) );
+            assertThat( "'" + plugin.getWidgetOptions()['widgetContainerId'] + "'", equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/options/option[@name='widgetContainerId']/@value" )) );
               
             testCaseChain.callChain();
          }, afterEachTest );

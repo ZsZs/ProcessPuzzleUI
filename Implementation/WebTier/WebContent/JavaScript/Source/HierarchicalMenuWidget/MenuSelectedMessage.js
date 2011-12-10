@@ -22,9 +22,10 @@ var MenuSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
       actionType: null,
+      activityType: null,
       description: "A message about the event that a menu or tool bar item was selected.",
       documentContentURI: null,
-      documentType: SmartDocument.Types.SMART,
+      documentType: AbstractDocument.Types.SMART,
       documentURI: null,
       contextItemId : null,
       name: "Menu Selected Message"
@@ -40,6 +41,7 @@ var MenuSelectedMessage = new Class({
    
    //Properties
    getActionType: function() { return this.options.actionType; },
+   getActivityType: function() { return this.options.activityType; },
    getContextItemId: function() { return this.options.contextItemId; },
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },

@@ -176,7 +176,8 @@ this.MooEditable = new Class({
 		this.textarea.setStyle('display', 'none');
 		
 		this.iframe.setStyle('display', '').inject(this.textarea, 'before');
-		
+
+/* As dialogs aren't embeded into the document, instead MochaUI windows are used, this is not needed.		
 		Object.each(this.dialogs, function(action, name){
 			Object.each(action, function(dialog){
 				document.id(dialog).inject(self.iframe, 'before');
@@ -198,7 +199,7 @@ this.MooEditable = new Class({
 				});
 			});
 		});
-
+*/
 		// contentWindow and document references
 		this.win = this.iframe.contentWindow;
 		this.doc = this.win.document;

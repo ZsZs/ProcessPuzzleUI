@@ -29,6 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var ToolBarWidget = new Class({
    Extends : BrowserWidget,
+   Binds : ['onButtonSelection'],
    options : {
       buttonsSelector : "/toolBarDefinition/buttons/button | /toolBarDefinition/buttons/divider",
       componentName : "ToolBarWidget",
