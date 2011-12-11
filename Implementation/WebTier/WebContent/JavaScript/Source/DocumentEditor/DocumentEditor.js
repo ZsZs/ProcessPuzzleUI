@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentEditor = new Class({
    Implements: [Events, Options],
-   Binds: ['finalizeAttach', 'instantiateTools'],
+   Binds: ['determineStyleSheets', 'finalizeAttach', 'instantiateTools'],
    options : {
       componentName : "DocumentEditor",
    },
@@ -41,13 +41,14 @@ var DocumentEditor = new Class({
       
       //Private attributes
       this.attachChain = new Chain();
+      this.styleSheets = new ArrayList();
       this.subjectElement;
    },
    
    //Public accessor and mutator methods
    attach: function( subjectElement ){
       this.subjectElement = subjectElement;
-      this.attachChain.chain( this.instantiateTools, this.finalizeAttach );
+      this.attachChain.chain( this.determineStyleSheets, this.instantiateTools, this.finalizeAttach );
       this.attachChain.callChain();
    },
    
@@ -58,6 +59,14 @@ var DocumentEditor = new Class({
    getSubjectElement: function() { return this.subjectElement; },
    
    //Protected and private helper methods
+   determineStyleSheets: function(){
+      var linkElements = this.subjectElement.getDocument().getElements("link"); 
+      linkElements.each( function( linkElement, index ){
+         this.styleSheets.add( linkElement.get( 'href' ));
+      }, this );
+      this.attachChain.callChain();
+   }.protect(),
+   
    finalizeAttach: function(){
       this.attachChain.clearChain();
       this.fireEvent( 'editorAttached', this );

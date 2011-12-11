@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var HtmlDocument = new Class({
    Extends: AbstractDocument,
-   Binds: ['attachEditor', 'createTextArea'],
+   Binds: ['attachEditor', 'createTextArea', 'resizeTextArea'],
    
    options: {
       componentName : "HtmlDocument",
@@ -60,6 +60,39 @@ var HtmlDocument = new Class({
       this.parent();
    },
    
+   resizeTextArea: function(){
+      var oldScrollTop = this.textArea.getScroll().y;
+      this.textArea.scrollTo( null, 1 );
+      var grew = false;
+      
+      while( this.textArea.getScroll().y > 0 ) {
+         // It can scroll, so make it longer
+         var oldHeight = this.textArea.clientHeight;
+         grew = true;
+         this.textArea.rows++;
+   
+         if( this.textArea.clientHeight == oldHeight ) {
+             // Height didn't change, probably due to a max-height restriction
+             // Exit this function and restore the overflow, so that we have a scrollbar.
+             if( this.textArea.getStyle( 'overflowY' )) this.textArea.setStyle( 'overflowY', '' );
+             this.textArea.scrollTo( null, oldScrollTop );
+             return;
+         }
+   
+         this.textArea.scrollTop = 1; // perhaps +1 row is not enough, do it again
+      }
+
+      if( !grew ) {
+         while( this.textArea.getScroll().y == 0 && this.textArea.rows > this.textArea.__originalRows ) {
+             this.textArea.rows--;
+             this.textArea.scrollTo( null, 1 );
+         }
+         if( this.textArea.getScroll().y > 0 )  this.textArea.rows++;
+      }
+   
+      if( !this.textArea.getStyle( 'overflowY' )) this.textArea.setStyle( 'overflowY', 'hidden' );
+   },
+   
    unmarshall: function(){
       this.parent();
    },
@@ -79,8 +112,10 @@ var HtmlDocument = new Class({
    }.protect(),
    
    createTextArea: function(){
-      this.textArea = this.htmlElementFactory.create( 'textArea', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { id : this.name } );
-      this.textArea.set( 'html', this.documentContent.xmlAsText );
+      this.textArea = this.htmlElementFactory.create( 'textArea', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
+         id : this.name, styles : { overflowY : 'hidden', width : '98%' }});
+      //this.textArea.set( 'html', this.documentContent.xmlAsText );
+      this.resizeTextArea();
       this.constructionChain.callChain();
    }
       

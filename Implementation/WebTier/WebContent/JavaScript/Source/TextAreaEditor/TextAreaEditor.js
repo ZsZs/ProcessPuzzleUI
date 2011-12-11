@@ -32,6 +32,9 @@ var TextAreaEditor = new Class({
    Binds: ['onMooEditableAttach'],
    options : {
       componentName : "TextAreaEditor",
+      dimensions : { x : 500, y : 100 },
+      numberOfColumns : 120,
+      numberOfRows : 50
    },
 
    //Constructor
@@ -54,6 +57,7 @@ var TextAreaEditor = new Class({
    },
    
    onMooEditableAttach: function(){
+      this.mooEditable.setContent( this.initialContent );
       this.attachChain.callChain();
    },
    
@@ -88,6 +92,18 @@ var TextAreaEditor = new Class({
    
    instantiateTools: function(){
       this.defineDialogWindows();
-      this.mooEditable = new MooEditable( this.subjectElement, { onAttach: this.onMooEditableAttach, toolbar : false,  } );
+      var styleSheetLinks = "";
+      this.styleSheets.each( function( styleSheetUri, index ){
+         styleSheetLinks += "<link rel='stylesheet' type='text/css' href='" + styleSheetUri + "'>";
+      }, this );
+      
+      this.mooEditable = new MooEditable( this.subjectElement, { 
+         externalCSS : styleSheetLinks,
+         handleDialogs : false, 
+         handleLabel : false, 
+         handleSubmit : false,
+         onAttach: this.onMooEditableAttach, 
+         toolbar : false
+      });
    }.protect(),
 });
