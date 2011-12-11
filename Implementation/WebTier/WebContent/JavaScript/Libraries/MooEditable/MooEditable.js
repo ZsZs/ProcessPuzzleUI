@@ -141,6 +141,7 @@ this.MooEditable = new Class({
             self.action( item.name, args );
          }
       });
+      
       this.attach.delay( 1, this );
 
       // Update the event for textarea's corresponding labels
@@ -210,7 +211,7 @@ this.MooEditable = new Class({
          Object.each( this.dialogs, function( action, name ) {
             Object.each( action, function( dialog ) {
                document.id( dialog ).inject( self.iframe, 'before' );
-               var range;
+               var range =  null;
                dialog.addEvents( {
                   open : function() {
                      range = self.selection.getRange();
@@ -284,12 +285,13 @@ this.MooEditable = new Class({
          keydown : this.editorKeyDown.bind( this ),
          focus : this.editorFocus.bind( this ),
          blur : this.editorBlur.bind( this )} );
-      this.win.addEvents( {
+      this.win.addEvents({
          focus : this.editorFocus.bind( this ),
-         blur : this.editorBlur.bind( this )} );
+         blur : this.editorBlur.bind( this )
+      });
       ['cut', 'copy', 'paste'].each( function( event ) {
          self.doc.body.addListener( event, self['editor' + event.capitalize()].bind( self ) );
-      } );
+      });
       this.textarea.addEvent( 'keypress', this.textarea.retrieve( 'mooeditable:textareaKeyListener', this.keyListener.bind( this ) ) );
 
       // Fix window focus event not firing on Firefox 2

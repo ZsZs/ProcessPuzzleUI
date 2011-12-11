@@ -113,8 +113,8 @@ var HtmlDocument = new Class({
    
    createTextArea: function(){
       this.textArea = this.htmlElementFactory.create( 'textArea', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
-         id : this.name, styles : { overflowY : 'hidden', width : '98%' }});
-      //this.textArea.set( 'html', this.documentContent.xmlAsText );
+         id : this.name, styles : { border: 0, margin: 0, padding: 0, overflowY : 'hidden', width : this.containerElement.getSize().x }});
+      this.textArea.set( 'html', this.documentContent.xmlAsText );
       this.resizeTextArea();
       this.constructionChain.callChain();
    }
