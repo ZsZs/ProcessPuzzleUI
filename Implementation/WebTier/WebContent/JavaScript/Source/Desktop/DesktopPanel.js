@@ -40,7 +40,8 @@ var DesktopPanel = new Class({
            'onDocumentReady', 
            'onHeaderConstructed', 
            'onHeaderConstructionError',
-           'onMUIPanelLoaded', 
+           'onMUIPanelLoaded',
+           'onMUIPanelResize',
            'onPluginConstructed',
            'onPluginError',
            'subscribeToWebUIMessages',
@@ -168,6 +169,12 @@ var DesktopPanel = new Class({
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s MUIPanel finished." );
       this.MUIPanelLoaded = true;
       this.constructionChain.callChain();
+   },
+   
+   onMUIPanelResize: function(){
+      if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
+         this.document.onContainerResize( this.panelContentElement.getSize() );
+      }
    },
    
    onPluginConstructed: function(){
@@ -315,7 +322,8 @@ var DesktopPanel = new Class({
             headerToolbox: this.header ? true : false,
             headerToolboxOnload: this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
-            height: this.height, 
+            height: this.height,
+            onResize: this.onMUIPanelResize,
             title: panelTitle 
          });
       }catch( exception ){

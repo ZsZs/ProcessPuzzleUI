@@ -1143,6 +1143,7 @@ MUI.extend({
 				newPanelHeight = 0;
 			}
 			panel.setStyle('height', newPanelHeight);
+			if(!$defined(action)) instances[panel.id].fireEvent('onResize'); 
 		}.bind(this));
 
 		// Make sure the remaining height is 0. If not add/subtract the
@@ -1354,6 +1355,7 @@ function addResizeLeft(element, min, max){
 			$(element).getElements('iframe').setStyle('visibility','visible');
 			partner.getElements('iframe').setStyle('visibility','visible');
 			instance.fireEvent('onResize');
+			instances[partner.id].fireEvent('onResize');
 		}.bind(this)
 	});
 }

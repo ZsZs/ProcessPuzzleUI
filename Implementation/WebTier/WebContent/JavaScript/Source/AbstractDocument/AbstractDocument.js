@@ -34,6 +34,7 @@ var AbstractDocument = new Class({
            'instantiateEditor',
            'loadResources', 
            'onConstructionError', 
+           'onContainerResize',
            'onDocumentError', 
            'onDocumentReady', 
            'onEditorAttached',
@@ -107,6 +108,10 @@ var AbstractDocument = new Class({
       if( error ) this.error = error;
       this.revertConstruction();
       this.fireEvent( 'documentError', this.error );
+   },
+   
+   onContainerResize: function( newSize ){
+      //Abstract method, should be overwritten by subclasses
    },
    
    onDocumentError: function( error ){

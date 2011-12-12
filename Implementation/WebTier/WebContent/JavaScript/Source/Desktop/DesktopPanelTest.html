@@ -103,10 +103,11 @@
 
 <script type="text/javascript">
    window.addEvent( 'domready', function() {
+//      test_construct_instantiatesMUIPanel();
 //      test_construct_constructsHeaderWithPlugin();
-//       test_construct_constructsSmartDocument();
-//       test_construct_whenSpecified_subscribesForMenuSelectedMessage();
-       test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument();
+//      test_construct_constructsSmartDocument();
+//      test_construct_whenSpecified_subscribesForMenuSelectedMessage();
+//      test_webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument();
    });
 
    JsHamcrest.Integration.JsUnit();
@@ -295,7 +296,6 @@
          },
          function(){
             //after panelConstructed event
-            testCaseChain.callChain();
             testCaseChain.callChain();
          },
          afterEachTest

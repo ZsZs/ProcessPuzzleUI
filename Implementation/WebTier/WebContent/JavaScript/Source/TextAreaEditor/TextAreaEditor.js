@@ -56,6 +56,10 @@ var TextAreaEditor = new Class({
       this.mooEditable.detach();
    },
    
+   onContainerResize: function( newSize ){
+      this.mooEditable.onContainerResize( newSize );
+   },
+   
    onMooEditableAttach: function(){
       this.mooEditable.setContent( this.initialContent );
       this.attachChain.callChain();

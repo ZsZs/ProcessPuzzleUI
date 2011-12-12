@@ -60,20 +60,21 @@ var HtmlDocument = new Class({
       this.parent();
    },
    
+   onContainerResize: function( newSize ){
+      this.editor.onContainerResize( this.containerElement.getSize() );
+   },
+   
    resizeTextArea: function(){
       var oldScrollTop = this.textArea.getScroll().y;
       this.textArea.scrollTo( null, 1 );
       var grew = false;
       
       while( this.textArea.getScroll().y > 0 ) {
-         // It can scroll, so make it longer
          var oldHeight = this.textArea.clientHeight;
          grew = true;
          this.textArea.rows++;
    
          if( this.textArea.clientHeight == oldHeight ) {
-             // Height didn't change, probably due to a max-height restriction
-             // Exit this function and restore the overflow, so that we have a scrollbar.
              if( this.textArea.getStyle( 'overflowY' )) this.textArea.setStyle( 'overflowY', '' );
              this.textArea.scrollTo( null, oldScrollTop );
              return;

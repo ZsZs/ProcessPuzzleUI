@@ -191,6 +191,12 @@ this.MooEditable = new Class({
       if( !this.iframe.getStyle( 'overflowY' )) this.iframe.setStyle( 'overflowY', 'hidden' );
    },
    
+   onContainerResize: function( newSize ){
+      this.container.setStyle( 'width', newSize.x );
+      this.iframe.setStyle( 'width', newSize.x );
+      this.stretchIFrame();
+   },
+   
    attach : function() {
       var self = this;
 
