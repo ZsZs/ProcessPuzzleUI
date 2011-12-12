@@ -51,7 +51,7 @@ this.MooEditable = new Class({
       dimensions : null,
       disabled : false,
       elasticHeight : true,
-      estimatedRowHeight : 20,
+      estimatedRowHeight : 10,
       extraCSS : '',
       externalCSS : '',
       handleDialogs : true,
@@ -119,7 +119,7 @@ this.MooEditable = new Class({
       this.container = new Element( 'div', {
          id : (this.textarea.id) ? this.textarea.id + '-mooeditable-container' : null,
          'class' : 'mooeditable-container',
-         styles : { width : dimensions.x }
+         styles : { overflowY : 'hidden', width : dimensions.x }
       });
 
       // Override all textarea styles
@@ -129,7 +129,7 @@ this.MooEditable = new Class({
       this.iframe = new Element( 'IFrame', {
          'class' : 'mooeditable-iframe',
          frameBorder : 0,
-         scrolling : false,
+         scrolling : 'no',
          src : 'javascript:""', // Workaround for HTTPs warning in IE6/7
          styles : { height : dimensions.y, width : dimensions.x }
       });
@@ -165,36 +165,42 @@ this.MooEditable = new Class({
       this.fireEvent( 'render', this );
    },
 
-   stretchIFrame: function(){
-      this.iframe.contentWindow.scrollTo( null, 1 );
-      var grew = false;
-      
-      while( this.iframe.contentWindow.getScroll().y > 0 ) {
-         var currentHeight = this.iframe.getStyle( 'height' ).toInt();
-         grew = true;
-         this.iframe.setStyle( 'height', currentHeight + this.options.estimatedRowHeight );
-   
-         this.iframe.contentWindow.scrollTop = 1; // perhaps +1 row is not enough, do it again
-      }
-
-      if( !grew ) {
-         while( this.iframe.contentWindow.getScroll().y == 0 && this.iframe.getStyle( 'height' ).toInt() > this.iframe.contentWindow.__originalHeight ) {
-            var currentHeight = this.iframe.getStyle( 'height' ).toInt();
-            this.iframe.setStyle( 'height', currentHeight - this.options.estimatedRowHeight );
-            this.iframe.contentWindow.scrollTo( null, 1 );
-         }
-         
-         if( this.iframe.contentWindow.getScroll().y > 0 )
-            this.iframe.setStyle( 'height', this.iframe.getStyle( 'height' ).toInt() + this.options.estimatedRowHeight );
-      }
+   adjustIFrameHeight: function(){
+      if( !this.tryToIncreaseHeight() ) this.tryToDecreaseHeight();
    
       if( !this.iframe.getStyle( 'overflowY' )) this.iframe.setStyle( 'overflowY', 'hidden' );
-   },
+   }.protect(),
+   
+   tryToDecreaseHeight: function(){
+      while( this.iframe.contentWindow.getScroll().y == 0 ) {
+         var currentHeight = this.iframe.getStyle( 'height' ).toInt();
+         this.iframe.setStyle( 'height', currentHeight - this.options.estimatedRowHeight );
+         this.iframe.contentWindow.scrollTo( null, 1 );
+      }
+      
+      if( this.iframe.contentWindow.getScroll().y > 0 )
+         this.iframe.setStyle( 'height', this.iframe.getStyle( 'height' ).toInt() + this.options.estimatedRowHeight );
+   }.protect(),
+   
+   tryToIncreaseHeight : function(){
+      var heightIncreased = false;
+      this.iframe.contentWindow.scrollTo( null, 1 );
+      
+      while( this.iframe.contentWindow.getScroll().y > 0 ) {
+         heightIncreased = true;
+         var currentHeight = this.iframe.getStyle( 'height' ).toInt();
+         this.iframe.setStyle( 'height', currentHeight + this.options.estimatedRowHeight );
+   
+         this.iframe.contentWindow.scrollTo( null, 1 );
+      }
+      
+      return heightIncreased;
+   }.protect(),
    
    onContainerResize: function( newSize ){
       this.container.setStyle( 'width', newSize.x );
       this.iframe.setStyle( 'width', newSize.x );
-      this.stretchIFrame();
+      this.adjustIFrameHeight();
    },
    
    attach : function() {
@@ -483,10 +489,8 @@ this.MooEditable = new Class({
 
       var c = e.code;
       // 33-36 = pageup, pagedown, end, home; 45 = insert
-      if( this.options.toolbar
-            && (/^enter|left|up|right|down|delete|backspace$/i.test( e.key ) || (c >= 33 && c <= 36) || c == 45 || e.meta || e.control) ){
-         if( Browser.ie6 ){ // Delay for less cpu usage when you are
-                              // typing
+      if( this.options.toolbar && (/^enter|left|up|right|down|delete|backspace$/i.test( e.key ) || (c >= 33 && c <= 36) || c == 45 || e.meta || e.control) ){
+         if( Browser.ie6 ){ // Delay for less cpu usage when you are typing
             clearTimeout( this.checkStatesDelay );
             this.checkStatesDelay = this.checkStates.delay( 500, this );
          }else{
@@ -494,6 +498,7 @@ this.MooEditable = new Class({
          }
       }
 
+      this.adjustIFrameHeight();
       this.fireEvent( 'editorKeyUp', [e, this] );
    },
 
@@ -518,8 +523,7 @@ this.MooEditable = new Class({
                r.setEndAfter( br );
                s.setRange( r );
 
-               // Could not place caret after BR then insert an nbsp
-               // entity and move the caret
+               // Could not place caret after BR then insert an nbsp entity and move the caret
                if( s.getSelection().focusNode == br.previousSibling ){
                   var nbsp = this.doc.createTextNode( '\u00a0' );
                   var p = br.parentNode;
@@ -667,7 +671,7 @@ this.MooEditable = new Class({
          return '<!-- mooeditable:protect:' + (protect.length - 1) + ' -->';
       } );
       this.doc.body.set( 'html', this.ensureRootElement( content ) );
-      if( this.options.elasticHeight )  this.stretchIFrame();
+      if( this.options.elasticHeight )  this.adjustIFrameHeight();
       return this;
    },
 
