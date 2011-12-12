@@ -31,10 +31,11 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
-   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
     
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
@@ -70,6 +71,7 @@
    <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UniqueId.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
@@ -93,6 +95,8 @@
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButtonFactory.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarDivider.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
@@ -102,7 +106,7 @@
 
    <script type="text/javascript" >
       window.addEvent( 'domready', function() {
-         test_construct_constructsWholeDekstop();
+         //test_unmarshall_unmarshallsDesktopComponents();
       });
   	  
       JsHamcrest.Integration.JsUnit();
@@ -198,10 +202,10 @@
             function(){
                desktop.unmarshall();
                
-               assertThat( desktop.getName(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/name" )));
-               assertThat( desktop.getDescription(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/description" )));
-               assertThat( desktop.getVersion(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/version" )));
-               assertThat( desktop.getContainerId(), equalTo( desktopConfiguration.selectNodeText( "pp:desktopConfiguration/containerId" )));
+               assertThat( desktop.getName(), equalTo( desktopConfiguration.selectNodeText( "/desktopConfiguration/name" )));
+               assertThat( desktop.getDescription(), equalTo( desktopConfiguration.selectNodeText( "/desktopConfiguration/description" )));
+               assertThat( desktop.getVersion(), equalTo( desktopConfiguration.selectNodeText( "/desktopConfiguration/version" )));
+               assertThat( desktop.getContainerId(), equalTo( desktopConfiguration.selectNodeText( "/desktopConfiguration/containerId" )));
                
                assertThat( desktop.getResources().getState(), equalTo( ResourceManager.States.UNMARSHALLED ));
                assertThat( desktop.getHeader().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));

@@ -21,7 +21,7 @@
             <plugin>
                <resources>
                   <styleSheets>
-                     <styleSheet>Desktops/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
+                     <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/SkinSelectorWidget.css</styleSheet>
                   </styleSheets>
                </resources>
                <widget name="SkinSelectorWidget">

@@ -5,13 +5,13 @@
 	
 	<tabWidget tabWidgetId="TabWidget" selectedTabClass="selectedTab" showCloseButton="true" showPrintButton="true">
 		<tab tabId="tabOne" caption="TabWidget.tabOne">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
       </tab>
 		<tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
       </tab>
 		<tab tabId="tabThree" caption="TabWidget.tabThree">
-         <messageProperties>{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : SmartDocument.Types.HTML }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
       </tab>
 	</tabWidget>
 	
