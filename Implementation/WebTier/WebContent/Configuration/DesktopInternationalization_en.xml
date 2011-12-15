@@ -16,6 +16,7 @@
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menus</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
+    <Resource key="DesktopNotification.underDevelopment" type="String">Requested feature is under development, please try again after a few days.</Resource>
 
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>

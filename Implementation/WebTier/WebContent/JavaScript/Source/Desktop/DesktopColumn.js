@@ -73,7 +73,6 @@ var DesktopColumn = new Class({
    getMUIColumn: function() { return this.MUIColumn; },
    getName: function() { return this.name; },
    getPlacement: function() { return this.placement; },
-   getState: function() { return this.state; },
    getWidth: function() { return this.width; }
    
    //Protected, private helper methods

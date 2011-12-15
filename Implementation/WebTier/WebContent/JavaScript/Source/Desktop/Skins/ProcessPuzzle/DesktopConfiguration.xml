@@ -98,6 +98,17 @@
 	</panels>
 	
 	<windows>
-		<window></window>
+      <window name="aboutDialog" height="300" width="500">
+         <title>DesktopWindow.aboutDialog.title</title>
+         <contentURL>../Desktop/Content/About.html</contentURL>
+      </window>
+      
+		<window name="newDocumentDialog" height="400" width="600">
+         <title>DesktopWindow.newDocumentDialog.title</title>
+         <document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper">
+             <documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</documentDefinitionUri>
+             <documentContentUri>../Desktop/SampleDocumentContent.xml</documentContentUri>
+         </document>
+      </window>
 	</windows>
 </desktopConfiguration>

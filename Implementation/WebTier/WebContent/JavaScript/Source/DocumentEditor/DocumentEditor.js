@@ -55,6 +55,10 @@ var DocumentEditor = new Class({
    destroy: function(){
    },
    
+   showNotification: function( notificationText ){
+      MUI.notification( this.internationalization.getText( notificationText ));
+   }, 
+   
    //Properties
    getSubjectElement: function() { return this.subjectElement; },
    

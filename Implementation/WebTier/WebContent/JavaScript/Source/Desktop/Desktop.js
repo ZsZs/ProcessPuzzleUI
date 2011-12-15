@@ -203,6 +203,12 @@ var Desktop = new Class({
       this.callNextConfigurationStep();
    },
    
+   showNotification: function( notificationText ){
+      if( this.state == Desktop.States.CONSTRUCTED ){
+         MUI.notification( this.resourceBundle.getText( notificationText ));
+      }
+   }, 
+   
    unmarshall: function(){
       this.unmarshallDesktopProperties();
       this.unmarshallResources();
@@ -448,7 +454,7 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { onPanelConstructed : this.onPanelConstructed } );
+         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onPanelConstructed } );
          desktopPanel.unmarshall();
          this.panels.put( desktopPanel.getName(), desktopPanel );
       }, this );

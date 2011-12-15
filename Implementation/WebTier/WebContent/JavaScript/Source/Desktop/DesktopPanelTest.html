@@ -82,6 +82,7 @@
    <script type="text/javascript" src="../SmartDocument/MissingBindVariableException.js"></script>
    <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
+   <script type="text/javascript" src="../Desktop/ComplexContentBehaviour.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
@@ -103,6 +104,8 @@
 
 <script type="text/javascript">
    window.addEvent( 'domready', function() {
+//      test_initialize_linksToRelatedComponentsAndSetsState();
+//      test_unmarshall_determinesDocumentProperties();
 //      test_construct_instantiatesMUIPanel();
 //      test_construct_constructsHeaderWithPlugin();
 //      test_construct_constructsSmartDocument();
@@ -160,7 +163,7 @@
       columnDefinition = desktopDefinition.selectNode( COLUMN_DEFINITION );
       column = new DesktopColumn( columnDefinition, { componentContainerId : PAGE_WRAPPER_ID } );
       panelDefinition = desktopDefinition.selectNode( PANEL_DEFINITION );
-      panel = new DesktopPanel( panelDefinition, resourceBundle, { onPanelConstructed : onPanelConstructed, onDocumentLoaded : onDocumentLoaded } );
+      panel = new DesktopPanel( panelDefinition, resourceBundle, { componentContainerId : PAGE_WRAPPER_ID, onConstructed : onPanelConstructed, onDocumentLoaded : onDocumentLoaded } );
       desktopContainerElement = $( DESKTOP_CONTAINER_ID );
       pageWrapperElement = $( PAGE_WRAPPER_ID );
 
@@ -211,7 +214,7 @@
             assertThat( panel.getLogger(), equalTo( webUILogger ) );
             assertThat( panel.getMessageBus(), equalTo( messageBus ) );
             assertThat( panel.getComponentStateManager(), equalTo( componentStateManager ) );
-            assertThat( panel.getState(), equalTo( DesktopPanel.States.INITIALIZED ) );
+            assertThat( panel.getState(), equalTo( DesktopElement.States.INITIALIZED ) );
             testCaseChain.callChain();
          }, 
          afterEachTest 
@@ -224,7 +227,7 @@
          beforeEachTest, 
          function() {
             panel.unmarshall();
-            assertThat( panel.getState(), equalTo( DesktopPanel.States.UNMARSHALLED ) );
+            assertThat( panel.getState(), equalTo( DesktopElement.States.UNMARSHALLED ) );
             testCaseChain.callChain();
          }, 
          afterEachTest
@@ -274,7 +277,7 @@
             panel.unmarshall();
             assertThat( panel.getDocument(), not( nil() ) );
             assertThat( instanceOf( panel.getDocument(), SmartDocument ), is( true ) );
-            assertThat( panel.getDocumentDefintionUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( panel.getDocumentDefinitionUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentDefinitionUri" ) ) );
             assertThat( panel.getDocumentContentUri(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/documentContentUri" ) ) );
             assertThat( panel.getDocumentWrapperId(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@id" ) ) );
             assertThat( panel.getDocumentWrapperStyle(), equalTo( desktopDefinition.selectNodeText( PANEL_DEFINITION + "/document/@elementStyle" ) ) );

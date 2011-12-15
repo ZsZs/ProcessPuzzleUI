@@ -15,6 +15,9 @@
     <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Console</Resource>
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menus</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
+    <Resource key="DesktopNotification.underDevelopment" type="String">Requested feature is under development, please try again after a few days.</Resource>
+    <Resource key="DesktopWindow.aboutDialog.title" type="String">About</Resource>
+    <Resource key="DesktopWindow.newDocumentDialog.title" type="String">Create new document</Resource>
     <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
     <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
     <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
@@ -31,6 +34,9 @@
     <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Konzol</Resource>
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menük</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tippek</Resource>
+    <Resource key="DesktopNotification.underDevelopment" type="String">A kért funkció még fejlesztés alatt áll, kérjük próbálja meg néhány nap múlva.</Resource>
+    <Resource key="DesktopWindow.aboutDialog.title" type="String">Névjegy</Resource>
+    <Resource key="DesktopWindow.newDocumentDialog.title" type="String">Create new document</Resource>
     <Resource key="LanguageSelectorWidget.en" type="String">angol</Resource>
     <Resource key="LanguageSelectorWidget.hu" type="String">magyar</Resource>
     <Resource key="LanguageSelectorWidget.select" type="String">Válasszon nyelvet:</Resource>

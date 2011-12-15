@@ -16,6 +16,7 @@
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menük</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tippek</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Ki van bent?</Resource>
+    <Resource key="DesktopNotification.underDevelopment" type="String">A kért funkció még fejlesztés alatt áll, kérjük próbálja meg néhány nap múlva.</Resource>
 
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Okos dokumentum</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML tartalom</Resource>

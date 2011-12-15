@@ -27,15 +27,17 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var DesktopPanel = new Class({
-   Implements: [Events, Options],
+   Extends: DesktopElement,
+   Implements: [ComplexContentBehaviour],
    Binds: ['constructDocument', 
            'constructPlugin', 
            'constructHeader', 
-           'determinePanelElement',
+           'determineComponentElements',
            'finalizeConstruction',
            'instantiateMUIPanel',
            'loadHtmlDocument',
            'loadSmartDocument',
+           'onContainerResize', 
            'onDocumentError', 
            'onDocumentReady', 
            'onHeaderConstructed', 
@@ -49,120 +51,31 @@ var DesktopPanel = new Class({
    
    options : {
       columnReferenceSelector : "columnReference",
+      componentContentIdPostfix : "",
       componentName : "DesktopPanel",
-      contentUrlSelector : "contentURL",
-      documentContentUriSelector : "document/documentContentUri",
-      documentDefinitionUriSelector : "document/documentDefinitionUri",
-      documentNameSeparator : "_",
-      documentWrapperId : "_documentWrapper_" + (new Date().getTime()),
-      documentWrapperIdSelector : "document/@id",
-      documentWrapperStyle : "panelDocumentWrapper",
-      documentWrapperStyleSelector : "document/@elementStyle",
-      documentWrapperTag : "div",
-      documentWrapperTagSelector : "document/@tag",
-      handleMenuSelectedEvents : false,
-      handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
-      handleTabSelectedEvents : false,
-      handleTabSelectedEventsSelector : "handleTabSelectedEvents",
-      headerSelector : "panelHeader",
-      heightDefault : 125,
-      heightSelector : "height",
-      nameSelector : "name",
-      nameSpaces : "xmlns:pp='http://www.processpuzzle.com'",
+      componentRootElementIdPostfix : "_wrapper",
       panelContentElementSuffix : "_pad",
-      panelIdPostfix : "_wrapper",
       pluginSelector : "plugin",
       showHeaderSelector : "showHeader",
       storeStateSelector : "storeState",
-      titleSelector : "title",
-      widthSelector : "width"
    },
 
    //Constructor
    initialize: function( definitionElement, bundle, options ){
-      this.setOptions( options );
+      this.parent( definitionElement, bundle, options );
       this.columnReference;
-      this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
-      this.constructionChain = new Chain();
-      this.contentUrl;
-      this.definitionElement = definitionElement;
-      this.document;
-      this.documentContentUri;
-      this.documentContentType = AbstractDocument.Types.HTML;
-      this.documentDefinitionUri;
-      this.documentWrapper;
-      this.documentWrapperId;
-      this.documentWrapperStyle;
-      this.documentWrapperTag;
-      this.error;
-      this.handleMenuSelectedEvents;
-      this.handleTabSelectedEvents;
-      this.header;
-      this.height;
-      this.lastHandledMessage;
-      this.logger = Class.getInstanceOf( WebUILogger );
-      this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.MUIPanel;
       this.MUIPanelLoaded = false;
-      this.name;
-      this.panelContentElement;
-      this.panelElement;
-      this.plugin;
-      this.resourceBundle = bundle;
-      this.showHeader;
-      this.storeState = false;
-      this.title;
-      
-      this.state = DesktopPanel.States.INITIALIZED;
    },
    
    //Public accessor and mutator methods
    construct: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
-      this.constructionChain.chain( 
-         this.instantiateMUIPanel,
-         this.determinePanelElement,
-         this.constructHeader,
-         this.constructPlugin,
-         this.constructDocument,
-         this.subscribeToWebUIMessages,
-         this.finalizeConstruction
-      );
-      this.constructionChain.callChain();
+      this.parent();
    },
    
    destroy: function(){
-      this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "' started." );
-      if( this.state == DesktopPanel.States.CONSTRUCTED ) this.destroyComponents();
-      this.resetProperties();
-      this.state = DesktopPanel.States.INITIALIZED;
-   },
-   
-   onDocumentError: function( error ){
-      this.error = error;
-      this.revertConstruction();
-      this.fireEvent( 'panelError', error );
-      this.fireEvent('panelConstructed', this ); 
-   },
-   
-   onDocumentReady: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s artifact finished." );
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
-      this.storeComponentState();
-      this.fireEvent( 'documentLoaded', this.documentContentUri );
-      this.constructionChain.callChain();
-   },
-   
-   onHeaderConstructed: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s header finished." );
-      this.constructionChain.callChain();
-   },
-   
-   onHeaderConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
-      this.fireEvent( 'panelError', this.error );
-      this.fireEvent('panelConstructed', this ); 
+      this.parent();
+      this.columnReference = null;
    },
    
    onMUIPanelLoaded: function(){
@@ -171,45 +84,15 @@ var DesktopPanel = new Class({
       this.constructionChain.callChain();
    },
    
-   onMUIPanelResize: function(){
-      if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
-         this.document.onContainerResize( this.panelContentElement.getSize() );
-      }
-   },
-   
-   onPluginConstructed: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s plugin finished." );
-      this.constructionChain.callChain();
-   },
-   
-   onPluginError: function( error ){
-      this.error = error;
-      this.revertConstruction();
-      this.fireEvent( 'panelError', this.error );
-      this.fireEvent('panelConstructed', this ); 
-   },
-   
    unmarshall: function(){
+      this.unmarshallProperties();
       this.unmarshallPanelProperties();
       this.unmarshallPanelHeader();
       this.unmarshallPlugin();
       this.unmarshallDocument();
-      
-      this.state = DesktopPanel.States.UNMARSHALLED;
+      this.parent();
    },
    
-   webUIMessageHandler: function( webUIMessage ){
-      if( this.state != DesktopPanel.States.CONSTRUCTED ) return;
-      
-      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) && webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT ) {
-         this.destroyDocument();
-         this.destroyDocumentWrapper();
-         this.cleanUpPanelContent();
-         this.loadDocument( webUIMessage );
-      }
-      this.lastHandledMessage = webUIMessage;
-   },
-
    //Properties
    getColumnReference: function() { return this.columnReference; },
    getComponentStateManager: function() { return this.componentStateManager; },
@@ -221,9 +104,6 @@ var DesktopPanel = new Class({
    getDocumentWrapperStyle: function() { return this.documentWrapperStyle; },
    getDocumentWrapperTag: function() { return this.documentWrapperTag; },
    getHeader: function() { return this.header; },
-   getHeight: function() { return this.height; },
-   getLogger: function() { return this.logger; },
-   getMessageBus: function() { return this.messageBus; },
    getMUIPanel: function() { return this.MUIPanel; },
    getName: function() { return this.name; },
    getPlugin: function() { return this.plugin; },
@@ -234,79 +114,23 @@ var DesktopPanel = new Class({
    isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
-   cleanUpPanelContent: function(){
-      var contentElement = $( this.name + this.options.panelContentElementSuffix );
-      if( contentElement ){
-         contentElement.getChildren( '*' ).each( function( childElement, index ){
-            childElement.destroy();
-         }, this );
-      }
-   }.protect(),
-   
-   constructDocument: function(){
-      if( this.document ) {
-         this.createDocumentWrapper();
-         this.document.construct();
-      }else this.constructionChain.callChain();
-   }.protect(),
-   
-   constructPlugin: function(){
-      if( this.plugin ) this.plugin.construct();
-      else this.constructionChain.callChain();
-   }.protect(),
-   
-   constructHeader: function(){
-      if( this.header ) this.header.construct();
-      else this.constructionChain.callChain();
-   }.protect(),
-   
-   createDocumentWrapper: function(){
-      this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, 'class' : this.documentWrapperStyle } );
-      this.panelContentElement.grab( this.documentWrapper );
-   }.protect(),
-   
-   destroyComponents: function(){
-      this.destroyDocument();
-      this.destroyDocumentWrapper();
-      this.cleanUpPanelContent();
-      if( this.header ) this.header.destroy();
-      if( this.plugin ) this.plugin.destroy();
-      if( this.panelElement ) {
-         if( this.panelElement.destroy ) this.panelElement.destroy();
-         else this.panelElement.removeNode();
-      }
-   }.protect(),
-   
-   destroyDocument: function(){
-      if( this.document )  this.document.destroy();
-      this.document = null;
-   }.protect(),
-   
-   destroyDocumentWrapper: function(){
-      if( this.documentWrapper ) this.documentWrapper.destroy();
-      this.documentWrapper = null;
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.instantiateMUIPanel,
+         this.determineComponentElements,
+         this.constructHeader,
+         this.constructPlugin,
+         this.constructDocument,
+         this.subscribeToWebUIMessages,
+         this.finalizeConstruction
+      );
    }.protect(),
    
    determinePanelElement: function(){
-      this.panelElement = $( this.name + this.options.panelIdPostfix );
-      this.panelElement = $( this.panelElement );     //required by Internet Explorer
+      this.componentRootElement = $( this.name + this.options.panelIdPostfix );
+      this.componentRootElement = $( this.componentRootElement );     //required by Internet Explorer
       this.panelContentElement = $( this.name );
       this.constructionChain.callChain();
-   }.protect(),
-   
-   finalizeConstruction: function(){
-      this.state = DesktopPanel.States.CONSTRUCTED;
-      this.constructionChain.clearChain();
-      this.fireEvent('panelConstructed', this ); 
-   }.protect(),
-   
-   instantiateDocument: function( webUIMessage, documentOptions ){
-      var newDocument = null;
-      switch( webUIMessage.getDocumentType() ){
-      case AbstractDocument.Types.HTML: newDocument = new HtmlDocument( this.resourceBundle, documentOptions ); break;
-      case AbstractDocument.Types.SMART: newDocument = new SmartDocument( this.resourceBundle, documentOptions ); break;
-      }
-      return newDocument;
    }.protect(),
    
    instantiateMUIPanel: function(){
@@ -327,10 +151,8 @@ var DesktopPanel = new Class({
             title: panelTitle 
          });
       }catch( exception ){
-         this.error = exception;
-         this.revertConstruction();
-         this.fireEvent( 'panelError', this.error );
-         this.fireEvent('panelConstructed', this ); 
+         this.fireEvent('constructed', this ); //Needed by Desktop, to able to count panels created.
+         this.onConstructionError( this.exception );
       }
    }.protect(),
    
@@ -346,81 +168,6 @@ var DesktopPanel = new Class({
          title: this.title,
          url: documentFullURI
       });
-   }.protect(),
-   
-   loadDocument: function( webUIMessage ){
-      this.documentDefinitionUri = webUIMessage.getDocumentURI();
-      this.documentContentUri = webUIMessage.getDocumentContentURI();
-      this.documentContentType = webUIMessage.getDocumentType();
-      this.document = this.instantiateDocument( webUIMessage, { 
-         documentContainerId : this.documentWrapperId, 
-         documentDefinitionUri : webUIMessage.getDocumentURI(), 
-         documentContentUri : this.documentContentUri,
-         onDocumentReady : this.onDocumentReady,
-         onDocumentError : this.onDocumentError
-      });
-      this.document.unmarshall();
-      this.constructDocument();
-   }.protect(),
-   
-   resetProperties: function(){
-      this.columnReference = null;
-      this.contentUrl = null;
-      this.documentContentUri = null;
-      this.documentDefinitionUri = null;
-      this.documentWrapperId = null;
-      this.documentWrapperStyle = null;
-      this.documentWrapperTag = null;
-      this.height = null;
-      this.name = null;
-      this.showHeader = null;
-      this.title = null;
-   }.protect(),
-   
-   revertConstruction: function(){
-      this.destroyComponents();
-      this.resetProperties();
-      this.state = DesktopPanel.States.INITIALIZED;
-   }.protect(),
-   
-   storeComponentState : function() {
-      if( this.storeState ){
-         var componentState;
-         if( this.documentContentType == AbstractDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
-         else componentState = { uri : this.documentDefinitionUri, type : this.documentContentType };
-         this.componentStateManager.storeCurrentState( this.options.componentName, componentState );
-      }
-   }.protect(),
-   
-   subscribeToWebUIMessages: function() {
-      if( this.handleMenuSelectedEvents ){
-         this.logger.debug( this.options.componentName + ".subscribeToWebUIMessages() started." );
-         this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
-      }
-      
-      if( this.handleTabSelectedEvents ){
-         this.logger.debug( this.options.componentName + ".subscribedToWebUIMessages() started." );
-         this.messageBus.subscribeToMessage( TabSelectedMessage, this.webUIMessageHandler );
-      }
-      this.constructionChain.callChain();
-   }.protect(),
-   
-   unmarshallDocument: function(){
-      this.documentContentUri = XmlResource.selectNodeText( this.options.documentContentUriSelector, this.definitionElement );
-      this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement );
-      this.documentWrapperId = XmlResource.selectNodeText( this.options.documentWrapperIdSelector, this.definitionElement, this.options.nameSpaces, this.name + this.options.documentWrapperId );
-      this.documentWrapperStyle = XmlResource.selectNodeText( this.options.documentWrapperStyleSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperStyle );
-      this.documentWrapperTag = XmlResource.selectNodeText( this.options.documentWrapperTagSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperTag );
-      if( this.documentDefinitionUri ){
-         this.document = new SmartDocument( this.resourceBundle, { 
-            documentContainerId : this.documentWrapperId, 
-            documentDefinitionUri : this.documentDefinitionUri, 
-            documentContentUri : this.documentContentUri,
-            onDocumentReady : this.onDocumentReady,
-            onDocumentError : this.onDocumentError
-         });
-         this.document.unmarshall();
-      }
    }.protect(),
    
    unmarshallHeaderToolbox: function() {
@@ -441,25 +188,5 @@ var DesktopPanel = new Class({
    
    unmarshallPanelProperties: function(){
       this.columnReference = XmlResource.determineAttributeValue( this.definitionElement, this.options.columnReferenceSelector );
-      this.contentUrl = XmlResource.selectNodeText( this.options.contentUrlSelector, this.definitionElement );
-      this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector, this.options.heightDefault ));
-      this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );
-      this.showHeader = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.showHeaderSelector ));
-      this.handleMenuSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleMenuSelectedEventsSelector, this.options.handleMenuSelectedEvents ));
-      this.handleTabSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleTabSelectedEventsSelector, this.options.handleTabSelectedEvents ));
-      this.storeState = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.storeStateSelector, false ));
-      this.title = XmlResource.selectNodeText( this.options.titleSelector, this.definitionElement );
-      if( this.resourceBundle ) this.title = this.resourceBundle.getText( this.title );
-      this.options.componentName = this.name;
-   }.protect(),
-  
-   unmarshallPlugin: function(){
-      var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
-      if( pluginDefinition ){
-         this.plugin = new DocumentPlugin( pluginDefinition, this.resourceBundle, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginError } );
-         this.plugin.unmarshall();
-      }
-   }.protect()
+   }.protect(),  
 });
-
-DesktopPanel.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

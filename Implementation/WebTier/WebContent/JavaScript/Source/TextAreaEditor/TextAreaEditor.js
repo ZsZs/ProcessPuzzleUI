@@ -65,7 +65,7 @@ var TextAreaEditor = new Class({
       this.attachChain.callChain();
    },
    
-   textAddImage: function(){ this.mooEditable.action( 'urlimage' ); },
+   textAddImage: function(){ this.showNotification( "DesktopNotification.underDevelopment" ); },
    textAddLink: function(){ this.mooEditable.action( 'createlink' ); },
    textAlignCenter: function(){ this.mooEditable.action( 'justifycenter' ); },
    textAlignLeft: function(){ this.mooEditable.action( 'justifyleft' ); },

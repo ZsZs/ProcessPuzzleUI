@@ -73,7 +73,7 @@ var DesktopDocument = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructDocument, this.constructed );
+      this.constructionChain.chain( this.constructDocument, this.finalizeConstruction );
    }.protect(),
    
    constructDocument: function(){

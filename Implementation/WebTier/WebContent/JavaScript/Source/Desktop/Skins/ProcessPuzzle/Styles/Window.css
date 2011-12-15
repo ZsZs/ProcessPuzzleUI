@@ -310,7 +310,8 @@ div.mochaToolbarWrapper.bottom {
 }
 
 .mocha.notification {
-	background: #cedff2;	
+	background: rgb(220,252,230);	
+   color: teal;
 }
 
 .mocha.notification .mochaTitlebar {

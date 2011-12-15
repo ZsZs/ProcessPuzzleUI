@@ -14,6 +14,7 @@
    <![endif]--> 
     
    <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
@@ -53,6 +54,7 @@
    <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
+   <script type="text/javascript" src="../Desktop/ComplexContentBehaviour.js"></script>
    <script type="text/javascript" src="../Desktop/Desktop.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
@@ -107,9 +109,11 @@
    <script type="text/javascript" >
       window.addEvent( 'domready', function() {
          //test_unmarshall_unmarshallsDesktopComponents();
+         //test_showNotification_delegatesToMUI();
       });
   	  
       JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
  	  
       var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
       var DESKTOP_CONTAINER_ID = "desktop";
@@ -219,7 +223,7 @@
                
                assertThat( desktop.getPanels().size(), equalTo( 5 ));
                desktop.getPanels().each( function( panelEntry, index ){
-                  assertThat( panelEntry.getValue().getState(), equalTo( DesktopPanel.States.UNMARSHALLED ));
+                  assertThat( panelEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
                });
                testCaseChain.callChain();
             },
@@ -235,13 +239,30 @@
                desktop.construct();
             },
             function(){
-               assertThat( desktop.getState(), equalTo( DesktopPanel.States.CONSTRUCTED ));
+               assertThat( desktop.getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
                testCaseChain.callChain();
             },
             afterEachTest
          ).callChain();
       }
       
+      function test_showNotification_delegatesToMUI(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               desktop.unmarshall();
+               desktop.construct();
+            },
+            function(){
+               var mockedMUINotification = spy( MUI.notification );
+               MUI.notification = mockedMUINotification; 
+               desktop.showNotification( "DesktopNotification.underDevelopment" );
+               verify( mockedMUINotification )( resourceBundle.getText( "DesktopNotification.underDevelopment" ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         ).callChain();
+      }
     </script>
     
 </head>

@@ -137,6 +137,12 @@ var AbstractDocument = new Class({
       else this.onConstructionError();
    },
    
+   showNotification: function( notificationText ){
+      if( this.state == AbstractDocument.States.CONSTRUCTED ){
+         MUI.notification( this.i18Resource.getText( notificationText ));
+      }
+   }, 
+   
    unmarshall: function(){
       this.unmarshallProperties();
       this.unmarshallResources();

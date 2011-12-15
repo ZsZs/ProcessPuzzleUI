@@ -26,10 +26,10 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopElement = new Class({
    Implements: [Events, Options],
-   Binds: ['constructed', 'onConstructionError'],
+   Binds: ['constructed', 'finalizeConstruction', 'onConstructionError'],
    
    options: {
-      componentContainerId: "Desktop",
+      componentContainerId: "desktop",
       componentName: "DesktopElement",
       defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
@@ -40,6 +40,7 @@ var DesktopElement = new Class({
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
       this.setOptions( options );
+      this.componentStateManager;
       this.constructionChain = new Chain();
       this.containerElement;
       this.definitionElement = definitionElement;
@@ -48,6 +49,7 @@ var DesktopElement = new Class({
       this.id;
       this.internationalization = internationalization;
       this.logger;
+      this.messageBus;
       this.state = DesktopElement.States.UNINITIALIZED;
       this.tag;
       
@@ -63,14 +65,11 @@ var DesktopElement = new Class({
       this.constructionChain.callChain();
    },
    
-   constructed: function(){
-      this.status = DesktopElement.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this );
-      this.constructionChain.clearChain();
-   },
-   
    destroy: function(){
-      if( this.htmlElement ) this.htmlElement.destroy();
+      this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "' started." );
+      if( this.state == DesktopElement.States.CONSTRUCTED ) this.destroyComponents();
+      this.resetProperties();
+      if( this.htmlElement ) this.htmlElement.destroy();      
       this.state = DesktopElement.States.INITIALIZED;
    },
    
@@ -94,7 +93,7 @@ var DesktopElement = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructed );
+      this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
    
    configureLogger : function() {
@@ -120,14 +119,31 @@ var DesktopElement = new Class({
       else return null;
    }.protect(),
    
+   destroyComponents: function(){
+      //Abstract method, should be overwritten
+   }.protect(),
+   
+   finalizeConstruction: function(){
+      this.state = DesktopElement.States.CONSTRUCTED;
+      this.constructionChain.clearChain();
+      this.fireEvent('constructed', this ); 
+   }.protect(),
+   
+   resetProperties: function(){
+      //Abstract method, should be overwritten.
+   }.protect(),
+   
    revertConstruction: function(){
       this.state = DesktopElement.States.INITIALIZED;
    }.protect(),
    
    setUp: function(){
+      this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.configureLogger();
       this.containerElement = $( this.options.componentContainerId );
-      if( this.containerElement == null ) throw new IllegalArgumentException( "Parameter 'componetContainerId' in invalid." );
+      if( this.containerElement == null ) 
+         throw new IllegalArgumentException( "Parameter 'componetContainerId' in invalid." );
+      this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.state = DesktopElement.States.INITIALIZED;
    }.protect(),
    
