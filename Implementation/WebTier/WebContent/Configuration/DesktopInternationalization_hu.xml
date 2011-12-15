@@ -26,6 +26,7 @@
     <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Videó album</Resource>
 
     <Resource key="HierarchicalMenuWidget.administration" type="String">Adminisztráció</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.about" type="String">Névjegy</Resource>
     <Resource key="HierarchicalMenuWidget.administration.users" type="String">Felhasználók</Resource>
 
     <Resource key="LanguageSelectorWidget.en" type="String">angol</Resource>

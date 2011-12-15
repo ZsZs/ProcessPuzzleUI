@@ -26,6 +26,7 @@
     <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
 
     <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.about" type="String">About ProcessPuzzle</Resource>
     <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
     
     <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>

@@ -64,6 +64,7 @@
    <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopWindow.js"></script>
    <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
@@ -110,6 +111,8 @@
       window.addEvent( 'domready', function() {
          //test_unmarshall_unmarshallsDesktopComponents();
          //test_showNotification_delegatesToMUI();
+         test_construct_subscribesForMenuSelectedMessage();
+         //test_showWindow_constructsDesktopWindow();
       });
   	  
       JsHamcrest.Integration.JsUnit();
@@ -134,6 +137,7 @@
       var DESKTOP_NAVIGATION_BAR_ID = 'desktopNavigationBar';
       var DESKTOP_TITLE_BAR_WRAPPER_ID = 'desktopTitlebarWrapper';
       var DESKTOP_TITLE_BAR_ID = 'desktopTitleBar';
+      var DESKTOP_WINDOW_NAME = 'aboutDialog';
       var DOCKER_ONLY_CONFIGURATION_PATH = 'Skins/ProcessPuzzle/Configuration/WindowDockerOnlyConfiguration.xml';
       var DOCUMENT_BROWSER_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/TreeView.html';
       var DOCUMENT_PANEL_CONTENT_URL = '../DesktopConfigurator/Content/HelloWorldContent.html';
@@ -148,21 +152,28 @@
       var desktopConfiguration;
       var desktopElement;
       var desktop;
+      var desktopWindow;
       var resourceBundle;
       var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
       var testWindow;
       var webUIConfiguration;
       var webUILogger = null;
       var webUIController;
+      var webUIMessageBus;
 
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+      
       function beforeEachTest() {
-         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-         else testWindow = window;
          inform( "beforeEachTest" );
+         testCaseIsRunning = true;
         
          webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : WEBUI_CONFIGURATION_URI } );
          webUIConfiguration = webUIController.getWebUIConfiguration();
          webUILogger = webUIController.getLogger();
+         webUIMessageBus = new WebUIMessageBus();
          resourceBundle = webUIController.getResourceBundle();
          desktop = new Desktop( webUIConfiguration, resourceBundle, { configurationURI : DESKTOP_CONFIGURATION_URI, onConstructed : onConstructed, onError : onError });
          desktopConfiguration = desktop.getConfigurationXml();
@@ -179,14 +190,19 @@
          testCaseChain.callChain();
       }
       
+      function onWindowReady(){
+         testCaseChain.callChain();
+      }
+      
       function afterEachTest() {
+         if( desktopWindow ) desktopWindow.destroy();
          if( desktop ) desktop.destroy();
          if( webUIController.isConfigured ) webUIController.destroy();
          desktop = null;
 		 
-         testCaseChain.callChain();
-         testCaseChain.clearChain();
          inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
       }
       
       function test_initialize_loadsDesktopConfiguration(){
@@ -197,7 +213,8 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
+         );
+         runTestCase();
       }
 
       function test_unmarshall_unmarshallsDesktopComponents(){
@@ -225,10 +242,16 @@
                desktop.getPanels().each( function( panelEntry, index ){
                   assertThat( panelEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
                });
+               
+               assertThat( desktop.getWindows().size(), equalTo( 2 ));
+               desktop.getWindows().each( function( windowEntry, index ){
+                  assertThat( windowEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
+               });
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
+         );
+         runTestCase();
       }
       
       function test_construct_constructsWholeDekstop(){
@@ -243,9 +266,26 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
+         );
+         runTestCase();
       }
       
+      function test_construct_subscribesForMenuSelectedMessage(){
+         testCaseChain.chain( 
+            beforeEachTest,
+            function(){
+               desktop.unmarshall();
+               desktop.construct();
+            },
+            function() {
+               assertThat( webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( desktop.webUIMessageHandler ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
+      }
+
       function test_showNotification_delegatesToMUI(){
          testCaseChain.chain(
             beforeEachTest,
@@ -261,7 +301,27 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
+         );
+         runTestCase();
+      }
+      
+      function test_showWindow_constructsDesktopWindow(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               desktop.unmarshall();
+               desktop.construct();
+            },
+            function(){
+               desktopWindow = desktop.showWindow( DESKTOP_WINDOW_NAME, onWindowReady );
+            },
+            function(){
+               assertThat( desktopWindow.getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
       }
     </script>
     

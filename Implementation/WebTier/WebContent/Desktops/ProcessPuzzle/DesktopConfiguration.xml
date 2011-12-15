@@ -114,6 +114,9 @@
 	</panels>
 	
    <windows>
-      <window/>
+      <window name="aboutDialog" height="400" width="600">
+         <title>DesktopWindow.aboutDialog.title</title>
+         <contentURL>Content/System/About.html</contentURL>
+      </window>      
    </windows>
 </desktopConfiguration>

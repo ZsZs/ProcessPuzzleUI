@@ -34,6 +34,7 @@ var DesktopWindow = new Class({
       'constructDocument',
       'constructHeader',
       'constructPlugin',
+      'destroy',
       'determineComponentElements', 
       'instantiateMUIWindow', 
       'onContainerResize', 
@@ -57,10 +58,12 @@ var DesktopWindow = new Class({
    initialize: function( definitionElement, internationalization, options ){
       this.parent( definitionElement, internationalization, options );
       this.MUIWindow;
+      this.onReadyCallBack;
    },
    
    //Public accessor and mutator methods
-   construct: function(){
+   construct: function( onReadyCallback ){
+      this.onReadyCallBack = onReadyCallback;
       this.parent();
    },
    
@@ -75,7 +78,7 @@ var DesktopWindow = new Class({
    unmarshall: function(){
       this.unmarshallProperties();
       this.unmarshallWindowProperties();
-      this.unmarshallPanelHeader();
+      this.unmarshallHeader();
       this.unmarshallPlugin();
       this.unmarshallDocument();
       this.parent();
@@ -83,6 +86,7 @@ var DesktopWindow = new Class({
    
    //Properties
    getMUIWindow: function() { return this.MUIWindow; },
+   getOnReadyCallback: function() { return this.onReadyCallBack; },
    getWindowContentElement: function() { return this.contentContainerElement; },
    getWindowElement: function() { return this.componentRootElement; },
    
@@ -106,7 +110,9 @@ var DesktopWindow = new Class({
          container : this.containerElement,
          contentURL : this.contentUrl,
          id : this.name,
-         onContentLoaded: this.contentUrl ? this.onMUIWindowLoaded : null,
+         onClose : this.destroy,
+         onContentLoaded : this.contentUrl ? this.onMUIWindowLoaded : null,
+         onResize : this.onContainerResize,
          title : this.internationalization.getText( this.title )
       });      
       if( !this.contentUrl ) this.constructionChain.callChain();
@@ -115,3 +121,5 @@ var DesktopWindow = new Class({
    unmarshallWindowProperties: function(){
    }.protect(),
 });
+
+DesktopWindow.Activity = { SHOW_WINDOW : 'showWindow' };

@@ -147,7 +147,7 @@ var DesktopPanel = new Class({
             headerToolboxOnload: this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
             height: this.height,
-            onResize: this.onMUIPanelResize,
+            onResize: this.onContainerResize,
             title: panelTitle 
          });
       }catch( exception ){

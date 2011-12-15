@@ -295,7 +295,7 @@ var AbstractDocument = new Class({
 
 AbstractDocument.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
 AbstractDocument.Types = { HTML : 0, SMART : 1 };
-AbstractDocument.Activity = { LOAD_DOCUMENT : 0, MODIFY_DOCUMENT : 1 };
+AbstractDocument.Activity = { LOAD_DOCUMENT : 'loadDocument', MODIFY_DOCUMENT : 'modifyDocument' };
 AbstractDocument.Action = { 
       BOLD : 0, 
       ITALIC : 1, 

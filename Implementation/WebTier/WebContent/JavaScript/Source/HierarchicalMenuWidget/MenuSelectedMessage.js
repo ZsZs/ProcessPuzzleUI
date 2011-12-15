@@ -45,6 +45,7 @@ var MenuSelectedMessage = new Class({
    getContextItemId: function() { return this.options.contextItemId; },
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },
-   getDocumentURI: function() { return this.options.documentURI; }
+   getDocumentURI: function() { return this.options.documentURI; },
+   getWindowName: function() { return this.options.windowName; }
 });
 

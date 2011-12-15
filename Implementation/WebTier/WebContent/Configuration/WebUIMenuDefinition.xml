@@ -37,6 +37,9 @@
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
 			</menuItem>
 						
+         <menuItem menuItemId="Administration-About" caption="HierarchicalMenuWidget.administration.about">
+            <messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'aboutDialog' }</messageProperties>         
+         </menuItem>
 		</menuItem>
 	</menuItem>
 </pp:menuWidgetDefinition>

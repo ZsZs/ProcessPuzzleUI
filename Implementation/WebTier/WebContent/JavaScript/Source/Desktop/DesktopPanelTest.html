@@ -132,7 +132,6 @@
    var desktopContainerElement;
    var desktopDefinition;
    var loadedDocument;
-   var messageBus;
    var panelDefinition;
    var pageWrapperElement;
    var panel;
@@ -156,7 +155,6 @@
       webUIMessageBus = new WebUIMessageBus();
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( new Locale({ language : "hu" }) );
-      messageBus = new WebUIMessageBus();
       componentStateManager = new ComponentStateManager();
 
       desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'"} );
@@ -212,7 +210,7 @@
          beforeEachTest, 
          function() {
             assertThat( panel.getLogger(), equalTo( webUILogger ) );
-            assertThat( panel.getMessageBus(), equalTo( messageBus ) );
+            assertThat( panel.getMessageBus(), equalTo( webUIMessageBus ) );
             assertThat( panel.getComponentStateManager(), equalTo( componentStateManager ) );
             assertThat( panel.getState(), equalTo( DesktopElement.States.INITIALIZED ) );
             testCaseChain.callChain();
@@ -352,7 +350,7 @@
             //documentLoaded event was fired
          },
          function() {
-            assertThat( messageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( panel.webUIMessageHandler ), is( true ));
+            assertThat( webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( panel.webUIMessageHandler ), is( true ));
             testCaseChain.callChain();
          },
          afterEachTest
@@ -372,7 +370,7 @@
          },
          function(){
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.HTML, documentURI : HTML_DOCUMENT_URI });
-            messageBus.notifySubscribers( message );
+            webUIMessageBus.notifySubscribers( message );
          },
          function() {
             assertThat( panel.getDocumentDefinitionUri(), equalTo( HTML_DOCUMENT_URI ));
@@ -395,7 +393,7 @@
          },
          function(){
             var message = new MenuSelectedMessage({ activiyType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : SMART_DOCUMENT_URI });
-            messageBus.notifySubscribers( message );
+            webUIMessageBus.notifySubscribers( message );
          },
          function() {
             assertThat( panel.getDocumentDefintionUri(), equalTo( SMART_DOCUMENT_URI ));

@@ -314,6 +314,10 @@ var ComplexContentBehaviour = new Class({
       }
    }.protect(),
    
+   unmarshallHeader: function(){
+      //Not implemented yet.
+   }.protect(),
+   
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
