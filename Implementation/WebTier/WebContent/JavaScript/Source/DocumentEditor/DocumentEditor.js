@@ -41,6 +41,8 @@ var DocumentEditor = new Class({
       
       //Private attributes
       this.attachChain = new Chain();
+      this.logger = Class.getInstanceOf( WebUILogger );
+      this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.styleSheets = new ArrayList();
       this.subjectElement;
    },
@@ -56,9 +58,15 @@ var DocumentEditor = new Class({
    },
    
    showNotification: function( notificationText ){
-      MUI.notification( this.internationalization.getText( notificationText ));
+      var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : notificationText });
+      this.messageBus.notifySubscribers( message );
    }, 
    
+   showWindow: function( windowName ){
+      var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : windowName });
+      this.messageBus.notifySubscribers( message );
+   },
+      
    //Properties
    getSubjectElement: function() { return this.subjectElement; },
    

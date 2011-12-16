@@ -247,8 +247,13 @@ var Desktop = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( this.state != DesktopElement.States.CONSTRUCTED ) return;
       
-      if( instanceOf( webUIMessage, MenuSelectedMessage ) && ( webUIMessage.getActivityType() == DesktopWindow.Activity.SHOW_WINDOW )) {
-         this.showWindow( webUIMessage.getWindowName() );
+      if( instanceOf( webUIMessage, MenuSelectedMessage )) {
+         switch( webUIMessage.getActivityType() ){
+         case DesktopWindow.Activity.SHOW_NOTIFICATION:
+            this.showNotification( webUIMessage.getNotification() ); break;
+         case DesktopWindow.Activity.SHOW_WINDOW:
+            this.showWindow( webUIMessage.getWindowName() ); break;
+         }
       }
       this.lastHandledMessage = webUIMessage;
    },

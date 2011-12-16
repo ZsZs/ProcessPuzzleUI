@@ -108,7 +108,7 @@ var DesktopWindow = new Class({
       
       this.MUIWindow = new MUI.Window({
          container : this.containerElement,
-         contentURL : this.contentUrl,
+         contentURL : this.contentUrl ? this.contentUrl : null,
          id : this.name,
          onClose : this.destroy,
          onContentLoaded : this.contentUrl ? this.onMUIWindowLoaded : null,
@@ -122,4 +122,4 @@ var DesktopWindow = new Class({
    }.protect(),
 });
 
-DesktopWindow.Activity = { SHOW_WINDOW : 'showWindow' };
+DesktopWindow.Activity = { SHOW_WINDOW : 'showWindow', SHOW_NOTIFICATION : 'showNotification' };

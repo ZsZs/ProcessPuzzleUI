@@ -28,7 +28,9 @@ var MenuSelectedMessage = new Class({
       documentType: AbstractDocument.Types.SMART,
       documentURI: null,
       contextItemId : null,
-      name: "Menu Selected Message"
+      name: "Menu Selected Message",
+      notification: null,
+      windowName: null
    },
    
    //Constructors
@@ -46,6 +48,7 @@ var MenuSelectedMessage = new Class({
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },
    getDocumentURI: function() { return this.options.documentURI; },
+   getNotification: function() { return this.options.notification; },
    getWindowName: function() { return this.options.windowName; }
 });
 

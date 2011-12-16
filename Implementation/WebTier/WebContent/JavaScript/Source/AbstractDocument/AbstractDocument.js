@@ -139,9 +139,17 @@ var AbstractDocument = new Class({
    
    showNotification: function( notificationText ){
       if( this.state == AbstractDocument.States.CONSTRUCTED ){
-         MUI.notification( this.i18Resource.getText( notificationText ));
+         var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : notificationText });
+         this.messageBus.notifySubscribers( message );
       }
    }, 
+   
+   showWindow: function( windowName ){
+      if( this.state == AbstractDocument.States.CONSTRUCTED ){
+         var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : windowName });
+         this.messageBus.notifySubscribers( message );
+      }
+   },
    
    unmarshall: function(){
       this.unmarshallProperties();

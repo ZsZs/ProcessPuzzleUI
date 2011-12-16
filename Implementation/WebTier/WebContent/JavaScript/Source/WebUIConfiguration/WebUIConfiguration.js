@@ -404,3 +404,8 @@ var WebUIConfiguration = new Class({
       else return null;
    } 
 });
+
+SYSTEM_WINDOWS = { 
+   ABOUT : 'about',
+   DOCUMENT_EXPLORER : 'documentExplorer'
+};

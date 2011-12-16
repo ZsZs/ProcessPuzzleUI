@@ -38,7 +38,7 @@
 			</menuItem>
 						
          <menuItem menuItemId="Administration-About" caption="HierarchicalMenuWidget.administration.about">
-            <messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'aboutDialog' }</messageProperties>         
+            <messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'about' }</messageProperties>         
          </menuItem>
 		</menuItem>
 	</menuItem>
