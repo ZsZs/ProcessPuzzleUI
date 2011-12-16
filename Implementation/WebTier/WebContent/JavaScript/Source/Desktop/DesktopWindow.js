@@ -109,11 +109,13 @@ var DesktopWindow = new Class({
       this.MUIWindow = new MUI.Window({
          container : this.containerElement,
          contentURL : this.contentUrl ? this.contentUrl : null,
+         height : this.height,
          id : this.name,
          onClose : this.destroy,
          onContentLoaded : this.contentUrl ? this.onMUIWindowLoaded : null,
          onResize : this.onContainerResize,
-         title : this.internationalization.getText( this.title )
+         title : this.internationalization.getText( this.title ),
+         width : this.width
       });      
       if( !this.contentUrl ) this.constructionChain.callChain();
    }.protect(),
