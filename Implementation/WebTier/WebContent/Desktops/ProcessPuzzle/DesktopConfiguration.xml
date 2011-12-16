@@ -114,9 +114,13 @@
 	</panels>
 	
    <windows>
-      <window name="aboutDialog" height="400" width="600">
-         <title>DesktopWindow.aboutDialog.title</title>
+      <window name='about' height='400' width='600'>
+         <title>DesktopWindow.about.title</title>
          <contentURL>Content/System/About.html</contentURL>
-      </window>      
+      </window>
+      
+      <window name="documentExplorer" height="400" width="600">
+         <title>DesktopWindow.documentExplorer.title</title>
+      </window>
    </windows>
 </desktopConfiguration>

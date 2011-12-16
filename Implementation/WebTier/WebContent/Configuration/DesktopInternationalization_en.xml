@@ -16,25 +16,12 @@
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menus</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
+    
     <Resource key="DesktopNotification.underDevelopment" type="String">Requested feature is under development, please try again after a few days.</Resource>
-
-    <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Photo Album</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
-
-    <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.about" type="String">About ProcessPuzzle</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
     
-    <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
-    <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
-    <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
+    <Resource key="DesktopWindow.about.title" type="String">About ProcessPuzzle</Resource>
+    <Resource key="DesktopWindow.documentExplorer.title" type="String">Document Explorer</Resource>
 
-    <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
-    
     <Resource key="DocumentComments.introduction" type="String">Comments of the active document.</Resource>
     <Resource key="DocumentComments.title" type="String">Comments</Resource>
     
@@ -82,14 +69,21 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">managing editor: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
     
-    <Resource key="StaticDocument.exampleDescription" type="String">All of this document's elements are examples to display static content.</Resource>
-    <Resource key="StaticDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
-    <Resource key="StaticDocument.introduction" type="String">This example - SmartDocument - contains only static elements defined in the definition xml. 
-    As there is no editable values in this document the definition doesn't refers to any content xml. 
-    Text values in the definition xml are automatically translated. This features facilitates of creating document templates.</Resource>
-    <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
-    <Resource key="StaticDocument.title" type="String">Static Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Photo Album</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
+
+    <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.about" type="String">About ProcessPuzzle</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
     
+    <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
+    <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
+    <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
+
     <Resource key="PersonalToDoList.introduction" type="String">To Do list of the logged in user.</Resource>
     <Resource key="PersonalToDoList.title" type="String">Personal To Do List</Resource>
     
@@ -98,6 +92,16 @@
     <Resource key="PhotoGaleryDocument.exampleDescription" type="String">A lenti példa egy slide show modul bepítését szemlélteti.</Resource>
     <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
     <Resource key="PhotoGaleryDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    
+    <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
+    
+    <Resource key="StaticDocument.exampleDescription" type="String">All of this document's elements are examples to display static content.</Resource>
+    <Resource key="StaticDocument.footer" type="String">ProcessPuzzle - Desktop like back-end agnostic browser interface</Resource>
+    <Resource key="StaticDocument.introduction" type="String">This example - SmartDocument - contains only static elements defined in the definition xml. 
+    As there is no editable values in this document the definition doesn't refers to any content xml. 
+    Text values in the definition xml are automatically translated. This features facilitates of creating document templates.</Resource>
+    <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
+    <Resource key="StaticDocument.title" type="String">Static Document</Resource>
     
   </Language>
 </pp:Resources>
