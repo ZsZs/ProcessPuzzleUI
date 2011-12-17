@@ -87,7 +87,7 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         test_construct_whenSpecified_loadsSmartDocument();
+         //test_construct_whenSpecified_loadsSmartDocument();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -194,7 +194,7 @@
                assertThat( windowWithHtmlContent.getContentUrl(), equalTo( desktopDefinition.selectNodeText( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/contentURL" ) ));
                assertThat( windowWithHtmlContent.getHeight(), equalTo( desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@height" ).value ));
                assertThat( windowWithHtmlContent.getName(), equalTo( desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@name" ).value ));
-               assertThat( windowWithHtmlContent.getTitle(), equalTo( desktopDefinition.selectNodeText( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/title" ) ));
+               assertThat( windowWithHtmlContent.getTitle(), equalTo( desktopInternationalization.getText( desktopDefinition.selectNodeText( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/title" ) )));
                assertThat( windowWithHtmlContent.getWidth(), equalTo( desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@width" ).value ));
                testCaseChain.callChain();
             },

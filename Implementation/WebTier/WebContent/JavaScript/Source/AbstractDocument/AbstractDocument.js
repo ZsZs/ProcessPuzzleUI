@@ -98,7 +98,7 @@ var AbstractDocument = new Class({
    
    destroy: function(){
       if( this.resources ) this.resources.release();
-      if( this.editor ) this.editor.destroy();
+      if( this.editor ) this.editor.detach();
       this.resetProperties();
       this.constructionChain.clearChain();
       this.state = AbstractDocument.States.INITIALIZED;
@@ -302,7 +302,7 @@ var AbstractDocument = new Class({
 });
 
 AbstractDocument.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
-AbstractDocument.Types = { HTML : 0, SMART : 1 };
+AbstractDocument.Types = { HTML : 'StaticHtml', SMART : 'SmartDocument', REMOTE_RESOURCE : 'RemoteResource' };
 AbstractDocument.Activity = { LOAD_DOCUMENT : 'loadDocument', MODIFY_DOCUMENT : 'modifyDocument' };
 AbstractDocument.Action = { 
       BOLD : 0, 

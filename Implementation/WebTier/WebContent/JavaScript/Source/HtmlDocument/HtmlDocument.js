@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var HtmlDocument = new Class({
    Extends: AbstractDocument,
-   Binds: ['attachEditor', 'createTextArea', 'resizeTextArea'],
+   Binds: ['attachEditor', 'createTextArea', 'onContainerResize', 'resizeTextArea'],
    
    options: {
       componentName : "HtmlDocument",

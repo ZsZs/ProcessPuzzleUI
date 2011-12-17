@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains internalization resources for Desktop Configurator. -->
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="DesktopNotification.TextAreaEditor.selectionNeeded" type="String">Please select text or image.</Resource>
+    <Resource key="DesktopNotification.underDevelopment" type="String">Requested feature is under development, please try again after a few days.</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="DesktopNotification.TextAreaEditor.selectionNeeded" type="String">Válasszon ki szöveget, vagy képet.</Resource>
+    <Resource key="DesktopNotification.underDevelopment" type="String">A kért funkció még fejlesztés alatt áll, kérjük próbálja meg néhány nap múlva.</Resource>
+  </Language>
+</pp:Resources>

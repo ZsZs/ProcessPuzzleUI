@@ -47,7 +47,7 @@ Required by:
 .mochaTitlebar {
 	width: 100%;
 	overflow: hidden;
-	background: url(../images/spacer.gif?from=fafafa&to=e5e5e5); 
+	background: url(../Images/WindowHeaderBackground.jpg); 
 }
 
 .mochaTitlebar h3 {

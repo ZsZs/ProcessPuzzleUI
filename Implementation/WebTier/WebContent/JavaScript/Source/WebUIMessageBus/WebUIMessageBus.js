@@ -55,6 +55,13 @@ var WebUIMessageBus = new Class({
       this.subscribersToMessages.put( messageClass.prototype.options.name, subscribersToMessage );
    },
    
+   writeOffFromMessage: function( messageClass, callBack ){
+      var subscribersToMessage = this.getSubscribersToMessage( messageClass );
+      if( subscribersToMessage == null ) return;
+      
+      subscribersToMessage.remove( subscribersToMessage.indexOf( callBack ));
+   },
+   
    tearDown: function() {
       this.subscribersToMessages.clear();
    },

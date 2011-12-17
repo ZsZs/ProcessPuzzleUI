@@ -1011,9 +1011,8 @@ MooEditable.Selection = new Class( {
 
    isCollapsed : function() {
       var r = this.getRange();
-      if( r.item )
-         return false;
-      return r.boundingWidth == 0 || this.getSelection().isCollapsed;
+      if( r && r.item ) return false;
+      return ( r && r.boundingWidth == 0 ) || this.getSelection().isCollapsed;
    },
 
    collapse : function( toStart ) {
@@ -1606,7 +1605,7 @@ MooEditable.Actions = {
          var dialogs = this.dialogs.createlink;
          if( selection.isCollapsed() ){
             var node = selection.getNode();
-            if( node.get( 'tag' ) == 'a' && node.get( 'href' ) ){
+            if( node && node.get( 'tag' ) == 'a' && node.get( 'href' ) ){
                selection.selectNode( node );
                var prompt = dialogs.prompt;
                prompt.el.getElement( '.dialog-input' ).set( 'value', node.get( 'href' ) );

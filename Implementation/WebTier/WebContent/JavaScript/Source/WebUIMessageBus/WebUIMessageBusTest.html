@@ -43,7 +43,7 @@
       eventHandlerTwoWasCalled = false;
    }
 
-   function testInitialization() {
+   function test_initialize() {
       assertTrue( "After 'initialize' WebUIMessageBus is...", true );
       assertEquals( "initializes messages list.", 0, messageBus.getMessageListSize() );
    }
@@ -62,6 +62,15 @@
       //VERIFY:
       assertTrue( eventHandlerOneWasCalled );
       assertTrue( eventHandlerTwoWasCalled );
+   }
+   
+   function test_writeOffFromMessage_removesFunctionFromSubscribers(){
+      messageBus.subscribeToMessage( TestMessageOne, eventHandlerOne );
+      messageBus.subscribeToMessage( TestMessageTwo, eventHandlerTwo );
+
+      messageBus.writeOffFromMessage( TestMessageOne, eventHandlerOne );
+      
+      assertThat( messageBus.getSubscribersToMessage( TestMessageOne ).size(), equalTo( 0 ));
    }
    
    function testTearDown() {
@@ -88,7 +97,7 @@
    //runs a test function during debugging
    function runTestFunction(){
       setUp();
-      testNotifySubscribers();
+      test_writeOffFromMessage_removesFunctionFromSubscribers();
       tearDown();
    }
    </script>

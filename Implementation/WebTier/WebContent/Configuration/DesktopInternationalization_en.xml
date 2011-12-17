@@ -17,6 +17,7 @@
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
     
+    <Resource key="DesktopNotification.TextAreaEditor.selectionNeeded" type="String">Please select text or image.</Resource>
     <Resource key="DesktopNotification.underDevelopment" type="String">Requested feature is under development, please try again after a few days.</Resource>
     
     <Resource key="DesktopWindow.about.title" type="String">About ProcessPuzzle</Resource>

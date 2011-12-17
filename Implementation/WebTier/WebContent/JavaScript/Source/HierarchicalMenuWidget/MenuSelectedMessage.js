@@ -28,7 +28,7 @@ var MenuSelectedMessage = new Class({
       documentType: AbstractDocument.Types.SMART,
       documentURI: null,
       contextItemId : null,
-      name: "Menu Selected Message",
+      name: "MenuSelectedMessage",
       notification: null,
       windowName: null
    },

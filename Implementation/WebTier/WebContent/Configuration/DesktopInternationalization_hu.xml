@@ -17,6 +17,7 @@
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tippek</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Ki van bent?</Resource>
 
+    <Resource key="DesktopNotification.TextAreaEditor.selectionNeeded" type="String">Válasszon ki szöveget, vagy képet.</Resource>
     <Resource key="DesktopNotification.underDevelopment" type="String">A kért funkció még fejlesztés alatt áll, kérjük próbálja meg néhány nap múlva.</Resource>
 
     <Resource key="DesktopWindow.about.title" type="String">ProcessPuzzle névjegy</Resource>

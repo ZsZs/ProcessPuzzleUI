@@ -29,9 +29,10 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentEditor = new Class({
    Implements: [Events, Options],
-   Binds: ['determineStyleSheets', 'finalizeAttach', 'instantiateTools'],
+   Binds: ['determineStyleSheets', 'finalizeAttach', 'instantiateTools', 'subscribeToWebUIMessages', 'webUIMessageHandler'],
    options : {
       componentName : "DocumentEditor",
+      subscribeToWebUIMessages : [],
    },
 
    //Constructor
@@ -41,6 +42,7 @@ var DocumentEditor = new Class({
       
       //Private attributes
       this.attachChain = new Chain();
+      this.lastWebUIMessage;
       this.logger = Class.getInstanceOf( WebUILogger );
       this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.styleSheets = new ArrayList();
@@ -50,15 +52,18 @@ var DocumentEditor = new Class({
    //Public accessor and mutator methods
    attach: function( subjectElement ){
       this.subjectElement = subjectElement;
-      this.attachChain.chain( this.determineStyleSheets, this.instantiateTools, this.finalizeAttach );
+      this.attachChain.chain( this.determineStyleSheets, this.instantiateTools, this.subscribeToWebUIMessages, this.finalizeAttach );
       this.attachChain.callChain();
    },
    
-   destroy: function(){
+   detach: function(){
+      this.destroyTools();
+      this.writeOffFromWebUIMessages();
+      this.finalizeDetach();
    },
    
    showNotification: function( notificationText ){
-      var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : notificationText });
+      var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : this.options.componentName + "." + notificationText });
       this.messageBus.notifySubscribers( message );
    }, 
    
@@ -66,11 +71,26 @@ var DocumentEditor = new Class({
       var message = new MenuSelectedMessage({ originator : this.name, activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : windowName });
       this.messageBus.notifySubscribers( message );
    },
+   
+   webUIMessageHandler : function( webUIMessage ){
+      var messageHandlerName = "this.on" + webUIMessage.getName();
+      try{
+         var messageHandler = eval( messageHandlerName );
+         messageHandler( webUIMessage );
+      }catch( e ){
+         this.logger.debug( "'" + messageHandleName + "' should be implemented." );
+      }
+      this.lastWebUIMessage = webUIMessage;
+   },
       
    //Properties
    getSubjectElement: function() { return this.subjectElement; },
    
    //Protected and private helper methods
+   destroyTools: function(){
+      //Abstract method, should be overwritten.
+   }.protect(),
+   
    determineStyleSheets: function(){
       var linkElements = this.subjectElement.getDocument().getElements("link"); 
       linkElements.each( function( linkElement, index ){
@@ -84,7 +104,28 @@ var DocumentEditor = new Class({
       this.fireEvent( 'editorAttached', this );
    }.protect(),
    
+   finalizeDetach: function(){
+      this.fireEvent( 'editorDetached', this );
+   }.protect(),
+   
    instantiateTools: function(){
       //Abstract method, should be overwrite in subclasses.
+   }.protect(),
+   
+   subscribeToWebUIMessages : function() {
+      if( this.options.subscribeToWebUIMessages ){
+         this.options.subscribeToWebUIMessages.each( function( messageClass, index ) {
+            this.messageBus.subscribeToMessage( messageClass, this.webUIMessageHandler );
+         }, this );
+      }
+      this.attachChain.callChain();
+   }.protect(),
+
+   writeOffFromWebUIMessages : function(){
+      if( this.options.subscribeToWebUIMessages ){
+         this.options.subscribeToWebUIMessages.each( function( messageClass, index ) {
+            this.messageBus.writeOffFromMessage( messageClass, this.webUIMessageHandler );
+         }, this );
+      }
    }.protect(),
 });

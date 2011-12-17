@@ -37,7 +37,7 @@ var ComplexContentBehaviour = new Class({
       documentNameSeparator : "_",
       documentWrapperId : "_documentWrapper_" + (new Date().getTime()),
       documentWrapperIdSelector : "document/@id",
-      documentWrapperStyle : "panelDocumentWrapper",
+      documentWrapperStyle : "documentWrapper",
       documentWrapperStyleSelector : "document/@elementStyle",
       documentWrapperTag : "div",
       documentWrapperTagSelector : "document/@tag",

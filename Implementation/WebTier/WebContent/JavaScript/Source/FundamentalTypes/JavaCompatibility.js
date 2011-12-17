@@ -254,3 +254,15 @@ Date.implement({
       return typeOf( this ) === typeOf( obj );
    }
 });
+
+//Function
+Function.implement({
+   equals : function( otherFunction ){
+      if (!this.typeMatches( otherFunction )) return false; 
+      return this === otherFunction;
+   },
+
+   typeMatches : function( otherFunction ) {
+      return typeOf( this ) === typeOf( otherFunction );
+   }
+});

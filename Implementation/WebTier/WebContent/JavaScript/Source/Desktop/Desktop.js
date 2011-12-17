@@ -218,7 +218,7 @@ var Desktop = new Class({
    
    showNotification: function( notificationText ){
       if( this.state == DesktopElement.States.CONSTRUCTED ){
-         MUI.notification( this.resourceBundle.getText( notificationText ));
+         MUI.notification( this.resourceBundle.getText( "DesktopNotification." + notificationText ));
       }
    },
    

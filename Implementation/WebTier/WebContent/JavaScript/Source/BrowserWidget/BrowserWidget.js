@@ -249,6 +249,14 @@ var BrowserWidget = new Class( {
    unmarshallProperties: function(){
       this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
       this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
+   }.protect(),
+   
+   writeOffFromWebUIMessages : function(){
+      if( this.options.subscribeToWebUIMessages ){
+         this.options.subscribeToWebUIMessages.each( function( messageClass, index ) {
+            this.messageBus.writeOffFromMessage( messageClass, this.webUIMessageHandler );
+         }, this );
+      }
    }
 });
 

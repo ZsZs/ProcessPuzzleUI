@@ -29,12 +29,15 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TextAreaEditor = new Class({
    Extends: DocumentEditor,
-   Binds: ['onMooEditableAttach'],
+   Binds: ['onDocumentSelectedMessage', 'onMooEditableAttach'],
    options : {
       componentName : "TextAreaEditor",
+      createLinkAlert : "selectionNeeded",
+      createLinkPromt : SYSTEM_WINDOWS.DOCUMENT_EXPLORER,
       dimensions : { x : 500, y : 100 },
       numberOfColumns : 120,
-      numberOfRows : 50
+      numberOfRows : 50,
+      urlImagePromt : SYSTEM_WINDOWS.DOCUMENT_EXPLORER,
    },
 
    //Constructor
@@ -52,21 +55,25 @@ var TextAreaEditor = new Class({
       this.parent( subjectElement );
    },
    
-   destroy: function(){
+   detach: function(){
       this.mooEditable.detach();
+      this.parent();
    },
    
    onContainerResize: function( newSize ){
       this.mooEditable.onContainerResize( newSize );
    },
    
+   onDocumentSelectedMessage: function( webUIMessage ){
+      this.mooEditable.execute( 'createlink', null, webUIMessage.getDocumentURI() );
+   },
+   
    onMooEditableAttach: function(){
-      this.mooEditable.setContent( this.initialContent );
       this.attachChain.callChain();
    },
    
-   textAddImage: function(){ this.showNotification( "DesktopNotification.underDevelopment" ); },
-   textAddLink: function(){ this.showWindow( SYSTEM_WINDOWS.DOCUMENT_EXPLORER ); },
+   textAddImage: function(){ this.mooEditable.action( 'urlimage' ); },
+   textAddLink: function(){ this.mooEditable.action( 'createlink' ); },
    textAlignCenter: function(){ this.mooEditable.action( 'justifycenter' ); },
    textAlignLeft: function(){ this.mooEditable.action( 'justifyleft' ); },
    textAlignJustify: function(){ this.mooEditable.action( 'justifyfull' ); },
@@ -85,13 +92,21 @@ var TextAreaEditor = new Class({
    textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist' ); },
    
    //Properties
+   getMooEditable: function() { return this.mooEditable; },
    
    //Protected and private helper methods   
    defineDialogWindows: function(){
-      MooEditable.Actions.createlink.dialogs.alert = function() { var dialog = new DocumentEditorDialog( this.internationalization ); return dialog; }.bind( this );
-      MooEditable.Actions.createlink.dialogs.prompt = function() { var dialog = new DocumentEditorDialog( this.internationalization ); return dialog; }.bind( this );
+      MooEditable.Actions.createlink.dialogs.alert = function( callerObject ) { 
+         return new MooEditableDialog( this, { action : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : this.options.createLinkAlert }); 
+      }.bind( this );
       
-      MooEditable.Actions.urlimage.dialogs.prompt = function() { var dialog = new DocumentEditorDialog( this.internationalization ); return dialog; }.bind( this );
+      MooEditable.Actions.createlink.dialogs.prompt = function(  callerObject ) { 
+         return new MooEditableDialog( this, { action : DesktopWindow.Activity.SHOW_WINDOW, windowName : this.options.createLinkPromt }); 
+      }.bind( this );
+      
+      MooEditable.Actions.urlimage.dialogs.prompt = function( callerObject ) { 
+         return new MooEditableDialog( this, {  action : DesktopWindow.Activity.SHOW_WINDOW, windowName : this.options.urlImagePromt }); 
+      }.bind( this );
    }.protect(),
    
    instantiateTools: function(){

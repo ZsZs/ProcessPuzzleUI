@@ -137,18 +137,18 @@ var DesktopPanel = new Class({
       var panelTitle = this.header && this.header.getPlugin() ? "" : this.title;
       try{
          this.MUIPanel = new MUI.Panel({ 
-            column: this.columnReference,
-            content: "",
-            onContentLoaded: this.header ? null : this.onMUIPanelLoaded,
-            contentURL: this.contentUrl,
-            id: this.name,
-            header: this.showHeader,
-            headerToolbox: this.header ? true : false,
-            headerToolboxOnload: this.header ? this.onMUIPanelLoaded : null,
-            headerToolboxURL: this.header ? this.header.getToolBoxUrl() : null,
-            height: this.height,
-            onResize: this.onContainerResize,
-            title: panelTitle 
+            column : this.columnReference,
+            content : "",
+            onContentLoaded : this.header ? null : this.onMUIPanelLoaded,
+            contentURL : this.contentUrl,
+            id : this.name,
+            header : this.showHeader,
+            headerToolbox : this.header ? true : false,
+            headerToolboxOnload : this.header ? this.onMUIPanelLoaded : null,
+            headerToolboxURL : this.header ? this.header.getToolBoxUrl() : null,
+            height : this.height,
+            onResize : this.onContainerResize,
+            title : panelTitle 
          });
       }catch( exception ){
          this.fireEvent('constructed', this ); //Needed by Desktop, to able to count panels created.
