@@ -29,7 +29,7 @@ var DocumentElementEditor = new Class({
    Binds: ['onBlur', 'onClick'],
    options: {
       inputStyle : { background: 'transparent', border : 'none', width: '20em' },
-      styleProperties : ['color', 'display', 'font-size', 'font-weight', 'margin', 'padding', 'text-align'],
+      styleProperties : ['color', 'display', 'font-family', 'font-size', 'font-weight', 'line-height', 'margin', 'height', 'padding', 'position', 'text-align', 'width'],
    },
    
    initialize: function( subjectHtmlElement, options ){
