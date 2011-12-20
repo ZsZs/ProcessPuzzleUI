@@ -26,10 +26,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DataElement = new Class({
    Extends: DocumentElement,
+   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
       componentName : "DataElement",
+      isEditable : true,
    },
    
    //Constructor
@@ -37,29 +39,18 @@ var DataElement = new Class({
       this.parent( definitionElement, bundle, options );
       
       //Private variables
-      this.contextElement;
-      this.bind;
-      this.dataXml = data;
-      this.dataElementsNumber = 1;
-      this.maxOccures;
-      this.minOccures;
-      this.siblings = new ArrayList();
-      this.source;
-      this.where;
+      this.setUp( data );
    },
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      this.contextElement = contextElement;
-      this.where = where;
-      this.retrieveData();
-      this.constructSiblings();
       this.parent( contextElement, where );
    },
    
    destroy: function(){
       this.destroySiblings();
       this.parent();
+      this.numberOfConstructedSiblings = 0;
    },
    
    unmarshall: function(){
@@ -73,4 +64,29 @@ var DataElement = new Class({
    //Properties
    
    //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.retrieveData, 
+         this.constructSiblings, 
+         this.createHtmlElement, 
+         this.injectHtmlElement, 
+         this.constructPlugin, 
+         this.authorization, 
+         this.associateEditor, 
+         this.finalizeConstruction 
+      );
+   }.protect(),
+   
+   injectHtmlElement: function(){
+      this.htmlElement.addClass( DataElement.CLASS );
+      this.parent();
+   }.protect(),
+   
+   setUp: function( data ){
+      this.dataXml = data;
+      this.numberOfConstructedSiblings = 0;
+      this.siblings = new ArrayList();
+   }.protect(),
 });
+
+DataElement.CLASS = "dataElement";

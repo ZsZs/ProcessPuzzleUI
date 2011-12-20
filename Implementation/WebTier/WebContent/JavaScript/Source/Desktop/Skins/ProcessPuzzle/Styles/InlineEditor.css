@@ -1,0 +1,45 @@
+.ine-root a {
+	color: black;
+	/*color: inherit;*/
+	text-decoration: none;
+	background-color: #F0FFFF;
+}
+
+.ine-root a:hover {
+	background-color: #FFF6BF;
+}
+
+.ine-root a:focus {
+	outline: 0;
+}
+
+
+.ine-root form {
+	display:inline;
+}
+
+.ine-root input, .ine-root select  {
+	font-size: 0.9em;
+	padding: 0.1em;
+	vertical-align: middle;
+}
+
+.ine-root input[type=button], .ine-root input[type=submit] {
+	font-size: 0.9em;
+	padding: 0 0.5em;
+	margin-left: 4px;
+}
+
+.ine-root textarea {
+	font-family: inherit;
+	font-size: 1em;
+
+	width: 512px;
+	height: 96px;
+}
+
+.ine-error {
+	font-size: 0.8em;
+	font-weight: bold;
+	color: red;
+}

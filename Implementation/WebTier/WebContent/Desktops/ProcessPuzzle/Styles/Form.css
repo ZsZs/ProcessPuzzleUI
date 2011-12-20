@@ -52,7 +52,7 @@ div.row {
 	padding-top: 3px;
 }
 
-div.row span.label {
+div.row label.label {
 	float: left;
 	width: 150px;
 	text-align: right;

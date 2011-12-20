@@ -39,6 +39,8 @@ var FormField = new Class({
       //Private variables
       this.elementFactory;
       this.label;
+      this.labelElement;
+      this.valueElement;
    },
    
    //Public mutators and accessor methods
@@ -58,10 +60,22 @@ var FormField = new Class({
    //Properties
    getElementFactory: function() { return this.elementFactory; },
    getLabel: function() { return this.label; },
+   getLabelElement: function() { return this.labelElement; },
+   getValueElement: function() { return this.valueElement; },
    
    //Protected, private helper methods
+   associateEditor: function(){
+      if( this.isEditable() ){
+         this.editor = DocumentElementEditorFactory.create( this, this.valueElement, {} );
+         this.editor.attach();
+      }
+      this.constructionChain.callChain();
+   }.protect(),
+   
    createHtmlElement : function(){
       this.htmlElement = this.elementFactory.createStaticRow( this.label, this.text, this.id, this.contextElement, WidgetElementFactory.Positions.LastChild );
+      this.labelElement = this.htmlElement.getChildren( 'label' )[0];
+      this.valueElement = this.htmlElement.getChildren( 'span' )[0];
       this.constructionChain.callChain();
    },
    

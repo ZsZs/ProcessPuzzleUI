@@ -43,10 +43,13 @@
    <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditor.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditorFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../SmartDocument/DataElementBehaviour.js"></script>
    <script type="text/javascript" src="../SmartDocument/DataElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementEditor.js"></script>
    <script type="text/javascript" src="../SmartDocument/FormField.js"></script>
    <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
@@ -114,6 +117,15 @@
          //VERIFY:
          assertThat( formField.getElementFactory, not( nil() ));
          assertThat( documentContainerElement.getChildren( 'div' ).length, equalTo( 1 ));
+         assertThat( formField.getLabelElement().get( 'tag' ), equalTo( 'label' ));
+         assertThat( formField.getValueElement().get( 'tag' ), equalTo( 'span' ));
+      }
+      
+      function test_construct_associatesEditorWithTheValueElement(){
+         formField.unmarshall();
+         formField.construct( documentContainerElement, "bottom" );
+         
+         assertThat( formField.getEditor().getSubjectElement(), equalTo( formField.getValueElement() ));
       }
       
       function test_destroy_destroysCreatedHtmlElements(){
@@ -127,7 +139,7 @@
       //runs a test function during debugging
       function runTestFunction(){
          setUp();
-         test_destroy_destroysCreatedHtmlElements();
+         test_construct_associatesEditorWithTheValueElement();
          tearDown();
       }
       </script>

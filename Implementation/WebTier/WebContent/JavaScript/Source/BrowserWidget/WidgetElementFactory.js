@@ -137,7 +137,7 @@ var WidgetElementFactory = new Class( {
 
    createStaticRow : function( labelText, valueText, valueElementId, contextElement, position ) {
       var staticRow = this.create( 'div', null, contextElement, position, { 'class' : this.options.rowClassName } );
-      this.create( 'span', labelText, staticRow, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.labelClassName } );
+      this.create( 'label', labelText, staticRow, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.labelClassName } );
       this.create( 'span', valueText, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
       return staticRow;
    },

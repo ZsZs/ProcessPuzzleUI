@@ -26,13 +26,14 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentElement = new Class({
    Implements: [Events, Options],
-   Binds: ['createHtmlElement', 'constructed', 'constructPlugin', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
+   Binds: ['associateEditor', 'authorization', 'createHtmlElement', 'constructPlugin', 'finalizeConstruction', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
    
    options: {
-      componentName : "DesktopElement",
+      componentName : "DocumentElement",
       defaultTag : "div",
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
+      isEditable : false,
       pluginSelector : "plugin",
       referenceSelector : "@href",
       styleSelector : "@elementStyle",
@@ -49,6 +50,8 @@ var DocumentElement = new Class({
       
       this.constructionChain = new Chain();
       this.contextElement;
+      this.editable;
+      this.editor;
       this.elementFactory;
       this.error = null;
       this.htmlElement;
@@ -61,9 +64,7 @@ var DocumentElement = new Class({
       this.style;
       this.tag;
       this.text;
-      this.where;
-      
-      this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.constructPlugin, this.constructed );
+      this.where;      
    },
    
    //Public mutators and accessor methods
@@ -74,7 +75,7 @@ var DocumentElement = new Class({
       this.contextElement = contextElement;
       this.where = where;
       this.elementFactory = new WidgetElementFactory( contextElement, this.resourceBundle );
-      
+      this.compileConstructionChain();
       this.constructionChain.callChain();
    },
    
@@ -84,14 +85,9 @@ var DocumentElement = new Class({
       if( this.plugin ) this.plugin.destroy();
       if( this.status == DocumentElement.States.CONSTRUCTED ) this.deleteHtmlElement();
       if( this.status <= DocumentElement.States.CONSTRUCTED )this.resetProperties();
+      if( this.editor ) this.editor.detach();
       this.error = null;
       this.status = DocumentElement.States.INITIALIZED;
-   },
-   
-   constructed: function(){
-      this.status = DocumentElement.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this );
-      this.constructionChain.callChain();
    },
    
    onPluginConstructed: function(){
@@ -117,6 +113,7 @@ var DocumentElement = new Class({
    //Properties
    getDefinitionElement: function() { return this.definitionElement; },
    getBind: function() { return this.bind; },
+   getEditor: function() { return this.editor; },
    getHtmlElement: function() { return this.htmlElement; },
    getId: function() { return this.id; },
    getPlugin: function() { return this.plugin; },
@@ -127,9 +124,27 @@ var DocumentElement = new Class({
    getText: function() { return this.text; },
    getResourceType: function() { return this.options.type; },
    getResourceUri: function() { return resourceUri; },
+   isEditable: function() { return this.editable; },
    isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
+   associateEditor: function(){
+      if( this.isEditable() ){
+         this.editor = DocumentElementEditorFactory.create( this, this.htmlElement, {} );
+         this.editor.attach();
+      }
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   authorization: function(){
+      this.editable = this.options.isEditable;
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.constructPlugin, this.authorization, this.associateEditor, this.finalizeConstruction );
+   }.protect(),
+   
    constructPlugin: function(){
       if( this.plugin ){ this.plugin.construct();
       }else this.constructionChain.callChain();
@@ -162,6 +177,12 @@ var DocumentElement = new Class({
       var attributeNode = XmlResource.selectNode( selector, this.definitionElement );
       if( attributeNode ) return attributeNode.value;
       else return null;
+   }.protect(),
+      
+   finalizeConstruction: function(){
+      this.status = DocumentElement.States.CONSTRUCTED;
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this );
    }.protect(),
    
    injectHtmlElement: function(){

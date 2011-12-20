@@ -57,6 +57,8 @@
    <script type="text/javascript" src="../ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../ResourceManager/UndefinedDocumentResourceException.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditor.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditorFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../SmartDocument/UnconfiguredDocumentElementException.js"></script>
@@ -68,6 +70,7 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
+         test_consturct_whenElementIsEditable_instantiatesAndassociatesEditor();
 //         test_construct_whenPluginIsSpecified_CallsPluginConstruct();
 //         test_construct_whenPluginResourceIsUnavailable_firesError();
 //         test_destroy_whenUnmarshalled_ResetsProperties();
@@ -113,9 +116,9 @@
          desktopInternationalization.load( new Locale({ language : "en" }) );
 		   
          documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-         documentElementWithLink = new DocumentElement( documentDefinition.selectNode( ELEMENT_DEFINITION_WITH_LINK ), desktopInternationalization, { onConstructed : onConstructed } );
-         documentElementWithoutId = new DocumentElement( documentDefinition.selectNode( ELEMENT_DEFINITION_WITHOUT_ID ), desktopInternationalization, { onConstructed : onConstructed } );
-         documentElementWithPlugin = new DocumentElement( documentDefinition.selectNode( ELEMENT_DEFINITION_WITH_PLUGIN ), desktopInternationalization, { onConstructed : onConstructed, onConstructionError : onConstructionError });
+         documentElementWithLink = new DocumentElement( documentDefinition.selectNode( ELEMENT_DEFINITION_WITH_LINK ), desktopInternationalization, { isEditable : true, onConstructed : onConstructed } );
+         documentElementWithoutId = new DocumentElement( documentDefinition.selectNode( ELEMENT_DEFINITION_WITHOUT_ID ), desktopInternationalization, { isEditable : true, onConstructed : onConstructed } );
+         documentElementWithPlugin = new DocumentElement( documentDefinition.selectNode( ELEMENT_DEFINITION_WITH_PLUGIN ), desktopInternationalization, { isEditable : true, onConstructed : onConstructed, onConstructionError : onConstructionError });
          documentContainerElement = $( DOCUMENT_CONTAINER_ID );
            
          testCaseIsRunning = true;
@@ -256,6 +259,23 @@
             afterEachTest 
          );
          runTestCase();
+      }
+      
+      function test_consturct_whenElementIsEditable_instantiatesAndassociatesEditor(){
+         testCaseChain.chain( 
+               beforeEachTest, 
+               function(){
+                  documentElementWithLink.unmarshall();
+                  documentElementWithLink.construct( documentContainerElement, "bottom" );
+               },
+               function(){
+                  assertThat( instanceOf( documentElementWithLink.getEditor(), DocumentElementEditor ), is( true ));
+                  assertThat( documentElementWithLink.getEditor().getSubjectElement(), equalTo( documentElementWithLink.getHtmlElement() ));
+                  testCaseChain.callChain();
+               },
+               afterEachTest 
+            );
+            runTestCase();
       }
 		
       function test_construct_whenNotUnmarshalled_raisesException(){

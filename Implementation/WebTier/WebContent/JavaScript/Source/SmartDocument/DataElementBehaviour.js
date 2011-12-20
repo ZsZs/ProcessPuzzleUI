@@ -40,14 +40,20 @@ var DataElementBehaviour = new Class({
       this.bind;
       this.dataXml = data;
       //this.dataElementsIndex = index ? index : 0;
-      this.dataElementsNumber = 1;
+      this.dataElementsNumber;
       this.maxOccures;
       this.minOccures;
+      this.numberOfConstructedSiblings;
+      this.siblings;
       this.source;
    },
    
    //Public mutators and accessor methods
-
+   onSiblingConstructed: function(){
+      this.numberOfConstructedSiblings++;
+      if( this.numberOfConstructedSiblings == this.siblings.size() ) this.constructionChain.callChain();
+   },
+   
    //Properties
    getDataElementsIndex: function() { return this.dataElementsIndex; },
    getDataElementsNumber: function() { return this.dataElementsNumber; },
@@ -68,9 +74,11 @@ var DataElementBehaviour = new Class({
    }.protect(),
    
    constructSiblings: function(){
-      this.siblings.each( function( siblingElement, index ){
-         siblingElement.construct( this.contextElement, this.where );
-      }, this );
+      if( this.siblings.size() > 0 ){
+         this.siblings.each( function( siblingElement, index ){
+            siblingElement.construct( this.contextElement, this.where );
+         }, this );      
+      }else this.constructionChain.callChain();
    }.protect(),
    
    determineDataElementsNumber: function(){
@@ -89,7 +97,7 @@ var DataElementBehaviour = new Class({
    
    instantiateSiblings: function() {
       for( var i = 2; i <= this.dataElementsNumber; i++ ){
-         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { variables : { index : i } });
+         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { onConstructed : this.onSiblingConstructed, variables : { index : i } });
          siblingElement.unmarshall();
          this.siblings.add( siblingElement );
       }
@@ -118,6 +126,7 @@ var DataElementBehaviour = new Class({
          this.text = this.dataXml.selectNodeText( dataSelector );
          if( this.text ) this.text.trim();
       }      
+      this.constructionChain.callChain();
    }.protect(),
    
    unmarshallDataProperties: function(){

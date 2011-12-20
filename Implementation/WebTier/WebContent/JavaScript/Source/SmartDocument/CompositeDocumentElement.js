@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDocumentElement = new Class({
    Extends: DocumentElement,
-   Binds: ['onNestedElementConstructed', 'onNestedElementConstructionError'],
+   Binds: ['constructNestedElements', 'onNestedElementConstructed', 'onNestedElementConstructionError'],
    
    options: {
       componentName : "CompositeDocumentElement",
@@ -47,12 +47,6 @@ var CompositeDocumentElement = new Class({
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
       this.parent( contextElement, where );
-      this.constructNestedElements();
-   },
-   
-   constructed: function(){
-      if( this.numberOfConstructedNestedElements == this.elements.size() ) this.parent();
-      else this.constructionChain.chain( this.constructed );
    },
    
    destroy: function(){
@@ -66,7 +60,7 @@ var CompositeDocumentElement = new Class({
    
    onNestedElementConstructed: function( documentElement ){
       this.numberOfConstructedNestedElements++;
-      this.constructionChain.callChain();
+      if( this.numberOfConstructedNestedElements == this.elements.size() ) this.constructionChain.callChain();
    },
    
    onNestedElementConstructionError: function( error ){
@@ -88,6 +82,10 @@ var CompositeDocumentElement = new Class({
    //Protected, private helper methods
    addElement: function( documentElement ){
       this.elements.put( documentElement.getId(), documentElement );
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.associateEditor, this.constructPlugin, this.constructNestedElements, this.authorization, this.finalizeConstruction );
    }.protect(),
    
    constructNestedElements: function( contextElement ){

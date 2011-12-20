@@ -167,8 +167,9 @@ var ComplexContentBehaviour = new Class({
    //Protected, private helper methods
    cleanUpContentElement: function(){
       if( this.contentContainerElement ){
-         this.contentContainerElement.getChildren( '*' ).each( function( childElement, index ){
-            childElement.destroy();
+         var childElements = this.contentContainerElement.getElements ? this.contentContainerElement.getElements( '*' ) : Array.from( this.contentContainerElement.getElementsByTagName( '*' ));  
+         childElements.each( function( childElement, index ){
+            if( childElement.destroy ) childElement.destroy();
          }, this );
       }
    }.protect(),
@@ -221,6 +222,7 @@ var ComplexContentBehaviour = new Class({
       this.componentRootElement = $( this.name + this.options.componentRootElementIdPostfix );
       this.componentRootElement = $( this.componentRootElement );     //required by Internet Explorer
       this.contentContainerElement = $( this.name + this.options.componentContentIdPostfix );
+      this.contentContainerElement = document.id( this.contentContainerElement ); //Applies Element's methods, required by Internet Explorer
       this.constructionChain.callChain();
    },
    
