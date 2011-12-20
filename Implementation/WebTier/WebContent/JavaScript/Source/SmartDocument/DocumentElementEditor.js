@@ -28,7 +28,8 @@ var DocumentElementEditor = new Class({
    Implements: [Events, Options],
    Binds: ['onBlur', 'onClick'],
    options: {
-      
+      inputStyle : { background: 'transparent', border : 'none', width: '20em' },
+      styleProperties : ['color', 'display', 'font-size', 'font-weight', 'margin', 'padding', 'text-align'],
    },
    
    initialize: function( subjectHtmlElement, options ){
@@ -72,8 +73,10 @@ var DocumentElementEditor = new Class({
    
    //Protected, private helper methods
    injectInputElement: function(){
+      var subjectHtmlElementStyle = this.subjectHtmlElement.getStyles( this.options.styleProperties );
       this.subjectHtmlElement.setStyle( 'display', 'none' );
-      this.inputElement = new Element( 'input', { type: 'text', value : this.text });
+      this.inputElement = new Element( 'input', { name : this.subjectHtmlElement.get( 'id'), type: 'text', value : this.text, styles : this.options.inputStyle });
+      this.inputElement.setStyles( subjectHtmlElementStyle );
       this.inputElement.inject( this.subjectHtmlElement, 'after' );
    }.protect(),
    

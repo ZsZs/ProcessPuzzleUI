@@ -68,7 +68,7 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-//          test_onClick_insertsInputElementWithElementsText();
+          test_onClick_storesTextAndInsertsInputElementWithElementProperties();
 //          test_onBlur_savesPreviousTextAndDestroysInputElement();
       });
 
@@ -147,7 +147,7 @@
          runTestCase();
       }  
       
-      function test_onClick_storesTextAndinsertsInputElementWithElementsText() {
+      function test_onClick_storesTextAndInsertsInputElementWithElementProperties() {
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -158,7 +158,7 @@
                assertThat( elementEditor.getText(), equalTo( subjectElement.get( 'text' )));
                assertThat( subjectElement.getNext( 'input' ), not( nil() ));
                assertThat( subjectElement.getNext( 'input' ).get( 'value' ), equalTo( elementText ))
-               testCaseChain.callChain();
+               //testCaseChain.callChain();
             },
             afterEachTest 
          );
@@ -194,7 +194,7 @@
 	<h1>DocumentElementEditor.js test page</H1>
 	<p>This page contains tests for DocumentElementEditor.js JavaScript class.</P>
 	<div id="smartDocument">
-      <span id="elementToEdit">Current text of element</span>
+      <span id="elementToEdit" style="color: teal; display: block; text-align: center">Current text of element</span>
    </div>
 </body>
 </html>
