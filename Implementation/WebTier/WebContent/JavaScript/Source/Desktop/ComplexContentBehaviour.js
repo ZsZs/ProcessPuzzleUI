@@ -50,6 +50,9 @@ var ComplexContentBehaviour = new Class({
       heightSelector : "height",
       nameSelector : "name",
       nameSpaces : "xmlns:pp='http://www.processpuzzle.com'",
+      pluginSelector : "plugin",
+      showHeaderSelector : "showHeader",
+      storeStateSelector : "storeState",
       titleSelector : "title",
       widthDefault : 300,
       widthSelector : "width"
@@ -100,7 +103,7 @@ var ComplexContentBehaviour = new Class({
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
       this.storeComponentState();
-      this.fireEvent( 'documentLoaded', this.documentContentUri );
+      this.fireEvent( 'documentLoaded', this.documentDefinitionUri );
       this.constructionChain.callChain();
    },
    
@@ -317,8 +320,13 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    unmarshallHeader: function(){
-      //Not implemented yet.
+      var headerConfigurationElement = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
+      if( headerConfigurationElement ){
+          this.header = new DesktopPanelHeader( headerConfigurationElement, this.internationalization, { onHeaderConstructed : this.onHeaderConstructed, onHeaderConstructionError : this.onHeaderConstructionError });
+          this.header.unmarshall();
+      }
    }.protect(),
+   
    
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );

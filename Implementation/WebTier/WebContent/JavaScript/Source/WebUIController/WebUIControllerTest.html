@@ -39,26 +39,25 @@
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
     
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopElementFactory.js"></script>
-   <script type="text/javascript" src="../Desktop/CompositeDesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/ComplexContentBehaviour.js"></script>
    <script type="text/javascript" src="../Desktop/ConfigurationTimeoutException.js"></script>
    <script type="text/javascript" src="../Desktop/Desktop.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElementFactory.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopDocument.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopContentArea.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopFooter.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopFooterBar.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopHeader.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopNavigationBar.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanel.js"></script>
    <script type="text/javascript" src="../Desktop/DesktopPanelHeader.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopPlugin.js"></script>
-   <script type="text/javascript" src="../Desktop/DesktopTitleBar.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopWindow.js"></script>
    <script type="text/javascript" src="../Desktop/NoneExistingDesktopContainerElementException.js"></script>
    <script type="text/javascript" src="../Desktop/plugins/tree/scripts/tree.js"></script>
    <script type="text/javascript" src="../Desktop/ResourceNotFoundException.js"></script>
@@ -69,6 +68,8 @@
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
@@ -89,11 +90,19 @@
    <script type="text/javascript" src="../SkinSelectorWidget/SkinChangedMessage.js"></script>
    <script type="text/javascript" src="../SkinSelectorWidget/SkinSelectorWidget.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditor.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditorFactory.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementBehaviour.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementEditor.js"></script>
    <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/CompositeDataElement.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentHeader.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentPlugin.js"></script>
    <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../TabWidget/DuplicatedTabException.js"></script>
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
@@ -109,7 +118,7 @@
 	
    <script type="text/javascript" >
       window.addEvent('domready', function() {
-         testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted();
+         //test_initialize_instantiatesComponents();
       });
   	  
       JsHamcrest.Integration.JsUnit();
@@ -125,16 +134,21 @@
       var messageBus = null;
       var menuDiv = document.getElementById("RightMenu");
       var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
       var testWindow;
 		
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+      
       function beforeEachTest() {
-         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-         else testWindow = window;
-			
          inform( "beforeEachTest" );
+			
          messageBus = new WebUIMessageBus();
-         controller = new WebUIController({ contextRootPrefix : "../../", configurationUri : CONFIGURATION_URI, onConfigured : onConfigured }, testWindow );
+         controller = new WebUIController({ contextRootPrefix : "../../", configurationUri : CONFIGURATION_URI, onConfigured : onConfigured } );
          componentStateManager = Class.getInstanceOf( ComponentStateManager );
+         
+         testCaseIsRunning = true;
          testCaseChain.callChain();
       }
 
@@ -148,12 +162,13 @@
          messageBus.tearDown();
 			
          testWindow.location.hash = "";
-         testCaseChain.callChain();
-         testCaseChain.clearChain();
+
          inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
       };
 		
-      function test_Initialization_InstantiatesComponents() {
+      function test_initialize_instantiatesComponents() {
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -164,8 +179,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function test_Configure() {
          testCaseChain.chain(
@@ -191,8 +207,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function test_ChangeLanguage() {
          testCaseChain.chain(
@@ -212,7 +229,8 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
+         );
+         runTestCase();
       }
 		
       function test_Destroy(){
@@ -239,7 +257,8 @@
                testCaseChain.callChain.delay( 1000, this );
             },
             afterEachTest
-         ).callChain();
+         );
+         runTestCase();
       }
 		
       function test_LoadDocument() {
@@ -258,8 +277,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function test_RestoreStateFromUrl() {
          if( Browser.chrome || Browser.safary ) return; //Unfotunatelly Chrome and Safari dosn't handles location.hash of frames well.
@@ -279,8 +299,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function testStoreStateInUrl() {
          if( Browser.chrome || Browser.safary ) return; //Unfotunatelly Chrome and Safari dosn't handles location.hash of frames well.
@@ -299,8 +320,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
       
       function testWebUIMessageHandler_WhenLanguageChangedMessage_Broadcasted() {
          testCaseChain.chain(
@@ -323,8 +345,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function test_webUIMessageHandler_whenLoadDocumentAction_loadsDocument() {
          testCaseChain.chain(
@@ -345,8 +368,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function testWebUIMessageHandler_WhenSkinChangedMessage_Broadcasted() {
          testCaseChain.chain(
@@ -368,8 +392,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-		}
+         );
+         runTestCase();
+      }
 		
       function eventHandlerOne( eventMessage ){
          if( instanceOf( eventMessage, TestMessageTwo ) )

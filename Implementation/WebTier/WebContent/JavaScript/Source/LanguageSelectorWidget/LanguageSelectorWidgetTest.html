@@ -57,20 +57,22 @@
    var ELEMENT_SELECTOR = "LanguageSelector";
    var LANGUAGE = "hu";
    var WIDGET_CONTAINER_ID = "LanguageSelectorWidget";
-   var callBackMessage = null;
+   var callBackMessage;
    var callBackWasCalled = false;
-   var languageSelector = null;
+   var componentStateManager;
+   var languageSelector;
    var locale = new Locale({ language : LANGUAGE });
-   var messageBus = null;
-   var webUIConfiguration = null;
-   var webUIController = null;
-   var webUILogger = null;
-   var widgetContainerElement = null;
+   var messageBus;
+   var webUIConfiguration;
+   var webUIController;
+   var webUILogger;
+   var widgetContainerElement;
    
    function setUp() {
       messageBus = new WebUIMessageBus();
       webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
       webUILogger = new WebUILogger( webUIConfiguration );
+      componentStateManager = new ComponentStateManager();
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( locale );
       languageSelector = new LanguageSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
@@ -152,7 +154,7 @@
    //runs a test function during debugging
    function runTestFunction(){
       setUp();
-      test_destory_destroysCreatedHtmlElements();
+      test_initialization_WhenConstructorArgumentsAreGiven();
       tearDown();
    }
    </script>

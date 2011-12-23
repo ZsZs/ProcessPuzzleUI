@@ -66,6 +66,7 @@
    var WIDGET_CONTAINER_ID = "SkinSelectorWidget";
    var callBackMessage = null;
    var callBackWasCalled = false;
+   var componentStateManager;
    var skinSelector = null;
    var locale = new Locale({ language : LANGUAGE });
    var messageBus = null;
@@ -78,6 +79,7 @@
       messageBus = new WebUIMessageBus();
       webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
       webUILogger = new WebUILogger( webUIConfiguration );
+      componentStateManager = new ComponentStateManager();
       resourceBundle = new XMLResourceBundle( webUIConfiguration );
       resourceBundle.load( locale );
       skinSelector = new SkinSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
@@ -87,9 +89,10 @@
    }
 
    function tearDown() {
+      skinSelector.destroy();
       messageBus.tearDown();
-	  callBackWasCalled = false;
-	  callBackMessage = null;
+      callBackWasCalled = false;
+      callBackMessage = null;
    }
 
    function testInitialization_WhenConstructorArgumentsAreGiven() {
@@ -99,7 +102,7 @@
       assertNotNull( skinSelector.getAvailableSkins().get( SKIN_TWO_NAME ) );
    }
    
-   function testInitialization_WhenConstructorArgumentsAreMissing() {
+   function test_initialize_WhenConstructorArgumentsAreMissing() {
       //SETUP:
       var webUIController = new WebUIController({ configurationUri : "../WebUIController/SampleConfiguration.xml" });
       
@@ -113,7 +116,6 @@
       assertEquals( 2, skinSelector.getAvailableSkins().size() );
       
       //TEARDOWN:
-      skinSelector.destroy();
       webUIController.destroy();
    }
    

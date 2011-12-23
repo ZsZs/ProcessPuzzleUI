@@ -64,7 +64,6 @@
    <script type="text/javascript" src="../PhotoGaleryWidget/PhotoGaleryWidget.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
-   <script type="text/javascript" src="../ArtifactEditorWidget/ArtifactEditorWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -72,7 +71,7 @@
 
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         text_construct_instantiatesSlideShow();
+         test_initialization_setsState();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -85,20 +84,22 @@
       var WEBUI_CONFIGURATION_URI = "../PhotoGaleryWidget/WebUIConfiguration.xml";
 
       var locale = new Locale({ language : LANGUAGE });
-      var photoGalery = null;
-      var photoGaleryContainerElement = null;
-      var photoGaleryData = null;
-      var photoGaleryDefinition = null;
-      var photoGaleryInternationalization = null;
+      var componentStateManager;
+      var photoGalery;
+      var photoGaleryContainerElement;
+      var photoGaleryData;
+      var photoGaleryDefinition;
+      var photoGaleryInternationalization;
       var testCaseChain = new Chain();
-      var webUIConfiguration = null;
-      var webUIController = null;
-      var webUILogger = null;
+      var webUIConfiguration;
+      var webUIController;
+      var webUILogger;
 
       function beforeEachTest(){
          inform( "beforeEachTest" );
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
+         componentStateManager = new ComponentStateManager();
          photoGaleryInternationalization = new XMLResourceBundle( webUIConfiguration );
          photoGaleryInternationalization.load( locale );
          photoGaleryData = new XmlResource( PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
@@ -132,7 +133,7 @@
          testCaseChain.clearChain();
       }
 
-      function test_Initialization_SetsState(){
+      function test_initialization_setsState(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -217,7 +218,7 @@
             function(){
                assertThat( photoGalery.getSlideShow(), not( nil() ));
                assertThat( $( PHOTO_GALERY_CONTAINER_ID ).getElements( 'div' ).length, greaterThan( 0 ) );
-               //testCaseChain.callChain();
+               testCaseChain.callChain();
             },
             afterEachTest
          ).callChain();

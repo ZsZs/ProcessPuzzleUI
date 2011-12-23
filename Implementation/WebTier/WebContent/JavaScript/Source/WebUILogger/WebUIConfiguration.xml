@@ -92,7 +92,7 @@
                                 useDocumentWrite="true"
                                 width="800"/>
 				<wui:browserConsoleAppender name="formattedConsoleAppender"
-                                            layoutReference="formattedLayout"/>
+                                        layoutReference="formattedLayout"/>
 			</wui:appenders>			
 		</wui:logging>
 	</wui:webUI>

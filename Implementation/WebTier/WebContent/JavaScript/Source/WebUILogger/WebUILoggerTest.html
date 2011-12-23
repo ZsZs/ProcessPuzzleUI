@@ -80,7 +80,7 @@
 		logger.tearDown();
       }
 
-      function testInitialization_ConfiguresAppenders() {
+      function test_initialize_configuresAppenders() {
       	assertEquals( WebUILogger.INFO, ajaxAppender.getThreshold() );
       	
       	assertEquals( WebUILogger.DEBUG, popUpAppender.getThreshold() );
@@ -91,7 +91,7 @@
       	assertEquals( 800, inPageAppender.getWidth() );
       	assertFalse( inPageAppender.isInitiallyMinimized() );
 
-      	assertEquals( WebUILogger.ALL, browserConsoleAppender.getThreshold() );
+      	assertEquals( WebUILogger.DEBUG, browserConsoleAppender.getThreshold() );
       }
       
       function testInitialization_InstantiatesLayouts() {
@@ -173,7 +173,7 @@
       //runs a test function during debugging
       function runTestFunction(){
 	    setUp();
-	    testInitialization_InstantiatesLoggers();
+	    test_initialize_configuresAppenders();
 		tearDown();
 	  }
     </script>

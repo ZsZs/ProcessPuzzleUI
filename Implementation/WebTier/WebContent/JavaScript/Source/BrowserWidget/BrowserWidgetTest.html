@@ -72,6 +72,7 @@
       var WIDGET_DATA_URI = "../BrowserWidget/WidgetData.xml";
   	   var WIDGET_DEFINITION_URI = "../BrowserWidget/WidgetDefinition.xml";
   	   var browserWidget;
+  	   var componentStateManager;
   	   var domDocument;
   	   var locale = new Locale( LANGUAGE );
   	   var messageBus = null;
@@ -88,6 +89,7 @@
          messageBus = new WebUIMessageBus();
          webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
+         componentStateManager = new ComponentStateManager();
       	resourceBundle = new XMLResourceBundle( webUIConfiguration );
       	resourceBundle.load( locale );
       	browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle );

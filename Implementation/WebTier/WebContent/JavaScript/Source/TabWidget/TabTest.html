@@ -23,9 +23,9 @@
 	
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
 
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>	
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
@@ -40,6 +40,7 @@
    <script type="text/javascript" src="../Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLBundleParser.js"></script>
    <script type="text/javascript" src="../Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../SmartDocument/SmartDocument.js"></script>
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
@@ -119,7 +120,7 @@
          assertThat( aTab.getId(), equalTo( aTab.options.idPrefix + XmlResource.selectNodeText( "@tabId", tabDefinition )));
          assertThat( aTab.getCaption(), equalTo( resourceBundle.getText( XmlResource.selectNodeText( "@caption", tabDefinition ))));
          assertThat( aTab.isDefault(), equalTo( parseBoolean( XmlResource.selectNodeText( "@isDefault", tabDefinition ))));
-         assertThat( aTab.getMessageProperties(), equalTo( "{ actionType : 'loadDocument', documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }" ));
+         assertThat( aTab.getMessageProperties(), equalTo( "{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }" ));
       }
             
       function test_construct_createsLiAndAnchorElements() {         

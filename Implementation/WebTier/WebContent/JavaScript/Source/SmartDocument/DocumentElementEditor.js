@@ -28,7 +28,10 @@ var DocumentElementEditor = new Class({
    Implements: [Events, Options],
    Binds: ['onBlur', 'onClick'],
    options: {
+      dataType : 'string', //DocumentElementEditor.DataType.STRING,
       inputStyle : { background: 'transparent', border : 'none', width: '20em' },
+      mininmumWidth : '400',
+      restriction : null,
       styleProperties : ['color', 'display', 'font-family', 'font-size', 'font-weight', 'line-height', 'margin', 'height', 'padding', 'position', 'text-align', 'width'],
    },
    
@@ -45,7 +48,7 @@ var DocumentElementEditor = new Class({
    
    //Public accessors and mutators
    attach: function(){
-      this.subjectHtmlElement.addEvent( 'blur', this.onBlur );
+      this.subjectHtmlElement.addEvent( 'focus', this.onClick );
       this.subjectHtmlElement.addEvent( 'click', this.onClick );
    },
    
@@ -64,6 +67,10 @@ var DocumentElementEditor = new Class({
       this.fireEvent( 'editStart', this );
    },
    
+   onKeypress: function(){
+      
+   },
+   
    //Properties
    getInputElement: function() { return this.inputElement; },
    getPreviousValue: function() { return this.previousValue; },
@@ -75,13 +82,21 @@ var DocumentElementEditor = new Class({
    injectInputElement: function(){
       var subjectHtmlElementStyle = this.subjectHtmlElement.getStyles( this.options.styleProperties );
       this.subjectHtmlElement.setStyle( 'display', 'none' );
-      this.inputElement = new Element( 'input', { name : this.subjectHtmlElement.get( 'id'), type: 'text', value : this.text, styles : this.options.inputStyle });
+      this.inputElement = new Element( 'input', {
+         events : { blur : this.onBlur },
+         name : this.subjectHtmlElement.get( 'id'), 
+         type: 'text', 
+         value : this.text, 
+         styles : this.options.inputStyle 
+      });
       this.inputElement.setStyles( subjectHtmlElementStyle );
+      if( this.inputElement.getStyle( 'width' ).toInt() < this.options.minimumWidth ) this.inputElement.setStyle( 'width', this.options.minimumWidth );
       this.inputElement.inject( this.subjectHtmlElement, 'after' );
    }.protect(),
    
    removeInputElement: function(){
       this.text = this.inputElement.get( 'value' );
+      this.inputElement.removeEvents();
       this.inputElement.destroy();
       this.subjectHtmlElement.set( 'text', this.text );
       this.subjectHtmlElement.setStyle( 'display', 'inline' );
@@ -92,3 +107,6 @@ var DocumentElementEditor = new Class({
       this.previousValue = this.text;
    }
 });
+
+DocumentElementEditor.DataType = { BOOLEAN : 'boolean', INTEGER : 'integer', LONG_INTEGER : 'longInteger', STRING : 'string', TEXT : 'text', TIME_POINT : 'timePoint' };
+DocumentElementEditor.DataType.TIME_POINT.Precission = { YEAR : 'year', MONTH : 'month', DAY : 'day', HOUR : 'hour', MINUTE : 'minute', SECOND : 'second', MILLI_SECOND : 'milliSecond' };

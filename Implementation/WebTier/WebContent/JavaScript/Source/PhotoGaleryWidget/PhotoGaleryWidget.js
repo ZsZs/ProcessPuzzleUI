@@ -120,31 +120,8 @@ var PhotoGaleryWidget = new Class({
    },
    
    destroy: function(){
-      this.accessKeys = null;
-      this.automaticallyLinkSlide = null;
-      this.centerImages = null;
-      this.data = null;
-      this.dataAsText = "";
-      this.effectDuration = null;
-      this.firstSlide = null;
-      this.galeryLink = null;
-      this.height = null;
-      this.imageFolderUri = null;
-      this.loopShow = null;
-      this.overlapImages = null;
-      this.resizeImages = null;
-      this.showController = null;
-      this.showImageCaptions = null;
-      this.showSlidesRandom = null;
-      this.showThumbnails = null;
-      this.skipTransition = null;
-      this.slideChangeDelay = null;
-      this.slideTransition = null;
-      this.startPaused = null;
-      this.thumbnailFileNameRule = null;
-      this.width = null;
-      this.images.clear();
-      this.slideShow.destroy();
+      this.destroyComponents();
+      this.resetFields();
       this.parent();
    },
    
@@ -207,6 +184,10 @@ var PhotoGaleryWidget = new Class({
       this.data = eval( "({" + this.dataAsText + "})" );
    }.protect(),
    
+   destroyComponents: function(){
+      if( this.slideShow ) this.slideShow.destroy();
+   }.protect(),
+   
    instantiateSlideShow: function(){
       var slideShowOptions = {
          captions : this.showImageCaptions,
@@ -234,6 +215,33 @@ var PhotoGaleryWidget = new Class({
          width : this.width
       };
       this.slideShow = new Slideshow( this.containerElement, this.data, slideShowOptions );
+   }.protect(),
+   
+   resetFields: function(){
+      this.accessKeys = null;
+      this.automaticallyLinkSlide = null;
+      this.centerImages = null;
+      this.data = null;
+      this.dataAsText = "";
+      this.effectDuration = null;
+      this.firstSlide = null;
+      this.galeryLink = null;
+      this.height = null;
+      this.imageFolderUri = null;
+      this.loopShow = null;
+      this.overlapImages = null;
+      this.resizeImages = null;
+      this.showController = null;
+      this.showImageCaptions = null;
+      this.showSlidesRandom = null;
+      this.showThumbnails = null;
+      this.skipTransition = null;
+      this.slideChangeDelay = null;
+      this.slideTransition = null;
+      this.startPaused = null;
+      this.thumbnailFileNameRule = null;
+      this.width = null;
+      this.images.clear();
    }.protect(),
    
    unmarshallImages: function(){

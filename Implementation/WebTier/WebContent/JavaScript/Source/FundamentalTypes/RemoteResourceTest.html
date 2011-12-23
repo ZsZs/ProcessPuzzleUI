@@ -30,11 +30,17 @@
    
       var remoteResource = null;
       var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
       var onFailureWasCalled = false;
       var onSuccessWasCalled = false;
    
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+         
       function beforeEachTest() {
          inform( "beforeEachTest" );
+         testCaseIsRunning = true;
          testCaseChain.callChain();
       }
    
@@ -53,8 +59,10 @@
          remoteResource = null;
          onFailureWasCalled = false;
          onSuccessWasCalled = false;
-         testCaseChain.clearChain();
+         
          inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
       }
 
       function test_retrieve_whenLocalResourceExists_firesSuccessEvent() {
@@ -73,8 +81,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-      }
+         );
+         runTestCase();
+      }  
       
       function test_retrieve_whenResourceNotExists_firesFailureEvent() {
          testCaseChain.chain(
@@ -92,8 +101,9 @@
                testCaseChain.callChain();
             },
             afterEachTest
-         ).callChain();
-      }
+         );
+         runTestCase();
+      }  
    </script>
 </head>
 

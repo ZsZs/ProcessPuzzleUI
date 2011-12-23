@@ -29,6 +29,7 @@
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    
+   <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
@@ -86,7 +87,7 @@
    }
 
    function tearDown() {
-      if( menuWidget && menuWidget.isConstructed ) menuWidget.destroy();
+      menuWidget.destroy();
       messageBus.tearDown();
       componentStateManager.reset();
       menuWidget = null;
@@ -136,18 +137,18 @@
       assertEquals( "... anther container element is used.", $( 'AnotherMenuWidget' ), menuWidget.getContainerElement() ); 
    }
    
-   function test_Initialization_WhenComponentStateIsAvailable() {
+   function test_initialization_whenComponentStateIsAvailable() {
       //SETUP:
       componentStateManager.storeCurrentState( "HierarchicalMenuWidget", { currentItemId : 'itemThreeOfThree', contextItemId : 'mainItemThree' } );
       
       //EXCERCISE:
-   	  menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
       
       //VERIFY:
       assertEquals( "Current itemId sould be the stored one:", "itemThreeOfThree", menuWidget.currentItemId );
    }
    
-   function test_Construct_WhenNoOptionsAreGiven() {
+   function test_construct_whenNoOptionsAreGiven() {
       //SETUP:
       menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
    	  
@@ -156,7 +157,7 @@
       
       //VERIFY:
       assertTrue( "MenuWidget when configured...", true );
-      assertTrue( "... is configured.", menuWidget.isConstructed );
+      assertThat( menuWidget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
       assertEquals( "... reloads resource bundle with the given locale.", "hu", menuWidget.getResourceBundle().getLocale().getLanguage() );
       
       var listElement = widgetContainerElement.getChildren( "UL" )[0];
@@ -180,7 +181,7 @@
       assertEquals( "... stores default item's id in ComponentStateManager.", "mainItemTwo", componentStateManager.retrieveCurrentState( menuWidget.options.componentName )['currentItemId']) ; 
    }
    
-   function test_Construct_WhenContextItemIdIsGiven() {
+   function test_construct_whenContextItemIdIsGiven() {
       //SETUP:
    	  menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
    	  
@@ -244,7 +245,7 @@
       menuWidget.destroy();
       
       //VEFIRY:
-      assertFalse( "Destroy set 'isConfigured' to false.", menuWidget.isConstructed );
+      assertThat( menuWidget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
       assertEquals( "Destroy removes all child elements of widget container.", 0, widgetContainerElement.getChildren().length );
    }
    
@@ -295,7 +296,7 @@
    //runs a test function during debugging
    function runTestFunction(){
       setUp();
-      test_ChangeLanguage();
+      test_construct_whenNoOptionsAreGiven();
       tearDown();
    }
    </script>

@@ -27,15 +27,18 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
-   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
 	
    <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../Desktop/ComplexContentBehaviour.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../Desktop/DesktopWindow.js"></script>
    <script type="text/javascript" src="../Desktop/UnconfiguredDesktopElementException.js"></script>
    <script type="text/javascript" src="../DocumentEditor/DocumentEditor.js"></script>
-   <script type="text/javascript" src="../DocumentEditor/DocumentEditorDialog.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/JavaCompatibility.js"></script>
@@ -56,8 +59,8 @@
    <script type="text/javascript" src="../ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../ResourceManager/UndefinedDocumentResourceException.js"></script>
+   <script type="text/javascript" src="../TextAreaEditor/MooEditableDialog.js"></script>
    <script type="text/javascript" src="../TextAreaEditor/TextAreaEditor.js"></script>
-   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script>
 	
@@ -78,13 +81,13 @@
       var documentContainerElement;
       var documentContentResource;
       var documentDefinition;
-		var dataElement;
-		var documentInternationalization;
-		var htmlDocument;
+      var dataElement;
+      var documentInternationalization;
+      var htmlDocument;
       var testCaseChain = new Chain();
       var testCaseIsRunning = false;
-		var webUIConfiguration;
-		var webUILogger;
+      var webUIConfiguration;
+      var webUILogger;
       var webUIMessageBus;
 		
       function runTestCase(){
@@ -136,7 +139,7 @@
          testCaseChain.callChain();
       }
       
-      function test_construct_createsTextAreaAndinstantiatesEditor(){
+      function test_construct_createsTextAreaAndInstantiatesEditor(){
          testCaseChain.chain( 
             beforeEachTest, 
             function(){
@@ -165,6 +168,7 @@
                webUIMessageBus.notifySubscribers( message );
                
                verify( htmlDocument.editor ).textBold();
+               testCaseChain.callChain();
             },
             afterEachTest 
          );

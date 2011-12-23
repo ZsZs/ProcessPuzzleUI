@@ -47,10 +47,9 @@ var HierarchicalMenuWidget = new Class({
       this.parent( options, resourceBundle );
       this.determineInitializationArguments( options, resourceBundle );
       
-      this.currentItemId = null;
-      this.selectedElementClass = null;
-      this.self = this;
-      this.ulElement = null;      
+      this.currentItemId;
+      this.selectedElementClass;
+      this.ulElement;      
    },
    
    //Public accessor and mutator methods

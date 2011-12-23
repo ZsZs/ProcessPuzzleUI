@@ -59,7 +59,7 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         runTestFunction();
+         //runTestFunction();
       });
 				
       JsHamcrest.Integration.JsUnit();
@@ -75,12 +75,18 @@
       var documentContentResource;
       var documentDefinition;
 		var documentInternationalization;
+      var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
 		var webUIConfiguration;
 		var webUILogger;
 		var webUIMessageBus;
 		
-      function setUp(){
-         //inform( "beforEachTest" );
+		function runTestCase(){
+		   if( !testCaseIsRunning ) testCaseChain.callChain();
+		}
+	      
+		function beforeEachTest(){
+         inform( "beforeEachTest" );
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
          webUIMessageBus = new WebUIMessageBus();
@@ -94,81 +100,139 @@
             documentContentUri : DOCUMENT_CONTENT_URI, 
             documentContainerId : DOCUMENT_CONTAINER_ID,
             documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
-            rootElementName : "/htmlDocumentDefinition" });
+            rootElementName : "/htmlDocumentDefinition",
+            onDocumentReady : onDocumentReady });
+         
+         testCaseIsRunning = true;
+         testCaseChain.callChain();
       }
+		
+		function onDocumentReady(){
+		   testCaseChain.callChain();
+		}
 
-      function tearDown(){
+      function afterEachTest(){
          bundle.release();
          bundle = null;
 		   
          if( abstractDocument.getState() > AbstractDocument.States.INITIALIZED ) abstractDocument.destroy();
          abstractDocument = null;
          documentContainerElement = null;
-         //inform( "afterEachTest" );
+         
+         inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
       }
       
       function test_initialize_determinesFieldValues(){
-         assertThat( abstractDocument.getLogger(), equalTo( webUILogger ));
-         assertThat( abstractDocument.getMessageBus(), equalTo( webUIMessageBus ));
-      }
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( abstractDocument.getLogger(), equalTo( webUILogger ));
+               assertThat( abstractDocument.getMessageBus(), equalTo( webUIMessageBus ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
 		
       function test_initialize_loadsDocumentDefinitionAndContent() {
-         assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
-         assertThat( instanceOf( abstractDocument.getDocumentDefinition(), XmlResource ), is( true ));
-         assertThat( instanceOf( abstractDocument.getDocumentContent(), XmlResource ), is( true ));
-      }
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
+               assertThat( instanceOf( abstractDocument.getDocumentDefinition(), XmlResource ), is( true ));
+               assertThat( instanceOf( abstractDocument.getDocumentContent(), XmlResource ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
 		
       function test_unmarshall_determinesProperties(){
-         abstractDocument.unmarshall();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               abstractDocument.unmarshall();
 		   
-         assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.UNMARSHALLED ));
-         assertThat( abstractDocument.getDescription(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/description" )));
-         assertThat( abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( documentDefinition.selectNodeText( "/htmlDocumentDefinition/handleMenuSelectedEvents" ))));
-         assertThat( abstractDocument.getName(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/name" )));
-         assertThat( abstractDocument.getVersion(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/version" )));
-      }
+               assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.UNMARSHALLED ));
+               assertThat( abstractDocument.getDescription(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/description" )));
+               assertThat( abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( documentDefinition.selectNodeText( "/htmlDocumentDefinition/handleMenuSelectedEvents" ))));
+               assertThat( abstractDocument.getName(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/name" )));
+               assertThat( abstractDocument.getVersion(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/version" )));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
 		
       function test_unmarshall_whenSpecified_instantiatesAndUnmarshallsResources(){
-         abstractDocument.unmarshall();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               abstractDocument.unmarshall();
          
-         assertThat( abstractDocument.getResources(), not( nil() ));
-      }
+               assertThat( abstractDocument.getResources(), not( nil() ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
       
       function test_construct_instantiatesElementFactoryAndDocumentEditor(){
-         abstractDocument.unmarshall();
-         abstractDocument.construct();
-         
-         assertThat( instanceOf( abstractDocument.getEditor(), DocumentEditor), is( true ));
-         assertThat( instanceOf( abstractDocument.getHtmlElementFactory(), WidgetElementFactory ), is( true ));
-      }
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               abstractDocument.unmarshall();
+               abstractDocument.construct();
+            },
+            function(){
+               assertThat( instanceOf( abstractDocument.getEditor(), DocumentEditor), is( true ));
+               assertThat( instanceOf( abstractDocument.getHtmlElementFactory(), WidgetElementFactory ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
       
       function test_construct_subscribesToMenuSelectedEvents(){
-         abstractDocument.unmarshall();
-         abstractDocument.construct();
-         
-         assertThat( webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( abstractDocument.webUIMessageHandler ), is( true ));
-      }
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               abstractDocument.unmarshall();
+               abstractDocument.construct();
+            },
+            function(){
+               assertThat( webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( abstractDocument.webUIMessageHandler ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
       
       function test_destroy_whenUnmarshalled_resetsProperties(){
-         //SETUP: see also setUp() method
-         abstractDocument.unmarshall();
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               abstractDocument.unmarshall();
+               abstractDocument.destroy();
 		   
-         //EXCERCISE:
-         abstractDocument.destroy();
-		   
-         //VERIFY:
-         assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
-         assertThat( abstractDocument.getDescription(), nil() );
-         assertThat( abstractDocument.getName(), nil() );
-         assertThat( abstractDocument.getVersion(), nil() );
-      }
-				
-      //runs a test function during debugging
-      function runTestFunction(){
-         setUp();
-         test_construct_instantiatesElementFactoryAndDocumentEditor();
-         tearDown();
-      }
+               assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
+               assertThat( abstractDocument.getDescription(), nil() );
+               assertThat( abstractDocument.getName(), nil() );
+               assertThat( abstractDocument.getVersion(), nil() );
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
       </script>
 </head>
 

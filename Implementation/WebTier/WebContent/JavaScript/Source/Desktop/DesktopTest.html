@@ -34,6 +34,7 @@
 
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
     
    <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
@@ -42,10 +43,14 @@
    <script type="text/javascript" src="../BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/DefaultStateUriTransformer.js"></script>
    <script type="text/javascript" src="../ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../DocumentEditor/DocumentEditor.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditor.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DocumentElementEditorFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentElementFactory.js"></script>
    <script type="text/javascript" src="../SmartDocument/DataElementBehaviour.js"></script>
    <script type="text/javascript" src="../SmartDocument/DataElement.js"></script>
+   <script type="text/javascript" src="../SmartDocument/DataElementEditor.js"></script>
    <script type="text/javascript" src="../SmartDocument/CompositeDocumentElement.js"></script>
    <script type="text/javascript" src="../SmartDocument/CompositeDataElement.js"></script>
    <script type="text/javascript" src="../SmartDocument/DocumentBody.js"></script>
@@ -97,11 +102,12 @@
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../TextAreaEditor/MooEditableDialog.js"></script>
+   <script type="text/javascript" src="../TextAreaEditor/TextAreaEditor.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButtonFactory.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarDivider.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
-   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessageBus.js"></script> 
@@ -110,7 +116,9 @@
       window.addEvent( 'domready', function() {
          //test_unmarshall_unmarshallsDesktopComponents();
          //test_showNotification_delegatesToMUI();
+         //test_construct_constructsWholeDekstop();
          //test_construct_subscribesForMenuSelectedMessage();
+         //test_showNotification_delegatesToMUI();
          //test_showWindow_constructsDesktopWindow();
       });
   	  
@@ -295,7 +303,7 @@
             function(){
                var mockedMUINotification = spy( MUI.notification );
                MUI.notification = mockedMUINotification; 
-               desktop.showNotification( "DesktopNotification.underDevelopment" );
+               desktop.showNotification( "underDevelopment" );
                verify( mockedMUINotification )( resourceBundle.getText( "DesktopNotification.underDevelopment" ));
                testCaseChain.callChain();
             },

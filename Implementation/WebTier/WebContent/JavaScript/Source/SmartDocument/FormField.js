@@ -66,7 +66,7 @@ var FormField = new Class({
    //Protected, private helper methods
    associateEditor: function(){
       if( this.isEditable() ){
-         this.editor = DocumentElementEditorFactory.create( this, this.valueElement, {} );
+         this.editor = DocumentElementEditorFactory.create( this, {} );
          this.editor.attach();
       }
       this.constructionChain.callChain();

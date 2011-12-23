@@ -130,7 +130,7 @@ var DocumentElement = new Class({
    //Protected, private helper methods
    associateEditor: function(){
       if( this.isEditable() ){
-         this.editor = DocumentElementEditorFactory.create( this, this.htmlElement, {} );
+         this.editor = DocumentElementEditorFactory.create( this, {} );
          this.editor.attach();
       }
       this.constructionChain.callChain();

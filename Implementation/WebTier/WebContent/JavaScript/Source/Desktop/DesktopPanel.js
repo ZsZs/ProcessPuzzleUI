@@ -43,7 +43,6 @@ var DesktopPanel = new Class({
            'onHeaderConstructed', 
            'onHeaderConstructionError',
            'onMUIPanelLoaded',
-           'onMUIPanelResize',
            'onPluginConstructed',
            'onPluginError',
            'subscribeToWebUIMessages',
@@ -55,9 +54,6 @@ var DesktopPanel = new Class({
       componentName : "DesktopPanel",
       componentRootElementIdPostfix : "_wrapper",
       panelContentElementSuffix : "_pad",
-      pluginSelector : "plugin",
-      showHeaderSelector : "showHeader",
-      storeStateSelector : "storeState",
    },
 
    //Constructor
@@ -87,7 +83,7 @@ var DesktopPanel = new Class({
    unmarshall: function(){
       this.unmarshallProperties();
       this.unmarshallPanelProperties();
-      this.unmarshallPanelHeader();
+      this.unmarshallHeader();
       this.unmarshallPlugin();
       this.unmarshallDocument();
       this.parent();
@@ -168,22 +164,6 @@ var DesktopPanel = new Class({
          title: this.title,
          url: documentFullURI
       });
-   }.protect(),
-   
-   unmarshallHeaderToolbox: function() {
-      var headerDefinition = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
-      if( headerDefinition ){
-         this.header = new DesktopPanelHeader( headerDefinition, this.resourceBundle, { onHeaderConstructed : this.onHeaderConstructed } );
-         this.header.unmarshall();
-      }
-   }.protect(),
-   
-   unmarshallPanelHeader: function(){
-      var headerConfigurationElement = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
-      if( headerConfigurationElement ){
-          this.header = new DesktopPanelHeader( headerConfigurationElement, this.resourceBundle, { onHeaderConstructed : this.onHeaderConstructed, onHeaderConstructionError : this.onHeaderConstructionError });
-          this.header.unmarshall();
-      }
    }.protect(),
    
    unmarshallPanelProperties: function(){

@@ -271,7 +271,7 @@
       }
         
         
-      function test_createStaticRow_AppendsNewDivWithTwoSpans() {
+      function test_createStaticRow_AppendsNewDivWithLabelAndSpan() {
          //SETUP: See setUp()
          
          //EXCERCISE:
@@ -279,7 +279,7 @@
 
          //VERIFY:
          assertThat( newElement.get( 'class' ), equalTo( elementFactory.options.rowClassName ) );
-         assertThat( newElement.getFirst().get( 'tag' ).toUpperCase(), equalTo( "SPAN" ));
+         assertThat( newElement.getFirst().get( 'tag' ).toUpperCase(), equalTo( "LABEL" ));
          assertThat( newElement.getFirst().get( 'class' ), equalTo( elementFactory.options.labelClassName ));
          assertThat( newElement.getFirst().get( 'text' ), equalTo( ROW_LABEL ));
          assertThat( newElement.getLast().get( 'tag' ).toUpperCase(), equalTo( "SPAN" ));

@@ -33,11 +33,13 @@ var DocumentElementEditorFactory = new Class({
    initialize: function(){
    },
 
-   create: function( subjectDocumentElement, subjectHtmlElement, options ){
+   create: function( subjectDocumentElement, options ){
+      var subjectHtmlElement = subjectDocumentElement.getHtmlElement(); 
       var documentElementEditor = null;
       switch( subjectDocumentElement.options.componentName ){
       case "CompositeDataElement": 
       case "FormField": 
+         documentElementEditor = new DataElementEditor( subjectDocumentElement.getValueElement(), options ); break;
       case "DataElement": 
          documentElementEditor = new DataElementEditor( subjectHtmlElement, options ); break;
       case "CompositeDocumentElement": 
@@ -49,8 +51,8 @@ var DocumentElementEditorFactory = new Class({
    }
 });
 
-DocumentElementEditorFactory.create = function( subjectDocumentElement, subjectHtmlElement, options ){
+DocumentElementEditorFactory.create = function( subjectDocumentElement, options ){
    var factory = new DocumentElementEditorFactory();
-   var elementEditor = factory.create( subjectDocumentElement, subjectHtmlElement, options );
+   var elementEditor = factory.create( subjectDocumentElement, options );
    return elementEditor;
 };
