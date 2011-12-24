@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var DesktopElement = new Class({
-   Implements: [Events, Options],
+   Implements: [Events, Options, TimeOutBehaviour],
    Binds: ['constructed', 'finalizeConstruction', 'onConstructionError'],
    
    options: {
@@ -34,7 +34,7 @@ var DesktopElement = new Class({
       defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       idSelector : "@id",
-      tagSelector : "@tag"
+      tagSelector : "@tag",
    },
    
    //Constructor
@@ -60,7 +60,7 @@ var DesktopElement = new Class({
    construct: function(){
       if( this.state != DesktopElement.States.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
-      
+      this.startTimeOutTimer( 'construct' );
       this.compileConstructionChain();
       this.constructionChain.callChain();
    },
@@ -124,6 +124,7 @@ var DesktopElement = new Class({
    }.protect(),
    
    finalizeConstruction: function(){
+      this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
       this.fireEvent('constructed', this ); 

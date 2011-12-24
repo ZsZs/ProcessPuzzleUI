@@ -32,7 +32,6 @@ var XPathSelectionException = new Class({
    
    //Constructor
    initialize : function( selector, xmlResourceUri, options ){
-      this.setOptions( options );
       this.parent( options );
       this.parameters = { selector : selector, xmlResourceUri : xmlResourceUri };
    }	

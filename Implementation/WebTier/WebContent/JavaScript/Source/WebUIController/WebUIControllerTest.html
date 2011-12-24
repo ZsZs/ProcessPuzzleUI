@@ -35,6 +35,7 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
+   <script type="text/javascript" src="../FundamentalTypes/TimeOutBehaviour.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
@@ -71,6 +72,8 @@
    <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/TimeOutException.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/UniqueId.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
@@ -108,6 +111,10 @@
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarDivider.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarButtonFactory.js"></script>
+   <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
@@ -119,6 +126,8 @@
    <script type="text/javascript" >
       window.addEvent('domready', function() {
          //test_initialize_instantiatesComponents();
+         //test_configure();
+         test_changeLanguage();
       });
   	  
       JsHamcrest.Integration.JsUnit();
@@ -139,6 +148,7 @@
 		
       function runTestCase(){
          if( !testCaseIsRunning ) testCaseChain.callChain();
+         else runTestCase.delay( 500, this );
       }
       
       function beforeEachTest() {
@@ -161,7 +171,7 @@
          componentStateManager.reset();
          messageBus.tearDown();
 			
-         testWindow.location.hash = "";
+         window.location.hash = "";
 
          inform( "afterEachTest" );
          testCaseIsRunning = false;
@@ -183,7 +193,7 @@
          runTestCase();
       }
 		
-      function test_Configure() {
+      function test_configure() {
          testCaseChain.chain(
             beforeEachTest,
             function(){
@@ -197,10 +207,10 @@
                assertNotNull( "... loads resource bundles.", controller.getResourceBundle() );
             
                //assertTrue( "... Language Selector is configured.", controller.getLanguageSelector().isConfigured );
-               assertThat( controller.getDesktop().getState(), equalTo( Desktop.States.CONSTRUCTED ) ); 
+               assertThat( controller.getDesktop().getState(), equalTo( DesktopElement.States.CONSTRUCTED ) ); 
                assertTrue( "... the whole browser front-end is configured.", controller.isConfigured );
 
-               assertEquals( "... registers itself to 'MenuSelectedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( MenuSelectedMessage ).get(0) );
+               assertEquals( "... registers itself to 'SkinChangedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( SkinChangedMessage ).get(0) );
                assertEquals( "... registers itself to 'LanguageChangedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( LanguageChangedMessage ).get(0) );
             
                assertEquals( "... instantiates a configures DocumentManager.", Class.getInstanceOf( DocumentManager ), controller.getDocumentManager() );
@@ -211,7 +221,7 @@
          runTestCase();
       }
 		
-      function test_ChangeLanguage() {
+      function test_changeLanguage() {
          testCaseChain.chain(
             beforeEachTest,
             function(){

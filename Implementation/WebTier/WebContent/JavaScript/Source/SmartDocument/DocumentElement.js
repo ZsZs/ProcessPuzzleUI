@@ -25,7 +25,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 var DocumentElement = new Class({
-   Implements: [Events, Options],
+   Implements: [Events, Options, TimeOutBehaviour],
    Binds: ['associateEditor', 'authorization', 'createHtmlElement', 'constructPlugin', 'finalizeConstruction', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
    
    options: {
@@ -75,6 +75,7 @@ var DocumentElement = new Class({
       this.contextElement = contextElement;
       this.where = where;
       this.elementFactory = new WidgetElementFactory( contextElement, this.resourceBundle );
+      this.startTimeOutTimer( 'construct' );
       this.compileConstructionChain();
       this.constructionChain.callChain();
    },
@@ -180,6 +181,7 @@ var DocumentElement = new Class({
    }.protect(),
       
    finalizeConstruction: function(){
+      this.stopTimeOutTimer();
       this.status = DocumentElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this );

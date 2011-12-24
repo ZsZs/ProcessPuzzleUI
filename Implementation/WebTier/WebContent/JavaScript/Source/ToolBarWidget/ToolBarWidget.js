@@ -42,7 +42,7 @@ var ToolBarWidget = new Class({
 
    //Constructor
    initialize: function( options, internationalization ){
-      this.setOptions( options );
+      //this.setOptions( options );
       this.parent( options, internationalization );
       
       //Private attributes

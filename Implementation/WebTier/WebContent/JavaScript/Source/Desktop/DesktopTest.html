@@ -32,6 +32,7 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
+   <script type="text/javascript" src="../FundamentalTypes/TimeOutBehaviour.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
@@ -79,6 +80,7 @@
    <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/TimeOutException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/UniqueId.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
@@ -171,6 +173,7 @@
 
       function runTestCase(){
          if( !testCaseIsRunning ) testCaseChain.callChain();
+         else runTestCase.delay( 500, this );
       }
       
       function beforeEachTest() {

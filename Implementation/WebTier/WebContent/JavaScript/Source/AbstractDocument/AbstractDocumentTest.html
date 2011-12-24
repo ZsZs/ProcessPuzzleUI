@@ -59,7 +59,7 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //runTestFunction();
+         //test_construct_instantiatesElementFactoryAndDocumentEditor();
       });
 				
       JsHamcrest.Integration.JsUnit();
@@ -74,18 +74,19 @@
       var documentContainerElement;
       var documentContentResource;
       var documentDefinition;
-		var documentInternationalization;
+      var documentInternationalization;
       var testCaseChain = new Chain();
       var testCaseIsRunning = false;
-		var webUIConfiguration;
-		var webUILogger;
-		var webUIMessageBus;
+      var webUIConfiguration;
+      var webUILogger;
+      var webUIMessageBus;
 		
-		function runTestCase(){
-		   if( !testCaseIsRunning ) testCaseChain.callChain();
-		}
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+         else runTestCase.delay( 500, this );
+      }
 	      
-		function beforeEachTest(){
+      function beforeEachTest(){
          inform( "beforeEachTest" );
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
@@ -107,9 +108,9 @@
          testCaseChain.callChain();
       }
 		
-		function onDocumentReady(){
-		   testCaseChain.callChain();
-		}
+      function onDocumentReady(){
+         testCaseChain.callChain();
+      }
 
       function afterEachTest(){
          bundle.release();

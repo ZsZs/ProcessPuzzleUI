@@ -26,9 +26,10 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
+   <script type="text/javascript" src="../FundamentalTypes/TimeOutBehaviour.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script> 
-   <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
 	
    <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../BrowserWidget/BrowserWidget.js"></script>
@@ -46,6 +47,7 @@
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/OptionsResource.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/RemoteResource.js"></script>
+   <script type="text/javascript" src="../FundamentalTypes/TimeOutException.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
@@ -83,7 +85,7 @@
 		
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         test_construct_whenErrorOccured_revertsConstructionAndFiresError();
+         //test_construct_whenErrorOccured_revertsConstructionAndFiresError();
       });
 				
       JsHamcrest.Integration.JsUnit();
@@ -108,10 +110,15 @@
       var messageBus = null;
       var smartDocument = null;
       var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
       var webUIConfiguration = null;
       var webUIController = null;
       var webUILogger = null;
 		
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+      
       function beforeEachTest(){
          inform( "beforeEachTest" );
          messageBus = new WebUIMessageBus();
@@ -130,6 +137,7 @@
             });
          doumentContainerElement = $( DOCUMENT_CONTAINER_ID );
          callBackWasCalled = false;
+         testCaseIsRunning = true;
          testCaseChain.callChain();
       }
       
@@ -146,8 +154,10 @@
          if( smartDocument.getState() > AbstractDocument.States.INITIALIZED ) smartDocument.destroy();
          smartDocument = null;
          doumentContainerElement = null;
-         testCaseChain.clearChain();
+         
          inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
       }
 		
       function test_initialization(){
@@ -164,7 +174,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
 		
       function test_unmarshall_determinesDefintionProperties(){
@@ -180,7 +191,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
 		
       function test_unmarshall_determinesResources(){
@@ -195,7 +207,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
 		
       function test_unmarshall_unmarshallsHeaderBodyAndFooter(){
@@ -212,7 +225,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
 		
       function test_construct_constructsHeaderBodyAndFooter(){
@@ -231,7 +245,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
       
       function test_construct_whenErrorOccured_revertsConstructionAndFiresError(){
@@ -259,7 +274,8 @@
                testCaseChain.callChain();
             },
             afterEachTest 
-         ).callChain();
+         );
+         runTestCase();
       }
     </script>
 </head>

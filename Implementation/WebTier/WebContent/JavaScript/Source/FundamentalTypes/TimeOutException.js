@@ -1,11 +1,11 @@
-/****************************** IllegalArgumentException ***************************
-Name: UndefinedXmlResourceException
+/****************************** TimeoutException ***************************
+Name: TimeOutException
 
-Description: 
+Description: Thrown when the specified component's configuration or other process timed out.
 
-Requires:
+Requires: WebUIException
 
-Provides:
+Provides: TimeOutException
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -23,16 +23,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-var IllegalArgumentException = new Class({
+var TimeOutException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Argument: '{argumentName}' has inappropriate value: '{argumentValue}'.",
-      name: "IllegalArgumentException"
+      description: "Executing the '{componentName}' element's '{processName}' timed out. See the stack trace for the root cause.",
+      name: "TimeoutException"
    },
    
    //Constructor
-   initialize : function( argumentName, argumentValue, options ){
+   initialize : function( componentName, processName, options ){
       this.parent( options );
-      this.parameters = { argumentName : argumentName, argumentValue : argumentValue };
-   }	
+      this.parameters = { componentName : componentName, processName : processName };
+      this.componentName = componentName;
+      this.processName = processName;
+   },
+   
+   //Properties
+   getComponentName: function() { return this.componentName; },
+   getProcessName: function() { return this.processName; },
 });

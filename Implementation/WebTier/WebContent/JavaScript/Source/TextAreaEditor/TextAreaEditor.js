@@ -124,5 +124,6 @@ var TextAreaEditor = new Class({
          onAttach: this.onMooEditableAttach, 
          toolbar : false
       });
+      this.parent();
    }.protect(),
 });

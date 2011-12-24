@@ -189,7 +189,7 @@ var Desktop = new Class({
       this.callNextConfigurationStep();
    },
    
-   onPanelConstructed: function(){
+   onPanelConstructed: function( panel ){
       this.numberOfConstructedPanels++;
       if( this.numberOfConstructedPanels == this.panels.size() ){
          this.logger.debug( this.options.componentName + ", loading desktop panels is finished." );

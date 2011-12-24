@@ -45,6 +45,7 @@ var DesktopPanelHeader = new Class({
       this.error = false;
       this.internationalization = internationalization;
       this.logger = Class.getInstanceOf( WebUILogger );
+      this.plugin;
       this.state = DesktopPanelHeader.States.INITIALIZED;
       this.toolBox = null;
       this.toolBoxOnLoad = null;

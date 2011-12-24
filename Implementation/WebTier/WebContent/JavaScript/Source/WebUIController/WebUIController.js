@@ -29,6 +29,7 @@ var WebUIController = new Class({
             'configureDocumentManager',
             'configureLogger',
             'determineCurrentUserLocale',
+            'finalizeConfiguration',
             'loadDocument', 
             'loadInternationalizations',
             'loadWebUIConfiguration',
@@ -140,7 +141,8 @@ var WebUIController = new Class({
          this.constructDesktop,
          this.configureDocumentManager,
          this.subscribeToWebUIMessages,
-         this.storeComponentState
+         this.storeComponentState,
+         this.finalizeConfiguration
       ).callChain();
       
       this.logger.groupEnd( this.options.componentName + ".configure()" );
@@ -318,6 +320,11 @@ var WebUIController = new Class({
    determineDefaultSkin : function(){
       this.skin = this.webUIConfiguration.getDefaultSkin();
    }.protect(),
+   
+   finalizeConfiguration: function(){
+      this.isConfigured = true;
+      this.fireEvent( 'configured', this );
+   }.protect(),
 
    getTextInternal : function ( key, defaultValue ) {
       if( this.resourceBundle == null)
@@ -422,8 +429,6 @@ var WebUIController = new Class({
    storeComponentState : function() {
       this.logger.debug( this.options.componentName + ".storeComponentState() started." );
       this.stateManager.storeCurrentState( this.options.componentName, {locale : this.locale.toString()} );
-      this.isConfigured = true;
-      this.fireEvent( 'configured', this );
       this.configurationChain.callChain();
    }.protect(),
    

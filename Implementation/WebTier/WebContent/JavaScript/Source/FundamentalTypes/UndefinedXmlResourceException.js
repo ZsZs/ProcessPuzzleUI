@@ -32,7 +32,6 @@ var UndefinedXmlResourceException = new Class({
    
    //Constructor
    initialize : function( resourceName, options ){
-      this.setOptions( options );
       this.parent( options );
       this.parameters = { resourceName : resourceName };
    }	
