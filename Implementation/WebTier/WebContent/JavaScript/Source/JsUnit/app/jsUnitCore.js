@@ -52,7 +52,7 @@ JsUnit.PRIMITIVE_EQUALITY_PREDICATES = {
     'Date':     JsUnit.TRIPLE_EQUALITY_PREDICATE,
     'RegExp':   JsUnit.TO_STRING_EQUALITY_PREDICATE,
     'Function': JsUnit.TO_STRING_EQUALITY_PREDICATE
-}
+};
 
 /**
  * Hack for NS62 bug
@@ -74,7 +74,7 @@ JsUnit._fixTop = function() {
         window.top = tempTop;
     } catch (e) {
     }
-}
+};
 
 JsUnit._fixTop();
 
@@ -88,7 +88,7 @@ JsUnit._trueTypeOf = function(something) {
     try {
         switch (result) {
             case 'element':
-                result = 'Element'
+                result = 'Element';
                 break;
             case 'string':
                 break;
@@ -134,7 +134,7 @@ JsUnit._trueTypeOf = function(something) {
         result = result.substr(0, 1).toUpperCase() + result.substr(1);
         return result;
     }
-}
+};
 
 /**
  * @private

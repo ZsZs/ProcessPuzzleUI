@@ -27,6 +27,8 @@
    <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
    <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
    <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.Extras.js"></script>
    <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
@@ -38,6 +40,7 @@
    <script type="text/javascript" src="../FundamentalTypes/TimeOutBehaviour.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIMessageBus/WebUIMessage.js"></script>
     
    <script type="text/javascript" src="../AbstractDocument/AbstractDocument.js"></script>
@@ -63,7 +66,7 @@
    <script type="text/javascript" src="../Desktop/plugins/tree/scripts/tree.js"></script>
    <script type="text/javascript" src="../Desktop/ResourceNotFoundException.js"></script>
    <script type="text/javascript" src="../Desktop/WindowDocker.js"></script>
-   <script type="text/javascript" src="../DocumentManager/DocumentManager.js"></script>
+   <script type="text/javascript" src="../DocumentEditor/DocumentEditor.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../FundamentalTypes/IllegalArgumentException.js"></script>
@@ -77,6 +80,7 @@
    <script type="text/javascript" src="../FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
    <script type="text/javascript" src="../HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../HtmlDocument/HtmlDocument.js"></script>
    <script type="text/javascript" src="../Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../Internationalization/LocaleUtil.js"></script>
    <script type="text/javascript" src="../Internationalization/ResourceKey.js"></script>
@@ -111,11 +115,12 @@
    <script type="text/javascript" src="../TabWidget/Tab.js"></script>
    <script type="text/javascript" src="../TabWidget/TabSelectedMessage.js"></script>
    <script type="text/javascript" src="../TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../TextAreaEditor/MooEditableDialog.js"></script>
+   <script type="text/javascript" src="../TextAreaEditor/TextAreaEditor.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButton.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarDivider.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarButtonFactory.js"></script>
    <script type="text/javascript" src="../ToolBarWidget/ToolBarWidget.js"></script>
-   <script type="text/javascript" src="../WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../WebUIController/WebUIStateRestoredMessage.js"></script>
@@ -125,16 +130,14 @@
 	
    <script type="text/javascript" >
       window.addEvent('domready', function() {
-         //test_initialize_instantiatesComponents();
-         //test_configure();
-         test_changeLanguage();
+         //test_changeLanguage_reConstructsTheDesktopWithNewLocale();
       });
   	  
       JsHamcrest.Integration.JsUnit();
 		
       var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
       var DESKTOP_CONTAINER_ELEMENT_ID = "desktopContainer";
-      var SAMPLE_DOCUMENT_ONE = "../WebUIController/Content/SampleContentOne";
+      var SAMPLE_DOCUMENT_ONE = "../WebUIController/Content/SampleContentOne.xml";
       var componentStateManager = null;
       var controller;
       var docSelectorDiv = document.getElementById("DocumentSelector");
@@ -148,7 +151,6 @@
 		
       function runTestCase(){
          if( !testCaseIsRunning ) testCaseChain.callChain();
-         else runTestCase.delay( 500, this );
       }
       
       function beforeEachTest() {
@@ -206,14 +208,10 @@
                assertEquals( "... initializes with default locale.", "hu", controller.getCurrentLocale().getLanguage() );
                assertNotNull( "... loads resource bundles.", controller.getResourceBundle() );
             
-               //assertTrue( "... Language Selector is configured.", controller.getLanguageSelector().isConfigured );
-               assertThat( controller.getDesktop().getState(), equalTo( DesktopElement.States.CONSTRUCTED ) ); 
                assertTrue( "... the whole browser front-end is configured.", controller.isConfigured );
-
+               assertThat( controller.getDesktop().getState(), equalTo( DesktopElement.States.CONSTRUCTED ) ); 
                assertEquals( "... registers itself to 'SkinChangedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( SkinChangedMessage ).get(0) );
                assertEquals( "... registers itself to 'LanguageChangedMessage'.", controller.webUIMessageHandler, messageBus.getSubscribersToMessage( LanguageChangedMessage ).get(0) );
-            
-               assertEquals( "... instantiates a configures DocumentManager.", Class.getInstanceOf( DocumentManager ), controller.getDocumentManager() );
                testCaseChain.callChain();
             },
             afterEachTest
@@ -221,21 +219,21 @@
          runTestCase();
       }
 		
-      function test_changeLanguage() {
+      function test_changeLanguage_reConstructsTheDesktopWithNewLocale() {
          testCaseChain.chain(
             beforeEachTest,
             function(){
                controller.configure();
             },
             function(){
-               controller.loadDocument({ documentURI : 'Content/SampleContentOne' });
-			
+               assertThat( controller.getCurrentLocale().getLanguage(), equalTo( 'hu' ));
+
                var noneDefaultLanguage = new Locale({ language : 'en' });
                controller.changeLanguage( noneDefaultLanguage );
-			
-               assertEquals( "Given locale becomes the current.", noneDefaultLanguage, controller.getCurrentLocale() );
-               assertEquals( "... current document remains", 'Content/SampleContentOne', controller.currentDocumentProperties['documentURI'] );
-               //assertEquals( "... but is presented in the changed language.", "Sample Content One", $('documents-panel').getElements( "H1" )[0].childNodes[0].nodeValue );
+            },
+            function(){
+               assertThat( controller.getCurrentLocale().getLanguage(), equalTo( 'en' ));
+               assertThat( controller.isConfigured, is( true ));
                testCaseChain.callChain();
             },
             afterEachTest
@@ -243,27 +241,43 @@
          runTestCase();
       }
 		
-      function test_Destroy(){
+      function test_changeSkin_reConstructsTheDesktopWithNewSkin() {
          testCaseChain.chain(
             beforeEachTest,
             function(){
-               controller.getMessageBus().subscribeToMessage( TestMessageOne, eventHandlerOne );
                controller.configure();
             },
             function(){
-               debug( "before destroy()" );
+               assertThat( controller.getCurrentSkin(), equalTo( 'ProcessPuzzle' ));
+
+               controller.changeSkin( 'MochaUI' );
+            },
+            function(){
+               assertThat( controller.getCurrentSkin(), equalTo( 'MochaUI' ));
+               assertThat( controller.isConfigured, is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
+      }
+      
+      function test_destroy_destroysAllHtmlElementsAndEvents(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               controller.configure();
+            },
+            function(){
                controller.destroy();
 			
-               debug( "destroy() verification started." );
                assertTrue( "After WebUIController.destoy()...", true );
                assertFalse( "... not regarded to be configured.", controller.isConfigured );
-               debug( "Desktop state: " + controller.getDesktop().getState() );
                assertThat( controller.getDesktop().getState(), equalTo( Desktop.States.INITIALIZED ));
                assertFalse( "... WebUIConfiguration is not loaded.", controller.getWebUIConfiguration().isLoaded );
                assertFalse( "... XMLResourcebundle is not loaded.", controller.getResourceBundle().isLoaded );
                assertEquals( "tears down message bus.", 0, controller.getMessageBus().getMessageListSize() );
                assertThat( $( DESKTOP_CONTAINER_ELEMENT_ID ).getChildren( '*' ).length, equalTo( 0 ));
-               debug( "destroy() verification finished." );
                testCaseChain.callChain.delay( 1000, this );
             },
             afterEachTest
@@ -271,20 +285,20 @@
          runTestCase();
       }
 		
-      function test_LoadDocument() {
+      function test_loadDocument_publishesMenuSelectedMessage() {
          testCaseChain.chain(
             beforeEachTest,
             function(){
                controller.configure();
             },
             function(){
-               controller.loadDocument({ documentURI : SAMPLE_DOCUMENT_ONE });
+               controller.getMessageBus().subscribeToMessage( MenuSelectedMessage, function( webUIMessage ){
+                  assertThat( webUIMessage.getDocumentURI(), equalTo( SAMPLE_DOCUMENT_ONE ));
+               });
+               
+               controller.loadDocument( SAMPLE_DOCUMENT_ONE, AbstractDocument.Types.HTML );
 
-               var documentsPanel = $('documents-panel');
-               assertTrue( "After WebUIController.loadDocument()...", true );
-               assertEquals( "... stores current document URI", SAMPLE_DOCUMENT_ONE, controller.currentDocumentProperties['documentURI'] );
-               //assertEquals( "... adds page content.", "Minta tartalom - 1", Sarissa.getText( documentsPanel.getElements( "H1" )[0] ));
-               testCaseChain.callChain();
+               testCaseChain.callChain.delay( 500, this );
             },
             afterEachTest
          );

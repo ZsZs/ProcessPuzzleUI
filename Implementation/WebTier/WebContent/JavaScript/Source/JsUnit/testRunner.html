@@ -2,62 +2,76 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=8"/>
-<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-<title>JsUnit Test Runner</title>
-<script language="JavaScript" type="text/javascript" src="app/jsUnitCore.js"></script>
-<script language="JavaScript" type="text/javascript" src="app/jsUnitTestManager.js"></script>
-<script language="JavaScript" type="text/javascript" src="app/BaseUiManager.js"></script>
-<script language="JavaScript" type="text/javascript" src="app/ClassicUiManager.js"></script>
-<script language="JavaScript" type="text/javascript" src="app/ModernUiManager.js"></script>
-<script language="JavaScript" type="text/javascript" src="app/jsUnitParams.js"></script>
-<script language="JavaScript" type="text/javascript" src="app/jsUnitTracer.js"></script>
-<script language="JavaScript" type="text/javascript">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+   <title>JsUnit Test Runner</title>
+   
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/jsUnitCore.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsTestFunction.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsTestGroup.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsTestPage.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsTraceMessage.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/jsTestManager.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsBaseUiManager.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsClassicUiManager.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsModernUiManager.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/JsTestFrameAnalyser.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/jsUnitParams.js"></script>
+   <script language="JavaScript" type="text/javascript" src="app/jsUnitTracer.js"></script>
+   <script language="JavaScript" type="text/javascript">
 
-    var params = new JsUnit.Params(document.location.search);
-    var testManager;
-    var tracer;
+   window.addEvent('domready', function() {
+      resetTestManager();
+      setUpFrames();
+   });
+   
+   var params;
+   var testManager;
+   var tracer;
+   var uiFrameUrl;
 
-    function resetTestManager() {
-        testManager = new JsUnitTestManager(params);
-        tracer = new JsUnitTracer(testManager, params);
-    }
+   function resetTestManager() {
+      params = new JsUnit.Params( document.location.search );
+      testManager = new JsTestManager(params);
+      tracer = new JsUnitTracer(testManager, params);
+      uiFrameUrl = testManager.getUiFrameUrl();
+   }
 
-    resetTestManager();
+   function onLoadHandler() {
+      testManager.onLoad();
+      testManager.maybeRun();
+   }
 
-    function onLoadHandler() {
-        testManager.onLoad();
-        testManager.maybeRun();
-    }
+   function startTests() {
+      testManager.kickOffTests();
+   }
 
-    function startTests() {
-        testManager.kickOffTests();
-    }
+   function stopTests() {
+      testManager.abort();
+      resetTestManager();
+      testManager.onLoad();
+   }
 
-    function stopTests() {
-        testManager.abort();
-        resetTestManager();
-        testManager.onLoad();
-    }
-
-    var uiFrameUrl = testManager.getUiFrameUrl();
-
-    document.open();
-    document.write(
-            '<frameset id="testRunnerFrameset" rows="*,0,0,0" border="0" onload="onLoadHandler()">' + "\n" +
-            '    <frame frameborder="0" name="mainFrame" src="' + uiFrameUrl + '">' + "\n" +
-            '    <frame frameborder="0" name="mainResults" src="./app/main-results.html">' + "\n" +
-            '    <frame frameborder="0" name="documentLoader" src="./app/main-loader.html">' + "\n" +
-            '    <frame frameborder="0" name="testContainer" src="./app/testContainer.html">' + "\n" +
-            '    <noframes>' + "\n" +
-            '        <body>' + "\n" +
-            '        <p>Sorry, JsUnit requires support for frames.</p>' + "\n" +
-            '        </body>' + "\n" +
-            '    </noframes>' + "\n" +
-            '</frameset>'
-    );
-    document.close();
+   function setUpFrames(){
+      document.open();
+      document.write(
+          '<frameset id="testRunnerFrameset" rows="*,0,0,0" border="0" onload="onLoadHandler()">' + "\n" +
+          '    <frame frameborder="0" name="mainFrame" src="' + uiFrameUrl + '">' + "\n" +
+          '    <frame frameborder="0" name="mainResults" src="./app/main-results.html">' + "\n" +
+          '    <frame frameborder="0" name="documentLoader" src="./app/main-loader.html">' + "\n" +
+          '    <frame frameborder="0" name="testContainer" src="./app/testContainer.html">' + "\n" +
+          '    <noframes>' + "\n" +
+          '        <body>' + "\n" +
+          '        <p>Sorry, JsUnit requires support for frames.</p>' + "\n" +
+          '        </body>' + "\n" +
+          '    </noframes>' + "\n" +
+          '</frameset>'
+      );
+      document.close();
+   }
 
 </script>
 </head>

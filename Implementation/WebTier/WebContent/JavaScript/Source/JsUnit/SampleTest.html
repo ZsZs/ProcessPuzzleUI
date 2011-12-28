@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Test page for xyz.js</title>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+   <link type="text/css" rel="stylesheet" href="../JsUnit/app/css/jsUnitStyle.css">
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestRunner.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestClass.js"></script>
+
+   <script type="text/javascript">
+   window.addEvent('domready', function() {
+      //testRunTestCases();
+   });
+
+   var MyTests = new Class({
+      Implements: [Events, JsTestClass, Options],
+      Binds: ['delayedMethod', 'testCaseOne', 'testCaseTwo'],
+      
+      options: {
+         testMethods: [{ method: 'testCaseOne', isAsynchron: true }, { method: 'testCaseTwo' }]
+      },
+      
+      initialize: function( options ){
+         this.setOptions( options );
+      },
+      
+      delayedMethod: function(){
+         this.testMethodReady( this.testCaseOne );
+      },
+      
+      testCaseOne: function(){
+         console.log( "testCaseOne" );
+         this.delayedMethod.delay( 4000 );
+      },
+      
+      testCaseTwo: function(){
+         console.log( "testCaseTwo" );
+         assertThat( false, is( false ));
+      },
+   });
+   
+   function testFunctionOne(){
+      assertThat( true, is( true ));
+      console.log( "testFunctionOne" );
+   }
+   
+   function testFunctionTwo(){
+      assertThat( false, is( false ));
+      console.log( "testFunctionTwo" );
+   }
+   </script>
+</head>
+
+<body>
+   <h1>??.js test page</h1>
+
+</body>
+</html>

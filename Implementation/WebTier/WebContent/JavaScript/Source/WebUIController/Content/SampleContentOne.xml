@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<htmlDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/HtmlDocument.xsd">
+   <name>Test Html Document</name>
+   <description>This configuration supports testing plain Html document.</description>
+   <version>0.5</version>
+   <contentUri>../WebUIController/Content/SampleContentOne</contentUri>
+   <handleMenuSelectedEvents>true</handleMenuSelectedEvents>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+</htmlDocumentDefinition>
