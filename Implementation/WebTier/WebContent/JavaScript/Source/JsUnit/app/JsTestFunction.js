@@ -1,6 +1,7 @@
 var JsTestFunction = new Class({
    Implements : [Events, Options],
    
+   //Constructor
    initialize : function( testPage, testName ) {
       this.testPage = testPage;
       this.testName = testName;
@@ -10,6 +11,7 @@ var JsTestFunction = new Class({
       this.listeners = [];
    },
 
+   //Public accessor and mutator methods
    addTraceMessage : function( traceMessage ) {
       this.traceMessages.push( traceMessage );
    },
@@ -23,5 +25,7 @@ var JsTestFunction = new Class({
          this.listeners[i].call( null, this, event );
       }
    },
-
+   
+   //Properties
+   getName : function() { return this.testName; },
 });

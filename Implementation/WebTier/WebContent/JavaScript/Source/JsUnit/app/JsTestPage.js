@@ -1,6 +1,10 @@
 var JsTestPage = new Class({
+   Implements : [Events, Options],
+   Binds : ['onTestCaseFinished', 'onTestSuiteFinished'],
+   
    //Constructor
-   initialize : function( url, testFrame ) {
+   initialize : function( url, testFrame, options ) {
+      this.setOptions( options );
       this.currentTestFunctionIndex;
       this.errorCount = 0;
       this.failureCount = 0;
@@ -11,6 +15,7 @@ var JsTestPage = new Class({
       this.testFrame = testFrame;
       this.testFunctions = new Array();
       this.testMethods = new Array();
+      this.testSuiteChain = new Chain();
       this.url = url;
    },
 
@@ -20,12 +25,6 @@ var JsTestPage = new Class({
       this.determineTestFunctions();
    },
    
-   addTest : function( testName ) {
-      var testMethod = new JsTestFunction( this, testName );
-      this.testMethods.include( testMethod );
-      return testMethod;
-   },
-
    getStatus : function( testName ) {
       if( this.testMethods.length == 0 ) return 'noTestsYet';
       if( this.running ) return 'running';
@@ -51,6 +50,25 @@ var JsTestPage = new Class({
       for( var i = 0; i < this.listeners.length; i++ ){
          this.listeners[i].call( null, this, event );
       }
+   },
+   
+   onTestCaseFinished : function( testCaseName, result ){
+      this.fireEvent( 'testCaseFinished', [ testCaseName, result ] );
+   },
+   
+   onTestSuiteFinished : function( testSuiteName ){
+      this.fireEvent( 'testSuiteFinished', testSuiteName );
+      this.testSuiteChain.callChain();
+   },
+   
+   runTests : function(){
+      this.notify( JsTestPage.READY_EVENT );
+      var testClassRunner = new JsTestClassRunner( this.testClasses, { onTestCaseFinished : this.onTestCaseFinished, onTestSuiteFinished : this.onTestSuiteFinished });
+      var testFunctionRunner = new JsTestFunctionRunner( this.testFunctions, { onTestCaseFinished : this.onTestCaseFinished, onTestSuiteFinished : this.onTestSuiteFinished });
+      this.testSuiteChain.chain(
+         testClassRunner.runTests,
+         testFunctionRunner.runTests
+      ).callChain();
    },
    
    totalNumberOfTestCases : function(){

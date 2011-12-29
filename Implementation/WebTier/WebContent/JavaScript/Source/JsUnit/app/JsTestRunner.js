@@ -1,52 +1,40 @@
 /* JsTestRunner
- * 
- */
+*
+*/
+
 var JsTestRunner = new Class({
-   Implements: [Options],
-   Binds: ['callAfterEachTest', 'callBeforeEachTest', 'checkTimeOut', 'onTestMethodReady'],
-   options: {
+   Implements : [Events, Options],
+   Binds : ['runTests', 'onTestCaseFinished'],
+   
+   options : {
       delay: 200,
       maxTries: 20
    },
-
+   
    //Constructor
-   initialize: function( testClass ){
+   initialize : function( testCases, options ){
+      this.setOptions( options );
       this.numberOfTries;
-      this.testClass = testClass;
-      this.testCaseChain = new Chain();
-      this.testObject = new this.testClass({ onReady : this.onTestMethodReady });
+      this.testCases = testCases;
       this.timer;
-      this.waitList = new Array();
    },
    
    //Public accessor and mutator methods
-   onTestMethodReady: function(  testMethod  ){
+   onTestCaseFinished : function( testCaseName ){
+      if( testCaseName ) this.waitList.erase( testCaseName );
       clearInterval( this.timer );
-      if( testMethod && typeOf( testMethod ) == 'function' ) this.waitList.erase( testMethod.$name );
-      this.testCaseChain.callChain();
+      this.fireEvent( 'testCaseFinished', testCaseName );
    },
    
-   runTestCases: function(){
-      this.testObject.beforeAllTests();
-      this.compileTestCaseChain();
-      this.testCaseChain.callChain();
-      this.testObject.afterAllTests();
+   runTests : function(){
+      this.testCases.each( function( testCase, index ){
+         this.runTestCase( testCase );
+      }, this );
    },
    
-   //Properties
-   getTestClass: function(){ return this.testClass; },
+   //Properties   
    
    //Protected, private helper methods
-   callAfterEachTest: function(){
-      this.testObject.afterEachTest();
-      this.testCaseChain.callChain();
-   }.protect(),
-   
-   callBeforeEachTest: function(){
-      this.testObject.beforeEachTest();
-      this.testCaseChain.callChain();
-   }.protect(),
-   
    checkTimeOut: function(){
       this.numberOfTries++;
       console.log( "time out checked" );
@@ -56,36 +44,13 @@ var JsTestRunner = new Class({
       }
    },
    
-   compileTestCaseChain: function(){
-      this.testObject.options.testMethods.each( function( testCaseProperties, index ){
-         var testMethodName = testCaseProperties['method'];
-         var isAsynchron = testCaseProperties['isAsynchron'] ? testCaseProperties['isAsynchron'] : false; 
-         this.testCaseChain.chain(
-            this.callBeforeEachTest,
-            function(){ 
-               this.runTestCase( testMethodName, isAsynchron ); 
-            }.bind( this ),
-            this.callAfterEachTest
-         );
-      }, this );
+   runTestCase : function( testCase ){
+      //Abstract method, should be overwritten
    }.protect(),
-   
-   runTestCase: function( testMethodName, isAsynchron ){
-      try{
-         testMethod = eval( "this.testObject." + testMethodName );
-         testMethod();
-         
-         if( isAsynchron ) this.waitForTestMethod( testMethodName );
-         else this.testCaseChain.callChain();
-      }catch( e ){
-         alert( "Running of test method '" + testMethodName + "' caused the following error: " + e.message );
-      }
-   }.protect(),
-   
+      
    waitForTestMethod: function( testMethodName ){
       this.waitList.include( testMethodName );
       this.numberOfTries = 0;
       this.timer = this.checkTimeOut.periodical( this.options.delay );
    }.protect()
 });
-

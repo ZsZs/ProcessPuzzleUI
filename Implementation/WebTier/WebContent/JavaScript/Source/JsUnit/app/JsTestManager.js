@@ -1,4 +1,5 @@
 var JsTestManager = new Class( {
+   Binds : ['onTestCaseFinished', 'onTestSuiteFinished'],
 
    initialize : function( params ) {
       //Instance variables
@@ -80,7 +81,7 @@ var JsTestManager = new Class( {
 
    //Protected, private helper methods
    addTestSuite : function( testSuite ) {
-      var testGroup = new JsTestGroup();
+      var testGroup = new JsTestGroup({ onTestCaseFinished : this.onTestCaseFinished });
 
       while( testSuite.hasMorePages() ){
          var testPage = testGroup.addTestPage( testSuite.nextPage() );
@@ -117,7 +118,7 @@ var JsTestManager = new Class( {
       this.testIndex = 0;
       this.currentTestPage.analyse();
       this.numberOfTestsInPage = this.currentTestPage.totalNumberOfTestCases();
-      this.currentTestPage.notify( JsTestPage.READY_EVENT );
+      this.currentTestPage.runTests();
       this.runTestFunction();
    }.protect(),
 
@@ -239,13 +240,20 @@ var JsTestManager = new Class( {
          testFunction.status = 'running';
          testFunction.notify( 'statusChange' );
          this.executeTestFunction( testFunction );
-         this.totalCount++;
-         this.updateProgressIndicators();
-         this.testIndex++;
+         this.onTestCaseFinished( testFunction.getName() );
          setTimeout( 'if (top.testManager) top.testManager.runTestFunction()', JsTestManager.TIMEOUT_LENGTH );
       }
    },
-
+   
+   onTestCaseFinished : function( testCaseName, result ){
+      this.totalCount++;
+      this.updateProgressIndicators();
+      this.testIndex++;
+   },
+   
+   onTestSuiteFinished : function( testSuiteName ){
+   },
+   
    setWindowStatus : function( string ) {
       top.status = string;
    },
