@@ -1,5 +1,5 @@
 var JsTestManager = new Class( {
-   Binds : ['onTestCaseFinished', 'onTestSuiteFinished'],
+   Binds : ['onTestCaseFinished', 'onTestCaseStarted', 'onTestSuiteFinished'],
 
    initialize : function( params ) {
       //Instance variables
@@ -7,8 +7,6 @@ var JsTestManager = new Class( {
       this.container;
       this.containerController;
       this.currentTestPage;
-      this.errorCount;
-      this.failureCount;
       this.log;
       this.numberOfTestsInPage;
       this.params = params ? params : new JsUnit.Params();
@@ -18,9 +16,10 @@ var JsTestManager = new Class( {
       this.testCaseResultsField;
       this.testFrame;
       this.testGroupStack;
-      this.testIndex;
+      this.testResults;
       this.totalCount;
       this.uiManager;
+      this.verbose = true;
       
       this.instantiateUiManager();
       this.setup();
@@ -81,7 +80,7 @@ var JsTestManager = new Class( {
 
    //Protected, private helper methods
    addTestSuite : function( testSuite ) {
-      var testGroup = new JsTestGroup({ onTestCaseFinished : this.onTestCaseFinished });
+      var testGroup = new JsTestGroup({ onTestCaseFinished : this.onTestCaseFinished, onTestCaseStarted : this.onTestCaseStarted, verbose : this.verbose });
 
       while( testSuite.hasMorePages() ){
          var testPage = testGroup.addTestPage( testSuite.nextPage() );
@@ -119,7 +118,7 @@ var JsTestManager = new Class( {
       this.currentTestPage.analyse();
       this.numberOfTestsInPage = this.currentTestPage.totalNumberOfTestCases();
       this.currentTestPage.runTests();
-      this.runTestFunction();
+      //this.runTestFunction();
    }.protect(),
 
    handleNewSuite : function() {
@@ -138,7 +137,7 @@ var JsTestManager = new Class( {
    initializeComponents : function() {
       this.setStatus( 'Initializing...' );
       this.uiManager.starting();
-      this.updateProgressIndicators();
+      this.uiManager.updateProgressIndicators( this.testResults, this.calculateProgressBarProportion() );      
       this.setStatus( 'Done initializing' );
    }.protect(),
 
@@ -161,7 +160,8 @@ var JsTestManager = new Class( {
       this.failureCount = 0;
       this.log = [];
       this.testGroupStack = Array();
-
+      this.testResults = new JsTestSuiteResults();
+      
       var initialSuite = new JsUnitTestSuite();
       this.addTestSuite( initialSuite );      
    }.protect(),
@@ -245,10 +245,27 @@ var JsTestManager = new Class( {
       }
    },
    
-   onTestCaseFinished : function( testCaseName, result ){
-      this.totalCount++;
-      this.updateProgressIndicators();
-      this.testIndex++;
+   onTestCaseFinished : function( result ){
+      this.testResults.processTestCaseResult( result );
+      
+      this.uiManager.updateProgressIndicators( this.testResults, this.calculateProgressBarProportion() );      
+      this.uiManager.testCompleted( result );
+
+      var serializedTestCaseString = this._currentTestFunctionNameWithTestPageName( true ) + "|" + result.getTimeTaken() + "|";
+      
+      var exception = result.getException();
+      if( exception == null ) serializedTestCaseString += "S||";
+      else{
+         if( exception.isJsUnitFailure ) serializedTestCaseString += "F|";
+         else serializedTestCaseString += "E|";
+
+         serializedTestCaseString += this.uiManager.problemDetailMessageFor( exception );
+      }
+      this._addOption( this.testCaseResultsField, serializedTestCaseString, serializedTestCaseString );
+   },
+   
+   onTestCaseStarted : function( testCaseName ){
+      this.setStatus( 'Running test "' + testCaseName + '"' );
    },
    
    onTestSuiteFinished : function( testSuiteName ){
@@ -324,8 +341,7 @@ var JsTestManager = new Class( {
    },
 
    calculateProgressBarProportion : function() {
-      if( this.totalCount == 0 )
-         return 0;
+      if( this.testResults.getTotalCount() == 0 ) return 0;
       var currentDivisor = 1;
       var result = 0;
 
@@ -427,51 +443,6 @@ var JsTestManager = new Class( {
       return false;
    },
 
-   executeTestFunction : function( testFunction ) {
-      this._currentTest = testFunction;
-      this._testFunctionName = testFunction.testName;
-      this.setStatus( 'Running test "' + this._testFunctionName + '"' );
-      var exception = null;
-      var timeBefore = new Date();
-      try{
-         if( this._restoredHTML )
-            this.testFrame.document.getElementById( JsTestManager.RESTORED_HTML_DIV_ID ).innerHTML = this._restoredHTML;
-         if( this.testFrame.setUp !== JSUNIT_UNDEFINED_VALUE )
-            this.testFrame.setUp();
-         this.testFrame[this._testFunctionName]();
-      }catch (e1){
-         exception = e1;
-      }finally{
-         try{
-            if( this.testFrame.tearDown !== JSUNIT_UNDEFINED_VALUE )
-               this.testFrame.tearDown();
-         }catch (e2){
-            // Unlike JUnit, only assign a tearDown exception to excep if there
-            // is not already an exception from the test body
-            if( exception == null )
-               exception = e2;
-         }
-      }
-      testFunction.timeTaken = new Date() - timeBefore;
-
-      var timeTaken = testFunction.timeTaken / 1000;
-      this._setTestStatus( testFunction, exception );
-      this.uiManager.testCompleted( testFunction );
-
-      var serializedTestCaseString = this._currentTestFunctionNameWithTestPageName( true ) + "|" + timeTaken + "|";
-      if( exception == null )
-         serializedTestCaseString += "S||";
-      else{
-         if( exception.isJsUnitFailure )
-            serializedTestCaseString += "F|";
-         else{
-            serializedTestCaseString += "E|";
-         }
-         serializedTestCaseString += this.uiManager.problemDetailMessageFor( exception );
-      }
-      this._addOption( this.testCaseResultsField, serializedTestCaseString, serializedTestCaseString );
-   },
-
    _currentTestFunctionNameWithTestPageName : function( useFullyQualifiedTestPageName ) {
       var testURL = this.testFrame.location.href;
       var testQuery = testURL.indexOf( "?" );
@@ -488,10 +459,6 @@ var JsTestManager = new Class( {
    setStatus : function( str ) {
       this.uiManager.setStatus( str );
       this.log.push( str );
-   },
-
-   updateProgressIndicators : function() {
-      this.uiManager.updateProgressIndicators( this.totalCount, this.errorCount, this.failureCount, this.calculateProgressBarProportion() );
    },
 
    finalize : function() {
@@ -652,34 +619,7 @@ var JsTestManager = new Class( {
       result += webserver;
       result += "/jsunit/acceptor";
       return result;
-   },
-
-   _setTestStatus : function( test, excep ) {
-      var message = this._currentTestFunctionNameWithTestPageName( false ) + ' ';
-
-      if( excep == null ){
-         test.status = 'success';
-         test.testPage.successCount++;
-         message += 'passed';
-      }else{
-         test.exception = excep;
-
-         if( !excep.isJsUnitFailure ){
-            this.errorCount++;
-            test.status = 'error';
-            test.testPage.errorCount++;
-            message += 'had an error';
-         }else{
-            this.failureCount++;
-            test.status = 'failure';
-            test.testPage.failureCount++;
-            message += 'failed';
-         }
-      }
-
-      test.message = message;
-   },
-
+   }
 });
 
 JsTestManager.DEFAULT_TEST_FRAME_HEIGHT = 250;

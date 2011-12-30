@@ -2,6 +2,10 @@ var JsTestPage = new Class({
    Implements : [Events, Options],
    Binds : ['onTestCaseFinished', 'onTestSuiteFinished'],
    
+   options : {
+      verbose : false
+   },
+   
    //Constructor
    initialize : function( url, testFrame, options ) {
       this.setOptions( options );
@@ -15,7 +19,7 @@ var JsTestPage = new Class({
       this.testFrame = testFrame;
       this.testFunctions = new Array();
       this.testMethods = new Array();
-      this.testSuiteChain = new Chain();
+      this.testRunnerChain = new Chain();
       this.url = url;
    },
 
@@ -58,14 +62,25 @@ var JsTestPage = new Class({
    
    onTestSuiteFinished : function( testSuiteName ){
       this.fireEvent( 'testSuiteFinished', testSuiteName );
-      this.testSuiteChain.callChain();
+      this.testRunnerChain.callChain();
    },
    
    runTests : function(){
       this.notify( JsTestPage.READY_EVENT );
-      var testClassRunner = new JsTestClassRunner( this.testClasses, { onTestCaseFinished : this.onTestCaseFinished, onTestSuiteFinished : this.onTestSuiteFinished });
-      var testFunctionRunner = new JsTestFunctionRunner( this.testFunctions, { onTestCaseFinished : this.onTestCaseFinished, onTestSuiteFinished : this.onTestSuiteFinished });
-      this.testSuiteChain.chain(
+      var testClassRunner = new JsTestClassRunner( this.testClasses, { 
+         onTestCaseReady : this.onTestCaseFinished, 
+         onTestCaseStart : this.onTestCaseStarted, 
+         onTestSuiteReady : this.onTestSuiteFinished, 
+         verbose : this.options.verbose 
+      });
+      
+      var testFunctionRunner = new JsTestFunctionRunner( this.testFunctions, { 
+         onTestCaseReady : this.onTestCaseFinished, 
+         onTestCaseStart : this.onTestCaseStarted, 
+         onTestSuiteReady : this.onTestSuiteFinished, 
+         verbose : this.options.verbose 
+      });
+      this.testRunnerChain.chain(
          testClassRunner.runTests,
          testFunctionRunner.runTests
       ).callChain();
@@ -75,7 +90,9 @@ var JsTestPage = new Class({
       var totalNumberOfTestCases = 0;
       totalNumberOfTestCases += this.testFunctions.length;
       this.testClasses.each( function( testClassName, index ){
-         totalNumberOfTestCases++;
+         var testClass = eval( testClassName );
+         var testObject = new testClass();
+         totalNumberOfTestCases += testObject.options.testMethods.length;
       }, this );
       return totalNumberOfTestCases;
    },
@@ -98,9 +115,14 @@ var JsTestPage = new Class({
       var testFunctionNames = frameAnalyser.getTestFunctionNames();
       if( testFunctionNames ){
          testFunctionNames.each( function( functionName, index ){
-            this.testFunctions.include( new JsTestFunction( this, functionName ));
+            this.testFunctions.include( functionName );
          }, this );
       }
+      
+      eval( "this." + this.testFrame.name + "." + "JsTestFunction.current = {}" );
+      eval( "this." + this.testFrame.name + "." + "JsTestFunction.current.onReady = {}" );
+      eval( "this." + this.testFrame.name + "." + "JsTestFunction.current.asynchron = false" );
+
    }.protect(),
    
 });

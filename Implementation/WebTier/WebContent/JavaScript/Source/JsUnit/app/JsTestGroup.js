@@ -1,6 +1,10 @@
 var JsTestGroup = new Class({
    Implements : [Events, Options],
-   Binds : ['onTestCaseFinished', 'onTestSuiteFinished'],
+   Binds : ['onTestCaseFinished', 'onTestCaseStarted', 'onTestSuiteFinished'],
+   
+   options : {
+      verbose : false
+   },
    
    //Constructor
    initialize : function( options ) {
@@ -10,7 +14,7 @@ var JsTestGroup = new Class({
    },
 
    addTestPage : function( testPageUrl, testFrame ) {
-      var testPage = new JsTestPage( testPageUrl, testFrame, { onTestCaseFinished : this.onTestCaseFinished, onTestSuiteFinished : this.onTestSuiteFinished });
+      var testPage = new JsTestPage( testPageUrl, testFrame, { onTestCaseFinished : this.onTestCaseFinished, onTestCaseStarted : this.onTestCaseStarted, onTestSuiteFinished : this.onTestSuiteFinished, verbose : this.options.verbose });
       JsUnit.Util.push( this._testPages, testPage );
       return testPage;
    },
@@ -25,6 +29,10 @@ var JsTestGroup = new Class({
    
    onTestCaseFinished : function( testCaseName, result ){
       this.fireEvent( 'testCaseFinished', [ testCaseName, result ] );
+   },
+   
+   onTestCaseStarted : function( testCaseName ){
+      this.fireEvent( 'testCaseStarted', testCaseName );
    },
    
    onTestSuiteFinished : function( testSuiteName ){

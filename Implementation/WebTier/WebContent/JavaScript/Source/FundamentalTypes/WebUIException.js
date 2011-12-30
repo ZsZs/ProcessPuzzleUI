@@ -50,6 +50,7 @@ var WebUIException = new Class({
    
    //Properties
    getCause: function() { return this.options.cause; },
-   getDescription: function() { return this.options.description.substitute( this.parameters ); }, 
+   getDescription : function() { return this.options.description; },
+   getMessage: function() { return this.options.description.substitute( this.parameters ); }, 
    getName: function() { return this.options.name; }
 });

@@ -142,23 +142,23 @@ var JsClassicUiManager = new Class( {
    _setTotal : function( n ) { this._setTextOnLayer( 'mainCountsRuns', '<b>Runs:<\/b> ' + n ); },
 
    //Protected, private helper methods
-   updateProgressIndicators : function( totalCount, errorCount, failureCount, progressBarProportion ) {
-      this._setTotal( totalCount );
-      this._setErrors( errorCount );
-      this._setFailures( failureCount );
+   updateProgressIndicators : function( testSuiteResults, progressBarProportion ) {
+      this._setTotal( testSuiteResults.getTotalCount() );
+      this._setErrors( testSuiteResults.getErrorCount() );
+      this._setFailures( testSuiteResults.getFailureCount() );
       this._setProgressBarWidth( 300 * progressBarProportion );
 
-      if( errorCount > 0 || failureCount > 0 )
+      if( testSuiteResults.getErrorCount() > 0 || testSuiteResults.getFailureCount() > 0 )
          this._setProgressBarImage( '../images/red.gif' );
       else
          this._setProgressBarImage( '../images/green.gif' );
    },
 
-   testCompleted : function( test ) {
-      if( test.status != 'success' ){
+   testCompleted : function( testCaseResult ) {
+      if( !testCaseResult.isSuccess() ){
          var listField = this.problemsListField;
-         var exceptionText = this.problemDetailMessageFor( test.exception );
-         this.testManager._addOption( listField, exceptionText, test.message );
+         var exceptionText = this.problemDetailMessageFor( testCaseResult.getException() );
+         this.testManager._addOption( listField, exceptionText, testCaseResult.fullMessage() );
       }
    },
 

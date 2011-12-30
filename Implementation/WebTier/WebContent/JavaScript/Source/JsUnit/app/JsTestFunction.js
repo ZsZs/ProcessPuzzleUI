@@ -1,23 +1,30 @@
+var jsCurrentTestFunction;
+
 var JsTestFunction = new Class({
-   Implements : [Events, Options],
+   Extends : JsTestCase,
+   
+   options : {
+      functionNamePrefix : ""
+   },
    
    //Constructor
-   initialize : function( testPage, testName ) {
-      this.testPage = testPage;
-      this.testName = testName;
-      this.traceMessages = [];
+   initialize : function( testName, options ) {
+      this.parent( options );
+      this.name = testName;
+      this.testFunction;
+      this.traceMessages = new Array();
       this.status = 'ready';
 
-      this.listeners = [];
+      this.listeners = new Array();
    },
 
    //Public accessor and mutator methods
    addTraceMessage : function( traceMessage ) {
-      this.traceMessages.push( traceMessage );
+      this.traceMessages.include( traceMessage );
    },
 
    listen : function( callback ) {
-      JsUnit.Util.push( this.listeners, callback );
+      this.listeners.include( callback );
    },
 
    notify : function( event ) {
@@ -26,6 +33,29 @@ var JsTestFunction = new Class({
       }
    },
    
+   run : function(){
+      this.testFunction = eval( this.options.functionNamePrefix + this.name );
+      this.parent();
+   },
+   
    //Properties
-   getName : function() { return this.testName; },
+   
+   //Protected, private helper methods
+   callAfterEachTest: function(){
+      this.parent();
+   }.protect(),
+   
+   callBeforeEachTest: function(){
+      this.parent();
+   }.protect(),
+   
+   notifyOnTestCaseStart : function(){
+      eval( this.options.functionNamePrefix + "JsTestFunction.current = this" );
+      eval( this.options.functionNamePrefix + "JsTestFunction.current.onReady = this.onRunTestFinished" );
+      this.parent();
+   }.protect(),
+   
+   runTest: function(){
+      this.testFunction();
+   }.protect(),   
 });

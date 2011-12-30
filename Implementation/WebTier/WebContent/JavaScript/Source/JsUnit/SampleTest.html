@@ -12,19 +12,31 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestRunner.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestCaseResult.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestCaseTimeOutException.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestFunction.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestMethod.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestClass.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestClassRunner.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestFunctionRunner.js"></script>
 
    <script type="text/javascript">
    window.addEvent('domready', function() {
-      //testRunTestCases();
+      //runTestCases();
    });
 
    var MyTests = new Class({
       Implements: [Events, JsTestClass, Options],
-      Binds: ['delayedMethod', 'testCaseOne', 'testCaseTwo'],
+      Binds: ['asynchronuousTest', 'delayedMethod', 'failedTest', 'timedOutTest'],
       
       options: {
-         testMethods: [{ method: 'testCaseOne', isAsynchron: true }, { method: 'testCaseTwo' }]
+         testMethods: [
+            { method: 'asynchronuousTest', isAsynchron: true }, 
+            { method: 'timedOutTest', isAsynchron: true }, 
+            { method: 'failedTest' },
+            { method: 'successTest' }
+         ]
       },
       
       initialize: function( options ){
@@ -35,25 +47,66 @@
          this.testMethodReady( this.testCaseOne );
       },
       
-      testCaseOne: function(){
-         console.log( "testCaseOne" );
-         this.delayedMethod.delay( 4000 );
+      asynchronuousTest: function(){
+         this.delayedMethod.delay( 400 );
       },
       
-      testCaseTwo: function(){
-         console.log( "testCaseTwo" );
+      timedOutTest: function(){
+         this.delayedMethod.delay( 5000 );
+      },
+      
+      failedTest: function(){
+         assertThat( false, is( true ));
+      },
+      
+      successTest: function(){
          assertThat( false, is( false ));
       },
    });
    
-   function testFunctionOne(){
-      assertThat( true, is( true ));
-      console.log( "testFunctionOne" );
+   function delayedFunction(){
+      JsTestFunction.current.onReady();
    }
    
-   function testFunctionTwo(){
+   function testAsynchronTest(){
+      JsTestFunction.current.asynchron = true;
+      delayedFunction.delay( 400 );
+      assertThat( true, is( true ));
+   }
+   
+   function testTimedOutTest(){
+      JsTestFunction.current.asynchron = true;
+      delayedFunction.delay( 5000 );
+      assertThat( true, is( true ));
+   }
+   
+   function testFailedTest(){
+      assertThat( false, is( true ));
+   }
+   
+   function testSuccessTest(){
       assertThat( false, is( false ));
-      console.log( "testFunctionTwo" );
+   }
+   
+   function runTestCases(){
+      var testDefinitions = new Array();
+      testDefinitions.include( MyTests );
+      var testRunner = new JsTestClassRunner( testDefinitions, { onTestSuiteReady : onTestSuiteReady, verbose : true });
+      try{
+         testRunner.runTests();
+      }catch( e ){
+         alert( e );
+      }
+   }
+   
+   function onTestSuiteReady(){
+      var testDefinitions = new Array();
+      testDefinitions.include( "testAsynchronTest" );
+      testDefinitions.include( "testTimedOutTest" );
+      testDefinitions.include( "testFailedTest" );
+      testDefinitions.include( "testSuccessTest" );
+      testRunner = new JsTestFunctionRunner( testDefinitions, { verbose : true } );
+      testRunner.runTests();
    }
    </script>
 </head>
