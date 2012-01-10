@@ -1,6 +1,6 @@
 var JsTestPage = new Class({
    Implements : [Events, Options],
-   Binds : ['onTestCaseFinished', 'onTestSuiteFinished'],
+   Binds : ['discoverTestSuites', 'onTestCaseFinished', 'onTestCaseStarted', 'onTestRunnerFinished', 'onTestRunnerStarted'],
    
    options : {
       verbose : false
@@ -14,118 +14,129 @@ var JsTestPage = new Class({
       this.failureCount = 0;
       this.listeners = new Array();
       this.running = false;
+      this.state;
       this.successCount = 0;
-      this.testClasses = new Array();
+      this.testClassRunner;
       this.testFrame = testFrame;
-      this.testFunctions = new Array();
-      this.testMethods = new Array();
+      this.testFunctionRunner;
       this.testRunnerChain = new Chain();
       this.url = url;
+      
+      this.setUp();
    },
 
    //Public accessors and mutators
-   analyse : function(){
-      this.determineTestClasses();
-      this.determineTestFunctions();
+//   getStatus : function( testName ) {
+//      if( this.testMethods.length == 0 ) return 'noTestsYet';
+//      if( this.running ) return 'running';
+//      if( this.errorCount > 0 ) return 'error';
+//      if( this.failureCount > 0 ) return 'failure';
+//      if( this.successCount > 0 ) return 'success';
+//      return 'ready';
+//   },
+//   
+//   listen : function( callback ) {
+//      this.listeners.include( callback );
+//   },
+//   
+//   nextTestFunction : function(){
+//      if( !this.currentTestFunctionIndex ) this.currentTestFunctionIndex = 0;
+//
+//      if( this.currentTestFunctionIndex < this.testFunctions.length ) 
+//         return this.testFunctions[this.currentTestFunctionIndex++];
+//      else return null;
+//   },
+//
+//   notify : function( event ) {
+//      for( var i = 0; i < this.listeners.length; i++ ){
+//         this.listeners[i].call( null, this, event );
+//      }
+//   },
+//   
+   onTestCaseFinished : function( testResult ){
+      this.fireEvent( 'testCaseFinished', testResult );
    },
    
-   getStatus : function( testName ) {
-      if( this.testMethods.length == 0 ) return 'noTestsYet';
-      if( this.running ) return 'running';
-      if( this.errorCount > 0 ) return 'error';
-      if( this.failureCount > 0 ) return 'failure';
-      if( this.successCount > 0 ) return 'success';
-      return 'ready';
+   onTestCaseStarted : function( testResult ){
+      this.fireEvent( 'testCaseStarted', testResult );
    },
    
-   listen : function( callback ) {
-      this.listeners.include( callback );
+   onTestRunnerFinished : function(){
+      if( this.state == JsTestPage.Status.RUNNING_TEST_METHODS ){
+         this.testRunnerChain.callChain();         
+      }else this.fireEvent( 'testPageFinished', this );
    },
    
-   nextTestFunction : function(){
-      if( !this.currentTestFunctionIndex ) this.currentTestFunctionIndex = 0;
-
-      if( this.currentTestFunctionIndex < this.testFunctions.length ) 
-         return this.testFunctions[this.currentTestFunctionIndex++];
-      else return null;
-   },
-
-   notify : function( event ) {
-      for( var i = 0; i < this.listeners.length; i++ ){
-         this.listeners[i].call( null, this, event );
-      }
-   },
-   
-   onTestCaseFinished : function( testCaseName, result ){
-      this.fireEvent( 'testCaseFinished', [ testCaseName, result ] );
-   },
-   
-   onTestSuiteFinished : function( testSuiteName ){
-      this.fireEvent( 'testSuiteFinished', testSuiteName );
-      this.testRunnerChain.callChain();
+   onTestRunnerStarted : function(){
+      if( this.state == JsTestPage.Status.INITIALIZED ) {
+         this.calculateTotalNumberOfTestCases();
+         this.state = JsTestPage.Status.RUNNING_TEST_METHODS;
+         this.fireEvent( 'testPageStarted', this );
+      }else if( this.state == JsTestPage.Status.RUNNING_TEST_METHODS ) 
+         this.state = JsTestPage.Status.RUNNING_TEST_FUNCTIONS;
    },
    
    runTests : function(){
-      this.notify( JsTestPage.READY_EVENT );
-      var testClassRunner = new JsTestClassRunner( this.testClasses, { 
-         onTestCaseReady : this.onTestCaseFinished, 
-         onTestCaseStart : this.onTestCaseStarted, 
-         onTestSuiteReady : this.onTestSuiteFinished, 
-         verbose : this.options.verbose 
-      });
-      
-      var testFunctionRunner = new JsTestFunctionRunner( this.testFunctions, { 
-         onTestCaseReady : this.onTestCaseFinished, 
-         onTestCaseStart : this.onTestCaseStarted, 
-         onTestSuiteReady : this.onTestSuiteFinished, 
-         verbose : this.options.verbose 
-      });
-      this.testRunnerChain.chain(
-         testClassRunner.runTests,
-         testFunctionRunner.runTests
-      ).callChain();
+      this.testRunnerChain.callChain();
    },
    
-   totalNumberOfTestCases : function(){
-      var totalNumberOfTestCases = 0;
-      totalNumberOfTestCases += this.testFunctions.length;
-      this.testClasses.each( function( testClassName, index ){
-         var testClass = eval( testClassName );
-         var testObject = new testClass();
-         totalNumberOfTestCases += testObject.options.testMethods.length;
-      }, this );
-      return totalNumberOfTestCases;
-   },
-
    //Properties
-   getTestFunctions : function() { return this.testFunctions; },
-   getTestMethods : function() { return this.testMethods; },
+   getTotalNumberOfTestCases : function() { return this.totalNumberOfTestCases; },
+   getUrl : function() { return this.url; },
    
    //Protected, private helper methods
-   determineTestClasses : function(){
-      var frameAnalyser = new JsTestFrameAnalyser( this.testFrame );
-      frameAnalyser.getTestClassNames().each( function( className, index ){
-         var testClass = eval( "this." + this.testFrame.name + "." + className );
-         this.testClasses.include( testClass );
-      }, this );
+   calculateTotalNumberOfTestCases : function(){
+      this.totalNumberOfTestCases = this.testClassRunner.getTestCases().length;
+      this.totalNumberOfTestCases += this.testFunctionRunner.getTestCases().length;
+      return this.totalNumberOfTestCases;
    }.protect(),
    
-   determineTestFunctions : function(){
-      var frameAnalyser = new JsTestFrameAnalyser( this.testFrame );
-      var testFunctionNames = frameAnalyser.getTestFunctionNames();
-      if( testFunctionNames ){
-         testFunctionNames.each( function( functionName, index ){
-            this.testFunctions.include( functionName );
-         }, this );
+   configureTestRunners : function(){
+      this.testClassRunner.configure();
+      this.testFunctionRunner.configure();
+      this.testRunnerChain.callChain();
+   }.protect(),
+   
+   discoverTestSuites : function( self ){
+      if( this.testFrame.suite ){
+         var allegedSuite = this.testFrame.suite();
+         if( allegedSuite.isJsUnitTestSuite ){
+            this.fireEvent( 'addTestSuite', allegedSuite );
+         }
       }
-      
-      eval( "this." + this.testFrame.name + "." + "JsTestFunction.current = {}" );
-      eval( "this." + this.testFrame.name + "." + "JsTestFunction.current.onReady = {}" );
-      eval( "this." + this.testFrame.name + "." + "JsTestFunction.current.asynchron = false" );
-
+      this.testRunnerChain.callChain();
    }.protect(),
-   
+
+   setUp : function(){
+      this.testClassRunner = new JsTestClassRunner( this.testFrame, { 
+         onTestCaseReady : function( arguments ){ this.onTestCaseFinished( arguments ); }.bind( this ), 
+         onTestCaseStart : function( arguments ){ this.onTestCaseStarted( arguments ); }.bind( this ), 
+         onTestRunReady : function( arguments ){ this.onTestRunnerFinished( arguments ); }.bind( this ), 
+         onTestRunStart : function( arguments ){ this.onTestRunnerStarted( arguments ); }.bind( this ), 
+         url : this.url,
+         verbose : this.options.verbose 
+      });
+      
+      this.testFunctionRunner = new JsTestFunctionRunner( this.testFrame, { 
+         onTestCaseReady : function( arguments ){ this.onTestCaseFinished( arguments ); }.bind( this ), 
+         onTestCaseStart : function( arguments ){ this.onTestCaseStarted( arguments ); }.bind( this ), 
+         onTestRunReady : function( arguments ){ this.onTestRunnerFinished( arguments ); }.bind( this ), 
+         onTestRunStart : function( arguments ){ this.onTestRunnerStarted( arguments ); }.bind( this ), 
+         url : this.url,
+         verbose : this.options.verbose 
+      });
+      
+      this.testRunnerChain.chain(
+         function() { this.discoverTestSuites(); }.bind( this ),
+         function() { this.configureTestRunners(); }.bind( this ),
+         function() { this.testClassRunner.runTests(); }.bind( this ),
+         function() { this.testFunctionRunner.runTests(); }.bind( this )
+      );
+            
+      this.state = JsTestPage.Status.INITIALIZED;
+   }.protect()
 });
 
 JsTestPage.STATUS_CHANGE_EVENT = "statusChange";
 JsTestPage.READY_EVENT = "ready";
+JsTestPage.Status = { INITIALIZED : "testPageInitialized", RUNNING_TEST_FUNCTIONS : "runningTestFunctions", RUNNING_TEST_METHODS : "runningTestMethods", TESTS_FINISHED : "testFinished" };

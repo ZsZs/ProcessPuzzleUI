@@ -22,6 +22,19 @@ var JsTestFrameAnalyser = new Class({
    getTestFrame : function() { return this.testFrame; },
 
    //Protected, private helper methods
+   extractTestFunctionNamesFromScript : function( aScript ) {
+      var result = new Array();
+      var remainingScriptToInspect = aScript.text;
+      var currentIndex = this.indexOfTestFunctionIn( remainingScriptToInspect );
+      while( currentIndex != -1 ){
+         var fragment = remainingScriptToInspect.substring( currentIndex, remainingScriptToInspect.length );
+         result = result.concat( fragment.substring( 'function '.length, fragment.indexOf( '(' ) ) );
+         remainingScriptToInspect = remainingScriptToInspect.substring( currentIndex + 12, remainingScriptToInspect.length );
+         currentIndex = this.indexOfTestFunctionIn( remainingScriptToInspect );
+      }
+      return result;
+   }.protect(),
+   
    getTestClassNamesFromFrameProperties : function() {
       var testClassNames = new Array();
 
@@ -74,7 +87,7 @@ var JsTestFrameAnalyser = new Class({
          var scriptsInTestFrame = testFrame.document.scripts;
 
          for( var i = 0; i < scriptsInTestFrame.length; i++ ){
-            var someNames = this._extractTestFunctionNamesFromScript( scriptsInTestFrame[i] );
+            var someNames = this.extractTestFunctionNamesFromScript( scriptsInTestFrame[i] );
             if( someNames ){
                testFunctionNames = testFunctionNames.concat( someNames );
             }
@@ -82,6 +95,10 @@ var JsTestFrameAnalyser = new Class({
       }
 
       return testFunctionNames.length > 0 ? testFunctionNames : null;
+   }.protect(),
+
+   indexOfTestFunctionIn : function( string ) {
+      return string.indexOf( 'function test' );
    }.protect(),
 
    isJsTestClass : function( propertyName ) {

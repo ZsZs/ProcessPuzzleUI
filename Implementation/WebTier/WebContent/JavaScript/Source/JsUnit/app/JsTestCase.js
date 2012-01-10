@@ -7,14 +7,15 @@ var JsTestCase = new Class({
    Binds : ['callAfterEachTest', 'callBeforeEachTest', 'checkTimeOut', 'notifyOnTestCaseReady', 'notifyOnTestCaseStart', 'onRunTestFinished', 'run', 'testRunWrapper'],
    options : {
       delay: 200,
-      maxTries: 20
+      maxTries: 20,
+      url: null
    },
    
    //Constructor
-   initialize : function( options  ){
+   initialize : function( name, options  ){
       this.setOptions( options );
       this.asynchron = false; 
-      this.name;
+      this.name = name;
       this.numberOfTries;
       this.testCaseChain = new Chain();
       this.testResult;
@@ -44,6 +45,7 @@ var JsTestCase = new Class({
    
    //Properties
    getName : function() { return this.name; },
+   getFullName : function() { return this.options.url ? this.options.url + ":" + this.name : this.name; },
    isAsynchron : function() { return this.asynchron; },
 
    //Protected, private helper methods
@@ -58,11 +60,11 @@ var JsTestCase = new Class({
    
    compileTestCaseChain : function(){
       this.testCaseChain.chain(
-         this.notifyOnTestCaseStart,
-         this.callBeforeEachTest,
-         this.testRunWrapper, 
-         this.callAfterEachTest,
-         this.notifyOnTestCaseReady
+         function(){ this.notifyOnTestCaseStart(); }.bind( this ),
+         function(){ this.callBeforeEachTest(); }.bind( this ),
+         function(){ this.testRunWrapper(); }.bind( this ), 
+         function(){ this.callAfterEachTest(); }.bind( this ),
+         function(){ this.notifyOnTestCaseReady(); }.bind( this )
       );
    }.protect(),
    
@@ -72,7 +74,7 @@ var JsTestCase = new Class({
    }.protect(),
    
    notifyOnTestCaseStart : function(){
-      this.fireEvent( 'testCaseStart', this.name );
+      this.fireEvent( 'testCaseStart', this.testResult );
       this.testCaseChain.callChain();
    }.protect(),
    

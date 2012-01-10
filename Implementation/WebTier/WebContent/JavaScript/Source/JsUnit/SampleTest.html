@@ -15,6 +15,7 @@
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestCase.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestCaseResult.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestCaseTimeOutException.js"></script>
+   <script type="text/javascript" src="../../Source/JsUnit/app/JsTestFrameAnalyser.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestFunction.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestMethod.js"></script>
    <script type="text/javascript" src="../../Source/JsUnit/app/JsTestClass.js"></script>
@@ -23,7 +24,7 @@
 
    <script type="text/javascript">
    window.addEvent('domready', function() {
-      //runTestCases();
+      runTestCases();
    });
 
    var MyTests = new Class({
@@ -91,7 +92,7 @@
    function runTestCases(){
       var testDefinitions = new Array();
       testDefinitions.include( MyTests );
-      var testRunner = new JsTestClassRunner( testDefinitions, { onTestSuiteReady : onTestSuiteReady, verbose : true });
+      var testRunner = new JsTestClassRunner( window, { onTestRunReady : onTestRunReady, verbose : true });
       try{
          testRunner.runTests();
       }catch( e ){
@@ -99,13 +100,13 @@
       }
    }
    
-   function onTestSuiteReady(){
+   function onTestRunReady(){
       var testDefinitions = new Array();
       testDefinitions.include( "testAsynchronTest" );
       testDefinitions.include( "testTimedOutTest" );
       testDefinitions.include( "testFailedTest" );
       testDefinitions.include( "testSuccessTest" );
-      testRunner = new JsTestFunctionRunner( testDefinitions, { verbose : true } );
+      testRunner = new JsTestFunctionRunner( window, { functionNamePrefix : "window.", verbose : true } );
       testRunner.runTests();
    }
    </script>

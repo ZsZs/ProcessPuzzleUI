@@ -5,7 +5,7 @@
 var JsTestCaseTimeOutException = new Class({
    Implements : [Options],
    options : {
-      description : "Running '{testCaseName}' test case took longer than '{timeOutValue}' milliseconds.",
+      description : "Running '{testCaseName}' test case took longer than {timeOutValue} milliseconds.",
    },
    
    initialize : function( testCaseName, timeOutValue ){

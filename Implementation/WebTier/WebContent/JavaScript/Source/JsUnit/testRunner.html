@@ -8,7 +8,6 @@
    <title>JsUnit Test Runner</title>
    
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
-   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="app/jsUnitCore.js"></script>
    <script type="text/javascript" src="app/JsTestRunner.js"></script>
    <script type="text/javascript" src="app/JsBaseUiManager.js"></script>
@@ -17,7 +16,6 @@
    <script type="text/javascript" src="app/JsTestCase.js"></script>
    <script type="text/javascript" src="app/JsTestCaseResult.js"></script>
    <script type="text/javascript" src="app/JsTestCaseTimeOutException.js"></script>
-   <script type="text/javascript" src="app/JsTestGroup.js"></script>
    <script type="text/javascript" src="app/JsTestManager.js"></script>
    <script type="text/javascript" src="app/JsTestMethod.js"></script>
    <script type="text/javascript" src="app/JsTestClassRunner.js"></script>
@@ -26,9 +24,13 @@
    <script type="text/javascript" src="app/JsTraceMessage.js"></script>
    <script type="text/javascript" src="app/JsTestFrameAnalyser.js"></script>
    <script type="text/javascript" src="app/JsTestPage.js"></script>
+   <script type="text/javascript" src="app/JsTestStack.js"></script>
+   <script type="text/javascript" src="app/JsTestSuite.js"></script>
    <script type="text/javascript" src="app/JsTestSuiteResults.js"></script>
+   <script type="text/javascript" src="app/JsTraceLevel.js"></script>
+   <script type="text/javascript" src="app/JsTraceMessage.js"></script>
+   <script type="text/javascript" src="app/JsTracer.js"></script>
    <script type="text/javascript" src="app/jsUnitParams.js"></script>
-   <script type="text/javascript" src="app/jsUnitTracer.js"></script>
    
    <script type="text/javascript">
 
@@ -37,15 +39,14 @@
       setUpFrames();
    });
    
-   var params;
+   var params = new JsUnit.Params( document.location.search );
    var testManager;
    var tracer;
    var uiFrameUrl;
 
    function resetTestManager() {
-      params = new JsUnit.Params( document.location.search );
       testManager = new JsTestManager( params );
-      tracer = new JsUnitTracer( testManager, params);
+      tracer = testManager.getTracer();
       uiFrameUrl = testManager.getUiFrameUrl();
    }
 

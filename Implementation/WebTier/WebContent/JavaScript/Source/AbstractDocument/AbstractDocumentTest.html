@@ -7,16 +7,19 @@
    <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	
    <link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
-   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
-
-   <!--[if IE]>
-      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
-   <![endif]-->  
    
    <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../JsUnit/app/JsTestFunction.js"></script>
+
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
    <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
@@ -86,7 +89,7 @@
       }
 	      
       function beforeEachTest(){
-         inform( "beforeEachTest" );
+         window.inform( "beforeEachTest" );
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
          webUIMessageBus = new WebUIMessageBus();
@@ -119,7 +122,7 @@
          abstractDocument = null;
          documentContainerElement = null;
          
-         inform( "afterEachTest" );
+         window.inform( "afterEachTest" );
          testCaseIsRunning = false;
          testCaseChain.callChain();
       }

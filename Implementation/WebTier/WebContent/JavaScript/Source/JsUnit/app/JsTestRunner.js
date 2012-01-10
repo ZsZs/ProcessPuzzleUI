@@ -4,66 +4,72 @@
 
 var JsTestRunner = new Class({
    Implements : [Events, Options],
-   Binds : ['runTests', 'onTestCaseReady', 'onTestCaseStart'],
+   Binds : ['collectTestCases', 'finalizeTestRun', 'runTests', 'onTestCaseReady', 'onTestCaseStart'],
    
    options : {
+      componentName : "JsTestRunner",
+      url : null,
       verbose : false,
    },
    
    //Constructor
-   initialize : function( testDefinitions, options ){
+   initialize : function( testFrame, options ){
       this.setOptions( options );
       this.numberOfTestCaseReady;
       this.testCaseChain = new Chain();
       this.testCases = new Array();
-      this.testDefinitions = testDefinitions;
+      this.testFrame = testFrame;
    },
    
    //Public accessor and mutator methods
+   configure : function(){
+      this.collectTestCases();
+   },
+   
    onTestCaseReady : function( testResult ){
       this.numberOfTestCaseReady++;
       this.fireEvent( 'testCaseReady', testResult );
       if( this.options.verbose ) console.log( testResult.fullMessage() );
 
       if( this.numberOfTestCaseReady >= this.testCases.length ) {
-         this.testCaseChain.clearChain();
-         this.fireEvent( 'testSuiteReady' );
+         this.testCaseChain.callChain();
       }else this.testCaseChain.callChain();
    },
    
-   onTestCaseStart : function( testCaseName ){
-      this.fireEvent( 'testCaseStart', testCaseName );
-      if( this.numberOfTestCaseReady == 0 ) this.fireEvent( 'testSuiteStart' );
+   onTestCaseStart : function( testResult ){
+      this.fireEvent( 'testCaseStart', testResult );
    },
    
    runTests : function(){
       this.numberOfTestCaseReady = 0;
-      this.collectTestCases();
       this.addEventsToTestCases();
       this.compileTestCaseChain();
+      this.fireEvent( 'testRunStart' );
       this.testCaseChain.callChain();
    },
    
-   //Properties   
+   //Properties
+   getTestCases : function() { return this.testCases; },
    
    //Protected, private helper methods
    addEventsToTestCases : function(){
       this.testCases.each( function( testCase, index ){
-         testCase.addEvent( 'testCaseStart', this.onTestCaseStart );
-         testCase.addEvent( 'testCaseReady', this.onTestCaseReady );
+         testCase.addEvent( 'testCaseStart', function( arguments ){ this.onTestCaseStart( arguments ); }.bind( this ));
+         testCase.addEvent( 'testCaseReady', function( arguments ){ this.onTestCaseReady( arguments ); }.bind( this ));
       }, this );
    }.protect(),
    
    compileTestCaseChain : function(){
       this.testCases.each( function( testCase, index ){
          this.testCaseChain.chain(
-            testCase.run
+            function(){ testCase.run(); }.bind( this )
          );
       }, this );
-   },
-   
-   collectTestCases : function(){
-      //Abstract method, should be overwritten
+      this.testCaseChain.chain( function(){ this.finalizeTestRun(); }.bind( this ));
    }.protect(),
    
+   finalizeTestRun : function(){
+      this.testCaseChain.clearChain();
+      this.fireEvent( 'testRunReady' );      
+   }
 });

@@ -6,14 +6,15 @@ var JsTestMethod = new Class({
    Extends : JsTestCase,
    Binds: ['runTestMethod'],
    options : {
+      className : null
    },
    
    //Constructor
-   initialize : function( testClass, testMethodProperties, options ){
-      this.parent( options );
+   initialize : function( testClassName, testClass, testMethodProperties, options ){
+      this.parent( testMethodProperties['method'], options );
       this.asynchron = testMethodProperties['isAsynchron'] ? testMethodProperties['isAsynchron'] : false; 
-      this.name = testMethodProperties['method'];
       this.testClass = testClass;
+      this.testClassName = testClassName;
       this.testObject;
    },
    
@@ -24,6 +25,8 @@ var JsTestMethod = new Class({
    },
    
    //Properties
+   getFullName : function() { return this.options.url ? this.options.url + ":" + this.getName() : this.getName(); },
+   getName : function() { return this.testClassName + "." + this.name; },
 
    //Protected, private helper methods
    callAfterEachTest: function(){

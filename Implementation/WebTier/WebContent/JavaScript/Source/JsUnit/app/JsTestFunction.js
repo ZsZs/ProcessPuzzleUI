@@ -8,9 +8,8 @@ var JsTestFunction = new Class({
    },
    
    //Constructor
-   initialize : function( testName, options ) {
-      this.parent( options );
-      this.name = testName;
+   initialize : function( name, options ) {
+      this.parent( name, options );
       this.testFunction;
       this.traceMessages = new Array();
       this.status = 'ready';

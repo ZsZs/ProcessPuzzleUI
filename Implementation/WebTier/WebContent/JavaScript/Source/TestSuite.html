@@ -8,17 +8,19 @@
 	
 	<!-- JavaScript Unit -->
 	<link rel="stylesheet" type="text/css" href="JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
 	<script type="text/javascript" src="JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="JsUnit/app/JsTestSuite.js"></script>
 	<!-- JavaScript Unit -->
 
    <script type="text/javascript">
-	   function suite() {
-		   var newsuite = new top.jsUnitTestSuite();
-		   newsuite.addTestPage("../AbstractDocument/AbstractDocumentTest.html");
-		   newsuite.addTestPage("../BrowserWidget/BrowserWidgetTestSuite.html");
-		   newsuite.addTestPage("../ComponentStateManager/ComponentStateManagerTest.html");
-		   newsuite.addTestPage("../Desktop/DesktopTestSuite.html");
-		   //newsuite.addTestPage("../DocumentManager/DocumentManagerTestSuite.html");
+      function suite() {
+         var newsuite = new JsTestSuite();
+         newsuite.addTestPage("../AbstractDocument/AbstractDocumentTest.html");
+         newsuite.addTestPage("../BrowserWidget/BrowserWidgetTestSuite.html");
+         newsuite.addTestPage("../ComponentStateManager/ComponentStateManagerTest.html");
+         newsuite.addTestPage("../Desktop/DesktopTestSuite.html");
+         //newsuite.addTestPage("../DocumentManager/DocumentManagerTestSuite.html");
          newsuite.addTestPage("../FundamentalTypes/FundamentalTypesTestSuite.html");
          newsuite.addTestPage("../HierarchicalMenuWidget/HierarchicalMenuWidgetTest.html");
          newsuite.addTestPage("../HtmlDocument/HtmlDocumentTest.html");
