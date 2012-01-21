@@ -7,22 +7,26 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
    <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 	
-	<link type="text/css" rel="stylesheet" href="../JsUnit/css/jsUnitStyle.css">
-    <script type="text/javascript"  src="../JsUnit/app/jsUnitCore.js"></script>
+   <!-- JavaScript Unit -->
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestSuite.js"></script>
+   <!-- JavaScript Unit -->
 
-	<script type="text/javascript">
-		function suite() {
-		  var newsuite = new top.jsUnitTestSuite();
-        newsuite.addTestPage("../../Source/SmartDocument/CompositeDataElementTest.html");
-		  newsuite.addTestPage("../../Source/SmartDocument/CompositeDocumentElementTest.html");
-        newsuite.addTestPage("../../Source/SmartDocument/DataElementTest.html");
-        newsuite.addTestPage("../../Source/SmartDocument/DocumentElementTest.html");
-        newsuite.addTestPage("../../Source/SmartDocument/DocumentElementEditorTest.html");
-		  newsuite.addTestPage("../../Source/SmartDocument/DocumentHeaderTest.html");
-        newsuite.addTestPage("../../Source/SmartDocument/DocumentPluginTest.html");
-        newsuite.addTestPage("../../Source/SmartDocument/FormElementTest.html");
-        newsuite.addTestPage("../../Source/SmartDocument/FormFieldTest.html");
-		  newsuite.addTestPage("../../Source/SmartDocument/SmartDocumentTest.html");
+   <script type="text/javascript">
+      function suite() {
+        var newsuite = new JsTestSuite();
+        newsuite.addTestPage("../Source/SmartDocument/CompositeDataElementTest.html");
+		  newsuite.addTestPage("../Source/SmartDocument/CompositeDocumentElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DataElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DocumentElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DocumentElementEditorTest.html");
+		  newsuite.addTestPage("../Source/SmartDocument/DocumentHeaderTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DocumentPluginTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/FormElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/FormFieldTest.html");
+		  newsuite.addTestPage("../Source/SmartDocument/SmartDocumentTest.html");
 		  return newsuite;
 		}
 	</script>

@@ -36,7 +36,7 @@ var WidgetElementFactory = new Class( {
       defaultPosition : 3,
       formFieldsContainerClassName : "editableContainer",
       fieldSetImageAlt : "Show/Hide",
-      fieldSetImageSource : "images/expver.png",
+      fieldSetImageSource : "Images/expver.png",
       fieldSetImageStyle : { 'cursor' : 'pointer' },
       fieldSetImageTitle : "Show/Hide",
       fieldSetStyle : { 'border-color' : '#336699', 'width' : '100%' },

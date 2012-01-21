@@ -6,21 +6,25 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
 	
-	<link type="text/css" rel="stylesheet" href="../JsUnit/css/jsUnitStyle.css">
-    <script type="text/javascript"  src="../JsUnit/app/jsUnitCore.js"></script>
+   <!-- JavaScript Unit -->
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestSuite.js"></script>
+   <!-- JavaScript Unit -->
 
-	<script type="text/javascript">
-		function suite() {
-		  var newsuite = new top.jsUnitTestSuite();
-		  newsuite.addTestPage("../../Source/FundamentalTypes/ArrayListTest.html");
-		  newsuite.addTestPage("../../Source/FundamentalTypes/HashMapTest.html");
-		  newsuite.addTestPage("../../Source/FundamentalTypes/HashSetTest.html");
-		  newsuite.addTestPage("../../Source/FundamentalTypes/JavaCompatibilityTest.html");
-		  newsuite.addTestPage("../../Source/FundamentalTypes/LinkedHashMapTest.html");
-        newsuite.addTestPage("../../Source/FundamentalTypes/OptionsResourceTest.html");
-        newsuite.addTestPage("../../Source/FundamentalTypes/RemoteResourceTest.html");
-		  newsuite.addTestPage("../../Source/FundamentalTypes/StringTokenizerTest.html");
-		  newsuite.addTestPage("../../Source/FundamentalTypes/XmlResourceTest.html");
+   <script type="text/javascript">
+      function suite() {
+        var newsuite = new JsTestSuite();
+		  newsuite.addTestPage("../Source/FundamentalTypes/ArrayListTest.html");
+		  newsuite.addTestPage("../Source/FundamentalTypes/HashMapTest.html");
+		  newsuite.addTestPage("../Source/FundamentalTypes/HashSetTest.html");
+		  newsuite.addTestPage("../Source/FundamentalTypes/JavaCompatibilityTest.html");
+		  newsuite.addTestPage("../Source/FundamentalTypes/LinkedHashMapTest.html");
+        newsuite.addTestPage("../Source/FundamentalTypes/OptionsResourceTest.html");
+        newsuite.addTestPage("../Source/FundamentalTypes/RemoteResourceTest.html");
+		  newsuite.addTestPage("../Source/FundamentalTypes/StringTokenizerTest.html");
+		  newsuite.addTestPage("../Source/FundamentalTypes/XmlResourceTest.html");
 		  return newsuite;
 		}
 	</script>
