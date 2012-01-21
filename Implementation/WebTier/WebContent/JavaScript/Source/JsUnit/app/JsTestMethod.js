@@ -4,7 +4,7 @@
 
 var JsTestMethod = new Class({
    Extends : JsTestCase,
-   Binds: ['runTestMethod'],
+   Binds: ['onRunTestFinished', 'runTestMethod'],
    options : {
       className : null
    },
@@ -20,7 +20,7 @@ var JsTestMethod = new Class({
    
    //Public accessors and mutators   
    run : function(){
-      this.testObject = new this.testClass({ onReady : this.onRunTestFinished });
+      this.testObject = new this.testClass({ onReady : function( arguments ) { this.onRunTestFinished( arguments ); }.bind( this ) });
       this.parent();
    },
    
@@ -40,7 +40,8 @@ var JsTestMethod = new Class({
    }.protect(),
    
    runTest: function(){
-      testMethod = eval( "this.testObject." + this.name );
-      testMethod();
+      var testMethod = eval( "this.testObject." + this.name );
+      var testMethodOfTestObject = testMethod.bind( this.testObject );
+      testMethodOfTestObject();
    }.protect(),   
 });

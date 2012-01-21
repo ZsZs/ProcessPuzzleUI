@@ -17,6 +17,8 @@ var JsTestSuite = new Class( {
       this.testPages = Array();
       this.testSuites = new Array();
       this.pageIndex = 0;
+      this.parentSuite;
+      this.suiteIndex = 0;
 
       for( var i = 0; i < arguments.length; i++ ){
          if( arguments[i]._testPages ){
@@ -33,8 +35,8 @@ var JsTestSuite = new Class( {
    },
 
    addTestSuite : function( suite ) {
-      for( var i = 0; i < suite.testPages.length; i++ )
-         this.addTestPage( suite.testPages[i] );
+      this.testSuites.include( suite );
+      suite.setParentSuite( this );
    },
 
    clone : function() {
@@ -55,17 +57,27 @@ var JsTestSuite = new Class( {
       return this.testPages[this.pageIndex];
    },
 
-   hasMorePages : function() {
+   hasMorePage : function() {
       return this.pageIndex < this.testPages.length;
+   },
+   
+   hasMoreSuite : function(){
+      return this.suiteIndex < this.testSuites.length;
    },
 
    nextPage : function() {
       return this.testPages[this.pageIndex++];
    },
 
+   nextSuite : function() {
+      return this.testSuites[this.suiteIndex++];
+   },
+
    // Properties
+   getParentSuite : function() { return this.parentSuite; },
    getTestPages : function(){ return this.testPages; },
    getTestSuites : function() { return this.testSuites; },
+   setParentSuite : function( parentSuite ) { this.parentSuite = parentSuite ;},
 
 // Protected, private helper mehtods
 });

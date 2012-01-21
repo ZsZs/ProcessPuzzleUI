@@ -12,7 +12,6 @@ var JsTestManager = new Class({
    initialize : function( params, options ) {
       this.setOptions( options );
       //Instance variables
-      this.baseURL;
       this.container;
       this.containerController;
       this.currentTestPage;
@@ -26,6 +25,8 @@ var JsTestManager = new Class({
       this.testFrame;
       this.testPages;
       this.testResults;
+      this.testerContextRoot;
+      this.testsContextRoot;
       this.testStack;
       this.timer;
       this.timeRunStarted;
@@ -55,7 +56,8 @@ var JsTestManager = new Class({
       this.initializeInstanceVariables();
       this.instantiateTestPage( this.resolveUserEnteredTestFileName() );
       this.initializeUIManager();
-      this.determineBaseUrl( this.resolveUserEnteredTestFileName() );
+      this.testsContextRoot = this.determineContextRoot( this.resolveUserEnteredTestFileName() );
+      this.testerContextRoot = this.determineContextRoot( top.window.document.location.href );
       this.loadPage();
    },
 
@@ -131,7 +133,7 @@ var JsTestManager = new Class({
    },
    
    //Properties
-   getBaseURL : function() { return this.baseURL; },
+   getBaseURL : function() { return this.testsContextRoot; },
    getParameters : function() { return this.params; },
    getTestFunctionName : function() { return this._testFunctionName; },
    getTracer : function() { return this.tracer; },
@@ -171,7 +173,7 @@ var JsTestManager = new Class({
       }
    },
    
-   determineBaseUrl : function( url ) {
+   determineContextRoot : function( url ) {
       var firstQuery = url.indexOf( "?" );
       if( firstQuery >= 0 ){
          url = url.substring( 0, firstQuery );
@@ -184,17 +186,17 @@ var JsTestManager = new Class({
       if( lastSlash > 0 ){
          url = url.substring( 0, lastSlash + 1 );
       }
-      this.baseURL = url;
+      return url;
    }.protect(),
    
    finalizeTestRun : function(){
       this.testFrame.removeEvents();
-      this.containerController.setTestPage( './app/emptyPage.html' );
+      this.containerController.setTestPage( this.testerContextRoot + 'app/emptyPage.html' );
       this.uiManager.finishing();
    }.protect(),
    
    initializeInstanceVariables : function() {
-      this.baseURL = "";
+      this.testsContextRoot = "";
       this.totalCount = 0;
       this.errorCount = 0;
       this.failureCount = 0;
@@ -258,7 +260,7 @@ var JsTestManager = new Class({
          this.setStatus( 'Finished' );
          this.finalizeTestRun();
       }
-   }.protect(),
+   },
    
    notifyUiOfTestPage : function( testPage ) {
       if( testPage.alreadyNotifiedUi ) return;
@@ -348,8 +350,8 @@ var JsTestManager = new Class({
          testURL = testURL.substring( 0, testQuery );
       }
       if( !useFullyQualifiedTestPageName ){
-         if( testURL.substring( 0, this.baseURL.length ) == this.baseURL )
-            testURL = testURL.substring( this.baseURL.length );
+         if( testURL.substring( 0, this.testsContextRoot.length ) == this.testsContextRoot )
+            testURL = testURL.substring( this.testsContextRoot.length );
       }
       return testURL + ':' + this._testFunctionName;
    },
@@ -505,169 +507,6 @@ var JsTestManager = new Class({
    }
    
 /*********************** Obsolate methods *****************************/
-// addTestSuite : function( testSuite ) {
-// var testGroup = new JsTestGroup({ onTestCaseFinished : this.onTestCaseFinished, onTestCaseStarted : this.onTestCaseStarted, verbose : this.verbose });
-//
-// while( testSuite.hasMorePages() ){
-//    var testPage = testGroup.addTestPage( testSuite.nextPage() );
-//    this.notifyUiOfTestPage( testPage );
-// }
-//
-// JsUnit.Util.push( this.testGroupStack, testGroup );
-//}.protect(),
-
-// doneLoadingPage : function( testPage ) {
-// this.currentTestPage = testPage;
-// this.notifyUiOfTestPage( this.currentTestPage );
-// if( this.isTestPageSuite() ) this.handleNewSuite();
-// else this.handleNewPage();      
-//},
-
-//   handleNewPage : function(){
-//      this.testIndex = 0;
-//      this.currentTestPage.runTests();
-//   }.protect(),
-//
-//   handleNewSuite : function() {
-//      var allegedSuite = this.testFrame.suite();
-//      if( allegedSuite.isJsUnitTestSuite ){
-//         var newSuite = this._cloneTestSuite( allegedSuite );
-//         if( newSuite.containsTestPages() )
-//            this.addTestSuite( newSuite );
-//         this.nextPage();
-//      }else{
-//         this.fatalError( 'Invalid test suite in file ' + this.currentTestPage.url );
-//         this.abort();
-//      }
-//   }.protect(),
-//
-
-// _callBackWhenPageIsLoaded : function() {
-// if( (new Date() - this._loadAttemptStartTime) / 1000 > this.getTimeout() ){
-//    this.fatalError( 'Reading Test Page ' + this.currentTestPage.url + ' timed out.\nMake sure that the file exists and is a Test Page.' );
-//    if( this.userConfirm( 'Retry Test Run?' ) ){
-//       this.loadPage( this.currentTestPage );
-//       return;
-//    }else{
-//       this.abort();
-//       return;
-//    }
-// }
-// if( !this._isTestFrameLoaded() ){
-//    setTimeout( 'if (top.testManager) top.testManager._callBackWhenPageIsLoaded();', JsTestManager.TIMEOUT_LENGTH );
-//    return;
-// }
-// this.doneLoadingPage( this.currentTestPage );
-//},
-
-//_isTestFrameLoaded : function() {
-// try{
-//    return this.containerController.isPageLoaded();
-// }catch (e){
-// }
-// return false;
-//},
-//
-
-   /**
-    * This function handles cloning of a jsUnitTestSuite object. This was added
-    * to replace the clone method of the jsUnitTestSuite class due to an IE bug
-    * in cross frame scripting. (See also jsunit bug 1522271)
-    */
-//   _cloneTestSuite : function( suite ) {
-//      var clone = new jsUnitTestSuite();
-//      clone._testPages = suite._testPages.concat( new Array( 0 ) );
-//      return clone;
-//   },
-
-// nextPage : function() {
-// this._restoredHTML = null;
-// if( this.currentTestGroup().hasMorePages() ){
-//    var testPage = this.currentTestGroup().nextPage();
-//    this.loadPage( testPage );
-// }else{
-//    JsUnit.Util.pop( this.testGroupStack );
-//    if( this.currentTestGroup() == null )
-//       this._done();
-//    else
-//       this.nextPage();
-// }
-//},
-//
-//currentTestGroup : function() {
-// var suite = null;
-//
-// if( this.testGroupStack && this.testGroupStack.length > 0 )
-//    suite = this.testGroupStack[this.testGroupStack.length - 1];
-//
-// return suite;
-//},
-//
-
-// cleanUp : function() {
-// this.testFrame.removeEvents();
-// this.containerController.setTestPage( 'emptyPage.html' );
-// this.uiManager.finishing();
-//}.protect(),
-
-// runTestFunction : function() {
-// if( this.testIndex + 1 > this.numberOfTestsInPage ){
-//    if( typeof this.testFrame.tearDownPage == 'function' ){    // execute tearDownPage *synchronously* (unlike setUpPage which is asynchronous)
-//       this.testFrame.tearDownPage();
-//    }
-//
-//    this.currentTestPage.running = false;
-//    this.currentTestPage.notify( JsTestPage.STATUS_CHANGE_EVENT );
-//
-//    this.nextPage();
-//    return;
-// }
-//
-// if( this.testIndex == 0 ){
-//    this.currentTestPage.running = true;
-//    this.currentTestPage.notify( JsTestPage.STATUS_CHANGE_EVENT );
-//
-//    this.storeRestoredHTML();
-//    if( typeof (this.testFrame.setUpPage) == 'function' ){
-//       // first test for this page and a setUpPage is defined
-//       if( typeof (this.testFrame.setUpPageStatus) == 'undefined' ){
-//          // setUpPage() not called yet, so call it
-//          this.testFrame.setUpPageStatus = false;
-//          this.testFrame.startTime = new Date();
-//          this.testFrame.setUpPage();
-//          // try test again later
-//          setTimeout( 'top.testManager.runTestFunction()', JsTestManager.SETUPPAGE_INTERVAL );
-//          return;
-//       }
-//
-//       if( this.testFrame.setUpPageStatus != 'complete' ){
-//          this.setWindowStatus( 'setUpPage not completed... ' + this.testFrame.setUpPageStatus + ' ' + (new Date()) );
-//          if( (new Date() - this.testFrame.startTime) / 1000 > this.getsetUpPageTimeout() ){
-//             this.fatalError( 'setUpPage timed out without completing.' );
-//             if( !this.userConfirm( 'Retry Test Run?' ) ){
-//                this.abort();
-//                return;
-//             }
-//             this.testFrame.startTime = (new Date());
-//          }
-//          // try test again later
-//          setTimeout( 'top.testManager.runTestFunction()', JsTestManager.SETUPPAGE_INTERVAL );
-//          return;
-//       }
-//    }
-// }
-//
-// this.setWindowStatus( '' ); // either not first test, or no setUpPage defined, or setUpPage completed
-//
-// var testFunction = this.currentTestPage.nextTestFunction();
-// if( testFunction ){
-//    testFunction.status = 'running';
-//    testFunction.notify( 'statusChange' );
-//    this.executeTestFunction( testFunction );
-//    this.onTestCaseFinished( testFunction.getName() );
-//    setTimeout( 'if (top.testManager) top.testManager.runTestFunction()', JsTestManager.TIMEOUT_LENGTH );
-// }
-//},
 
 });
 

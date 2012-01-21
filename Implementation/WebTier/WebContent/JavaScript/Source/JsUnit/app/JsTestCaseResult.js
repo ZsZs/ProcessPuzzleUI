@@ -22,7 +22,9 @@ var JsTestCaseResult = new Class({
       var fullMessage = this.getName() + " - ";
       if( this.exception ){
          fullMessage += "failed! ";
-         fullMessage += this.determineExceptionMesssage();
+         fullMessage += "\nName: " + this.determineExceptionName();
+         fullMessage += "\nMessage" + this.determineExceptionMesssage();
+         fullMessage += "\nSource: " + this.determineExceptionSource();
          fullMessage += "\nStack trace:\n" + this.determineExceptionStackTrace() + "\n";
       } else fullMessage += "sucseeded. ";
       
@@ -63,10 +65,27 @@ var JsTestCaseResult = new Class({
       return message;
    }.protect(),
    
+   determineExceptionName : function(){
+      var name = "";
+      if( this.exception.getName ) name = this.exception.getName();
+      else if( this.exception.name ) name = this.exception.name;
+      else name = "Uknown";
+      
+      return name;
+   }.protect(),
+   
+   determineExceptionSource : function(){
+      var source = "";
+      if( this.exception.getSource ) source = this.exception.getSource();
+      else source = "Unknown";
+      
+      return source;
+   }.protect(),
+   
    determineExceptionStackTrace : function(){
       var stackTrace = "";
       if( this.exception.jsUnitMessage ) stackTrace = "not implemented yet";
-      else if( this.exception.getName ) stackTrace = this.exception.stackTrace();
+      else if( this.exception.stackTrace ) stackTrace = this.exception.stackTrace();
       else stackTrace = this.exception.stack;
       
       return stackTrace;

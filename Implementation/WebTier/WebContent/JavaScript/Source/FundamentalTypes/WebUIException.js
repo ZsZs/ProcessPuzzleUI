@@ -41,7 +41,7 @@ var WebUIException = new Class({
    
    //Public accessor and mutator methods
    stackTrace: function() {
-      var stackTrace = this.getDescription();
+      var stackTrace = "";
       if( this.options.cause && this.options.cause.stackTrace() )
          stackTrace += "\n" + this.options.cause.stackTrace();
       
@@ -52,5 +52,6 @@ var WebUIException = new Class({
    getCause: function() { return this.options.cause; },
    getDescription : function() { return this.options.description; },
    getMessage: function() { return this.options.description.substitute( this.parameters ); }, 
-   getName: function() { return this.options.name; }
+   getName: function() { return this.options.name; },
+   getSource : function() { return this.options.source; }
 });

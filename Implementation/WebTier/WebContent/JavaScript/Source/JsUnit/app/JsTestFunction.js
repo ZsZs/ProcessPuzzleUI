@@ -4,17 +4,20 @@ var JsTestFunction = new Class({
    Extends : JsTestCase,
    
    options : {
-      functionNamePrefix : ""
+      functionNamePrefix : "",
+      setUpFunctionName : "setUp",
+      tearDownFunctionName : "tearDown"
    },
    
    //Constructor
    initialize : function( name, options ) {
       this.parent( name, options );
+      this.listeners = new Array();
+      this.setUpFunction;
+      this.status = 'ready';
+      this.tearDownFunction;
       this.testFunction;
       this.traceMessages = new Array();
-      this.status = 'ready';
-
-      this.listeners = new Array();
    },
 
    //Public accessor and mutator methods
@@ -34,6 +37,13 @@ var JsTestFunction = new Class({
    
    run : function(){
       this.testFunction = eval( this.options.functionNamePrefix + this.name );
+      
+      try{ this.setUpFunction = eval( this.options.functionNamePrefix + this.options.setUpFunctionName );
+      }catch( e ){}
+      
+      try{ this.tearDownFunction = eval( this.options.functionNamePrefix + this.options.tearDownFunctionName );
+      }catch( e ){}
+      
       this.parent();
    },
    
@@ -41,10 +51,12 @@ var JsTestFunction = new Class({
    
    //Protected, private helper methods
    callAfterEachTest: function(){
+      if( this.tearDownFunction ) this.tearDownFunction();
       this.parent();
    }.protect(),
    
    callBeforeEachTest: function(){
+      if( this.setUpFunction ) this.setUpFunction();
       this.parent();
    }.protect(),
    

@@ -12,7 +12,7 @@ var JsTestStack = new Class({
       this.testPageIndex = 0;
       this.testPages = new Array();
       this.testSuiteIndex = 0;
-      this.testSuites = new Array();
+      this.currentTestSuite;
    },
    
    //Public accessors and mutators
@@ -21,26 +21,30 @@ var JsTestStack = new Class({
    },
    
    addTestSuite : function( testSuite ){
-      this.testSuites.include( testSuite );
+      if( this.currentTestSuite ) this.currentTestSuite.addTestSuite( testSuite );
+      this.currentTestSuite = testSuite;
    },
    
-   currentSuite : function(){
-      return this.testSuites[this.testSuiteIndex];
-   },
-
    hasMorePages : function() {
-      return (this.testPageIndex < this.testPages.length ) ||
-      this.currentSuite().hasMorePages() ||
-      this.hasMoreSuite();
+      if( this.testPageIndex < this.testPages.length ) return true;
+      else if( this.currentTestSuite && this.currentTestSuite.hasMorePage() ) return true;
+      else if( this.currentTestSuite && this.currentTestSuite.hasMoreSuite() ) return true;
+      else if( this.currentTestSuite && this.currentTestSuite.getParentSuite() ) return true;
+      else return false;
    },
    
    hasMoreSuite : function() { return this.testSuiteIndex < this.testSuites.length; },
 
    nextPage : function() {
       if( this.testPageIndex < this.testPages.length ) return this.testPages[this.testPageIndex++]; 
-      else if( this.currentSuite().hasMorePages() ) return this.currentSuite().nextPage();
-      else if( this.hasMoreSuite() ) return this.nextSuite().nextPage();
-      else return null;
+      else if( this.currentTestSuite.hasMorePage() ) return this.currentTestSuite.nextPage();
+      else if( this.currentTestSuite.hasMoreSuite() ) {
+         this.currentTestSuite = this.currentTestSuite.nextSuite();
+         return currentTestSuite.nextPage();
+      }else if( this.currentTestSuite.getParentSuite() ){
+         this.currentTestSuite = this.currentTestSuite.getParentSuite();
+         return this.nextPage();
+      }else return null;
    },
    
    nextSuite : function() {
@@ -49,5 +53,6 @@ var JsTestStack = new Class({
    
    //Properties
    getCurrentPage : function() { return this.testPages[this.index]; },
+   getCurrentSuite : function() { return this.currentTestSuite; },
    getTestPages : function() { return this.testPages; }
 });

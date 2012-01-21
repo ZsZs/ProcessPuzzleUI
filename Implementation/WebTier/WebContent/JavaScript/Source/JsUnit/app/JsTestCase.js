@@ -6,9 +6,9 @@ var JsTestCase = new Class({
    Implements : [Events, Options],
    Binds : ['callAfterEachTest', 'callBeforeEachTest', 'checkTimeOut', 'notifyOnTestCaseReady', 'notifyOnTestCaseStart', 'onRunTestFinished', 'run', 'testRunWrapper'],
    options : {
-      delay: 200,
       maxTries: 20,
-      url: null
+      url: null,
+      waitDelay: 200,
    },
    
    //Constructor
@@ -27,13 +27,15 @@ var JsTestCase = new Class({
       this.numberOfTries++;
       if( this.numberOfTries >= this.options.maxTries ){
          clearInterval( this.timer );
-         this.testResult.testFailed( new JsTestCaseTimeOutException( this.name, this.options.delay * this.options.maxTries ));
+         this.testResult.testFailed( new JsTestCaseTimeOutException( this.name, this.options.waitDelay * this.options.maxTries ));
+         this.testCaseChain.callChain();      
       }
    },
    
-   onRunTestFinished : function(){
+   onRunTestFinished : function( error ){
       clearInterval( this.timer );
-      this.testResult.testFinished();
+      if( error ) this.testResult.testFailed( error );
+      else this.testResult.testFinished();
       this.testCaseChain.callChain();
    },
    
@@ -97,6 +99,6 @@ var JsTestCase = new Class({
    
    waitForTestMethod: function(){
       this.numberOfTries = 0;
-      this.timer = this.checkTimeOut.periodical( this.options.delay );
+      this.timer = this.checkTimeOut.periodical( this.options.waitDelay, this );
    }.protect()
 });

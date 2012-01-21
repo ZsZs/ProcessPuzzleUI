@@ -20,39 +20,14 @@ var JsTestPage = new Class({
       this.testFrame = testFrame;
       this.testFunctionRunner;
       this.testRunnerChain = new Chain();
+      this.testSuite;
+      this.totalNumberOfTestCases;
       this.url = url;
       
       this.setUp();
    },
 
    //Public accessors and mutators
-//   getStatus : function( testName ) {
-//      if( this.testMethods.length == 0 ) return 'noTestsYet';
-//      if( this.running ) return 'running';
-//      if( this.errorCount > 0 ) return 'error';
-//      if( this.failureCount > 0 ) return 'failure';
-//      if( this.successCount > 0 ) return 'success';
-//      return 'ready';
-//   },
-//   
-//   listen : function( callback ) {
-//      this.listeners.include( callback );
-//   },
-//   
-//   nextTestFunction : function(){
-//      if( !this.currentTestFunctionIndex ) this.currentTestFunctionIndex = 0;
-//
-//      if( this.currentTestFunctionIndex < this.testFunctions.length ) 
-//         return this.testFunctions[this.currentTestFunctionIndex++];
-//      else return null;
-//   },
-//
-//   notify : function( event ) {
-//      for( var i = 0; i < this.listeners.length; i++ ){
-//         this.listeners[i].call( null, this, event );
-//      }
-//   },
-//   
    onTestCaseFinished : function( testResult ){
       this.fireEvent( 'testCaseFinished', testResult );
    },
@@ -62,9 +37,7 @@ var JsTestPage = new Class({
    },
    
    onTestRunnerFinished : function(){
-      if( this.state == JsTestPage.Status.RUNNING_TEST_METHODS ){
-         this.testRunnerChain.callChain();         
-      }else this.fireEvent( 'testPageFinished', this );
+      this.testRunnerChain.callChain();         
    },
    
    onTestRunnerStarted : function(){
@@ -101,12 +74,20 @@ var JsTestPage = new Class({
       if( this.testFrame.suite ){
          var allegedSuite = this.testFrame.suite();
          if( allegedSuite.isJsUnitTestSuite ){
-            this.fireEvent( 'addTestSuite', allegedSuite );
+            this.testSuite = allegedSuite;
+            this.fireEvent( 'addTestSuite', this.testSuite );
          }
       }
       this.testRunnerChain.callChain();
    }.protect(),
 
+   finalizeTestRun : function(){
+      this.testRunnerChain.clearChain();
+      if( this.totalNumberOfTestCases == 0 && this.testSuite == 'undefined' )
+         alert( this.url + " test page doesn't defines any test case or suite. Check that you included JsObjectTest related files." );
+      this.fireEvent( 'testPageFinished', this );
+   }.protect(),
+   
    setUp : function(){
       this.testClassRunner = new JsTestClassRunner( this.testFrame, { 
          onTestCaseReady : function( arguments ){ this.onTestCaseFinished( arguments ); }.bind( this ), 
@@ -130,7 +111,8 @@ var JsTestPage = new Class({
          function() { this.discoverTestSuites(); }.bind( this ),
          function() { this.configureTestRunners(); }.bind( this ),
          function() { this.testClassRunner.runTests(); }.bind( this ),
-         function() { this.testFunctionRunner.runTests(); }.bind( this )
+         function() { this.testFunctionRunner.runTests(); }.bind( this ),
+         function() { this.finalizeTestRun(); }.bind( this )
       );
             
       this.state = JsTestPage.Status.INITIALIZED;
