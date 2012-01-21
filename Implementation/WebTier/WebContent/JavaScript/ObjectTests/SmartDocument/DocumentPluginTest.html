@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+   <title>Test page for DocumentPlugin.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/SlideShow/slideshow.js"></script>
+   <script type="text/javascript" src="../../Libraries/SlideShow/slideshow.flash.js"></script>
+   <script type="text/javascript" src="../../Libraries/SlideShow/slideshow.fold.js"></script>
+   <script type="text/javascript" src="../../Libraries/SlideShow/slideshow.kenburns.js"></script>
+   <script type="text/javascript" src="../../Libraries/SlideShow/slideshow.push.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+	
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../../Source/Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/RemoteResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/UndefinedDocumentResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/SkinSelectorWidget/SkinChangedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/SkinSelectorWidget/SkinSelectorWidget.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
+	
+	<script type="text/javascript">
+      window.addEvent( 'domready', function() {
+//          test_initialization();
+//          test_unmarshall_determinesResources();
+//          test_unmarshall_determinesWidgetProperties();
+//         test_construct_loadsResources();
+//         test_construct_instantiatesWidget();
+         test_construct_whenWidgetConstructionFails_firesError();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
+		 
+      var DOCUMENT_URI = "../SmartDocument/SmartDocumentDefinition.xml";
+      var DOCUMENT_CONTAINER_ID = "SmartDocument";
+      var ERRONEOUS_DOCUMENT_URI = "../SmartDocument/ErroneousDocumentDefinition.xml";
+      var ERRONEOUS_PLUGIN_DEFINITION_ELEMENT = "/smartDocumentDefinition/documentBody/compositeElement/element[@id='skinSelector']/plugin";
+      var PLUGIN_DEFINITION_ELEMENT = "/smartDocumentDefinition/documentBody/compositeElement/element[@id='languageSelector']/plugin";
+      var PLUGIN_STYLE_SHEET = "../HierarchicalMenuWidget/HorizontalLayout.css";
+      var RESOURCE_ITEMS_SELECTOR = PLUGIN_DEFINITION_ELEMENT + "/resources/styleSheets/styleSheet | " + 
+		                              PLUGIN_DEFINITION_ELEMENT + "/resources/images/image | " +
+		                              PLUGIN_DEFINITION_ELEMENT + "/resources/javaScripts/javaScript"
+      var WEBUI_CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
+		
+      var loadCallbackWasCalled = false;
+      var desktopContainerElement = null;
+      var documentDefinition = null;
+      var erroneousDocumentDefinition = null;
+      var internationalization = null;
+      var pluginDefinitionElement = null;
+      var plugin = null;
+      var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
+      var testSuiteChain = new Chain();
+      var waitTries = 0;
+      var webUIConfiguration = null;
+      var webUIController = null;
+      var webUILogger = null;
+      
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+		
+      function beforeEachTest(){
+         inform( "beforeEachTest" );
+         webUIController = new WebUIController( { configurationUri : WEBUI_CONFIGURATION_URI } );
+         webUIConfiguration = webUIController.getApplicationConfiguration(); //new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = webUIController.getLogger(); 
+         internationalization = webUIController.getResourceBundle();
+		   
+         documentDefinition = new XmlResource( DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+         erroneousDocumentDefinition = new XmlResource( ERRONEOUS_DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+         var pluginDefinitionElement = documentDefinition.selectNode( PLUGIN_DEFINITION_ELEMENT );
+         plugin = new DocumentPlugin( pluginDefinitionElement, internationalization, { onResourcesLoaded : onResourcesLoaded, onConstructed : onConstructed, onConstructionError : onConstructionError } );
+         desktopContainerElement = $( DOCUMENT_CONTAINER_ID );
+          
+         testCaseIsRunning = true;
+         testCaseChain.callChain();
+      }
+		
+      function onResourcesLoaded(){
+         testCaseChain.callChain();
+      }
+		
+      function onConstructed(){
+         testCaseChain.callChain();
+      }
+      
+      function onConstructionError(){
+         testCaseChain.callChain();
+      }
+
+      function afterEachTest(){
+         documentDefinition.release();
+         erroneousDocumentDefinition.release();
+         plugin.destroy();
+         desktopContainerElement = null;
+         loadCallbackWasCalled = false;
+           
+         inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
+      }
+		
+      function test_initialization(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               assertThat( plugin.getState(), equalTo( DocumentPlugin.States.INITIALIZED ));
+               testCaseChain.callChain();
+            }, 
+            afterEachTest 
+         );
+         runTestCase();
+      }
+		
+      function test_unmarshall_determinesResources(){
+         testCaseChain.chain( 
+            beforeEachTest,
+            function(){
+               plugin.unmarshall();
+               assertThat( plugin.getResources(), not( nil() ));
+               assertThat( plugin.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));               
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
+      }
+		
+      function test_unmarshall_determinesWidgetProperties(){
+         testCaseChain.chain( beforeEachTest, function(){
+            plugin.unmarshall();
+            
+            //VERIFY:
+            assertThat( plugin.getWidgetName(), equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/@name" ) ));
+            assertThat( "'" + plugin.getWidgetOptions()['widgetContainerId'] + "'", equalTo( documentDefinition.selectNodeText( PLUGIN_DEFINITION_ELEMENT + "/widget/options/option[@name='widgetContainerId']/@value" )) );
+              
+            testCaseChain.callChain();
+         }, afterEachTest );
+         runTestCase();
+      }
+		
+      function test_construct_loadsResources(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+               assertThat( plugin.getResources().getResources().size(), equalTo( documentDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
+            },
+            function(){
+               assertThat( plugin.getState(), equalTo( DocumentPlugin.States.CONSTRUCTED ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }
+				
+      function test_construct_instantiatesWidget(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+            },
+            function(){
+               assertThat( plugin.getWidget(), not( nil() ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }
+            
+      function test_construct_whenResourceLoadFails_firesError(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               var pluginDefinitionElement = erroneousDocumentDefinition.selectNode( PLUGIN_DEFINITION_ELEMENT );
+               plugin = new DocumentPlugin( pluginDefinitionElement, internationalization, { onResourcesLoaded : onResourcesLoaded, onConstructed : onConstructed, onConstructionError : onConstructionError } );
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+               assertThat( plugin.isSuccess(), is( false ));
+               assertThat( instanceOf( plugin.getError(), UndefinedDocumentResourceException ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }
+            
+      function test_construct_whenWidgetConstructionFails_firesError(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               var pluginDefinitionElement = erroneousDocumentDefinition.selectNode( ERRONEOUS_PLUGIN_DEFINITION_ELEMENT );
+               plugin = new DocumentPlugin( pluginDefinitionElement, internationalization, { onResourcesLoaded : onResourcesLoaded, onConstructed : onConstructed, onConstructionError : onConstructionError } );
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+               assertThat( plugin.isSuccess(), is( false ));
+               assertThat( instanceOf( plugin.getError(), IllegalArgumentException ), is( true ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }
+            
+      function test_destroy_releasesResourcesAndDestroysPlugin(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               plugin.unmarshall();
+               plugin.construct();
+            },
+            function(){
+               //No operation after 'onResourcesLoaded'
+            },
+            function(){
+               var widgetDestroy = spy( plugin.getWidget().destroy );
+               plugin.destroy();
+              
+               assertThat( $$("link[href='" + PLUGIN_STYLE_SHEET + "']").length, equalTo( 0 ));
+               verify( widgetDestroy );
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }
+				
+      function loadCallback(){
+         assertThat( plugin.getState(), equalTo( DocumentPlugin.States.LOADED )); 
+         assertThat( instanceOf( plugin.getWidget(), HierarchicalMenuWidget ), is( true ));
+         assertThat( $$("link[href='" + PLUGIN_STYLE_SHEET + "']").length, equalTo( 1 ));
+         testCaseChain.callChain();
+      }		
+    </script>
+</head>
+
+<body>
+	<h1>DocumentPlugin.js test page</H1>
+	<p>This page contains tests for DocumentPlugin.js JavaScript class.</P>
+	<div id="SmartDocument">Desktop container.
+	   <div id="languageSelector"></div>
+	</div>
+</body>
+</html>

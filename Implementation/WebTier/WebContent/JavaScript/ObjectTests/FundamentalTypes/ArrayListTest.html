@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+   <title>Test page for ArrayList.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script language="JavaScript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script language="JavaScript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+
+   <script type="text/javascript">
+   window.addEvent( 'domready', function() {
+      runTestFunction();
+   });
+
+   JsHamcrest.Integration.JsUnit();
+   
+   var sampleList = null;
+   var ITEM_ONE = "entry one value";
+   var ITEM_TWO = "entry two value";
+   var ITEM_THREE = "entry three value";
+   var ITEM_FOUR = "entry four value";
+   var ITEM_FIVE = "entry five value";
+
+   function setUp() {
+      sampleList = new ArrayList();
+      sampleList.add( ITEM_ONE );
+      sampleList.add( ITEM_TWO );
+      sampleList.add( ITEM_THREE );
+   }
+
+   function tearDown() {
+      sampleList = null;
+   }
+
+   function testInitialize() {
+      var emptyList = new ArrayList();
+
+      assertEquals( "After initialization, size is:", 0, emptyList.size() );
+      assertTrue( "After initializaiton, List is empty.", emptyList.isEmpty() );
+   }
+
+   function testAdd_AddsAndStoresNewItem() {
+      assertEquals( "The number of items the list contains is:", 3, sampleList.size() );
+      assertEquals( "We can get added elements by index.", ITEM_ONE, sampleList.get( 0 ) );
+   }
+
+   function testAddAll_AppendsWithAnotherList() {
+      var anotherList = new ArrayList();
+      anotherList.add( ITEM_FOUR );
+      anotherList.add( ITEM_FIVE );
+
+      sampleList.addAll( anotherList );
+
+      assertEquals( "The number of items in the list now is:", 5, sampleList.size() );
+      assertEquals( "We can get newly added elements by index.", ITEM_FIVE, sampleList.get( 4 ) );
+   }
+
+   function testClear_DiscardsItems() {
+      sampleList.clear();
+      assertEquals( "After 'clear' list's size is:", 0, sampleList.size() );
+   }
+
+   function testClone_ReturnsNewCopy() {
+      var clonedSampleList = sampleList.clone();
+      sampleList.clear();
+
+      clonedSampleList.each( function( listItem, index ) {
+         if( index == 0 ){
+            assertEquals( ITEM_ONE, listItem );
+         }
+         if( index == 1 ){
+            assertEquals( ITEM_TWO, listItem );
+         }
+         if( index == 2 ){
+            assertEquals( ITEM_THREE, listItem );
+         }
+      }, this );
+   }
+
+   function testContains_ReturnsTrue_WhenListContainsTheItem() {
+      assertTrue( sampleList.contains( ITEM_TWO ) );
+      assertFalse( sampleList.contains( ITEM_FIVE ) );
+   }
+
+   function testGet_RetrievesItemByIndex() {
+      assertEquals( ITEM_THREE, sampleList.get( 2 ) );
+      assertUndefined( sampleList.get( 3 ) );
+   }
+
+   function testEach_IteratesThrueAllItems() {
+      sampleList.each( function( listItem, index ) {
+         if( index == 0 ){
+            assertEquals( ITEM_ONE, listItem );
+         }
+         if( index == 1 ){
+            assertEquals( ITEM_TWO, listItem );
+         }
+         if( index == 2 ){
+            assertEquals( ITEM_THREE, listItem );
+         }
+      }, this );
+   }
+
+   function testEquals() {
+      var sameList = new ArrayList();
+      sameList.add( ITEM_ONE );
+      sameList.add( ITEM_TWO );
+      sameList.add( ITEM_THREE );
+
+      assertTrue( sampleList.equals( sameList ) );
+      assertTrue( sameList.equals( sampleList ) );
+   }
+
+   function test_indexOf_returnAdditionIndexOfTheItem() {
+      assertThat( sampleList.indexOf( ITEM_ONE ), equalTo( 0 ) );
+      assertThat( sampleList.indexOf( ITEM_TWO ), equalTo( 1 ) );
+      assertThat( sampleList.indexOf( ITEM_THREE ), equalTo( 2 ) );
+   }
+
+   function testIsEmpty() {
+      assertFalse( sampleList.isEmpty() );
+
+      var newList = new ArrayList();
+      assertTrue( newList.isEmpty() );
+   }
+
+   function testGet() {
+      assertEquals( ITEM_THREE, sampleList.get( 2 ) );
+   }
+
+   function testIterator() {
+      var iterator = sampleList.iterator();
+      var index = 0;
+      while( iterator.hasNext() ){
+         var listItem = iterator.next();
+         if( index == 0 ){
+            assertEquals( ITEM_ONE, listItem );
+         }
+         if( index == 1 ){
+            assertEquals( ITEM_TWO, listItem );
+         }
+         if( index == 2 ){
+            assertEquals( ITEM_THREE, listItem );
+         }
+
+         index++;
+      }
+   }
+   
+   function test_remove_decreasesSizeAndReordersItems() {
+      var previousSize = sampleList.size();
+      sampleList.remove( 1 );
+      
+      assertThat( sampleList.size(), equalTo( previousSize -1 ));
+      
+      assertThat( sampleList.indexOf( ITEM_ONE ), equalTo( 0 ) );
+      assertThat( sampleList.indexOf( ITEM_TWO ), is( nil() ));
+      assertThat( sampleList.indexOf( ITEM_THREE ), equalTo( 1 ) );
+   }
+
+
+   //runs a test function during debugging
+   function runTestFunction() {
+      setUp();
+      //test_remove_reordersItems();
+      tearDown();
+   }
+</script>
+</head>
+
+<body>
+ <h1>ArrayList.js test page</H1>
+ <p>This page contains tests for ArrayList.js JavaScript class.</P>
+</body>
+</html>

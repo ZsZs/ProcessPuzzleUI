@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Test page for HtmlDocument.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.Extras.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+	
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/ComplexContentBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/DesktopWindow.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/UnconfiguredDesktopElementException.js"></script>
+   <script type="text/javascript" src="../../Source/DocumentEditor/DocumentEditor.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/HtmlDocument/HtmlDocument.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/UndefinedDocumentResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/TextAreaEditor/MooEditableDialog.js"></script>
+   <script type="text/javascript" src="../../Source/TextAreaEditor/TextAreaEditor.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
+	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         test_webUIMessageHandler_invokesEditor();
+      });
+				
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
+		
+      var WEBUI_CONFIGURATION_URI = "../HtmlDocument/WebUIConfiguration.xml";
+      var DOCUMENT_CONTAINER_ID = "HtmlDocument";
+      var DOCUMENT_CONTENT_URI = "../HtmlDocument/HtmlDocument_en.html";
+      var DOCUMENT_DEFINITION_URI = "../HtmlDocument/HtmlDocumentDefinition.xml";
+		
+      var bundle;
+      var documentContainerElement;
+      var documentContentResource;
+      var documentDefinition;
+      var dataElement;
+      var documentInternationalization;
+      var htmlDocument;
+      var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
+      var webUIConfiguration;
+      var webUILogger;
+      var webUIMessageBus;
+		
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+      
+      function beforeEachTest(){
+         inform( "beforEachTest" );
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         webUIMessageBus = new WebUIMessageBus();
+         bundle = new XMLResourceBundle( webUIConfiguration );
+         bundle.load( new Locale({ language : "en" }) );
+		   
+         documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
+         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
+         documentContainerElement = $( DOCUMENT_CONTAINER_ID );
+         htmlDocument = new HtmlDocument( bundle, { 
+            documentContentUri : DOCUMENT_CONTENT_URI, 
+            documentContainerId : DOCUMENT_CONTAINER_ID,
+            documentDefinitionUri : DOCUMENT_DEFINITION_URI,
+            onDocumentError : onDocumentError,
+            onDocumentReady : onDocumentReady,
+            rootElementName : "/htmlDocumentDefinition" });
+         htmlDocument.unmarshall();
+         
+         testCaseIsRunning = true;
+         testCaseChain.callChain();
+      }
+
+      function afterEachTest(){
+         webUIMessageBus.tearDown();
+         bundle.release();
+         bundle = null;
+		   
+         if( htmlDocument.getState() > AbstractDocument.States.INITIALIZED ) htmlDocument.destroy();
+         htmlDocument = null;
+         documentContainerElement = null;
+         inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
+      }
+      
+      function onDocumentError(){
+         testCaseChain.callChain();
+      }
+      
+      function onDocumentReady(){
+         testCaseChain.callChain();
+      }
+      
+      function test_construct_createsTextAreaAndInstantiatesEditor(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               htmlDocument.construct();
+            },
+            function(){
+               assertThat( documentContainerElement.getChildren( 'textarea' ).length, equalTo( 1 ));
+               assertThat( instanceOf( htmlDocument.getEditor(), TextAreaEditor ), is( true ));
+               assertThat( htmlDocument.getEditor().getSubjectElement(), equalTo( htmlDocument.getTextArea() ));
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }
+      
+      function test_webUIMessageHandler_invokesEditor(){
+         testCaseChain.chain( 
+            beforeEachTest, 
+            function(){
+               htmlDocument.construct();
+            },
+            function(){
+               htmlDocument.editor = spy( htmlDocument.getEditor() );
+               var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.BOLD });
+               webUIMessageBus.notifySubscribers( message );
+               
+               verify( htmlDocument.editor ).textBold();
+               testCaseChain.callChain();
+            },
+            afterEachTest 
+         );
+         runTestCase();
+      }  
+   </script>
+</head>
+
+<body>
+   <h1>HtmlDocument.js test page</H1>
+   <p>This page contains tests for HtmlDocument.js JavaScript class.</P>
+   <div id="HtmlDocument" style="overflow-y: hidden"></div>
+</body>
+</html>

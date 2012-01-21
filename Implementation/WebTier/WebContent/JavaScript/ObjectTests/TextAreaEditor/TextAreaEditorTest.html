@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+   <title>Test page for ArtifactEditorWidget.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+
+   <link rel="stylesheet" type="text/css" href="../ToolBarWidget/ToolBar.css">
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooEditable/MooEditable.Extras.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Core.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Dock.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Layout.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/AbstractDocument/DocumentSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/ComplexContentBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/DesktopWindow.js"></script>
+   <script type="text/javascript" src="../../Source/DocumentEditor/DocumentEditor.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/TextAreaEditor/MooEditableDialog.js"></script>
+   <script type="text/javascript" src="../../Source/TextAreaEditor/TextAreaEditor.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarWidget.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         test_textAddLink_whenReceivesDocumentSelectedMessage_addsOrChangesAnchorHref();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
+
+      var LANGUAGE = "hu";
+      var TEXT_AREA_ID = "EditorContainer";
+      var WEBUI_CONFIGURATION_URI = "../TextAreaEditor/WebUIConfiguration.xml";
+
+      var internationalization;
+      var lastMessage;
+      var locale = new Locale({ language : LANGUAGE });
+      var textAreaEditor;
+      var textAreaElement;
+      var testCaseChain = new Chain();
+      var testCaseIsRunning = false;
+      var webUIConfiguration;
+      var webUIController;
+      var webUILogger;
+      var webUIMessageBus;
+
+      function runTestCase(){
+         if( !testCaseIsRunning ) testCaseChain.callChain();
+      }
+      
+      function beforeEachTest() {
+         inform( "beforeEachTest" );
+         testCaseIsRunning = true;
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         webUIMessageBus = new WebUIMessageBus();
+         webUIMessageBus.subscribeToMessage( MenuSelectedMessage, messageSubscriber );
+         internationalization = new XMLResourceBundle( webUIConfiguration );
+         internationalization.load( locale );
+         
+         textAreaEditor = new TextAreaEditor( internationalization, { onEditorAttached : onEditorAttached, subscribeToWebUIMessages : [DocumentSelectedMessage] });
+         textAreaElement = $( TEXT_AREA_ID );
+         textAreaEditor.attach( textAreaElement );
+      }
+      
+      function messageSubscriber( webUIMessage ){
+         lastMessage = webUIMessage;
+      }
+      
+      function onEditorAttached(){
+         testCaseChain.callChain();
+      }
+
+      function afterEachTest() {
+         textAreaEditor.detach();
+         webUIMessageBus.tearDown();
+         lastMessage = null;
+         
+         inform( "afterEachTest" );
+         testCaseIsRunning = false;
+         testCaseChain.callChain();
+      }
+
+      function test_textAddLink_whenNoTextIsSelected_showsNotification(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               textAreaEditor.textAddLink();
+               assertThat( lastMessage.getActivityType(), equalTo( DesktopWindow.Activity.SHOW_NOTIFICATION ));
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
+      }
+
+      function test_textAddLink_whenTextIsSelected_showsDocumentExplorer(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               selectElementContents( textAreaEditor.getMooEditable().win, textAreaEditor.getMooEditable().doc, textAreaEditor.getMooEditable().doc.getElementsByTagName( "body" )[0] );
+               textAreaEditor.textAddLink();
+               assertThat( lastMessage.getActivityType(), equalTo( DesktopWindow.Activity.SHOW_WINDOW ));
+               assertThat( lastMessage.getWindowName(), equalTo( SYSTEM_WINDOWS.DOCUMENT_EXPLORER ));              
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
+      }
+      
+      function test_textAddLink_whenReceivesDocumentSelectedMessage_addsOrChangesAnchorHref(){
+         testCaseChain.chain(
+            beforeEachTest,
+            function(){
+               selectElementContents( textAreaEditor.getMooEditable().win, textAreaEditor.getMooEditable().doc, textAreaEditor.getMooEditable().doc.getElementsByTagName( "body" )[0] );
+               textAreaEditor.textAddLink();
+               var message = new DocumentSelectedMessage({ originator : SYSTEM_WINDOWS.DOCUMENT_EXPLORER, documentURI : 'http://processpuzzle.com' });
+               webUIMessageBus.notifySubscribers( message );
+               
+               testCaseChain.callChain();
+            },
+            afterEachTest
+         );
+         runTestCase();
+      }
+      
+      function selectElementContents( targetWindow, targetDocument, el ) {
+         var body = targetDocument.body, range, sel;
+         if (body.createTextRange) {
+             range = body.createTextRange();
+             range.moveToElementText(el);
+             range.select();
+         } else if (targetDocument.createRange && window.getSelection) {
+             range = targetDocument.createRange();
+             range.selectNodeContents(el);
+             sel = targetWindow.getSelection();
+             sel.removeAllRanges();
+             sel.addRange(range);
+         }
+     }
+   </script>
+</head>
+
+<body>
+   <h1>TextAreaEditor.js test page</H1>
+   <p>This page contains tests for TextAreaEditor.js JavaScript class.</P>
+   <textArea id="EditorContainer">Hello World</textArea>
+</body>
+</html>

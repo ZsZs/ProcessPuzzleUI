@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+   <title>Test page for VideoPlayerWidget.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+
+   <link rel="stylesheet" type="text/css" href="../ToolBarWidget/ToolBar.css">
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/MochaUI/Core.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Dock.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Layout.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarWidget.js"></script>
+   <script type="text/javascript" src="../../Source/VideoPlayerWidget/VideoPlayerWidget.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
+
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestCase();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
+
+      var LANGUAGE = "hu";
+      var VIDEO_PLAYER_DEFINITION_URI = "../VideoPlayerWidget/VideoPlayerDefinition.xml";
+      var VIDEO_PLAYER_CONTAINER_ID = "VideoPlayerContainer";
+      var WEBUI_CONFIGURATION_URI = "../VideoPlayerWidget/WebUIConfiguration.xml";
+
+      var locale = new Locale({ language : LANGUAGE });
+      var videoPlayer = null;
+      var videoPlayerContainerElement = null;
+      var videoPlayerDefinition = null;
+      var videoPlayerInternationalization = null;
+      var testCaseChain = new Chain();
+      var webUIConfiguration = null;
+      var webUIController = null;
+      var webUILogger = null;
+
+      function setUp(){
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         videoPlayerInternationalization = new XMLResourceBundle( webUIConfiguration );
+         videoPlayerInternationalization.load( locale );
+         videoPlayerDefinition = new XmlResource( VIDEO_PLAYER_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
+         
+         videoPlayer = new VideoPlayerWidget( { widgetContainerId : VIDEO_PLAYER_CONTAINER_ID, widgetDefinitionURI : VIDEO_PLAYER_DEFINITION_URI }, videoPlayerInternationalization );
+         videoPlayerContainerElement = $( VIDEO_PLAYER_CONTAINER_ID );
+      }
+
+      function tearDown(){
+         videoPlayerDefinition.release();
+         videoPlayer.destroy();
+      }
+
+      function test_Initialization_SetsState(){
+         assertThat( videoPlayer.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+      }
+      
+      //runs a test function during debugging
+      function runTestCase(){
+         setUp();
+         test_Initialization_SetsState();
+         tearDown();
+      }
+   </script>
+</head>
+
+<body>
+   <h1>VideoPlayerWidget.js test page</H1>
+   <p>This page contains tests for VideoPlayerWidget.js JavaScript class.</P>
+   <div id="VideoPlayerContainer"></div>
+</body>
+</html>

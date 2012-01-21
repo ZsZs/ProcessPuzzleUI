@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Test page for HierarchicalMenuWiget.js</title>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+   <link type="text/css" rel="stylesheet" href="../HierarchicalMenuWidget/VerticalLayout.css">
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+
+   <script type="text/javascript">
+   window.addEvent('domready', function() {
+      runTestFunction();
+   });
+   
+   JsHamcrest.Integration.JsUnit();
+   
+   var CONFIGURATION_URI = "../HierarchicalMenuWidget/WebUIConfiguration.xml";
+   var LANGUAGE = "hu";
+   var MENU_DEFINITION_URI = "../HierarchicalMenuWidget/MenuDefinition.xml";
+   var MENU_WIDGET_ID = "HierarchicalMenuWidget";
+   var callBackMessage = null;
+   var callBackWasCalled = false;
+   var componentStateManager = null;
+   var locale = new Locale({ language : LANGUAGE });
+   var menuWidget = null;
+   var messageBus = null;
+   var resourceBundle = null;
+   var webUIConfiguration = null;
+   var webUILogger = null;
+   var widgetContainerElement = null;
+
+   function setUp() {
+      messageBus = new WebUIMessageBus();
+      componentStateManager = new ComponentStateManager();
+      webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+      webUILogger = new WebUILogger( webUIConfiguration );
+      resourceBundle = new XMLResourceBundle( webUIConfiguration );
+      resourceBundle.load( locale );
+      widgetContainerElement = $( MENU_WIDGET_ID );
+   }
+
+   function tearDown() {
+      menuWidget.destroy();
+      messageBus.tearDown();
+      componentStateManager.reset();
+      menuWidget = null;
+      webUIConfiguration = null;
+      resourceBundle = null;
+      callBackMessage = null;
+	   callBackWasCalled = false;
+   }
+   
+   function test_Initialization_WhenConstructorArgumentsAreGiven() {
+      //SETUP:
+      //EXCERCISE:
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+   	  
+      //VERIFY:
+      assertTrue( "MenuWidget when initialized...", true );
+      assertTrue( "... loads Menu Definition XML.", menuWidget.getDefinitionXml().isSuccess() );
+      assertEquals( "... retains a pointer to the WebUIMessageBus.", messageBus, menuWidget.getMessageBus() );
+   }
+
+   function test_Initialization_WhenConstructorArgumentsAreMissing() {
+      //SETUP:
+      var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : "../WebUIController/SampleConfiguration.xml" });
+   	  
+      //EXCERCISE:
+      menuWidget = new HierarchicalMenuWidget();
+   	  
+      //VERIFY:
+      assertTrue( "MenuWidget when initialized...", true );
+      assertEquals( "... uses WebUIController's Resource Bundle.", webUIController.getResourceBundle(), menuWidget.getResourceBundle() );
+      assertEquals( "... uses WebUIController's Locale.", webUIController.getCurrentLocale(), menuWidget.getLocale() );
+      assertTrue( "... loads Menu Definition XML, defined in WebUIConfiguration.", menuWidget.getDefinitionXml().isSuccess() );
+   }
+   
+   function test_Initialization_WhenOnlyOptionsAreGiven() {
+      //SETUP:
+      var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : "../WebUIController/SampleConfiguration.xml" });
+
+      //EXCERCISE:
+   	  menuWidget = new HierarchicalMenuWidget({ widgetContainerId : 'AnotherMenuWidget' });
+   	  
+      //VERIFY:
+      assertTrue( "MenuWidget when initialized...", true );
+      assertEquals( "... uses WebUIController's Resource Bundle.", webUIController.getResourceBundle(), menuWidget.getResourceBundle() );
+      assertEquals( "... uses WebUIController's Locale.", webUIController.getCurrentLocale(), menuWidget.getLocale() );
+      assertTrue( "... loads Menu Definition XML, defined in WebUIConfiguration.", menuWidget.getDefinitionXml().isSuccess() );
+      assertEquals( "... anther container element is used.", $( 'AnotherMenuWidget' ), menuWidget.getContainerElement() ); 
+   }
+   
+   function test_initialization_whenComponentStateIsAvailable() {
+      //SETUP:
+      componentStateManager.storeCurrentState( "HierarchicalMenuWidget", { currentItemId : 'itemThreeOfThree', contextItemId : 'mainItemThree' } );
+      
+      //EXCERCISE:
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+      
+      //VERIFY:
+      assertEquals( "Current itemId sould be the stored one:", "itemThreeOfThree", menuWidget.currentItemId );
+   }
+   
+   function test_construct_whenNoOptionsAreGiven() {
+      //SETUP:
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+   	  
+      //EXCERCISE:
+      menuWidget.construct();
+      
+      //VERIFY:
+      assertTrue( "MenuWidget when configured...", true );
+      assertThat( menuWidget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+      assertEquals( "... reloads resource bundle with the given locale.", "hu", menuWidget.getResourceBundle().getLocale().getLanguage() );
+      
+      var listElement = widgetContainerElement.getChildren( "UL" )[0];
+      assertThat( listElement, not( nil() ));
+      assertEquals( "... sets UL element's id.", "MenuWidget", listElement.get( 'id' ));
+      assertEquals( "... determines selected item's class name.", "selectedMenuItem", menuWidget.getSelectedElementClass() );
+      
+      var listItemElements = listElement.getChildren( "LI" );
+      assertEquals( "... creates the specified number of LI elements.", 3, listItemElements.length );
+      var listItemElementOne = listItemElements[0];
+      assertEquals( "... sets LI element's id.", "mainItemOne", listItemElementOne.get( 'id' ));
+      assertEquals( "... creates one Anchor child element.", 1, listItemElementOne.getChildren().length );
+      assertEquals( "... adds 'internationalized' text to anchors.", "Fő menü egy", Sarissa.getText( listItemElementOne.getChildren()[0] )); 
+      assertEquals( "... sets anchor's 'target' to:", "_self", listItemElementOne.getChildren()[0].get( 'target' )); 
+      assertEquals( "... sets anchor's 'href' to:", "#", listItemElementOne.getChildren()[0].get( 'href' )); 
+      assertFalse( "... keeps none default menu item's class empty.", listItemElementOne.hasClass( "selectedMenuItem" ));      
+      
+      var listItemElementTwo = listItemElements[1];
+      assertTrue( "... sets default menu item's class.", listItemElementTwo.hasClass( "selectedMenuItem" ) ); 
+	  
+      assertEquals( "... stores default item's id in ComponentStateManager.", "mainItemTwo", componentStateManager.retrieveCurrentState( menuWidget.options.componentName )['currentItemId']) ; 
+   }
+   
+   function test_construct_whenContextItemIdIsGiven() {
+      //SETUP:
+   	  menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+   	  
+      //EXCERCISE:
+      menuWidget.construct({ contextItemId : 'mainItemTwo' });
+      
+      //VERIFY:
+      var listElement = widgetContainerElement.getChildren( "UL" )[0];
+      assertEquals( "This should be the 1. sub item of 'mainItemTwo'.", "itemOneOfTwo", listElement.getChildren( "LI" )[0].get( 'id' ));
+      assertEquals( "This should be the 2. sub item of 'mainItemTwo'.", "itemTwoOfTwo", listElement.getChildren( "LI" )[1].get( 'id' ));
+      assertEquals( "This should be the 3. sub item of 'mainItemTwo'.", "itemThreeOfTwo", listElement.getChildren( "LI" )[2].get( 'id' ));
+   }
+   
+   function test_Construct_WhenComponentStateIsAvailable() {
+      //SETUP:
+      componentStateManager.storeCurrentState( "HierarchicalMenuWidget", { contextItemId : 'mainItemThree' } );
+   	  menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI, onSelectionCallBack : onSelectCallBack }, resourceBundle );
+      
+      //EXCERCISE:
+      menuWidget.construct();
+      
+      //VERIFY:
+	  assertTrue( "... sets previously selected menu item's class to...", widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[2].hasClass( "selectedMenuItem" ) ); 
+   }
+   
+   function test_Construct_WhenShowSubItems_IsTrue() {
+      //SETUP:
+   	  menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI, showSubItems : true }, resourceBundle );
+   	  
+      //EXCERCISE:
+      menuWidget.construct();
+      
+      //VERIFY:
+      assertTrue( "MenuWidget when configured...", true );
+      assertEquals( "... creates UL elemenst for nested menus too.", 4, widgetContainerElement.getElements( 'UL' ).length );
+      var listElement = widgetContainerElement.getElements( "UL" )[1];
+      assertEquals( "This should be the 1. sub item of 'mainItemOne'.", "itemOneOfOne", listElement.getChildren( "LI" )[0].get( 'id' ));
+      assertEquals( "This should be the 2. sub item of 'mainItemOne'.", "itemTwoOfOne", listElement.getChildren( "LI" )[1].get( 'id' ));
+      assertEquals( "This should be the 3. sub item of 'mainItemOne'.", "itemThreeOfOne", listElement.getChildren( "LI" )[2].get( 'id' ));
+   }
+   
+   function test_ChangeLanguage() {
+      //SETUP:
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI, onSelectionCallBack : onSelectCallBack }, resourceBundle );
+      menuWidget.construct();
+      
+      //EXCERCISE:
+      menuWidget.changeLanguage( new Locale({ language : 'en' }));
+      
+      //VEFIRY:
+      assertEquals( "... reloads resource bundle with the given locale.", "en", menuWidget.getResourceBundle().getLocale().getLanguage() );
+      assertEquals( "... destroys and then rebulds the menu with new language.", "Main Item One", Sarissa.getText( widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[0].getChildren()[0] )); 
+   }
+      
+   function test_Destory() {
+      //SETUP:
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI, onSelectionCallBack : onSelectCallBack }, resourceBundle );
+      menuWidget.construct();
+      
+      //EXCERCISE:
+      menuWidget.destroy();
+      
+      //VEFIRY:
+      assertThat( menuWidget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+      assertEquals( "Destroy removes all child elements of widget container.", 0, widgetContainerElement.getChildren().length );
+   }
+   
+   function test_OnSelection() {
+      //SETUP:
+      messageBus.subscribeToMessage( MenuSelectedMessage, onSelectCallBack );
+      
+      menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI }, resourceBundle );
+      menuWidget.construct();
+      
+      //EXCERCISE:
+      var anchorElement = widgetContainerElement.getElementById( 'mainItemThree' ).getChildren( 'A' )[0];
+      anchorElement.fireEvent( 'click' );
+   	  
+      //VERIFY:
+      assertTrue( callBackWasCalled );
+      assertEquals( "Expected message argument is:", "loadMenu", callBackMessage.getActionType() );
+      assertEquals( "Expected message argument is:", "mainItemThree", callBackMessage.getContextItemId() );
+      assertEquals( "Expected message argument is:", "HierarchicalMenuWidget", callBackMessage.getOriginator() );
+      assertTrue( "Sets 'class' property of the parent LI element.", anchorElement.getParent().hasClass( "selectedMenuItem" ));
+      assertFalse( "Removes 'class' property from all other elements.", widgetContainerElement.getElementById( 'mainItemOne' ).hasClass( "selectedMenuItem" ));
+      assertFalse( "Removes 'class' property from all other elements.", widgetContainerElement.getElementById( 'mainItemTwo' ).hasClass( "selectedMenuItem" ));
+
+      assertEquals( "Stores selected item's id in ComponentStateManager.", "mainItemThree", componentStateManager.retrieveCurrentState( menuWidget.options.componentName )['currentItemId']) ; 
+   }
+   
+   function test_WebUIMessageHandler() {
+      //SETUP:
+      var menuMessage = new MenuSelectedMessage({actionType : 'loadMenu', contextItemId : 'mainItemTwo'});
+   	menuWidget = new HierarchicalMenuWidget({ widgetDefinitionURI : MENU_DEFINITION_URI, subscribeToWebUIMessages : [MenuSelectedMessage] }, resourceBundle );
+      menuWidget.construct();
+	      
+      //EXCERCISE:
+      messageBus.notifySubscribers( menuMessage );
+	      
+      //VERIFY:
+      assertTrue( "MenuWidget should reconfigure the whole menu with the context item of 'mainItemTwo'.", true );
+      assertEquals( "itemOneOfTwo", widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[0].get( 'id' ));
+      assertEquals( "itemTwoOfTwo", widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[1].get( 'id' ));
+      assertEquals( "itemThreeOfTwo", widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[2].get( 'id' ));
+   }
+   
+   function onSelectCallBack( webUIMessage ) {
+      callBackMessage = webUIMessage;
+	   callBackWasCalled = true;
+   }
+   
+   //runs a test function during debugging
+   function runTestFunction(){
+      setUp();
+      test_construct_whenNoOptionsAreGiven();
+      tearDown();
+   }
+   </script>
+</head>
+
+<body>
+   <h1>HierarchicalMenuWidget.js test page</h1>
+   <dir id="HierarchicalMenuWidget"></dir>
+   <dir id="AnotherMenuWidget"></dir>
+</body>
+</html>

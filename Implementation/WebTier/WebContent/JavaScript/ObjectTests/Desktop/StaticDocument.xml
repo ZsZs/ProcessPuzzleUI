@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Static Document</name>
+   <description>Demonstrates static content of a Smart Document.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentHeader tag="div" id="staticDocumentHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1">StaticDocument.title</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="smartDocumentBody">
+      <element tag="p">StaticDocument.paragraph</element>
+   </documentBody>
+   
+   <documentFooter tag="div" id="staticDocumentFooter">
+      <compositeElement tag="div" id="footerWrapper">
+         <element tag="h3">StaticDocument.footer</element>
+      </compositeElement>
+   </documentFooter>
+</smartDocumentDefinition>

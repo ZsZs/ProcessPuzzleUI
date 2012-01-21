@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+   <title>Test page for TabWidget.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+   <link rel="stylesheet" type="text/css" href="../TabWidget/tab.css">
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/DuplicatedTabException.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/TabWidget.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+ 	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestFunction();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+		
+      var LANGUAGE = "hu";
+      var TAB_WIDGET_ID = "TabWidget";
+      var WEBUI_CONFIGURATION_URI = "../TabWidget/WebUIConfiguration.xml";
+      var WIDGET_DEFINITION_URI = "TabsDefinition.xml";
+      var callBackMessage = null;
+      var callBackWasCalled = false;
+      var componentStateManager;
+      var containerElement;
+      var definitionXml;
+      var locale = new Locale({ language : LANGUAGE });
+      var resourceBundle;
+      var tabWidget;
+      var webUIConfiguration;
+      var webUILogger;
+		
+      function setUp() {
+         messageBus = new WebUIMessageBus();
+         componentStateManager = new ComponentStateManager();
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+			
+         resourceBundle = new XMLResourceBundle( webUIConfiguration );
+         resourceBundle.load( locale );
+			
+         containerElement = $( TAB_WIDGET_ID );
+         tabWidget = new TabWidget( { widgetDefinitionURI : WIDGET_DEFINITION_URI }, resourceBundle  );
+         definitionXml = tabWidget.getDefinitionXml();
+      }
+
+      function tearDown(){
+         if( tabWidget ) tabWidget.destroy();
+         messageBus.tearDown();
+         componentStateManager.reset();
+         tabWidget = null;
+         webUIConfiguration = null;
+         resourceBundle = null;
+         callBackMessage = null;
+         callBackWasCalled = false;
+      }
+
+      function test_unmarshall_determinesProperties(){
+         tabWidget.unmarshall();
+		   
+         var definitionXml = tabWidget.getDefinitionXml();
+         assertThat( tabWidget.getId(), equalTo( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@tabWidgetId' )));
+         assertThat( tabWidget.getSelectedTabClass(), equalTo( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@selectedTabClass' )));
+         assertThat( tabWidget.getShowCloseButton(), equalTo( parseBoolean( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@showCloseButton' ))));
+         assertThat( tabWidget.getShowPrintButton(), equalTo( parseBoolean( definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@showPrintButton' ))));
+      }
+      
+      function test_unmarshall_instantiatesTabs(){
+         tabWidget.unmarshall();
+         
+         assertThat( tabWidget.getTabs().size(), equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length ));
+      }
+		
+      function test_construct_createsUnorderedListsAndConstructsTabs() {
+         tabWidget.unmarshall();
+         tabWidget.construct();
+
+         assertThat( containerElement.getElements( 'UL' ).length, equalTo( 2 ));
+         assertThat( containerElement.getElements( 'UL' )[0].hasClass( tabWidget.options.TABCLASSNAME ), is( true ));
+         assertThat( containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length ));
+         assertThat( containerElement.getElements( 'UL' )[1].hasClass( tabWidget.options.BUTTONCLASSNAME ), is( true ));
+      }
+
+      function test_construct_activatesDefaultTab(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+      }
+
+      function test_construct_whenEnabled_createsCloseAndPrintButton(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         assertThat( tabWidget.isCloseButtonVisible(), is( true ));
+         assertThat( tabWidget.isPrintButtonVisible(), is( true ));
+         assertThat( containerElement.getElements( 'UL' )[1].getChildren( 'li' ).length, equalTo( 2 ));
+      }
+
+      function test_addTab_whenWidgetIsConstructed_instantiatesNewTabAndConstructs(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         tabWidget.addTab( "newTab", "TabWidget.addedTab" );
+         
+         assertThat( tabWidget.getTabs().size(), equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length + 1 ));
+         assertThat( containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length +1 ));
+         assertThat( tabWidget.getTabById( "newTab" ).isActive(), is( true ));
+      }
+
+      function test_addTab_whenOnlyInitialized_throwsException() {
+         try{
+            tabWidget.addTab( "newTab", "newTabCaption" );
+            fail( "Expected exception." );
+         }catch( e ){ 
+            assertThat( instanceOf( e, UnconfiguredWidgetException ), is( true ));
+         }
+      }
+
+      function test_removeTab_destroysHtmlElements(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         
+         tabWidget.removeTab( "tab_tabTwo" );
+         
+         assertThat( containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length -1 ));
+      }
+
+      function test_removeTab_whenActiveTabHasNext_activatesNext(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         tabWidget.removeTab( "tab_tabTwo" );
+	         
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabThree" ));
+      }
+
+      function test_removeTab_whenActiveTabIsLast_activatesPrevious(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         tabWidget.activateTab( "tab_tabThree" );
+         tabWidget.removeTab( "tab_tabThree" );
+	            
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+      }
+
+      function test_removeTab_whenOnlyInitialized_throwsException(){
+         try{
+            tabWidget.removeTab( "tab_tabTwo" );
+            fail( "Expected exception." );
+         }catch( e ){ 
+            assertThat( instanceOf( e, UnconfiguredWidgetException ), is( true ));
+         }
+      }
+      
+      function test_activateTab_deactivatesPreviousAndActivatesTheGiven(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+         
+         tabWidget.activateTab( "tab_tabOne" );
+         
+         assertThat( tabWidget.getTabById( "tab_tabTwo" ).isActive(), is( false ));
+         assertThat( tabWidget.getTabById( "tab_tabOne" ).isActive(), is( true ));
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+      }
+
+      function test_activateTab_storesState(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         
+         tabWidget.activateTab( "tab_tabOne" );
+         
+         assertThat( componentStateManager.retrieveCurrentState( tabWidget.options.componentName ).currentTabId, equalTo( "tab_tabOne" ));
+      }
+
+      function test_onTabSelected_activatesTabAndNotifiesSubscribers(){
+         tabWidget.unmarshall();
+         tabWidget.construct();
+         
+         messageBus.subscribeToMessage( TabSelectedMessage, onTabSelectedMessage );
+         tabWidget.onTabSelected( tabWidget.getTabById( "tab_tabOne" ));
+         
+         assertThat( callBackWasCalled, is( true ));
+         assertThat( tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+      }
+      
+      function onTabSelectedMessage( message ){
+         callBackWasCalled = true;
+         assertThat( message.getId(), equalTo( "tab_tabOne" ));
+      }
+
+      //runs a test function during debugging
+      function runTestFunction(){
+         setUp();
+         test_activateTab_storesState();
+         tearDown();
+      }
+   </script>
+</head>
+
+<body>
+	<h1>TabWidgetTest.js test page</h1>
+	<p>This page contains tests for TabWidgetigatorTest.js javascript class.</p>
+
+	<div id="TabWidget"></div>
+
+<!--
+	Schema, example:
+	<div id="TabWidget">
+		<ul Class="Tabs">
+			<li><a href="#">Tab_1</a></li>
+			<li><a href="#">Tab_2</a></li>
+		</ul>
+		<ul Class="Buttons">
+			<li><a href="#" title="Close">Close</a></li>
+			<li><a href="#">Print</a></li>
+		</ul>
+	</div>
+-->
+</body>
+</html>

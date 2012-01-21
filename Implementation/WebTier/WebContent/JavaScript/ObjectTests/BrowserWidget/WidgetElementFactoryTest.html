@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+   <title>Test page for WidgetElementFactory.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/MochaUI/Core.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Dock.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Layout.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Tabs.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Window.js"></script>
+   <script type="text/javascript" src="../../Libraries/MochaUI/Modal.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script> 
+
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestCase();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
+
+      var ANCHOR_ID = "anchorId";
+      var ANCHOR_LINK = "http://processpuzzle.com"
+      var ANCHOR_TEXT = "a link";
+      var CLICK_EVENT_HANDLER = function anchorClickEvent() { alert("You clicked me."); };
+      var CONTEXT_ELEMENT_ID = "contextElement";
+      var FIELDSET_IMAGE_ID = "fieldSetImageId";
+      var FORM_NAME = "newForm"
+      var FORM_METHOD_TYPE = "POST";
+      var HIDDEN_DIVISION_ID = "hiddenVisionId";
+      var INTERNATIONALIZATION_URI = "../BrowserWidget/WidgetInternationalization.xml";
+      var LANGUAGE = "hu";
+      var NEW_ELEMENT_CLASS = "newElementClass";
+      var NEW_ELEMENT_ID = "newElementId";
+      var NEW_ELEMENT_TEXT = "Hello World!";
+      var RESOURCE_KEY = "Widget.ItemOne";
+      var ROW_LABEL = "row label:";
+      var ROW_VALUE = "row value";
+      var ROW_VALUE_ID = "rowValueId";
+      var TABLE_COLUMN_ONE = "First Column";
+      var TABLE_COLUMN_TWO = "Second Column";
+      var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
+
+      var contextElement = null;
+      var elementFactory = null;
+      var i18Resource = null;
+      var locale = new Locale( LANGUAGE );
+      var newElement = null;
+      var webUIConfiguration = null;
+      var webUILogger = null;
+
+      function setUp(){
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         i18Resource = new XMLResourceBundle( webUIConfiguration );
+         i18Resource.load( locale );
+         contextElement = $( CONTEXT_ELEMENT_ID );
+         elementFactory = new WidgetElementFactory( contextElement, i18Resource );
+      }
+
+      function tearDown(){
+         i18Resource.release();
+         if( newElement ) newElement.destroy();
+         newElement = null;
+         elementFactory = null;
+      }
+      
+      function test_Create_InstantiatesNewElementWithGivenProperties(){
+         newElement = elementFactory.create( 'div', null, null, null, { id : NEW_ELEMENT_ID, 'class' : "newElementClass" } );
+         assertThat( newElement.get( 'tag' ).toUpperCase(), equalTo( "DIV" ));
+         assertThat( newElement.get( 'id' ), equalTo( NEW_ELEMENT_ID ));
+         assertThat( newElement.get( 'class'), equalTo( NEW_ELEMENT_CLASS ));
+      }
+      
+      function test_Create_WhenTextIsGivenAddsToNode(){
+         newElement = elementFactory.create( 'div', NEW_ELEMENT_TEXT );
+         assertThat( newElement.get( 'text' ), equalTo( NEW_ELEMENT_TEXT ));
+      }
+      
+      function test_Create_WhenTextIsGivenTranslatesIt(){
+         newElement = elementFactory.create( 'div', RESOURCE_KEY );
+         assertThat( newElement.get( 'text' ), equalTo( i18Resource.getText( RESOURCE_KEY )));
+      }      
+      
+      function test_Create_InsertsNewElementIntoGivenPosition(){
+         var elementBefore = elementFactory.create( 'div', "Before", contextElement, WidgetElementFactory.Positions.Before );
+         assertThat( contextElement.getPrevious(), equalTo( elementBefore ));
+         
+         var elementAfter = elementFactory.create( 'div', "After", contextElement, WidgetElementFactory.Positions.After );
+         assertThat( contextElement.getNext(), equalTo( elementAfter ));
+         
+         var firstChild = elementFactory.create( 'div', "FirstChild", contextElement, WidgetElementFactory.Positions.FirstChild );
+         assertThat( contextElement.getFirst(), equalTo( firstChild ));
+
+         var lastChild = elementFactory.create( 'div', "LastChild", contextElement, WidgetElementFactory.Positions.LastChild );
+         assertThat( contextElement.getLast(), equalTo( lastChild ));
+
+         //TEAR DOWN:
+         elementBefore.destroy();
+         elementAfter.destroy();
+         firstChild.destroy();
+         lastChild.destroy();
+      }
+      
+      function test_CreateAnchor_CreatesNewAnchorElement() {
+         //SETUP:
+         //EXCERCISE:
+         newElement = elementFactory.createAnchor( ANCHOR_TEXT, ANCHOR_LINK, CLICK_EVENT_HANDLER, null, null, {'id' : ANCHOR_ID } );
+         
+         //VERIFY:
+         assertNotNull( "A new achor was created.", newElement );
+         assertEquals( "A", newElement.tagName.toUpperCase() );
+         assertEquals( ANCHOR_ID, newElement.get( 'id' ));
+         assertEquals( ANCHOR_TEXT, newElement.get( 'text' ));
+         assertEquals( "#", newElement.get( 'href' ));
+
+         var events = newElement.retrieve( 'events' );
+         var clickEventHandler = events['click'].keys[0];
+         assertEquals( CLICK_EVENT_HANDLER, clickEventHandler );
+      }
+       
+      function testCreateButton_CreatesNewInputElement() {
+         //SETUP: see setUp()
+         //EXERCISE:
+         newElement = elementFactory.createButton( RESOURCE_KEY, CLICK_EVENT_HANDLER );
+           
+         //VERIFY:
+         assertEquals( "INPUT", newElement.tagName.toUpperCase() );
+         assertEquals( "button", newElement.get( 'type' ));
+         assertEquals( i18Resource.getText( RESOURCE_KEY ), newElement.get( 'value' ));
+         assertTrue( newElement.hasClass( elementFactory.options.buttonClass ) );
+         assertEquals( CLICK_EVENT_HANDLER, newElement.retrieve( 'events' )['click'].keys[0] );
+      }
+      
+      function test_CreateCollapsibleArea_CreatesNewDivElement() {
+         //SETUP:
+         //EXCERCISE:
+         var newElement = elementFactory.createCollapsibleArea();
+         
+         //VERIFY:
+         assertNotNull( "A new division element was created.", newElement ); 
+         assertEquals( "DIV", newElement.tagName.toUpperCase() );
+         assertTrue( newElement.hasClass( elementFactory.options.readOnlyContainerClassName ) );
+      }
+       
+      function testCreateDivisionElement() {
+         //SETUP:
+         //EXCERCISE:
+         var newElement = elementFactory.createDivision();
+         
+         //VERIFY:
+         assertNotNull( "A new division element was created.", newElement ); 
+         assertEquals( "DIV", newElement.tagName.toUpperCase() );
+         assertTrue( newElement.hasClass( elementFactory.options.readOnlyContainerClassName ));
+      }
+       
+      function test_CreateFieldSet_CreatesFieldsetAndNestedLegendAndImageElements() {
+         //SETUP:
+         //EXCERCISE:
+         var newElement = elementFactory.createFieldSet( FIELDSET_IMAGE_ID );
+         
+         //VERIFY:
+         assertNotNull( "A new FIELDSET element was created.", newElement ); 
+         assertEquals( "FIELDSET", newElement.tagName.toUpperCase() );
+         
+         assertEquals( elementFactory.options.fieldSetStyle["border-color"], newElement.getStyle( "border-color" ));
+         assertEquals( elementFactory.options.fieldSetStyle["width"], newElement.getStyle( "width" ));
+         
+         var legend = newElement.getElement( "LEGEND" );
+         assertNotNull( "Fieldset has a LEGEND child element.", legend );
+         
+         var image = newElement.getElement( "LEGEND IMG" );
+         assertNotNull( "LEGEND within FIELDSET element has an IMG child element.", image );
+         assertEquals( FIELDSET_IMAGE_ID, image.get( "id" ));
+         assertEquals( elementFactory.options.fieldSetImageSource, image.get( "src" ));
+         assertEquals( elementFactory.options.fieldSetImageAlt, image.get( "alt" ));
+         assertEquals( elementFactory.options.fieldSetImageTitle, image.get( "title" ));
+         assertEquals( elementFactory.options.fieldSetImageStyle["cursor"], image.getStyle( "cursor" ));
+      }
+       
+      function test_CreateForm_AppendsNewFormToContainer() {
+         //SETUP: See setUp()
+         
+         //EXCERCISE:
+         newElement = elementFactory.createForm( FORM_NAME, FORM_METHOD_TYPE );
+         
+         //VERIFY:
+         assertThat( newElement.get('id'), equalTo( FORM_NAME) );
+         assertThat( newElement.get('method'), equalTo( FORM_METHOD_TYPE ));
+         assertThat( contextElement.getElementById( FORM_NAME ).get( 'tag' ).toUpperCase(), equalTo( "FORM" ));
+      }
+      
+      function test_CreateHiddenDivision_SetsDisplayToNone() {
+         //SETUP:
+         //EXCERCISE:
+         var newElement = elementFactory.createHiddenDivision( HIDDEN_DIVISION_ID );
+          
+         //VERIFY:
+         assertNotNull( "A new DIV element was created.", newElement );
+         assertEquals( "DIV", newElement.tagName.toUpperCase() );
+         assertEquals( HIDDEN_DIVISION_ID, newElement.id );
+         assertEquals( "none", newElement.getStyle( "display" ) );
+         assertTrue( newElement.hasClass( elementFactory.options.readOnlyContainerClassName ));
+      }
+      
+      function test_CreateRowLabel_InstantiatesSpanWithGivenTextAndClass() {
+         //SETUP:
+         //EXCERCISE:
+         var newElement = elementFactory.createRowLabel( ROW_LABEL );
+          
+         //VERIFY:
+         assertElementExists( newElement, "SPAN" );
+         assertTrue( newElement.hasClass( elementFactory.options.labelClassName ) );
+         assertEquals( ROW_LABEL, newElement.get( 'text' ) );
+      }
+
+      function test_CreateRowValue_InstantiatesSpanWithClass() {
+         //SETUP:
+         //EXCERCISE:
+         var newElement = elementFactory.createRowValue( ROW_VALUE, ROW_VALUE_ID );
+          
+         //VERIFY:
+         assertElementExists( newElement, "SPAN" );
+         assertThat( newElement.get( 'text' ), equalTo( ROW_VALUE ));
+         assertThat( newElement.get( 'id' ), equalTo( ROW_VALUE_ID ));
+         assertTrue( newElement.hasClass( elementFactory.options.valueClassName ) );
+      }
+        
+        
+      function test_createStaticRow_AppendsNewDivWithLabelAndSpan() {
+         //SETUP: See setUp()
+         
+         //EXCERCISE:
+         newElement = elementFactory.createStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID, contextElement );
+
+         //VERIFY:
+         assertThat( newElement.get( 'class' ), equalTo( elementFactory.options.rowClassName ) );
+         assertThat( newElement.getFirst().get( 'tag' ).toUpperCase(), equalTo( "LABEL" ));
+         assertThat( newElement.getFirst().get( 'class' ), equalTo( elementFactory.options.labelClassName ));
+         assertThat( newElement.getFirst().get( 'text' ), equalTo( ROW_LABEL ));
+         assertThat( newElement.getLast().get( 'tag' ).toUpperCase(), equalTo( "SPAN" ));
+         assertThat( newElement.getLast().get( 'class' ), equalTo( elementFactory.options.valueClassName ));
+         assertThat( newElement.getLast().get( 'text' ), equalTo( ROW_VALUE ));
+         assertThat( newElement.getLast().get( 'id' ), equalTo( ROW_VALUE_ID ));
+      }
+       
+      function testCreateTable_InstantiatesTableHeaderAndRowsElements() {
+         //SETUP:
+         var tableDefinition = defineTestTable();
+         
+         //EXCERCISE:
+         var newElement = elementFactory.createTable( tableDefinition, contextElement );
+          
+         //VERIFY:
+         assertNotNull( "A new TABLE element was created.", newElement );
+         assertEquals( "TABLE", newElement.tagName.toUpperCase() );
+         
+         assertNotNull( "The TABLE contains THEAD element.", newElement.getElement( "THEAD" ) );
+         assertNotNull( "The table head (THEAD) contains a TR element.", newElement.getElement( "THEAD TR" ) );
+         assertEquals( tableDefinition.getColumns().size(), newElement.getElements( "THEAD TR TH" ).length );
+          
+         newElement.getElements( "THEAD TR TH" ).each( function( tableHeader, index ){
+            assertEquals( tableDefinition.getColumns().getColumnByIndex( index ).getCaption(), tableHeader.get( 'text' ));
+         });
+          
+         assertNotNull( "The TABLE contains TBODY element.", newElement.getElement( "TBODY" ) );
+         assertEquals( "The table body contains 2 TR elements.", 2, newElement.getElements( "TBODY TR" ).length );
+         assertEquals( "The 2 rows contains 4 TD elements.", 4, newElement.getElements( "TBODY TR TD" ).length );
+         newElement.getElements( "TBODY TR TD" ).each( function( tableData, index ){
+            assertEquals( index +1, tableData.get( 'text' ).toInt() );
+         }); 
+      }
+        
+      //Private helper methods
+      function assertElementExists( element, tagName ){
+         assertNotNull( "The given element exists.", element );
+         assertEquals( tagName, element.tagName.toUpperCase() );
+      }
+      
+      function defineTestTable() {
+         var tableDefinition = new TableDefinition( i18Resource );
+         tableDefinition.addColumn( TABLE_COLUMN_ONE );
+         tableDefinition.addColumn( TABLE_COLUMN_TWO );
+         tableDefinition.addRow( new Array( 1,2 ) );
+         tableDefinition.addRow( new Array( 3,4 ) );
+        
+         return tableDefinition;
+      }
+
+      //runs a test function during debugging
+      function runTestCase(){
+         setUp();
+         testCreateTable_InstantiatesTableHeaderAndRowsElements();
+         tearDown();
+      }
+   </script>
+</head>
+
+<body>
+   <h1>WidgetElementFactory.js test page</H1>
+   <p>This page contains tests for WidgetElementFactory.js JavaScript class.</P>
+   <div id="contextElement">Context Element
+      <div id="childElement">Child of Context</div>
+   </div>
+</body>
+</html>

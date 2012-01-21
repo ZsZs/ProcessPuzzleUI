@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Test page for XmlResource.js</title>
+
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XPathSelectionException.js"></script>
+
+   <script type="text/javascript">
+      window.addEvent( 'domready', function() {
+         runTestFunction();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+
+      var INJECTION_POINT = "/pp:Resources/Language[@name='en']/Resource";
+      var NEW_ELEMENT_NAME = "newElement";
+      var NEW_ELEMENT_TEXT = "new element text";
+      var RESOURCE_LOCATOR_ONE = "../Internationalization/TestResources.xml";
+      var RESOURCE_LOCATOR_TWO = "../Internationalization/TestResources_en.xml";
+      var xmlResource;
+
+      function setUp() {
+         xmlResource = new XmlResource( RESOURCE_LOCATOR_ONE, {
+         nameSpaces : "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'"} );
+      }
+
+      function tearDown() {
+         xmlResource = null;
+      }
+
+      function test_initialize_retrievesXmlResource() {
+         //SETUP:
+         //EXCERCISE:
+         //VERIFY:
+         assertNotNull( xmlResource );
+         assertNotNull( xmlResource.getDocument() );
+         assertTrue( xmlResource.isSuccess() );
+         assertTrue( !xmlResource.isAsync() );
+         assertEquals( RESOURCE_LOCATOR_ONE, xmlResource.getUri() );
+      }
+
+      function test_initialize_whenResourceLocationIsWrong_throwsException() {
+         try{
+            new XmlResource( "dummy.xml" );
+            fail( "Exception was expected. 'uri' parameter can't be null, empty or invalid." );
+         }catch (e){
+            assertTrue( "UndefinedXmlResourceException is expected.", e instanceof UndefinedXmlResourceException );
+         }
+      }
+      
+      function test_createElement(){
+         var newElement = xmlResource.createElement( NEW_ELEMENT_NAME, { text : NEW_ELEMENT_TEXT });
+         assertThat( String.from( newElement.nodeName ).toUpperCase(), equalTo( NEW_ELEMENT_NAME.toUpperCase() ) );
+         assertThat(  Sarissa.getText( newElement ), equalTo( NEW_ELEMENT_TEXT ));
+      }
+
+      function test_determineAttributeValue() {
+         var closeCommandElement = xmlResource.selectNode( "/pp:Resources/Resource[@key='CloseActiveDocumentCommand']" );
+         assertEquals( "CloseActiveDocumentCommand", xmlResource.determineAttributeValue( closeCommandElement, "key" ) );
+      }
+
+      function test_determineNodeText() {
+         var closeCommandElement = xmlResource.selectNode( "/pp:Resources/Resource[@key='CloseActiveDocumentCommand']" );
+         assertEquals( "Close", xmlResource.determineNodeText( closeCommandElement ) );
+      }
+      
+      function test_injectElement(){
+         var newElement = xmlResource.createElement( NEW_ELEMENT_NAME, { text : NEW_ELEMENT_TEXT });
+         xmlResource.injectElement( newElement, INJECTION_POINT, XmlResource.Positions.LastChild );
+         assertThat( xmlResource.selectNode( INJECTION_POINT ).getElementsByTagName( NEW_ELEMENT_NAME ), not( nil() ));
+      }
+
+      function test_selectNodes() {
+         assertThat( typeOf( xmlResource.selectNodes( "/pp:Resources/Resource" )), equalTo( 'array' ));
+      }
+
+      function test_selectNode() {
+         //SETUP: see setUp()
+         //EXCERCISE, VERIFY:
+         assertEquals( "Close", xmlResource.selectNode( "/pp:Resources/Resource[@key='CloseActiveDocumentCommand']/text()" ).nodeValue );
+      }
+
+      function test_selectNodeText() {
+         var subNodes = xmlResource.selectNodes( "/pp:Resources/Language[@name='hu']" );
+
+         assertEquals( "Nyomtatás", xmlResource.selectNodeText( "Resource", subNodes[0] ) );
+      }
+
+      function test_refresh() {
+         //SETUP:
+         //EXCERCISE:
+         xmlResource.refreshResource();
+
+         //VERIFY:
+         assertTrue( xmlResource.isSuccess() );
+         assertEquals( RESOURCE_LOCATOR_ONE, xmlResource.getUri() );
+      }
+
+      function test_refresh_WhenParseOnCompleteIsFalse() {
+         //SETUP:
+         xmlResource = new XmlResource( RESOURCE_LOCATOR_ONE, {
+            nameSpaces : "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'",
+            parseOnComplete : false} );
+
+         //EXCERCISE:
+         xmlResource.refreshResource();
+
+         //VERIFY:
+         assertNull( "Whent parseOncomplete is false xmlDocument should be null.", xmlResource.getDocument() );
+         assertNotNull( "Although the xml resource is retrieved.", xmlResource.getXmlAsText() );
+      }
+
+      //runs a test function during debugging
+      function runTestFunction() {
+         setUp();
+         test_selectNodes();
+         tearDown();
+      }
+   </script>
+</head>
+
+<body>
+ <h1>XmlResource.js test page</h1>
+</body>
+</html>

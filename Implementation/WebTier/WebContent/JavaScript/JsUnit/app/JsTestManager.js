@@ -157,9 +157,18 @@ var JsTestManager = new Class({
    checkIfTestPageLoaded : function(){
       var self = top.testManager;
       self.numberOfTries++;
-      var testFrameUrl = self.testFrame.document.location.href.substring( 0, self.testFrame.document.location.href.indexOf( "?" ));
-      var currentPageUri = self.currentTestPage.getUrl().substring( self.currentTestPage.getUrl().lastIndexOf( "./" ) +2 );
-      if( self.testFrame.document.readyState == 'complete' && testFrameUrl.contains( currentPageUri )){
+//console.log( self.numberOfTries + "-nd try to load: " + self.currentTestPage.getUrl() );
+
+      var positionOfQuestionMark = self.testFrame.document ? self.testFrame.document.location.href.indexOf( "?" ) : -1;
+      positionOfQuestionMark = positionOfQuestionMark >= 0 ? positionOfQuestionMark : 0;
+      var testFrameUrl = self.testFrame.document ? self.testFrame.document.location.href.substring( 0, positionOfQuestionMark ) : "";
+      
+      var positionOfLastSlash = self.currentTestPage.getUrl().lastIndexOf( "./" );
+      positionOfLastSlash = positionOfLastSlash == -1 ? 0 : positionOfLastSlash +2;
+      var currentPageUri = self.currentTestPage.getUrl().substring( positionOfLastSlash );
+      
+      if( self.testFrame.document && self.testFrame.document.readyState == 'complete' && testFrameUrl.contains( currentPageUri )){
+//console.log( "Loading: " + self.currentTestPage.getUrl() + "succseeded!" );
          clearInterval( self.timer );
          self.onTestPageLoaded();
       }else if( self.numberOfTries >= self.options.maxTries ){
@@ -192,7 +201,7 @@ var JsTestManager = new Class({
    }.protect(),
    
    finalizeTestRun : function(){
-      this.testFrame.removeEvents();
+      if( this.testFrame && this.testFrame.removeEvents ) this.testFrame.removeEvents();
       this.containerController.setTestPage( this.testerContextRoot + this.options.emptyTestPage );
       this.uiManager.finishing();
    }.protect(),
@@ -203,14 +212,10 @@ var JsTestManager = new Class({
       this.errorCount = 0;
       this.failureCount = 0;
       this.log = new Array();
-//      this.testGroupStack = new Array();
       this.testPages = new Array();
       this.testResults = new JsTestSuiteResults();
       this.testStack = new JsTestStack();
       this.timeRunStarted = new Date();
-      
-//      var initialSuite = new JsTestSuite();
-//      this.addTestSuite( initialSuite );      
    }.protect(),
 
    initializeUIManager : function() {

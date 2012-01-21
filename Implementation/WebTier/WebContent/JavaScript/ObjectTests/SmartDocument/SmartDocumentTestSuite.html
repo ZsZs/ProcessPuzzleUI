@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+  <head>
+	<title>SmartDocument Test Suite</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+   <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+	
+   <!-- JavaScript Unit -->
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestSuite.js"></script>
+   <!-- JavaScript Unit -->
+
+   <script type="text/javascript">
+      function suite() {
+        var newsuite = new JsTestSuite();
+        newsuite.addTestPage("../Source/SmartDocument/CompositeDataElementTest.html");
+		  newsuite.addTestPage("../Source/SmartDocument/CompositeDocumentElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DataElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DocumentElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DocumentElementEditorTest.html");
+		  newsuite.addTestPage("../Source/SmartDocument/DocumentHeaderTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/DocumentPluginTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/FormElementTest.html");
+        newsuite.addTestPage("../Source/SmartDocument/FormFieldTest.html");
+		  newsuite.addTestPage("../Source/SmartDocument/SmartDocumentTest.html");
+		  return newsuite;
+		}
+	</script>
+  </head>
+
+  <body>
+    <h1>SmartDocument Test Suite</h1>
+
+    <p>This page contains a suite of tests for&nbsp;'SmartDocument' testing.</p>
+  </body>
+</html>

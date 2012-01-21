@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+<head>
+   <title>Test page for Tab.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+   <link rel="stylesheet" type="text/css" href="../TabWidget/tab.css">
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+	
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
+
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>	
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
+ 	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestFunction();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+		
+      var LANGUAGE = "hu";
+      var TAB_CAPTION = "aTab";
+      var TAB_DEFINITION_SELECTOR = "/pp:tabWidgetDefinition/tabWidget/tab[@tabId='tabTwo']";
+      var TAB_NAME = "aTab";
+      var TAB_WIDGET_ID = "TabWidget";
+      var WEBUI_CONFIGURATION_URI = "../TabWidget/WebUIConfiguration.xml";
+      var WIDGET_DEFINITION_URI = "TabsDefinition.xml";
+      var aTab;
+      var componentStateManager;
+      var locale = new Locale({ language : LANGUAGE });
+      var messageBus;
+      var onTabSelectedWasCalled;
+      var parentElement;
+      var resourceBundle;
+      var tabDefinition;
+      var targetObject;
+      var webUIConfiguration;
+      var webUILogger;
+      var widgetDefinition;
+	
+      function setUp(){
+         onTabSelectedWasCalled = false;
+         messageBus = new WebUIMessageBus();
+         componentStateManager = new ComponentStateManager();
+         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
+         webUILogger = new WebUILogger( webUIConfiguration );
+         resourceBundle = new XMLResourceBundle( webUIConfiguration );
+         resourceBundle.load( locale );
+         
+         widgetDefinition = new XmlResource( WIDGET_DEFINITION_URI );
+         tabDefinition = widgetDefinition.selectNode( TAB_DEFINITION_SELECTOR );
+         
+         aTab = new Tab( tabDefinition, resourceBundle, { onTabSelected : onTabSelected } );
+         parentElement = $$( 'ul.Tabs' );
+      }
+      
+      function onTabSelected(){
+         onTabSelectedWasCalled = true;
+      }
+
+      function tearDown(){
+         messageBus.tearDown();
+         if( aTab.isVisible() ) aTab.destroy();
+         aTab = null;
+      }
+
+      function test_initialize_setsDefaultValues(){
+         assertThat( aTab.isVisible(), is( false ));
+         assertThat( aTab.isActive(), is( false ));
+      }
+
+      function test_initialize_whenDefinitionArgumentIsMissing_throwsException(){
+         try{ 
+            var anotherTab = new Tab();
+            fail("No exception was thrown.");
+         }catch(e) {
+            assertThat( instanceOf( e, JsUnit.Failure ), is( true ));
+         }
+      }
+
+      function test_unmarshall_determinesProperties(){
+         aTab.unmarshall();
+         
+         assertThat( aTab.getId(), equalTo( aTab.options.idPrefix + XmlResource.selectNodeText( "@tabId", tabDefinition )));
+         assertThat( aTab.getCaption(), equalTo( resourceBundle.getText( XmlResource.selectNodeText( "@caption", tabDefinition ))));
+         assertThat( aTab.isDefault(), equalTo( parseBoolean( XmlResource.selectNodeText( "@isDefault", tabDefinition ))));
+         assertThat( aTab.getMessageProperties(), equalTo( "{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }" ));
+      }
+            
+      function test_construct_createsLiAndAnchorElements() {         
+         aTab.unmarshall();
+         aTab.construct( parentElement );
+         
+         assertThat( parentElement.getChildren( 'li' ).length, equalTo( 1 ));
+         assertThat( parentElement.getElements( 'a' ).length, equalTo( 1 ));
+         //assertThat( parentElement.getElements( 'a' )[0].get( 'text' ).toString(), equalTo( resourceBundle.getText( XmlResource.selectNodeText( "@caption", tabDefinition ))));
+         assertThat( aTab.isVisible(), is( true ));
+      }
+      
+      function test_activate_setsLIElementId(){
+         aTab.unmarshall();
+         aTab.construct( parentElement );
+         aTab.activate();
+         
+         assertThat( parentElement.getChildren( 'li' )[0].get( 'id').toString(), equalTo( aTab.options.currentTabId ));
+         assertThat( aTab.isActive(), is( true ));
+      }
+      
+      function test_deActivate_removesLIElementId(){
+         aTab.unmarshall();
+         aTab.construct( parentElement );
+         aTab.activate();
+         aTab.deActivate();
+         
+         assertThat( parentElement.getChildren( 'li' )[0].get( 'id').toString(), equalTo( "" ));
+         assertThat( aTab.isActive(), is( false ));
+      }
+      
+      function test_equals_whenTabsAreSame_returnsTrue() {
+         var tabOne = new Tab( tabDefinition, resourceBundle );
+         tabOne.unmarshall();
+         var tabTwo = new Tab( tabDefinition, resourceBundle );
+         tabTwo.unmarshall();
+			
+         assertTrue( tabOne.equals( tabTwo ));
+         assertTrue( tabTwo.equals( tabOne ));
+      }
+
+		function test_equals_whenDifferentClass_returnsFalse(){
+			assertFalse( aTab.equals( new Object() ));
+		}
+		
+      function test_onSelection_activatesTabAndFiresEvent() {
+         aTab.unmarshall();
+         aTab.construct( parentElement );
+         aTab.deActivate();
+         
+         aTab.onSelection()
+   	  
+         assertThat( aTab.isActive(), is( true ));
+         assertThat( onTabSelectedWasCalled, is( true ));
+      }
+      
+      function test_click_callsOnSelection(){
+         aTab.unmarshall();
+         aTab.construct( parentElement );
+         aTab.deActivate();
+         
+         var anchorElement = $( aTab.getId() );
+         anchorElement.fireEvent( 'click' );
+         
+         assertThat( aTab.isActive(), is( true ));
+         assertThat( onTabSelectedWasCalled, is( true ));
+      }
+      
+      function test_destroy_destroysHtmlElement(){
+         aTab.unmarshall();
+         aTab.construct( parentElement );
+         aTab.destroy();
+         
+         assertThat( parentElement.getElements()[0].length, equalTo( 0 ));
+      }
+   
+      //runs a test function during debugging
+      function runTestFunction(){
+         setUp();
+         test_unmarshall_determinesProperties();
+         tearDown();
+      }
+    </script>
+</head>
+
+<body>
+	<h1>Tab.js test page</H1>
+	<p>This page contains tests for Tab.js JavaScript class.</P>
+
+	<div id=TabWidget>
+			<ul class="Tabs"></ul>
+	</div>
+</body></html>

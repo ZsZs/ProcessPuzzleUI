@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Test page for DesktopDocument.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+    
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+	
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentElement.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/CompositeDocumentElement.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentBody.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentFooter.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentHeader.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/SmartDocument.js"></script>
+   <script type="text/javascript" src="../../Source/SmartDocument/UnconfiguredDocumentElementException.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="../../Source/Desktop/DesktopDocument.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/RemoteResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/LanguageSelectorWidget/LanguageChangedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentResource.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentImage.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentScript.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/DocumentStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Source/ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+
+   <script type="text/javascript" src="../../ObjectTests/Desktop/DesktopDocumentTest.js"></script>
+	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         //test_construct_constructsDocument();
+         //test_destroy_destroysDocument();
+      });
+				
+      JsHamcrest.Integration.JsUnit();		
+   </script>
+</head>
+
+<body>
+	<h1>DesktopDocument.js test page</H1>
+	<p>This page contains tests for DesktopDocument.js JavaScript class.</P>
+	<div id="Desktop">ProcessPuzzleUI desktop container.</div>
+</body>
+</html>

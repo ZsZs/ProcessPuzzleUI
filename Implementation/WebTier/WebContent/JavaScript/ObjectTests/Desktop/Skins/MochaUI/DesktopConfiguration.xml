@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<desktopConfiguration 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopConfiguration.xsd">
+
+	<name>MochaUI Desktop</name>
+	<version>1.0</version>
+	<description>This is full flagged desktop configuration.</description>
+   <containerId>desktopContainer</containerId>
+
+	<resources>
+		<styleSheets>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Core.css</styleSheet>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Content.css</styleSheet>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Dock.css</styleSheet>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Layout.css</styleSheet>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Panels.css</styleSheet>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Tabs.css</styleSheet>
+			<styleSheet>../Desktop/Skins/MochaUI/Styles/Window.css</styleSheet>
+		</styleSheets>
+		<images></images>
+		<javaScripts></javaScripts>
+	</resources>
+	
+   <header documentDefinition="../Desktop/Skins/MochaUI/DesktopHeader.xml"/>
+	
+   <windowDocker tag="div" id="dockWrapper" />
+
+   <contentArea tag="div" id="pageWrapper" />
+
+   <footer documentDefinition="../Desktop/Skins/MochaUI/DesktopFooter.xml"/>
+   
+	<columns>
+		<column name='mainColumn' placement='main' minimumWidth='100' maximumWidth='300' />
+		<column name='rightColumn' placement='right' width='220' minimumWidth='200' maximumWidth='300' />
+	</columns>
+	
+	<panels>
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false">
+			<title>DesktopConfigurator.Panel.documentsTitle</title>
+		</panel>
+		
+		<panel name='console' columnReference='mainColumn' height='100' showHeader='true'>
+			<title>DesktopConfigurator.Panel.consoleTitle</title>
+		</panel>
+		
+		<panel name='menu-panel' columnReference='rightColumn' showHeader='true'>
+			<title>DesktopConfigurator.Panel.menusTitle</title>
+		</panel>
+		
+		<panel name='tips-panel' columnReference='rightColumn' height='150' showHeader='true'>
+			<title>DesktopConfigurator.Panel.tipsTitle</title>
+		</panel>
+	</panels>
+	
+   <windows>
+   </windows>
+
+</desktopConfiguration>

@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+   <title>Test page for WebUIConfiguration.js</title>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+	
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+	
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         runTestFunction();
+      });
+  	  
+   JsHamcrest.Integration.JsUnit();
+		
+   var APPENDER_ONE_NAME = "xmlAjaxAppender";
+   var APPENDER_TWO_NAME = "formattedPopUpAppender";
+   var APPENDER_THREE_NAME = "formattedInPageAppender";
+   var APPENDER_FOUR_NAME = "formattedConsoleAppender";
+   var CONFIGURATION_URI = "../WebUIConfiguration/WebUIConfiguration.xml";
+   var DEFAULT_SKIN = "ProcessPuzzle";
+   var LAYOUT_ONE_NAME = "formattedLayout";
+   var LAYOUT_TWO_NAME = "xmlLayout";
+   var LOCALE_ONE = "hu";
+   var LOCALE_TWO = "en, GB";
+   var LOGGER_ONE_NAME = "WebUI";
+   var LOGGER_TWO_NAME = "ProcessPuzzle";
+   var RESOURCE_BUNDLE_ONE = "../Internationalization/TestResources";
+   var RESOURCE_BUNDLE_TWO = "../Internationalization/TestResourcesTwo";
+   var SKIN_ONE_NAME = "MochaUI";
+   var SKIN_ONE_CONFIGURATION = "../DesktopConfigurator/Skins/MochaUI/DesktopConfiguration.xml";
+   var SKIN_ONE_PATH = "../DesktopConfigurator/Skins/MochaUI";
+   var SKIN_TWO_NAME = "ProcessPuzzle";
+   var SKIN_TWO_CONFIGURATION = "../DesktopConfigurator/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml";
+   var SKIN_TWO_PATH = "../DesktopConfigurator/Skins/ProcessPuzzle";
+   var webUIConfiguration = null;
+
+   function setUp() {
+      webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
+   }
+
+   function tearDown() {
+      webUIConfiguration.release();
+      webUIConfiguration.destroyInstance();
+      webUIConfiguration = null;
+   }
+
+   function test_initialize_loadsXmlResource() {
+      assertTrue( "Configuration file is loaded immediately.", webUIConfiguration.isLoaded );
+      assertNotNull( "Selects and stores 'webUI' element.", webUIConfiguration.getConfigurationElement() );
+      assertNotNull( "Selects and strores 'internationalization' element.", webUIConfiguration.getI18Element() );
+   }
+      
+//Internationalization, Locale
+	  function testGetI18DefaultLocale() {
+	  	assertEquals( "hu", webUIConfiguration.getI18DefaultLocale() );
+	  }
+	  
+      function testGetI18Locale() {
+      	assertEquals( LOCALE_ONE, webUIConfiguration.getI18Locale( 0 ) );
+      	assertEquals( LOCALE_TWO, webUIConfiguration.getI18Locale( 1 ) );
+      }
+      
+	  function testGetI18LocaleElements() {
+	  	assertEquals( "Number of locales is: ", 2, webUIConfiguration.getI18LocaleElements().length );
+	  }
+
+//Internationalization, Resource Bundle
+	  function testGetI18ResourceBundleElements() {
+	  	assertEquals( "Number of resource bundles is: ", 4, webUIConfiguration.getI18ResourceBundleElements().length );
+	  }
+     
+	  function testGetI18ResourceBundleNameSpace() {
+	  	assertEquals( "Name space of resource bundles is: ", "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'", webUIConfiguration.getI18ResourceBundleNameSpace() );
+	  }
+     
+      function testGetI18ResourceBundle() {
+      	assertEquals( RESOURCE_BUNDLE_ONE, webUIConfiguration.getI18ResourceBundleName( 2 ) );
+      	assertEquals( RESOURCE_BUNDLE_TWO, webUIConfiguration.getI18ResourceBundleName( 3 ) );
+      }
+      
+//Logging Appender
+      function testGetLoggingAppenderBatchSize() {
+      	assertEquals( "5", webUIConfiguration.getLoggingAppenderBatchSize( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderCommandLineObjectExpansionDepth() {
+      	assertEquals( "10", webUIConfiguration.getLoggingAppenderCommandLineObjectExpansionDepth( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderComplainAboutPopUpBlocking() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderComplainAboutPopUpBlocking( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderContainerElementId() {
+      	assertEquals( "JavaScriptLogging", webUIConfiguration.getLoggingAppenderContainerElementId( APPENDER_THREE_NAME ));
+      }
+
+      function testGetLoggingAppenderElements() {
+      	assertEquals( "Configuration file defines:", 4, webUIConfiguration.getLoggingAppenderElements().length );
+      }
+      
+      function testGetLoggingAppenderFailCallback() {
+      	assertEquals( "function() {alert('Logging error occured.')}", webUIConfiguration.getLoggingAppenderFailCallback( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderFocusPopUp() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderFocusPopUp( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderHeight() {
+      	assertEquals( 600, webUIConfiguration.getLoggingAppenderHeight( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderLayoutReference() {
+      	assertEquals( "xmlLayout", webUIConfiguration.getLoggingAppenderLayoutReference( APPENDER_ONE_NAME )); 
+      	assertEquals( "formattedLayout", webUIConfiguration.getLoggingAppenderLayoutReference( APPENDER_TWO_NAME )); 
+      	assertEquals( "formattedLayout", webUIConfiguration.getLoggingAppenderLayoutReference( APPENDER_THREE_NAME )); 
+      	assertEquals( "formattedLayout", webUIConfiguration.getLoggingAppenderLayoutReference( APPENDER_FOUR_NAME )); 
+      }
+      
+      function testGetLoggingAppenderLazyInit() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderLazyInit( APPENDER_TWO_NAME ));
+      	assertEquals( "false", webUIConfiguration.getLoggingAppenderLazyInit( APPENDER_THREE_NAME ));
+      }
+
+      function testGetLoggingAppenderThreshold() {
+      	assertEquals( "info", webUIConfiguration.getLoggingAppenderThreshold( APPENDER_ONE_NAME )); 
+      	assertEquals( "debug", webUIConfiguration.getLoggingAppenderThreshold( APPENDER_TWO_NAME )); 
+      	assertEquals( "trace", webUIConfiguration.getLoggingAppenderThreshold( APPENDER_THREE_NAME )); 
+      }
+      
+      function testGetLoggingAppenderMaxMessages() {
+      	assertEquals( "1000", webUIConfiguration.getLoggingAppenderMaxMessages( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderName() {
+      	assertEquals( APPENDER_ONE_NAME, webUIConfiguration.getLoggingAppenderName( 0 ) );
+      	assertEquals( APPENDER_TWO_NAME, webUIConfiguration.getLoggingAppenderName( 1 ) );
+      	assertEquals( APPENDER_THREE_NAME, webUIConfiguration.getLoggingAppenderName( 2 ) );
+      	assertEquals( APPENDER_FOUR_NAME, webUIConfiguration.getLoggingAppenderName( 3 ) );
+      }
+      
+      function testGetLoggingAppenderNewestMessageAtTop() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderNewestMessageAtTop( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderReopenWhenClosed() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderReopenWhenClosed( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderRequestSuccessCallback() {
+      	assertEquals( "function() { alert('Log was successfully sent') };", webUIConfiguration.getLoggingAppenderRequestSuccessCallback( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderScrollToLatestMessage() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderScrollToLatestMessage( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderShowCommandLine() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderShowCommandLine( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderInitiallyMinimized() {
+      	assertEquals( true, webUIConfiguration.getLoggingAppenderInitiallyMinimized( APPENDER_TWO_NAME ));
+      	assertEquals( false, webUIConfiguration.getLoggingAppenderInitiallyMinimized( APPENDER_THREE_NAME ));
+      }
+
+      function testGetLoggingAppenderSendAllOnUnload() {
+      	assertEquals( "no", webUIConfiguration.getLoggingAppenderSendAllOnUnload( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderPostVariableName() {
+      	assertEquals( "logData", webUIConfiguration.getLoggingAppenderPostVariableName( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderTimedSending() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderTimedSending( APPENDER_ONE_NAME ));
+      }
+      
+      function testGetLoggingAppenderTimerInterval() {
+      	assertEquals( "3000", webUIConfiguration.getLoggingAppenderTimerInterval( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderType() {
+        assertEquals( "wui:ajaxAppender", webUIConfiguration.getLoggingAppenderType( APPENDER_ONE_NAME ));
+      	assertEquals( "wui:popUpAppender", webUIConfiguration.getLoggingAppenderType( APPENDER_TWO_NAME ));
+      	assertEquals( "wui:inPageAppender", webUIConfiguration.getLoggingAppenderType( APPENDER_THREE_NAME ));
+      	assertEquals( "wui:browserConsoleAppender", webUIConfiguration.getLoggingAppenderType( APPENDER_FOUR_NAME ));
+      }
+
+      function testGetLoggingAppenderURL() {
+      	assertEquals( "http://localhost", webUIConfiguration.getLoggingAppenderURL( APPENDER_ONE_NAME )); 
+      	assertNull( webUIConfiguration.getLoggingAppenderURL( APPENDER_TWO_NAME )); 
+      	assertNull( webUIConfiguration.getLoggingAppenderURL( APPENDER_THREE_NAME )); 
+      	assertNull( webUIConfiguration.getLoggingAppenderURL( APPENDER_FOUR_NAME )); 
+      }
+      
+      function testGetLoggingAppenderUseDocumentWrite() {
+      	assertEquals( "false", webUIConfiguration.getLoggingAppenderUseDocumentWrite( APPENDER_TWO_NAME ));
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderUseDocumentWrite( APPENDER_THREE_NAME ));
+      }
+
+      function testGetLoggingAppenderUseOldPopUp() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderUseOldPopUp( APPENDER_TWO_NAME ));
+      }
+
+      function testGetLoggingAppenderWaitForResponse() {
+      	assertEquals( "true", webUIConfiguration.getLoggingAppenderTimedSending( APPENDER_ONE_NAME ));
+      }
+
+      function testGetLoggingAppenderWidth() {
+      	assertEquals( 800, webUIConfiguration.getLoggingAppenderWidth( APPENDER_THREE_NAME ));
+      }
+
+//Logging Layout
+      function testGetLoggingLayoutElements() {
+      	assertEquals( "Configuration file defines:", 2, webUIConfiguration.getLoggingLayoutElements().length );
+      }
+      
+      function testGetLoggingLayoutName() {
+      	assertEquals( LAYOUT_ONE_NAME, webUIConfiguration.getLoggingLayoutName( 0 ) );
+      	assertEquals( LAYOUT_TWO_NAME, webUIConfiguration.getLoggingLayoutName( 1 ) );
+      }
+      
+      function testGetLoggingLayoutPattern() {
+      	assertEquals( "%d{HH:mm:ss} %-5p - %c: %m%n", webUIConfiguration.getLoggingLayoutPattern( LAYOUT_ONE_NAME ));
+      	assertEquals( "[%-5p] %m", webUIConfiguration.getLoggingLayoutPattern( LAYOUT_TWO_NAME ));
+      }
+      
+//Logging Logger
+      function testGetLoggingLoggerAppenderReference() {
+      	assertEquals( "formattedPopUpAppender", webUIConfiguration.getLoggingLoggerAppenderReference( LOGGER_ONE_NAME ));
+      	assertEquals( "xmlAjaxAppender", webUIConfiguration.getLoggingLoggerAppenderReference( LOGGER_TWO_NAME ));
+      }
+      
+      function testGetLoggingLoggerElements() {
+      	assertEquals( "Configuration file defines:", 3, webUIConfiguration.getLoggerElements().length );
+      }
+      
+      function testGetLoggingLoggerLevel() {
+      	assertEquals( "debug", webUIConfiguration.getLoggerLevel( LOGGER_ONE_NAME ));
+      	assertEquals( "info", webUIConfiguration.getLoggerLevel( LOGGER_TWO_NAME ));
+      }
+      
+      function testGetLoggingLoggerName() {
+      	assertEquals( LOGGER_ONE_NAME, webUIConfiguration.getLoggerName( 0 ) );
+      	assertEquals( LOGGER_TWO_NAME, webUIConfiguration.getLoggerName( 1 ) );
+      }
+      
+ //Web UI, Desktop, Skin
+ 	  function testGetDefaultSkin() {
+ 	  	assertEquals( DEFAULT_SKIN,  webUIConfiguration.getDefaultSkin() );	
+ 	  }
+ 	  
+ 	  function testGetAvailableSkinElements() {
+ 	    assertEquals( 2, webUIConfiguration.getAvailableSkinElements().length );
+ 	  }
+ 	  
+ 	  function testGetSkinConfiguration() {
+      	assertEquals( SKIN_ONE_CONFIGURATION, webUIConfiguration.getSkinConfiguration( SKIN_ONE_NAME ));
+      	assertEquals( SKIN_TWO_CONFIGURATION, webUIConfiguration.getSkinConfiguration( SKIN_TWO_NAME ));
+ 	  }
+      
+ 	  function testGetSkinNameByIndex() {
+      	assertEquals( SKIN_ONE_NAME, webUIConfiguration.getSkinNameByIndex( 0 ));
+      	assertEquals( SKIN_TWO_NAME, webUIConfiguration.getSkinNameByIndex( 1 ));
+ 	  }
+      
+ 	  function testGetSkinPath() {
+      	assertEquals( SKIN_ONE_PATH, webUIConfiguration.getSkinPath( SKIN_ONE_NAME ) );
+      	assertEquals( SKIN_TWO_PATH, webUIConfiguration.getSkinPath( SKIN_TWO_NAME ) );
+ 	  }
+      
+ 	  function testGetSkinPathByIndex() {
+      	assertEquals( SKIN_ONE_PATH, webUIConfiguration.getSkinPathByIndex( 0 ) );
+      	assertEquals( SKIN_TWO_PATH, webUIConfiguration.getSkinPathByIndex( 1 ) );
+ 	  }
+      
+      function testRelease(){
+      	webUIConfiguration.release();
+      	
+      	assertFalse( webUIConfiguration.isLoaded );
+      	assertNull( webUIConfiguration.i18Element );
+      	assertNull( webUIConfiguration.loggingElement );
+      	assertNull( webUIConfiguration.xmlResource );
+      	assertNull( webUIConfiguration.webUIElement );
+      }
+      
+   //runs a test function during debugging
+   function runTestFunction(){
+      setUp();
+      test_initialize_loadsXmlResource();
+      tearDown();
+   }
+</script>
+</head>
+<body>
+	<h1>WebUIConfiguration.js test page</h1>
+</body>
+</html>

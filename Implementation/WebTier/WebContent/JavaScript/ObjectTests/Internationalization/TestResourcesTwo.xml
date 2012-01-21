@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="TestResourcesTwo.res_21" type="String">Resource twenty one</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="TestResourcesTwo.res_22" type="String">Erőforrás kettő</Resource>
+  </Language>
+</pp:Resources>

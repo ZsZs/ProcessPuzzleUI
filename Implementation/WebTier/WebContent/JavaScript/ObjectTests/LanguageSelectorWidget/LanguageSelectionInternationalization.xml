@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">
+    <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
+    <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
+    <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
+  </Language>
+  
+  <Language name="hu">
+    <Resource key="LanguageSelectorWidget.en" type="String">angol</Resource>
+    <Resource key="LanguageSelectorWidget.hu" type="String">magyar</Resource>
+    <Resource key="LanguageSelectorWidget.select" type="String">Válasszon nyelvet:</Resource>
+  </Language>
+</pp:Resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:tabWidgetDefinition
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<tabWidget tabWidgetId="TabWidget" selectedTabClass="selectedTab" showCloseButton="true" showPrintButton="true">
+		<tab tabId="tabOne" caption="TabWidget.tabOne">
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
+      </tab>
+		<tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true">
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
+      </tab>
+		<tab tabId="tabThree" caption="TabWidget.tabThree">
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
+      </tab>
+	</tabWidget>
+	
+</pp:tabWidgetDefinition>

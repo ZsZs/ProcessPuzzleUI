@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+	<title>ProcessPuzzle Test Suite</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
+	<!-- JavaScript Unit -->
+	<link rel="stylesheet" type="text/css" href="../JsUnit/css/jsUnitStyle.css">
+   <script type="text/javascript" src="../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+	<script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../JsUnit/app/JsTestSuite.js"></script>
+	<!-- JavaScript Unit -->
+
+   <script type="text/javascript">
+      function suite() {
+         var newsuite = new JsTestSuite();
+         newsuite.addTestPage("../ObjectTests/AbstractDocument/AbstractDocumentTest.html");
+         newsuite.addTestPage("../ObjectTests/BrowserWidget/BrowserWidgetTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/ComponentStateManager/ComponentStateManagerTest.html");
+         newsuite.addTestPage("../ObjectTests/Desktop/DesktopTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/FundamentalTypes/FundamentalTypesTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/HierarchicalMenuWidget/HierarchicalMenuWidgetTest.html");
+         newsuite.addTestPage("../ObjectTests/HtmlDocument/HtmlDocumentTest.html");
+         newsuite.addTestPage("../ObjectTests/Internationalization/InternalizationTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/LanguageSelectorWidget/LanguageSelectorWidgetTest.html");
+          //newsuite.addTestPage("../ObjectTests/NewsReaderWidget/NewsReaderWidgetTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/PhotoGaleryWidget/PhotoGaleryWidgetTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/ResourceManager/ResourceManagerTest.html");
+         newsuite.addTestPage("../ObjectTests/Singleton/SingletonTest.html");
+         newsuite.addTestPage("../ObjectTests/SkinSelectorWidget/SkinSelectorWidgetTest.html");
+         newsuite.addTestPage("../ObjectTests/SmartDocument/SmartDocumentTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/TabWidget/TabWidgetTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/TextAreaEditor/TextAreaEditorTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/ToolBarWidget/ToolBarWidgetTestSuite.html");
+         newsuite.addTestPage("../ObjectTests/WebUIConfiguration/WebUIConfigurationTest.html");
+         newsuite.addTestPage("../ObjectTests/WebUIController/WebUIControllerTest.html");
+         newsuite.addTestPage("../ObjectTests/WebUILogger/WebUILoggerTest.html");
+         newsuite.addTestPage("../ObjectTests/WebUIMessageBus/WebUIMessageBusTest.html");
+         return newsuite;
+      }
+	</script>
+</head>
+
+<body>
+   <h1>ProcessPuzzle Test Suite</h1>
+
+   <p>This page contains a suite of tests for&nbsp;'ProcessPuzzle' testing.</p>
+</body>
+</html>
