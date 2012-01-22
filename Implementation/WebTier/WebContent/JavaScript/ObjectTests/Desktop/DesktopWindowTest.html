@@ -20,6 +20,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/MochaUI/Core.js"></script>
@@ -96,209 +97,15 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 	
+   <script type="text/javascript" src="../../ObjectTests/Desktop/DesktopWindowTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //test_construct_whenSpecified_loadsContentHtml();
-         //test_construct_whenSpecified_loadsSmartDocument();
       });
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
-		 
-      var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
-      var DESKTOP_CONTAINER_ID = "desktop";
-      var WINDOW_DEFINITION_WITH_HTMLCONTENT = "/desktopConfiguration/windows/window[@name='aboutDialog']";
-      var WINDOW_DEFINITION_WITH_SMARTCONTENT = "/desktopConfiguration/windows/window[@name='newDocumentDialog']";
-      var PAGE_WRAPPER_ID = "pageWrapper";
-      var WEBUI_CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
-		
-      var desktopContainerElement;
-      var desktopDefinition;
-      var desktopInternationalization;
-      var elementDefinition;
-      var pageWrapperElement;
-      var testCaseChain = new Chain();
-      var testCaseIsRunning = false;
-      var webUIConfiguration;
-      var webUIController;
-      var webUILogger;
-      var windowWithHtmlContent;
-      var windowWithSmartDocument;
-		
-      function runTestCase(){
-         if( !testCaseIsRunning ) testCaseChain.callChain();
-      }
       
-      function prepareWindowConstruction(){
-         MUI.myChain = new Chain();
-         MUI.myChain.chain( function(){ MUI.Desktop.initialize({ desktop : DESKTOP_CONTAINER_ID, pageWrapper : PAGE_WRAPPER_ID });} );
-         MUI.myChain.callChain();
-      }
-      
-      function beforeEachTest(){
-         inform( "beforeEachTest" );
-         testCaseIsRunning = true;
-         
-         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         desktopInternationalization = new XMLResourceBundle( webUIConfiguration );
-         desktopInternationalization.load( new Locale({ language : "en" }) );
-		   
-         desktopDefinition = new XmlResource( DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'" } );
-         var elementDefinition = desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT );
-         windowWithHtmlContent = new DesktopWindow( elementDefinition, desktopInternationalization, { componentContainerId : PAGE_WRAPPER_ID, onConstructed : onConstructed } );
-         
-         elementDefinition = desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_SMARTCONTENT );
-         windowWithSmartContent = new DesktopWindow( elementDefinition, desktopInternationalization, { componentContainerId : PAGE_WRAPPER_ID, onConstructed : onConstructed } );
-         
-         desktopContainerElement = $( DESKTOP_CONTAINER_ID );
-         pageWrapperElement = $( PAGE_WRAPPER_ID );
-         
-         testCaseChain.callChain();
-      }
-      
-      function onConstructed(){
-         testCaseChain.callChain();
-      }
-
-      function afterEachTest(){
-         desktopDefinition.release();
-         windowWithHtmlContent.destroy();
-         windowWithSmartContent.destroy();
-         desktopContainerElement = null;
-         inform( "afterEachTest" );
-         testCaseIsRunning = false;
-         testCaseChain.callChain();
-      }
-		
-      function test_initialize(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               assertThat( windowWithHtmlContent.getState(), equalTo( DesktopElement.States.INITIALIZED ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-		
-      function test_Unmarshall_SetsState(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               windowWithHtmlContent.unmarshall();
-
-               assertThat( windowWithHtmlContent.getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-				
-      function test_unmarshall_determinesProperties(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               windowWithHtmlContent.unmarshall();
-		   
-               assertThat( windowWithHtmlContent.getContentUrl(), equalTo( desktopDefinition.selectNodeText( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/contentURL" ) ));
-               assertThat( windowWithHtmlContent.getHeight(), equalTo( desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@height" ).value ));
-               assertThat( windowWithHtmlContent.getName(), equalTo( desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@name" ).value ));
-               assertThat( windowWithHtmlContent.getTitle(), equalTo( desktopInternationalization.getText( desktopDefinition.selectNodeText( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/title" ) )));
-               assertThat( windowWithHtmlContent.getWidth(), equalTo( desktopDefinition.selectNode( WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@width" ).value ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-		
-      function test_unmarshall_whenSpecificed_unmarshallsDocument(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               windowWithSmartContent.unmarshall();
-         
-               assertThat( windowWithSmartContent.getDocument(), not( nil() ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-      
-      function test_construct_instantiatesMUIWindowAndDeterminesWindowElement(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               prepareWindowConstruction();
-               windowWithHtmlContent.unmarshall();
-               windowWithHtmlContent.construct();
-            },
-            function(){
-               assertThat( windowWithHtmlContent.getMUIWindow(), not( nil() ));
-               assertThat( windowWithHtmlContent.getWindowElement(), equalTo( pageWrapperElement.getElementById( windowWithHtmlContent.getName() )));
-               assertThat( windowWithHtmlContent.getWindowContentElement(), equalTo( pageWrapperElement.getElementById( windowWithHtmlContent.getName() + "_content" )));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-      
-      function test_construct_whenSpecified_loadsContentHtml(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               prepareWindowConstruction();
-               windowWithHtmlContent.unmarshall();
-               windowWithHtmlContent.construct();
-            },
-            function(){
-               assertThat( windowWithHtmlContent.getWindowContentElement().getChildren('h1').length, equalTo( 1 ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-      
-      function test_construct_whenSpecified_loadsSmartDocument(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               prepareWindowConstruction();
-               windowWithSmartContent.unmarshall();
-               windowWithSmartContent.construct();
-            },
-            function(){
-               assertThat( windowWithSmartContent.getDocument().getState(), equalTo( AbstractDocument.States.CONSTRUCTED ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
-      
-      function test_destroy_destroysAllNestedHtmlElementsAndEvents(){
-         testCaseChain.chain(
-            beforeEachTest, 
-            function(){
-               prepareWindowConstruction();
-               windowWithHtmlContent.unmarshall();
-               windowWithHtmlContent.construct();
-            },
-            function(){
-               windowWithHtmlContent.destroy();
-               assertThat( pageWrapperElement.getElements( '*' ).length, equalTo( 0 ));
-               testCaseChain.callChain();
-            },
-            afterEachTest
-         );
-         runTestCase();
-      }
     </script>
 </head>
 

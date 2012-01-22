@@ -58,7 +58,7 @@ var JsTestSuiteResults = new Class({
          result += (this.testSuiteIndex - 1) / currentDivisor;
       }
       
-      result += (this.testIndex + 1) / (this.totalNumberOfTestCases * currentDivisor);
+      result += this.testIndex / (this.totalNumberOfTestCases * currentDivisor);
       return result;
    },
 

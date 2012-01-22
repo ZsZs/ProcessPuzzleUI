@@ -4,7 +4,8 @@ var RemoteResourceTest = new Class( {
 
    options : {
       testMethods : 
-         [{ method : 'retrieve_whenLocalResourceExists_firesSuccessEvent', isAsynchron : true}, 
+         [{ method : 'retrieve_whenCSSExists_firesSuccessEvent', isAsynchron : true},
+          { method : 'retrieve_whenJavaScriptExists_firesSuccessEvent', isAsynchron : true}, 
           { method : 'retrieve_whenResourceNotExists_firesFailureEvent', isAsynchron : true }]
    },
 
@@ -30,10 +31,24 @@ var RemoteResourceTest = new Class( {
       this.inform( "afterEachTest" );
    },
    
-   retrieve_whenLocalResourceExists_firesSuccessEvent : function() {
+   retrieve_whenCSSExists_firesSuccessEvent : function() {
       this.testCaseChain.chain(
          function(){
-            this.remoteResource = new RemoteResource( "../Internationalization/TestResources.xml", { onFailure: this.onFailure, onSuccess: this.onSuccess });
+            this.remoteResource = new RemoteResource( "../FundamentalTypes/DummyCSS.css", { onFailure: this.onFailure, onSuccess: this.onSuccess });
+            this.remoteResource.retrieve();
+         }.bind( this ),
+         function(){
+            assertThat( this.onSuccessWasCalled, is( true )); 
+            assertThat( this.onFailureWasCalled, is( false )); 
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   retrieve_whenJavaScriptExists_firesSuccessEvent : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.remoteResource = new RemoteResource( "../FundamentalTypes/RemoteResourceTest.js", { onFailure: this.onFailure, onSuccess: this.onSuccess });
             this.remoteResource.retrieve();
          }.bind( this ),
          function(){
@@ -51,9 +66,7 @@ var RemoteResourceTest = new Class( {
             this.remoteResource.retrieve();
          }.bind( this ),
          function(){
-            assertThat( this.onSuccessWasCalled, is( true )); 
-         }.bind( this ),
-         function(){
+            assertThat( this.onSuccessWasCalled, is( false )); 
             assertThat( this.onFailureWasCalled, is( true )); 
             this.testMethodReady();
          }.bind( this )

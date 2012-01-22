@@ -47,7 +47,7 @@ var RemoteResource = new Class({
    isSuccess: function() { // Determines if an XMLHttpRequest was successful or not
       try {
           // IE error sometimes returns 1223 when it should be 204 so treat it as success, see #1450
-          return ( location.protocol === "file:" && !this.status && this.status === 0 ) ||
+          return ( location.protocol === "file:" && !this.status && this.status === 0 && ( this.response.text || this.response.xml )) ||
               // Opera returns 0 when status is 304
               ( this.status >= 200 && this.status < 300 ) ||
               ( this.status === 304 ) || 
