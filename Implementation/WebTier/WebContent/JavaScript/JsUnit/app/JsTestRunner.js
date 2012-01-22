@@ -8,6 +8,7 @@ var JsTestRunner = new Class({
    
    options : {
       componentName : "JsTestRunner",
+      eventFireDelay : 10,
       url : null,
       verbose : false,
    },
@@ -70,6 +71,6 @@ var JsTestRunner = new Class({
    
    finalizeTestRun : function(){
       this.testCaseChain.clearChain();
-      this.fireEvent( 'testRunReady', [], 50 );      
+      this.fireEvent( 'testRunReady', [], this.options.eventFireDelay );      
    }
 });

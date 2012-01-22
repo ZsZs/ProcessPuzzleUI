@@ -3,6 +3,7 @@ var JsTestPage = new Class({
    Binds : ['discoverTestSuites', 'onTestCaseFinished', 'onTestCaseStarted', 'onTestRunnerFinished', 'onTestRunnerStarted'],
    
    options : {
+      eventFireDelay : 10,
       verbose : false
    },
    
@@ -85,7 +86,7 @@ var JsTestPage = new Class({
       this.testRunnerChain.clearChain();
       if( this.totalNumberOfTestCases == 0 && this.testSuite == 'undefined' )
          alert( this.url + " test page doesn't defines any test case or suite. Check that you included JsObjectTest related files." );
-      this.fireEvent( 'testPageFinished', this, 50 );
+      this.fireEvent( 'testPageFinished', this, this.options.eventFireDelay );
    }.protect(),
    
    setUp : function(){
