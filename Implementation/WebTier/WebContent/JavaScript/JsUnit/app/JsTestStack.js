@@ -3,6 +3,7 @@ var JsTestStack = new Class({
    Binds : [],
    
    options : {
+      componentName : "JsTestStack",
       verbose : false
    },
    
@@ -20,9 +21,13 @@ var JsTestStack = new Class({
       this.testPages.include( testPage );
    },
    
-   addTestSuite : function( testSuite ){
-      if( this.currentTestSuite ) this.currentTestSuite.addTestSuite( testSuite );
-      this.currentTestSuite = testSuite;
+   addTestSuite : function( newSuite ){
+      if( this.currentTestSuite ) {
+         console.log( newSuite.getTestPages() );
+         this.currentTestSuite.addTestSuite( newSuite );
+      }
+      
+      this.currentTestSuite = newSuite;
    },
    
    hasMorePages : function() {
@@ -39,8 +44,11 @@ var JsTestStack = new Class({
       if( this.testPageIndex < this.testPages.length ) return this.testPages[this.testPageIndex++]; 
       else if( this.currentTestSuite.hasMorePage() ) return this.currentTestSuite.nextPage();
       else if( this.currentTestSuite.hasMoreSuite() ) {
-         this.currentTestSuite = this.currentTestSuite.nextSuite();
-         return currentTestSuite.nextPage();
+         var nextTestSuite = this.currentTestSuite.nextSuite();
+         if( nextTestSuite ) {
+            this.currentTestSuite = nextTestSuite;
+            return this.currentTestSuite.nextPage();
+         } else return null;
       }else if( this.currentTestSuite.getParentSuite() ){
          this.currentTestSuite = this.currentTestSuite.getParentSuite();
          return this.nextPage();

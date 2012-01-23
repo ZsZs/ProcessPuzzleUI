@@ -6,6 +6,7 @@ var JsTestSuiteResults = new Class({
    Implements : [Options],
    
    options : {
+      componentName : "JsTestSuiteResults"
    },
    
    //Constructor
@@ -54,7 +55,7 @@ var JsTestSuiteResults = new Class({
 
       for( var i = 0; i < this.testSuiteStack.length; i++ ){
          var testSuite = this.testSuiteStack[i];
-         currentDivisor *= testSuite.getTestPages().length;
+         currentDivisor = currentDivisor * testSuite.getTestPages().length;
          result += (this.testSuiteIndex - 1) / currentDivisor;
       }
       

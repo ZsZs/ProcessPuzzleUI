@@ -71,7 +71,6 @@ var BrowserWidget = new Class( {
          throw new IllegalArgumentException( "Parameter 'widgetContainerId' in invalid." );
       if( !this.i18Resource.isLoaded )
          throw new IllegalArgumentException( "ResourceBundle should be already loaded." );
-      ;
       
       this.elementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource, elementFactoryOptions );
       this.restoreComponentState();

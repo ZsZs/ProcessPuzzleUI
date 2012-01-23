@@ -6,9 +6,11 @@ var JsTestCase = new Class({
    Implements : [Events, Options],
    Binds : ['callAfterEachTest', 'callBeforeEachTest', 'checkTimeOut', 'notifyOnTestCaseReady', 'notifyOnTestCaseStart', 'onRunTestFinished', 'run', 'testRunWrapper'],
    options : {
+      delayAfterTest : 10,
+      eventFireDelay : 10,
       maxTries: 20,
       url: null,
-      waitDelay: 200,
+      waitDelay: 200
    },
    
    //Constructor
@@ -71,7 +73,7 @@ var JsTestCase = new Class({
    }.protect(),
    
    notifyOnTestCaseReady : function(){
-      this.fireEvent( 'testCaseReady', this.testResult );
+      this.fireEvent( 'testCaseReady', this.testResult, this.options.eventFireDelay );
       this.testCaseChain.clearChain();
    }.protect(),
    

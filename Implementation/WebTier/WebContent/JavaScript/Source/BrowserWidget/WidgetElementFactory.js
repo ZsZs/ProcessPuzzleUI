@@ -191,7 +191,7 @@ var WidgetElementFactory = new Class( {
    mergeProperties : function( baseProperties, additionalProperties ){
       var mergedProperties = Object.merge( baseProperties, additionalProperties );
       return mergedProperties;
-   }.protect(),
+   }.protect()
 
 });
 

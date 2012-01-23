@@ -3,6 +3,7 @@ var JsTestPage = new Class({
    Binds : ['discoverTestSuites', 'onTestCaseFinished', 'onTestCaseStarted', 'onTestRunnerFinished', 'onTestRunnerStarted'],
    
    options : {
+      componentName : "JsTestStack",
       eventFireDelay : 10,
       verbose : false
    },
@@ -75,7 +76,8 @@ var JsTestPage = new Class({
       if( this.testFrame.suite ){
          var allegedSuite = this.testFrame.suite();
          if( allegedSuite.isJsUnitTestSuite ){
-            this.testSuite = allegedSuite;
+            this.testSuite = new JsTestSuite( allegedSuite.options );
+            this.testSuite = allegedSuite.clone( this.testSuite );
             this.fireEvent( 'addTestSuite', this.testSuite );
          }
       }

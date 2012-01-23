@@ -8,7 +8,8 @@ var JsTestRunner = new Class({
    
    options : {
       componentName : "JsTestRunner",
-      eventFireDelay : 10,
+      eventFireDelay : 5,
+      testCaseCallDelay : 5,
       url : null,
       verbose : false,
    },
@@ -29,7 +30,7 @@ var JsTestRunner = new Class({
    
    onTestCaseReady : function( testResult ){
       this.numberOfTestCaseReady++;
-      this.fireEvent( 'testCaseReady', testResult );
+      this.fireEvent( 'testCaseReady', testResult, this.options.eventFireDelay );
       if( this.options.verbose ) console.log( testResult.fullMessage() );
 
       if( this.numberOfTestCaseReady >= this.testCases.length ) {

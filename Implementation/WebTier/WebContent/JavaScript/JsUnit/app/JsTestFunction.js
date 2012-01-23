@@ -68,5 +68,5 @@ var JsTestFunction = new Class({
    
    runTest: function(){
       this.testFunction();
-   }.protect(),   
+   }.protect()
 });

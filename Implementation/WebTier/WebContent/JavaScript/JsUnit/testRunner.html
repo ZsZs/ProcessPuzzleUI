@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -34,11 +34,6 @@
    
    <script type="text/javascript">
 
-   window.addEvent('domready', function() {
-      resetTestManager();
-      setUpFrames();
-   });
-   
    var params = new JsUnit.Params( document.location.search );
    var testManager;
    var tracer;
@@ -50,6 +45,8 @@
       uiFrameUrl = testManager.getUiFrameUrl();
    }
 
+   resetTestManager();
+   
    function onLoadHandler() {
       testManager.onLoad();
       testManager.maybeRun();
@@ -65,9 +62,8 @@
       testManager.onLoad();
    }
 
-   function setUpFrames(){
-      document.open();
-      document.write(
+   document.open();
+   document.write(
           '<frameset id="testRunnerFrameset" rows="*,0,0,0" border="0" onload="onLoadHandler()">' + "\n" +
           '    <frame frameborder="0" name="mainFrame" src="' + uiFrameUrl + '">' + "\n" +
           '    <frame frameborder="0" name="mainResults" src="./app/main-results.html">' + "\n" +
@@ -79,9 +75,8 @@
           '        </body>' + "\n" +
           '    </noframes>' + "\n" +
           '</frameset>'
-      );
-      document.close();
-   }
+   );
+   document.close();
 
 </script>
 </head>

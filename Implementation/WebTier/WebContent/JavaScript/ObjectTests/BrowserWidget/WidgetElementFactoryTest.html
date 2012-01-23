@@ -8,10 +8,6 @@
 
    <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
    
-   <script type="text/javascript">
-      var contextRootPrefix = "../../../";
-   </script>
-   
    <!--[if IE]>
       <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
    <![endif]-->  
@@ -237,7 +233,7 @@
          
          //VERIFY:
          assertThat( newElement.get('id'), equalTo( FORM_NAME) );
-         assertThat( newElement.get('method'), equalTo( FORM_METHOD_TYPE ));
+         assertThat( newElement.get('method').toUpperCase(), equalTo( FORM_METHOD_TYPE ));
          assertThat( contextElement.getElementById( FORM_NAME ).get( 'tag' ).toUpperCase(), equalTo( "FORM" ));
       }
       
