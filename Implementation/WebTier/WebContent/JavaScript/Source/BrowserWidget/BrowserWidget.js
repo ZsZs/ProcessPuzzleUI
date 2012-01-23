@@ -29,6 +29,7 @@ var BrowserWidget = new Class( {
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       domDocument : this.document,
+      eventDeliveryDelay : 5,
       subscribeToWebUIMessages : false,
       widgetContainerId : "widgetContainer",
       widgetDataURI : null,
@@ -111,12 +112,12 @@ var BrowserWidget = new Class( {
       this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
       this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this );
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    },
    
    onDestroyed : function(){
       this.logger.trace( this.options.componentName + ".onDestroyed() of '" + this.name + "'." );
-      this.fireEvent( 'destroyed', this );
+      this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
    },
 
    removeChild : function( childElement, parentElement ) {

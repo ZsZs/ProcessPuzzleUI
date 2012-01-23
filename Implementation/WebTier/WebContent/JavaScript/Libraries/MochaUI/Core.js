@@ -1031,8 +1031,8 @@ if( Browser.Engine.webkit ) {
 		 webUIController = Class.getInstanceOf( WebUIController );
 		 if( webUIController != null ) pathPrefix = webUIController.getContextRootPrefix();
     }catch( e ){
-         if( !(typeof( contectRootPrefix ) === 'undefined' )) 
-            pathPrefix = contectRootPrefix;
+         if( !(typeof( contextRootPrefix ) === 'undefined' )) 
+            pathPrefix = contextRootPrefix;
     };
     
     new MUI.Require({

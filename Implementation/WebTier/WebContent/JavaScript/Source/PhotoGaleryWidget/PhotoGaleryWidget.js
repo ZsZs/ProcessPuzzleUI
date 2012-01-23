@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var PhotoGaleryWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['onComplete', 'onEnd', 'onStart'],
+   Binds : ['compileDataObject', 'instantiateSlideShow', 'onComplete', 'onEnd', 'onShow', 'onStart'],
    options : {
       accessKeysDefault : null,
       accessKeysSelector : "pp:widgetDefinition/properties/accessKeys",
@@ -88,6 +88,7 @@ var PhotoGaleryWidget = new Class({
       this.accessKeys;
       this.automaticallyLinkSlide;
       this.centerImages;
+      this.constructionChain = new Chain();
       this.data;
       this.dataAsText = "";
       this.effectDuration;
@@ -114,9 +115,10 @@ var PhotoGaleryWidget = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.compileDataObject();
-      this.instantiateSlideShow();
-      return this.parent();
+      this.constructionChain.chain(
+         this.compileDataObject,
+         this.instantiateSlideShow
+      ).callChain();
    },
    
    destroy: function(){
@@ -136,8 +138,18 @@ var PhotoGaleryWidget = new Class({
       this.logger.trace( this.options.componentName + ".onEnd() ended Slideshow 2." );
    },
    
+   onShow: function(){
+      if( this.state < BrowserWidget.States.CONSTRUCTED ){
+         this.logger.trace( this.options.componentName + ".onShow() started to load Slideshow 2." );
+         this.onConstructed();
+      }
+   },
+   
    onStart: function(){
-      this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
+      if( this.state < BrowserWidget.States.CONSTRUCTED ){
+         this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
+         this.onConstructed();
+      }
    },
    
    unmarshall: function(){
@@ -182,6 +194,7 @@ var PhotoGaleryWidget = new Class({
       }, this );
       
       this.data = eval( "({" + this.dataAsText + "})" );
+      this.constructionChain.callChain();
    }.protect(),
    
    destroyComponents: function(){
@@ -203,6 +216,7 @@ var PhotoGaleryWidget = new Class({
          loop : this.loopShow,
          onComplete : this.onComplete,
          onEnd : this.onEnd,
+         onShow : this.onShow,
          onStart : this.onStart,
          overlap : this.overlapImages,
          paused : this.startPaused,
