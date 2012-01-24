@@ -32,6 +32,7 @@ var ResourceManager = new Class({
       documentImagesSelector: "images/image",
       documentScriptsSelector: "javaScripts/javaScript",
       documentStyleSheetsSelector: "styleSheets/styleSheet",
+      eventFireDelay : 5,
       type : null
    },
    
@@ -62,7 +63,7 @@ var ResourceManager = new Class({
    
    onResourceError: function( resourceUri ){
       this.error = new UndefinedDocumentResourceException( resourceUri );
-      this.fireEvent( 'resourceError', this.error );
+      this.fireEvent( 'resourceError', this.error, this.options.eventFireDelay );
       this.onResourceLoaded( resourceUri );
    },
    
@@ -70,7 +71,7 @@ var ResourceManager = new Class({
       this.numberOfResourcesLoaded++;
       if( this.resources.size() > 0 && this.numberOfResourcesLoaded >= this.resources.size() ){
          this.state = ResourceManager.States.LOADED;
-         this.fireEvent( 'resourcesLoaded', this );
+         this.fireEvent( 'resourcesLoaded', this, this.options.eventFireDelay );
       }
    },
    

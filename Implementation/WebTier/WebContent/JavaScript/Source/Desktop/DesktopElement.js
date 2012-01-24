@@ -33,6 +33,7 @@ var DesktopElement = new Class({
       componentName: "DesktopElement",
       defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      eventFireDelay : 5,
       idSelector : "@id",
       tagSelector : "@tag",
    },
@@ -127,7 +128,7 @@ var DesktopElement = new Class({
       this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
-      this.fireEvent('constructed', this ); 
+      this.fireEvent('constructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
    resetProperties: function(){

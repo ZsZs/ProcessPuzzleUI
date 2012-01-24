@@ -3,17 +3,14 @@
    <resources>
       <styleSheets>
          <styleSheet>../ResourceManager/DummyCSS.css</styleSheet>
-         <styleSheet>../ResourceManager/NoneExistingCSS.css</styleSheet>
       </styleSheets>
 
       <images>
          <image id="logoImage" title="ProcessPuzzle">../SmartDocument/Images/ProcessPuzzleLogo.jpg</image>
-         <image>../ResourceManager/NoneExistingImage.jpg</image>
       </images>
       
       <javaScripts>
          <javaScript>../ResourceManager/DummyScript.js</javaScript>
-         <javaScript>../ResourceManager/NoneExistingScript.js</javaScript>
       </javaScripts>
    </resources>
 </testResources>

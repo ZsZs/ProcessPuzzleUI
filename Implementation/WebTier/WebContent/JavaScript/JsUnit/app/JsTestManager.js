@@ -157,7 +157,6 @@ var JsTestManager = new Class({
    checkIfTestPageLoaded : function(){
       var self = top.testManager;
       self.numberOfTries++;
-//console.log( self.numberOfTries + "-nd try to load: " + self.currentTestPage.getUrl() );
 
       var positionOfQuestionMark = self.testFrame.document ? self.testFrame.document.location.href.indexOf( "?" ) : -1;
       positionOfQuestionMark = positionOfQuestionMark >= 0 ? positionOfQuestionMark : 0;
@@ -168,7 +167,6 @@ var JsTestManager = new Class({
       var currentPageUri = self.currentTestPage.getUrl().substring( positionOfLastSlash );
       
       if( self.testFrame.document && self.testFrame.document.readyState == 'complete' && testFrameUrl.contains( currentPageUri )){
-//console.log( "Loading: " + self.currentTestPage.getUrl() + "succseeded!" );
          clearInterval( self.timer );
          self.onTestPageLoaded();
       }else if( self.numberOfTries >= self.options.maxTries ){
@@ -259,8 +257,8 @@ var JsTestManager = new Class({
    }.protect(),
 
    nextPage : function(){
-      if( this.testStack.hasMorePages() ){
-         var nextPageUrl = this.testStack.nextPage();
+      var nextPageUrl = this.testStack.nextPage();
+      if( nextPageUrl ){
          this.instantiateTestPage( nextPageUrl );
          this.loadPage();
       }else {

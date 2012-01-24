@@ -11,7 +11,8 @@ var RemoteResourceTest = new Class( {
           { method : 'construct_instantiatesMUIWindowAndDeterminesWindowElement', isAsynchron : true}, 
           { method : 'construct_whenSpecified_loadsContentHtml', isAsynchron : true }, 
           { method : 'construct_whenSpecified_loadsSmartDocument', isAsynchron : true }, 
-          { method : 'destroy_destroysAllNestedHtmlElementsAndEvents', isAsynchron : true }]
+          { method : 'destroy_destroysAllNestedHtmlElementsAndEvents', isAsynchron : true }],
+      windowUnderlayElementId : "windowUnderlay"          
    },
 
    constants : {
@@ -139,6 +140,7 @@ var RemoteResourceTest = new Class( {
          }.bind( this ),
          function(){
             this.windowWithHtmlContent.destroy();
+            this.destroyWindowUnderlay();
             assertThat( this.pageWrapperElement.getElements( '*' ).length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
@@ -155,6 +157,11 @@ var RemoteResourceTest = new Class( {
    },
    
    //Protected, private helper methdos
+   destroyWindowUnderlay : function(){
+      var windowUnderlayElement = this.pageWrapperElement.getElementById( this.options.windowUnderlayElementId );
+      if( windowUnderlayElement ) windowUnderlayElement.destroy();
+   }.protect(),
+   
    prepareWindowConstruction : function(){
       var desktopId = this.constants.DESKTOP_CONTAINER_ID;
       var pageWrapperId = this.constants.PAGE_WRAPPER_ID;

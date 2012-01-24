@@ -116,7 +116,8 @@ var DesktopWindow = new Class({
          onResize : this.onContainerResize,
          title : this.internationalization.getText( this.title ),
          width : this.width
-      });      
+      });
+            
       if( !this.contentUrl ) this.constructionChain.callChain();
    }.protect(),
    

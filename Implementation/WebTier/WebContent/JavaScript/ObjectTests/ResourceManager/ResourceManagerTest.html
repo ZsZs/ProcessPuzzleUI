@@ -23,6 +23,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
@@ -37,6 +38,7 @@
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
 	
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
@@ -47,6 +49,7 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/RemoteResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutBehaviour.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/XPathSelectionException.js"></script>
@@ -74,241 +77,14 @@
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
 		
+   <script type="text/javascript" src="../../ObjectTests/ResourceManager/ResourceManagerTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         test_load_loadsStyleSheetsAndHandlesError();
       });
 				
       JsHamcrest.Integration.JsUnit();
-		
-      var CONFIGURATION_URI = "../ResourceManager/WebUIConfiguration.xml";
-      var RESOURCES_DEFINITION_URI = "../ResourceManager/TestResourcesDefinition.xml";
-      var IMAGE_ID = "logoImage";
-      var IMAGE_URI = "../SmartDocument/Images/ProcessPuzzleLogo.jpg";
-      var RESOURCES_SELECTOR = "/testResources/resources";
-      var RESOURCE_ITEMS_SELECTOR = RESOURCES_SELECTOR + "/styleSheets/styleSheet | " + 
-                                    RESOURCES_SELECTOR + "/images/image | " +
-                                    RESOURCES_SELECTOR + "/javaScripts/javaScript"
-      var SCRIPT_URI = "../ResourceManager/DummyScript.js";
-      var STYLE_SHEET_URI = "../ResourceManager/DummyCSS.css";
-      var STYLESHEETS_SELECTOR = RESOURCES_SELECTOR + "/styleSheets";
-      var resourcesDefinition = null;
-      var onResourceErrorWasCalled = false;
-      var onResourceLoadedWasCalled = false;
-      var resourceManager = null;
-      var testCaseChain = new Chain();
-      var testCaseFinished = false;
-      var testCaseMethod = null;
-      var testWindow;
-      var webUIConfiguration = null;
-      var webUILogger = null;
-		
-      function beforeEachTest(){
-         inform( "beforeEachTest()");
-         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-		   
-         resourcesDefinition = new XmlResource( RESOURCES_DEFINITION_URI );
-         resourceManager = new ResourceManager( resourcesDefinition.selectNode( RESOURCES_SELECTOR ), {onResourcesLoaded : onResourcesLoaded, onResourceError : onResourceError } );
-	       
-         testCaseFinished = false;
-         onResourceErrorWasCalled = false;
-         onResourceLoadedWasCalled = false;
-         testCaseChain.callChain();
-      }
-      
-      function onResourceError( resourceUri ){
-         debug( "onResourceError() was called.");
-         onResourceErrorWasCalled = true;
-      }
-
-		
-      function onResourcesLoaded( resource ){
-         debug( "onResourcesLoaded() was called.");
-         onResourceLoadedWasCalled = true;
-         testCaseChain.callChain();
-      }
-
-      function afterEachTest(){
-         inform( "afterEachTest()");
-         if( resourceManager ) resourceManager.release();
-         resourceManager = null;
-
-         if( resourcesDefinition ) resourcesDefinition.release();
-         resourcesDefinition = null;
-	       
-         testCaseFinished = true;
-         testCaseChain.clearChain();
-      }
-		
-      function verifyTestCaseFinished(){
-         inform( "verifyTestCaseFinished was called." );
-         if( !testCaseFinished ) fail( "Test case '" + testCaseMethod + "' did not finished.");
-      }
-
-      function test_initialize_instantiatesResourcesCollection() {
-         testCaseChain.clearChain();
-         testCaseMethod = "testInitialize";
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               assertThat( resourceManager, not( nil() ));
-               assertThat( resourceManager.getResources(), not( nil() ));
-
-               debug( "Verification of 'initialize' was finished.");
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         ).callChain();
-      }
-		
-      function test_unmarshall_determinesResources(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               resourceManager.unmarshall();
-               assertThat( resourceManager.getResources().size(), equalTo( resourcesDefinition.selectNodes( RESOURCE_ITEMS_SELECTOR ).length ));
-		         
-               debug( "Verification of 'unmarshall_DeterminesResources' was finished.");
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }
-		
-      function test_load_loadsStyleSheetsAndHandlesError(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               resourceManager.unmarshall();
-               resourceManager.load();
-            },
-            function(){
-               assertThat( onResourceLoadedWasCalled, is( true ));
-               assertThat( onResourceErrorWasCalled, is( true ));
-               assertThat( resourceManager.isSuccess(), is( false ));
-               
-               var linkElement = $$("link[href='" + STYLE_SHEET_URI + "']");
-               assertThat( linkElement.length, equalTo( 1 ));
-
-               var scriptElement =  $$("script[src='" + SCRIPT_URI + "']");
-               assertThat( scriptElement.length, equalTo( 1 ));
-
-               debug( "Verification of 'load_LoadsStyleSheets' was finished.");
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }
-
-      function test_load_loadsImagesAndHandlesError(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-            function(){
-               var imageElement = document.getElementById( IMAGE_ID );
-               //assertNotNull( imageElement );
-               //assertThat( imageElement.length, equalTo( 1 ));
-		         
-               assertThat( onResourceLoadedWasCalled, is( true ));
-               assertThat( onResourceErrorWasCalled, is( true ));
-               
-               debug( "Verification of 'load_LoadsImages' was finished.");
-               testCaseChain.callChain();
-            }.bind( document ), 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }
-		
-      function test_load_loadsScriptsAndHandlesError(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-            function(){
-               var scriptElement = $$("script[src='" + SCRIPT_URI + "']");
-               assertThat( onResourceLoadedWasCalled, is( true ));
-               assertThat( onResourceErrorWasCalled, is( true ));
-               assertThat( scriptElement, not( nil() ));
-               assertThat( scriptElement.length, equalTo( 1 ));
-		         
-               debug( "Verification of 'load_LoadsScripts' was finished.");
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }
-		
-      function test_Load_PreventsDuplicateScriptLoading(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-            function(){
-               assertThat( $$("link[href='../JsUnit/css/jsUnitStyle.css']").length, equalTo( 1 ));
-               assertThat( $$("script[src='../ResourceManager/ResourceManager.js']").length, equalTo( 1 ));
-	               
-               debug( "Verification of 'load_PreventsDuplicateScriptLoading' was finished.");
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }
-	      
-      function test_load_whenOneOfTheResourcesUnAvailable_FiresError(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               var unavailableResource = resourcesDefinition.createElement( 'styleSheet', { text : "UnAvailableStyleSheet.css" } );
-               var styleSheetsElement = resourcesDefinition.selectNode( STYLESHEETS_SELECTOR );
-               resourcesDefinition.injectElement( unavailableResource, STYLESHEETS_SELECTOR );
-               resourceManager.unmarshall(); 
-               resourceManager.load(); 
-            }, 
-            function(){
-               assertThat( onResourceErrorWasCalled, is( true ));
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }
-         
-      function test_Release_DestroysLoadedElements(){
-         testCaseChain.clearChain();
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){ resourceManager.unmarshall(); resourceManager.load(); }, 
-            function(){
-               assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 1 ));
-               resourceManager.release();        
-               assertThat( resourceManager.getResources().size(), equalTo( 0 ));
-               assertThat( $$("link[href='" + STYLE_SHEET_URI + "']").length, equalTo( 0 ));
-               assertThat( $$("script[src='" + SCRIPT_URI + "']").length, equalTo( 0 ));
-
-               debug( "Verification of 'release_DestroysLoadedElements' was finished.");
-               testCaseChain.callChain();
-            }, 
-            afterEachTest 
-         );
-         testCaseChain.chain.bind( document );
-         testCaseChain.callChain();
-      }		
+				
    </script>
 </head>
 

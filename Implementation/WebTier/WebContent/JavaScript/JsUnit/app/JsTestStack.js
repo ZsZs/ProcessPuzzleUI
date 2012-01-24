@@ -22,34 +22,28 @@ var JsTestStack = new Class({
    },
    
    addTestSuite : function( newSuite ){
-      if( this.currentTestSuite ) {
-         console.log( newSuite.getTestPages() );
-         this.currentTestSuite.addTestSuite( newSuite );
-      }
-      
+      if( this.currentTestSuite ) this.currentTestSuite.addTestSuite( newSuite );      
       this.currentTestSuite = newSuite;
    },
    
-   hasMorePages : function() {
-      if( this.testPageIndex < this.testPages.length ) return true;
-      else if( this.currentTestSuite && this.currentTestSuite.hasMorePage() ) return true;
-      else if( this.currentTestSuite && this.currentTestSuite.hasMoreSuite() ) return true;
-      else if( this.currentTestSuite && this.currentTestSuite.getParentSuite() ) return true;
-      else return false;
-   },
+//   hasMorePages : function() {
+//      if( this.testPageIndex < this.testPages.length ) return true;
+//      else if( this.currentTestSuite && this.currentTestSuite.hasMorePage() ) return true;
+//      else if( this.currentTestSuite && this.currentTestSuite.hasMoreSuite() ) return true;
+//      else if( this.currentTestSuite && this.currentTestSuite.getParentSuite() ) return true;
+//      else return false;
+//   },
    
    hasMoreSuite : function() { return this.testSuiteIndex < this.testSuites.length; },
 
    nextPage : function() {
-      if( this.testPageIndex < this.testPages.length ) return this.testPages[this.testPageIndex++]; 
-      else if( this.currentTestSuite.hasMorePage() ) return this.currentTestSuite.nextPage();
-      else if( this.currentTestSuite.hasMoreSuite() ) {
-         var nextTestSuite = this.currentTestSuite.nextSuite();
-         if( nextTestSuite ) {
-            this.currentTestSuite = nextTestSuite;
-            return this.currentTestSuite.nextPage();
-         } else return null;
-      }else if( this.currentTestSuite.getParentSuite() ){
+      if( this.testPageIndex < this.testPages.length ) return this.testPages[this.testPageIndex++];
+      if( this.currentTestSuite && this.currentTestSuite.hasMorePage() ) return this.currentTestSuite.nextPage();
+      if( this.currentTestSuite && this.currentTestSuite.hasMoreSuite() ) {
+         this.currentTestSuite = this.currentTestSuite.nextSuite();
+         return this.currentTestSuite.nextPage();
+      }
+      if( this.currentTestSuite && this.currentTestSuite.getParentSuite() ){
          this.currentTestSuite = this.currentTestSuite.getParentSuite();
          return this.nextPage();
       }else return null;
