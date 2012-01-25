@@ -30,9 +30,10 @@ var DesktopPanelHeader = new Class({
    
    options: {
       componentName : "DesktopPanelHeader",
+      contextRootPrefix : "",
       headerSelector : "panelHeader",
       pluginSelector : "plugin",
-      toolboxContent : null,        //"../Desktop/EmptyToolboxContent.html",
+      toolboxContent : "JavaScript/Source/Desktop/EmptyToolboxContent.html",
       toolboxSelector : "toolBox",
       toolBoxUrlSelector : "@toolBoxUrl",
       type : "DesktopPanel"
@@ -78,7 +79,7 @@ var DesktopPanelHeader = new Class({
    
    unmarshall: function(){
       this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
-      if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.toolboxContent;
+      if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
          this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionFailed : this.onPluginConstructionError });

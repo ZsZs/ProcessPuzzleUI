@@ -139,6 +139,7 @@ var DesktopPanel = new Class({
             contentURL : this.contentUrl,
             id : this.name,
             header : this.showHeader,
+            //headerToolbox : this.header.getToolBoxUrl() ? true : false,
             headerToolbox : this.header ? true : false,
             headerToolboxOnload : this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL : this.header ? this.header.getToolBoxUrl() : null,

@@ -79,7 +79,7 @@
             </plugin>
          </panelHeader>
 		</panel>
-		
+
 		<panel name='consolePanel' columnReference='mainColumn' height='200' showHeader='true' handleTabSelectedEvents="true" storeState="false">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader>
@@ -115,9 +115,8 @@
       <panel name='relationshipsPanel' columnReference='rightColumn' height='150' showHeader='true'>
          <title>DesktopConfigurator.Panel.relationshipsTitle</title>
       </panel>
-      
 	</panels>
-	
+
    <windows>
       <window name='about' height='400' width='600'>
          <title>DesktopWindow.about.title</title>
@@ -128,4 +127,5 @@
          <title>DesktopWindow.documentExplorer.title</title>
       </window>
    </windows>
+
 </desktopConfiguration>
