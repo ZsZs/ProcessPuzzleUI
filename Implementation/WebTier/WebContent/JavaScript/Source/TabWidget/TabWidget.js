@@ -23,7 +23,8 @@ var TabWidget = new Class( {
    Binds : ['onClose', 'onTabSelected'],
 
    options : {
-      TABCLASSNAME : "Tabs",
+      TAB_LIST_STYLE : "Tabs",
+      TAB_WIDGET_STYLE : "TabWidgetWrapper",
       BUTTONCLASSNAME : "Buttons",
       backgroundImage : "Images/bg.gif",
       buttonPrefix : "button_",
@@ -58,14 +59,15 @@ var TabWidget = new Class( {
 
       // Private instance variables
       this.activeTab = null;
-      this.buttonsContainerElement;
+      this.buttonsListElement;
       this.id;
       this.isVisible = false;
       this.selectedTabClass;
       this.showCloseButton;
       this.showPrintButton;
+      this.tabListElement;
       this.tabs = new LinkedHashMap();
-      this.tabsContainerElement;
+      this.tabsWrapperElement;
    },
 
    // Public accessor and mutator methods
@@ -85,7 +87,7 @@ var TabWidget = new Class( {
 
       var newTab = new Tab( null, this.i18Resource, { id : id, caption : caption, onTabSelected : this.onTabSelected });
       this.tabs.put( newTab.getId(), newTab );
-      if( this.state == BrowserWidget.States.CONSTRUCTED ) newTab.construct( this.tabsContainerElement );
+      if( this.state == BrowserWidget.States.CONSTRUCTED ) newTab.construct( this.tabListElement );
 
       if( doNotActivate == null || (doNotActivate != null && doNotActivate == false) )
          this.activateTab( id );
@@ -113,21 +115,23 @@ var TabWidget = new Class( {
    },
 
    destroy : function() {
-      if( this.tabsContainerElement ){
+      if( this.tabListElement ){
          this.tabs.each( function( entry, index ) {
             entry.getValue().destroy();
          }, this );
-         if( this.tabsContainerElement.destroy ){
-            this.tabsContainerElement.removeEvents();
-            this.tabsContainerElement.destroy();
-         }else this.tabsContainerElement.removeNode();
+         if( this.tabListElement.destroy ){
+            this.tabListElement.removeEvents();
+            this.tabListElement.destroy();
+         }else this.tabListElement.removeNode();
       }
+      
+      if( this.tabsWrapperElement ) this.tabsWrapperElement.destroy();
 
-      if( this.buttonsContainerElement ){
-         if( this.buttonsContainerElement.destroy ){
-            this.buttonsContainerElement.removeEvents();
-            this.buttonsContainerElement.destroy();
-         }else this.buttonsContainerElement.removeNode();
+      if( this.buttonsListElement ){
+         if( this.buttonsListElement.destroy ){
+            this.buttonsListElement.removeEvents();
+            this.buttonsListElement.destroy();
+         }else this.buttonsListElement.removeNode();
       }
 
       this.parent();
@@ -138,7 +142,7 @@ var TabWidget = new Class( {
       if( htmlDivElement != null ){
          var tabLists = htmlDivElement.getElementsByTagName( "ul" );
          for( var i = 0; i < tabLists.length; i++ )
-            if( tabLists[i].className == TABCLASSNAME )
+            if( tabLists[i].className == TAB_LIST_STYLE )
                tabList = tabLists[i];
       }
       if( tabList == null )
@@ -153,7 +157,7 @@ var TabWidget = new Class( {
       if( htmlDivElement != null ){
          var tabLists = htmlDivElement.getElementsByTagName( "ul" );
          for( var i = 0; i < tabLists.length; i++ )
-            if( tabLists[i].className == TABCLASSNAME )
+            if( tabLists[i].className == TAB_LIST_STYLE )
                tabList = tabLists[i];
       }
       if( tabList == null )
@@ -246,7 +250,7 @@ var TabWidget = new Class( {
    
    constructButtons : function() {
       if( this.showCloseButton || this.showPrintButton ){
-         this.buttonsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
+         this.buttonsListElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
          if( this.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
          if( this.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
       }
@@ -255,18 +259,19 @@ var TabWidget = new Class( {
    constructTabs : function() {
       this.tabs.each( function( tabEntry, index ) {
          var tab = tabEntry.getValue();
-         tab.construct( this.tabsContainerElement );
+         tab.construct( this.tabListElement );
       }, this );
    }.protect(),
 
    createButton : function( caption, onClickHandler ) {
-      var listItem = this.elementFactory.create( 'li', null, this.buttonsContainerElement, WidgetElementFactory.Positions.LastChild );
+      var listItem = this.elementFactory.create( 'li', null, this.buttonsListElement, WidgetElementFactory.Positions.LastChild );
       var anchorProperties = { href : "#", id : this.options.buttonPrefix + caption };
       this.elementFactory.createAnchor( caption.replace( / /g, String.fromCharCode( 160 ) ), null, onClickHandler, listItem, WidgetElementFactory.Positions.LastChild, anchorProperties );
    }.protect(),
 
    createHtmlElements : function() {
-      this.tabsContainerElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.TABCLASSNAME } );
+      this.tabsWrapperElement = this.elementFactory.create( 'div', null, null, null, { 'class' : this.options.TAB_WIDGET_STYLE } );
+      this.tabListElement = this.elementFactory.create( 'ul', null, this.tabsWrapperElement, null, { 'class' : this.options.TAB_LIST_STYLE } );
    }.protect(),
 
    hideButtons : function() {
@@ -304,7 +309,7 @@ var TabWidget = new Class( {
       if( htmlDivElement != null ){
          var tabLists = htmlDivElement.getElementsByTagName( "ul" );
          for( var i = 0; i < tabLists.length; i++ ){
-            if( tabLists[i].className == this.options.TABCLASSNAME ){
+            if( tabLists[i].className == this.options.TAB_LIST_STYLE ){
                var tabList = tabLists[i];
                htmlDivElement.removeChild( tabList ); // removes the list to
                                                       // 'tab' division

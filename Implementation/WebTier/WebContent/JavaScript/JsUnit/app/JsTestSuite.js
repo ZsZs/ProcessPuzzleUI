@@ -39,15 +39,6 @@ var JsTestSuite = new Class( {
       suite.setParentSuite( this );
    },
 
-   clone : function( suiteClone ) {
-      suiteClone.parentSuite = this.parentSuite ? this.parentSuite.clone() : null;
-      suiteClone.testPageIndex = this.testPageIndex;
-      suiteClone.testPages = Array.clone( this.testPages );
-      suiteClone.testSuiteIndex = this.testSuiteIndex;
-      suiteClone.testSuites = Array.clone( this.testSuites );
-      return suiteClone;
-   },
-
    containsTestPages : function() {
       return this.testPages.length > 0;
    },

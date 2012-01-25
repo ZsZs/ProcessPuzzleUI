@@ -66,6 +66,17 @@ var JsTestPage = new Class({
       return this.totalNumberOfTestCases;
    }.protect(),
    
+   cloneTestSuite : function( originalSuite ){
+      var suiteOptions = Object.clone( originalSuite.options );
+      var suiteClone = new JsTestSuite( suiteOptions );
+      suiteClone.parentSuite = originalSuite.parentSuite ? this.cloneTestSuite( originalSuite.parentSuite ) : null;
+      suiteClone.testPageIndex = originalSuite.testPageIndex;
+      suiteClone.testPages = Array.clone( originalSuite.testPages );
+      suiteClone.testSuiteIndex = originalSuite.testSuiteIndex;
+      suiteClone.testSuites = Array.clone( originalSuite.testSuites );
+      return suiteClone;
+   }.protect(),
+   
    configureTestRunners : function(){
       this.testClassRunner.configure();
       this.testFunctionRunner.configure();
@@ -76,8 +87,7 @@ var JsTestPage = new Class({
       if( this.testFrame.suite ){
          var allegedSuite = this.testFrame.suite();
          if( allegedSuite.isJsUnitTestSuite ){
-            this.testSuite = new JsTestSuite( allegedSuite.options );
-            this.testSuite = allegedSuite.clone( this.testSuite );
+            this.testSuite = this.cloneTestSuite( allegedSuite );
             this.fireEvent( 'addTestSuite', this.testSuite );
          }
       }

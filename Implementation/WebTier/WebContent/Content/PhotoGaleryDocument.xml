@@ -37,9 +37,4 @@
       </element>
    </documentBody>
    
-   <documentFooter tag="div" id="photoGaleryDocumentFooter" elementStyle="documentFooter">
-      <compositeElement tag="div" id="footerWrapper">
-         <element tag="h3">PhotoGaleryDocument.footer</element>
-      </compositeElement>
-   </documentFooter>
 </smartDocumentDefinition>

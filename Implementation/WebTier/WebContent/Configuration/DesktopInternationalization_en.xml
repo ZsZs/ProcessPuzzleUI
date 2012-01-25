@@ -10,10 +10,14 @@
     <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Workflow and Content Management Business Platform</Resource>
     <Resource key="DesktopConfigurator.navigationBar" type="String">Navigation Bar</Resource>
     <Resource key="DesktopConfigurator.footerText" type="String">Powered by ProcessPuzzle - Copyright 2005-2011, IT Codex Llc.</Resource>
+    <Resource key="DesktopConfigurator.Panel.comunityTitle" type="String">Social Network</Resource>
+    <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Console</Resource>
     <Resource key="DesktopConfigurator.Panel.contentBrowserTitle" type="String">Content Browser</Resource>
     <Resource key="DesktopConfigurator.Panel.documentsTitle" type="String">Documents</Resource>
-    <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Console</Resource>
+    <Resource key="DesktopConfigurator.Panel.eventsTitle" type="String">Upcoming Events</Resource>
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menus</Resource>
+    <Resource key="DesktopConfigurator.Panel.newsTitle" type="String">Top News</Resource>
+    <Resource key="DesktopConfigurator.Panel.relationshipsTitle" type="String">Relationships</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tips</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Who is in?</Resource>
     

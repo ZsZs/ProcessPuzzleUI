@@ -276,7 +276,6 @@ var ComplexContentBehaviour = new Class({
    revertConstruction: function(){
       this.destroyComponents();
       this.resetProperties();
-      this.parent();
    }.protect(),
       
    storeComponentState : function() {

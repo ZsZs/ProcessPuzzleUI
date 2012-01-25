@@ -36,13 +36,14 @@ body {
 /* Header */
 #desktopHeader {
 	background: url(../Images/HeaderBackground.gif) repeat-x;
-	height: 75px;
-	overflow: hidden;
+/*	height: 75px; */
+	overflow: visible;
 }
 
 #desktopTitleBar {
    height: 45px;
    overflow: hidden;
+   position: relative;  
 }
 
 #desktopTitlebarWrapper {
@@ -88,10 +89,8 @@ body {
 	height: 30px;
 	width: 100%;
 	margin: 0px;
-	padding: 0px;
-	position: relative;
-	top: 0px;
-	overflow: hidden; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
+	position: static;
+	overflow: visible; /* Remove this line if you want the menu to be backward compatible with Firefox 2 */	
 }
 
 #desktopNavigationBar div.navigationBarText {

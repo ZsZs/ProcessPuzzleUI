@@ -20,4 +20,4 @@ Required by:
 
 #documents-panel { overflow: hidden; }
 
-.panelDocumentWrapper { margin-left: 5px; margin-right: 5px; }
+.documentWrapper { margin-left: 5px; margin-right: 5px; padding : 2px; }

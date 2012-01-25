@@ -202,6 +202,16 @@ var JsTestManager = new Class({
       if( this.testFrame && this.testFrame.removeEvents ) this.testFrame.removeEvents();
       this.containerController.setTestPage( this.testerContextRoot + this.options.emptyTestPage );
       this.uiManager.finishing();
+      
+      var secondsSinceRunBegan = (new Date() - this.timeRunStarted) / 1000;
+      this.setStatus( 'Done (' + secondsSinceRunBegan + ' seconds)' );
+
+      if( typeof top.suiteTearDown === 'function' ){ top.suiteTearDown(); }
+
+      if( this.params.shouldSubmitResults() ){
+         this.resultsTimeField.value = secondsSinceRunBegan;
+         this.submitResults();
+      }
    }.protect(),
    
    initializeInstanceVariables : function() {
@@ -308,21 +318,21 @@ var JsTestManager = new Class({
       this._submitResultsForm();
    },
 
-   _done : function() {
-      var secondsSinceRunBegan = (new Date() - this.timeRunStarted) / 1000;
-      this.setStatus( 'Done (' + secondsSinceRunBegan + ' seconds)' );
-
-      // call the suite teardown function, if defined
-      if( typeof top.suiteTearDown === 'function' ){
-         top.suiteTearDown();
-      }
-
-      this.finalizeTestRun();
-      if( this.params.shouldSubmitResults() ){
-         this.resultsTimeField.value = secondsSinceRunBegan;
-         this.submitResults();
-      }
-   },
+//   _done : function() {
+//      var secondsSinceRunBegan = (new Date() - this.timeRunStarted) / 1000;
+//      this.setStatus( 'Done (' + secondsSinceRunBegan + ' seconds)' );
+//
+//      // call the suite teardown function, if defined
+//      if( typeof top.suiteTearDown === 'function' ){
+//         top.suiteTearDown();
+//      }
+//
+//      this.finalizeTestRun();
+//      if( this.params.shouldSubmitResults() ){
+//         this.resultsTimeField.value = secondsSinceRunBegan;
+//         this.submitResults();
+//      }
+//   },
 
    getTimeout : function() {
       var result = JsTestManager.TESTPAGE_WAIT_SEC;

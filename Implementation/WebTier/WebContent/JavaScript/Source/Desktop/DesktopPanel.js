@@ -147,8 +147,11 @@ var DesktopPanel = new Class({
             title : panelTitle 
          });
       }catch( exception ){
-         this.fireEvent('constructed', this ); //Needed by Desktop, to able to count panels created.
-         this.onConstructionError( this.exception );
+         var logMessage = exception.name + ": " + exception.message;
+         logMessage += exception.stack ? "\n" + exception.stack : "";
+         this.logger.error( logMessage );
+         this.fireEvent('constructed', this, this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
+         this.onConstructionError( exception );
       }
    }.protect(),
    

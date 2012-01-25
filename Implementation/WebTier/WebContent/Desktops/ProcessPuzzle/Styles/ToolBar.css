@@ -5,6 +5,7 @@
 	font:normal 12px Trebuchet MS,Arial;
 	height: 30px;
 	margin: 0px;
+   overflow: visible;
 	padding: 0px;
 }
 
@@ -73,7 +74,7 @@
    padding: 5px;
    position: relative;
    text-decoration: none !important;
-   top: -3em;
+   top: 0em;
    width: 99em;
    white-space:nowrap;
    z-index: 10;

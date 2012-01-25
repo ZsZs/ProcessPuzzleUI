@@ -32,6 +32,7 @@ var WebUIController = new Class({
             'loadInternationalizations',
             'loadWebUIConfiguration',
             'onDesktopConstructed', 
+            'onError', 
             'restoreStateFromUrl',
             'storeComponentState',
             'storeStateInUrl',
@@ -335,6 +336,12 @@ var WebUIController = new Class({
       var messageElement = new Element( 'p' );
       messageElement.appendText( exception.message );
       this.warningContainer.grab( messageElement );
+      
+      var stackElement = new Element( 'p' );
+      if( exception.stack ) {
+         stackElement.appendText( exception.stack );
+         this.warningContainer.grab( stackElement );
+      }
    }.protect(),
 	
    storeComponentState : function() {

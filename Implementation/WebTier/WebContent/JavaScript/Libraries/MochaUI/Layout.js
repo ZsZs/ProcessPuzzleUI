@@ -698,7 +698,7 @@ MUI.Panel = new Class({
 		}
 
 		this.showHandle = true;
-		if ($(options.column).getChildren().length == 0) {
+		if( $(options.column).getChildren().length == 0 ) {
 			this.showHandle = false;
 		}
 

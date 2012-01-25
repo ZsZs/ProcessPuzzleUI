@@ -17,11 +17,17 @@ Required by:
 
 /* Toolbar Tabs */
 
+div.TabWidgetWrapper {
+   margin : 0px;
+   overflow: hidden;
+   padding : 0px;	
+}
+
 .toolbarTabs {	
 	padding: 0 5px 2px 2px;
 	background: url(../Images/tabs.gif) repeat-x;
 	background-position: left -70px;
-	overflow: visible;
+	overflow: hidden;
 }
 
 .tab-menu {	

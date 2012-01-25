@@ -5,9 +5,9 @@ div#HorizontalMenuBar {
 	border: 0px;
 	height: 30px;
 	left: 0px;
-	line-height: normal;
+	line-height: 18px;
 	margin: 0px;
-	overflow: hidden;
+	overflow: visible;
 	padding: 0px;
 	position: relative;
 	visibility: visible;
@@ -39,7 +39,8 @@ div#HorizontalMenuBar li ul {
 	margin-left:-1px;
 	padding: 2px;
 	position: absolute;
-	width:130px;
+	top: 30px;
+	width:165px;
 	z-index: 8000;
 }
 

@@ -9,11 +9,15 @@
     <Resource key="DesktopConfigurator.desktopTitle" type="String">ProcessPuzzle</Resource>
     <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Munkafolyamat- és tartalomkezelő üzleti platform</Resource>
     <Resource key="DesktopConfigurator.navigationBar" type="String">Navigációs sáv</Resource>
-    <Resource key="DesktopConfigurator.footerText" type="String">ProcessPuzzle-l támogatva - Minden jog fenntartva 2005-2011, IT Kódex Kft.</Resource>
+    <Resource key="DesktopConfigurator.footerText" type="String">ProcessPuzzle-l támogatva - Minden jog fenntartva 2005-2012, IT Kódex Kft.</Resource>
+    <Resource key="DesktopConfigurator.Panel.comunityTitle" type="String">Közösségi háló</Resource>
+    <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Konzol</Resource>
     <Resource key="DesktopConfigurator.Panel.contentBrowserTitle" type="String">Tartalom böngésző</Resource>
     <Resource key="DesktopConfigurator.Panel.documentsTitle" type="String">Dokumentumok</Resource>
-    <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Konzol</Resource>
+    <Resource key="DesktopConfigurator.Panel.eventsTitle" type="String">Közeli esmények</Resource>
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menük</Resource>
+    <Resource key="DesktopConfigurator.Panel.newsTitle" type="String">Friss hírek</Resource>
+    <Resource key="DesktopConfigurator.Panel.relationshipsTitle" type="String">Kapcsolatok</Resource>
     <Resource key="DesktopConfigurator.Panel.tipsTitle" type="String">Tippek</Resource>
     <Resource key="DesktopConfigurator.Panel.whoIsIn" type="String">Ki van bent?</Resource>
 
@@ -70,7 +74,7 @@
     <Resource key="DynamicDocument.RSS.generator" type="String">generátor: </Resource>
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">főszerkesztő: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmester: </Resource>
-    
+
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Okos dokumentum</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML tartalom</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Statikus dokumentum</Resource>
