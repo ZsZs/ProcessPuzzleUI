@@ -102,6 +102,10 @@
 		
 		<panel name='eventsPanel' columnReference='rightColumn' showHeader='true' >
 			<title>DesktopConfigurator.Panel.eventsTitle</title>
+         <document tag="div" id="upcommingEventsWrapper" elementStyle="documentWrapper" type="StaticHtml">
+             <documentDefinitionUri>Content/WidgetExamples/UpcommingEventsDefinition.xml</documentDefinitionUri>
+             <documentContentUri>Content/WidgetExamples/UpcommingEvents</documentContentUri>
+         </document>
 		</panel>
 		
 		<panel name='newsPanel' columnReference='rightColumn' height='250' showHeader='true'>

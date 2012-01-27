@@ -35,6 +35,8 @@ var ComplexContentBehaviour = new Class({
       documentContentUriSelector : "document/documentContentUri",
       documentDefinitionUriSelector : "document/documentDefinitionUri",
       documentNameSeparator : "_",
+      documentTypeDefault : AbstractDocument.Types.SMART,
+      documentTypeSelector : "document/@type",
       documentWrapperId : "_documentWrapper_" + (new Date().getTime()),
       documentWrapperIdSelector : "document/@id",
       documentWrapperStyle : "documentWrapper",
@@ -68,6 +70,7 @@ var ComplexContentBehaviour = new Class({
       this.documentContentUri;
       this.documentContentType = AbstractDocument.Types.HTML;
       this.documentDefinitionUri;
+      this.documentType;
       this.documentWrapper;
       this.documentWrapperId;
       this.documentWrapperStyle;
@@ -303,11 +306,12 @@ var ComplexContentBehaviour = new Class({
    unmarshallDocument: function(){
       this.documentContentUri = XmlResource.selectNodeText( this.options.documentContentUriSelector, this.definitionElement );
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement );
+      this.documentType = XmlResource.selectNodeText( this.options.documentTypeSelector, this.definitionElement, this.options.nameSpaces, this.options.documentTypeDefault );
       this.documentWrapperId = XmlResource.selectNodeText( this.options.documentWrapperIdSelector, this.definitionElement, this.options.nameSpaces, this.name + this.options.documentWrapperId );
       this.documentWrapperStyle = XmlResource.selectNodeText( this.options.documentWrapperStyleSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperStyle );
       this.documentWrapperTag = XmlResource.selectNodeText( this.options.documentWrapperTagSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperTag );
       if( this.documentDefinitionUri ){
-         this.document = new SmartDocument( this.internationalization, { 
+         this.document = this.instantiateDocument( this.documentType, { 
             documentContainerId : this.documentWrapperId, 
             documentDefinitionUri : this.documentDefinitionUri, 
             documentContentUri : this.documentContentUri,

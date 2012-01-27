@@ -14,7 +14,7 @@
     <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Konzol</Resource>
     <Resource key="DesktopConfigurator.Panel.contentBrowserTitle" type="String">Tartalom böngésző</Resource>
     <Resource key="DesktopConfigurator.Panel.documentsTitle" type="String">Dokumentumok</Resource>
-    <Resource key="DesktopConfigurator.Panel.eventsTitle" type="String">Közeli esmények</Resource>
+    <Resource key="DesktopConfigurator.Panel.eventsTitle" type="String">Közeli események</Resource>
     <Resource key="DesktopConfigurator.Panel.menusTitle" type="String">Menük</Resource>
     <Resource key="DesktopConfigurator.Panel.newsTitle" type="String">Friss hírek</Resource>
     <Resource key="DesktopConfigurator.Panel.relationshipsTitle" type="String">Kapcsolatok</Resource>

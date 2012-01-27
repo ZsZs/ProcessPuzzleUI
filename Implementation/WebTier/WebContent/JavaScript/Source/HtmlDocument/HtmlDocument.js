@@ -56,7 +56,8 @@ var HtmlDocument = new Class({
    },
    
    destroy: function(){
-      this.textArea.destroy();
+      if( this.textArea.removeEvents ) this.textArea.removeEvents();
+      if( this.textArea.destroy ) this.textArea.destroy();
       this.parent();
    },
    

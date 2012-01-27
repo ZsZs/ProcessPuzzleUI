@@ -92,11 +92,11 @@
     <Resource key="PersonalToDoList.introduction" type="String">To Do list of the logged in user.</Resource>
     <Resource key="PersonalToDoList.title" type="String">Personal To Do List</Resource>
     
-    <Resource key="PhotoGaleryDocument.title" type="String">Dokumentum beépülő modullal</Resource>
-    <Resource key="PhotoGaleryDocument.introduction" type="String">Egy okos dokumentumba tetszőleges számú modul építhető be. A beépülő modulok többnyire speciális módon jelenítenek meg tartamat.</Resource>
-    <Resource key="PhotoGaleryDocument.exampleDescription" type="String">A lenti példa egy slide show modul bepítését szemlélteti.</Resource>
-    <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
-    <Resource key="PhotoGaleryDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    <Resource key="PhotoGaleryDocument.title" type="String">Document with embedded widget</Resource>
+    <Resource key="PhotoGaleryDocument.introduction" type="String">Any number of intelligent, interactive components i.e. widgets can be incorporated into a SmarDocument. These widget can present the content, data in a special way.</Resource>
+    <Resource key="PhotoGaleryDocument.exampleDescription" type="String">The slide show component below is an example of UI widgets.</Resource>
+    <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Desktop like, back-end agnostic browser interface.</Resource>
+    <Resource key="PhotoGaleryDocument.subTitle" type="String">Smart Document Example</Resource>
     
     <Resource key="SkinSelectorWidget.select" type="String">Choose skin:</Resource>
     

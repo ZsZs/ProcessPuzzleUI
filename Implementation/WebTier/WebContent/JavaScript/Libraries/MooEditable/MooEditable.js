@@ -172,9 +172,10 @@ this.MooEditable = new Class({
    }.protect(),
    
    tryToDecreaseHeight: function(){
-      while( this.iframe.contentWindow.getScroll().y == 0 ) {
+      while( this.iframe.contentWindow.getScroll().y == 0 && this.iframe.getStyle( 'height' ).toInt() > 0 ) {
          var currentHeight = this.iframe.getStyle( 'height' ).toInt();
-         this.iframe.setStyle( 'height', currentHeight - this.options.estimatedRowHeight );
+         var decreasedHeight = ( currentHeight - this.options.estimatedRowHeight ) >= 0 ? currentHeight - this.options.estimatedRowHeight : 0;
+         this.iframe.setStyle( 'height', decreasedHeight );
          this.iframe.contentWindow.scrollTo( null, 1 );
       }
       
@@ -677,7 +678,8 @@ this.MooEditable = new Class({
 
    saveContent : function() {
       if( this.mode == 'iframe' ){
-         this.textarea.set( 'value', this.getContent() );
+         if( this.textarea.set ) this.textarea.set( 'value', this.getContent() );
+         else this.textarea.value = this.getContent();
       }
       return this;
    },

@@ -133,6 +133,7 @@
       <xs:attribute name="value" use="required"/>
     </xs:complexType>
   </xs:element>
+  
   <xs:element name="document">
     <xs:complexType>
       <xs:sequence>
@@ -142,6 +143,15 @@
       <xs:attribute name="elementStyle" use="required" type="xs:NCName"/>
       <xs:attribute name="id" use="required" type="xs:NCName"/>
       <xs:attribute name="tag" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required">
+        <xs:simpleType>
+          <xs:restriction base='xs:string'>
+            <xs:enumeration value='StaticHtml'/>
+            <xs:enumeration value='SmartDocument'/>
+            <xs:enumeration value='RemoteResource'/>
+          </xs:restriction>
+      	</xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="documentDefinitionUri" type="xs:string"/>
