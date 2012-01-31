@@ -15,9 +15,23 @@
 	<patternset id="javascript.source.files">
 		<include name="Source/FundamentalTypes/*.js" />
 		<include name="Source/Singleton/*.js" />
+      <include name="Source/WebUIConfiguration/*.js" />
+      <include name="Source/WebUIMessageBus/*.js" />
+      <include name="Source/AbstractDocument/*.js" />
 		<include name="Source/BrowserWidget/*.js" />
-		<include name="Source/DesktopConfigurator/*.js" />
+      <include name="Source/ComponentStateManager/*.js" />
+		<include name="Source/Desktop/*.js" />
+      <include name="Source/HierarchicalMenuWidget/*.js" />
+      <include name="Source/HtmlDocument/*.js" />
 		<include name="Source/Internationalization/*.js" />
+      <include name="Source/LanguageSelectorWidget/*.js" />
+      <include name="Source/PhotoGaleryWidget/*.js" />
+      <include name="Source/ResourceManager/*.js" />
+      <include name="Source/SkinSelectorWidget/*.js" />
+      <include name="Source/SmartDocument/*.js" />
+      <include name="Source/TabWidget/*.js" />
+      <include name="Source/TextAreaEditor/*.js" />
+      <include name="Source/ToolBarWidget/*.js" />
 		<include name="Source/WebUIController/*.js" />
 		<exclude name="**/*.copyarea.db" />
 	</patternset>

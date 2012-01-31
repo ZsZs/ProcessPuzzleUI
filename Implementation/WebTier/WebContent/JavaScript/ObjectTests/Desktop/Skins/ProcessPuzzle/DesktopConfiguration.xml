@@ -62,7 +62,7 @@
                </widget>
             </plugin>
          </panelHeader>
-			<document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper">
+			<document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
 			    <documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</documentDefinitionUri>
 			    <documentContentUri>../Desktop/SampleDocumentContent.xml</documentContentUri>
 			</document>
@@ -105,7 +105,7 @@
       
 		<window name="newDocumentDialog" height="400" width="600">
          <title>DesktopWindow.newDocumentDialog.title</title>
-         <document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper">
+         <document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
              <documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</documentDefinitionUri>
              <documentContentUri>../Desktop/SampleDocumentContent.xml</documentContentUri>
          </document>
