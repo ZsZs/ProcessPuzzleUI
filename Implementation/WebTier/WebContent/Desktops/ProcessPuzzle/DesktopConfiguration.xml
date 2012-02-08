@@ -99,7 +99,7 @@
             </plugin>
          </panelHeader>
 		</panel>
-		
+<!-- 
 		<panel name='eventsPanel' columnReference='rightColumn' showHeader='true' >
 			<title>DesktopConfigurator.Panel.eventsTitle</title>
          <document tag="div" id="upcommingEventsWrapper" elementStyle="documentWrapper" type="StaticHtml">
@@ -119,6 +119,7 @@
       <panel name='relationshipsPanel' columnReference='rightColumn' height='150' showHeader='true'>
          <title>DesktopConfigurator.Panel.relationshipsTitle</title>
       </panel>
+ -->     
 	</panels>
 
    <windows>
