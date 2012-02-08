@@ -21,7 +21,7 @@ var TestClassTemplate = new Class( {
       ERRONEOUS_PLUGIN_DEFINITION_ELEMENT : "/smartDocumentDefinition/documentBody/compositeElement/element[@id='skinSelector']/plugin",
       PLUGIN_DEFINITION_ELEMENT : "/smartDocumentDefinition/documentBody/compositeElement/element[@id='languageSelector']/plugin",
       PLUGIN_STYLE_SHEET : "../HierarchicalMenuWidget/HorizontalLayout.css",
-      WEBUI_CONFIGURATION_URI : "../SmartDocument/WebUIConfiguration.xml",
+      WEBUI_CONFIGURATION_URI : "../SmartDocument/WebUIConfiguration.xml"
    },
    
    initialize : function( options ) {

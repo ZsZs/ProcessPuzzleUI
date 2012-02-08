@@ -104,14 +104,12 @@ var TabWidget = new Class( {
 
    construct : function() {
       if( this.isVisible ) return;
-      this.logger.group( this.options.componentName + ".construct", false );
       this.createHtmlElements();
       this.constructTabs();
       this.constructButtons();
       this.isVisible = true;
       this.parent();
       this.activateDefaultTab();
-      this.logger.groupEnd( this.options.componentName + ".construct" );
    },
 
    destroy : function() {
