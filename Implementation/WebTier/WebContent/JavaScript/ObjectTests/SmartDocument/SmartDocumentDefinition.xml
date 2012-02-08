@@ -65,8 +65,8 @@
                     <image>../LanguageSelectorWidget/Images/SelectorBackground-Right.jpg</image>
                  </images>
                  <javaScripts>
-                    <javaScript>../LanguageSelectorWidget/LanguageChangedMessage.js</javaScript>
-                    <javaScript>../LanguageSelectorWidget/LanguageSelectorWidget.js</javaScript>
+                    <javaScript>../../Source/LanguageSelectorWidget/LanguageChangedMessage.js</javaScript>
+                    <javaScript>../../Source/LanguageSelectorWidget/LanguageSelectorWidget.js</javaScript>
                  </javaScripts>
               </resources>
               <widget name="LanguageSelectorWidget">
