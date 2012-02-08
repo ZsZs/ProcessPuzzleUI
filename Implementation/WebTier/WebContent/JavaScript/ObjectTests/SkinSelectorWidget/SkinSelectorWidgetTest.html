@@ -34,6 +34,7 @@
 
    <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
    
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
@@ -64,111 +65,10 @@
    
    <script type="text/javascript">
    window.addEvent('domready', function() {
-      runTestFunction();
    });
 
    JsHamcrest.Integration.JsUnit();
 	  
-   var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
-   var ELEMENT_SELECTOR = "SkinSelector";
-   var LANGUAGE = "hu";
-   var SKIN_ONE_NAME = "MochaUI";
-   var SKIN_ONE_PATH = "../DesktopConfigurator/Skins/MochaUI";
-   var SKIN_TWO_NAME = "ProcessPuzzle";
-   var SKIN_TWO_PATH = "../DesktopConfigurator/Skins/ProcessPuzzle";
-   var WIDGET_CONTAINER_ID = "SkinSelectorWidget";
-   var callBackMessage = null;
-   var callBackWasCalled = false;
-   var componentStateManager;
-   var skinSelector = null;
-   var locale = new Locale({ language : LANGUAGE });
-   var messageBus = null;
-   var webUIConfiguration = null;
-   var webUIController = null;
-   var webUILogger = null;
-   var widgetContainerElement = null;
-   
-   function setUp() {
-      messageBus = new WebUIMessageBus();
-      webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-      webUILogger = new WebUILogger( webUIConfiguration );
-      componentStateManager = new ComponentStateManager();
-      resourceBundle = new XMLResourceBundle( webUIConfiguration );
-      resourceBundle.load( locale );
-      skinSelector = new SkinSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
-      widgetContainerElement = skinSelector.getContainerElement();
-
-	  callBackWasCalled = false;
-   }
-
-   function tearDown() {
-      skinSelector.destroy();
-      messageBus.tearDown();
-      callBackWasCalled = false;
-      callBackMessage = null;
-   }
-
-   function testInitialization_WhenConstructorArgumentsAreGiven() {
-      assertEquals( $( WIDGET_CONTAINER_ID ), skinSelector.getContainerElement() );
-      assertEquals( "Initialization determines available skins.", 2, skinSelector.getAvailableSkins().size() ); 
-      assertNotNull( skinSelector.getAvailableSkins().get( SKIN_ONE_NAME ) );
-      assertNotNull( skinSelector.getAvailableSkins().get( SKIN_TWO_NAME ) );
-   }
-   
-   function test_initialize_WhenConstructorArgumentsAreMissing() {
-      //SETUP:
-      var webUIController = new WebUIController({ configurationUri : "../WebUIController/SampleConfiguration.xml" });
-      
-      //EXCERCISE:
-      var skinSelector = new SkinSelectorWidget();
-      
-      //VERIFY:
-      assertTrue( "When 'SkinSelector' is instantiated without arguments, 'WebUIController' is used as data source.", true );
-      assertEquals( webUIController.getResourceBundle(), skinSelector.getResourceBundle() );
-      assertEquals( webUIController.getWebUIConfiguration(), skinSelector.getWebUIConfiguration() );
-      assertEquals( 2, skinSelector.getAvailableSkins().size() );
-      
-      //TEARDOWN:
-      webUIController.destroy();
-   }
-   
-   function testConfigure_CreatesSelectElementWithOptions() {
-      //SETUP:
-      //EXCERCISE:
-      skinSelector.construct();
-      
-      //VERIFY:
-      var selectElement = widgetContainerElement.getElementById( ELEMENT_SELECTOR );
-      assertNotNull( selectElement );
-      assertEquals( "The number of options elements:", 3, selectElement.getChildren().length );
-      //assertEquals( skinSelector.onSelection, selectElement.hasEvent( 'change' ));
-   }
-   
-   function testOnSelection_NotifiesMessageBusSubscribers() {
-      //SETUP:
-      skinSelector.construct();
-      messageBus.subscribeToMessage( SkinChangedMessage, onSkinChangeCallback );
-      
-      //EXCERCISE:
-      var selectElement = widgetContainerElement.getElementById( ELEMENT_SELECTOR );
-   	  selectElement.fireEvent( 'change' );
-   	  
-      //VERIFY:
-   	  assertTrue( callBackWasCalled );
-   	  //assertEquals( "en", callBackMessage.getNewLocale().getLanguage() );
-   }
-   
-   function onSkinChangeCallback( message ) {
-	  callBackWasCalled = true;
-	  callBackMessage = message;
-   }
-      
-   //runs a test function during debugging
-   function runTestFunction(){
-      setUp();
-      testConfigure_CreatesSelectElementWithOptions();
-      tearDown();
-   }
    </script>
 </head>
 
