@@ -18,6 +18,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//= require_directory ../FundamentalTypes
+
 var TabWidget = new Class( {
    Extends : BrowserWidget,
    Binds : ['onClose', 'onTabSelected'],

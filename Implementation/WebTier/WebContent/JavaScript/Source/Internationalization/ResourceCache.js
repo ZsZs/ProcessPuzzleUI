@@ -16,6 +16,8 @@ requires:
 provides: [ProcessPuzzle.ResourceCache]
 */
 
+//= require_directory ../FundamentalTypes
+
 var ResourceCache = new Class({
 
 	initialize : function(){

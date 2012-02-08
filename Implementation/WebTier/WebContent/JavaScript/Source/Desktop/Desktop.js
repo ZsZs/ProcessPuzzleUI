@@ -51,6 +51,8 @@ provides: [ProcessPuzzle.Desktop]
 ...
 */
 
+//= require_directory ../FundamentalTypes
+
 var Desktop = new Class({
    Implements : [Events, Options], 
    Binds : ['constructColumns', 

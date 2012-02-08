@@ -8,7 +8,7 @@
 //= require_directory ./HtmlDocument
 //= require_directory ./Internationalization
 //= require_directory ./LanguageSelectorWidget
-//= require_directory ./NewReaderWidget
+//= require_directory ./NewsReaderWidget
 //= require_directory ./PhotoGaleryWidget
 //= require_directory ./ResourceManager
 //= require_directory ./Singleton
@@ -22,3 +22,4 @@
 //= require_directory ./WebUIController
 //= require_directory ./WebUILogger
 //= require_directory ./WebUIMessageBus
+

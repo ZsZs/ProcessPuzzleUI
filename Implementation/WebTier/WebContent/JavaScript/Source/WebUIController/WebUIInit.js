@@ -1,5 +1,7 @@
 // WebUIInit.js
 
+//= require_directory ../FundamentalTypes
+
 function WebUIInit() {
 	var CONTEXT_ROOT_PREFIX = "../../../"; 
 	var logger = log4javascript.getLogger( ROOT_LOGGER_NAME + ".webUiInit" );

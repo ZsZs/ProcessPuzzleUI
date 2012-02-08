@@ -1,5 +1,7 @@
 //WebUIMessage.js
 
+//= require_directory ../FundamentalTypes
+
 var WebUIMessage = new Class({
    Implements: Options,
    options: {

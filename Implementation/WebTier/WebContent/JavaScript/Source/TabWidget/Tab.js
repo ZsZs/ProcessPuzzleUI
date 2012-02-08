@@ -17,6 +17,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//= require_directory ../FundamentalTypes
+
 var Tab = new Class( {
    Implements : [Events, Options],
    Binds : ['onSelection'],

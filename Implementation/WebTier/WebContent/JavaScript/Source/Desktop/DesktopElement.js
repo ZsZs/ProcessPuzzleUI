@@ -24,6 +24,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+//= require_directory ../FundamentalTypes
+
 var DesktopElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
    Binds: ['constructed', 'finalizeConstruction', 'onConstructionError'],

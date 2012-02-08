@@ -21,6 +21,8 @@ ROOT_LOGGER_NAME = "WebUI";
 FRONT_CONTROLLER = "CommandControllerServlet";
 
 // Main control class, responsible for managing and syncronizing the widgets.
+//= require_directory ../FundamentalTypes
+
 var WebUIController = new Class({
    Implements: [Class.Singleton, Events, Options],
    Binds : ['changeLanguage', 

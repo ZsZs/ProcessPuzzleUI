@@ -16,6 +16,8 @@ provides: Class.Singleton
 ...
 */
 
+//= require_directory ../FundamentalTypes
+
 (function(){
 
 var storage = {

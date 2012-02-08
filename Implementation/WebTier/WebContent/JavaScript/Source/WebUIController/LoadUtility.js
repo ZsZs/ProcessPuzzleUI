@@ -1,5 +1,7 @@
 // LoadUtility.js
 
+//= require_directory ../FundamentalTypes
+
 function getWebUIController() {
 	try {
 		return parent.webUIController;

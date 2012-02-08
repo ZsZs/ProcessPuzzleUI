@@ -1,5 +1,7 @@
 //TestMessageOne.js
 
+//= require_directory ../FundamentalTypes
+
 var TestMessageOne = new Class({
    Extends: WebUIMessage,
    options: {

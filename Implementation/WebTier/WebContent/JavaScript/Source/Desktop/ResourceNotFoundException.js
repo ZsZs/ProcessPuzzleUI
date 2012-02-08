@@ -1,5 +1,7 @@
 //UnconfiguredWidget.js
 
+//= require_directory ../FundamentalTypes
+
 var ResourceNotFoundException = new Class({
    Extends: WebUIException,
    options: {

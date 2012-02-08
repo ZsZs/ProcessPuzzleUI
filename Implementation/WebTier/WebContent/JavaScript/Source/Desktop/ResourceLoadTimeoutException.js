@@ -1,5 +1,7 @@
 //UnconfiguredWidget.js
 
+//= require_directory ../FundamentalTypes
+
 var ResourceLoadTimeoutException = new Class({
    Extends: WebUIException,
    options: {
