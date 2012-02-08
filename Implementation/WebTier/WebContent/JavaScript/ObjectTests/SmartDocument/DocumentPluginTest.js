@@ -1,4 +1,4 @@
-var TestClassTemplate = new Class( {
+var DocumentPluginTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onConstructionError', 'onResourcesLoaded'],
 

@@ -1,4 +1,4 @@
-var TestClassTemplate = new Class( {
+var TabWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onTabSelectedMessage'],
 
