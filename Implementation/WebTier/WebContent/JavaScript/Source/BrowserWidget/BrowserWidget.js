@@ -18,8 +18,9 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Abstract root class of all widgets. Provides standardized way for different
-// HTML element creation.
+//= require ./WebUIMessageBus/WebUIMessage.js
+//= require ./FundamentalTypes/WebUIException.js
+
 var BrowserWidget = new Class( {
    Implements : [Events, Options],
    Binds : ['onConstructed', 'onDestroyed', 'webUIMessageHandler'],
