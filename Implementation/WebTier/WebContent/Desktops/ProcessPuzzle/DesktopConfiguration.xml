@@ -112,6 +112,7 @@
 			<title>DesktopConfigurator.Panel.newsTitle</title>
 		</panel>
   
+ -->     
       <panel name='communityPanel' columnReference='rightColumn' height='250' showHeader='true'>
          <title>DesktopConfigurator.Panel.comunityTitle</title>
       </panel>
@@ -119,7 +120,6 @@
       <panel name='relationshipsPanel' columnReference='rightColumn' height='150' showHeader='true'>
          <title>DesktopConfigurator.Panel.relationshipsTitle</title>
       </panel>
- -->     
 	</panels>
 
    <windows>

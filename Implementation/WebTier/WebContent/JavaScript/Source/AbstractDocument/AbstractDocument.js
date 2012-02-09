@@ -27,6 +27,8 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 //= require_directory ../FundamentalTypes
+//= require ../WebUILogger/WebUILogger.js
+//= require ../WebUIMessageBus/WebUIMessageBus.js
 
 var AbstractDocument = new Class({
    Implements: [Events, Options],

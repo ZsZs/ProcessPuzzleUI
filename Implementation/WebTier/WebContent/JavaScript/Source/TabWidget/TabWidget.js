@@ -19,6 +19,7 @@
  */
 
 //= require_directory ../FundamentalTypes
+//= require ../BrowserWidget/BrowserWidget.js
 
 var TabWidget = new Class( {
    Extends : BrowserWidget,

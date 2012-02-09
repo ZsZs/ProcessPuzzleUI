@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //= require_directory ../FundamentalTypes
+//= require ../Singleton/Singleton.js
 
 var WebUIMessageBus = new Class({
    Implements: [Class.Singleton, Options],

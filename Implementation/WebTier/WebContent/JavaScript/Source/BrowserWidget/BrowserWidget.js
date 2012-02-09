@@ -20,8 +20,6 @@
 
 //= require_directory ../FundamentalTypes
 //= require ../WebUIMessageBus/WebUIMessage.js
-//= require ../FundamentalTypes/WebUIException.js
-//= require_directory ../FundamentalTypes
 
 var BrowserWidget = new Class( {
    Implements : [Events, Options],

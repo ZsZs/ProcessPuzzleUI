@@ -28,6 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 //= require_directory ../FundamentalTypes
+//= require ../BrowserWidget/BrowserWidget.js
 
 var ToolBarWidget = new Class({
    Extends : BrowserWidget,

@@ -25,6 +25,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 //= require_directory ../FundamentalTypes
+//= require ../Desktop/DesktopElement.js
 
 var DesktopFooter = new Class({
    Extends: DesktopDocument,
