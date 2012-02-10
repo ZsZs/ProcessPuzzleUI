@@ -14,6 +14,7 @@
 			<property name="project.root" location="${project.webtier.root}" />
 			<property name="view.root.path" location="${view.root.path}" />
 			<property file="${project.build.dir}/local.build.properties" />
+         <property file="${project.build.dir}/application.properties" />
 		</ant>
 	</target>
 </project>
