@@ -56,7 +56,7 @@ var JsTestClass = new Class({
          
    warn : function( arguments ){
       this.tracer.warn( arguments );
-   }.protect(),
+   }.protect()
    
 });
 

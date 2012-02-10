@@ -20,6 +20,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
@@ -35,160 +36,13 @@
    <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
 
+   <script type="text/javascript" src="../../ObjectTests/WebUILogger/WebUILoggerTest.js"></script>
+   
    <script type="text/javascript" >
       window.addEvent('domready', function() {
-         runTestFunction();
       });
 	
-      JsHamcrest.Integration.JsUnit();
-	  
-      var APPENDER_ONE_NAME = "xmlAjaxAppender";
-      var APPENDER_TWO_NAME = "formattedPopUpAppender";
-      var APPENDER_THREE_NAME = "formattedInPageAppender";
-      var APPENDER_FOUR_NAME = "formattedConsoleAppender";
-      var CONFIGURATION_URI = "../WebUILogger/WebUIConfiguration.xml";
-      var ERROR_MESSAGE = "An error message.";
-      var INFO_MESSAGE = "An info message.";
-      var LAYOUT_ONE_NAME = "formattedLayout";
-      var LAYOUT_TWO_NAME = "xmlLayout";
-      var LOG_CONTAINER_ELEMENT_ID = "JavaScriptLogging";
-      var LOGGER_ONE_NAME = "WebUI";
-      var LOGGER_TWO_NAME = "ProcessPuzzle";
-      var LOGGER_THREE_NAME = "LoggerForUnitTest";
-  	  
-      var ajaxAppender = null;
-      var browserConsoleAppender = null;
-      var configuration = null;
-      var inPageAppender = null;
-      var logContainerElement;
-      var logger = null;
-      var patternLayout = null;
-      var popUpAppender = null;
-      var processPuzzleLogger = null;
-      var unitTestLogger = null;
-      var xmlLayout = null;
-      var webUILogger = null;
-	  
-      function setUp() {
-      	configuration = new WebUIConfiguration( CONFIGURATION_URI );
-      	logger = new WebUILogger( configuration );
-      	if( !logger.isConfigured() ) logger.configure( configuration );
-      	
-         patternLayout = logger.getLayout( LAYOUT_ONE_NAME );
-         xmlLayout = logger.getLayout( LAYOUT_TWO_NAME );
-		
-         ajaxAppender = logger.getAppender( APPENDER_ONE_NAME );
-         popUpAppender = logger.getAppender( APPENDER_TWO_NAME );
-         inPageAppender = logger.getAppender( APPENDER_THREE_NAME );
-         browserConsoleAppender = logger.getAppender( APPENDER_FOUR_NAME );
-		
-         webUILogger = logger.getLogger( LOGGER_ONE_NAME );
-         processPuzzleLogger = logger.getLogger( LOGGER_TWO_NAME );
-         unitTestLogger = logger.getLogger( LOGGER_THREE_NAME );
-		
-         logContainerElement = $( LOG_CONTAINER_ELEMENT_ID );
-      }
-
-      function tearDown() {
-		logger.tearDown();
-      }
-
-      function test_initialize_configuresAppenders() {
-      	assertEquals( WebUILogger.INFO, ajaxAppender.getThreshold() );
-      	
-      	assertEquals( WebUILogger.DEBUG, popUpAppender.getThreshold() );
-      	assertTrue( popUpAppender.isInitiallyMinimized() );
-
-      	assertEquals( WebUILogger.TRACE, inPageAppender.getThreshold() );
-      	assertEquals( 600, inPageAppender.getHeight() );
-      	assertEquals( 800, inPageAppender.getWidth() );
-      	assertFalse( inPageAppender.isInitiallyMinimized() );
-
-      	assertEquals( WebUILogger.DEBUG, browserConsoleAppender.getThreshold() );
-      }
-      
-      function testInitialization_InstantiatesLayouts() {
-      	assertEquals( "Configuration contains:", 2, logger.getLayouts().length );
-      	assertEquals( "%d{HH:mm:ss} %-5p - %c: %m%n", patternLayout.pattern );
-      	assertEquals( "[%-5p] %m", xmlLayout.pattern );
-      }
-      
-      function testInitialization_InstantiatesAppenders() {
-      	assertEquals( "Configuration contains:", 4, logger.getAppenders().length );
-      	assertEquals( xmlLayout, ajaxAppender.getLayout() );
-      	assertEquals( patternLayout, popUpAppender.getLayout() );
-      	assertEquals( patternLayout, inPageAppender.getLayout() );
-      	assertEquals( patternLayout, browserConsoleAppender.getLayout() );
-      }
-      
-      function testInitialization_InstantiatesLoggers() {
-      	assertEquals( "Configuration contains:", 3, logger.getLoggers().length );
-      	assertEquals( "Returns the default logger's name.", LOGGER_THREE_NAME, logger.getName());
-      	assertEquals( "DEBUG", logger.getLevel().name );
-      	assertEquals( "INFO", webUILogger.getLevel().name );
-      	assertEquals( "INFO", processPuzzleLogger.getLevel().name );
-      	
-      	assertEquals( popUpAppender, webUILogger.getEffectiveAppenders()[0] );
-      	assertEquals( ajaxAppender, processPuzzleLogger.getEffectiveAppenders()[0] );
-      	
-      	assertEquals( unitTestLogger, logger.getDefaultLogger() );
-      }
-      
-      function testLog_BroadcastsLogMessageToAppenders() {
-      	logger.log( WebUILogger.TRACE, ERROR_MESSAGE );
-      	//Messge is dispached after 'domredy' event is handled.
-      }
-      
-      function testLog_WhenLevelIsMissing_ThrowsException() {
-      	try{
-      		logger.log( ERROR_MESSAGE );
-      		fail( "Exception was expected. 'logLevel' parameter can't be null, empty or illegal value." );
-      	}catch( e ) {
-      		assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
-      	}
-      	
-      }
-      
-      function testGroup() {
-      	logger.group( "Test group 1:", false );
-      	logger.groupEnd();
-      }
-      
-      function testGroupEnd() {
-      	logger.group( "Test group 2:", false );
-      	logger.groupEnd();
-      }
-      
-      function testTrace(){
-      	logger.trace( ERROR_MESSAGE );
-      }
-      
-      function testDebug(){
-      	logger.debug( ERROR_MESSAGE );
-      }
-      
-      function testInfo(){
-      	logger.info( ERROR_MESSAGE );
-      }
-      
-      function testWarn(){
-      	logger.warn( ERROR_MESSAGE );
-      }
-      
-      function testError(){
-      	logger.error( ERROR_MESSAGE );
-      }
-      
-      function testFatal(){
-      	logger.fatal( ERROR_MESSAGE );
-      }
-      
-      //runs a test function during debugging
-      function runTestFunction(){
-	    setUp();
-	    test_initialize_configuresAppenders();
-		tearDown();
-	  }
+      JsHamcrest.Integration.JsUnit();	  	  
     </script>
 </head>
   <body>
