@@ -25,7 +25,7 @@ var JsTestMethod = new Class({
    },
    
    //Properties
-   getFullName : function() { return this.options.url ? this.options.url + ":" + this.getName() : this.getName(); },
+   getFullName : function() { return this.options.url ? this.options.url.toLowerCase() + ":" + this.getName() : this.getName(); },
    getName : function() { return this.testClassName + "." + this.name; },
 
    //Protected, private helper methods
