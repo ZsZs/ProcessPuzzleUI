@@ -1,7 +1,3 @@
-
-JsHamcrest.Integration.JsUnit();
-JsMockito.Integration.JsUnit();   
-
 var JsTestClass = new Class({
    Implements: [Events, Options],
    options: {

@@ -9,7 +9,16 @@
 	<property file="${application.build.dir}/application.properties" />
 	<property file="${common.build.path}/common.build.properties" />
 
-	<target name="call-webtier-build">
+   <target name="call-domaintier-build">
+      <ant dir="${project.domaintier.root}" antfile="${project.build.file}" inheritall="false">
+         <property name="project.root" location="${project.domaintier.root}" />
+         <property name="view.root.path" location="${view.root.path}" />
+         <property file="${project.build.dir}/local.build.properties" />
+         <property file="${project.build.dir}/application.properties" />
+      </ant>
+   </target>
+
+   <target name="call-webtier-build" depends="call-domaintier-build">
 		<ant dir="${project.webtier.root}" antfile="${project.build.file}" inheritall="false">
 			<property name="project.root" location="${project.webtier.root}" />
 			<property name="view.root.path" location="${view.root.path}" />

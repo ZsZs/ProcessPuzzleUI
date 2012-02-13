@@ -218,3 +218,5 @@ if(Sarissa._SARISSA_HAS_DOM_FEATURE && document.implementation.hasFeature("XPath
     };
     Sarissa.IS_ENABLED_SELECT_NODES = true;
 }
+
+Sarissa.XPATH_INITIALIZED = true;

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ProcessPuzzleUI Domain Tier" basedir=".." default="domaintier-build">
+
+	<property name="project.root" location="${basedir}" />
+	<property name="view.root.path" location="../../../../../" />
+	<property name="common.build.path" value="${view.root.path}/BuildPuzzle/Implementation/BuildSnippets" />
+	
+	<property file="${view.root.path}/ProcessPuzzleCommons/Implementation/DomainTier/Build/component.properties" prefix="processpuzzlecommons"/>
+	<property file="${project.root}/Build/local.build.properties" />
+	<property file="${project.root}/Build/component.properties"/>
+	<property file="${common.build.path}/common.build.properties" />
+
+	<path id="project.auxiliary.classpath">
+		<fileset dir="${release.base.path}/${processpuzzlecommons.component.distribution.dir}">
+			<include name="${processpuzzlecommons.component.packaged.file}" />
+		</fileset>
+		
+		<fileset dir="${common.development.library.path}/HtmlUnit">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="domaintier-build">
+		<ant dir="${project.root}" antfile="${common.build.path}/${common.domaintier.build.file}">
+			<property name="cobertura.data.file" value="${project.root}/${cobertura.data.file}" />
+			<reference refid="project.auxiliary.classpath"/>
+		</ant>
+	</target>
+</project>

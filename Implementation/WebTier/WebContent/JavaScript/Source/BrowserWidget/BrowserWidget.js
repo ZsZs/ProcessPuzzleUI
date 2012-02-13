@@ -23,7 +23,7 @@
 
 var BrowserWidget = new Class( {
    Implements : [Events, Options],
-   Binds : ['onConstructed', 'onDestroyed', 'webUIMessageHandler'],
+   Binds : ['finalizeConstruction', 'onDestroyed', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -43,6 +43,7 @@ var BrowserWidget = new Class( {
 
       // private instance variables
       this.componentStateManager;
+      this.constructionChain = new Chain();
       this.containerElement;
       this.dataXml;
       this.definitionXml;
@@ -80,7 +81,10 @@ var BrowserWidget = new Class( {
 
    // public accessor and mutator methods
    construct : function() {
-      if( this.state < BrowserWidget.States.CONSTRUCTED ) this.onConstructed();
+      if( this.state < BrowserWidget.States.CONSTRUCTED ) {
+         this.compileConstructionChain();
+         this.constructionChain.callChain();
+      }
       return this;
    },
 
@@ -106,13 +110,6 @@ var BrowserWidget = new Class( {
          text = key;
       }
       return text;
-   },
-   
-   onConstructed : function(){
-      this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
-      this.storeComponentState();
-      this.state = BrowserWidget.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    },
    
    onDestroyed : function(){
@@ -169,6 +166,10 @@ var BrowserWidget = new Class( {
    getState : function() { return this.state; },
 
    // Private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.finalizeConstruction );
+   }.protect(),
+   
    compileStateSpecification: function(){
       //Abstract method, should be overwrite!
    }.protect(),
@@ -205,6 +206,13 @@ var BrowserWidget = new Class( {
       }
    }.protect(),
 
+   finalizeConstruction : function(){
+      this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
+      this.storeComponentState();
+      this.state = BrowserWidget.States.CONSTRUCTED;
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+   
    loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );

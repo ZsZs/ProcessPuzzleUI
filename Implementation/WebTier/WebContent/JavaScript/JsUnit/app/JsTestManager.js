@@ -5,6 +5,7 @@ var JsTestManager = new Class({
    options : {
       componentName : "JsTestManager",
       delay: 200,
+      delayAfterPageLoad: 50,
       emptyTestPage : "app/emptyPage.html",
       maxTries: 20,
       verbose : false
@@ -168,7 +169,7 @@ var JsTestManager = new Class({
       
       if( self.testFrame.document && self.testFrame.document.readyState == 'complete' && testFrameUrl.contains( currentPageUri )){
          clearInterval( self.timer );
-         self.onTestPageLoaded();
+         self.onTestPageLoaded.delay( self.options.delayAfterPageLoad, self );
       }else if( self.numberOfTries >= self.options.maxTries ){
          clearInterval( self.timer );
          self.fatalError( 'Reading Test Page ' + self.currentTestPage.url + ' timed out.\nMake sure that the file exists and is a Test Page.' );

@@ -112,6 +112,7 @@ var DocumentEditor = new Class({
    
    instantiateTools: function(){
       //Abstract method, should be overwritten in subclasses.
+      this.attachChain.callChain();
    }.protect(),
    
    subscribeToWebUIMessages : function() {

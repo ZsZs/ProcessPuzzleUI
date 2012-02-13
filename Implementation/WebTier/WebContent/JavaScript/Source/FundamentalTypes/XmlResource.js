@@ -56,6 +56,7 @@ var XmlResource = new Class({
    initialize: function ( uri, options ) {
       // parameter assertions
       assertThat( uri, not( nil() ));
+      assertThat( Sarissa.XPATH_INITIALIZED, is( true ));
       
       this.parent( options );
       this.options.url = uri;

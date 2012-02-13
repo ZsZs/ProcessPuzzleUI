@@ -3,8 +3,8 @@ var TestClassTemplate = new Class( {
    Binds : ['onFailure', 'onSuccess'],
 
    options : {
-      testMethods : 
-         [{ method : 'synchronTest', isAsynchron : false },
+      testMethods : [
+          { method : 'synchronTest', isAsynchron : false },
           { method : 'asynchronTestOne', isAsynchron : true }, 
           { method : 'asynchronTestTwo', isAsynchron : true }]
    },
@@ -23,9 +23,6 @@ var TestClassTemplate = new Class( {
    },
    
    synchronTest : function() {
-      //EXCERCISE:
-      
-      //VERIFY:
    },
    
    asynchronTestOne : function() {
