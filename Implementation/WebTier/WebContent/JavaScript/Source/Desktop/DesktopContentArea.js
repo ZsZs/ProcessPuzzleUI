@@ -42,10 +42,12 @@ var DesktopContentArea = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
+      this.createHtmlElement();
       this.parent();
    },
    
    unmarshall: function(){
+      this.unmarshallElementProperties();
       this.parent();
    }
 
