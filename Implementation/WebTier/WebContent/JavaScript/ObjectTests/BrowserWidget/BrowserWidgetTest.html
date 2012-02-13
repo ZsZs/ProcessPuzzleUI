@@ -17,6 +17,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
@@ -56,200 +57,14 @@
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
 
+   <script type="text/javascript" src="../../ObjectTests/BrowserWidget/BrowserWidgetTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         runTestFunction();
       });
 
       JsHamcrest.Integration.JsUnit();
-	   
-      var CHILD_ELEMENT_TYPE = "DIV";
-	   var CONFIGURATION_URI = "../BrowserWidget/WebUIConfiguration.xml";
-      var LANGUAGE = "hu";
-  	   var RESOURCE_PATH = "../BrowserWidget/WidgetInternationalization";
-  	   var RESOURCE_KEY = "Widget.ItemOne";
-      var ROW_LABEL = "row label:";
-      var ROW_VALUE = "row value";
-      var ROW_VALUE_ID = "rowValueId";
-  	   var SEARCHED_ELEMENT_ID = "searchedElementId";
-  	   var WIDGET_CONTAINER_ID = "widgetContainer";
-      var WIDGET_DATA_URI = "../BrowserWidget/WidgetData.xml";
-  	   var WIDGET_DEFINITION_URI = "../BrowserWidget/WidgetDefinition.xml";
-  	   var browserWidget;
-  	   var componentStateManager;
-  	   var domDocument;
-  	   var locale = new Locale( LANGUAGE );
-  	   var messageBus = null;
-  	   var resourceBundle;
-  	   var testWindow;
-  	   var webUIConfiguration = null;
-  	   var webUILogger = null;
-  	   var widgetContainerElement;
-  	  
-      function setUp() {
-         if( window.top.frames['testContainer'] ) testWindow = window.top.frames['testContainer'];
-         else testWindow = window;
-         domDocument = document;
-         messageBus = new WebUIMessageBus();
-         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         componentStateManager = new ComponentStateManager();
-      	resourceBundle = new XMLResourceBundle( webUIConfiguration );
-      	resourceBundle.load( locale );
-      	browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle );
-      	widgetContainerElement = $( WIDGET_CONTAINER_ID );
-      }
-
-      function tearDown() {
-         widgetContainerElement.getChildren().each( function( element ) {
-            element.destroy();
-         });
-        
-         messageBus.tearDown();
-      }
       
-      function test_Initialization_WhenArgumentsAreGiven_DeducesAssociatedObjects() {
-         assertEquals( "Browser Widget uses the same locale as the ResourceBundle.", resourceBundle.getLocale(), browserWidget.getLocale() );
-         assertEquals( "Holds a reference to the WebUIMessageBus", messageBus, browserWidget.getMessageBus() );
-      }
-       
-      function test_Initialization_WhenNoArgumentsAreGiven_UsesWebUiController() {
-         //SETUP:
-         var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : CONFIGURATION_URI }, testWindow );
-   	  
-      	//EXCERCISE:
-   	  	browserWidget = new BrowserWidget();
-   	  
-      	//VERIFY:
-         assertNotNull( "Browser widget successfully instantiated.", browserWidget );
-         assertNotNull( "Identifies container element.", widgetContainerElement );
-         assertEquals( "Browser Widget uses the Resource Bundle of WebUIController.", webUIController.getResourceBundle(), browserWidget.getResourceBundle() );
-      }
-      
-      function test_Initialization_FindsContainerElement() {
-         assertThat( browserWidget.getContainerElement(), equalTo( widgetContainerElement ) );
-      }
-      
-      function test_Initialization_LoadsI18Resources() {
-         assertThat( browserWidget.getResourceBundle().isLoaded, is( true ));
-      }
-      
-      function test_Initialization_InstantiatesElementFactory(){
-         assertThat( browserWidget.getElementFactory(), not( nil() ));
-         assertThat( instanceOf( browserWidget.getElementFactory(), WidgetElementFactory ), is( true ));
-      }
-      
-      function test_Initialization_WhenDefinitionUriIsGiven_LoadsIt(){
-         //SETUP, EXCERCISE:
-         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, widgetDefinitionURI : WIDGET_DEFINITION_URI }, resourceBundle );
-         
-         //VERIFY:
-         assertThat( browserWidget.getDefinitionXml(), not( nil() ));
-      }
-      
-      function test_Initialization_WhenDataUriIsGiven_LoadsIt(){
-         //SETUP, EXCERCISE:
-         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, widgetDataURI : WIDGET_DATA_URI }, resourceBundle );
-         
-         //VERIFY:
-         assertThat( browserWidget.getDataXml(), not( nil() ));
-      }
-      
-      function test_Initialization_WhenMessageSubsciptionsAreGiven_SubscribesToMessages() {
-         //SETUP, EXCERCISE:
-         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, resourceBundle );
-         
-         //VERIFY:
-         assertEquals( "BrowserWidget is registered to message:", browserWidget.webUIMessageHandler, messageBus.getSubscribersToMessage( TestMessageOne ).get(0) );
-         assertEquals( "BrowserWidget is registered to message:", browserWidget.webUIMessageHandler, messageBus.getSubscribersToMessage( TestMessageTwo ).get(0) );
-      }
-      
-      function test_Initialization_ContainerIdShouldBeValid() {
-         try{
-           new BrowserWidget( { widgetContainerId : "blabla" } , resourceBundle );
-            fail( "Exception was expected. 'containerId' parameter should identify a valid dom element." );
-         }catch( e ) {
-            assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
-         }
-      }
-      
-      function test_Initialization_ResourceBundleShouldBeLoaded() {
-         try{
-           new BrowserWidget( { widgetContainerId : WIDGET_CONTAINER_ID }, new XMLResourceBundle( webUIConfiguration ) );
-            fail( "Exception was expected. 'resourceBundle' parameter can't be null or empty." );
-         }catch( e ) {
-            assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
-         }
-      }
-      
-      function test_GetText_UsesI18Resource() {
-      	assertNotNull( browserWidget.getText( RESOURCE_KEY ) );
-         assertEquals( resourceBundle.getText( RESOURCE_KEY ), browserWidget.getText( RESOURCE_KEY ));
-      }
-      
-      function test_RemoveChild_DestroysNestedChildElements() {
-      	//SETUP: 
-      	var elementToRemove = browserWidget.getElementFactory().createStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID );
-      	assertNotNull( widgetContainerElement.getElementById( ROW_VALUE_ID ));
-      	 
-      	//EXCERCISE:
-      	browserWidget.removeChild( elementToRemove );
-      	
-      	//VERIFY:
-      	assertNull( widgetContainerElement.getElementById( ROW_VALUE_ID ) );
-      }
-      
-      function test_Destroy_DestroysAllCreatedElements() {
-      	//SETUP:
-         browserWidget.getElementFactory().createStaticRow( ROW_LABEL, ROW_VALUE, ROW_VALUE_ID );
-         browserWidget.construct();
-      	assertTrue( widgetContainerElement.getChildren().length >= 1 );
-      	
-      	//EXCERCISE:
-      	browserWidget.destroy();
-      	
-      	//VERIFY:
-      	assertTrue( widgetContainerElement.getChildren().length == 0 );
-      }
-
-      function test_WebUIMessageHandler_WhenConfigured() {
-         //SETUP:
-         var webUIMessageOne = new TestMessageOne();
-         var webUIMessageTwo = new TestMessageTwo();
-         browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, resourceBundle );
-         browserWidget.construct();
-	      
-         //EXCERCISE:
-         messageBus.notifySubscribers( webUIMessageOne );
-	      
-         //VERIFY:
-         assertEquals( "BrowserWidget stores the last handled WebUIMessage.", webUIMessageOne, browserWidget.getLastMessage() ); 
-         messageBus.notifySubscribers( webUIMessageTwo );
-         assertEquals( "BrowserWidget stores the last handled WebUIMessage.", webUIMessageTwo, browserWidget.getLastMessage() ); 
-      }
-   
-	   function test_WebUIMessageHandler_WhenNotConfigured() {
-	      //SETUP:
-	      var webUIMessageOne = new TestMessageOne();
-	      browserWidget = new BrowserWidget({ widgetContainerId : WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne] }, resourceBundle );
-	      
-	      try{
-	         //EXCERCISE:
-            messageBus.notifySubscribers( webUIMessageOne );
-            fail( "UnconfiguredWidgetExceptions was expected!" );
-	      }catch( e ) {
-	         //VERIFY:
-            assertTrue( instanceOf( e, UnconfiguredWidgetException ) );
-	      }
-	   }
-   
-      //runs a test function during debugging
-      function runTestFunction(){
-         setUp();
-         test_Destroy_DestroysAllCreatedElements();
-         tearDown();
-      }
-	  
     </script>
   </head>
 
