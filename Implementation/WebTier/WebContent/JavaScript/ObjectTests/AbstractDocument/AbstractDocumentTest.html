@@ -20,11 +20,13 @@
    <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
     
    <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <!--[if IE]>
@@ -64,183 +66,16 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 	
+   <script type="text/javascript" src="../../ObjectTests/AbstractDocument/AbstractDocumentTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //test_construct_instantiatesElementFactoryAndDocumentEditor();
       });
-				
+      
       JsHamcrest.Integration.JsUnit();
-		
-      var WEBUI_CONFIGURATION_URI = "../HtmlDocument/WebUIConfiguration.xml";
-      var DOCUMENT_CONTAINER_ID = "abstractDocument";
-      var DOCUMENT_CONTENT_URI = "../AbstractDocument/HtmlDocument_en.html";
-      var DOCUMENT_DEFINITION_URI = "../AbstractDocument/HtmlDocumentDefinition.xml";
-		
-      var abstractDocument;
-      var bundle;
-      var documentContainerElement;
-      var documentContentResource;
-      var documentDefinition;
-      var documentInternationalization;
-      var testCaseChain = new Chain();
-      var testCaseIsRunning = false;
-      var webUIConfiguration;
-      var webUILogger;
-      var webUIMessageBus;
-		
-      function runTestCase(){
-         if( !testCaseIsRunning ) testCaseChain.callChain();
-      }
-	      
-      function beforeEachTest(){
-         window.inform( "beforeEachTest" );
-         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         webUIMessageBus = new WebUIMessageBus();
-         bundle = new XMLResourceBundle( webUIConfiguration );
-         bundle.load( new Locale({ language : "en" }) );
-		   
-         documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
-         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
-         documentContainerElement = $( DOCUMENT_CONTAINER_ID );
-         abstractDocument = new AbstractDocument( bundle, { 
-            documentContentUri : DOCUMENT_CONTENT_URI, 
-            documentContainerId : DOCUMENT_CONTAINER_ID,
-            documentDefinitionUri : DOCUMENT_DEFINITION_URI, 
-            rootElementName : "/htmlDocumentDefinition",
-            onDocumentReady : onDocumentReady });
-         
-         testCaseIsRunning = true;
-         testCaseChain.callChain();
-      }
-		
-      function onDocumentReady(){
-         testCaseChain.callChain();
-      }
+      JsMockito.Integration.JsUnit();   
 
-      function afterEachTest(){
-         bundle.release();
-         bundle = null;
-		   
-         if( abstractDocument.getState() > AbstractDocument.States.INITIALIZED ) abstractDocument.destroy();
-         abstractDocument = null;
-         documentContainerElement = null;
-         
-         window.inform( "afterEachTest" );
-         testCaseIsRunning = false;
-         testCaseChain.callChain();
-      }
-      
-      function test_initialize_determinesFieldValues(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               assertThat( abstractDocument.getLogger(), equalTo( webUILogger ));
-               assertThat( abstractDocument.getMessageBus(), equalTo( webUIMessageBus ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-		
-      function test_initialize_loadsDocumentDefinitionAndContent() {
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
-               assertThat( instanceOf( abstractDocument.getDocumentDefinition(), XmlResource ), is( true ));
-               assertThat( instanceOf( abstractDocument.getDocumentContent(), XmlResource ), is( true ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-		
-      function test_unmarshall_determinesProperties(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               abstractDocument.unmarshall();
-		   
-               assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.UNMARSHALLED ));
-               assertThat( abstractDocument.getDescription(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/description" )));
-               assertThat( abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( documentDefinition.selectNodeText( "/htmlDocumentDefinition/handleMenuSelectedEvents" ))));
-               assertThat( abstractDocument.getName(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/name" )));
-               assertThat( abstractDocument.getVersion(), equalTo( documentDefinition.selectNodeText( "/htmlDocumentDefinition/version" )));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-		
-      function test_unmarshall_whenSpecified_instantiatesAndUnmarshallsResources(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               abstractDocument.unmarshall();
-         
-               assertThat( abstractDocument.getResources(), not( nil() ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      
-      function test_construct_instantiatesElementFactoryAndDocumentEditor(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               abstractDocument.unmarshall();
-               abstractDocument.construct();
-            },
-            function(){
-               assertThat( instanceOf( abstractDocument.getEditor(), DocumentEditor), is( true ));
-               assertThat( instanceOf( abstractDocument.getHtmlElementFactory(), WidgetElementFactory ), is( true ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      
-      function test_construct_subscribesToMenuSelectedEvents(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               abstractDocument.unmarshall();
-               abstractDocument.construct();
-            },
-            function(){
-               assertThat( webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( abstractDocument.webUIMessageHandler ), is( true ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      
-      function test_destroy_whenUnmarshalled_resetsProperties(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               abstractDocument.unmarshall();
-               abstractDocument.destroy();
-		   
-               assertThat( abstractDocument.getState(), equalTo( AbstractDocument.States.INITIALIZED ));
-               assertThat( abstractDocument.getDescription(), nil() );
-               assertThat( abstractDocument.getName(), nil() );
-               assertThat( abstractDocument.getVersion(), nil() );
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      </script>
+   </script>
 </head>
 
 <body>
