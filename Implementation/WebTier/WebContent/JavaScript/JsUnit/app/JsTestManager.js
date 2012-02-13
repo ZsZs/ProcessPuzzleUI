@@ -119,7 +119,7 @@ var JsTestManager = new Class({
    
    onTestCaseStarted : function( testCaseResult ){
       var self = top.testManager;
-      self.setStatus( 'Running test "' + testCaseResult.getName() + '"' );
+      self.setStatus( 'Running Test Case: "' + testCaseResult.getName() + '"' );
       self.uiManager.onTestCaseStarted( testCaseResult );
    },
    
@@ -260,7 +260,7 @@ var JsTestManager = new Class({
    }.protect(),
    
    loadPage : function() {
-      this.setStatus( 'Opening Test Page "' + this.currentTestPage.url + '"' );
+      this.setStatus( 'Opening Test Page: "' + this.currentTestPage.url + '"' );
       
       this.containerController.setTestPage( this.currentTestPage.url );
       this.numberOfTries = 0;
