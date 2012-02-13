@@ -49,7 +49,7 @@ var JsTestCase = new Class({
    
    //Properties
    getName : function() { return this.name; },
-   getFullName : function() { return this.options.url ? this.options.url + ":" + this.name : this.name; },
+   getFullName : function() { return this.options.url ? this.options.url.toLowerCase() + ":" + this.name : this.name; },
    isAsynchron : function() { return this.asynchron; },
 
    //Protected, private helper methods

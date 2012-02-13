@@ -12,12 +12,14 @@ var JsTestFunction = new Class({
    //Constructor
    initialize : function( name, options ) {
       this.parent( name, options );
+      this.fakeClassName;
       this.listeners = new Array();
       this.setUpFunction;
       this.status = 'ready';
       this.tearDownFunction;
       this.testFunction;
       this.traceMessages = new Array();
+      this.deriveFakeClassNameFromUrl();
    },
 
    //Public accessor and mutator methods
@@ -48,6 +50,7 @@ var JsTestFunction = new Class({
    },
    
    //Properties
+   getFullName : function() { return this.options.url ? this.options.url.toLowerCase() + ":" + this.fakeClassName + "." + this.name : this.name; },
    
    //Protected, private helper methods
    callAfterEachTest: function(){
@@ -58,6 +61,10 @@ var JsTestFunction = new Class({
    callBeforeEachTest: function(){
       if( this.setUpFunction ) this.setUpFunction();
       this.parent();
+   }.protect(),
+   
+   deriveFakeClassNameFromUrl: function(){
+      this.fakeClassName = this.options.url.substring( this.options.url.lastIndexOf( "/" ) +1, this.options.url.indexOf( ".htm" ));
    }.protect(),
    
    notifyOnTestCaseStart : function(){
