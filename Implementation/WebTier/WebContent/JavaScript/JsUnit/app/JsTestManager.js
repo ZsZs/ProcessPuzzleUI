@@ -115,12 +115,14 @@ var JsTestManager = new Class({
          serializedTestCaseString += self.uiManager.problemDetailMessageFor( exception );
       }
       self._addOption( self.testCaseResultsField, serializedTestCaseString, serializedTestCaseString );
+      console.log( "Test Case: " + testCaseResult.getName() + " finished." );
    },
    
    onTestCaseStarted : function( testCaseResult ){
       var self = top.testManager;
       self.setStatus( 'Running Test Case: "' + testCaseResult.getName() + '"' );
       self.uiManager.onTestCaseStarted( testCaseResult );
+      console.log( "Test Case: " + testCaseResult.getName() + " started." );
    },
    
    onTestPageLoaded : function(){
@@ -169,6 +171,7 @@ var JsTestManager = new Class({
       
       if( self.testFrame.document && self.testFrame.document.readyState == 'complete' && testFrameUrl.contains( currentPageUri )){
          clearInterval( self.timer );
+         console.log( "Test Page is: " + self.testFrame.location.href );
          self.onTestPageLoaded.delay( self.options.delayAfterPageLoad, self );
       }else if( self.numberOfTries >= self.options.maxTries ){
          clearInterval( self.timer );
