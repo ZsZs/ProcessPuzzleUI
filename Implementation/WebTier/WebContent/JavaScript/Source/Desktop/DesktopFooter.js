@@ -36,8 +36,8 @@ var DesktopFooter = new Class({
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, options ){
-      this.parent( headerDefinitionElement, bundle, options );
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
       this.footerId;
    },
    
