@@ -31,7 +31,8 @@
 
    <script type="text/javascript">
       window.addEvent( 'domready', function() {
-         runTestFunction();
+         console.log( "XmlResourceTest.html is ready." );
+         setUp();
       });
 
       JsHamcrest.Integration.JsUnit();
@@ -44,8 +45,7 @@
       var xmlResource;
 
       function setUp() {
-         xmlResource = new XmlResource( RESOURCE_LOCATOR_ONE, {
-         nameSpaces : "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'"} );
+         xmlResource = new XmlResource( RESOURCE_LOCATOR_ONE, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'"} );
       }
 
       function tearDown() {
