@@ -66,7 +66,7 @@ var XmlResource = new Class({
       this.xmlDoc = null;
       
       //this.checkBrowserCompatibility();
-      //this.refreshResource();
+      this.refreshResource();
       
       //console.log('XmlResource is initialized.');
    },
@@ -123,7 +123,7 @@ var XmlResource = new Class({
       
       var foundXmlNodes = null;
       try {
-         var foundXmlNodes = subjectNode.selectNodes( selector );
+         foundXmlNodes = subjectNode.selectNodes( selector );
          if( typeOf( foundXmlNodes ) == 'collection' ){
             foundXmlNodes =  Array.from( foundXmlNodes );
          }
@@ -165,94 +165,9 @@ var XmlResource = new Class({
    getDocument: function() { return this.xmlDoc; },
    getUri: function() { return this.options.url; },
    getXmlAsText: function() { return this.xmlAsText; },
-   isAsync: function() { return this.options.async; },
+   isAsync: function() { return this.options.async; }
    
    //Private helper methods
-   checkBrowserCompatibility: function(){
-      if( window.XMLDocument && (!XMLDocument.prototype.setProperty )){
-         XMLDocument.prototype.setProperty  = function(x,y){};
-         SarissaNodeList = function (i){ this.length = i; };
-        SarissaNodeList.prototype = [];
-        SarissaNodeList.prototype.constructor = Array;
-        SarissaNodeList.prototype.item = function(i) {
-            return (i < 0 || i >= this.length)?null:this[i];
-        };
-        SarissaNodeList.prototype.expr = "";
-        if(window.XMLDocument && (!XMLDocument.prototype.setProperty)){
-            XMLDocument.prototype.setProperty  = function(x,y){};
-        }
-        Sarissa.setXpathNamespaces = function(oDoc, sNsSet) {
-            //oDoc._sarissa_setXpathNamespaces(sNsSet);
-            oDoc._sarissa_useCustomResolver = true;
-            var namespaces = sNsSet.indexOf(" ")>-1?sNsSet.split(" "):[sNsSet];
-            oDoc._sarissa_xpathNamespaces = [];
-            for(var i=0;i < namespaces.length;i++){
-                var ns = namespaces[i];
-                var colonPos = ns.indexOf(":");
-                var assignPos = ns.indexOf("=");
-                if(colonPos > 0 && assignPos > colonPos+1){
-                    var prefix = ns.substring(colonPos+1, assignPos);
-                    var uri = ns.substring(assignPos+2, ns.length-1);
-                    oDoc._sarissa_xpathNamespaces[prefix] = uri;
-                }else{
-                    throw "Bad format on namespace declaration(s) given";
-                }
-            }
-        };
-        XMLDocument.prototype._sarissa_useCustomResolver = false;
-        XMLDocument.prototype._sarissa_xpathNamespaces = [];
-        XMLDocument.prototype.selectNodes = function(sExpr, contextNode, returnSingle){
-            var nsDoc = this;
-            var nsresolver;
-            if(this._sarissa_useCustomResolver){
-                nsresolver = function(prefix){
-                    var s = nsDoc._sarissa_xpathNamespaces[prefix];
-                    if(s){ return s; }
-                    else { throw "No namespace URI found for prefix: '" + prefix+"'"; }
-                };
-            }
-            else{ nsresolver = this.createNSResolver(this.documentElement); }
-            var result = null;
-            if(!returnSingle){
-                var oResult = this.evaluate( sExpr, (contextNode?contextNode:this), nsresolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                var nodeList = new SarissaNodeList(oResult.snapshotLength);
-                nodeList.expr = sExpr;
-                for(var i=0;i<nodeList.length;i++){
-                    nodeList[i] = oResult.snapshotItem(i);
-                }
-                result = nodeList;
-            }
-            else {
-                result = this.evaluate(sExpr, (contextNode?contextNode:this), nsresolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            }
-            return result;      
-        };
-        
-        Element.prototype.selectNodes = function(sExpr){
-            var doc = this.ownerDocument;
-            if(doc.selectNodes){
-                return doc.selectNodes(sExpr, this);
-            }
-            else{
-                throw "Method selectNodes is only supported by XML Elements";
-            }
-        };
-        XMLDocument.prototype.selectSingleNode = function(sExpr, contextNode){
-            var ctx = contextNode?contextNode:null;
-            return this.selectNodes(sExpr, ctx, true);
-        };
-        Element.prototype.selectSingleNode = function(sExpr){
-            var doc = this.ownerDocument;
-            if(doc.selectSingleNode){
-                return doc.selectSingleNode(sExpr, this);
-            }
-            else{
-                throw "Method selectNodes is only supported by XML Elements";
-            }
-        };
-        Sarissa.IS_ENABLED_SELECT_NODES = true;
-      }
-   }.protect()
 });
 
 //Static methods
@@ -298,38 +213,6 @@ XmlResource.selectNodeText = function( selector, xmlElement, nameSpaces, default
    if( !selectedElement && defaultValue ) return defaultValue;
    else return XmlResource.determineNodeText( selectedElement, defaultValue );
 };
-
-Browser.Request = function(){
-   return $try( function(){
-      if( Browser.Engine.trident && window.location.protocol == "file:" )
-         return new ActiveXObject('Microsoft.XMLHTTP');
-      else 
-         return new XMLHttpRequest();
-   }, function(){
-         return new ActiveXObject('MSXML2.XMLHTTP');
-   }, function(){
-      return new ActiveXObject('Microsoft.XMLHTTP');
-   });
-};
-
-function XMLDocument () {
-   var xmlDoc = null;
-
-   if(document.implementation && document.implementation.createDocument)
-   {  xmlDoc = document.implementation.createDocument("", "", null);
-
-   }
-   else if( window.ActiveXObject )
-   {  xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-      xmlDoc.async = false;
-   }
-   else
-   {  alert('Your browser can\'t handle this script');
-      return;
-   }
-   
-   return xmlDoc;
-}
 
 function TransformXML( xmlFileName, xslFileName ) {
    var xml = new XmlResource( xmlFileName );
