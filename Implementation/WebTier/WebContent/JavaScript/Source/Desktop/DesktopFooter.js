@@ -26,6 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 //= require ../Desktop/DesktopElement.js
+//= require ../Desktop/DesktopDocument.js
 
 var DesktopFooter = new Class({
    Extends: DesktopDocument,
@@ -36,8 +37,8 @@ var DesktopFooter = new Class({
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, options ){
-      this.parent( headerDefinitionElement, bundle, options );
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
       this.footerId;
    },
    

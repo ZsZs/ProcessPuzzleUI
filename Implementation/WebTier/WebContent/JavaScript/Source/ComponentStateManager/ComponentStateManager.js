@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //ComponentStateManager.js
 //= require_directory ../FundamentalTypes
 //= require ../Singleton/Singleton.js
+//= require ../ComponentStateManager/DefaultStateUriTransformer.js
 
 var ComponentStateManager = new Class({
    Implements: [Options, Class.Singleton],

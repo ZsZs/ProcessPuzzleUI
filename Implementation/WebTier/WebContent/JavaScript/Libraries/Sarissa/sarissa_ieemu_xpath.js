@@ -33,7 +33,6 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 if(Sarissa._SARISSA_HAS_DOM_FEATURE && document.implementation.hasFeature("XPath", "3.0")){
-   console.log( "Sarissa XPATH compatiblity started of: " + window.location.href );
     /**
      * <p>SarissaNodeList behaves as a NodeList but is only used as a result to <code>selectNodes</code>,
      * so it also has some properties IEs proprietery object features.</p>
@@ -77,7 +76,6 @@ if(Sarissa._SARISSA_HAS_DOM_FEATURE && document.implementation.hasFeature("XPath
     /** dummy, used to accept IE's stuff without throwing errors */
     if(window.XMLDocument && (!XMLDocument.prototype.setProperty)){
         XMLDocument.prototype.setProperty  = function(x,y){};
-        console.log( "Setting XMLDocument.prototype.setProperty" );
     }
     /**
     * <p>Programmatically control namespace URI/prefix mappings for XPath
