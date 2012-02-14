@@ -70,6 +70,7 @@ var DesktopPanelTest = new Class( {
       this.desktopDefinition.release();
       this.panel.destroy();
       this.column.destroy();
+      this.componentStateManager.reset();
       this.webUIMessageBus.tearDown();
       this.desktopContainerElement = null;
       this.loadedDocumentUri = null;
