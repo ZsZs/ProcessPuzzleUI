@@ -126,10 +126,18 @@
    
    <script type="text/javascript" >
       window.addEvent( 'domready', function() {
+         //runTestCase();
       });
   	  
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
+      
+      function runTestCase(){
+         var testObject = new DesktopTest();
+         testObject.beforeEachTest();
+         testObject.construct_constructsWholeDekstop();
+         testObject.afterEachTest();
+      }
     </script>
     
 </head>

@@ -118,10 +118,7 @@ var PhotoGaleryWidget = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.constructionChain.chain(
-         this.compileDataObject,
-         this.instantiateSlideShow
-      ).callChain();
+      this.parent();
    },
    
    destroy: function(){
@@ -133,7 +130,7 @@ var PhotoGaleryWidget = new Class({
    onComplete: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onComplete() completed to load Slideshow 2." );
-         this.onConstructed();
+         this.constructionChain.callChain();
       }
    },
    
@@ -144,14 +141,14 @@ var PhotoGaleryWidget = new Class({
    onShow: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onShow() started to load Slideshow 2." );
-         this.onConstructed();
+         this.constructionChain.callChain();
       }
    },
    
    onStart: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
-         this.onConstructed();
+         this.constructionChain.callChain();
       }
    },
    
@@ -198,6 +195,15 @@ var PhotoGaleryWidget = new Class({
       
       this.data = eval( "({" + this.dataAsText + "})" );
       this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain(
+         this.compileDataObject,
+         this.instantiateSlideShow,
+         this.finalizeConstruction
+      );
+      
    }.protect(),
    
    destroyComponents: function(){
