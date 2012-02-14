@@ -214,19 +214,6 @@ XmlResource.selectNodeText = function( selector, xmlElement, nameSpaces, default
    else return XmlResource.determineNodeText( selectedElement, defaultValue );
 };
 
-Browser.Request = function(){
-   return $try( function(){
-      if( Browser.Engine.trident && window.location.protocol == "file:" )
-         return new ActiveXObject('Microsoft.XMLHTTP');
-      else 
-         return new XMLHttpRequest();
-   }, function(){
-         return new ActiveXObject('MSXML2.XMLHTTP');
-   }, function(){
-      return new ActiveXObject('Microsoft.XMLHTTP');
-   });
-};
-
 function TransformXML( xmlFileName, xslFileName ) {
    var xml = new XmlResource( xmlFileName );
    var xsl = new XmlResource( xslFileName );
