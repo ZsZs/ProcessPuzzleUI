@@ -84,7 +84,7 @@ var DesktopPanelHeader = new Class({
       if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
-         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionFailed : this.onPluginConstructionError });
+         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginConstructionError });
          this.plugin.unmarshall();
       }
       this.state = DesktopPanelHeader.States.UNMARSHALLED;      
