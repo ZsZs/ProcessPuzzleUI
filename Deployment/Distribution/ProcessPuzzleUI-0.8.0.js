@@ -1484,6 +1484,7 @@ var XmlResource = new Class({
    initialize: function ( uri, options ) {
       // parameter assertions
       assertThat( uri, not( nil() ));
+      assertThat( Sarissa.XPATH_INITIALIZED, is( true ));
       
       this.parent( options );
       this.options.url = uri;
@@ -1491,7 +1492,8 @@ var XmlResource = new Class({
       this.options.async = false;
       this.xmlAsText = null;
       this.xmlDoc = null;
-
+      
+      //this.checkBrowserCompatibility();
       this.refreshResource();
       
       //console.log('XmlResource is initialized.');
@@ -1549,7 +1551,7 @@ var XmlResource = new Class({
       
       var foundXmlNodes = null;
       try {
-         var foundXmlNodes = subjectNode.selectNodes( selector );
+         foundXmlNodes = subjectNode.selectNodes( selector );
          if( typeOf( foundXmlNodes ) == 'collection' ){
             foundXmlNodes =  Array.from( foundXmlNodes );
          }
@@ -1639,38 +1641,6 @@ XmlResource.selectNodeText = function( selector, xmlElement, nameSpaces, default
    if( !selectedElement && defaultValue ) return defaultValue;
    else return XmlResource.determineNodeText( selectedElement, defaultValue );
 };
-
-Browser.Request = function(){
-   return $try( function(){
-      if( Browser.Engine.trident && window.location.protocol == "file:" )
-         return new ActiveXObject('Microsoft.XMLHTTP');
-      else 
-         return new XMLHttpRequest();
-   }, function(){
-         return new ActiveXObject('MSXML2.XMLHTTP');
-   }, function(){
-      return new ActiveXObject('Microsoft.XMLHTTP');
-   });
-};
-
-function XMLDocument () {
-   var xmlDoc = null;
-
-   if(document.implementation && document.implementation.createDocument)
-   {  xmlDoc = document.implementation.createDocument("", "", null);
-
-   }
-   else if( window.ActiveXObject )
-   {  xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-      xmlDoc.async = false;
-   }
-   else
-   {  alert('Your browser can\'t handle this script');
-      return;
-   }
-   
-   return xmlDoc;
-}
 
 function TransformXML( xmlFileName, xslFileName ) {
    var xml = new XmlResource( xmlFileName );
@@ -2543,7 +2513,7 @@ var DocumentSelectedMessage = new Class({
 
 var BrowserWidget = new Class( {
    Implements : [Events, Options],
-   Binds : ['onConstructed', 'onDestroyed', 'webUIMessageHandler'],
+   Binds : ['finalizeConstruction', 'onDestroyed', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -2563,6 +2533,7 @@ var BrowserWidget = new Class( {
 
       // private instance variables
       this.componentStateManager;
+      this.constructionChain = new Chain();
       this.containerElement;
       this.dataXml;
       this.definitionXml;
@@ -2600,7 +2571,10 @@ var BrowserWidget = new Class( {
 
    // public accessor and mutator methods
    construct : function() {
-      if( this.state < BrowserWidget.States.CONSTRUCTED ) this.onConstructed();
+      if( this.state < BrowserWidget.States.CONSTRUCTED ) {
+         this.compileConstructionChain();
+         this.constructionChain.callChain();
+      }
       return this;
    },
 
@@ -2626,13 +2600,6 @@ var BrowserWidget = new Class( {
          text = key;
       }
       return text;
-   },
-   
-   onConstructed : function(){
-      this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
-      this.storeComponentState();
-      this.state = BrowserWidget.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    },
    
    onDestroyed : function(){
@@ -2689,6 +2656,10 @@ var BrowserWidget = new Class( {
    getState : function() { return this.state; },
 
    // Private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.finalizeConstruction );
+   }.protect(),
+   
    compileStateSpecification: function(){
       //Abstract method, should be overwrite!
    }.protect(),
@@ -2725,6 +2696,13 @@ var BrowserWidget = new Class( {
       }
    }.protect(),
 
+   finalizeConstruction : function(){
+      this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
+      this.storeComponentState();
+      this.state = BrowserWidget.States.CONSTRUCTED;
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+   
    loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );
@@ -5732,6 +5710,7 @@ var DocumentEditor = new Class({
    
    instantiateTools: function(){
       //Abstract method, should be overwritten in subclasses.
+      this.attachChain.callChain();
    }.protect(),
    
    subscribeToWebUIMessages : function() {
@@ -7332,10 +7311,7 @@ var PhotoGaleryWidget = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.constructionChain.chain(
-         this.compileDataObject,
-         this.instantiateSlideShow
-      ).callChain();
+      this.parent();
    },
    
    destroy: function(){
@@ -7347,7 +7323,7 @@ var PhotoGaleryWidget = new Class({
    onComplete: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onComplete() completed to load Slideshow 2." );
-         this.onConstructed();
+         this.constructionChain.callChain();
       }
    },
    
@@ -7358,14 +7334,14 @@ var PhotoGaleryWidget = new Class({
    onShow: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onShow() started to load Slideshow 2." );
-         this.onConstructed();
+         this.constructionChain.callChain();
       }
    },
    
    onStart: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
-         this.onConstructed();
+         this.constructionChain.callChain();
       }
    },
    
@@ -7412,6 +7388,15 @@ var PhotoGaleryWidget = new Class({
       
       this.data = eval( "({" + this.dataAsText + "})" );
       this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain(
+         this.compileDataObject,
+         this.instantiateSlideShow,
+         this.finalizeConstruction
+      );
+      
    }.protect(),
    
    destroyComponents: function(){
