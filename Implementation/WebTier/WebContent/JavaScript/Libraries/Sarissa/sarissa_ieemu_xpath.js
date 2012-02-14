@@ -218,10 +218,7 @@ if(Sarissa._SARISSA_HAS_DOM_FEATURE && document.implementation.hasFeature("XPath
             throw "Method selectNodes is only supported by XML Elements";
         }
     };
-    Sarissa.IS_ENABLED_SELECT_NODES = true;
-    
-    console.log( "Type of XMLDocument.prototype.setProperty is: " + typeOf( XMLDocument.prototype.setProperty ));
-    console.log( "Sarissa XPATH compatiblity finished in: " + window.location.href );    
+    Sarissa.IS_ENABLED_SELECT_NODES = true;    
 }
 
 Sarissa.XPATH_INITIALIZED = true;
