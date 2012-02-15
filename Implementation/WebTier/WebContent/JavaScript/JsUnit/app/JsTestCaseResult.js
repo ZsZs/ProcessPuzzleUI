@@ -23,7 +23,7 @@ var JsTestCaseResult = new Class({
       if( this.exception ){
          fullMessage += "failed! ";
          fullMessage += "\nName: " + this.determineExceptionName();
-         fullMessage += "\nMessage" + this.determineExceptionMesssage();
+         fullMessage += "\nMessage: " + this.determineExceptionMesssage();
          fullMessage += "\nSource: " + this.determineExceptionSource();
          fullMessage += "\nStack trace:\n" + this.determineExceptionStackTrace() + "\n";
       } else fullMessage += "sucseeded. ";
