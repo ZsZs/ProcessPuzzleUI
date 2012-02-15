@@ -1,4 +1,4 @@
-var CompositeDataElementTest = new Class( {
+window.CompositeDataElementTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructionError', 'onConstructed'],
 

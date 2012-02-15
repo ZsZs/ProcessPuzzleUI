@@ -1,4 +1,4 @@
-var PhotoGaleryImageTest = new Class( {
+window.PhotoGaleryImageTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : [],
 

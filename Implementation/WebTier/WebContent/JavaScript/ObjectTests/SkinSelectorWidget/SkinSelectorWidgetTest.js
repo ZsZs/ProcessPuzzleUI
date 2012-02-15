@@ -1,4 +1,4 @@
-var SkinSelectorWidgetTest = new Class( {
+window.SkinSelectorWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onSkinChangeCallback'],
 

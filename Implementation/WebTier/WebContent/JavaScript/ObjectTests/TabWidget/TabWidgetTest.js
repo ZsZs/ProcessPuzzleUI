@@ -1,4 +1,4 @@
-var TabWidgetTest = new Class( {
+window.TabWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onTabSelectedMessage'],
 

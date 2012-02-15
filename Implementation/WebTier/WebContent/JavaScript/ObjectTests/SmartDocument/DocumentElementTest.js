@@ -1,4 +1,4 @@
-var DocumentElementTest = new Class( {
+window.DocumentElementTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onConstructionError'],
 

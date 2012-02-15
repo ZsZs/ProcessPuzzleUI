@@ -1,4 +1,4 @@
-var ResourceManagerTest = new Class( {
+window.ResourceManagerTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onResourcesLoaded', 'onResourceError'],
 

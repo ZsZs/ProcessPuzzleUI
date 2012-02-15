@@ -1,4 +1,4 @@
-var WebUILoggerTest = new Class( {
+window.WebUILoggerTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : [],
 

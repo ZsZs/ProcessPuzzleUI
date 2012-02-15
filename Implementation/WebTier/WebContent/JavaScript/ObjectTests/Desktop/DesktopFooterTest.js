@@ -1,4 +1,4 @@
-var DesktopFooterTest = new Class( {
+window.DesktopFooterTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onError'],
 

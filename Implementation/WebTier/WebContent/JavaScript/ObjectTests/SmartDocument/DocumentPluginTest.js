@@ -1,4 +1,4 @@
-var DocumentPluginTest = new Class( {
+window.DocumentPluginTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onConstructionError', 'onResourcesLoaded'],
 

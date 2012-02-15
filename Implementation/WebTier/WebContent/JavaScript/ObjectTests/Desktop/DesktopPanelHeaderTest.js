@@ -1,4 +1,4 @@
-var DesktopPanelHeaderTest = new Class({
+window.DesktopPanelHeaderTest = new Class({
    Implements : [Events, JsTestClass, Options],
    Binds : ['onHeaderConstructed', 'onHeaderConstructionError'],
 

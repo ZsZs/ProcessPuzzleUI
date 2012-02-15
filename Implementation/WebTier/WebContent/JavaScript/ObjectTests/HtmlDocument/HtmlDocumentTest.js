@@ -1,4 +1,4 @@
-var HtmlDocumentTest = new Class( {
+window.HtmlDocumentTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onDocumentError', 'onDocumentReady'],
 

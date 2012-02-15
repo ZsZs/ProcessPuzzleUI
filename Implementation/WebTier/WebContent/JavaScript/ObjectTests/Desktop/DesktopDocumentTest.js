@@ -1,4 +1,4 @@
-var DesktopDocumentTest = new Class( {
+window.DesktopDocumentTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onError'],
 
