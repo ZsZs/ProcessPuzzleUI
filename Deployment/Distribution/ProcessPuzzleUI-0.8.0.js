@@ -3116,7 +3116,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+//DefaultStateUriTransformer.js
+
+var DefaultStateUriTransformer = new Class({
+   initialize: function( stateManager ){
+      this.stateManager = stateManager;
+   },
+   
+   transformUriToState: function( uri ) {
+      this.stateManager.parse( uri );
+   },
+   
+   transformStateToUri: function(){
+      return this.stateManager.toString();
+   }
+});
+/**
+ProcessPuzzle User Interface
+Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
+Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 //ComponentStateManager.js
+
 
 
 
@@ -3198,40 +3233,6 @@ var ComponentStateManager = new Class({
    
    //Properties
    getStateUriTransformer: function() { return this.stateUriTransformer; }
-});
-/**
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-//DefaultStateUriTransformer.js
-
-var DefaultStateUriTransformer = new Class({
-   initialize: function( stateManager ){
-      this.stateManager = stateManager;
-   },
-   
-   transformUriToState: function( uri ) {
-      this.stateManager.parse( uri );
-   },
-   
-   transformStateToUri: function(){
-      return this.stateManager.toString();
-   }
 });
 /*
 Name: 
@@ -4648,6 +4649,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopFooter = new Class({
    Extends: DesktopDocument,
    
@@ -4657,8 +4659,8 @@ var DesktopFooter = new Class({
    },
    
    //Constructor
-   initialize: function( headerDefinitionElement, bundle, options ){
-      this.parent( headerDefinitionElement, bundle, options );
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
       this.footerId;
    },
    
@@ -4702,6 +4704,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
