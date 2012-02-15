@@ -24,6 +24,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
@@ -76,127 +77,15 @@
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 	
+   <script type="text/javascript" src="../../ObjectTests/SmartDocument/DocumentElementEditorTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-//          test_onClick_storesTextAndInsertsInputElementWithElementProperties();
-//          test_onBlur_savesPreviousTextAndDestroysInputElement();
       });
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
 
-      var NEW_TEXT = "This is a modified text.";
-      var ORIGINAL_TEXT = "Current text of element";
-      var SUBJECT_ELEMENT_ID = "elementToEdit";
-      var elementEditor;
-      var subjectElement;
-      var testCaseChain = new Chain();
-      var testCaseIsRunning = false;
-		
-      function runTestCase(){
-         if( !testCaseIsRunning ) testCaseChain.callChain();
-      }
-      
-      function beforeEachTest(){
-         inform( "beforeEachTest" );
-		   
-         subjectElement = $( SUBJECT_ELEMENT_ID );
-         elementEditor = new DocumentElementEditor( subjectElement, {} );
-         
-         testCaseIsRunning = true;
-         testCaseChain.callChain();
-      }
-
-      function afterEachTest(){
-         elementEditor.detach();
-         subjectElement = null;
-		   
-         inform( "afterEachTest" );
-         testCaseIsRunning = false;
-         testCaseChain.callChain();
-      }
-		
-      function onConstructed(){
-         testCaseChain.callChain();
-      }
-
-      function onConstructionError(){
-         testCaseChain.callChain();
-      }
-      
-      function test_initialize() {
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }	
-      
-      function test_attach_associatesEventHandlingWithHtmlElement() {
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               var mockedOnClick = spy( elementEditor.onClick ); elementEditor.onClick = mockedOnClick;
-               var mockedOnBlur = spy( elementEditor.onBlur ); elementEditor.onBlur = mockedOnBlur;
-               
-               elementEditor.attach();
-               
-               subjectElement.fireEvent( 'click' );
-               verify( mockedOnClick )();
-               
-               subjectElement.fireEvent( 'focus' );
-               verify( mockedOnClick, times( 2 ))();
-               
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      
-      function test_onClick_storesTextAndInsertsInputElementWithElementProperties() {
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               var elementText = subjectElement.get( 'text' );
-               elementEditor.attach();
-               elementEditor.onClick();
-
-               assertThat( elementEditor.getText(), equalTo( subjectElement.get( 'text' )));
-               assertThat( subjectElement.getNext( 'input' ), not( nil() ));
-               assertThat( subjectElement.getNext( 'input' ).get( 'value' ), equalTo( elementText ))
-               //testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      
-      function test_onBlur_savesPreviousTextAndDestroysInputElement() {
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               var elementText = subjectElement.get( 'text' );
-               elementEditor.attach();
-               elementEditor.onClick();
-               elementEditor.getInputElement().set( 'value', NEW_TEXT );
-               
-               elementEditor.getInputElement().fireEvent( 'blur' );
-               
-               assertThat( subjectElement.getNext( 'input' ), is( nil() ));
-               assertThat( subjectElement.get( 'text' ), equalTo( NEW_TEXT ));
-               assertThat( elementEditor.isChanged(), is( true ));
-               assertThat( elementEditor.getPreviousValue(), equalTo( ORIGINAL_TEXT ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }  
-      
     </script>
 </head>
 
