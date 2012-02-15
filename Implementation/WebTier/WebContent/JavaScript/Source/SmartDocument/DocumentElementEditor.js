@@ -44,29 +44,42 @@ var DocumentElementEditor = new Class({
       //private fields
       this.inputElement;
       this.previousValue;
+      this.state = DocumentElementEditor.States.DETACHED;
       this.subjectHtmlElement = subjectHtmlElement;
       this.text;
    },
    
    //Public accessors and mutators
    attach: function(){
-      this.subjectHtmlElement.addEvent( 'focus', this.onClick );
-      this.subjectHtmlElement.addEvent( 'click', this.onClick );
+      if( this.state == DocumentElementEditor.States.DETACHED ){
+         this.subjectHtmlElement.addEvent( 'focus', this.onClick );
+         this.subjectHtmlElement.addEvent( 'click', this.onClick );
+         this.state = DocumentElementEditor.States.ATTACHED;
+      }
    },
    
    detach: function(){
-      if( this.inputElement ) this.removeInputElement();
+      if( this.state == DocumentElementEditor.States.EDITING || this.state == DocumentElementEditor.States.ATTACHED ){
+         if( this.inputElement ) this.removeInputElement();
+         this.state = DocumentElementEditor.States.DETACHED;
+      }
    },
    
    onBlur: function(){
-      this.removeInputElement();
-      this.fireEvent( 'editEnd', this );
+      if( this.state == DocumentElementEditor.States.EDITING ){
+         this.removeInputElement();
+         this.state = DocumentElementEditor.States.ATTACHED;
+         this.fireEvent( 'editEnd', this );
+      }
    },
    
    onClick: function(){
-      this.saveCurrentValue();
-      this.injectInputElement();
-      this.fireEvent( 'editStart', this );
+      if( this.state == DocumentElementEditor.States.ATTACHED ){
+         this.saveCurrentValue();
+         this.injectInputElement();
+         this.state = DocumentElementEditor.States.EDITING;
+         this.fireEvent( 'editStart', this );
+      }
    },
    
    onKeypress: function(){
@@ -76,6 +89,7 @@ var DocumentElementEditor = new Class({
    //Properties
    getInputElement: function() { return this.inputElement; },
    getPreviousValue: function() { return this.previousValue; },
+   getState: function() { return this.state; },
    getSubjectElement: function(){ return this.subjectHtmlElement; },
    getText: function() { return this.text; },
    isChanged: function() { return !(this.text && this.text.equals( this.previousValue )); },
@@ -112,3 +126,4 @@ var DocumentElementEditor = new Class({
 
 DocumentElementEditor.DataType = { BOOLEAN : 'boolean', INTEGER : 'integer', LONG_INTEGER : 'longInteger', STRING : 'string', TEXT : 'text', TIME_POINT : 'timePoint' };
 DocumentElementEditor.DataType.TIME_POINT.Precission = { YEAR : 'year', MONTH : 'month', DAY : 'day', HOUR : 'hour', MINUTE : 'minute', SECOND : 'second', MILLI_SECOND : 'milliSecond' };
+DocumentElementEditor.States = { DETACHED : 'detached', ATTACHED : 'attached', EDITING : 'editing' };
