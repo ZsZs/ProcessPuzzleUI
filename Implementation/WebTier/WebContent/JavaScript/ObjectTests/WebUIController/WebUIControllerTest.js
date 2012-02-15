@@ -1,4 +1,4 @@
-var WebUIControllerTest = new Class( {
+window.WebUIControllerTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConfigured', 'onFailure'],
 
@@ -35,7 +35,6 @@ var WebUIControllerTest = new Class( {
       this.infoPanelSelectorDiv = document.getElementById("InfoPanelSelector");
       this.messageBus = null;
       this.menuDiv = document.getElementById("RightMenu");
-      this.testWindow;
    },   
 
    beforeEachTest : function(){

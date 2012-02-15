@@ -1,4 +1,4 @@
-var PhotoGaleryWidgetTest = new Class( {
+window.PhotoGaleryWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed'],
 

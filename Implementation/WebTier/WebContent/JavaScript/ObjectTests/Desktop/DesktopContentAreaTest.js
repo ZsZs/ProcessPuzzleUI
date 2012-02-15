@@ -1,4 +1,4 @@
-var DesktopContentAreaTest = new Class( {
+window.DesktopContentAreaTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onError'],
 

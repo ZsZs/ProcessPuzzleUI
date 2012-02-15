@@ -1,4 +1,4 @@
-var TextAreaEditorTest = new Class( {
+window.TextAreaEditorTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['messageSubscriber', 'onEditorAttached'],
 

@@ -1,4 +1,4 @@
-var FormElementTest = new Class( {
+window.FormElementTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onFailure', 'onSuccess'],
 

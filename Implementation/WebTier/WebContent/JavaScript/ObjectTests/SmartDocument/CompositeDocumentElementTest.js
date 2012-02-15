@@ -1,4 +1,4 @@
-var CompositeDocumentElementTest = new Class( {
+window.CompositeDocumentElementTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onConstructionError'],
 

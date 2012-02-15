@@ -1,4 +1,4 @@
-var SmartDocumentTest = new Class( {
+window.SmartDocumentTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onDocumentError', 'onDocumentReady'],
 

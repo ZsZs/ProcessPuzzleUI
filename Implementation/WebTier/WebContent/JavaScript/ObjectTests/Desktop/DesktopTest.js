@@ -1,4 +1,4 @@
-var DesktopTest = new Class( {
+window.DesktopTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onError', 'onWindowReady'],
 

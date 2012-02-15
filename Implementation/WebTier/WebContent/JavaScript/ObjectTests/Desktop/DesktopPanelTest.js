@@ -1,4 +1,4 @@
-var DesktopPanelTest = new Class( {
+window.DesktopPanelTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onDocumentLoaded', 'onPanelConstructed'],
 

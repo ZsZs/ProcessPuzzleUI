@@ -1,4 +1,4 @@
-var DesktopColumnTest = new Class( {
+window.DesktopColumnTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onError'],
 

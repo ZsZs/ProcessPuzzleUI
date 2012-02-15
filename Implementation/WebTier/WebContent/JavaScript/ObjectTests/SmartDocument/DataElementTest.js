@@ -1,4 +1,4 @@
-var DataElementTest = new Class( {
+window.DataElementTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onConstructionError'],
 

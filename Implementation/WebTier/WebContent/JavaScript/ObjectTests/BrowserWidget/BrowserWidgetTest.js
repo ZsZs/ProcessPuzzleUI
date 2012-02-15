@@ -1,4 +1,4 @@
-var BrowserWidgetTest = new Class( {
+window.BrowserWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed'],
 

@@ -1,4 +1,4 @@
-var WidgetElementFactoryTest = new Class( {
+window.WidgetElementFactoryTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onFailure', 'onSuccess'],
 
