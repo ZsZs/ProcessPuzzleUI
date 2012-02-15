@@ -1,4 +1,4 @@
-var AbstractDocumentTest = new Class( {
+window.AbstractDocumentTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onDocumentReady', 'onDocumentError'],
 
