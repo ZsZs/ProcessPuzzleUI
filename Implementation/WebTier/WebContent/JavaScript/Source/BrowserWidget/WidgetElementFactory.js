@@ -76,7 +76,11 @@ var WidgetElementFactory = new Class( {
    createButton : function( buttonCaption, clickEventHandler, contextElement, position, elementProperties ) {
       var defaultProperties = { 'class' : this.BUTTON_CLASS, type : "button", value : buttonCaption, events : { click : clickEventHandler } };
       var properties = this.mergeProperties( defaultProperties, elementProperties );
-      var button = this.create( "INPUT", buttonCaption, contextElement, position, properties );
+      var button = this.create( "INPUT", null, contextElement, position, properties );
+      if( buttonCaption ) {
+         var i18Caption = this.i18Resource.getText( buttonCaption );
+         button.set( 'value', i18Caption );
+      }
       return button;
    },
 
