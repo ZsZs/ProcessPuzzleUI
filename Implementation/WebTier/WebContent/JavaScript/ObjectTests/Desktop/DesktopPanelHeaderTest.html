@@ -23,6 +23,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>  
@@ -38,7 +39,11 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutBehaviour.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
 	
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../../Source/Desktop/DesktopPanelHeader.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
@@ -61,73 +66,28 @@
    <script type="text/javascript" src="../../Source/ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../../Source/ResourceManager/ResourceManager.js"></script>
    <script type="text/javascript" src="../../Source/SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/DuplicatedTabException.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/Tab.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/TabSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/TabWidget/TabWidget.js"></script>
    <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 	
+   <script type="text/javascript" src="../../ObjectTests/Desktop/DesktopPanelHeaderTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         runTestFunction();
       });
 				
       JsHamcrest.Integration.JsUnit();
-		
-      var CONFIGURATION_URI = "../Desktop/WebUIConfiguration.xml";
-      var DESKTOP_CONFIGURATION_URI = "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml";
-      var PANEL_HEADER_SELECTOR = "/desktopConfiguration/panels/panel[@name='console']/panelHeader";
-      var desktopConfiguration = null;
-      var panelHeader = null;
-      var panelHeaderDefinition = null;
-		
-      function setUp(){
-         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         bundle = new XMLResourceBundle( webUIConfiguration );
-         bundle.load( new Locale({ language : "en" }) );
-           
-         desktopConfiguration = new XmlResource( DESKTOP_CONFIGURATION_URI );
-         panelHeaderDefinition = desktopConfiguration.selectNode( PANEL_HEADER_SELECTOR );
-         panelHeader = new DesktopPanelHeader( panelHeaderDefinition, bundle, { onHeaderConstructed : verifyConstruction } );
-      }
-
-		function tearDown(){
-		   if( panelHeader.getState() > DesktopPanelHeader.States.INITIALIZED ) panelHeader.destroy();
-         panelHeader = null;
-		}
-		
-		function testInitialize() {
-			assertThat( panelHeader, not( nil() ));
-			assertThat( panelHeader.getDefinitionElement(), not( nil() ));
-			assertThat( panelHeader.getState(), DesktopPanelHeader.States.INITIALIZED );
-		}
-		
-		function testUnmarshall_DeterminesHeaderProperties(){
-		   panelHeader.unmarshall();
-         assertThat( panelHeader.getState(), DesktopPanelHeader.States.UNMARSHALLED );
-		   assertThat( panelHeader.getToolBoxUrl(), equalTo( desktopConfiguration.selectNodeText( PANEL_HEADER_SELECTOR + "/@toolBoxUrl" )));
-		   assertThat( panelHeader.getPlugin(), not( nil() ));
-		}
-		
-		function testConstruct(){
-	      panelHeader.unmarshall();
-	      panelHeader.construct();
-		}
-		
-		function verifyConstruction(){
-	      assertThat( panelHeader.getState(), DesktopPanelHeader.States.CONSTRUCTED );
-		}
-		
-		//runs a test function during debugging
-		function runTestFunction(){
-			setUp();
-			testConstruct();
-			tearDown();
-		}
+				
     </script>
 </head>
 
 <body>
 	<h1>DesktopPanelHeader.js test page</H1>
 	<p>This page contains tests for DesktpPanelHeader.js JavaScript class.</P>
-	<div id="Desktop"></div>
+	<div id="console_headerToolbox"></div>
 </body>
 </html>

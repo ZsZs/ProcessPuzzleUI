@@ -29,6 +29,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
@@ -70,130 +71,14 @@
    <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
 	
+   <script type="text/javascript" src="../../ObjectTests/SmartDocument/CompositeDataElementTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //test_construct_whenMaxOccuresIsGiven_constructsSiblingElements();
       });
 				
       JsHamcrest.Integration.JsUnit();
-		
-      var CONFIGURATION_URI = "../SmartDocument/WebUIConfiguration.xml";
-      var DOCUMENT_CONTAINER_ID = "SmartDocument";
-      var DOCUMENT_CONTENT_URI = "../SmartDocument/SampleDocumentContent.xml";
-      var DOCUMENT_DEFINITION_URI = "../SmartDocument/SmartDocumentDefinition.xml";
-      var ELEMENT_DEFINITION_SELECTOR = "/smartDocumentDefinition/documentBody/compositeElement/compositeDataElement";
-      var NESTED_COMPOSITE_ELEMENT_NAME = "bodyWrapper";
-      var NESTED_SIMPLE_ELEMENT_NAME = "copyright";
-		
-      var bundle;
-      var compositeDataElement;
-      var documentContentResource;
-      var documentDefinition;
-      var testCaseChain = new Chain();
-      var testCaseIsRunning;
-      var webUIConfiguration;
-      var webUILogger;
-		
-      function runTestCase(){
-         if( !testCaseIsRunning ) testCaseChain.callChain();
-      }
-            
-      function beforeEachTest(){
-         inform( "beforeEachTest" );
-         webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         bundle = new XMLResourceBundle( webUIConfiguration );
-         bundle.load( new Locale({ language : "en" }) );
-		   
-         documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-         documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-         compositeDataElement = new CompositeDataElement( documentDefinition.selectNode( ELEMENT_DEFINITION_SELECTOR ), bundle, documentContentResource, 
-            { onConstructed : onConstructed, onConstructionError : onConstructionError }
-         );
-         documentContainerElement = $( DOCUMENT_CONTAINER_ID );
-         
-         testCaseIsRunning = true;
-         testCaseChain.callChain();
-      }
-      
-      function onConstructionError(){
-         testCaseChain.callChain();
-      }
-      
-      function onConstructed(){
-         testCaseChain.callChain();
-      }
-
-      function afterEachTest(){
-         if( compositeDataElement.getState() > DocumentElement.States.INITIALIZED ) compositeDataElement.destroy();
-         compositeDataElement = null;			
-         documentContainerElement = null;
-         inform( "afterEachTest" );
-         testCaseIsRunning = false;
-         testCaseChain.callChain();
-      }
-		
-      function test_unmarshall_determinesElementProperties(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               compositeDataElement.unmarshall();
-               assertThat( compositeDataElement.getBind(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@bind" )));
-               assertThat( compositeDataElement.getMaxOccures(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@maxOccures" ) ));
-               assertThat( compositeDataElement.getMinOccures(), equalTo( documentDefinition.selectNodeText( ELEMENT_DEFINITION_SELECTOR + "/@minOccures" ) ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }
-      
-      function test_unmarshall_whenMaxOccuresIsGiven_instantiatesSiblingElements(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               compositeDataElement.unmarshall();
-
-               assertThat( compositeDataElement.getSiblings().size(), equalTo( documentContentResource.selectNodes( "/rss/channel/item" ).length -1 ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }
-		
-      function test_construct_whenMaxOccuresIsGiven_constructsSiblingElements(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               compositeDataElement.unmarshall();
-               compositeDataElement.construct( documentContainerElement, 'bottom' );
-            },
-            function(){
-               assertThat( documentContainerElement.getChildren( 'ul' ).length, equalTo( documentContentResource.selectNodes( "/rss/channel/item" ).length ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }
-				
-      function test_destroy_whenConstructed_destroysHtmlElements(){
-         testCaseChain.chain( 
-            beforeEachTest, 
-            function(){
-               compositeDataElement.unmarshall();
-               compositeDataElement.construct( documentContainerElement, 'bottom' );
-            },
-            function(){
-               compositeDataElement.destroy();
-               assertThat( documentContainerElement.getChildren().length, equalTo( 0 ));
-               testCaseChain.callChain();
-            },
-            afterEachTest 
-         );
-         runTestCase();
-      }
+						
    </script>
 </head>
 

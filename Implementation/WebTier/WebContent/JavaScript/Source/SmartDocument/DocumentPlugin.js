@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentPlugin = new Class({
    Implements: [Events, Options],
-   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed'],   
+   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed', 'onWidgetError'],   
    
    options: {
       componentName : "DocumentPlugin",
@@ -133,7 +133,7 @@ var DocumentPlugin = new Class({
       if( this.widgetName ){
          try{
             var widgetClass = eval( this.widgetName );
-            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed } );
+            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onError : this.onWidgetError } );
             this.widget = new widgetClass( mergedOptions, this.internationalization );
             this.widget.unmarshall();
             this.widget.construct();
