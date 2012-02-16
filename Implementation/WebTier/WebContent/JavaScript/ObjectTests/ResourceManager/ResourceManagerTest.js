@@ -6,11 +6,13 @@ window.ResourceManagerTest = new Class( {
       testMethods : [
           { method : 'initialize_instantiatesResourcesCollection', isAsynchron : false },
           { method : 'unmarshall_determinesResources', isAsynchron : false },
-          { method : 'load_loadsStyleSheets', isAsynchron : true }, 
-          { method : 'load_loadsImages', isAsynchron : true }, 
+          { method : 'load_loadsStyleSheets', isAsynchron : true },
+          { method : 'load_loadsImages', isAsynchron : true },
           { method : 'load_loadsScripts', isAsynchron : true }, 
           { method : 'load_preventsDuplicateScriptLoading', isAsynchron : true }, 
-          { method : 'load_whenOneOfTheResourcesUnAvailable_FiresError', isAsynchron : true }, 
+          { method : 'load_whenStyleSheetIsUnAvailable_FiresError', isAsynchron : true }, 
+          { method : 'load_whenImageIsUnAvailable_FiresError', isAsynchron : true }, 
+          { method : 'load_whenScriptIsUnAvailable_FiresError', isAsynchron : true }, 
           { method : 'release_destroysLoadedElements', isAsynchron : true }]
    },
 
@@ -19,6 +21,7 @@ window.ResourceManagerTest = new Class( {
       RESOURCES_DEFINITION_URI : "../ResourceManager/TestResourcesDefinition.xml",
       IMAGE_ID : "logoImage",
       IMAGE_URI : "../SmartDocument/Images/ProcessPuzzleLogo.jpg",
+      IMAGES_SELECTOR : "/testResources/resources" + "/images",
       RESOURCES_SELECTOR : "/testResources/resources",
       RESOURCE_ITEMS_SELECTOR : "/testResources/resources" + "/styleSheets/styleSheet | " + 
                                 "/testResources/resources" + "/images/image | " +
@@ -124,7 +127,6 @@ window.ResourceManagerTest = new Class( {
       this.testCaseChain.chain(
          function(){
             var duplicateScript = this.resourcesDefinition.createElement( 'javaScript', { text : this.constants.SCRIPT_URI } );
-            //var javaScriptsElement = this.resourcesDefinition.selectNode( this.constants.SCRIPTS_SELECTOR );
             this.resourcesDefinition.injectElement( duplicateScript, this.constants.SCRIPTS_SELECTOR );
             this.resourceManager.unmarshall(); 
             this.resourceManager.load();
@@ -137,12 +139,44 @@ window.ResourceManagerTest = new Class( {
       ).callChain();
    },
    
-   load_whenOneOfTheResourcesUnAvailable_FiresError : function() {
+   load_whenStyleSheetIsUnAvailable_FiresError : function() {
       this.testCaseChain.chain(
          function(){
             var unavailableResource = this.resourcesDefinition.createElement( 'styleSheet', { text : "UnAvailableStyleSheet.css" } );
             //var styleSheetsElement = this.resourcesDefinition.selectNode( this.constants.STYLESHEETS_SELECTOR );
             this.resourcesDefinition.injectElement( unavailableResource, this.constants.STYLESHEETS_SELECTOR );
+            this.resourceManager.unmarshall(); 
+            this.resourceManager.load(); 
+         }.bind( this ),
+         function(){
+            assertThat( this.onResourceErrorWasCalled, is( true ));
+            assertThat( this.resourceManager.isSuccess(), is( false ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   load_whenImageIsUnAvailable_FiresError : function() {
+      this.testCaseChain.chain(
+         function(){
+            var unavailableResource = this.resourcesDefinition.createElement( 'image', { text : "UnAvailableImage.jpg" } );
+            this.resourcesDefinition.injectElement( unavailableResource, this.constants.IMAGES_SELECTOR );
+            this.resourceManager.unmarshall(); 
+            this.resourceManager.load(); 
+         }.bind( this ),
+         function(){
+            assertThat( this.onResourceErrorWasCalled, is( true ));
+            assertThat( this.resourceManager.isSuccess(), is( false ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   load_whenScriptIsUnAvailable_FiresError : function() {
+      this.testCaseChain.chain(
+         function(){
+            var unavailableResource = this.resourcesDefinition.createElement( 'javaScript', { text : "UnAvailableScript.js" } );
+            this.resourcesDefinition.injectElement( unavailableResource, this.constants.SCRIPTS_SELECTOR );
             this.resourceManager.unmarshall(); 
             this.resourceManager.load(); 
          }.bind( this ),
