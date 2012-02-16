@@ -5,7 +5,7 @@ var JsTestManager = new Class({
    options : {
       componentName : "JsTestManager",
       delay: 200,
-      delayAfterPageLoad: 50,
+      delayAfterPageLoad: 20,
       emptyTestPage : "app/emptyPage.html",
       maxTries: 20,
       verbose : false
