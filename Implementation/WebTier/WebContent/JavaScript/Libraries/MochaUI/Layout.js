@@ -1137,7 +1137,7 @@ MUI.extend({
 		var remainingHeight = column.offsetHeight.toInt() - this.height;
 
 		panelsToResize.each(function(panel){
-			var ratio = this.panelsTotalHeight / panel.offsetHeight.toInt();
+			var ratio = panel.offsetHeight.toInt() >= 1 ? this.panelsTotalHeight / panel.offsetHeight.toInt() : 1; 
 			var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
 			if (newPanelHeight < 1){
 				newPanelHeight = 0;
