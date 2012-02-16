@@ -39,8 +39,8 @@ window.PhotoGaleryWidgetTest = new Class( {
       this.componentStateManager = new ComponentStateManager();
       this.photoGaleryInternationalization = new XMLResourceBundle( this.webUIConfiguration );
       this.photoGaleryInternationalization.load( this.locale );
-      this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
-      this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
+      this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
+      this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
       
       this.photoGalery = new PhotoGaleryWidget( {
          onConstructed : this.onConstructed,
