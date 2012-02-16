@@ -39,6 +39,7 @@ var DocumentResource = new Class({
    initialize: function( resourceElement, options ){
       this.setOptions( options );
       this.availabilityCheckIsRunning;
+      this.baseUri = new URI( document.location.href );
       this.id = null;
       this.htmlElement = null;
       this.resourceElement = resourceElement;
@@ -70,6 +71,7 @@ var DocumentResource = new Class({
    unmarshall: function(){
       this.id = XmlResource.selectNodeText( this.options.idSelector, this.resourceElement );
       this.resourceUri = XmlResource.determineNodeText( this.resourceElement );
+      this.transformToResourceUriToAbsolute();
    },
 
    //Properties
@@ -108,5 +110,10 @@ var DocumentResource = new Class({
       }catch( e ){
          throw new UndefinedDocumentResourceException( this.resourceUri, { cause: e, source : this.componentName } );
       }
-   }.protect()
+   }.protect(),
+   
+   transformToResourceUriToAbsolute: function(){
+      var tempUri = new URI( this.resourceUri );
+      this.resourceUri = this.baseUri.get( 'scheme' ) + "://" + tempUri.toAbsolute( this.baseUri );
+   }
 });

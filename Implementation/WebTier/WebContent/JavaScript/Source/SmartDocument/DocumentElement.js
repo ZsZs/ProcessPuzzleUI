@@ -171,7 +171,7 @@ var DocumentElement = new Class({
    
    deleteHtmlElement: function(){
       if( this.htmlElement ) {
-         this.htmlElement.destroy();
+         if( this.htmlElement.destroy ) this.htmlElement.destroy();
          this.htmlElement = null;
       }
    }.protect(),

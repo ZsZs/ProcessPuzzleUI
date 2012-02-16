@@ -348,8 +348,11 @@ this.MooEditable = new Class({
       this.saveContent();
       this.textarea.setStyle( 'display', '' ).removeClass( 'mooeditable-textarea' ).inject( this.container, 'before' );
       this.textarea.removeEvent( 'keypress', this.textarea.retrieve( 'mooeditable:textareaKeyListener' ) );
+      this.doc.removeEvents();
+      this.win.removeEvents();
       this.container.dispose();
       this.fireEvent( 'detach', this );
+      this.removeEvents();
       return this;
    },
 

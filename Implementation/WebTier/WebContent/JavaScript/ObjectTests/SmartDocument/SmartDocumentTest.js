@@ -34,6 +34,7 @@ window.SmartDocumentTest = new Class( {
       this.componentStateManager;
       this.doumentContainerElement;
       this.documentDefinition;
+      this.error;
       this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.smartDocument;
@@ -144,7 +145,8 @@ window.SmartDocumentTest = new Class( {
       ).callChain();
    },
    
-   onDocumentError : function(){
+   onDocumentError : function( error ){
+      this.error = error;
       this.testCaseChain.callChain();
    },
 
