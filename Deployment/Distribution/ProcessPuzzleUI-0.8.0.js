@@ -7565,6 +7565,12 @@ var DocumentImage = new Class({
    getTitle: function() { return this.title; },
    
    //Protected, private helper methods
+   checkResourceAvailability: function(){
+      this.resourceAvailable = true;
+      this.availabilityCheckIsRunning = false;
+      this.loadChain.callChain();
+   }.protect(),
+   
    isResourceLoaded: function(){
       return false;
    }.protect(),
@@ -10488,24 +10494,24 @@ var TextAreaEditor = new Class({
       this.attachChain.callChain();
    },
    
-   textAddImage: function(){ this.mooEditable.action( 'urlimage' ); },
-   textAddLink: function(){ this.mooEditable.action( 'createlink' ); },
-   textAlignCenter: function(){ this.mooEditable.action( 'justifycenter' ); },
-   textAlignLeft: function(){ this.mooEditable.action( 'justifyleft' ); },
-   textAlignJustify: function(){ this.mooEditable.action( 'justifyfull' ); },
-   textAlignRight: function(){ this.mooEditable.action( 'justifyright' ); },
-   textBold: function(){ this.mooEditable.action( 'bold' ); },
-   textIndent: function(){ this.mooEditable.action( 'indent' ); },
-   textItalic: function(){ this.mooEditable.action( 'italic' ); },
-   textOrderedList: function(){ this.mooEditable.action( 'insertorderedlist' ); },
-   textOutdent: function(){ this.mooEditable.action( 'outdent' ); },
-   textRedo: function(){ this.mooEditable.action( 'redo' ); },
-   textRemoveLink: function(){ this.mooEditable.action( 'unlink' ); },
-   textStrikethrough: function(){ this.mooEditable.action( 'strikethrough' ); },
-   textToggleView: function(){ this.mooEditable.action( 'toggleview' ); },
-   textUnderline: function(){ this.mooEditable.action( 'underline' ); },
-   textUndo: function(){ this.mooEditable.action( 'undo' ); },
-   textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist' ); },
+   textAddImage: function(){ this.mooEditable.action( 'urlimage', [] ); },
+   textAddLink: function(){ this.mooEditable.action( 'createlink', [] ); },
+   textAlignCenter: function(){ this.mooEditable.action( 'justifycenter', [] ); },
+   textAlignLeft: function(){ this.mooEditable.action( 'justifyleft', [] ); },
+   textAlignJustify: function(){ this.mooEditable.action( 'justifyfull', [] ); },
+   textAlignRight: function(){ this.mooEditable.action( 'justifyright', [] ); },
+   textBold: function(){ this.mooEditable.action( 'bold', [] ); },
+   textIndent: function(){ this.mooEditable.action( 'indent', [] ); },
+   textItalic: function(){ this.mooEditable.action( 'italic', [] ); },
+   textOrderedList: function(){ this.mooEditable.action( 'insertorderedlist', [] ); },
+   textOutdent: function(){ this.mooEditable.action( 'outdent', [] ); },
+   textRedo: function(){ this.mooEditable.action( 'redo', [] ); },
+   textRemoveLink: function(){ this.mooEditable.action( 'unlink', [] ); },
+   textStrikethrough: function(){ this.mooEditable.action( 'strikethrough', [] ); },
+   textToggleView: function(){ this.mooEditable.action( 'toggleview', [] ); },
+   textUnderline: function(){ this.mooEditable.action( 'underline', [] ); },
+   textUndo: function(){ this.mooEditable.action( 'undo', [] ); },
+   textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist', [] ); },
    
    //Properties
    getMooEditable: function() { return this.mooEditable; },
