@@ -1,4 +1,4 @@
-var RemoteResourceTest = new Class( {
+window.RemoteResourceTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onFailure', 'onSuccess'],
 
