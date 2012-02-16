@@ -900,7 +900,9 @@
          if( a ){
             (function( a ) {
                var visible = i == this.slide ? 'active' : 'inactive';
-               a.store( 'loaded', true ).get( 'morph' ).set( this.classes.get( 'thumbnails', 'hidden' ) ).start( this.classes.get( 'thumbnails', visible ) );
+               if( a.store ){
+                  a.store( 'loaded', true ).get( 'morph' ).set( this.classes.get( 'thumbnails', 'hidden' ) ).start( this.classes.get( 'thumbnails', visible ) );
+               }
             }).delay( Math.max( 1000 / this.data.thumbnails.length, 100 ), this, a );
          }
 

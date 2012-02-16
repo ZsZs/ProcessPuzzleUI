@@ -33,7 +33,7 @@ window.PhotoGaleryImageTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.photoGaleryInternationalization = new XMLResourceBundle( this.webUIConfiguration );
       this.photoGaleryInternationalization.load( this.locale );
-      this.photoGaleryDefinition = new XmlResource( this.constants.IMAGE_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
+      this.photoGaleryDefinition = new XmlResource( this.constants.IMAGE_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
       this.imageDefinition = this.photoGaleryDefinition.selectNode( this.constants.IMAGE_SELECTOR );
       
       this.photoGaleryImage = new PhotoGaleryImage( this.imageDefinition, this.photoGaleryInternationalization );

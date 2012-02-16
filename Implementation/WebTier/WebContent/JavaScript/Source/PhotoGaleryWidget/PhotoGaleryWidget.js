@@ -44,6 +44,7 @@ var PhotoGaleryWidget = new Class({
       descriptionSelector : "/pp:widgetDefinition/description", 
       effectDurationDefault : 750,
       effectDurationSelector : "pp:widgetDefinition/properties/effectDuration",
+      eventDeliveryDelay : 50,
       firstSlideDefault: 0,
       firstSlideSelector: "pp:widgetDefinition/properties/firstSlide",
       galeryLinkDefault: null,
@@ -123,6 +124,7 @@ var PhotoGaleryWidget = new Class({
    
    destroy: function(){
       this.destroyComponents();
+      this.destroyChildElements( this.containerElement );
       this.resetFields();
       this.parent();
    },
@@ -204,6 +206,16 @@ var PhotoGaleryWidget = new Class({
          this.finalizeConstruction
       );
       
+   }.protect(),
+   
+   destroyChildElements: function( parentElement ){
+      var childElements = parentElement.getChildren( '*' );
+      childElements.each( function( childElement, index ){
+         if( childElement.getChildren( '*' ).length > 0 ) this.destroyChildElements( childElement );
+         
+         if( childElement.removeEvents ) childElement.removeEvents();
+         if( childElement.destroy ) childElement.destroy();
+      }.bind( this ));
    }.protect(),
    
    destroyComponents: function(){
