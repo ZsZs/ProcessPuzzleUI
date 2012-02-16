@@ -55,6 +55,12 @@ var DocumentImage = new Class({
    getTitle: function() { return this.title; },
    
    //Protected, private helper methods
+   checkResourceAvailability: function(){
+      this.resourceAvailable = true;
+      this.availabilityCheckIsRunning = false;
+      this.loadChain.callChain();
+   }.protect(),
+   
    isResourceLoaded: function(){
       return false;
    }.protect(),
