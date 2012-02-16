@@ -69,8 +69,8 @@ var ToolBarWidget = new Class({
    destroy: function(){
       this.destroyButtons();
       this.destroyDividers();
-      if( this.listElement ) this.listElement.destroy();
-      if( this.wrapperElement ) this.wrapperElement.destroy();
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      if( this.wrapperElement && this.wrapperElement.destroy ) this.wrapperElement.destroy();
       this.parent();
    },
    

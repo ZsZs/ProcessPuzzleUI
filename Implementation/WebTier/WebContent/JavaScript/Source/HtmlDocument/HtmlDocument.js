@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var HtmlDocument = new Class({
    Extends: AbstractDocument,
-   Binds: ['attachEditor', 'createTextArea', 'onContainerResize', 'resizeTextArea'],
+   Binds: ['attachEditor', 'createTextArea', 'destroyTextArea', 'onContainerResize', 'resizeTextArea'],
    
    options: {
       componentName : "HtmlDocument",
@@ -59,8 +59,6 @@ var HtmlDocument = new Class({
    },
    
    destroy: function(){
-      if( this.textArea.removeEvents ) this.textArea.removeEvents();
-      if( this.textArea.destroy ) this.textArea.destroy();
       this.parent();
    },
    
@@ -116,12 +114,22 @@ var HtmlDocument = new Class({
          this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain(  this.releseResource, this.detachEditor, this.destroyTextArea, this.resetProperties, this.finalizeDestruction );
+   }.protect(),
+   
    createTextArea: function(){
       this.textArea = this.htmlElementFactory.create( 'textArea', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
          id : this.name, styles : { border: 0, margin: 0, padding: 0, overflowY : 'hidden', width : this.containerElement.getSize().x }});
       this.textArea.set( 'html', this.documentContent.xmlAsText );
       this.resizeTextArea();
       this.constructionChain.callChain();
-   }
+   },
+   
+   destroyTextArea: function(){
+      if( this.textArea.removeEvents ) this.textArea.removeEvents();
+      if( this.textArea.destroy ) this.textArea.destroy();
+      this.destructionChain.callChain();
+   }.protect()
       
 });

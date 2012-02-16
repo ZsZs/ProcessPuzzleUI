@@ -126,7 +126,7 @@ var TabWidget = new Class( {
          }else this.tabListElement.removeNode();
       }
       
-      if( this.tabsWrapperElement ) this.tabsWrapperElement.destroy();
+      if( this.tabsWrapperElement && this.tabsWrapperElement.destroy ) this.tabsWrapperElement.destroy();
 
       if( this.buttonsListElement ){
          if( this.buttonsListElement.destroy ){

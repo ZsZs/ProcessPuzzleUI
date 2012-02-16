@@ -33,8 +33,10 @@ You should have received a copy of the GNU General Public License along with thi
 var AbstractDocument = new Class({
    Implements: [Events, Options],
    Binds: ['attachEditor',
+           'detachEditor',
            'determineContainerElement',
            'finalizeConstruction', 
+           'finalizeDestruction',
            'instantiateEditor',
            'loadResources', 
            'onConstructionError', 
@@ -44,6 +46,8 @@ var AbstractDocument = new Class({
            'onEditorAttached',
            'onResourceError', 
            'onResourcesLoaded', 
+           'releaseResources',
+           'resetProperties',
            'subscribeToWebUIMessages', 
            'webUIMessageHandler'],
    
@@ -74,6 +78,7 @@ var AbstractDocument = new Class({
       this.containerElement;
       this.contentUri;
       this.description;
+      this.destructionChain = new Chain();
       this.documentContent;
       this.documentDefinition;
       this.documentDefinitionUri;
@@ -101,11 +106,8 @@ var AbstractDocument = new Class({
    },
    
    destroy: function(){
-      if( this.resources ) this.resources.release();
-      if( this.editor ) this.editor.detach();
-      this.resetProperties();
-      this.constructionChain.clearChain();
-      this.state = AbstractDocument.States.INITIALIZED;
+      this.compileDestructionChain();
+      this.destructionChain.callChain();
    },
    
    onConstructionError: function( error ){
@@ -217,6 +219,15 @@ var AbstractDocument = new Class({
       this.constructionChain.chain( this.determineContainerElement, this.instantiateEditor, this.attachEditor, this.subscribeToWebUIMessages, this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain(  this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );
+   }.protect(),
+   
+   detachEditor: function(){
+      if( this.editor ) this.editor.detach();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    determineContainerElement: function(){
       this.containerElement = $( this.options.documentContainerId );
       this.htmlElementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource );
@@ -226,6 +237,13 @@ var AbstractDocument = new Class({
    finalizeConstruction: function(){
       this.state = AbstractDocument.States.CONSTRUCTED;
       this.fireEvent('documentReady', this );
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.constructionChain.clearChain();
+      this.destructionChain.clearChain();
+      this.state = AbstractDocument.States.INITIALIZED;
+      this.fireEvent('documentDestroyed', this );
    }.protect(),
    
    instantiateEditor: function(){
@@ -265,6 +283,11 @@ var AbstractDocument = new Class({
       else this.constructionChain.callChain();
    }.protect(),
    
+   releaseResources : function(){
+      if( this.resources ) this.resources.release();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    resetProperties: function(){
       this.description = null;
       this.documentDefinitionUri = null;
@@ -272,6 +295,7 @@ var AbstractDocument = new Class({
       this.editor = null;
       this.name = null;
       this.version = null;
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){

@@ -221,7 +221,7 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    destroyDocumentWrapper: function(){
-      if( this.documentWrapper ) this.documentWrapper.destroy();
+      if( this.documentWrapper && this.documentWrapper.destroy ) this.documentWrapper.destroy();
       this.documentWrapper = null;
    }.protect(),
    

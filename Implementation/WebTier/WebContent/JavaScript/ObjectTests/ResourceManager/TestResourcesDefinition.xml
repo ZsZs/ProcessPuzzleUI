@@ -11,6 +11,7 @@
       
       <javaScripts>
          <javaScript>../ResourceManager/DummyScript.js</javaScript>
+         <javaScript>../../Source/LanguageSelectorWidget/LanguageChangedMessage.js</javaScript>
       </javaScripts>
    </resources>
 </testResources>

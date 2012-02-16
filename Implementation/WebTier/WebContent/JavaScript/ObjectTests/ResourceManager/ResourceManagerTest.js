@@ -34,6 +34,7 @@ window.ResourceManagerTest = new Class( {
    
    initialize : function( options ) {
       this.setOptions( options );
+      this.error;
       this.resourcesDefinition;
       this.onResourceErrorWasCalled;
       this.onResourceLoadedWasCalled;
@@ -82,7 +83,7 @@ window.ResourceManagerTest = new Class( {
             assertThat( this.onResourceErrorWasCalled, is( false ));
             assertThat( this.resourceManager.isSuccess(), is( true ));
             
-            var linkElement = $$("link[href='" + this.constants.STYLE_SHEET_URI + "']");
+            var linkElement = $$("link[href='" + this.transformToResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']");
             assertThat( linkElement.length, equalTo( 1 ));
             
             this.testMethodReady();
@@ -112,7 +113,7 @@ window.ResourceManagerTest = new Class( {
             this.resourceManager.load();
          }.bind( this ),
          function(){
-            var scriptElement = $$("script[src='" + this.constants.SCRIPT_URI + "']");
+            var scriptElement = $$("script[src='" + this.transformToResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']");
             assertThat( this.onResourceLoadedWasCalled, is( true ));
             assertThat( this.onResourceErrorWasCalled, is( false ));
             assertThat( this.resourceManager.isSuccess(), is( true ));
@@ -132,7 +133,7 @@ window.ResourceManagerTest = new Class( {
             this.resourceManager.load();
          }.bind( this ),
          function(){
-            var scriptElement = $$("script[src='" + this.constants.SCRIPT_URI + "']");
+            var scriptElement = $$("script[src='" + this.transformToResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']");
             assertThat( scriptElement.length, equalTo( 1 ));
             this.testMethodReady();
          }.bind( this )
@@ -195,23 +196,30 @@ window.ResourceManagerTest = new Class( {
             this.resourceManager.load();
          }.bind( this ),
          function(){
-            assertThat( $$("link[href='" + this.constants.STYLE_SHEET_URI + "']").length, equalTo( 1 ));
+            assertThat( $$("link[href='" + this.transformToResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']").length, equalTo( 1 ));
             this.resourceManager.release();        
             assertThat( this.resourceManager.getResources().size(), equalTo( 0 ));
-            assertThat( $$("link[href='" + this.constants.STYLE_SHEET_URI + "']").length, equalTo( 0 ));
-            assertThat( $$("script[src='" + this.constants.SCRIPT_URI + "']").length, equalTo( 0 ));
+            assertThat( $$("link[href='" + this.transformToResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']").length, equalTo( 0 ));
+            assertThat( $$("script[src='" + this.transformToResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']").length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
    },
    
    onResourceError : function( error ){
+      this.error = error;
       this.onResourceErrorWasCalled = true;
    },
 
    onResourcesLoaded : function( resource ){
       this.onResourceLoadedWasCalled = true;
       this.testCaseChain.callChain();
-   }
+   },
+   
+   transformToResourceUriToAbsolute: function( resourceUri ){
+      var baseUri = new URI( document.location.href );
+      var tempUri = new URI( resourceUri );
+      return baseUri.get( 'scheme' ) + "://" + tempUri.toAbsolute( baseUri );
+   }.protect()
 
 });

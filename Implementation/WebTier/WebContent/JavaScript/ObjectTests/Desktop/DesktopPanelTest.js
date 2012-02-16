@@ -12,8 +12,8 @@ window.DesktopPanelTest = new Class( {
           { method : 'construct_instantiatesMUIPanel', isAsynchron : true }, 
           { method : 'construct_constructsHeaderWithPlugin', isAsynchron : true }, 
           { method : 'construct_constructsSmartDocument', isAsynchron : true }, 
-          { method : 'construct_whenSpecified_subscribesForMenuSelectedMessage', isAsynchron : true }, 
-          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true }, 
+          { method : 'construct_whenSpecified_subscribesForMenuSelectedMessage', isAsynchron : true },
+          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true },
           { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument', isAsynchron : true }]
    },
 
@@ -238,6 +238,11 @@ window.DesktopPanelTest = new Class( {
       MUI.myChain.callChain();
       this.column.construct();
       this.panel.construct();
-   }
+   }.protect(),
 
+   transformToResourceUriToAbsolute: function( resourceUri ){
+      var baseUri = new URI( document.location.href );
+      var tempUri = new URI( resourceUri );
+      return baseUri.get( 'scheme' ) + "://" + tempUri.toAbsolute( baseUri );
+   }.protect()
 });

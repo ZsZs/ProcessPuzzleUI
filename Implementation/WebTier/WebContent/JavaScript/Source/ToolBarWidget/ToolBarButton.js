@@ -69,11 +69,11 @@ var ToolBarButton = new Class({
    },
    
    destroy: function(){
-      if( this.toolTipElement ) this.toolTipElement.destroy();
-      if( this.imageElement ) this.imageElement.destroy();
-      if( this.spanElement ) this.spanElement.destroy();
-      if( this.anchorElement ) this.anchorElement.destroy();
-      if( this.listItemElement ) this.listItemElement.destroy();
+      if( this.toolTipElement && this.toolTipElement.destroy ) this.toolTipElement.destroy();
+      if( this.imageElement && this.imageElement.destroy ) this.imageElement.destroy();
+      if( this.spanElement && this.spanElement.destroy ) this.spanElement.destroy();
+      if( this.anchorElement && this.anchorElement.destroy ) this.anchorElement.destroy();
+      if( this.listItemElement && this.listItemElement.destroy ) this.listItemElement.destroy();
       this.state = ToolBarButton.States.INITIALIZED;
    },
    
