@@ -1,20 +1,19 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <title>JsUnit main-data.html</title>
    <link rel="stylesheet" type="text/css" href="../css/jsUnitStyle.css">
-   <script language="JavaScript" type="text/javascript" src="jsUnitCore.js"></script>
+   <script type="text/javascript" src="jsUnitCore.js"></script>
    
-   <script language="JavaScript" type="text/javascript">
+   <script type="text/javascript">
 
         function pageLoaded() {
             giveFocusToTestFileNameField();
         }
 
         function giveFocusToTestFileNameField() {
-            if (document.testRunnerForm.testFileName.type != "hidden")
+            if( document.testRunnerForm.testFileName.type != "hidden")
                 document.testRunnerForm.testFileName.focus();
         }
 
@@ -39,9 +38,9 @@
         </td>
         <td width="50">&nbsp;</td>
         <th align="left">
-            <h2>JsUnit <script language="javascript" type="text/javascript">document.write(JsUnit.VERSION);</script> TestRunner</h2>
+            <h2>JsUnit <script type="text/javascript">document.write(JsUnit.VERSION);</script> TestRunner</h2>
             Running on
-            <script language="javascript" type="text/javascript">document.write(navigator.userAgent);</script>
+            <script type="text/javascript">document.write(navigator.userAgent);</script>
         </th>
 
         <td nowrap align="right" valign="middle">
@@ -58,7 +57,7 @@
 </table>
 
 <form name="testRunnerForm" action="">
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
     if (!top.params.getTestPage()) {
         document.write("<h4>Enter the location of the Test Page/Test Suite Page to be run:</h4>");
     } else {
@@ -69,7 +68,7 @@
 <table cellpadding="0" cellspacing="0" border="0" summary="Form for entering test case location">
     <tr>
         <td align="center" valign="middle">
-            <script language="JavaScript" type="text/javascript">
+            <script type="text/javascript">
                 if (!top.params.getTestPage())
                     document.write(top.testManager.getTestFileProtocol());
             </script>
@@ -77,7 +76,7 @@
 
         <td nowrap align="center" valign="bottom">
             &nbsp;
-            <script language="JavaScript" type="text/javascript">
+            <script type="text/javascript">
                 var testManager = top.testManager;
                 var testPageString = testManager.getTestPageString();
 
@@ -126,7 +125,7 @@
 
         <td nowrap>Page load timeout:</td>
         <td>&nbsp;
-            <script language="javascript" type="text/javascript">
+            <script type="text/javascript">
                 document.write('<input type="text" size="2" name="timeout" value="' + top.params.getPageLoadTimeout() + '">');
             </script>
         </td>
@@ -135,7 +134,7 @@
 
         <td nowrap>Setup page timeout:</td>
         <td>&nbsp;
-            <script language="javascript" type="text/javascript">
+            <script type="text/javascript">
                 document.write('<input type="text" size="2" name="setUpPageTimeout" value="' + top.params.getSetupPageTimeout() + '">');
             </script>
         </td>

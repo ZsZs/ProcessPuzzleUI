@@ -1215,14 +1215,9 @@ MUI.Window = new Class({
 			}).inject(cache.toolbar2WrapperEl);
 		}
 
-		cache.contentWrapperEl = new Element('div', {
-			'id': id + '_contentWrapper',
-			'class': 'mochaContentWrapper',
-			'styles': {
-				'width': width + 'px',
-				'height': height + 'px'
-			}
-		}).inject(cache.contentBorderEl);
+		var elmentOptions = { 'id': id + '_contentWrapper', 'class': 'mochaContentWrapper', 'styles': { 'width': width + 'px', 'height': height + 'px' }};
+		cache.contentWrapperEl = new Element( 'div', elmentOptions );
+		cache.contentWrapperEl.inject( cache.contentBorderEl );
 
 		if (this.options.shape == 'gauge'){
 			cache.contentBorderEl.setStyle('borderWidth', 0);

@@ -73,6 +73,7 @@ var Desktop = new Class({
             'onResourceError',
             'onResourcesLoaded',
             'onWindowDockerConstructed',
+            'showNotification',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
    options : {
