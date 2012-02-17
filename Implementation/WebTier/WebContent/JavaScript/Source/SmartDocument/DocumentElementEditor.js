@@ -114,6 +114,8 @@ var DocumentElementEditor = new Class({
       this.text = this.inputElement.get( 'value' );
       this.inputElement.removeEvents();
       this.inputElement.destroy();
+      this.subjectHtmlElement.removeEvent( 'focus', this.onClick );
+      this.subjectHtmlElement.removeEvent( 'click', this.onClick );
       this.subjectHtmlElement.set( 'text', this.text );
       this.subjectHtmlElement.setStyle( 'display', 'inline' );
    }.protect(),
