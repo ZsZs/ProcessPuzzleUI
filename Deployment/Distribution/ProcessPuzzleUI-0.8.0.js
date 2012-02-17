@@ -545,6 +545,64 @@ var SetIterator = new Class({
    }
 });
 
+/**
+Name: WebUIException
+
+Description: 
+
+Requires:
+
+Provides:
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+var WebUIException = new Class({
+   Implements: Options,
+   options: {
+      cause: null,
+      description: "Please overwrite this option.",
+      message : "",
+      name: "WebUIException",
+      source: null
+   },
+   
+   //Constructors
+   initialize: function( options ){
+     this.setOptions( options );
+     this.parameters;
+   },
+   
+   //Public accessor and mutator methods
+   stackTrace: function() {
+      var stackTrace = "";
+      if( this.options.cause && this.options.cause.stackTrace() )
+         stackTrace += "\n" + this.options.cause.stackTrace();
+      
+      return stackTrace;
+   },
+   
+   //Properties
+   getCause: function() { return this.options.cause; },
+   getDescription : function() { return this.options.description; },
+   getMessage: function() { return this.options.description.substitute( this.parameters ); }, 
+   getName: function() { return this.options.name; },
+   getSource : function() { return this.options.source; }
+});
 /****************************** IllegalArgumentException ***************************
 Name: UndefinedXmlResourceException
 
@@ -569,6 +627,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 **/
+
 
 
 var IllegalArgumentException = new Class({
@@ -1328,64 +1387,6 @@ UniqueId.generate = function( prefix ){
    var generator = new UniqueId( prefix );
    return generator.generate();
 };
-/**
-Name: WebUIException
-
-Description: 
-
-Requires:
-
-Provides:
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-	- Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-var WebUIException = new Class({
-   Implements: Options,
-   options: {
-      cause: null,
-      description: "Please overwrite this option.",
-      message : "",
-      name: "WebUIException",
-      source: null
-   },
-   
-   //Constructors
-   initialize: function( options ){
-     this.setOptions( options );
-     this.parameters;
-   },
-   
-   //Public accessor and mutator methods
-   stackTrace: function() {
-      var stackTrace = "";
-      if( this.options.cause && this.options.cause.stackTrace() )
-         stackTrace += "\n" + this.options.cause.stackTrace();
-      
-      return stackTrace;
-   },
-   
-   //Properties
-   getCause: function() { return this.options.cause; },
-   getDescription : function() { return this.options.description; },
-   getMessage: function() { return this.options.description.substitute( this.parameters ); }, 
-   getName: function() { return this.options.name; },
-   getSource : function() { return this.options.source; }
-});
 /****************************** XPathSelectionException ***************************
 Name: XPathSelectionException
 
@@ -2100,8 +2101,10 @@ You should have received a copy of the GNU General Public License along with thi
 var AbstractDocument = new Class({
    Implements: [Events, Options],
    Binds: ['attachEditor',
+           'detachEditor',
            'determineContainerElement',
            'finalizeConstruction', 
+           'finalizeDestruction',
            'instantiateEditor',
            'loadResources', 
            'onConstructionError', 
@@ -2111,6 +2114,8 @@ var AbstractDocument = new Class({
            'onEditorAttached',
            'onResourceError', 
            'onResourcesLoaded', 
+           'releaseResources',
+           'resetProperties',
            'subscribeToWebUIMessages', 
            'webUIMessageHandler'],
    
@@ -2141,6 +2146,7 @@ var AbstractDocument = new Class({
       this.containerElement;
       this.contentUri;
       this.description;
+      this.destructionChain = new Chain();
       this.documentContent;
       this.documentDefinition;
       this.documentDefinitionUri;
@@ -2168,11 +2174,8 @@ var AbstractDocument = new Class({
    },
    
    destroy: function(){
-      if( this.resources ) this.resources.release();
-      if( this.editor ) this.editor.detach();
-      this.resetProperties();
-      this.constructionChain.clearChain();
-      this.state = AbstractDocument.States.INITIALIZED;
+      this.compileDestructionChain();
+      this.destructionChain.callChain();
    },
    
    onConstructionError: function( error ){
@@ -2284,6 +2287,15 @@ var AbstractDocument = new Class({
       this.constructionChain.chain( this.determineContainerElement, this.instantiateEditor, this.attachEditor, this.subscribeToWebUIMessages, this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain(  this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );
+   }.protect(),
+   
+   detachEditor: function(){
+      if( this.editor ) this.editor.detach();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    determineContainerElement: function(){
       this.containerElement = $( this.options.documentContainerId );
       this.htmlElementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource );
@@ -2293,6 +2305,13 @@ var AbstractDocument = new Class({
    finalizeConstruction: function(){
       this.state = AbstractDocument.States.CONSTRUCTED;
       this.fireEvent('documentReady', this );
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.constructionChain.clearChain();
+      this.destructionChain.clearChain();
+      this.state = AbstractDocument.States.INITIALIZED;
+      this.fireEvent('documentDestroyed', this );
    }.protect(),
    
    instantiateEditor: function(){
@@ -2332,6 +2351,11 @@ var AbstractDocument = new Class({
       else this.constructionChain.callChain();
    }.protect(),
    
+   releaseResources : function(){
+      if( this.resources ) this.resources.release();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    resetProperties: function(){
       this.description = null;
       this.documentDefinitionUri = null;
@@ -2339,6 +2363,7 @@ var AbstractDocument = new Class({
       this.editor = null;
       this.name = null;
       this.version = null;
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -3461,7 +3486,7 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    destroyDocumentWrapper: function(){
-      if( this.documentWrapper ) this.documentWrapper.destroy();
+      if( this.documentWrapper && this.documentWrapper.destroy ) this.documentWrapper.destroy();
       this.documentWrapper = null;
    }.protect(),
    
@@ -3687,6 +3712,7 @@ var Desktop = new Class({
             'onResourceError',
             'onResourcesLoaded',
             'onWindowDockerConstructed',
+            'showNotification',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
    options : {
@@ -6054,7 +6080,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var HtmlDocument = new Class({
    Extends: AbstractDocument,
-   Binds: ['attachEditor', 'createTextArea', 'onContainerResize', 'resizeTextArea'],
+   Binds: ['attachEditor', 'createTextArea', 'destroyTextArea', 'onContainerResize', 'resizeTextArea'],
    
    options: {
       componentName : "HtmlDocument",
@@ -6082,8 +6108,6 @@ var HtmlDocument = new Class({
    },
    
    destroy: function(){
-      if( this.textArea.removeEvents ) this.textArea.removeEvents();
-      if( this.textArea.destroy ) this.textArea.destroy();
       this.parent();
    },
    
@@ -6139,13 +6163,23 @@ var HtmlDocument = new Class({
          this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain(  this.releseResource, this.detachEditor, this.destroyTextArea, this.resetProperties, this.finalizeDestruction );
+   }.protect(),
+   
    createTextArea: function(){
       this.textArea = this.htmlElementFactory.create( 'textArea', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
          id : this.name, styles : { border: 0, margin: 0, padding: 0, overflowY : 'hidden', width : this.containerElement.getSize().x }});
       this.textArea.set( 'html', this.documentContent.xmlAsText );
       this.resizeTextArea();
       this.constructionChain.callChain();
-   }
+   },
+   
+   destroyTextArea: function(){
+      if( this.textArea.removeEvents ) this.textArea.removeEvents();
+      if( this.textArea.destroy ) this.textArea.destroy();
+      this.destructionChain.callChain();
+   }.protect()
       
 });
 /**
@@ -7244,6 +7278,7 @@ var PhotoGaleryWidget = new Class({
       descriptionSelector : "/pp:widgetDefinition/description", 
       effectDurationDefault : 750,
       effectDurationSelector : "pp:widgetDefinition/properties/effectDuration",
+      eventDeliveryDelay : 50,
       firstSlideDefault: 0,
       firstSlideSelector: "pp:widgetDefinition/properties/firstSlide",
       galeryLinkDefault: null,
@@ -7323,6 +7358,7 @@ var PhotoGaleryWidget = new Class({
    
    destroy: function(){
       this.destroyComponents();
+      this.destroyChildElements( this.containerElement );
       this.resetFields();
       this.parent();
    },
@@ -7404,6 +7440,16 @@ var PhotoGaleryWidget = new Class({
          this.finalizeConstruction
       );
       
+   }.protect(),
+   
+   destroyChildElements: function( parentElement ){
+      var childElements = parentElement.getChildren( '*' );
+      childElements.each( function( childElement, index ){
+         if( childElement.getChildren( '*' ).length > 0 ) this.destroyChildElements( childElement );
+         
+         if( childElement.removeEvents ) childElement.removeEvents();
+         if( childElement.destroy ) childElement.destroy();
+      }.bind( this ));
    }.protect(),
    
    destroyComponents: function(){
@@ -7509,91 +7555,6 @@ var PhotoGaleryWidget = new Class({
    }.protect()
 });
 /*
-Name: DocumentImage
-
-Description: Represents an element in the <resources> part of the SmartDocumentDefinition.
-
-Requires:
-
-Provides:
-    - DocumentImage
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-var DocumentImage = new Class({
-   Extends: DocumentResource,
-   Binds: ['loadResource'],   
-   
-   options: {
-      titleSelector : "@title"
-   },
-   
-   //Constructor
-   initialize: function( resourceElement, options ){
-      this.options.type = "Image";
-      this.parent( resourceElement, options );
-      this.title = null;
-   },
-   
-   //Public mutators and accessor methods
-   release: function(){
-      this.parent();
-   },
-
-   unmarshall: function(){
-      this.parent();
-      this.title = XmlResource.selectNodeText( this.options.titleSelector, this.resourceElement );
-   },
-
-   //Properties
-   getTitle: function() { return this.title; },
-   
-   //Protected, private helper methods
-   checkResourceAvailability: function(){
-      this.resourceAvailable = true;
-      this.availabilityCheckIsRunning = false;
-      this.loadChain.callChain();
-   }.protect(),
-   
-   isResourceLoaded: function(){
-      return false;
-   }.protect(),
-   
-   loadResource: function(){
-      Asset.image( this.resourceUri, {
-         id: this.id,
-         title: this.title,
-         onAbort: function(){
-            this.onResourceError();
-         }.bind( this ),
-         
-         onError: function(){
-            this.onResourceError();
-         }.bind( this ),
-         
-         onLoad: function(){
-            this.onResourceLoaded();
-         }.bind( this )
-     });      
-   }.protect()
-});
-/*
 Name: DocumentResource
 
 Description: Represents an element in the <resources> part of the SmartDocumentDefinition.
@@ -7665,6 +7626,7 @@ var DocumentResource = new Class({
    unmarshall: function(){
       this.id = XmlResource.selectNodeText( this.options.idSelector, this.resourceElement );
       this.resourceUri = XmlResource.determineNodeText( this.resourceElement );
+      this.resourceUri = this.transformToResourceUriToAbsolute();
    },
 
    //Properties
@@ -7703,6 +7665,110 @@ var DocumentResource = new Class({
       }catch( e ){
          throw new UndefinedDocumentResourceException( this.resourceUri, { cause: e, source : this.componentName } );
       }
+   }.protect(),
+   
+   determineBaseUri: function(){
+   }.protect(),
+   
+   transformToResourceUriToAbsolute: function(){
+      var resourceUriFragment = this.resourceUri;
+      var currentDirectory = document.location.href;
+      currentDirectory = currentDirectory.lastIndexOf( "#" ) > 0 ? currentDirectory.substring( 0, currentDirectory.lastIndexOf( "#" )) : currentDirectory;
+      currentDirectory = currentDirectory.lastIndexOf( "?" ) > 0  ? currentDirectory.substring( 0, currentDirectory.lastIndexOf( "?" )) : currentDirectory;
+      currentDirectory = currentDirectory.substring( 0, currentDirectory.lastIndexOf( "/" ));
+      
+      while( resourceUriFragment.indexOf( "../" ) == 0 ){
+         resourceUriFragment = resourceUriFragment.substring( resourceUriFragment.indexOf( "../" ) + 3 );
+         currentDirectory = currentDirectory.substring( 0, currentDirectory.lastIndexOf( "/" ));
+      }
+      
+      return currentDirectory + "/" + resourceUriFragment;
+   }
+});
+/*
+Name: DocumentImage
+
+Description: Represents an element in the <resources> part of the SmartDocumentDefinition.
+
+Requires:
+
+Provides:
+    - DocumentImage
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DocumentImage = new Class({
+   Extends: DocumentResource,
+   Binds: ['loadResource'],   
+   
+   options: {
+      titleSelector : "@title"
+   },
+   
+   //Constructor
+   initialize: function( resourceElement, options ){
+      this.options.type = "Image";
+      this.parent( resourceElement, options );
+      this.title = null;
+   },
+   
+   //Public mutators and accessor methods
+   release: function(){
+      this.parent();
+   },
+
+   unmarshall: function(){
+      this.parent();
+      this.title = XmlResource.selectNodeText( this.options.titleSelector, this.resourceElement );
+   },
+
+   //Properties
+   getTitle: function() { return this.title; },
+   
+   //Protected, private helper methods
+   checkResourceAvailability: function(){
+      this.resourceAvailable = true;
+      this.availabilityCheckIsRunning = false;
+      this.loadChain.callChain();
+   }.protect(),
+   
+   isResourceLoaded: function(){
+      return false;
+   }.protect(),
+   
+   loadResource: function(){
+      Asset.image( this.resourceUri, {
+         id: this.id,
+         title: this.title,
+         onAbort: function(){
+            this.onResourceError();
+         }.bind( this ),
+         
+         onError: function(){
+            this.onResourceError();
+         }.bind( this ),
+         
+         onLoad: function(){
+            this.onResourceLoaded();
+         }.bind( this )
+     });      
    }.protect()
 });
 /*
@@ -7730,6 +7796,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -7791,6 +7858,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -8338,7 +8406,7 @@ var DocumentElement = new Class({
    
    deleteHtmlElement: function(){
       if( this.htmlElement ) {
-         this.htmlElement.destroy();
+         if( this.htmlElement.destroy ) this.htmlElement.destroy();
          this.htmlElement = null;
       }
    }.protect(),
@@ -8979,6 +9047,8 @@ var DocumentElementEditor = new Class({
       this.text = this.inputElement.get( 'value' );
       this.inputElement.removeEvents();
       this.inputElement.destroy();
+      this.subjectHtmlElement.removeEvent( 'focus', this.onClick );
+      this.subjectHtmlElement.removeEvent( 'click', this.onClick );
       this.subjectHtmlElement.set( 'text', this.text );
       this.subjectHtmlElement.setStyle( 'display', 'inline' );
    }.protect(),
@@ -9702,7 +9772,7 @@ var MissingBindVariableException = new Class({
       this.parameters = { dataElementId : dataElementId };
    }	
 });
-/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.state = AbstractDocument.States.CONSTRUCTED;      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError } );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, { onConstructed : this.onBodyConstructed, onConstructionError : this.onConstructionError } );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, { onConstructed : this.onFooterConstructed, onConstructionError : this.onConstructionError } );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
+/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.state = AbstractDocument.States.CONSTRUCTED;      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError } );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, { onConstructed : this.onBodyConstructed, onConstructionError : this.onConstructionError } );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, { onConstructed : this.onFooterConstructed, onConstructionError : this.onConstructionError } );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
 /****************************** UnconfiguredDocumentElementException ***************************
 Name: UnconfiguredDocumentElementException
 
@@ -10123,7 +10193,7 @@ var TabWidget = new Class( {
          }else this.tabListElement.removeNode();
       }
       
-      if( this.tabsWrapperElement ) this.tabsWrapperElement.destroy();
+      if( this.tabsWrapperElement && this.tabsWrapperElement.destroy ) this.tabsWrapperElement.destroy();
 
       if( this.buttonsListElement ){
          if( this.buttonsListElement.destroy ){
@@ -10414,610 +10484,6 @@ var MooEditableDialog = new Class({
    
    //Properties
    isCollapsed: function() { return false; },
-   
-   //Protected and private helper methods
-});
-/*
-Name: 
-    - TextAreaEditor
-
-Description: 
-    - Provides text editing features for text areas. The edited area can be a whole HTML document or just a text area component of a SmartDocument. 
-
-Requires:
-    - MooEditable, DocumentEditor
-    
-Provides:
-    - TextAreaEditor
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var TextAreaEditor = new Class({
-   Extends: DocumentEditor,
-   Binds: ['onDocumentSelectedMessage', 'onMooEditableAttach'],
-   options : {
-      componentName : "TextAreaEditor",
-      createLinkAlert : "selectionNeeded",
-      createLinkPromt : SYSTEM_WINDOWS.DOCUMENT_EXPLORER,
-      dimensions : { x : 500, y : 100 },
-      numberOfColumns : 120,
-      numberOfRows : 50,
-      urlImagePromt : SYSTEM_WINDOWS.DOCUMENT_EXPLORER,
-   },
-
-   //Constructor
-   initialize: function( internationalization, options ){
-      this.parent( internationalization, options );
-      
-      //Private attributes
-      this.initialContent;
-      this.mooEditable;
-   },
-   
-   //Public accessor and mutator methods
-   attach: function( subjectElement, initialContent ){
-      this.initialContent = initialContent;
-      this.parent( subjectElement );
-   },
-   
-   detach: function(){
-      this.mooEditable.detach();
-      this.parent();
-   },
-   
-   onContainerResize: function( newSize ){
-      this.mooEditable.onContainerResize( newSize );
-   },
-   
-   onDocumentSelectedMessage: function( webUIMessage ){
-      this.mooEditable.execute( 'createlink', null, webUIMessage.getDocumentURI() );
-   },
-   
-   onMooEditableAttach: function(){
-      this.attachChain.callChain();
-   },
-   
-   textAddImage: function(){ this.mooEditable.action( 'urlimage', [] ); },
-   textAddLink: function(){ this.mooEditable.action( 'createlink', [] ); },
-   textAlignCenter: function(){ this.mooEditable.action( 'justifycenter', [] ); },
-   textAlignLeft: function(){ this.mooEditable.action( 'justifyleft', [] ); },
-   textAlignJustify: function(){ this.mooEditable.action( 'justifyfull', [] ); },
-   textAlignRight: function(){ this.mooEditable.action( 'justifyright', [] ); },
-   textBold: function(){ this.mooEditable.action( 'bold', [] ); },
-   textIndent: function(){ this.mooEditable.action( 'indent', [] ); },
-   textItalic: function(){ this.mooEditable.action( 'italic', [] ); },
-   textOrderedList: function(){ this.mooEditable.action( 'insertorderedlist', [] ); },
-   textOutdent: function(){ this.mooEditable.action( 'outdent', [] ); },
-   textRedo: function(){ this.mooEditable.action( 'redo', [] ); },
-   textRemoveLink: function(){ this.mooEditable.action( 'unlink', [] ); },
-   textStrikethrough: function(){ this.mooEditable.action( 'strikethrough', [] ); },
-   textToggleView: function(){ this.mooEditable.action( 'toggleview', [] ); },
-   textUnderline: function(){ this.mooEditable.action( 'underline', [] ); },
-   textUndo: function(){ this.mooEditable.action( 'undo', [] ); },
-   textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist', [] ); },
-   
-   //Properties
-   getMooEditable: function() { return this.mooEditable; },
-   
-   //Protected and private helper methods   
-   defineDialogWindows: function(){
-      MooEditable.Actions.createlink.dialogs.alert = function( callerObject ) { 
-         return new MooEditableDialog( this, { action : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : this.options.createLinkAlert }); 
-      }.bind( this );
-      
-      MooEditable.Actions.createlink.dialogs.prompt = function(  callerObject ) { 
-         return new MooEditableDialog( this, { action : DesktopWindow.Activity.SHOW_WINDOW, windowName : this.options.createLinkPromt }); 
-      }.bind( this );
-      
-      MooEditable.Actions.urlimage.dialogs.prompt = function( callerObject ) { 
-         return new MooEditableDialog( this, {  action : DesktopWindow.Activity.SHOW_WINDOW, windowName : this.options.urlImagePromt }); 
-      }.bind( this );
-   }.protect(),
-   
-   instantiateTools: function(){
-      this.defineDialogWindows();
-      var styleSheetLinks = "";
-      this.styleSheets.each( function( styleSheetUri, index ){
-         styleSheetLinks += "<link rel='stylesheet' type='text/css' href='" + styleSheetUri + "'>";
-      }, this );
-      
-      this.mooEditable = new MooEditable( this.subjectElement, { 
-         externalCSS : styleSheetLinks,
-         handleDialogs : false, 
-         handleLabel : false, 
-         handleSubmit : false,
-         onAttach: this.onMooEditableAttach, 
-         toolbar : false
-      });
-   }.protect(),
-});
-/*
-Name: 
-    - ToolBarButton
-
-Description: 
-    - Represents a button in a toolbar. It's a component of a ToolBar. 
-
-Requires:
-
-Provides:
-    - ToolBarButton
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-var ToolBarButton = new Class({
-   Implements : [Events, Options],
-   Binds: ['onSelection'],
-   
-   options : {
-      buttonStyle : "toolBarButton",
-      captionSelector : "caption",
-      iconImageSelector : "iconImage",
-      messagePropertiesSelector : "messageProperties",
-      nameSelector : "@name",
-      showCaption : false,
-      toolTipStyle : "toolBarToolTip"
-   },
-
-   //Constructor
-   initialize: function( definition, elementFactory, options ){
-      this.setOptions( options );
-      this.anchorElement;
-      this.definitionXml = definition;
-      this.caption;
-      this.factory = elementFactory;
-      this.iconImageUri;
-      this.imageElement;
-      this.listItemElement;
-      this.messageProperties;
-      this.name = new Date().getTime();
-      this.parentElement;
-      this.spanElement;
-      this.state = ToolBarButton.States.INITIALIZED;
-      this.toolTipElement;
-   },
-   
-   //Public accessor and mutator methods
-   construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
-      this.parentElement = parentElement;
-      this.instantiateHtmlElements();
-      this.state = ToolBarButton.States.CONSTRUCTED;
-   },
-   
-   destroy: function(){
-      if( this.toolTipElement ) this.toolTipElement.destroy();
-      if( this.imageElement ) this.imageElement.destroy();
-      if( this.spanElement ) this.spanElement.destroy();
-      if( this.anchorElement ) this.anchorElement.destroy();
-      if( this.listItemElement ) this.listItemElement.destroy();
-      this.state = ToolBarButton.States.INITIALIZED;
-   },
-   
-   onSelection: function(){
-      this.fireEvent( 'onSelection', this );
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.state = ToolBarButton.States.UNMARSHALLED;
-   },
-   
-   //Properties
-   getCaption: function() { return this.caption; },
-   getIconImage: function() { return this.iconImageUri; },
-   getMessageProperties: function() { return this.messageProperties; },
-   getName: function() { return this.name; },
-   getParentElement: function() { return this.parentElement; },
-   getState: function() { return this.state; },
-   
-   //Protected, private helper methods
-   instantiateHtmlElements: function(){
-      var buttonTitle = this.options.showCaption ? this.caption : "";
-      this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
-      this.anchorElement = this.factory.createAnchor( buttonTitle, null, this.onSelection, this.listItemElement, WidgetElementFactory.Positions.lastChild );
-      this.spanElement = this.factory.create( 'span', null, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.buttonStyle });
-      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.iconImageUri, alt : buttonTitle });
-      this.toolTipElement = this.factory.create( 'span', this.caption, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.toolTipStyle });
-   },
-   
-   unmarshallProperties: function(){
-      this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
-      this.iconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml );
-      this.messageProperties = XmlResource.selectNodeText( this.options.messagePropertiesSelector, this.definitionXml );
-      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
-   }.protect(),
-});
-
-ToolBarButton.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
-/*
-Name: ToolBarButtonFactory
-
-Description: Instantiates a new subclass of ToolBarButton according to the given XML element.
-
-Requires:
-
-Provides:
-    - ToolBarButtonFactory
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-var ToolBarButtonFactory = new Class({
-   Implements: Options,
-   
-   options: {   
-   },
-   
-   initialize: function(){
-   },
-
-   create: function( definitionXmlElement, htmlElementFactory, options ){
-      var newButton;
-      switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "DIVIDER": 
-         newButton = new ToolBarDivider( definitionXmlElement, htmlElementFactory, options ); break;
-      case "BUTTON":
-      default:
-         newButton = new ToolBarButton( definitionXmlElement, htmlElementFactory, options ); break;
-      }
-      
-      return newButton;
-   }
-});
-
-ToolBarButtonFactory.create = function(  definitionXmlElement, htmlElementFactory, options ){
-   var factory = new ToolBarButtonFactory();
-   var button = factory.create( definitionXmlElement, htmlElementFactory, options );
-   return button;
-};
-/*
-Name: 
-    - ToolBarDivider
-
-Description: 
-    - Represents a divider in a tool bar. It's a component of a ToolBar. 
-
-Requires:
-
-Provides:
-    - ToolBarDivider
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-var ToolBarDivider = new Class({
-   Implements : Options,
-   
-   options : {
-      dividerStyle : "toolBarDivider",
-      iconImageSelector : "iconImage",
-      dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
-      namePrefix : "divider_"
-   },
-
-   //Constructor
-   initialize: function( definition, elementFactory, options ){
-      this.setOptions( options );
-      this.definitionXml = definition;
-      this.factory = elementFactory;
-      this.dividerIconImageUri;
-      this.imageElement;
-      this.listItemElement;
-      this.name = UniqueId.generate( this.options.namePrefix );
-      this.parentElement;
-      this.state = ToolBarButton.States.INITIALIZED;
-      this.toolTipElement;
-   },
-   
-   //Public accessor and mutator methods
-   construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
-      this.parentElement = parentElement;
-      this.instantiateHtmlElements();
-      this.state = ToolBarButton.States.CONSTRUCTED;
-   },
-   
-   destroy: function(){
-      if( this.imageElement ) this.imageElement.destroy();
-      if( this.spanElement ) this.spanElement.destroy();
-      if( this.listItemElement ) this.listItemElement.destroy();
-      this.state = ToolBarButton.States.INITIALIZED;
-   },
-   
-   onSelection: function(){
-      
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.state = ToolBarButton.States.UNMARSHALLED;
-   },
-   
-   //Properties
-   getIconImage: function() { return this.dividerIconImageUri; },
-   getName: function() { return this.name; },
-   getParentElement: function() { return this.parentElement; },
-   getState: function() { return this.state; },
-   
-   //Protected, private helper methods
-   instantiateHtmlElements: function(){
-      this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
-      this.spanElement = this.factory.create( 'span', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.dividerStyle });
-      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.dividerIconImageUri });
-   },
-   
-   unmarshallProperties: function(){
-      this.dividerIconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml, null, this.options.dividerIconImageUri );
-   }.protect(),
-});
-/*
-Name: 
-    - ToolBarWidget
-
-Description: 
-    - Represents a toolbar which is a user interface for user actions. 
-
-Requires:
-    - ToolBarButton
-    
-Provides:
-    - ToolBarWidget
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var ToolBarWidget = new Class({
-   Extends : BrowserWidget,
-   Binds : ['onButtonSelection'],
-   options : {
-      buttonsSelector : "/toolBarDefinition/buttons/button | /toolBarDefinition/buttons/divider",
-      componentName : "ToolBarWidget",
-      descriptionSelector : "/toolBarDefinition/description", 
-      dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
-      listStyleSelector : "/toolBarDefinition/buttons/@elementStyle",
-      nameSelector : "/toolBarDefinition/name",
-      showCaptionsSelector : "/toolBarDefinition/showCaptions"
-   },
-
-   //Constructor
-   initialize: function( options, internationalization ){
-      //this.setOptions( options );
-      this.parent( options, internationalization );
-      
-      //Private attributes
-      this.buttons = new LinkedHashMap();
-      this.description;
-      this.dividers = new ArrayList();
-      this.name;
-      this.listElement;
-      this.listStyle;
-      this.showCaptions = false;
-      this.wrapperElement;
-   },
-   
-   //Public accessor and mutator methods
-   construct: function(){
-      this.constructHtmlElements();
-      this.constructButtons();
-      return this.parent();
-   },
-   
-   destroy: function(){
-      this.destroyButtons();
-      this.destroyDividers();
-      if( this.listElement ) this.listElement.destroy();
-      if( this.wrapperElement ) this.wrapperElement.destroy();
-      this.parent();
-   },
-   
-   onButtonSelection: function( button ){
-      var argumentText = button.getMessageProperties();
-      var arguments = argumentText != null ? eval( "(" + argumentText + ")" ) : null;
-      arguments['originator'] = this.name;
-      
-      this.messageBus.notifySubscribers( new MenuSelectedMessage( arguments ));
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallButtons();
-      return this.parent();
-   },
-   
-   //Properties
-   getButtons: function() { return this.buttons; },
-   getDescription: function() { return this.description; },
-   getListStyle: function() { return this.listStyle; },
-   getName: function() { return this.name; },
-   
-   //Protected and private helper methods
-   constructButtons: function(){
-      this.buttons.each( function( buttonEntry, index ){
-         var toolBarButton = buttonEntry.getValue();
-         toolBarButton.construct( this.listElement );
-      }, this );
-   }.protect(),
-   
-   constructHtmlElements: function(){
-      this.wrapperElement = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { id : this.name });
-      this.listElement = this.elementFactory.create( 'ul', null, this.wrapperElement, WidgetElementFactory.Positions.LastChild, { 'class' : this.listStyle } );
-   }.protect(),
-   
-   destroyButtons: function(){
-      this.buttons.each( function( buttonEntry, index ) {
-         var button = buttonEntry.getValue();
-         button.destroy();
-      }, this );
-      
-      this.buttons.clear();
-   }.protect(),
-   
-   destroyDividers: function(){
-      this.buttons.each( function( divider, index ) {
-         divider.destroy();
-      }, this );
-      
-      this.buttons.clear();
-   }.protect(),
-   
-   unmarshallButtons: function(){
-      var buttonDefinitions = this.definitionXml.selectNodes( this.options.buttonsSelector );
-      buttonDefinitions.each( function( buttonDefinition, index ){
-         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
-         toolBarButton.unmarshall();
-         this.buttons.put( toolBarButton.getName(), toolBarButton );
-      }, this );
-   }.protect(),
-   
-   unmarshallProperties: function(){
-      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
-      this.listStyle = this.definitionXml.selectNodeText( this.options.listStyleSelector );
-      this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
-      this.showCaptions = parseBoolean( this.definitionXml.selectNodeText( this.options.showCaptionsSelector, null, false ));
-   }
-});
-/*
-Name: 
-    - VideoPlayerWidget
-
-Description: 
-    - Plays specified video files. 
-
-Requires:
-    - BrowserWidget, WidgetElementFactory
-    
-Provides:
-    - VideoPlayerWidget
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var VideoPlayerWidget = new Class({
-   Extends : ToolBarWidget,
-   options : {
-      componentName : "VideoPlayerWidget",
-      descriptionSelector : "/pp:widgetDefinition/description", 
-      nameSelector : "/pp:widgetDefinition/name"
-   },
-
-   //Constructor
-   initialize: function( options, internationalization ){
-      this.setOptions( options );
-      this.parent( options, internationalization );
-      
-      //Private attributes
-   },
-   
-   //Public accessor and mutator methods
-   construct: function(){
-      return this.parent();
-   },
-   
-   destroy: function(){
-      this.parent();
-   },
-   
-   unmarshall: function(){
-      return this.parent();
-   },
-   
-   //Properties
    
    //Protected and private helper methods
 });
@@ -11435,6 +10901,611 @@ SYSTEM_WINDOWS = {
    ABOUT : 'about',
    DOCUMENT_EXPLORER : 'documentExplorer'
 };
+/*
+Name: 
+    - TextAreaEditor
+
+Description: 
+    - Provides text editing features for text areas. The edited area can be a whole HTML document or just a text area component of a SmartDocument. 
+
+Requires:
+    - MooEditable, DocumentEditor
+    
+Provides:
+    - TextAreaEditor
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var TextAreaEditor = new Class({
+   Extends: DocumentEditor,
+   Binds: ['onDocumentSelectedMessage', 'onMooEditableAttach'],
+   options : {
+      componentName : "TextAreaEditor",
+      createLinkAlert : "selectionNeeded",
+      createLinkPromt : SYSTEM_WINDOWS.DOCUMENT_EXPLORER,
+      dimensions : { x : 500, y : 100 },
+      numberOfColumns : 120,
+      numberOfRows : 50,
+      urlImagePromt : SYSTEM_WINDOWS.DOCUMENT_EXPLORER,
+   },
+
+   //Constructor
+   initialize: function( internationalization, options ){
+      this.parent( internationalization, options );
+      
+      //Private attributes
+      this.initialContent;
+      this.mooEditable;
+   },
+   
+   //Public accessor and mutator methods
+   attach: function( subjectElement, initialContent ){
+      this.initialContent = initialContent;
+      this.parent( subjectElement );
+   },
+   
+   detach: function(){
+      this.mooEditable.detach();
+      this.parent();
+   },
+   
+   onContainerResize: function( newSize ){
+      this.mooEditable.onContainerResize( newSize );
+   },
+   
+   onDocumentSelectedMessage: function( webUIMessage ){
+      this.mooEditable.execute( 'createlink', null, webUIMessage.getDocumentURI() );
+   },
+   
+   onMooEditableAttach: function(){
+      this.attachChain.callChain();
+   },
+   
+   textAddImage: function(){ this.mooEditable.action( 'urlimage', [] ); },
+   textAddLink: function(){ this.mooEditable.action( 'createlink', [] ); },
+   textAlignCenter: function(){ this.mooEditable.action( 'justifycenter', [] ); },
+   textAlignLeft: function(){ this.mooEditable.action( 'justifyleft', [] ); },
+   textAlignJustify: function(){ this.mooEditable.action( 'justifyfull', [] ); },
+   textAlignRight: function(){ this.mooEditable.action( 'justifyright', [] ); },
+   textBold: function(){ this.mooEditable.action( 'bold', [] ); },
+   textIndent: function(){ this.mooEditable.action( 'indent', [] ); },
+   textItalic: function(){ this.mooEditable.action( 'italic', [] ); },
+   textOrderedList: function(){ this.mooEditable.action( 'insertorderedlist', [] ); },
+   textOutdent: function(){ this.mooEditable.action( 'outdent', [] ); },
+   textRedo: function(){ this.mooEditable.action( 'redo', [] ); },
+   textRemoveLink: function(){ this.mooEditable.action( 'unlink', [] ); },
+   textStrikethrough: function(){ this.mooEditable.action( 'strikethrough', [] ); },
+   textToggleView: function(){ this.mooEditable.action( 'toggleview', [] ); },
+   textUnderline: function(){ this.mooEditable.action( 'underline', [] ); },
+   textUndo: function(){ this.mooEditable.action( 'undo', [] ); },
+   textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist', [] ); },
+   
+   //Properties
+   getMooEditable: function() { return this.mooEditable; },
+   
+   //Protected and private helper methods   
+   defineDialogWindows: function(){
+      MooEditable.Actions.createlink.dialogs.alert = function( callerObject ) { 
+         return new MooEditableDialog( this, { action : DesktopWindow.Activity.SHOW_NOTIFICATION, notification : this.options.createLinkAlert }); 
+      }.bind( this );
+      
+      MooEditable.Actions.createlink.dialogs.prompt = function(  callerObject ) { 
+         return new MooEditableDialog( this, { action : DesktopWindow.Activity.SHOW_WINDOW, windowName : this.options.createLinkPromt }); 
+      }.bind( this );
+      
+      MooEditable.Actions.urlimage.dialogs.prompt = function( callerObject ) { 
+         return new MooEditableDialog( this, {  action : DesktopWindow.Activity.SHOW_WINDOW, windowName : this.options.urlImagePromt }); 
+      }.bind( this );
+   }.protect(),
+   
+   instantiateTools: function(){
+      this.defineDialogWindows();
+      var styleSheetLinks = "";
+      this.styleSheets.each( function( styleSheetUri, index ){
+         styleSheetLinks += "<link rel='stylesheet' type='text/css' href='" + styleSheetUri + "'>";
+      }, this );
+      
+      this.mooEditable = new MooEditable( this.subjectElement, { 
+         externalCSS : styleSheetLinks,
+         handleDialogs : false, 
+         handleLabel : false, 
+         handleSubmit : false,
+         onAttach: this.onMooEditableAttach, 
+         toolbar : false
+      });
+   }.protect(),
+});
+/*
+Name: 
+    - ToolBarButton
+
+Description: 
+    - Represents a button in a toolbar. It's a component of a ToolBar. 
+
+Requires:
+
+Provides:
+    - ToolBarButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var ToolBarButton = new Class({
+   Implements : [Events, Options],
+   Binds: ['onSelection'],
+   
+   options : {
+      buttonStyle : "toolBarButton",
+      captionSelector : "caption",
+      iconImageSelector : "iconImage",
+      messagePropertiesSelector : "messageProperties",
+      nameSelector : "@name",
+      showCaption : false,
+      toolTipStyle : "toolBarToolTip"
+   },
+
+   //Constructor
+   initialize: function( definition, elementFactory, options ){
+      this.setOptions( options );
+      this.anchorElement;
+      this.definitionXml = definition;
+      this.caption;
+      this.factory = elementFactory;
+      this.iconImageUri;
+      this.imageElement;
+      this.listItemElement;
+      this.messageProperties;
+      this.name = new Date().getTime();
+      this.parentElement;
+      this.spanElement;
+      this.state = ToolBarButton.States.INITIALIZED;
+      this.toolTipElement;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function( parentElement ){
+      assertThat( parentElement, not( nil() ));
+      this.parentElement = parentElement;
+      this.instantiateHtmlElements();
+      this.state = ToolBarButton.States.CONSTRUCTED;
+   },
+   
+   destroy: function(){
+      if( this.toolTipElement && this.toolTipElement.destroy ) this.toolTipElement.destroy();
+      if( this.imageElement && this.imageElement.destroy ) this.imageElement.destroy();
+      if( this.spanElement && this.spanElement.destroy ) this.spanElement.destroy();
+      if( this.anchorElement && this.anchorElement.destroy ) this.anchorElement.destroy();
+      if( this.listItemElement && this.listItemElement.destroy ) this.listItemElement.destroy();
+      this.state = ToolBarButton.States.INITIALIZED;
+   },
+   
+   onSelection: function(){
+      this.fireEvent( 'onSelection', this );
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.state = ToolBarButton.States.UNMARSHALLED;
+   },
+   
+   //Properties
+   getCaption: function() { return this.caption; },
+   getIconImage: function() { return this.iconImageUri; },
+   getMessageProperties: function() { return this.messageProperties; },
+   getName: function() { return this.name; },
+   getParentElement: function() { return this.parentElement; },
+   getState: function() { return this.state; },
+   
+   //Protected, private helper methods
+   instantiateHtmlElements: function(){
+      var buttonTitle = this.options.showCaption ? this.caption : "";
+      this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
+      this.anchorElement = this.factory.createAnchor( buttonTitle, null, this.onSelection, this.listItemElement, WidgetElementFactory.Positions.lastChild );
+      this.spanElement = this.factory.create( 'span', null, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.buttonStyle });
+      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.iconImageUri, alt : buttonTitle });
+      this.toolTipElement = this.factory.create( 'span', this.caption, this.anchorElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.toolTipStyle });
+   },
+   
+   unmarshallProperties: function(){
+      this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
+      this.iconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml );
+      this.messageProperties = XmlResource.selectNodeText( this.options.messagePropertiesSelector, this.definitionXml );
+      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
+   }.protect(),
+});
+
+ToolBarButton.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
+/*
+Name: ToolBarButtonFactory
+
+Description: Instantiates a new subclass of ToolBarButton according to the given XML element.
+
+Requires:
+
+Provides:
+    - ToolBarButtonFactory
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var ToolBarButtonFactory = new Class({
+   Implements: Options,
+   
+   options: {   
+   },
+   
+   initialize: function(){
+   },
+
+   create: function( definitionXmlElement, htmlElementFactory, options ){
+      var newButton;
+      switch( definitionXmlElement.tagName.toUpperCase() ){
+      case "DIVIDER": 
+         newButton = new ToolBarDivider( definitionXmlElement, htmlElementFactory, options ); break;
+      case "BUTTON":
+      default:
+         newButton = new ToolBarButton( definitionXmlElement, htmlElementFactory, options ); break;
+      }
+      
+      return newButton;
+   }
+});
+
+ToolBarButtonFactory.create = function(  definitionXmlElement, htmlElementFactory, options ){
+   var factory = new ToolBarButtonFactory();
+   var button = factory.create( definitionXmlElement, htmlElementFactory, options );
+   return button;
+};
+/*
+Name: 
+    - ToolBarDivider
+
+Description: 
+    - Represents a divider in a tool bar. It's a component of a ToolBar. 
+
+Requires:
+
+Provides:
+    - ToolBarDivider
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var ToolBarDivider = new Class({
+   Implements : Options,
+   
+   options : {
+      dividerStyle : "toolBarDivider",
+      iconImageSelector : "iconImage",
+      dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
+      namePrefix : "divider_"
+   },
+
+   //Constructor
+   initialize: function( definition, elementFactory, options ){
+      this.setOptions( options );
+      this.definitionXml = definition;
+      this.factory = elementFactory;
+      this.dividerIconImageUri;
+      this.imageElement;
+      this.listItemElement;
+      this.name = UniqueId.generate( this.options.namePrefix );
+      this.parentElement;
+      this.state = ToolBarButton.States.INITIALIZED;
+      this.toolTipElement;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function( parentElement ){
+      assertThat( parentElement, not( nil() ));
+      this.parentElement = parentElement;
+      this.instantiateHtmlElements();
+      this.state = ToolBarButton.States.CONSTRUCTED;
+   },
+   
+   destroy: function(){
+      if( this.imageElement && this.imageElement.destroy ) this.imageElement.destroy();
+      if( this.spanElement && this.spanElement.destroy ) this.spanElement.destroy();
+      if( this.listItemElement && this.listItemElement.destroy ) this.listItemElement.destroy();
+      this.state = ToolBarButton.States.INITIALIZED;
+   },
+   
+   onSelection: function(){
+      
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.state = ToolBarButton.States.UNMARSHALLED;
+   },
+   
+   //Properties
+   getIconImage: function() { return this.dividerIconImageUri; },
+   getName: function() { return this.name; },
+   getParentElement: function() { return this.parentElement; },
+   getState: function() { return this.state; },
+   
+   //Protected, private helper methods
+   instantiateHtmlElements: function(){
+      this.listItemElement = this.factory.create( 'li', null, this.parentElement, WidgetElementFactory.Positions.lastChild, { id : this.name } );
+      this.spanElement = this.factory.create( 'span', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { 'class' : this.options.dividerStyle });
+      this.imageElement = this.factory.create( 'img', null, this.spanElement, WidgetElementFactory.Positions.lastChild, { src : this.dividerIconImageUri });
+   },
+   
+   unmarshallProperties: function(){
+      this.dividerIconImageUri = XmlResource.selectNodeText( this.options.iconImageSelector, this.definitionXml, null, this.options.dividerIconImageUri );
+   }.protect(),
+});
+/*
+Name: 
+    - ToolBarWidget
+
+Description: 
+    - Represents a toolbar which is a user interface for user actions. 
+
+Requires:
+    - ToolBarButton
+    
+Provides:
+    - ToolBarWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var ToolBarWidget = new Class({
+   Extends : BrowserWidget,
+   Binds : ['onButtonSelection'],
+   options : {
+      buttonsSelector : "/toolBarDefinition/buttons/button | /toolBarDefinition/buttons/divider",
+      componentName : "ToolBarWidget",
+      descriptionSelector : "/toolBarDefinition/description", 
+      dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
+      listStyleSelector : "/toolBarDefinition/buttons/@elementStyle",
+      nameSelector : "/toolBarDefinition/name",
+      showCaptionsSelector : "/toolBarDefinition/showCaptions"
+   },
+
+   //Constructor
+   initialize: function( options, internationalization ){
+      //this.setOptions( options );
+      this.parent( options, internationalization );
+      
+      //Private attributes
+      this.buttons = new LinkedHashMap();
+      this.description;
+      this.dividers = new ArrayList();
+      this.name;
+      this.listElement;
+      this.listStyle;
+      this.showCaptions = false;
+      this.wrapperElement;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function(){
+      this.constructHtmlElements();
+      this.constructButtons();
+      return this.parent();
+   },
+   
+   destroy: function(){
+      this.destroyButtons();
+      this.destroyDividers();
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      if( this.wrapperElement && this.wrapperElement.destroy ) this.wrapperElement.destroy();
+      this.parent();
+   },
+   
+   onButtonSelection: function( button ){
+      var argumentText = button.getMessageProperties();
+      var arguments = argumentText != null ? eval( "(" + argumentText + ")" ) : null;
+      arguments['originator'] = this.name;
+      
+      this.messageBus.notifySubscribers( new MenuSelectedMessage( arguments ));
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.unmarshallButtons();
+      return this.parent();
+   },
+   
+   //Properties
+   getButtons: function() { return this.buttons; },
+   getDescription: function() { return this.description; },
+   getListStyle: function() { return this.listStyle; },
+   getName: function() { return this.name; },
+   
+   //Protected and private helper methods
+   constructButtons: function(){
+      this.buttons.each( function( buttonEntry, index ){
+         var toolBarButton = buttonEntry.getValue();
+         toolBarButton.construct( this.listElement );
+      }, this );
+   }.protect(),
+   
+   constructHtmlElements: function(){
+      this.wrapperElement = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { id : this.name });
+      this.listElement = this.elementFactory.create( 'ul', null, this.wrapperElement, WidgetElementFactory.Positions.LastChild, { 'class' : this.listStyle } );
+   }.protect(),
+   
+   destroyButtons: function(){
+      this.buttons.each( function( buttonEntry, index ) {
+         var button = buttonEntry.getValue();
+         button.destroy();
+      }, this );
+      
+      this.buttons.clear();
+   }.protect(),
+   
+   destroyDividers: function(){
+      this.buttons.each( function( divider, index ) {
+         divider.destroy();
+      }, this );
+      
+      this.buttons.clear();
+   }.protect(),
+   
+   unmarshallButtons: function(){
+      var buttonDefinitions = this.definitionXml.selectNodes( this.options.buttonsSelector );
+      buttonDefinitions.each( function( buttonDefinition, index ){
+         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
+         toolBarButton.unmarshall();
+         this.buttons.put( toolBarButton.getName(), toolBarButton );
+      }, this );
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
+      this.listStyle = this.definitionXml.selectNodeText( this.options.listStyleSelector );
+      this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
+      this.showCaptions = parseBoolean( this.definitionXml.selectNodeText( this.options.showCaptionsSelector, null, false ));
+   }
+});
+/*
+Name: 
+    - VideoPlayerWidget
+
+Description: 
+    - Plays specified video files. 
+
+Requires:
+    - BrowserWidget, WidgetElementFactory
+    
+Provides:
+    - VideoPlayerWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var VideoPlayerWidget = new Class({
+   Extends : ToolBarWidget,
+   options : {
+      componentName : "VideoPlayerWidget",
+      descriptionSelector : "/pp:widgetDefinition/description", 
+      nameSelector : "/pp:widgetDefinition/name"
+   },
+
+   //Constructor
+   initialize: function( options, internationalization ){
+      this.setOptions( options );
+      this.parent( options, internationalization );
+      
+      //Private attributes
+   },
+   
+   //Public accessor and mutator methods
+   construct: function(){
+      return this.parent();
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      return this.parent();
+   },
+   
+   //Properties
+   
+   //Protected and private helper methods
+});
 // LoadUtility.js
 
 
