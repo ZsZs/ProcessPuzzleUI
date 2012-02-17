@@ -2854,7 +2854,11 @@ var WidgetElementFactory = new Class( {
    createButton : function( buttonCaption, clickEventHandler, contextElement, position, elementProperties ) {
       var defaultProperties = { 'class' : this.BUTTON_CLASS, type : "button", value : buttonCaption, events : { click : clickEventHandler } };
       var properties = this.mergeProperties( defaultProperties, elementProperties );
-      var button = this.create( "INPUT", buttonCaption, contextElement, position, properties );
+      var button = this.create( "INPUT", null, contextElement, position, properties );
+      if( buttonCaption ) {
+         var i18Caption = this.i18Resource.getText( buttonCaption );
+         button.set( 'value', i18Caption );
+      }
       return button;
    },
 
@@ -5000,7 +5004,7 @@ var DesktopPanelHeader = new Class({
       if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
-         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionFailed : this.onPluginConstructionError });
+         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginConstructionError });
          this.plugin.unmarshall();
       }
       this.state = DesktopPanelHeader.States.UNMARSHALLED;      
@@ -7561,6 +7565,12 @@ var DocumentImage = new Class({
    getTitle: function() { return this.title; },
    
    //Protected, private helper methods
+   checkResourceAvailability: function(){
+      this.resourceAvailable = true;
+      this.availabilityCheckIsRunning = false;
+      this.loadChain.callChain();
+   }.protect(),
+   
    isResourceLoaded: function(){
       return false;
    }.protect(),
@@ -8899,29 +8909,42 @@ var DocumentElementEditor = new Class({
       //private fields
       this.inputElement;
       this.previousValue;
+      this.state = DocumentElementEditor.States.DETACHED;
       this.subjectHtmlElement = subjectHtmlElement;
       this.text;
    },
    
    //Public accessors and mutators
    attach: function(){
-      this.subjectHtmlElement.addEvent( 'focus', this.onClick );
-      this.subjectHtmlElement.addEvent( 'click', this.onClick );
+      if( this.state == DocumentElementEditor.States.DETACHED ){
+         this.subjectHtmlElement.addEvent( 'focus', this.onClick );
+         this.subjectHtmlElement.addEvent( 'click', this.onClick );
+         this.state = DocumentElementEditor.States.ATTACHED;
+      }
    },
    
    detach: function(){
-      if( this.inputElement ) this.removeInputElement();
+      if( this.state == DocumentElementEditor.States.EDITING || this.state == DocumentElementEditor.States.ATTACHED ){
+         if( this.inputElement ) this.removeInputElement();
+         this.state = DocumentElementEditor.States.DETACHED;
+      }
    },
    
    onBlur: function(){
-      this.removeInputElement();
-      this.fireEvent( 'editEnd', this );
+      if( this.state == DocumentElementEditor.States.EDITING ){
+         this.removeInputElement();
+         this.state = DocumentElementEditor.States.ATTACHED;
+         this.fireEvent( 'editEnd', this );
+      }
    },
    
    onClick: function(){
-      this.saveCurrentValue();
-      this.injectInputElement();
-      this.fireEvent( 'editStart', this );
+      if( this.state == DocumentElementEditor.States.ATTACHED ){
+         this.saveCurrentValue();
+         this.injectInputElement();
+         this.state = DocumentElementEditor.States.EDITING;
+         this.fireEvent( 'editStart', this );
+      }
    },
    
    onKeypress: function(){
@@ -8931,6 +8954,7 @@ var DocumentElementEditor = new Class({
    //Properties
    getInputElement: function() { return this.inputElement; },
    getPreviousValue: function() { return this.previousValue; },
+   getState: function() { return this.state; },
    getSubjectElement: function(){ return this.subjectHtmlElement; },
    getText: function() { return this.text; },
    isChanged: function() { return !(this.text && this.text.equals( this.previousValue )); },
@@ -8967,6 +8991,7 @@ var DocumentElementEditor = new Class({
 
 DocumentElementEditor.DataType = { BOOLEAN : 'boolean', INTEGER : 'integer', LONG_INTEGER : 'longInteger', STRING : 'string', TEXT : 'text', TIME_POINT : 'timePoint' };
 DocumentElementEditor.DataType.TIME_POINT.Precission = { YEAR : 'year', MONTH : 'month', DAY : 'day', HOUR : 'hour', MINUTE : 'minute', SECOND : 'second', MILLI_SECOND : 'milliSecond' };
+DocumentElementEditor.States = { DETACHED : 'detached', ATTACHED : 'attached', EDITING : 'editing' };
 /*
 Name: DataElementEditor
 
@@ -9326,7 +9351,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentPlugin = new Class({
    Implements: [Events, Options],
-   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed'],   
+   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed', 'onWidgetError'],   
    
    options: {
       componentName : "DocumentPlugin",
@@ -9429,7 +9454,7 @@ var DocumentPlugin = new Class({
       if( this.widgetName ){
          try{
             var widgetClass = eval( this.widgetName );
-            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed } );
+            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onError : this.onWidgetError } );
             this.widget = new widgetClass( mergedOptions, this.internationalization );
             this.widget.unmarshall();
             this.widget.construct();
@@ -10469,24 +10494,24 @@ var TextAreaEditor = new Class({
       this.attachChain.callChain();
    },
    
-   textAddImage: function(){ this.mooEditable.action( 'urlimage' ); },
-   textAddLink: function(){ this.mooEditable.action( 'createlink' ); },
-   textAlignCenter: function(){ this.mooEditable.action( 'justifycenter' ); },
-   textAlignLeft: function(){ this.mooEditable.action( 'justifyleft' ); },
-   textAlignJustify: function(){ this.mooEditable.action( 'justifyfull' ); },
-   textAlignRight: function(){ this.mooEditable.action( 'justifyright' ); },
-   textBold: function(){ this.mooEditable.action( 'bold' ); },
-   textIndent: function(){ this.mooEditable.action( 'indent' ); },
-   textItalic: function(){ this.mooEditable.action( 'italic' ); },
-   textOrderedList: function(){ this.mooEditable.action( 'insertorderedlist' ); },
-   textOutdent: function(){ this.mooEditable.action( 'outdent' ); },
-   textRedo: function(){ this.mooEditable.action( 'redo' ); },
-   textRemoveLink: function(){ this.mooEditable.action( 'unlink' ); },
-   textStrikethrough: function(){ this.mooEditable.action( 'strikethrough' ); },
-   textToggleView: function(){ this.mooEditable.action( 'toggleview' ); },
-   textUnderline: function(){ this.mooEditable.action( 'underline' ); },
-   textUndo: function(){ this.mooEditable.action( 'undo' ); },
-   textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist' ); },
+   textAddImage: function(){ this.mooEditable.action( 'urlimage', [] ); },
+   textAddLink: function(){ this.mooEditable.action( 'createlink', [] ); },
+   textAlignCenter: function(){ this.mooEditable.action( 'justifycenter', [] ); },
+   textAlignLeft: function(){ this.mooEditable.action( 'justifyleft', [] ); },
+   textAlignJustify: function(){ this.mooEditable.action( 'justifyfull', [] ); },
+   textAlignRight: function(){ this.mooEditable.action( 'justifyright', [] ); },
+   textBold: function(){ this.mooEditable.action( 'bold', [] ); },
+   textIndent: function(){ this.mooEditable.action( 'indent', [] ); },
+   textItalic: function(){ this.mooEditable.action( 'italic', [] ); },
+   textOrderedList: function(){ this.mooEditable.action( 'insertorderedlist', [] ); },
+   textOutdent: function(){ this.mooEditable.action( 'outdent', [] ); },
+   textRedo: function(){ this.mooEditable.action( 'redo', [] ); },
+   textRemoveLink: function(){ this.mooEditable.action( 'unlink', [] ); },
+   textStrikethrough: function(){ this.mooEditable.action( 'strikethrough', [] ); },
+   textToggleView: function(){ this.mooEditable.action( 'toggleview', [] ); },
+   textUnderline: function(){ this.mooEditable.action( 'underline', [] ); },
+   textUndo: function(){ this.mooEditable.action( 'undo', [] ); },
+   textUnorderedList: function(){ this.mooEditable.action( 'insertunorderedlist', [] ); },
    
    //Properties
    getMooEditable: function() { return this.mooEditable; },
