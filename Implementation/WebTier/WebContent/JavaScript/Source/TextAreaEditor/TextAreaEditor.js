@@ -29,6 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 //= require ../DocumentEditor/DocumentEditor.js
+//= require ../WebUIConfiguration/WebUIConfiguration.js
 
 var TextAreaEditor = new Class({
    Extends: DocumentEditor,
