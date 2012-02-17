@@ -116,7 +116,10 @@ var DocumentResource = new Class({
    
    transformToResourceUriToAbsolute: function(){
       var resourceUriFragment = this.resourceUri;
-      var currentDirectory = document.location.href.substring( 0, document.location.href.lastIndexOf( "/" ));
+      var currentDirectory = document.location.href;
+      currentDirectory = currentDirectory.lastIndexOf( "#" ) > 0 ? currentDirectory.substring( 0, currentDirectory.lastIndexOf( "#" )) : currentDirectory;
+      currentDirectory = currentDirectory.lastIndexOf( "?" ) > 0  ? currentDirectory.substring( 0, currentDirectory.lastIndexOf( "?" )) : currentDirectory;
+      currentDirectory = currentDirectory.substring( 0, currentDirectory.lastIndexOf( "/" ));
       
       while( resourceUriFragment.indexOf( "../" ) == 0 ){
          resourceUriFragment = resourceUriFragment.substring( resourceUriFragment.indexOf( "../" ) + 3 );

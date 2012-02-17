@@ -83,7 +83,7 @@ window.ResourceManagerTest = new Class( {
             assertThat( this.onResourceErrorWasCalled, is( false ));
             assertThat( this.resourceManager.isSuccess(), is( true ));
             
-            var linkElement = $$("link[href='" + this.transformToResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']");
+            var linkElement = $$("link[href='" + this.transformResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']");
             assertThat( linkElement.length, equalTo( 1 ));
             
             this.testMethodReady();
@@ -113,7 +113,7 @@ window.ResourceManagerTest = new Class( {
             this.resourceManager.load();
          }.bind( this ),
          function(){
-            var scriptElement = $$("script[src='" + this.transformToResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']");
+            var scriptElement = $$("script[src='" + this.transformResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']");
             assertThat( this.onResourceLoadedWasCalled, is( true ));
             assertThat( this.onResourceErrorWasCalled, is( false ));
             assertThat( this.resourceManager.isSuccess(), is( true ));
@@ -133,7 +133,7 @@ window.ResourceManagerTest = new Class( {
             this.resourceManager.load();
          }.bind( this ),
          function(){
-            var scriptElement = $$("script[src='" + this.transformToResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']");
+            var scriptElement = $$("script[src='" + this.transformResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']");
             assertThat( scriptElement.length, equalTo( 1 ));
             this.testMethodReady();
          }.bind( this )
@@ -196,11 +196,11 @@ window.ResourceManagerTest = new Class( {
             this.resourceManager.load();
          }.bind( this ),
          function(){
-            assertThat( $$("link[href='" + this.transformToResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']").length, equalTo( 1 ));
+            assertThat( $$("link[href='" + this.transformResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']").length, equalTo( 1 ));
             this.resourceManager.release();        
             assertThat( this.resourceManager.getResources().size(), equalTo( 0 ));
-            assertThat( $$("link[href='" + this.transformToResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']").length, equalTo( 0 ));
-            assertThat( $$("script[src='" + this.transformToResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']").length, equalTo( 0 ));
+            assertThat( $$("link[href='" + this.transformResourceUriToAbsolute( this.constants.STYLE_SHEET_URI ) + "']").length, equalTo( 0 ));
+            assertThat( $$("script[src='" + this.transformResourceUriToAbsolute( this.constants.SCRIPT_URI ) + "']").length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -216,10 +216,18 @@ window.ResourceManagerTest = new Class( {
       this.testCaseChain.callChain();
    },
    
-   transformToResourceUriToAbsolute: function( resourceUri ){
-      var baseUri = new URI( document.location.href );
-      var tempUri = new URI( resourceUri );
-      return baseUri.get( 'scheme' ) + "://" + tempUri.toAbsolute( baseUri );
+   transformResourceUriToAbsolute: function(  resourceUri ){
+      var resourceUriFragment =  resourceUri ;
+      var currentDirectory = document.location.href;
+      currentDirectory = currentDirectory.lastIndexOf( "#" ) > 0 ? currentDirectory.substring( 0, currentDirectory.lastIndexOf( "#" )) : currentDirectory;
+      currentDirectory = currentDirectory.lastIndexOf( "?" ) > 0  ? currentDirectory.substring( 0, currentDirectory.lastIndexOf( "?" )) : currentDirectory;
+      currentDirectory = currentDirectory.substring( 0, currentDirectory.lastIndexOf( "/" ));
+      
+      while( resourceUriFragment.indexOf( "../" ) == 0 ){
+         resourceUriFragment = resourceUriFragment.substring( resourceUriFragment.indexOf( "../" ) + 3 );
+         currentDirectory = currentDirectory.substring( 0, currentDirectory.lastIndexOf( "/" ));
+      }
+      
+      return currentDirectory + "/" + resourceUriFragment;
    }.protect()
-
 });
