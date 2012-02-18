@@ -9,7 +9,7 @@
     <Resource key="DesktopConfigurator.desktopTitle" type="String">ProcessPuzzle</Resource>
     <Resource key="DesktopConfigurator.desktopSubTitle" type="String">Munkafolyamat- és tartalomkezelő üzleti platform</Resource>
     <Resource key="DesktopConfigurator.navigationBar" type="String">Navigációs sáv</Resource>
-    <Resource key="DesktopConfigurator.footerText" type="String">ProcessPuzzle-l támogatva - Minden jog fenntartva 2005-2012, IT Kódex Kft.</Resource>
+    <Resource key="DesktopConfigurator.footerText" type="String">Saját webhely 5 perc alatt! - ProcessPuzzle, minden jog fenntartva 2005-2012, IT Kódex Kft.</Resource>
     <Resource key="DesktopConfigurator.Panel.comunityTitle" type="String">Közösségi háló</Resource>
     <Resource key="DesktopConfigurator.Panel.consoleTitle" type="String">Konzol</Resource>
     <Resource key="DesktopConfigurator.Panel.contentBrowserTitle" type="String">Tartalom böngésző</Resource>
