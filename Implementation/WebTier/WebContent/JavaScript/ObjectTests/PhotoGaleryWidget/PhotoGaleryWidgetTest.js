@@ -130,6 +130,10 @@ window.PhotoGaleryWidgetTest = new Class( {
    
    onDestroyed : function(){
       this.testCaseChain.callChain();
-   }
+   },
+   
+   waitForImageLoading : function(){
+      //NOP
+   }.protect()
 
 });

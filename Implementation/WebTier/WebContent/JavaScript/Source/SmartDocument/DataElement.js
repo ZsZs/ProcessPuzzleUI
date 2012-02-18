@@ -26,6 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 //= require ../SmartDocument/DocumentElement.js
+//= require ../SmartDocument/DataElementBehaviour.js
 
 var DataElement = new Class({
    Extends: DocumentElement,
