@@ -4942,7 +4942,7 @@ function isBody(element){
 
 function getCompatElement(element){
 	var doc = element.getDocument();
-	return (!doc.compatMode || doc.compatMode == 'CSS1Compat') ? doc.html : doc.body;
+   return (( !doc.compatMode || doc.compatMode == 'CSS1Compat' ) && doc.html ) ? doc.html : doc.body;
 }
 
 })();

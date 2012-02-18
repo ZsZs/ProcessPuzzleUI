@@ -375,6 +375,8 @@
                }, this );
                typeOf( this.el[p] ) == 'function' && this.el[p]();
                delete this.el.uid;
+               if( this.preloader && this.preloader.removeEvents ) this.preloader.removeEvents();
+               if( this.preloader && this.preloader.destroy ) this.preloader.destroy();
             },
 
             /**
