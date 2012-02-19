@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+   <title>Test page for DiagramWidget.js</title>
+   <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=8"/>
+
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <script type="text/javascript">
+      var contextRootPrefix = "../../../";
+   </script>
+   
+   <!--[if IE]>
+      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
+   <![endif]-->  
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Draw2d/draw2d.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/moocanvas.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/wz_jsgraphics.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/package.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/Actor.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/Class.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/InheritanceConnection.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/InheritanceConnectionDecorator.js"></script>
+   <script type="text/javascript" src="../../Libraries/Draw2d/InheritancePort.js"></script>
+   <script type="text/javascript" src="../../Libraries/RemoteStyleSheet/RemoteStyleSheet.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/DiagramWidget/DiagramFigure.js"></script>
+   <script type="text/javascript" src="../../Source/DiagramWidget/DiagramFigureFactory.js"></script>
+   <script type="text/javascript" src="../../Source/DiagramWidget/ClassFigure.js"></script>
+   <script type="text/javascript" src="../../Source/DiagramWidget/DiagramWidget.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarWidget.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script>
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
+
+   <script type="text/javascript" src="../../ObjectTests/DiagramWidget/DiagramWidgetTest.js"></script>
+   <script type="text/javascript" src="../../ObjectTests/DiagramWidget/ClassFigureTest.js"></script>
+   
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+         //runTestMethod();
+      });
+
+      JsHamcrest.Integration.JsUnit();
+      JsMockito.Integration.JsUnit();
+
+      var testObject;
+      
+      function runTestMethod(){
+         testObject = new DiagramWidgetTest({ onReady : onReady });
+         testObject.beforeEachTest();
+         testObject.construct_instantiatesSlideShow();
+      }
+      
+      function onReady(){
+         testObject.afterEachTest();
+      }
+   </script>
+</head>
+
+<body>
+   <h1>DiagramWidget.js test page</H1>
+   <p>This page contains tests for DiagramWidget.js JavaScript class.</P>
+   <div id="DiagramContainer"></div>
+</body>
+</html>

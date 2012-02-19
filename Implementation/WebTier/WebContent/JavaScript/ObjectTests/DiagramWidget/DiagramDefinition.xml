@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:widgetDefinition
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <name>DiagramWidget</name>
+   <title>DiagramWidget.title</title>
+   <description>DiagramWidget.description</description>
+   <author>Zsolt Zsuffa</author>
+   <properties>
+   </properties>
+   
+   <canvas height="200" width="300" ></canvas>
+   
+   <figures>
+      <class name="DiagramFigure" id="DiagramFigure" positionX="50" positionY="50" />
+      <class name="ClassFigure" id="ClassFigure" positionX="50" positionY="100" />
+   </figures>
+</pp:widgetDefinition>
