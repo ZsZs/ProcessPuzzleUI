@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:widgetDefinition
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <name>DiagramWidget</name>
+   <title>DiagramWidget.title</title>
+   <description>DiagramWidget.description</description>
+   <author>Zsolt Zsuffa</author>
+   <properties>
+   </properties>
+   
+   <canvas height="200" width="300" ></canvas>
+   
+   <figures>
+      <class name="DiagramFigure" positionX="50" positionY="50">
+         <attributes>
+            <attribute name="canvas" type="draw2d.workflow" defaultValue="null"/>
+         </attributes>
+         
+         <operations>
+            <operation name="construct"></operation>
+            <operation name="destroy"></operation>
+            <operation name="draw"></operation>
+         </operations>
+      </class>
+      
+      <class name="ClassFigure" positionX="50" positionY="100">
+         <attributes>
+            <attribute name="attributes" type="ArrayList" />
+            <attribute name="operations" type="ArrayList" />
+         </attributes>
+         
+         <operations>
+            <operation name="drawAttributes"></operation>
+            <operation name="drawOperations"></operation>
+         </operations>
+      </class>
+   </figures>
+</pp:widgetDefinition>

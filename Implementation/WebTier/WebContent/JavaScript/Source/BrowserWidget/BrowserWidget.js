@@ -23,7 +23,7 @@
 
 var BrowserWidget = new Class( {
    Implements : [Events, Options],
-   Binds : ['finalizeConstruction', 'onDestroyed', 'webUIMessageHandler'],
+   Binds : ['destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -48,6 +48,7 @@ var BrowserWidget = new Class( {
       this.dataXml;
       this.definitionXml;
       this.description;
+      this.destructionChain = new Chain();
       this.elementFactory = null;
       this.i18Resource = null;
       this.lastHandledMessage = null;
@@ -90,15 +91,8 @@ var BrowserWidget = new Class( {
 
    destroy : function() {
       if( this.state == BrowserWidget.States.CONSTRUCTED ){
-         this.containerElement = document.id( this.containerElement );
-         this.containerElement.getElements( '*' ).each( function( childElement, index ) {
-            if( childElement.removeEvents )
-               childElement.removeEvents();
-            if( childElement.destroy )
-               childElement.destroy();
-         } );
-         this.state = BrowserWidget.States.INITIALIZED;
-         this.onDestroyed();
+         this.compileDestructionChain();
+         this.destructionChain.callChain();
       }
    },
 
@@ -112,11 +106,6 @@ var BrowserWidget = new Class( {
       return text;
    },
    
-   onDestroyed : function(){
-      this.logger.trace( this.options.componentName + ".onDestroyed() of '" + this.name + "'." );
-      this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
-   },
-
    removeChild : function( childElement, parentElement ) {
       var contextElement = parentElement == undefined ? this.containerElement : parentElement;
 
@@ -170,6 +159,10 @@ var BrowserWidget = new Class( {
       this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
    compileStateSpecification: function(){
       //Abstract method, should be overwrite!
    }.protect(),
@@ -205,14 +198,34 @@ var BrowserWidget = new Class( {
          this.locale = this.webUIController.getCurrentLocale();
       }
    }.protect(),
+   
+   destroyChildHtmlElements : function(){
+      this.containerElement = document.id( this.containerElement );
+      this.containerElement.getElements( '*' ).each( function( childElement, index ) {
+         if( childElement.removeEvents )
+            childElement.removeEvents();
+         if( childElement.destroy )
+            childElement.destroy();
+      });
+      
+      this.destructionChain.callChain();
+   }.protect(),
 
    finalizeConstruction : function(){
       this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
       this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
+      this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    }.protect(),
    
+   finalizeDestruction : function(){
+      this.logger.trace( this.options.componentName + ".onDestroyed() of '" + this.name + "'." );
+      this.state = BrowserWidget.States.INITIALIZED;
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+
    loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );

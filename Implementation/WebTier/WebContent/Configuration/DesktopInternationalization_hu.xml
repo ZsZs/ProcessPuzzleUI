@@ -27,6 +27,12 @@
     <Resource key="DesktopWindow.about.title" type="String">ProcessPuzzle névjegy</Resource>
     <Resource key="DesktopWindow.documentExplorer.title" type="String">Dokumentum intéző</Resource>
 
+    <Resource key="DiagramDocument.title" type="String">Document with embedded Diagram widget</Resource>
+    <Resource key="DiagramDocument.introduction" type="String">...</Resource>
+    <Resource key="DiagramDocument.exampleDescription" type="String">...</Resource>
+    <Resource key="DiagramDocument.footer" type="String">ProcessPuzzle - Desktop like, back-end agnostic browser interface.</Resource>
+    <Resource key="DiagramDocument.subTitle" type="String">Smart Document Example</Resource>
+    
     <Resource key="DocumentComments.introduction" type="String">Megjegyzések a kiválasztott dokumentumhoz.</Resource>
     <Resource key="DocumentComments.title" type="String">Megjegyzések</Resource>
     
@@ -78,6 +84,7 @@
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Okos dokumentum</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML tartalom</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Statikus dokumentum</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.diagram" type="String">Diagram</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dinamikus dokumentum</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Fotó album</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Videó album</Resource>
