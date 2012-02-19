@@ -28,6 +28,10 @@
          <menuItem menuItemId="YourMenu-VideoAlbum" caption="HierarchicalMenuWidget.documentExamples.videoAlbum" isDefault="false">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/VideoGaleryDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
          </menuItem>       
+         
+         <menuItem menuItemId="YourMenu-Diagram" caption="HierarchicalMenuWidget.documentExamples.diagram" isDefault="false">
+            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         </menuItem>
 		</menuItem>
 		
 		<menuItem menuItemId="Administration" caption="HierarchicalMenuWidget.administration">

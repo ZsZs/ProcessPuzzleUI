@@ -27,6 +27,12 @@
     <Resource key="DesktopWindow.about.title" type="String">About ProcessPuzzle</Resource>
     <Resource key="DesktopWindow.documentExplorer.title" type="String">Document Explorer</Resource>
 
+    <Resource key="DiagramDocument.title" type="String">Document with embedded Diagram widget</Resource>
+    <Resource key="DiagramDocument.introduction" type="String">...</Resource>
+    <Resource key="DiagramDocument.exampleDescription" type="String">...</Resource>
+    <Resource key="DiagramDocument.footer" type="String">ProcessPuzzle - Desktop like, back-end agnostic browser interface.</Resource>
+    <Resource key="DiagramDocument.subTitle" type="String">Smart Document Example</Resource>
+    
     <Resource key="DocumentComments.introduction" type="String">Comments of the active document.</Resource>
     <Resource key="DocumentComments.title" type="String">Comments</Resource>
     
@@ -75,10 +81,11 @@
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
     
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.diagram" type="String">Diagram</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Photo Album</Resource>
+    <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
 
     <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>

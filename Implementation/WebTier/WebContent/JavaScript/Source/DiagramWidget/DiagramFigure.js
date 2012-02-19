@@ -87,7 +87,7 @@ var DiagramFigure = new Class({
    }.protect(),
    
    addFigureToCanvas : function(){
-      this.canvas.addFigure( this.draw2dObject, this.positionX, this.positonY );
+      this.canvas.addFigure( this.draw2dObject, this.positionX, this.positionY );
       this.drawChain.callChain();
    }.protect(),
    

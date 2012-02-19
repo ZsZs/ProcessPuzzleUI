@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Diagram Widget Document</name>
+   <description>Demonstrates Diagram widget embeded into a Smart Document.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentHeader tag="div" id="photoGaleryDocumentHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1">DiagramDocument.title</element>
+         <element tag="h2">DiagramDocument.subTitle</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="smartDocumentBody">
+      <element tag="p">DiagramDocument.introduction</element>
+      <element tag="p">DiagramDocument.exampleDescription</element>
+      <element tag="div" id="DiagramContainer" elementStyle="slideshow">
+         <plugin>
+            <widget name="DiagramWidget">
+               <options>
+                  <option name="widgetContainerId" value="'DiagramContainer'"/>
+                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/DiagramDefinition.xml'"/>
+               </options>
+            </widget>
+         </plugin>
+      </element>
+   </documentBody>
+   
+</smartDocumentDefinition>
