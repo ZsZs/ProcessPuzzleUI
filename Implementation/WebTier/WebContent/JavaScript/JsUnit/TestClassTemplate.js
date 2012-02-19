@@ -1,4 +1,4 @@
-var TestClassTemplate = new Class( {
+window.TestClassTemplate = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onFailure', 'onSuccess'],
 
