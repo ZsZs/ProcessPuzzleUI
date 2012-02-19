@@ -59,7 +59,7 @@ var DiagramWidget = new Class({
       this.canvasHeight;
       this.canvasWidth;
       this.description;
-      this.figures = new LinkedHashMap();
+      this.figures = new ArrayList();
       this.name;
       this.title;
       this.paintArea;
@@ -107,8 +107,7 @@ var DiagramWidget = new Class({
    }.protect(),
    
    destroyFigures : function(){
-      this.figures.each( function( figureEntry, index ){
-         var figure = figureEntry.getValue();
+      this.figures.each( function( figure, index ){
          figure.destroy();
       }.bind( this ));
       
@@ -128,9 +127,8 @@ var DiagramWidget = new Class({
    }.protect(),
    
    drawFigures : function(){
-      this.figures.each( function( figureEntry, index ){
-         var figure = figureEntry.getValue();
-         figure.construct( this.canvas );
+      this.figures.each( function( figure, index ){
+         figure.draw( this.canvas );
       }.bind( this ));
       
       this.constructionChain.callChain();
@@ -142,7 +140,7 @@ var DiagramWidget = new Class({
          figuresElement.each( function( figureElement, index ){
             var figure = DiagramFigureFactory.create( figureElement, this.i18Resource );
             figure.unmarshall();
-            this.figures.put( figure.getId(), figure );
+            this.figures.add( figure );
          }, this );
       }
    }.protect(),

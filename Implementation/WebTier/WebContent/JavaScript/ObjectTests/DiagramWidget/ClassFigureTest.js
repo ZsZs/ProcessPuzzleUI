@@ -4,15 +4,18 @@ window.ClassFigureTest = new Class({
 
    options : {
       testMethods : [
-         { method : 'construct_callsInstantiateDraw2dObject', isAsynchron : false }]
+         { method : 'unmarshall_determinesAttributes', isAsynchron : false },
+         { method : 'draw_instantiatesDraw2dObject', isAsynchron : false },
+         { method : 'draw_drawsAttributes', isAsynchron : false }]
    },
 
    constants : {
+      ATTRIBUTE_SELECTOR : "/attributes/attribute",
       LANGUAGE : "hu",
       DIAGRAM_DATA_URI : "../DiagramWidget/DiagramData.xml",
       DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramDefinition.xml",
       DIAGRAM_CONTAINER_ID : "DiagramContainer",
-      FIGURE_SELECTOR : "pp:widgetDefinition/figures/class[0]",
+      FIGURE_SELECTOR : "//pp:widgetDefinition/figures/class[@name='ClassFigure']",
       PAINT_AREA_ID : "paintarea",
       WEBUI_CONFIGURATION_URI : "../DiagramWidget/WebUIConfiguration.xml",
    },
@@ -33,6 +36,8 @@ window.ClassFigureTest = new Class({
       this.webUIConfiguration;
       this.webUIController;
       this.webUILogger;
+      
+      this.constants.ATTRIBUTE_SELECTOR = this.constants.FIGURE_SELECTOR + this.constants.ATTRIBUTE_SELECTOR;
    },   
 
    beforeEachTest : function(){
@@ -59,11 +64,32 @@ window.ClassFigureTest = new Class({
       this.elementFactory = null;
    },
    
-   construct_callsInstantiateDraw2dObject : function(){
+   unmarshall_determinesAttributes : function(){
       this.figure.unmarshall();
-      this.figure.construct( this.canvas );
+
+      assertThat( this.figure.getAttributes().size(), equalTo( this.diagramDefinition.selectNodes( this.constants.ATTRIBUTE_SELECTOR ).length ));
+      this.figure.getAttributes().each( function( attribute, index ){
+         var selectorIndex = index +1;
+         assertThat( attribute.getName(), equalTo( this.diagramDefinition.selectNodeText( this.constants.ATTRIBUTE_SELECTOR + "[" + selectorIndex + "]/@name" )));
+         assertThat( attribute.getType(), equalTo( this.diagramDefinition.selectNodeText( this.constants.ATTRIBUTE_SELECTOR + "[" + selectorIndex + "]/@type" )));
+         assertThat( attribute.getDefaultValue(), equalTo( this.diagramDefinition.selectNodeText( this.constants.ATTRIBUTE_SELECTOR + "[" + selectorIndex + "]/@defaultValue" )));
+      }.bind( this ));
+   },
+   
+   draw_instantiatesDraw2dObject : function(){
+      this.figure.unmarshall();
+      this.figure.draw( this.canvas );
       
       assertThat( this.figure.getState(), equalTo( DiagramFigure.States.CONSTRUCTED ));
+   },
+      
+   draw_drawsAttributes : function(){
+      this.figure.drawAttributes = spy( this.figure.drawAttributes );
+         
+      this.figure.unmarshall();
+      this.figure.draw( this.canvas );
+      
+      verify( this.figure.drawAttributes );
    },
       
    //Event handling methods

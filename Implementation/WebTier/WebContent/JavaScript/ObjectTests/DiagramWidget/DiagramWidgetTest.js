@@ -79,10 +79,8 @@ window.DiagramWidgetTest = new Class( {
       this.diagram.unmarshall();
       
       assertThat( this.diagram.getFigures().size(), equalTo( this.diagramDefinition.selectNodes( this.constants.FIGURES_SELECTOR ).length ));
-      this.diagram.getFigures().each( function( figureEntry, index ){
-         var figure = figureEntry.getValue();
+      this.diagram.getFigures().each( function( figure, index ){
          var selectorIndex = index +1;
-         assertThat( figure.getId(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@id" )));
          assertThat( figure.getName(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@name" )));
          assertThat( figure.getPositionX(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@positionX" )));
          assertThat( figure.getPositionY(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@positionY" )));
@@ -107,9 +105,9 @@ window.DiagramWidgetTest = new Class( {
       this.testCaseChain.chain(
          function(){ this.diagram.unmarshall(); this.diagram.construct(); }.bind( this ),
          function(){
-            this.diagram.getFigures().each( function( figureEntry, index ){
-               var figure = figureEntry.getValue();
+            this.diagram.getFigures().each( function( figure, index ){
                assertThat( figure.getState(), equalTo( DiagramFigure.States.CONSTRUCTED ));
+               assertThat( figure.getId(), equalTo( figure.draw2dObject.id ));
             }.bind( this ));
             this.testMethodReady();
          }.bind( this )

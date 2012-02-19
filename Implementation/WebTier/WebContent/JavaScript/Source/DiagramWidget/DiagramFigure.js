@@ -30,11 +30,10 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DiagramFigure = new Class({
    Implements : [Events, Options],
-   Binds: [],
+   Binds: ['addFigureToCanvas', 'finalizeDraw'],
    
    options : {
       componentName : "DiagramFigure",
-      idSelector : "@id",
       nameSelector : "@name",
       positionXSelector : "@positionX",
       positionYSelector : "@positionY"
@@ -47,7 +46,7 @@ var DiagramFigure = new Class({
       this.canvas;
       this.definitionXml = definitionXmlElement;
       this.draw2dObject;
-      this.id;
+      this.drawChain = new Chain();
       this.internationalization = internationalization;
       this.name;
       this.positionX;
@@ -56,18 +55,18 @@ var DiagramFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function( canvas ){
-      assertThat( canvas, not( nil() ));
-      this.canvas = canvas;
-      this.draw();
-      this.state = DiagramFigure.States.CONSTRUCTED;
-   },
-   
    destroy: function(){
       if( this.state == DiagramFigure.States.CONSTRUCTED ){
          this.removeFigureFromCanvas();
          this.state = DiagramFigure.States.INITIALIZED;
       }
+   },
+   
+   draw: function( canvas ){
+      assertThat( canvas, not( nil() ));
+      this.canvas = canvas;
+      this.compileDrawChain();
+      this.drawChain.callChain();
    },
    
    unmarshall: function(){
@@ -76,18 +75,26 @@ var DiagramFigure = new Class({
    },
    
    //Properties
-   getId: function() { return this.id; },
+   getId: function() { return this.draw2dObject.id; },
    getName: function() { return this.name; },
    getPositionX: function() { return this.positionX; },
    getPositionY: function() { return this.positionY; },
    getState: function() { return this.state; },
    
    //Protected, private helper methods
-   draw : function(){
-      this.instantiateDraw2dObject();
-      this.draw2dObject.addAttribute( this.id, "String" );
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+   
+   addFigureToCanvas : function(){
       this.canvas.addFigure( this.draw2dObject, this.positionX, this.positonY );
-      
+      this.drawChain.callChain();
+   }.protect(),
+   
+   finalizeDraw : function(){
+      this.drawChain.clearChain();
+      this.state = DiagramFigure.States.CONSTRUCTED;
+      this.fireEvent( 'drawReady', this );
    }.protect(),
    
    removeFigureFromCanvas : function(){
@@ -95,7 +102,6 @@ var DiagramFigure = new Class({
    }.protect(),
    
    unmarshallProperties: function(){
-      this.id = XmlResource.selectNodeText( this.options.idSelector, this.definitionXml );
       this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
       this.positionX = XmlResource.selectNodeText( this.options.positionXSelector, this.definitionXml );
       this.positionY = XmlResource.selectNodeText( this.options.positionYSelector, this.definitionXml );

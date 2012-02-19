@@ -32,35 +32,65 @@ You should have received a copy of the GNU General Public License along with thi
 var ClassFigure = new Class({
    Extends : DiagramFigure,
    Implements : [Events, Options],
-   Binds: [],
+   Binds: ['instantiateDraw2dObject', 'drawAttributes'],
    
    options : {
+      attributesSelector : "attributes/attribute",
       componentName : "ClassFigure"
    },
 
    //Constructor
    initialize: function( definition, internationalization, options ){
       this.parent( definition, internationalization, options );
+      
+      this.attributes = new ArrayList();
    },
    
    //Public accessor and mutator methods
-   construct: function( canvas ){
-      this.parent( canvas );
-   },
-   
    destroy: function(){
       this.parent();
    },
    
+   draw: function( canvas ){
+      this.parent( canvas );
+   },
+   
    unmarshall: function(){
+      this.unmarshallAttributes();
       this.parent();
    },
    
    //Properties
+   getAttributes : function() { return this.attributes; },
    
    //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+
+   drawAttributes : function(){
+      this.attributes.each( function( attribute, index ){
+         this.draw2dObject.addAttribute( attribute.getName(), attribute.getType(), attribute.getDefaultValue() );
+      }.bind( this ));
+      
+      this.drawChain.callChain();
+   }.protect(),
+   
    instantiateDraw2dObject : function(){
       this.draw2dObject = new draw2d.shape.uml.Class( this.name );
-   }.protect()
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallAttributes: function(){
+      var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
+      if( attributesElement ){
+         attributesElement.each( function( attributeElement, index ){
+            var attribute = new AttributeFigure( attributeElement, this.internationalization );
+            attribute.unmarshall();
+            this.attributes.add( attribute );
+         }, this );
+      }
+   }.protect(),
+   
 });
 
