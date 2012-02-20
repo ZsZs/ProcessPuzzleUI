@@ -1,14 +1,14 @@
 /*
 Name: 
-    - ClassFigure
+    - ConnectionFigure
 
 Description: 
-    - Represents a figure of UML class. 
+    - Represents a connection between two figures. 
 
 Requires:
 
 Provides:
-    - ClassFigure
+    - ConnectionFigure
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,21 +29,23 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 //= require ../DiagramWidget/DiagramFigure.js
 
-var ClassFigure = new Class({
+var ConnectionFigure = new Class({
    Extends : DiagramFigure,
    Implements : [Events, Options],
-   Binds: ['instantiateDraw2dObject', 'drawAttributes'],
+   Binds: ['instantiateDraw2dObject', 'linkSourceAndTarget'],
    
    options : {
-      attributesSelector : "attributes/attribute",
-      componentName : "ClassFigure"
+      componentName : "ConnectionFigure",
+      sourceSelector : "@source",
+      targetSelector : "@target"
    },
 
    //Constructor
    initialize: function( definition, internationalization, options ){
       this.parent( definition, internationalization, options );
       
-      this.attributes = new ArrayList();
+      this.sourceFigureName;
+      this.targetFigureName;
    },
    
    //Public accessor and mutator methods
@@ -56,42 +58,35 @@ var ClassFigure = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallAttributes();
       this.parent();
    },
    
    //Properties
-   getAttributes : function() { return this.attributes; },
+   getSourceFigureName : function() { return this.sourceFigureName; },
+   getTargetFigureName : function() { return this.targetFigureName; },
    
    //Protected, private helper methods
    compileDrawChain : function(){
-      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.addFigureToCanvas, this.finalizeDraw );
+      this.drawChain.chain( this.instantiateDraw2dObject, this.linkSourceAndTarget, this.addFigureToCanvas, this.finalizeDraw );
    }.protect(),
 
-   drawAttributes : function(){
-      this.attributes.each( function( attribute, index ){
-         this.draw2dObject.addAttribute( attribute.getName(), attribute.getType(), attribute.getDefaultValue() );
-      }.bind( this ));
-      
-      this.drawChain.callChain();
-   }.protect(),
-   
    instantiateDraw2dObject : function(){
-      this.draw2dObject = new draw2d.shape.uml.Class( this.name );
+      this.draw2dObject = new draw2d.Connection( this.name );
       this.drawChain.callChain();
    }.protect(),
    
-   unmarshallAttributes: function(){
-      var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
-      if( attributesElement ){
-         if( !attributesElement.each ) attributesElement = Array.from( attributesElement );
-         attributesElement.each( function( attributeElement, index ){
-            var attribute = new AttributeFigure( attributeElement, this.internationalization );
-            attribute.unmarshall();
-            this.attributes.add( attribute );
-         }, this );
-      }
-   }.protect()
+   linkSourceAndTarget : function(){
+      var sourceFigure = this.lookUpDiagramFigure( this.sourceFigureName );
+      var targetFigure = this.lookUpDiagramFigure( this.targetFigureName );
+      this.draw2dObject.setSource( sourceFigure.getDraw2dObject().portTop );
+      this.draw2dObject.setTarget( targetFigure.getDraw2dObject().portTop );
+      this.drawChain.callChain();
+   }.protect(),
    
+   unmarshallProperties: function(){
+      this.sourceFigureName = XmlResource.selectNodeText( this.options.sourceSelector, this.definitionXml );
+      this.targetFigureName = XmlResource.selectNodeText( this.options.targetSelector, this.definitionXml );
+      this.parent();
+   }.protect()
 });
 

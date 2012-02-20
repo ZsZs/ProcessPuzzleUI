@@ -17,7 +17,7 @@ window.DiagramWidgetTest = new Class( {
       DIAGRAM_DATA_URI : "../DiagramWidget/DiagramData.xml",
       DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramDefinition.xml",
       DIAGRAM_CONTAINER_ID : "DiagramContainer",
-      FIGURES_SELECTOR : "pp:widgetDefinition/figures/class",
+      FIGURES_SELECTOR : "//pp:widgetDefinition/figures/annotation | //pp:widgetDefinition/figures/class | //pp:widgetDefinition/figures/inheritanceConnection",
       WEBUI_CONFIGURATION_URI : "../DiagramWidget/WebUIConfiguration.xml",
    },
    
@@ -79,11 +79,12 @@ window.DiagramWidgetTest = new Class( {
       this.diagram.unmarshall();
       
       assertThat( this.diagram.getFigures().size(), equalTo( this.diagramDefinition.selectNodes( this.constants.FIGURES_SELECTOR ).length ));
+      var figures = this.diagramDefinition.selectNodes( this.constants.FIGURES_SELECTOR );
       this.diagram.getFigures().each( function( figure, index ){
-         var selectorIndex = index +1;
-         assertThat( figure.getName(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@name" )));
-         assertThat( figure.getPositionX(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@positionX" )));
-         assertThat( figure.getPositionY(), equalTo( this.diagramDefinition.selectNodeText( "pp:widgetDefinition/figures/class[" + selectorIndex + "]/@positionY" )));
+         var figureElement = figures[index];
+         assertThat( figure.getName(), equalTo(  XmlResource.selectNodeText( "@name", figureElement )));
+         assertThat( figure.getPositionX(), equalTo( XmlResource.selectNodeText( "@positionX", figureElement )));
+         assertThat( figure.getPositionY(), equalTo( XmlResource.selectNodeText( "@positionY", figureElement )));
       }.bind( this ));
    },
    

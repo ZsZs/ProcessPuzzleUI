@@ -1,14 +1,14 @@
 /*
 Name: 
-    - AttributeFigure
+    - InheritanceConnectionFigure
 
 Description: 
-    - Represents an attribute of ClassFigure. 
+    - Represents a inheritance connection between two figures. 
 
 Requires:
 
 Provides:
-    - AttributeFigure
+    - InheritanceConnectionFigure
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,51 +29,39 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 //= require ../DiagramWidget/DiagramFigure.js
 
-var AttributeFigure = new Class({
+var InheritanceConnectionFigure = new Class({
+   Extends : ConnectionFigure,
    Implements : [Events, Options],
-   Binds: [],
+   Binds: ['instantiateDraw2dObject'],
    
    options : {
-      componentName : "AttributeFigure",
-      defaultValueSelector : "@defaultValue",
-      nameSelector : "@name",
-      typeSelector : "@type"
+      componentName : "InheritanceConnectionFigure"
    },
 
    //Constructor
    initialize: function( definition, internationalization, options ){
-      this.setOptions( options );
-      
-      this.defaultValue;
-      this.definitionXml = definition;
-      this.internationalization = internationalization;
-      this.name;
-      this.type;
+      this.parent( definition, internationalization, options );
    },
    
    //Public accessor and mutator methods
-   construct: function( diagram ){
-      this.parent( diagram );
-   },
-   
    destroy: function(){
       this.parent();
    },
    
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
    unmarshall: function(){
-      this.unmarshallProperties();
+      this.parent();
    },
    
    //Properties
-   getDefaultValue : function() { return this.defaultValue; },
-   getName : function() { return this.name; },
-   getType : function() { return this.type; },
    
    //Protected, private helper methods
-   unmarshallProperties : function(){
-      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
-      this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
-      this.defaultValue = XmlResource.selectNodeText( this.options.defaultValueSelector, this.definitionXml );
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.shape.uml.InheritanceConnection( this.name );
+      this.drawChain.callChain();
    }.protect()
 });
 

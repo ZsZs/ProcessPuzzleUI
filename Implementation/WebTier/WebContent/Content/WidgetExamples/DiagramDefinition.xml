@@ -13,7 +13,11 @@
    <canvas height="200" width="300" ></canvas>
    
    <figures>
-      <class name="DiagramFigure" positionX="50" positionY="0">
+      <annotation name="DiagramAnnotation" height="60" width="250" positionX="0" positionY="0">
+         <text>DiagramWidget.annotation.text</text>
+      </annotation>
+   
+      <class name="DiagramFigure" positionX="50" positionY="100">
          <attributes>
             <attribute name="canvas" type="draw2d.workflow" defaultValue="null"/>
          </attributes>
@@ -25,7 +29,7 @@
          </operations>
       </class>
       
-      <class name="ClassFigure" positionX="50" positionY="100">
+      <class name="ClassFigure" positionX="75" positionY="200">
          <attributes>
             <attribute name="attributes" type="ArrayList" />
             <attribute name="operations" type="ArrayList" />
@@ -36,5 +40,7 @@
             <operation name="drawOperations"></operation>
          </operations>
       </class>
+      
+      <inheritanceConnection name="ClassIsSpecializedFigure" source="ClassFigure" target="DiagramFigure" />
    </figures>
 </pp:widgetDefinition>

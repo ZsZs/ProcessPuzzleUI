@@ -7,10 +7,12 @@
   <Language name="en">
     <Resource key="DiagramWidget.description" type="String">Yeah, this is a very simple diagram.</Resource>
     <Resource key="DiagramWidget.title" type="String">Sample UML Diagram</Resource>
+    <Resource key="DiagramWidget.annotation.text" type="String">This diagram demonstrates the functionality of Digram Widget.</Resource>
   </Language>
   
   <Language name="hu">
     <Resource key="DiagramWidget.title" type="String">Sample UML Diagram</Resource>
-    <Resource key="DiagramWidget.title" type="String">Nos, ez egy nagyon egyszerű diagram.</Resource>
+    <Resource key="DiagramWidget.description" type="String">Nos, ez egy nagyon egyszerű diagram.</Resource>
+    <Resource key="DiagramWidget.annotation.text" type="String">Ez a diagram Diagram felhasználói felület komponens funkcionalitását demonstrálja.</Resource>
   </Language>
 </pp:Resources>

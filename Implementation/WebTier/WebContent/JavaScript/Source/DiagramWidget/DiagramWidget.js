@@ -42,7 +42,7 @@ var DiagramWidget = new Class({
       canvasWidthSelector : "//pp:widgetDefinition/canvas/@width",
       componentName : "DiagramWidget",
       descriptionSelector : "//pp:widgetDefinition/description",
-      figuresSelector : "//pp:widgetDefinition/figures/class",
+      figuresSelector : "//pp:widgetDefinition/figures/annotation | //pp:widgetDefinition/figures/class | //pp:widgetDefinition/figures/inheritanceConnection",
       nameSelector : "//pp:widgetDefinition/name",
       paintAreaId : "paintarea",
       titleSelector : "//pp:widgetDefinition/title",
@@ -128,7 +128,7 @@ var DiagramWidget = new Class({
    
    drawFigures : function(){
       this.figures.each( function( figure, index ){
-         figure.draw( this.canvas );
+         figure.draw( this );
       }.bind( this ));
       
       this.constructionChain.callChain();
