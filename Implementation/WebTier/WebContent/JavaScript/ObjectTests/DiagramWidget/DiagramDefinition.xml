@@ -40,5 +40,7 @@
             <operation name="drawOperations"></operation>
          </operations>
       </class>
+      
+      <inheritanceConnection name="ClassIsSpecializedFigure" source="ClassFigure" target="DiagramFigure" />
    </figures>
 </pp:widgetDefinition>

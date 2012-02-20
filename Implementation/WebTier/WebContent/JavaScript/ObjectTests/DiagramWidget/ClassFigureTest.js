@@ -43,7 +43,7 @@ window.ClassFigureTest = new Class({
    
    draw_instantiatesDraw2dObject : function(){
       this.figure.unmarshall();
-      this.figure.draw( this.canvas );
+      this.figure.draw( this.diagram );
       
       assertThat( this.figure.getState(), equalTo( DiagramFigure.States.CONSTRUCTED ));
    },
@@ -52,7 +52,7 @@ window.ClassFigureTest = new Class({
       this.figure.drawAttributes = spy( this.figure.drawAttributes );
          
       this.figure.unmarshall();
-      this.figure.draw( this.canvas );
+      this.figure.draw( this.diagram );
       
       verify( this.figure.drawAttributes );
    },

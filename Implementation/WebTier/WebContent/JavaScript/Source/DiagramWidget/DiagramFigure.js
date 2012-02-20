@@ -45,6 +45,7 @@ var DiagramFigure = new Class({
       
       this.canvas;
       this.definitionXml = definitionXmlElement;
+      this.diagram;
       this.draw2dObject;
       this.drawChain = new Chain();
       this.internationalization = internationalization;
@@ -62,9 +63,10 @@ var DiagramFigure = new Class({
       }
    },
    
-   draw: function( canvas ){
-      assertThat( canvas, not( nil() ));
-      this.canvas = canvas;
+   draw: function( diagram ){
+      assertThat( diagram, not( nil() ));
+      this.diagram = diagram;
+      this.canvas = diagram.getCanvas();
       this.compileDrawChain();
       this.drawChain.callChain();
    },
@@ -75,6 +77,7 @@ var DiagramFigure = new Class({
    },
    
    //Properties
+   getDraw2dObject : function() { return this.draw2dObject; },
    getId: function() { return this.draw2dObject.id; },
    getName: function() { return this.name; },
    getPositionX: function() { return this.positionX; },
@@ -97,6 +100,16 @@ var DiagramFigure = new Class({
       this.fireEvent( 'drawReady', this );
    }.protect(),
    
+   lookUpDiagramFigure : function( figureName ){
+      var searchedFigure = null;
+      this.diagram.getFigures().each( function( figure, index ){
+         if( figure.getName() == figureName ) 
+            searchedFigure = figure;
+      }.bind( this ));
+      
+      return searchedFigure;
+   }.protect(),
+   
    removeFigureFromCanvas : function(){
       this.canvas.removeFigure( this.draw2dObject );
    }.protect(),
@@ -105,7 +118,7 @@ var DiagramFigure = new Class({
       this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
       this.positionX = XmlResource.selectNodeText( this.options.positionXSelector, this.definitionXml );
       this.positionY = XmlResource.selectNodeText( this.options.positionYSelector, this.definitionXml );
-   }.protect(),
+   }.protect()
 });
 
 DiagramFigure.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

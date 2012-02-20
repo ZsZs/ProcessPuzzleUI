@@ -24,6 +24,7 @@ window.DiagramFigureTest = new Class({
       this.figure;
       this.figureDefinition;
       this.componentStateManager;
+      this.diagram;
       this.diagramContainerElement;
       this.diagramData;
       this.diagramDefinition;
@@ -45,14 +46,18 @@ window.DiagramFigureTest = new Class({
       this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
       this.figureDefinition = this.diagramDefinition.selectNode( this.constants.FIGURE_SELECTOR );
 
+      this.instantiateDiagram();
       this.instantiateFigure();
+      this.diagram.getFigures().add( this.figure );
       
       this.diagramContainerElement = $( this.constants.DIAGRAM_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.diagramContainerElement, this.diagramInternationalization );
       this.drawCanvas();
+      this.diagram.canvas = this.canvas;
    },
    
    afterEachTest : function (){
+      this.diagram.destroy();
       this.figure.destroy();
       this.destroyCanvas();
       this.diagramData.release();
@@ -81,6 +86,16 @@ window.DiagramFigureTest = new Class({
          });
       
       this.canvas = new draw2d.Workflow( this.constants.PAINT_AREA_ID );
+   }.protect(),
+   
+   instantiateDiagram : function(){
+      this.diagram = new DiagramWidget( {
+         onConstructed : this.onConstructed,
+         onDestroyed : this.onDestroyed,
+         widgetContainerId : this.constants.DIAGRAM_CONTAINER_ID, 
+         widgetDefinitionURI : this.constants.DIAGRAM_DEFINITION_URI, 
+         widgetDataURI : this.constants.DIAGRAM_DATA_URI 
+      }, this.diagramInternationalization );
    }.protect()
    
 });

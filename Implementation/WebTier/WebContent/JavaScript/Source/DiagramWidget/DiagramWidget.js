@@ -128,7 +128,7 @@ var DiagramWidget = new Class({
    
    drawFigures : function(){
       this.figures.each( function( figure, index ){
-         figure.draw( this.canvas );
+         figure.draw( this );
       }.bind( this ));
       
       this.constructionChain.callChain();

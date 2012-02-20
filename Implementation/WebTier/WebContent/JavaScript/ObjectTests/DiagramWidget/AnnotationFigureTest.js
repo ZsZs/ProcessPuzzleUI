@@ -36,7 +36,7 @@ window.AnnotationFigureTest = new Class({
    
    draw_instantiatesDraw2dObject : function(){
       this.figure.unmarshall();
-      this.figure.draw( this.canvas );
+      this.figure.draw( this.diagram );
       
       assertThat( this.figure.getState(), equalTo( DiagramFigure.States.CONSTRUCTED ));
    },

@@ -51,8 +51,8 @@ var ClassFigure = new Class({
       this.parent();
    },
    
-   draw: function( canvas ){
-      this.parent( canvas );
+   draw: function( diagram ){
+      this.parent( diagram );
    },
    
    unmarshall: function(){

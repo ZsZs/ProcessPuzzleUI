@@ -38,6 +38,8 @@ var DiagramFigureFactory = new Class({
    create: function( definitionXmlElement, internationalization, options ){
       var newFigure;
       switch( definitionXmlElement.tagName.toUpperCase() ){
+      case "ANNOTATION": 
+         newFigure = new AnnotationFigure( definitionXmlElement, internationalization, options ); break;
       case "CLASS": 
          newFigure = new ClassFigure( definitionXmlElement, internationalization, options ); break;
       case "INHERITANCECONNECTION":
