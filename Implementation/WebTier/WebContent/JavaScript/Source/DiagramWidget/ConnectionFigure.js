@@ -86,6 +86,7 @@ var ConnectionFigure = new Class({
    unmarshallProperties: function(){
       this.sourceFigureName = XmlResource.selectNodeText( this.options.sourceSelector, this.definitionXml );
       this.targetFigureName = XmlResource.selectNodeText( this.options.targetSelector, this.definitionXml );
+      this.parent();
    }.protect()
 });
 
