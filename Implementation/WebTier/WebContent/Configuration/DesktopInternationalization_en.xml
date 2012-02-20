@@ -33,6 +33,10 @@
     <Resource key="DiagramDocument.footer" type="String">ProcessPuzzle - Desktop like, back-end agnostic browser interface.</Resource>
     <Resource key="DiagramDocument.subTitle" type="String">Smart Document Example</Resource>
     
+    <Resource key="DiagramWidget.description" type="String">Yeah, this is a very simple diagram.</Resource>
+    <Resource key="DiagramWidget.title" type="String">Sample UML Diagram</Resource>
+    <Resource key="DiagramWidget.annotation.text" type="String">This diagram demonstrates the functionality of Digram Widget.</Resource>
+    
     <Resource key="DocumentComments.introduction" type="String">Comments of the active document.</Resource>
     <Resource key="DocumentComments.title" type="String">Comments</Resource>
     
