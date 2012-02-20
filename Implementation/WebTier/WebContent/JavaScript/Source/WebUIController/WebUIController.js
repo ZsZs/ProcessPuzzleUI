@@ -150,6 +150,14 @@ var WebUIController = new Class({
       this.messageBus.notifySubscribers( message );
    },
    
+   loadHtmlDocument : function( documentUri ){
+      this.loadDocument( documentUri, AbstractDocument.Types.HTML );
+   },
+   
+   loadSmartDocument : function( documentUri ){
+      this.loadDocument( documentUri, AbstractDocument.Types.SMART );
+   },
+   
    onDesktopConstructed : function(){
       this.logger.debug( this.options.componentName + ", constructing desktop is finished." );
       this.configurationChain.callChain();
@@ -186,9 +194,7 @@ var WebUIController = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( !this.isConfigured ) throw new UnconfiguredWebUIControllerException({ source : 'WebUIController.webUIMessageHandler()' });
       
-      if( instanceOf( webUIMessage, MenuSelectedMessage ) && webUIMessage.getActionType() == 'loadDocument' ){
-         this.loadDocument( { documentURI : webUIMessage.getDocumentURI() } );
-      }else if( instanceOf( webUIMessage, LanguageChangedMessage ) && webUIMessage.getNewLocale() != this.getCurrentLocale() ){
+      if( instanceOf( webUIMessage, LanguageChangedMessage ) && webUIMessage.getNewLocale() != this.getCurrentLocale() ){
          this.changeLanguage( webUIMessage.getNewLocale() );
       }else if( instanceOf( webUIMessage, SkinChangedMessage ) && webUIMessage.getNewSkin() != this.getCurrentSkin() ){
          this.changeSkin( webUIMessage.getNewSkin() );
