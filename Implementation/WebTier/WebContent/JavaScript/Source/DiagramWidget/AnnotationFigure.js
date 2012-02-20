@@ -1,14 +1,14 @@
 /*
 Name: 
-    - ClassFigure
+    - AnnotationFigure
 
 Description: 
-    - Represents a figure of UML class. 
+    - Represents an annotation figure. 
 
 Requires:
 
 Provides:
-    - ClassFigure
+    - AnnotationFigure
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,21 +29,25 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 //= require ../DiagramWidget/DiagramFigure.js
 
-var ClassFigure = new Class({
+var AnnotationFigure = new Class({
    Extends : DiagramFigure,
    Implements : [Events, Options],
-   Binds: ['instantiateDraw2dObject', 'drawAttributes'],
+   Binds: ['instantiateDraw2dObject', 'drawAttributes', 'setDimension'],
    
    options : {
-      attributesSelector : "attributes/attribute",
-      componentName : "ClassFigure"
+      componentName : "AnnotationFigure",
+      textSelector : "text",
+      heightSelector : "@height",
+      widthSelector : "@width"
    },
 
    //Constructor
    initialize: function( definition, internationalization, options ){
       this.parent( definition, internationalization, options );
       
-      this.attributes = new ArrayList();
+      this.height;
+      this.text;
+      this.width;
    },
    
    //Public accessor and mutator methods
@@ -56,40 +60,36 @@ var ClassFigure = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallAttributes();
       this.parent();
    },
    
    //Properties
-   getAttributes : function() { return this.attributes; },
+   getHeight : function() { return this.height; },
+   getText : function() { return this.text; },
+   getWidth : function() { return this.width; },
    
    //Protected, private helper methods
    compileDrawChain : function(){
-      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.addFigureToCanvas, this.finalizeDraw );
+      this.drawChain.chain( this.instantiateDraw2dObject, this.setDimension, this.addFigureToCanvas, this.finalizeDraw );
    }.protect(),
 
-   drawAttributes : function(){
-      this.attributes.each( function( attribute, index ){
-         this.draw2dObject.addAttribute( attribute.getName(), attribute.getType(), attribute.getDefaultValue() );
-      }.bind( this ));
-      
-      this.drawChain.callChain();
-   }.protect(),
-   
    instantiateDraw2dObject : function(){
-      this.draw2dObject = new draw2d.shape.uml.Class( this.name );
+      this.draw2dObject = new draw2d.Annotation( this.text );
       this.drawChain.callChain();
    }.protect(),
    
-   unmarshallAttributes: function(){
-      var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
-      if( attributesElement ){
-         attributesElement.each( function( attributeElement, index ){
-            var attribute = new AttributeFigure( attributeElement, this.internationalization );
-            attribute.unmarshall();
-            this.attributes.add( attribute );
-         }, this );
-      }
+   setDimension : function(){
+      this.draw2dObject.setDimension( this.width, this.height );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.text = XmlResource.selectNodeText( this.options.textSelector, this.definitionXml );
+      if( this.text ) this.text = this.internationalization.getText( this.text );
+      this.height = parseInt( XmlResource.selectNodeText( this.options.heightSelector, this.definitionXml ));
+      this.width = parseInt( XmlResource.selectNodeText( this.options.widthSelector, this.definitionXml ));
+      
+      this.parent();
    }.protect()
    
 });

@@ -12,8 +12,7 @@ window.ClassFigureTest = new Class({
 
    constants : {
       ATTRIBUTE_SELECTOR : "/attributes/attribute",
-      FIGURE_SELECTOR : "//pp:widgetDefinition/figures/class[@name='ClassFigure']",
-      PAINT_AREA_ID : "paintarea",
+      FIGURE_SELECTOR : "//pp:widgetDefinition/figures/class[@name='ClassFigure']"
    },
    
    initialize : function( options ) {
@@ -68,19 +67,6 @@ window.ClassFigureTest = new Class({
    },
    
    //Protected, private helper methods
-   destroyCanvas : function(){
-      this.paintArea.destroy();
-   }.protect(),
-   
-   drawCanvas : function(){
-      this.paintArea = this.elementFactory.create( 'div', null, this.diagramContainerElement, WidgetElementFactory.Positions.LastChild, { 
-            id : this.constants.PAINT_AREA_ID,
-            styles : { height : this.canvasHeight, width : this.canvasWidth }
-         });
-      
-      this.canvas = new draw2d.Workflow( this.constants.PAINT_AREA_ID );
-   }.protect(),
-   
    instantiateFigure : function(){
       this.figure = new ClassFigure( this.figureDefinition, this.diagramInternationalization );
    }.protect()
