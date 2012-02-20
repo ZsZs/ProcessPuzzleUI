@@ -84,6 +84,7 @@ var ClassFigure = new Class({
    unmarshallAttributes: function(){
       var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
       if( attributesElement ){
+         if( !attributesElement.each ) attributesElement = Array.from( attributesElement );
          attributesElement.each( function( attributeElement, index ){
             var attribute = new AttributeFigure( attributeElement, this.internationalization );
             attribute.unmarshall();
