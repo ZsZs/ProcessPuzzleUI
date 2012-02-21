@@ -149,12 +149,14 @@
    <script type="text/javascript" src="JavaScript/Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
    <script type="text/javascript" >
+      var webUIController;
+   
       window.addEvent('domready', function() {
-      	JsHamcrest.Integration.ProcessPuzzle();
-      	var controller = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml" });
-      	controller.configure();
-  	   });
-    </script>
+         JsHamcrest.Integration.ProcessPuzzle();
+         webUIController = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml" });
+         webUIController.configure();
+      });
+   </script>
   	
 </head>
 
