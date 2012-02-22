@@ -92,6 +92,12 @@ p {
 
 /* Lists */
 
+ol {
+   list-style: outside;
+   margin: 0 0 9px 16px;
+   list-style-type: decimal;
+}
+
 ul {
 	list-style: outside;
 	margin: 0 0 9px 16px;

@@ -182,6 +182,7 @@ body {
 
 .panelWrapper.collapsed .panel-header {
 	border-bottom: 0;	
+	overflow : hidden;
 }
 
 .panelAlt {
@@ -204,7 +205,7 @@ body {
 	position: relative;	
 	background: #f1f1f1 url(../Images/PanelHeaderBackground.jpg) repeat-x;
 	height: 30px;
-	overflow: visible;
+	overflow: hidden;
 	border-bottom: 1px solid #d3d3d3;		
 }
 
@@ -288,6 +289,7 @@ body {
 }
 
 .panel-header-toolbox {
+	overflow: hidden;
 }
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */
