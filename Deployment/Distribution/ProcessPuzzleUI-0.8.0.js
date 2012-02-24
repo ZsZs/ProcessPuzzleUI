@@ -1149,6 +1149,62 @@ var RemoteResource = new Class({
   //Private helper methods
 });
    
+/*
+Name: ResourceUri
+
+Description: Helps to analyze a localize an uri.
+
+Requires:
+   - 
+
+Provides:
+   - ResourceUri
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+var ResourceUri = new Class({
+   Implements: Options,
+   
+   options: {
+      contentType : "xml"
+   },
+   
+   // Constructor
+   initialize: function ( uri, locale, options ) {
+      // parameter assertions
+      assertThat( uri, not( nil() ));
+      
+      this.setOptions( options );
+      
+      this.locale = locale;
+      this.uri = uri;
+   },
+   
+   //Public accessors and mutators
+   determineLocalizedUri : function(){
+      return this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) + "_" + this.locale.getLanguage() + "." + this.options.contentType;      
+   }
+  
+  // Properties
+  
+  //Private helper methods
+});
+   
 /**
 Name: StringTokenizer
 
@@ -2547,6 +2603,7 @@ var BrowserWidget = new Class( {
       domDocument : this.document,
       eventDeliveryDelay : 5,
       subscribeToWebUIMessages : false,
+      useLocalizedData : false,
       widgetContainerId : "widgetContainer",
       widgetDataURI : null,
       widgetDefinitionURI : null
@@ -2752,7 +2809,8 @@ var BrowserWidget = new Class( {
    loadWidgetData : function() {
       if( this.options.widgetDataURI ){
          try{
-            this.dataXml = new XmlResource( this.options.widgetDataURI, {
+            var dataUri = this.options.useLocalizedData ? new ResourceUri( this.options.widgetDataURI, this.locale ).determineLocalizedUri() : this.options.widgetDataURI;
+            this.dataXml = new XmlResource( dataUri, {
                nameSpaces : this.options.dataXmlNameSpace} );
          }catch (e){
             this.logger.debug( "Widget data: '" + this.options.widgetDataURI + "' not found." );
@@ -6883,7 +6941,7 @@ var LanguageSelectorWidget = new Class({
    }.protect()
    
 });
-/**Name: NewsReaderWidgetDescription: Reads and displays RSS xml. The display properties are highly configurable.Requires:Provides:	- NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.**///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,      options : {      componentName : "NewsReaderWidget",      widgetContainerId : "NewsReaderWidget",   },      //Constructor   initialize : function( options, resourceBundle, webUIConfiguration ) {      this.setOptions( options );      this.parent( options, resourceBundle );   },   //Public accesors and mutators   construct: function(){         },      destroy: function() {         }      //Properties      //Protected, private helper methods});
+/*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,      options : {      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource );         this.channel.unmarshall();      }         }.protect()});
 /********************************* RssChannel ******************************
 Name: RssChannel
 
@@ -6929,27 +6987,28 @@ var RssChannel = new Class({
    },
    
    //Constructor
-   initialize: function ( rssResource, options ) {
+   initialize: function ( rssResource, internationalization, options ) {
       // parameter assertions
       assertThat( rssResource, not( nil() ));
       this.setOptions( options );
       
-      this.buildDate = null;
-      this.description = null;
-      this.documents = null;
-      this.generator = null;
+      this.buildDate;
+      this.description;
+      this.documents;
+      this.generator;
+      this.internationalization;
       this.items = new ArrayList();
-      this.language = null;
-      this.link = null;
-      this.managingDirector = null;
-      this.publicationDate = null;
+      this.language;
+      this.link;
+      this.managingDirector;
+      this.publicationDate;
       this.rssResource = rssResource;
-      this.title = null;
-      this.webMaster = null;
+      this.title;
+      this.webMaster;
    },
    
    //Public accessor and mutator methods
-   release: function(){
+   destroy: function(){
       
    },
    
@@ -7039,7 +7098,7 @@ var RssItem = new Class({
    //Constructor
    initialize: function ( itemResource, options ) {
       // parameter assertions
-      assertThat( rssResource, not( nil() ));      
+      assertThat( itemResource, not( nil() ));      
       this.setOptions( options );
       
       this.description = null;
@@ -7051,7 +7110,7 @@ var RssItem = new Class({
    },
    
    //Public accessor and mutator methods
-   release: function(){
+   destroy: function(){
    },
    
    unmarshall: function(){
