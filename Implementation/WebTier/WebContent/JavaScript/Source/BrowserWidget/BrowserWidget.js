@@ -32,6 +32,7 @@ var BrowserWidget = new Class( {
       domDocument : this.document,
       eventDeliveryDelay : 5,
       subscribeToWebUIMessages : false,
+      useLocalizedData : false,
       widgetContainerId : "widgetContainer",
       widgetDataURI : null,
       widgetDefinitionURI : null
@@ -237,7 +238,8 @@ var BrowserWidget = new Class( {
    loadWidgetData : function() {
       if( this.options.widgetDataURI ){
          try{
-            this.dataXml = new XmlResource( this.options.widgetDataURI, {
+            var dataUri = this.options.useLocalizedData ? new ResourceUri( this.options.widgetDataURI, this.locale ).determineLocalizedUri() : this.options.widgetDataURI;
+            this.dataXml = new XmlResource( dataUri, {
                nameSpaces : this.options.dataXmlNameSpace} );
          }catch (e){
             this.logger.debug( "Widget data: '" + this.options.widgetDataURI + "' not found." );

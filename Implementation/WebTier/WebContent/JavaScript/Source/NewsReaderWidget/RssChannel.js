@@ -43,27 +43,28 @@ var RssChannel = new Class({
    },
    
    //Constructor
-   initialize: function ( rssResource, options ) {
+   initialize: function ( rssResource, internationalization, options ) {
       // parameter assertions
       assertThat( rssResource, not( nil() ));
       this.setOptions( options );
       
-      this.buildDate = null;
-      this.description = null;
-      this.documents = null;
-      this.generator = null;
+      this.buildDate;
+      this.description;
+      this.documents;
+      this.generator;
+      this.internationalization;
       this.items = new ArrayList();
-      this.language = null;
-      this.link = null;
-      this.managingDirector = null;
-      this.publicationDate = null;
+      this.language;
+      this.link;
+      this.managingDirector;
+      this.publicationDate;
       this.rssResource = rssResource;
-      this.title = null;
-      this.webMaster = null;
+      this.title;
+      this.webMaster;
    },
    
    //Public accessor and mutator methods
-   release: function(){
+   destroy: function(){
       
    },
    

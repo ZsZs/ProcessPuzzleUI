@@ -11,6 +11,7 @@ window.BrowserWidgetTest = new Class( {
           { method : 'initialize_instantiatesElementFactory', isAsynchron : false },
           { method : 'initialize_whenDefinitionUriIsGiven_loadsIt', isAsynchron : false },
           { method : 'initialize_whenDataUriIsGiven_loadsIt', isAsynchron : false },
+          { method : 'initialize_whenUseLocalizedDataIsTrue_loadsLocalVersion', isAsynchron : false },
           { method : 'initialize_whenMessageSubsciptionsAreGiven_subscribesToMessages', isAsynchron : false },
           { method : 'initialize_whenContainerIdIsInValid_throwsExeption', isAsynchron : false },
           { method : 'initialize_whenResourceBundleIsNotLoaded_throwsException', isAsynchron : false },
@@ -25,6 +26,7 @@ window.BrowserWidgetTest = new Class( {
       CHILD_ELEMENT_TYPE : "DIV",
       CONFIGURATION_URI : "../BrowserWidget/WebUIConfiguration.xml",
       LANGUAGE : "hu",
+      LOCALIZED_WIDGET_DATA_URI : "../BrowserWidget/WidgetData_hu.xml",
       RESOURCE_PATH : "../BrowserWidget/WidgetInternationalization",
       RESOURCE_KEY : "Widget.ItemOne",
       ROW_LABEL : "row label:",
@@ -42,7 +44,7 @@ window.BrowserWidgetTest = new Class( {
       this.browserWidget;
       this.componentStateManager;
       this.domDocument;
-      this.locale = new Locale( this.constants.LANGUAGE );
+      this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.resourceBundle;
       this.webUIConfiguration;
@@ -108,6 +110,12 @@ window.BrowserWidgetTest = new Class( {
       this.browserWidget = new BrowserWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID, widgetDataURI : this.constants.WIDGET_DATA_URI }, this.resourceBundle );
       
       assertThat( this.browserWidget.getDataXml(), not( nil() ));
+   },
+   
+   initialize_whenUseLocalizedDataIsTrue_loadsLocalVersion : function() {
+      this.browserWidget = new BrowserWidget({ useLocalizedData : true, widgetContainerId : this.constants.WIDGET_CONTAINER_ID, widgetDataURI : this.constants.WIDGET_DATA_URI }, this.resourceBundle );
+      
+      assertThat( this.browserWidget.getDataXml().getUri(), equalTo( this.constants.LOCALIZED_WIDGET_DATA_URI ));
    },
    
    initialize_whenMessageSubsciptionsAreGiven_subscribesToMessages : function() {

@@ -39,7 +39,7 @@ var RssItem = new Class({
    //Constructor
    initialize: function ( itemResource, options ) {
       // parameter assertions
-      assertThat( rssResource, not( nil() ));      
+      assertThat( itemResource, not( nil() ));      
       this.setOptions( options );
       
       this.description = null;
@@ -51,7 +51,7 @@ var RssItem = new Class({
    },
    
    //Public accessor and mutator methods
-   release: function(){
+   destroy: function(){
    },
    
    unmarshall: function(){
