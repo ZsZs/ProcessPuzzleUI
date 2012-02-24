@@ -165,6 +165,18 @@ form button {
 	padding: 3px 1px;		
 }
 
+.floatBoxLeft {
+   float: left;;
+   margin: 5px;
+   border: 1px;
+}
+
+.floatBoxRight {
+   float: right;
+   margin: 5px;
+   border: 1px;
+}
+
 .searchField {
 	width: 150px;
 	overflow: hidden;

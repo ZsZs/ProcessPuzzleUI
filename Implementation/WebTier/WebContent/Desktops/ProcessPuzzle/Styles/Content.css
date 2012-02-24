@@ -92,6 +92,12 @@ p {
 
 /* Lists */
 
+ol {
+   list-style: outside;
+   margin: 0 0 9px 16px;
+   list-style-type: decimal;
+}
+
 ul {
 	list-style: outside;
 	margin: 0 0 9px 16px;
@@ -169,6 +175,18 @@ form button {
 
 * html .button {
 	padding: 3px 1px;		
+}
+
+.floatBoxLeft {
+   float: left;;
+   margin: 5px;
+   border: 1px;
+}
+
+.floatBoxRight {
+   float: right;
+   margin: 5px;
+   border: 1px;
 }
 
 .searchField {

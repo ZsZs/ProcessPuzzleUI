@@ -93,8 +93,9 @@
 
 #DocumentEditorToolBar a:hover span.toolBarToolTip {
    font-family: Calibri, Tahoma, Geneva, sans-serif;
-   left: 2em;
+   left: 3em;
    margin-left: 0;
    opacity: 1;
-   z-index: 999;
+   top: -36px;
+z-index: 999;
 }

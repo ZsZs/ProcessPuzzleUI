@@ -1,9 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML>
+
 <html>
 <head>
-   <title>Test page for BrowserWiget.js</title>
-   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
+	<title>Test page for NewsReaderWidget.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=8"/>
+	
    <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
    
    <script type="text/javascript">
@@ -34,7 +36,7 @@
    <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
-	
+   
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
@@ -42,7 +44,7 @@
    <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
-	<script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/ResourceUri.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
@@ -54,6 +56,9 @@
    <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/XMLBundleParser.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
+   <script type="text/javascript" src="../../Source/NewsReaderWidget/NewsReaderWidget.js"></script>
+   <script type="text/javascript" src="../../Source/NewsReaderWidget/RssChannel.js"></script>
+   <script type="text/javascript" src="../../Source/NewsReaderWidget/RssItem.js"></script>
    <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script> 
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script> 
@@ -61,21 +66,22 @@
    <script type="text/javascript" src="../../Source/WebUIMessageBus/TestMessageTwo.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
-
-   <script type="text/javascript" src="../../ObjectTests/BrowserWidget/BrowserWidgetTest.js"></script>
+ 
    
-   <script type="text/javascript">
-      window.addEvent('domready', function() {
-      });
-
-      JsHamcrest.Integration.JsUnit();
-      
+   <script type="text/javascript" src="../../ObjectTests/NewsReaderWidget/NewsReaderWidgetTest.js"></script>
+   
+	<script type="text/javascript">
+		window.addEvent('domready', function() {
+		});
+				
+		JsHamcrest.Integration.JsUnit();
+		
     </script>
-  </head>
+</head>
 
 <body>
-    <h1>BrowserWidget.js test page</h1>
-    <p>The widget is below this paragrahp.</p>
-    <div id="widgetContainer"></div>
+	<h1>NewsReaderWidget.js test page</H1>
+	<p>This page contains tests for NewsReaderWidget.js JavaScript class.</P>
+	<div id="NewsReaderWidget">Widget container.</div>
 </body>
 </html>
