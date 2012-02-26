@@ -5,7 +5,8 @@ window.NewsReaderWidgetTest = new Class( {
    options : {
       testMethods : [
          { method : 'initialize_loadsLocalizedRssVersion', isAsynchron : false },
-         { method : 'unmarshall_instantiatesChannel', isAsynchron : false }]
+         { method : 'unmarshall_instantiatesChannel', isAsynchron : false },
+         { method : 'unmarshall_passesElementFactoryToChannel', isAsynchron : false }]
    },
 
    constants : {
@@ -64,6 +65,13 @@ window.NewsReaderWidgetTest = new Class( {
       this.newsReaderWidget.unmarshall();
       
       assertThat( this.newsReaderWidget.getChannel(), not( nil() ));
+      assertThat( instanceOf( this.newsReaderWidget.getChannel(), RssChannel ), is( true ));
+   },
+   
+   unmarshall_passesElementFactoryToChannel : function(){
+      this.newsReaderWidget.unmarshall();
+      
+      assertThat( this.newsReaderWidget.getChannel().getElementFactory(), equalTo( this.newsReaderWidget.getElementFactory() ));
    },
    
    asynchronTestOne : function() {

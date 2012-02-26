@@ -30,28 +30,48 @@ var RssItem = new Class({
 
    options: {
       descriptionSelector: "description",
+      descriptionStyle : "rssItemDescription",
       globalUniqueIdSelector: "guid",
       linkSelector: "link",
       publicationDateSelector: "pubDate",
-      titleSelector: "title"
+      showDescription: true, 
+      titleSelector: "title",
+      titleStyle : "rssItemTitle",
    },
    
    //Constructor
-   initialize: function ( itemResource, options ) {
+   initialize: function ( itemResource, elementFactory, options ) {
       // parameter assertions
       assertThat( itemResource, not( nil() ));      
       this.setOptions( options );
       
-      this.description = null;
-      this.globalUniqueId = null;
+      this.containerElement;
+      this.description;
+      this.elementFactory = elementFactory;
+      this.globalUniqueId;
       this.itemResource = itemResource;
-      this.link = null;
-      this.publicationDate = null;
-      this.title = null;
+      this.link;
+      this.publicationDate;
+      this.state = BrowserWidget.States.INITIALIZED;
+      this.title;
    },
    
    //Public accessor and mutator methods
+   construct: function( containerElement ){
+      if( this.state == BrowserWidget.States.UNMARSHALLED ){
+         this.containerElement = containerElement;
+         this.createTitleElement();
+         this.createDescriptionElement();
+         this.state = BrowserWidget.States.CONSTRUCTED;
+      }
+   },
+   
    destroy: function(){
+      if( this.state == BrowserWidget.States.CONSTRUCTED ){
+         this.destroyPropertyElements();
+      }
+      
+      this.state = BrowserWidget.States.INITIALIZED;
    },
    
    unmarshall: function(){
@@ -60,6 +80,8 @@ var RssItem = new Class({
       this.link = XmlResource.selectNodeText( this.options.linkSelector, this.itemResource );
       this.publicationDate = XmlResource.selectNodeText( this.options.publicationDateSelector, this.itemResource );
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.itemResource );
+      
+      this.state = BrowserWidget.States.UNMARSHALLED;
    },
    
    //Properties
@@ -67,7 +89,34 @@ var RssItem = new Class({
    getGlobalUniqueId: function() { return this.globalUniqueId; },
    getLink: function() { return this.link; },
    getPublicationDate: function() { return this.publicationDate; },
+   getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    
    //Private helper methods
+   createDescriptionElement : function(){
+      if( this.options.showDescription ){
+         var elementOptions = { 'class' : this.options.descriptionStyle };
+         this.descriptionElement = this.elementFactory.create( 'div', this.description, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      }
+   }.protect(),
+   
+   createTitleElement : function(){
+      var elementOptions = { 'class' : this.options.titleStyle };
+      var elementText = this.link ? null : this.title;
+      this.titleElement = this.elementFactory.create( 'div', elementText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      
+      if( this.link ){
+         this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+      }
+   }.protect(),
+   
+   destroyPropertyElement: function( propertyElement ){
+      if( propertyElement.removeEvents ) propertyElement.removeEvents();
+      if( propertyElement.destroy ) propertyElement.destroy();
+   }.protect(),
+   
+   destroyPropertyElements: function(){
+      this.destroyPropertyElement( this.titleElement );
+      this.destroyPropertyElement( this.descriptionElement );
+   }
 });
