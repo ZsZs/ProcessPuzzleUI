@@ -37,6 +37,9 @@ var RssItem = new Class({
       showDescription: true, 
       titleSelector: "title",
       titleStyle : "rssItemTitle",
+      trancatedDescriptionEnding : "...",
+      truncatedDescriptionLength : 120,
+      truncateDescription : false
    },
    
    //Constructor
@@ -96,7 +99,13 @@ var RssItem = new Class({
    createDescriptionElement : function(){
       if( this.options.showDescription ){
          var elementOptions = { 'class' : this.options.descriptionStyle };
-         this.descriptionElement = this.elementFactory.create( 'div', this.description, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+         var descriptionText;
+         if( this.options.truncateDescription ){
+            descriptionText = this.description.substr( 0, this.options.truncatedDescriptionLength ) + this.options.trancatedDescriptionEnding;
+         }else {
+            descriptionText = this.description;
+         }
+         this.descriptionElement = this.elementFactory.create( 'div', descriptionText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
       }
    }.protect(),
    

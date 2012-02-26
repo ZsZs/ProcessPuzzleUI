@@ -7,7 +7,8 @@ window.RssItemTest = new Class( {
          { method : 'unmarshall_determinesItemProperties', isAsynchron : false },
          { method : 'construct_displaysTitle', isAsynchron : false },
          { method : 'construct_whenLinkIsValid_createsAnchor', isAsynchron : false },
-         { method : 'construct_whenEnabled_displaysDescription', isAsynchron : false }]
+         { method : 'construct_whenEnabled_displaysDescription', isAsynchron : false },
+         { method : 'construct_whenRequested_truncatesDescription', isAsynchron : false }]
    },
 
    constants : {
@@ -91,6 +92,16 @@ window.RssItemTest = new Class( {
       var descriptionElement = this.widgetContainerElement.getChildren( 'div.' + this.item.options.descriptionStyle )[0];
       assertThat( descriptionElement.hasClass( this.item.options.descriptionStyle ), is( true )); 
       assertThat( descriptionElement.get( 'text' ), equalTo( this.item.getDescription() )); 
+   },
+   
+   construct_whenRequested_truncatesDescription : function() {
+      this.item.unmarshall();
+      this.item.options.truncateDescription = true;
+      this.item.construct( this.widgetContainerElement );
+      
+      var descriptionElement = this.widgetContainerElement.getChildren( 'div.' + this.item.options.descriptionStyle )[0];
+      var expectedText = this.item.getDescription().substr( 0, this.item.options.truncatedDescriptionLength ) + this.item.options.trancatedDescriptionEnding;
+      assertThat( descriptionElement.get( 'text' ), equalTo( expectedText )); 
    }
    
 });
