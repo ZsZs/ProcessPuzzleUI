@@ -46,6 +46,12 @@ var ResourceUri = new Class({
    //Public accessors and mutators
    determineLocalizedUri : function(){
       return this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) + "_" + this.locale.getLanguage() + "." + this.options.contentType;      
+   },
+   
+   isLocal : function(){
+      var givenUri = new URI( this.uri );
+      var documentUri = new URI( document.location.href );
+      return givenUri.get( 'host' ) == "" || givenUri.get( 'host' ) == documentUri.get( 'host' ); 
    }
   
   // Properties

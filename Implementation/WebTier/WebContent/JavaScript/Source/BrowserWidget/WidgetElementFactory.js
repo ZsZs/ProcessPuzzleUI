@@ -70,9 +70,12 @@ var WidgetElementFactory = new Class( {
       var defaultProperties;
       if( clickEventHandler ){
          defaultProperties = { href : "#", events : { click : clickEventHandler } };
+      }else if( new ResourceUri( anchorLink ).isLocal() ){
+         defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
       }else {
          defaultProperties = { href : anchorLink };
       }
+      
       var properties = this.mergeProperties( defaultProperties, elementProperties );
       var newAnchor = this.create( 'A', nodeText, contextElement, position, properties );
       return newAnchor;
