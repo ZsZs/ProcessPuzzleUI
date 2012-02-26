@@ -67,7 +67,12 @@ var WidgetElementFactory = new Class( {
    },
 
    createAnchor : function( nodeText, anchorLink, clickEventHandler, contextElement, position, elementProperties ) {
-      var defaultProperties = { href : "#", link : anchorLink, events : { click : clickEventHandler } };
+      var defaultProperties;
+      if( clickEventHandler ){
+         defaultProperties = { href : "#", events : { click : clickEventHandler } };
+      }else {
+         defaultProperties = { href : anchorLink };
+      }
       var properties = this.mergeProperties( defaultProperties, elementProperties );
       var newAnchor = this.create( 'A', nodeText, contextElement, position, properties );
       return newAnchor;

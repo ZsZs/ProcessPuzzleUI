@@ -8,7 +8,8 @@ window.WidgetElementFactoryTest = new Class( {
           { method : 'create_WhenTextIsGivenAddsToNode', isAsynchron : false }, 
           { method : 'create_WhenTextIsGivenTranslatesIt', isAsynchron : false }, 
           { method : 'create_InsertsNewElementIntoGivenPosition', isAsynchron : false }, 
-          { method : 'createAnchor_CreatesNewAnchorElement', isAsynchron : false }, 
+          { method : 'createAnchor_WhenOnClickIsNull_SetsHref', isAsynchron : false }, 
+          { method : 'createAnchor_WhenOnClickIsGiven_SetsHrefToNumber', isAsynchron : false }, 
           { method : 'createButton_CreatesNewInputElement', isAsynchron : false }, 
           { method : 'createCollapsibleArea_CreatesNewDivElement', isAsynchron : false }, 
           { method : 'createDivisionElement', isAsynchron : false }, 
@@ -109,7 +110,19 @@ window.WidgetElementFactoryTest = new Class( {
       lastChild.destroy();
    },
    
-   createAnchor_CreatesNewAnchorElement : function() {
+   createAnchor_WhenOnClickIsNull_SetsHref : function() {
+      //SETUP:
+      //EXCERCISE:
+      this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.ANCHOR_LINK, null, null, null, {'id' : this.constants.ANCHOR_ID } );
+      
+      //VERIFY:
+      assertEquals( "A", this.newElement.tagName.toUpperCase() );
+      assertEquals( this.constants.ANCHOR_ID, this.newElement.get( 'id' ));
+      assertEquals( this.constants.ANCHOR_TEXT, this.newElement.get( 'text' ));
+      assertThat( this.newElement.get( 'href' ), equalTo( this.constants.ANCHOR_LINK ));
+   },
+   
+   createAnchor_WhenOnClickIsGiven_SetsHrefToNumber : function() {
       //SETUP:
       //EXCERCISE:
       this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.ANCHOR_LINK, this.constants.CLICK_EVENT_HANDLER, null, null, {'id' : this.constants.ANCHOR_ID } );
