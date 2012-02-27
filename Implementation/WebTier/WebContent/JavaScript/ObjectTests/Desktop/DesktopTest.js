@@ -94,17 +94,17 @@ window.DesktopTest = new Class( {
       assertThat( this.desktop.getFooter().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       assertThat( this.desktop.getWindowDocker().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       
-      assertThat( this.desktop.getColumns().size(), equalTo( 3 ));
+      assertThat( this.desktop.getColumns().size(), equalTo( this.desktopConfiguration.selectNodes( "/desktopConfiguration/columns/column" ).length ));
       this.desktop.getColumns().each( function( columnEntry, index ){
          assertThat( columnEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       });
       
-      assertThat( this.desktop.getPanels().size(), equalTo( 5 ));
+      assertThat( this.desktop.getPanels().size(), equalTo( this.desktopConfiguration.selectNodes( "/desktopConfiguration/panels/panel" ).length ));
       this.desktop.getPanels().each( function( panelEntry, index ){
          assertThat( panelEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       });
       
-      assertThat( this.desktop.getWindows().size(), equalTo( 2 ));
+      assertThat( this.desktop.getWindows().size(), equalTo( this.desktopConfiguration.selectNodes( "/desktopConfiguration/windows/window" ).length ));
       this.desktop.getWindows().each( function( windowEntry, index ){
          assertThat( windowEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       });
