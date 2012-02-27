@@ -123,7 +123,7 @@
                   <option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
                   <option name="widgetDefinitionURI" value="'Content/WidgetExamples/SiteNewsDefinition.xml'"/>
                   <option name="componentName" value="'TopNewsWidget'"/>
-                  <option name="truncateDescription" value="true"/>
+                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
                </options>
             </widget>
          </plugin>
