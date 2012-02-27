@@ -19,6 +19,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
@@ -37,54 +38,14 @@
    <script language="JavaScript" src="../../Source/WebUIMessageBus/TestMessageOne.js"></script>
    <script language="JavaScript" src="../../Source/WebUIMessageBus/TestMessageTwo.js"></script>
 	
+   <script language="JavaScript" src="../../ObjectTests/FundamentalTypes/OptionsResourceTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //runTestFunction();
       });
 				
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
-      
-      var OPTIONS_ELEMENT_SELECTOR = "/sampleOptions/options";
-      var OPTIONS_XML_URI = "../FundamentalTypes/Options.xml";
-      var optionsElement;
-      var optionsResource;
-      var optionsXml;
-      
-      function setUp(){
-         optionsXml = new XmlResource( OPTIONS_XML_URI );
-         optionsElement = optionsXml.selectNode( OPTIONS_ELEMENT_SELECTOR );
-         optionsResource = new OptionsResource( optionsElement );
-      }
-
-		function tearDown(){
-		}
-		
-		function test_initialize() {
-		   assertThat( optionsResource, not( nil() ));
-		}
-		
-		function test_unmarshall_OptionsObject(){
-		   optionsResource.unmarshall();
-		   assertThat( optionsResource.getOptions(), not( nil() ));
-		   assertThat( optionsResource.getOptions()['widgetContainerId'], equalTo( "HorizontalMenuBar" ));
-		   assertThat( optionsResource.getOptions()['widgetDefinitionURI'], equalTo( "../HierarchicalMenuWidget/MenuDefinition.xml" ));
-		   assertThat( optionsResource.getOptions()['arrayOfValues'].length, equalTo( 2 ));
-		   assertThat( optionsResource.getOptions()['booleanValue'], is( true ));
-		   
-         assertThat( typeOf( optionsResource.getOptions()['objectValue'] ), equalTo( 'object' ));
-         assertThat( optionsResource.getOptions()['objectValue']['stringProperty'], equalTo( 'hello' ));
-         assertThat( optionsResource.getOptions()['objectValue']['booleanProperty'], is( true ));
-         assertThat( optionsResource.getOptions()['objectValue']['integerProperty'], equalTo( 10 ));
-		}
-		
-		
-      //runs a test function during debugging
-      function runTestFunction(){
-         setUp();
-         test_unmarshall_OptionsObject();
-         tearDown();
-      }
    </script>
 </head>
 
