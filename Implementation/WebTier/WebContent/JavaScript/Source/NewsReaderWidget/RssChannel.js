@@ -41,8 +41,8 @@ var RssChannel = new Class({
       linkSelector : "//rss/channel/link",
       managingEditorSelector : "//rss/channel/managingEditor",
       publicationDateSelector : "//rss/channel/pubDate",
-      showDescription: false, 
-      showTitle: false, 
+      showDescription: true, 
+      showTitle: true, 
       titleSelector : "//rss/channel/title",
       titleStyle : "rssChannelTitle",
       webMasterSelector : "//rss/channel/webMaster",
@@ -136,12 +136,14 @@ var RssChannel = new Class({
    }.protect(),
    
    createTitleElement : function(){
-      var elementOptions = { 'class' : this.options.titleStyle };
-      var elementText = this.link ? null : this.title;
-      this.titleElement = this.elementFactory.create( 'div', elementText, this.wrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
-      
-      if( this.link ){
-         this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+      if( this.options.showTitle ){
+         var elementOptions = { 'class' : this.options.titleStyle };
+         var elementText = this.link ? null : this.title;
+         this.titleElement = this.elementFactory.create( 'div', elementText, this.wrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+         
+         if( this.link ){
+            this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+         }
       }
    }.protect(),
    
@@ -165,8 +167,8 @@ var RssChannel = new Class({
       if( this.wrapperElement.removeEvents ) this.wrapperElement.removeEvents();
       if( this.wrapperElement.destroy ) this.wrapperElement.destroy();
       
-      if( this.titleElement.removeEvents ) this.titleElement.removeEvents();
-      if( this.titleElement.destroy ) this.titleElement.destroy();
+      if( this.titleElement && this.titleElement.removeEvents ) this.titleElement.removeEvents();
+      if( this.titleElement && this.titleElement.destroy ) this.titleElement.destroy();
    }.protect(),
    
    unmarshallChannelProperties: function(){

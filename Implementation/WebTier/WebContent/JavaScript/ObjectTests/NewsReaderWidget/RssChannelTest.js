@@ -9,6 +9,7 @@ window.RssChannelTest = new Class( {
          { method : 'unmarshall_passesItemOptions', isAsynchron : false },
          { method : 'construct_createsChannelWrapper', isAsynchron : false },
          { method : 'construct_displaysChannelTitle', isAsynchron : false },
+         { method : 'construct_whenRequested_hidesChannelTitle', isAsynchron : false },
          { method : 'construct_whenLinkIsValid_createsAnchor', isAsynchron : false },
          { method : 'construct_createsItemsWrapper', isAsynchron : false },
          { method : 'construct_constructsItems', isAsynchron : false }]
@@ -102,9 +103,18 @@ window.RssChannelTest = new Class( {
       this.channel.link = null;  //eliminates creating anchor element
       this.channel.construct( this.widgetContainerElement );
       
-      var channelTitleElement = this.channel.getWrapperElement().getChildren( 'div' )[0];
+      var channelTitleElement = this.channel.getWrapperElement().getChildren( 'div.' + this.channel.options.titleStyle )[0];
       assertThat( channelTitleElement.hasClass( this.channel.options.titleStyle ), is( true )); 
       assertThat( channelTitleElement.get( 'text' ), equalTo( this.channel.getTitle() )); 
+   },
+   
+   construct_whenRequested_hidesChannelTitle : function() {
+      this.channel.unmarshall();
+      this.channel.options.showTitle = false;
+      this.channel.construct( this.widgetContainerElement );
+      
+      var channelTitleElement = this.channel.getWrapperElement().getChildren( 'div.' + this.channel.options.titleStyle )[0];
+      assertThat( channelTitleElement, is( nil() )); 
    },
    
    construct_whenLinkIsValid_createsAnchor : function() {
