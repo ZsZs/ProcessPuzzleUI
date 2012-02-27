@@ -7,7 +7,8 @@ window.NewsReaderWidgetTest = new Class( {
          { method : 'initialize_loadsLocalizedRssVersion', isAsynchron : false },
          { method : 'unmarshall_instantiatesChannel', isAsynchron : false },
          { method : 'unmarshall_passesElementFactoryToChannel', isAsynchron : false },
-         { method : 'unmarshall_passesOptionsToChannel', isAsynchron : false }]
+         { method : 'unmarshall_passesOptionsToChannel', isAsynchron : false },
+         { method : 'construct_constructsChannel', isAsynchron : true }]
    },
 
    constants : {
@@ -81,6 +82,20 @@ window.NewsReaderWidgetTest = new Class( {
       
       assertThat( this.newsReaderWidget.getChannel().options.showDescription, is( true ));
       assertThat( this.newsReaderWidget.getChannel().options.showTitle, is( true ));
+   },
+   
+   construct_constructsChannel : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.newsReaderWidget.unmarshall();
+            this.newsReaderWidget.construct();
+         }.bind( this ),
+         function(){
+            assertThat( this.newsReaderWidget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            assertThat( this.newsReaderWidget.getChannel().getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    onConstructed : function(){

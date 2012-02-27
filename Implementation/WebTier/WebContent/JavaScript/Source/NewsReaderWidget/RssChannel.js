@@ -114,6 +114,7 @@ var RssChannel = new Class({
    getLink: function() { return this.link; },
    getManagingEditor: function() { return this.managingEditor; },
    getPublicationDate: function() { return this.publicationDate; },
+   getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    getWebMaster: function() { return this.webMaster; },
    getWrapperElement: function() { return this.wrapperElement; },

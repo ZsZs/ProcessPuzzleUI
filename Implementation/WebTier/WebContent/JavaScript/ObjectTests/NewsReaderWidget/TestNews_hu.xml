@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rss-2_0.xsd">
+   <channel>
+      <title>ProcessPuzzle</title>
+      <link>http://processpuzzle.com</link>
+      <description>ProcessPuzzle friss híre.</description>
+      <language>hu-hu</language>
+      <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+      <lastBuildDate>Tue, 10 Jun 2003 04:00:00 GMT</lastBuildDate>
+      <docs>http://processpuzzle.com/rss</docs>
+      <generator>Weblog Editor 2.0</generator>
+      <managingEditor>zsolt.zsuffa@example.com</managingEditor>
+      <webMaster>peter.krima@example.com</webMaster>    
+    
+      <item>
+         <title>HONNIA bútor tervezés</title>
+         <link>http://honnia.hu/news</link>
+         <description>Cerasus Kft. elindította új, a ProcessPuzzle üzleti platformra épülő, világszerte elérhető Internetes szolgáltatását. A Honniával postosan a saját stílusában tervezheti meg bútotát, éppen az adottságainak megfelelő méretben.</description>
+         <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+         <guid>http://processpuzzle.com#item573</guid>
+      </item>  
+    
+      <item>
+         <title>ProcessPuzzle hírolvasó komponens</title>
+         <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+         <description>IT Kódex Kft. új felhasználói felület komponenst fejlesztett ki az RSS hírcsatornák megjelenítésére. A NewsReaderWidget a híreket testre szabható módon jeleníti meg és bármely okos dokumentumba beépíthető.</description>
+         <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
+         <guid>http://processpuzzle.com#item575</guid>
+      </item>  
+  </channel>  
+</rss>
