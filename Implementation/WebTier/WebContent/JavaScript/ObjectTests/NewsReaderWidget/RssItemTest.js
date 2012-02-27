@@ -40,7 +40,7 @@ window.RssItemTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "rss-2_0.xsd" });
+      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns='rss-2_0.xsd'" });
       this.itemDefinition = this.rssResource.selectNode( this.constants.ITEM_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
