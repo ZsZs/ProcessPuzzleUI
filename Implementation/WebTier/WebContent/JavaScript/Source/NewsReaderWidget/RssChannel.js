@@ -34,12 +34,15 @@ var RssChannel = new Class({
       descriptionStyle : "rssChannelDescription",
       documentsSelector : "//rss/channel/docs",
       generatorSelector : "//rss/channel/generator",
+      itemOptions : {},
       itemsSelector : "//rss/channel/item",
       itemsWrapperStyle : "rssItemsWrapper",
       languageSelector : "//rss/channel/language",
       linkSelector : "//rss/channel/link",
       managingEditorSelector : "//rss/channel/managingEditor",
       publicationDateSelector : "//rss/channel/pubDate",
+      showDescription: false, 
+      showTitle: false, 
       titleSelector : "//rss/channel/title",
       titleStyle : "rssChannelTitle",
       webMasterSelector : "//rss/channel/webMaster",
@@ -180,7 +183,7 @@ var RssChannel = new Class({
    }.protect(),
    
    unmarshallItem: function( itemResource ){
-      var rssItem = new RssItem( itemResource, this.elementFactory );
+      var rssItem = new RssItem( itemResource, this.elementFactory, this.options.itemOptions );
       rssItem.unmarshall();
       this.items.add( rssItem );
    }.protect(),

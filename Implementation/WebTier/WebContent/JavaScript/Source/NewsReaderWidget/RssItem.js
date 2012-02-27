@@ -35,6 +35,7 @@ var RssItem = new Class({
       linkSelector: "link",
       publicationDateSelector: "pubDate",
       showDescription: true, 
+      showTitle: true, 
       titleSelector: "title",
       titleStyle : "rssItemTitle",
       trancatedDescriptionEnding : "...",

@@ -6,7 +6,8 @@ window.NewsReaderWidgetTest = new Class( {
       testMethods : [
          { method : 'initialize_loadsLocalizedRssVersion', isAsynchron : false },
          { method : 'unmarshall_instantiatesChannel', isAsynchron : false },
-         { method : 'unmarshall_passesElementFactoryToChannel', isAsynchron : false }]
+         { method : 'unmarshall_passesElementFactoryToChannel', isAsynchron : false },
+         { method : 'unmarshall_passesOptionsToChannel', isAsynchron : false }]
    },
 
    constants : {
@@ -74,28 +75,12 @@ window.NewsReaderWidgetTest = new Class( {
       assertThat( this.newsReaderWidget.getChannel().getElementFactory(), equalTo( this.newsReaderWidget.getElementFactory() ));
    },
    
-   asynchronTestOne : function() {
-      this.testCaseChain.chain(
-         function(){
-            //EXCERCISE:
-         }.bind( this ),
-         function(){
-            //VERIFY:
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
-   asynchronTestOne : function() {
-      this.testCaseChain.chain(
-         function(){
-            //EXCERCISE:
-         }.bind( this ),
-         function(){
-            //VERIFY:
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
+   unmarshall_passesOptionsToChannel : function(){
+      this.newsReaderWidget.options.channelOptions = { showDescription : true, showTitle : true, itemOptions : { showDescription : false, showTitle : false } };
+      this.newsReaderWidget.unmarshall();
+      
+      assertThat( this.newsReaderWidget.getChannel().options.showDescription, is( true ));
+      assertThat( this.newsReaderWidget.getChannel().options.showTitle, is( true ));
    },
    
    onConstructed : function(){

@@ -6,6 +6,7 @@ window.RssChannelTest = new Class( {
       testMethods : [
          { method : 'unmarshall_determinesChannelProperties', isAsynchron : false },
          { method : 'unmarshall_unmarshalsItems', isAsynchron : false },
+         { method : 'unmarshall_passesItemOptions', isAsynchron : false },
          { method : 'construct_createsChannelWrapper', isAsynchron : false },
          { method : 'construct_displaysChannelTitle', isAsynchron : false },
          { method : 'construct_whenLinkIsValid_createsAnchor', isAsynchron : false },
@@ -76,6 +77,17 @@ window.RssChannelTest = new Class( {
       this.channel.unmarshall();
    
       assertThat( this.channel.getItems().size(), equalTo( this.rssResource.selectNodes( this.constants.CHANNEL_SELECTOR + "/item" ).length ));
+   },
+         
+   unmarshall_passesItemOptions : function(){
+      this.channel.options.itemOptions = { showDescription : false, showTitle : false };
+      this.channel.unmarshall();
+   
+      assertThat( this.channel.getItems().size(), equalTo( this.rssResource.selectNodes( this.constants.CHANNEL_SELECTOR + "/item" ).length ));
+      this.channel.getItems().each( function( rssItem, index ){
+         assertThat( rssItem.options.showDescription, is( false ));
+         assertThat( rssItem.options.showTitle, is( false ));
+      }.bind( this ));
    },
          
    construct_createsChannelWrapper : function() {

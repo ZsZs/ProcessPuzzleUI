@@ -63,9 +63,14 @@ Object.extend({
    },
    
    equals : function( thisObject, obj) {
-      if (!thisObject.typeMatches( obj ))
-         return false;
-      return thisObject.toString() === obj.toString();
+      if( !thisObject.typeMatches( obj )) return false;
+      if( typeOf( thisObject ) == 'object' ){
+         for( var objectProperty in thisObject ){
+            if( thisObject[objectProperty] != obj[objectProperty] ) return false;
+         }
+         return true;
+      }
+      else return thisObject.toString() === obj.toString();
    }
 });
 

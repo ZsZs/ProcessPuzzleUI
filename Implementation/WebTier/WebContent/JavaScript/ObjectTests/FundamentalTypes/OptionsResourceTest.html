@@ -39,7 +39,7 @@
 	
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         runTestFunction();
+         //runTestFunction();
       });
 				
       JsHamcrest.Integration.JsUnit();
@@ -71,6 +71,11 @@
 		   assertThat( optionsResource.getOptions()['widgetDefinitionURI'], equalTo( "../HierarchicalMenuWidget/MenuDefinition.xml" ));
 		   assertThat( optionsResource.getOptions()['arrayOfValues'].length, equalTo( 2 ));
 		   assertThat( optionsResource.getOptions()['booleanValue'], is( true ));
+		   
+         assertThat( typeOf( optionsResource.getOptions()['objectValue'] ), equalTo( 'object' ));
+         assertThat( optionsResource.getOptions()['objectValue']['stringProperty'], equalTo( 'hello' ));
+         assertThat( optionsResource.getOptions()['objectValue']['booleanProperty'], is( true ));
+         assertThat( optionsResource.getOptions()['objectValue']['integerProperty'], equalTo( 10 ));
 		}
 		
 		
