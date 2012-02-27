@@ -92,6 +92,27 @@
 			<title>DesktopConfigurator.Panel.menusTitle</title>
 		</panel>
 		
+      <panel name='newsPanel' columnReference='mainColumn' height='350' showHeader='true'>
+         <title>DesktopConfigurator.Panel.newsTitle</title>
+         <contentURL>../Desktop/NewsPanel.html</contentURL>
+         <plugin>
+            <resources>
+               <styleSheets>
+                  <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/NewsPanel.css</styleSheet>
+               </styleSheets>
+            </resources>
+            <widget name="NewsReaderWidget">
+               <options>
+                  <option name="widgetContainerId" value="'TopNews'"/>
+                  <option name="widgetDataURI" value="'../NewsReaderWidget/TestNews.xml'"/>
+                  <option name="widgetDefinitionURI" value="'../NewsReaderWidget/NewsReaderDefinition.xml'"/>
+                  <option name="componentName" value="'NewsReaderWidget'"/>
+                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+               </options>
+            </widget>
+         </plugin>
+      </panel>
+      
 		<panel name="tips-panel" columnReference="rightColumn" height="150" showHeader="true">
 			<title>DesktopConfigurator.Panel.tipsTitle</title>
 		</panel>

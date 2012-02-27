@@ -4,5 +4,7 @@
       <option name="widgetContainerId" value="'HorizontalMenuBar'"/>
       <option name="widgetDefinitionURI" value="'../HierarchicalMenuWidget/MenuDefinition.xml'" />
       <option name="arrayOfValues" value="['TestMessageOne', 'TestMessageOne']" />
+      <option name="booleanValue" value="true" />
+      <option name="objectValue" value="{ stringProperty : 'hello', booleanProperty : true, integerProperty : 10 }" />
    </options>
 </sampleOptions>

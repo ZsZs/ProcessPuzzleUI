@@ -29,64 +29,149 @@ var RssChannel = new Class({
    Implements: Options,
 
    options: {
-      buildDateSelector : "rss/channel/lastBuildDate/text()",
-      descriptionSelector : "rss/channel/description/text()",
-      documentsSelector : "rss/channel/docs/text()",
-      generatorSelector : "rss/channel/generator/text()",
-      itemsSelector : "rss/channel/item",
-      languageSelector : "rss/channel/language/text()",
-      linkSelector : "rss/channel/link/text()",
-      managingDirectorSelector : "rss/channel/managingEditor/text()",
-      publicationDateSelector : "rss/channel/pubDate/text()",
-      titleSelector : "rss/channel/title/text()",
-      webMasterSelector : "rss/channel/webMaster/text()"
+      buildDateSelector : "//rss/channel/lastBuildDate",
+      descriptionSelector : "//rss/channel/description",
+      descriptionStyle : "rssChannelDescription",
+      documentsSelector : "//rss/channel/docs",
+      generatorSelector : "//rss/channel/generator",
+      itemOptions : {},
+      itemsSelector : "//rss/channel/item",
+      itemsWrapperStyle : "rssItemsWrapper",
+      languageSelector : "//rss/channel/language",
+      linkSelector : "//rss/channel/link",
+      managingEditorSelector : "//rss/channel/managingEditor",
+      publicationDateSelector : "//rss/channel/pubDate",
+      showDescription: true, 
+      showTitle: true, 
+      titleSelector : "//rss/channel/title",
+      titleStyle : "rssChannelTitle",
+      webMasterSelector : "//rss/channel/webMaster",
+      wrapperElementId : "rssChannelWrapper",
+      wrapperElementTag : "div"
    },
    
    //Constructor
-   initialize: function ( rssResource, internationalization, options ) {
+   initialize: function ( rssResource, internationalization, elementFactory, options ) {
       // parameter assertions
       assertThat( rssResource, not( nil() ));
       this.setOptions( options );
       
       this.buildDate;
+      this.containerElement;
       this.description;
       this.documents;
+      this.elementFactory = elementFactory;
       this.generator;
       this.internationalization;
       this.items = new ArrayList();
       this.language;
       this.link;
-      this.managingDirector;
+      this.managingEditor;
       this.publicationDate;
       this.rssResource = rssResource;
+      this.state = BrowserWidget.States.INITIALIZED;
       this.title;
       this.webMaster;
+      this.wrapperElement;
    },
    
    //Public accessor and mutator methods
+   construct : function( containerElement ){
+      if( this.state == BrowserWidget.States.UNMARSHALLED ){
+         this.containerElement = containerElement;
+         this.createWrapperElement();
+         this.createTitleElement();
+         this.createItemsWrapper();
+         this.constructItems();
+         
+         this.state = BrowserWidget.States.CONSTRUCTED;
+      }
+   },
+   
    destroy: function(){
+      if( this.state == BrowserWidget.States.CONSTRUCTED ){
+         this.destroyItems();
+         this.destroyPropertyElements();
+      }
       
+      this.state = BrowserWidget.States.INITIALIZED;
    },
    
    unmarshall: function(){
       this.unmarshallChannelProperties();
       this.unmarshallItems();
+      this.state = BrowserWidget.States.UNMARSHALLED;
    },
    
    //Properties
    getBuildDate: function() { return this.buildDate; },
    getDescription: function() { return this.description; },
    getDocuments: function() { return this.documents; },
+   getElementFactory : function() { return this.elementFactory; },
    getGenerator: function() { return this.generator; },
    getItems: function() { return this.items; },
    getLanguage: function() { return this.language; },
    getLink: function() { return this.link; },
-   getManagingDirector: function() { return this.managingDirector; },
+   getManagingEditor: function() { return this.managingEditor; },
    getPublicationDate: function() { return this.publicationDate; },
+   getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    getWebMaster: function() { return this.webMaster; },
+   getWrapperElement: function() { return this.wrapperElement; },
    
    //Private helper methods
+   constructItems : function() {
+      this.items.each( function( channelItem, index ){
+         channelItem.construct( this.itemsWrapperElement );
+      }.bind( this ));
+   }.protect(),
+   
+   createItemsWrapper : function(){
+      this.itemsWrapperElement = this.elementFactory.create( 
+         this.options.wrapperElementTag, 
+         null, 
+         this.wrapperElement, 
+         WidgetElementFactory.Positions.LastChild, 
+         { 'class' : this.options.itemsWrapperStyle }
+      );
+   }.protect(),
+   
+   createTitleElement : function(){
+      if( this.options.showTitle ){
+         var elementOptions = { 'class' : this.options.titleStyle };
+         var elementText = this.link ? null : this.title;
+         this.titleElement = this.elementFactory.create( 'div', elementText, this.wrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+         
+         if( this.link ){
+            this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+         }
+      }
+   }.protect(),
+   
+   createWrapperElement : function(){
+      this.wrapperElement = this.elementFactory.create( 
+         this.options.wrapperElementTag, 
+         null, 
+         this.containerElement, 
+         WidgetElementFactory.Positions.LastChild, 
+         { id : this.options.wrapperElementId }
+      );
+   }.protect(),
+   
+   destroyItems: function(){
+      this.items.each( function( channelItem, index ){
+         channelItem.destroy();
+      }.bind( this ));
+   }.protect(),
+   
+   destroyPropertyElements: function(){
+      if( this.wrapperElement.removeEvents ) this.wrapperElement.removeEvents();
+      if( this.wrapperElement.destroy ) this.wrapperElement.destroy();
+      
+      if( this.titleElement && this.titleElement.removeEvents ) this.titleElement.removeEvents();
+      if( this.titleElement && this.titleElement.destroy ) this.titleElement.destroy();
+   }.protect(),
+   
    unmarshallChannelProperties: function(){
       this.buildDate = this.rssResource.selectNodeText( this.options.buildDateSelector );
       this.description = this.rssResource.selectNodeText( this.options.descriptionSelector );
@@ -94,14 +179,14 @@ var RssChannel = new Class({
       this.generator = this.rssResource.selectNodeText( this.options.generatorSelector );
       this.language = this.rssResource.selectNodeText( this.options.languageSelector );
       this.link = this.rssResource.selectNodeText( this.options.linkSelector );
-      this.managingDirector = this.rssResource.selectNodeText( this.options.managingDirectorSelector );
+      this.managingEditor = this.rssResource.selectNodeText( this.options.managingEditorSelector );
       this.publicationDate = this.rssResource.selectNodeText( this.options.publicationDateSelector );
       this.title = this.rssResource.selectNodeText( this.options.titleSelector );
       this.webMaster = this.rssResource.selectNodeText( this.options.webMasterSelector );
    }.protect(),
    
    unmarshallItem: function( itemResource ){
-      var rssItem = new RssItem( itemResource );
+      var rssItem = new RssItem( itemResource, this.elementFactory, this.options.itemOptions );
       rssItem.unmarshall();
       this.items.add( rssItem );
    }.protect(),

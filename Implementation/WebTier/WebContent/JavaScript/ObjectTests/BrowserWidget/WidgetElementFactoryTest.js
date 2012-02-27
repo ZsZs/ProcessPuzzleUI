@@ -8,7 +8,9 @@ window.WidgetElementFactoryTest = new Class( {
           { method : 'create_WhenTextIsGivenAddsToNode', isAsynchron : false }, 
           { method : 'create_WhenTextIsGivenTranslatesIt', isAsynchron : false }, 
           { method : 'create_InsertsNewElementIntoGivenPosition', isAsynchron : false }, 
-          { method : 'createAnchor_CreatesNewAnchorElement', isAsynchron : false }, 
+          { method : 'createAnchor_WhenOnClickIsNull_SetsHref', isAsynchron : false }, 
+          { method : 'createAnchor_WhenOnClickIsGiven_SetsHrefToNumber', isAsynchron : false }, 
+          { method : 'createAnchor_UriIsLocal_setsOnClickToWebUiController', isAsynchron : false }, 
           { method : 'createButton_CreatesNewInputElement', isAsynchron : false }, 
           { method : 'createCollapsibleArea_CreatesNewDivElement', isAsynchron : false }, 
           { method : 'createDivisionElement', isAsynchron : false }, 
@@ -33,6 +35,7 @@ window.WidgetElementFactoryTest = new Class( {
       HIDDEN_DIVISION_ID : "hiddenVisionId",
       INTERNATIONALIZATION_URI : "../BrowserWidget/WidgetInternationalization.xml",
       LANGUAGE : "hu",
+      LOCAL_ANCHOR_LINK : "Content/System/Users.hml",
       NEW_ELEMENT_CLASS : "newElementClass",
       NEW_ELEMENT_ID : "newElementId",
       NEW_ELEMENT_TEXT : "Hello World!",
@@ -109,21 +112,39 @@ window.WidgetElementFactoryTest = new Class( {
       lastChild.destroy();
    },
    
-   createAnchor_CreatesNewAnchorElement : function() {
+   createAnchor_WhenOnClickIsNull_SetsHref : function() {
+      //SETUP:
+      //EXCERCISE:
+      this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.ANCHOR_LINK, null, null, null, {'id' : this.constants.ANCHOR_ID } );
+      
+      //VERIFY:
+      assertEquals( "A", this.newElement.tagName.toUpperCase() );
+      assertEquals( this.constants.ANCHOR_ID, this.newElement.get( 'id' ));
+      assertEquals( this.constants.ANCHOR_TEXT, this.newElement.get( 'text' ));
+      assertThat( this.newElement.get( 'href' ), equalTo( this.constants.ANCHOR_LINK ));
+   },
+   
+   createAnchor_WhenOnClickIsGiven_SetsHrefToNumber : function() {
       //SETUP:
       //EXCERCISE:
       this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.ANCHOR_LINK, this.constants.CLICK_EVENT_HANDLER, null, null, {'id' : this.constants.ANCHOR_ID } );
       
       //VERIFY:
-      assertNotNull( "A new achor was created.", this.newElement );
-      assertEquals( "A", this.newElement.tagName.toUpperCase() );
-      assertEquals( this.constants.ANCHOR_ID, this.newElement.get( 'id' ));
-      assertEquals( this.constants.ANCHOR_TEXT, this.newElement.get( 'text' ));
-      assertEquals( "#", this.newElement.get( 'href' ));
+      assertThat( this.newElement.get( 'href' ), equalTo( "#" ));
 
       var events = this.newElement.retrieve( 'events' );
       var clickEventHandler = events['click'].keys[0];
       assertEquals( this.constants.CLICK_EVENT_HANDLER, clickEventHandler );
+   },
+   
+   createAnchor_UriIsLocal_setsOnClickToWebUiController : function() {
+      //SETUP:
+      //EXCERCISE:
+      this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.LOCAL_ANCHOR_LINK, null, null, null, {'id' : this.constants.ANCHOR_ID } );
+      
+      //VERIFY:
+      assertThat( this.newElement.get( 'href' ), equalTo( "#" ));
+      assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadHtmlDocument( '" + this.constants.LOCAL_ANCHOR_LINK + "' );" ));
    },
    
    createButton_CreatesNewInputElement : function() {

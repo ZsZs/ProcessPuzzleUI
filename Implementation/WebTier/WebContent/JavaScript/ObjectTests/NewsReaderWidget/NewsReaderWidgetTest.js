@@ -5,7 +5,10 @@ window.NewsReaderWidgetTest = new Class( {
    options : {
       testMethods : [
          { method : 'initialize_loadsLocalizedRssVersion', isAsynchron : false },
-         { method : 'unmarshall_instantiatesChannel', isAsynchron : false }]
+         { method : 'unmarshall_instantiatesChannel', isAsynchron : false },
+         { method : 'unmarshall_passesElementFactoryToChannel', isAsynchron : false },
+         { method : 'unmarshall_passesOptionsToChannel', isAsynchron : false },
+         { method : 'construct_constructsChannel', isAsynchron : true }]
    },
 
    constants : {
@@ -64,27 +67,32 @@ window.NewsReaderWidgetTest = new Class( {
       this.newsReaderWidget.unmarshall();
       
       assertThat( this.newsReaderWidget.getChannel(), not( nil() ));
+      assertThat( instanceOf( this.newsReaderWidget.getChannel(), RssChannel ), is( true ));
    },
    
-   asynchronTestOne : function() {
-      this.testCaseChain.chain(
-         function(){
-            //EXCERCISE:
-         }.bind( this ),
-         function(){
-            //VERIFY:
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
+   unmarshall_passesElementFactoryToChannel : function(){
+      this.newsReaderWidget.unmarshall();
+      
+      assertThat( this.newsReaderWidget.getChannel().getElementFactory(), equalTo( this.newsReaderWidget.getElementFactory() ));
    },
    
-   asynchronTestOne : function() {
+   unmarshall_passesOptionsToChannel : function(){
+      this.newsReaderWidget.options.channelOptions = { showDescription : true, showTitle : true, itemOptions : { showDescription : false, showTitle : false } };
+      this.newsReaderWidget.unmarshall();
+      
+      assertThat( this.newsReaderWidget.getChannel().options.showDescription, is( true ));
+      assertThat( this.newsReaderWidget.getChannel().options.showTitle, is( true ));
+   },
+   
+   construct_constructsChannel : function() {
       this.testCaseChain.chain(
          function(){
-            //EXCERCISE:
+            this.newsReaderWidget.unmarshall();
+            this.newsReaderWidget.construct();
          }.bind( this ),
          function(){
-            //VERIFY:
+            assertThat( this.newsReaderWidget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            assertThat( this.newsReaderWidget.getChannel().getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

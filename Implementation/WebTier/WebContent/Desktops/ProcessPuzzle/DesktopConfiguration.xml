@@ -103,26 +103,34 @@
              <documentContentUri></documentContentUri>
          </document>
 		</panel>
-<!-- 
+
 		<panel name='eventsPanel' columnReference='rightColumn' showHeader='true' >
 			<title>DesktopConfigurator.Panel.eventsTitle</title>
-         <document tag="div" id="upcommingEventsWrapper" elementStyle="documentWrapper" type="StaticHtml">
-             <documentDefinitionUri>Content/WidgetExamples/UpcommingEventsDefinition.xml</documentDefinitionUri>
-             <documentContentUri>Content/WidgetExamples/UpcommingEvents</documentContentUri>
-         </document>
 		</panel>
 		
-		<panel name='newsPanel' columnReference='rightColumn' height='250' showHeader='true'>
+		<panel name='newsPanel' columnReference='rightColumn' height='350' showHeader='true'>
 			<title>DesktopConfigurator.Panel.newsTitle</title>
+         <contentURL>Desktops/ProcessPuzzle/Pages/NewsPanel.html</contentURL>
+         <plugin>
+            <resources>
+               <styleSheets>
+                  <styleSheet>Desktops/ProcessPuzzle/Styles/NewsPanel.css</styleSheet>
+               </styleSheets>
+            </resources>
+            <widget name="NewsReaderWidget">
+               <options>
+                  <option name="widgetContainerId" value="'TopNews'"/>
+                  <option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/SiteNewsDefinition.xml'"/>
+                  <option name="componentName" value="'TopNewsWidget'"/>
+                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+               </options>
+            </widget>
+         </plugin>
 		</panel>
-  
- -->     
-      <panel name='communityPanel' columnReference='rightColumn' height='250' showHeader='true'>
+		
+      <panel name='communityPanel' columnReference='rightColumn' height='150' showHeader='true'>
          <title>DesktopConfigurator.Panel.comunityTitle</title>
-      </panel>
-  
-      <panel name='relationshipsPanel' columnReference='rightColumn' height='150' showHeader='true'>
-         <title>DesktopConfigurator.Panel.relationshipsTitle</title>
       </panel>
 	</panels>
 
