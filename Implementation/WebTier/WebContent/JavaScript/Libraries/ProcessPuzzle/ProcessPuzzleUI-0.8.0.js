@@ -709,9 +709,14 @@ Object.extend({
    },
    
    equals : function( thisObject, obj) {
-      if (!thisObject.typeMatches( obj ))
-         return false;
-      return thisObject.toString() === obj.toString();
+      if( !thisObject.typeMatches( obj )) return false;
+      if( typeOf( thisObject ) == 'object' ){
+         for( var objectProperty in thisObject ){
+            if( thisObject[objectProperty] != obj[objectProperty] ) return false;
+         }
+         return true;
+      }
+      else return thisObject.toString() === obj.toString();
    }
 });
 
@@ -1198,6 +1203,12 @@ var ResourceUri = new Class({
    //Public accessors and mutators
    determineLocalizedUri : function(){
       return this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) + "_" + this.locale.getLanguage() + "." + this.options.contentType;      
+   },
+   
+   isLocal : function(){
+      var givenUri = new URI( this.uri );
+      var documentUri = new URI( document.location.href );
+      return givenUri.get( 'host' ) == "" || givenUri.get( 'host' ) == documentUri.get( 'host' ); 
    }
   
   // Properties
@@ -2941,7 +2952,15 @@ var WidgetElementFactory = new Class( {
    },
 
    createAnchor : function( nodeText, anchorLink, clickEventHandler, contextElement, position, elementProperties ) {
-      var defaultProperties = { href : "#", link : anchorLink, events : { click : clickEventHandler } };
+      var defaultProperties;
+      if( clickEventHandler ){
+         defaultProperties = { href : "#", events : { click : clickEventHandler } };
+      }else if( new ResourceUri( anchorLink ).isLocal() ){
+         defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
+      }else {
+         defaultProperties = { href : anchorLink };
+      }
+      
       var properties = this.mergeProperties( defaultProperties, elementProperties );
       var newAnchor = this.create( 'A', nodeText, contextElement, position, properties );
       return newAnchor;
@@ -6941,7 +6960,7 @@ var LanguageSelectorWidget = new Class({
    }.protect()
    
 });
-/*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,      options : {      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource );         this.channel.unmarshall();      }         }.protect()});
+/*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructChannel', 'destroyChannel'],      options : {      channelOptions : {},      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructChannel, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChannel, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructChannel : function(){      this.channel.construct( this.containerElement );      this.constructionChain.callChain();   }.protect(),      destroyChannel : function(){      this.channel.destroy();   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource, this.elementFactory, this.options.channelOptions );         this.channel.unmarshall();      }         }.protect()});
 /********************************* RssChannel ******************************
 Name: RssChannel
 
@@ -6973,64 +6992,149 @@ var RssChannel = new Class({
    Implements: Options,
 
    options: {
-      buildDateSelector : "rss/channel/lastBuildDate/text()",
-      descriptionSelector : "rss/channel/description/text()",
-      documentsSelector : "rss/channel/docs/text()",
-      generatorSelector : "rss/channel/generator/text()",
-      itemsSelector : "rss/channel/item",
-      languageSelector : "rss/channel/language/text()",
-      linkSelector : "rss/channel/link/text()",
-      managingDirectorSelector : "rss/channel/managingEditor/text()",
-      publicationDateSelector : "rss/channel/pubDate/text()",
-      titleSelector : "rss/channel/title/text()",
-      webMasterSelector : "rss/channel/webMaster/text()"
+      buildDateSelector : "//rss/channel/lastBuildDate",
+      descriptionSelector : "//rss/channel/description",
+      descriptionStyle : "rssChannelDescription",
+      documentsSelector : "//rss/channel/docs",
+      generatorSelector : "//rss/channel/generator",
+      itemOptions : {},
+      itemsSelector : "//rss/channel/item",
+      itemsWrapperStyle : "rssItemsWrapper",
+      languageSelector : "//rss/channel/language",
+      linkSelector : "//rss/channel/link",
+      managingEditorSelector : "//rss/channel/managingEditor",
+      publicationDateSelector : "//rss/channel/pubDate",
+      showDescription: true, 
+      showTitle: true, 
+      titleSelector : "//rss/channel/title",
+      titleStyle : "rssChannelTitle",
+      webMasterSelector : "//rss/channel/webMaster",
+      wrapperElementId : "rssChannelWrapper",
+      wrapperElementTag : "div"
    },
    
    //Constructor
-   initialize: function ( rssResource, internationalization, options ) {
+   initialize: function ( rssResource, internationalization, elementFactory, options ) {
       // parameter assertions
       assertThat( rssResource, not( nil() ));
       this.setOptions( options );
       
       this.buildDate;
+      this.containerElement;
       this.description;
       this.documents;
+      this.elementFactory = elementFactory;
       this.generator;
       this.internationalization;
       this.items = new ArrayList();
       this.language;
       this.link;
-      this.managingDirector;
+      this.managingEditor;
       this.publicationDate;
       this.rssResource = rssResource;
+      this.state = BrowserWidget.States.INITIALIZED;
       this.title;
       this.webMaster;
+      this.wrapperElement;
    },
    
    //Public accessor and mutator methods
+   construct : function( containerElement ){
+      if( this.state == BrowserWidget.States.UNMARSHALLED ){
+         this.containerElement = containerElement;
+         this.createWrapperElement();
+         this.createTitleElement();
+         this.createItemsWrapper();
+         this.constructItems();
+         
+         this.state = BrowserWidget.States.CONSTRUCTED;
+      }
+   },
+   
    destroy: function(){
+      if( this.state == BrowserWidget.States.CONSTRUCTED ){
+         this.destroyItems();
+         this.destroyPropertyElements();
+      }
       
+      this.state = BrowserWidget.States.INITIALIZED;
    },
    
    unmarshall: function(){
       this.unmarshallChannelProperties();
       this.unmarshallItems();
+      this.state = BrowserWidget.States.UNMARSHALLED;
    },
    
    //Properties
    getBuildDate: function() { return this.buildDate; },
    getDescription: function() { return this.description; },
    getDocuments: function() { return this.documents; },
+   getElementFactory : function() { return this.elementFactory; },
    getGenerator: function() { return this.generator; },
    getItems: function() { return this.items; },
    getLanguage: function() { return this.language; },
    getLink: function() { return this.link; },
-   getManagingDirector: function() { return this.managingDirector; },
+   getManagingEditor: function() { return this.managingEditor; },
    getPublicationDate: function() { return this.publicationDate; },
+   getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    getWebMaster: function() { return this.webMaster; },
+   getWrapperElement: function() { return this.wrapperElement; },
    
    //Private helper methods
+   constructItems : function() {
+      this.items.each( function( channelItem, index ){
+         channelItem.construct( this.itemsWrapperElement );
+      }.bind( this ));
+   }.protect(),
+   
+   createItemsWrapper : function(){
+      this.itemsWrapperElement = this.elementFactory.create( 
+         this.options.wrapperElementTag, 
+         null, 
+         this.wrapperElement, 
+         WidgetElementFactory.Positions.LastChild, 
+         { 'class' : this.options.itemsWrapperStyle }
+      );
+   }.protect(),
+   
+   createTitleElement : function(){
+      if( this.options.showTitle ){
+         var elementOptions = { 'class' : this.options.titleStyle };
+         var elementText = this.link ? null : this.title;
+         this.titleElement = this.elementFactory.create( 'div', elementText, this.wrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+         
+         if( this.link ){
+            this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+         }
+      }
+   }.protect(),
+   
+   createWrapperElement : function(){
+      this.wrapperElement = this.elementFactory.create( 
+         this.options.wrapperElementTag, 
+         null, 
+         this.containerElement, 
+         WidgetElementFactory.Positions.LastChild, 
+         { id : this.options.wrapperElementId }
+      );
+   }.protect(),
+   
+   destroyItems: function(){
+      this.items.each( function( channelItem, index ){
+         channelItem.destroy();
+      }.bind( this ));
+   }.protect(),
+   
+   destroyPropertyElements: function(){
+      if( this.wrapperElement.removeEvents ) this.wrapperElement.removeEvents();
+      if( this.wrapperElement.destroy ) this.wrapperElement.destroy();
+      
+      if( this.titleElement && this.titleElement.removeEvents ) this.titleElement.removeEvents();
+      if( this.titleElement && this.titleElement.destroy ) this.titleElement.destroy();
+   }.protect(),
+   
    unmarshallChannelProperties: function(){
       this.buildDate = this.rssResource.selectNodeText( this.options.buildDateSelector );
       this.description = this.rssResource.selectNodeText( this.options.descriptionSelector );
@@ -7038,14 +7142,14 @@ var RssChannel = new Class({
       this.generator = this.rssResource.selectNodeText( this.options.generatorSelector );
       this.language = this.rssResource.selectNodeText( this.options.languageSelector );
       this.link = this.rssResource.selectNodeText( this.options.linkSelector );
-      this.managingDirector = this.rssResource.selectNodeText( this.options.managingDirectorSelector );
+      this.managingEditor = this.rssResource.selectNodeText( this.options.managingEditorSelector );
       this.publicationDate = this.rssResource.selectNodeText( this.options.publicationDateSelector );
       this.title = this.rssResource.selectNodeText( this.options.titleSelector );
       this.webMaster = this.rssResource.selectNodeText( this.options.webMasterSelector );
    }.protect(),
    
    unmarshallItem: function( itemResource ){
-      var rssItem = new RssItem( itemResource );
+      var rssItem = new RssItem( itemResource, this.elementFactory, this.options.itemOptions );
       rssItem.unmarshall();
       this.items.add( rssItem );
    }.protect(),
@@ -7089,28 +7193,52 @@ var RssItem = new Class({
 
    options: {
       descriptionSelector: "description",
+      descriptionStyle : "rssItemDescription",
       globalUniqueIdSelector: "guid",
       linkSelector: "link",
       publicationDateSelector: "pubDate",
-      titleSelector: "title"
+      showDescription: true, 
+      showTitle: true, 
+      titleSelector: "title",
+      titleStyle : "rssItemTitle",
+      trancatedDescriptionEnding : "...",
+      truncatedDescriptionLength : 120,
+      truncateDescription : false
    },
    
    //Constructor
-   initialize: function ( itemResource, options ) {
+   initialize: function ( itemResource, elementFactory, options ) {
       // parameter assertions
       assertThat( itemResource, not( nil() ));      
       this.setOptions( options );
       
-      this.description = null;
-      this.globalUniqueId = null;
+      this.containerElement;
+      this.description;
+      this.elementFactory = elementFactory;
+      this.globalUniqueId;
       this.itemResource = itemResource;
-      this.link = null;
-      this.publicationDate = null;
-      this.title = null;
+      this.link;
+      this.publicationDate;
+      this.state = BrowserWidget.States.INITIALIZED;
+      this.title;
    },
    
    //Public accessor and mutator methods
+   construct: function( containerElement ){
+      if( this.state == BrowserWidget.States.UNMARSHALLED ){
+         this.containerElement = containerElement;
+         this.createTitleElement();
+         this.createDescriptionElement();
+         this.state = BrowserWidget.States.CONSTRUCTED;
+      }
+   },
+   
    destroy: function(){
+      if( this.state == BrowserWidget.States.CONSTRUCTED ){
+         this.destroyPropertyElements();
+      }
+      
+      this.state = BrowserWidget.States.INITIALIZED;
    },
    
    unmarshall: function(){
@@ -7119,6 +7247,8 @@ var RssItem = new Class({
       this.link = XmlResource.selectNodeText( this.options.linkSelector, this.itemResource );
       this.publicationDate = XmlResource.selectNodeText( this.options.publicationDateSelector, this.itemResource );
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.itemResource );
+      
+      this.state = BrowserWidget.States.UNMARSHALLED;
    },
    
    //Properties
@@ -7126,9 +7256,42 @@ var RssItem = new Class({
    getGlobalUniqueId: function() { return this.globalUniqueId; },
    getLink: function() { return this.link; },
    getPublicationDate: function() { return this.publicationDate; },
+   getState: function() { return this.state; },
    getTitle: function() { return this.title; },
    
    //Private helper methods
+   createDescriptionElement : function(){
+      if( this.options.showDescription ){
+         var elementOptions = { 'class' : this.options.descriptionStyle };
+         var descriptionText;
+         if( this.options.truncateDescription ){
+            descriptionText = this.description.substr( 0, this.options.truncatedDescriptionLength ) + this.options.trancatedDescriptionEnding;
+         }else {
+            descriptionText = this.description;
+         }
+         this.descriptionElement = this.elementFactory.create( 'div', descriptionText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      }
+   }.protect(),
+   
+   createTitleElement : function(){
+      var elementOptions = { 'class' : this.options.titleStyle };
+      var elementText = this.link ? null : this.title;
+      this.titleElement = this.elementFactory.create( 'div', elementText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      
+      if( this.link ){
+         this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+      }
+   }.protect(),
+   
+   destroyPropertyElement: function( propertyElement ){
+      if( propertyElement.removeEvents ) propertyElement.removeEvents();
+      if( propertyElement.destroy ) propertyElement.destroy();
+   }.protect(),
+   
+   destroyPropertyElements: function(){
+      this.destroyPropertyElement( this.titleElement );
+      this.destroyPropertyElement( this.descriptionElement );
+   }
 });
 /********************************* RssResource ******************************
 Name: RssResource
