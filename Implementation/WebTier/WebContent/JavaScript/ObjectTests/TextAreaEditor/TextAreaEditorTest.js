@@ -1,9 +1,11 @@
 window.TextAreaEditorTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['messageSubscriber', 'onEditorAttached'],
+   Binds : ['messageSubscriber', 'onAnchorClick', 'onEditorAttached'],
 
    options : {
       testMethods : [
+          { method : 'attach_instantiatesMooEditable', isAsynchron : true }, 
+          { method : 'onEditorClick_whenAnchorIsTheEventSource_invokesOnClick', isAsynchron : true }, 
           { method : 'textAddLink_whenNoTextIsSelected_showsNotification', isAsynchron : true }, 
           { method : 'textAddLink_whenTextIsSelected_showsDocumentExplorer', isAsynchron : true }, 
           { method : 'textAddLink_whenReceivesDocumentSelectedMessage_addsOrChangesAnchorHref', isAsynchron : true }]
@@ -18,6 +20,7 @@ window.TextAreaEditorTest = new Class( {
    initialize : function( options ) {
       this.setOptions( options );
       
+      this.clickEvent;
       this.internationalization;
       this.lastMessage;
       this.locale = new Locale({ language : this.constants.LANGUAGE });
@@ -45,6 +48,38 @@ window.TextAreaEditorTest = new Class( {
       this.textAreaEditor.detach();
       this.webUIMessageBus.tearDown();
       this.lastMessage = null;
+   },
+   
+   attach_instantiatesMooEditable : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.textAreaEditor.instantiateTools = spy( this.textAreaEditor.instantiateTools );
+            this.textAreaEditor.attach( this.textAreaElement ); 
+         }.bind( this ),
+         function(){
+            verify( this.textAreaEditor.instantiateTools );
+            assertThat( instanceOf( this.textAreaEditor.mooEditable, MooEditable ), is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   onEditorClick_whenAnchorIsTheEventSource_invokesOnClick : function() {
+      this.testCaseChain.chain(
+         function(){ this.textAreaEditor.attach( this.textAreaElement ); }.bind( this ),
+         function(){
+            this.textAreaEditor.onEditorClick = spy( this.textAreaEditor.onEditorClick );
+            
+            var anchorElement = new Element( 'a', { events: { click: this.onAnchorClick }});
+            this.textAreaEditor.mooEditable.doc.body.grab( anchorElement );
+            anchorElement.click();
+            
+            this.textAreaEditor.mooEditable.editorClick( this.clickEvent );
+            
+            verify( this.textAreaEditor.onEditorClick )();
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    textAddLink_whenNoTextIsSelected_showsNotification : function() {
@@ -91,7 +126,12 @@ window.TextAreaEditorTest = new Class( {
    onEditorAttached : function(){
       this.testCaseChain.callChain();
    },
-
+   
+   //Protected, private helper methods
+   onAnchorClick : function( event ){
+      this.clickEvent = event;
+   },
+   
    selectElementContents : function( targetWindow, targetDocument, el ) {
       var body = targetDocument.body, range, sel;
       if (body.createTextRange) {
