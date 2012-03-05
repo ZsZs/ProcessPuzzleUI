@@ -5,7 +5,6 @@ window.TextAreaEditorTest = new Class( {
    options : {
       testMethods : [
           { method : 'attach_instantiatesMooEditable', isAsynchron : true }, 
-          { method : 'onEditorClick_whenAnchorIsTheEventSource_invokesOnClick', isAsynchron : true }, 
           { method : 'textAddLink_whenNoTextIsSelected_showsNotification', isAsynchron : true }, 
           { method : 'textAddLink_whenTextIsSelected_showsDocumentExplorer', isAsynchron : true }, 
           { method : 'textAddLink_whenReceivesDocumentSelectedMessage_addsOrChangesAnchorHref', isAsynchron : true }]
