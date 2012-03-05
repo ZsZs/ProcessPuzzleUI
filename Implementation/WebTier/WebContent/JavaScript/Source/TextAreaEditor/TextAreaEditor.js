@@ -33,7 +33,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TextAreaEditor = new Class({
    Extends: DocumentEditor,
-   Binds: ['onDocumentSelectedMessage', 'onMooEditableAttach'],
+   Binds: ['onDocumentSelectedMessage', 'onEditorClick', 'onMooEditableAttach'],
    options : {
       componentName : "TextAreaEditor",
       createLinkAlert : "selectionNeeded",
@@ -70,6 +70,17 @@ var TextAreaEditor = new Class({
    
    onDocumentSelectedMessage: function( webUIMessage ){
       this.mooEditable.execute( 'createlink', null, webUIMessage.getDocumentURI() );
+   },
+   
+   onEditorClick: function( event, editor ){
+      var subjectElement = event.target;
+      if( subjectElement.get( 'tag' ).toUpperCase() == 'A' ){
+         if( subjectElement.get( 'onclick' ) ){
+            eval( subjectElement.get( 'onclick' ));
+         }else if( subjectElement.get( 'href' )){
+            document.location.href = subjectElement.get( 'href' );
+         }
+      }
    },
    
    onMooEditableAttach: function(){
@@ -125,7 +136,8 @@ var TextAreaEditor = new Class({
          handleDialogs : false, 
          handleLabel : false, 
          handleSubmit : false,
-         onAttach: this.onMooEditableAttach, 
+         onAttach: this.onMooEditableAttach,
+         onEditorClick : this.onEditorClick,
          toolbar : false
       });
    }.protect(),
