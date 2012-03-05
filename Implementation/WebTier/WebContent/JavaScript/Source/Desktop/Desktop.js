@@ -140,7 +140,6 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.logger.group( this.options.componentName + ".construct", false );
       this.configurationChain.chain( 
          this.loadResources,
          this.constructHeader,
@@ -157,7 +156,6 @@ var Desktop = new Class({
    },
 	
    destroy : function() {
-      this.logger.group( this.options.componentName + ".destroy", false );
       if( this.state > DesktopElement.States.UNMARSHALLED ){
          if( this.resources ) this.resources.release();
          if( this.header ) this.header.destroy();
@@ -170,7 +168,6 @@ var Desktop = new Class({
          this.removeDesktopEvents();
          this.state = DesktopElement.States.INITIALIZED;
       }
-      this.logger.groupEnd( this.options.componentName + ".destroy" );
    },
    
    onContentAreaConstructed: function(){
@@ -383,7 +380,6 @@ var Desktop = new Class({
    finalizeConstruction: function(){
       this.state = DesktopElement.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
-      this.logger.groupEnd( this.options.componentName + ".construct" );
    }.protect(),
 	
    initializeMUI : function() {

@@ -87,13 +87,11 @@ var WebUIController = new Class({
       this.loadWebUIConfiguration();
       this.configureLogger();
 
-      this.logger.group( this.options.componentName + ".setUp", false );
       this.determineCurrentUserLocale();
       this.determineDefaultSkin();
       this.loadInternationalizations();
 
       this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
-      this.logger.groupEnd();
    }.protect(),
 
    //public accessor and mutator methods
@@ -112,7 +110,6 @@ var WebUIController = new Class({
    },
    
    configure : function() {
-      this.logger.group( this.options.componentName + ".configure()", false );
       this.configurationChain.chain( 
          this.loadWebUIConfiguration,
          this.configureLogger,
@@ -124,13 +121,10 @@ var WebUIController = new Class({
          this.storeComponentState,
          this.finalizeConfiguration
       ).callChain();
-      
-      this.logger.groupEnd( this.options.componentName + ".configure()" );
    },
    
    destroy : function() {
       if( this.isConfigured ){
-         this.logger.group( this.options.componentName + ".destroy()", false );
          this.locale = null;
          this.messageBus.tearDown();
          if( this.languageSelector ) this.languageSelector.destroy();
@@ -140,7 +134,6 @@ var WebUIController = new Class({
          this.options.window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
-         this.logger.groupEnd( this.options.componentName + ".destroy()" );
       }
    },
    

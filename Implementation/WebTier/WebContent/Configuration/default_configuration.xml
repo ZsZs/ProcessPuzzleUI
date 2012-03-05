@@ -43,7 +43,7 @@
 			
 		<wui:logging>
 			<wui:loggers>
-				<wui:logger name="WebUI" level="trace" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="WebUI" level="error" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
 			</wui:loggers>
 			
 			<wui:layouts>
@@ -57,7 +57,7 @@
 					commandLineObjectExpansionDepth="10"
 					complainAboutPopUpBlocking="true"
 					focusPopUp="true"
-					lazyInit="false"
+					lazyInit="true"
 					threshold="trace"
 					maxMessages="1000"
 					newestMessageAtTop="true"

@@ -57,7 +57,6 @@ var DesktopPanelHeader = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      this.logger.group( this.options.componentName + ".construct()" );
       if( this.plugin ) this.plugin.construct();
       else this.onPluginConstructed();
    },
@@ -68,7 +67,6 @@ var DesktopPanelHeader = new Class({
    
    onPluginConstructed : function(){
       this.state = DesktopPanelHeader.States.CONSTRUCTED;      
-      this.logger.groupEnd( this.options.componentName + ".construct()" );
       this.fireEvent( 'headerConstructed', this );
    },
    

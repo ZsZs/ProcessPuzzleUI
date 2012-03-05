@@ -5,7 +5,6 @@
 function WebUIInit() {
 	var CONTEXT_ROOT_PREFIX = "../../../"; 
 	var logger = log4javascript.getLogger( ROOT_LOGGER_NAME + ".webUiInit" );
-	logger.group("Initializing Browser Interface.", false );
 
 	var infoPagesMenuCaption = webUIController.getText("InfoPagesMenu");
 	var toDoListName = webUIController.getText("ToDoListName");
@@ -62,5 +61,4 @@ function WebUIInit() {
 	rightMenu.addSubMenuToCompositMenu("SystemAdminMenu","userManagementName", user, new UserManagementCommand());
 	rightMenu.addSubMenuToCompositMenu("SystemAdminMenu","organizationManagementName", organization, new OrganizationManagementCommand());
 	
-	logger.groupEnd();
 }
