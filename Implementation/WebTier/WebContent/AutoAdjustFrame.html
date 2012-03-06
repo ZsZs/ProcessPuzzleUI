@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Auto Adjust Frame</title>
+<script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+<script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+<script type="text/javascript">
+   window.addEvent( 'domready', function() {
+      stretchWindow = new StretchWindow();
+      stretchWindow.construct();
+   });
+   
+   var StretchWindow = new Class({
+      Implements: [Options],
+      options: {
+          estimatedRowHeight: 10,
+          text: "Hello world!\nline one\nline two",
+          windowWidth: 300
+      },
+      
+      initialize: function(){
+          this.contentWrapper;
+          this.frameContainer = $( 'frameContainer' );
+          this.iframe;                
+      },
+          
+      construct: function(){
+          this.createContentWindow();
+          this.adjustIFrameHeight();
+      },
+      
+      adjustIFrameHeight: function(){
+         if( !this.tryToIncreaseHeight() ) this.tryToDecreaseHeight();
+      
+         if( !this.iframe.getStyle( 'overflowY' )) this.iframe.setStyle( 'overflowY', 'hidden' );
+      }.protect(),
+      
+      createContentWindow: function(){
+          this.iframe = new Element( 'iframe', { frameBorder : 0, scrolling : 'no', styles : { overflowY : 'hidden', height : '1', width : this.options.windowWidth }});
+          this.frameContainer.grab( this.iframe );
+          this.contentWrapper = new Element( 'div', { styles : { overflow : 'hidden' }});
+          this.contentWrapper.set( 'text', this.options.text );
+          this.iframe.contentDocument.body.appendChild( this.contentWrapper );
+      }.protect(),
+      
+      tryToDecreaseHeight: function(){
+         while( this.iframe.getScroll().y == 0 && this.iframe.getStyle( 'height' ).toInt() > 0 ) {
+            var currentHeight = this.iframe.getStyle( 'height' ).toInt();
+            var decreasedHeight = ( currentHeight - this.options.estimatedRowHeight ) >= 0 ? currentHeight - this.options.estimatedRowHeight : 0;
+            this.iframe.setStyle( 'height', decreasedHeight );
+            this.iframe.scrollTo( null, 1 );
+         }
+         
+         if( this.iframe.getScroll().y > 0 )
+            this.iframe.setStyle( 'height', this.iframe.getStyle( 'height' ).toInt() + this.options.estimatedRowHeight );
+      }.protect(),
+      
+      tryToIncreaseHeight : function(){
+         this.iframe.scrollTo( null, 1 );
+         
+         while( this.iframe.getScroll().y > 0 ) {
+            var currentHeight = this.iframe.getStyle( 'height' ).toInt();
+            this.iframe.setStyle( 'height', currentHeight + this.options.estimatedRowHeight );
+      
+            this.iframe.scrollTo( null, 1 );
+         }
+      }.protect()
+      
+  });
+</script>
+</head>
+<body>
+<div id="frameContainer"></div>​
+</body>
+</html>
