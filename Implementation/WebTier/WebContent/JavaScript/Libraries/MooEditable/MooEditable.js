@@ -177,6 +177,8 @@ this.MooEditable = new Class({
          var decreasedHeight = ( currentHeight - this.options.estimatedRowHeight ) >= 0 ? currentHeight - this.options.estimatedRowHeight : 0;
          this.iframe.setStyle( 'height', decreasedHeight );
          this.iframe.contentWindow.scrollTo( null, 1 );
+         this.iframe.scrollTop = 1;
+
       }
       
       if( this.iframe.contentWindow.getScroll().y > 0 )

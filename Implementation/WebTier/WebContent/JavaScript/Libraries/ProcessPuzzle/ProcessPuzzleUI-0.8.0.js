@@ -3869,7 +3869,6 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.logger.group( this.options.componentName + ".construct", false );
       this.configurationChain.chain( 
          this.loadResources,
          this.constructHeader,
@@ -3886,7 +3885,6 @@ var Desktop = new Class({
    },
 	
    destroy : function() {
-      this.logger.group( this.options.componentName + ".destroy", false );
       if( this.state > DesktopElement.States.UNMARSHALLED ){
          if( this.resources ) this.resources.release();
          if( this.header ) this.header.destroy();
@@ -3899,7 +3897,6 @@ var Desktop = new Class({
          this.removeDesktopEvents();
          this.state = DesktopElement.States.INITIALIZED;
       }
-      this.logger.groupEnd( this.options.componentName + ".destroy" );
    },
    
    onContentAreaConstructed: function(){
@@ -4112,7 +4109,6 @@ var Desktop = new Class({
    finalizeConstruction: function(){
       this.state = DesktopElement.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
-      this.logger.groupEnd( this.options.componentName + ".construct" );
    }.protect(),
 	
    initializeMUI : function() {
@@ -5093,7 +5089,6 @@ var DesktopPanelHeader = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      this.logger.group( this.options.componentName + ".construct()" );
       if( this.plugin ) this.plugin.construct();
       else this.onPluginConstructed();
    },
@@ -5104,7 +5099,6 @@ var DesktopPanelHeader = new Class({
    
    onPluginConstructed : function(){
       this.state = DesktopPanelHeader.States.CONSTRUCTED;      
-      this.logger.groupEnd( this.options.componentName + ".construct()" );
       this.fireEvent( 'headerConstructed', this );
    },
    
@@ -11174,7 +11168,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TextAreaEditor = new Class({
    Extends: DocumentEditor,
-   Binds: ['onDocumentSelectedMessage', 'onMooEditableAttach'],
+   Binds: ['onDocumentSelectedMessage', 'onEditorClick', 'onMooEditableAttach'],
    options : {
       componentName : "TextAreaEditor",
       createLinkAlert : "selectionNeeded",
@@ -11211,6 +11205,17 @@ var TextAreaEditor = new Class({
    
    onDocumentSelectedMessage: function( webUIMessage ){
       this.mooEditable.execute( 'createlink', null, webUIMessage.getDocumentURI() );
+   },
+   
+   onEditorClick: function( event, editor ){
+      var subjectElement = event.target;
+      if( subjectElement.get( 'tag' ).toUpperCase() == 'A' ){
+         if( subjectElement.get( 'onclick' ) ){
+            eval( subjectElement.get( 'onclick' ));
+         }else if( subjectElement.get( 'href' )){
+            document.location.href = subjectElement.get( 'href' );
+         }
+      }
    },
    
    onMooEditableAttach: function(){
@@ -11266,7 +11271,8 @@ var TextAreaEditor = new Class({
          handleDialogs : false, 
          handleLabel : false, 
          handleSubmit : false,
-         onAttach: this.onMooEditableAttach, 
+         onAttach: this.onMooEditableAttach,
+         onEditorClick : this.onEditorClick,
          toolbar : false
       });
    }.protect(),
@@ -11908,13 +11914,11 @@ var WebUIController = new Class({
       this.loadWebUIConfiguration();
       this.configureLogger();
 
-      this.logger.group( this.options.componentName + ".setUp", false );
       this.determineCurrentUserLocale();
       this.determineDefaultSkin();
       this.loadInternationalizations();
 
       this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
-      this.logger.groupEnd();
    }.protect(),
 
    //public accessor and mutator methods
@@ -11933,7 +11937,6 @@ var WebUIController = new Class({
    },
    
    configure : function() {
-      this.logger.group( this.options.componentName + ".configure()", false );
       this.configurationChain.chain( 
          this.loadWebUIConfiguration,
          this.configureLogger,
@@ -11945,13 +11948,10 @@ var WebUIController = new Class({
          this.storeComponentState,
          this.finalizeConfiguration
       ).callChain();
-      
-      this.logger.groupEnd( this.options.componentName + ".configure()" );
    },
    
    destroy : function() {
       if( this.isConfigured ){
-         this.logger.group( this.options.componentName + ".destroy()", false );
          this.locale = null;
          this.messageBus.tearDown();
          if( this.languageSelector ) this.languageSelector.destroy();
@@ -11961,22 +11961,21 @@ var WebUIController = new Class({
          this.options.window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
-         this.logger.groupEnd( this.options.componentName + ".destroy()" );
       }
    },
    
-   loadDocument : function( documentUri, documentType ){
+   loadDocument : function( documentUri, contentUri, documentType ){
       this.logger.debug( this.options.componentName + ".loadDocument( '" + documentUri + "' )" );
-      var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : documentType, documentURI : documentUri });
+      var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : documentType, documentURI : documentUri, documentContentURI : contentUri });
       this.messageBus.notifySubscribers( message );
    },
    
    loadHtmlDocument : function( documentUri ){
-      this.loadDocument( documentUri, AbstractDocument.Types.HTML );
+      this.loadDocument( documentUri, null, AbstractDocument.Types.HTML );
    },
    
-   loadSmartDocument : function( documentUri ){
-      this.loadDocument( documentUri, AbstractDocument.Types.SMART );
+   loadSmartDocument : function( documentUri, contentUri ){
+      this.loadDocument( documentUri, contentUri, AbstractDocument.Types.SMART );
    },
    
    onDesktopConstructed : function(){
@@ -12195,7 +12194,6 @@ var WebUIController = new Class({
 function WebUIInit() {
 	var CONTEXT_ROOT_PREFIX = "../../../"; 
 	var logger = log4javascript.getLogger( ROOT_LOGGER_NAME + ".webUiInit" );
-	logger.group("Initializing Browser Interface.", false );
 
 	var infoPagesMenuCaption = webUIController.getText("InfoPagesMenu");
 	var toDoListName = webUIController.getText("ToDoListName");
@@ -12252,7 +12250,6 @@ function WebUIInit() {
 	rightMenu.addSubMenuToCompositMenu("SystemAdminMenu","userManagementName", user, new UserManagementCommand());
 	rightMenu.addSubMenuToCompositMenu("SystemAdminMenu","organizationManagementName", organization, new OrganizationManagementCommand());
 	
-	logger.groupEnd();
 }
 ;
 //TestMessageOne.js
