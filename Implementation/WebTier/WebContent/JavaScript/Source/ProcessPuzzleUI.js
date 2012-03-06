@@ -2,6 +2,7 @@
 //= require_directory ./BrowserWidget
 //= require_directory ./ComponentStateManager
 //= require_directory ./Desktop
+//= require_directory ./DiagramWidget
 //= require_directory ./DocumentEditor
 //= require_directory ./FundamentalTypes
 //= require_directory ./HierarchicalMenuWidget
