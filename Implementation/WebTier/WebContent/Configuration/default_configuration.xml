@@ -172,7 +172,7 @@
 		
 		<in:availableLocales>
 			<in:locale>hu</in:locale>
-			<in:locale>en-US</in:locale>
+			<in:locale>en</in:locale>
 		</in:availableLocales>
 		<in:defaultLocale>hu</in:defaultLocale>
 		<in:localeDefinitions>classpath:com/processpuzzle/internalization/domain/LocaleDefinitions.xml</in:localeDefinitions>
