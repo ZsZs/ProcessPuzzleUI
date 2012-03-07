@@ -4,11 +4,12 @@ window.LocaleTest = new Class( {
 
    options : {
       testMethods : [
-          { method : 'instantiate_whenLanguageAndCountryIsGiven_storesThem', isAsynchron : false },
-          { method : 'instantiate_whenNoArgumentIsGiven_usesDefaults', isAsynchron : false },
-          { method : 'equals_whenAllOptionsIsGiven_comparesAllOfThem', isAsynchron : false },
-          { method : 'equals_whenOnlyLanguageIsGiven_comparesOnlyLanguage', isAsynchron : false },
-          { method : 'parse_determinesLanguageCountryAndVariant', isAsynchron : false }]
+         { method : 'instantiate_whenLanguageAndCountryIsGiven_storesThem', isAsynchron : false },
+         { method : 'instantiate_whenNoArgumentIsGiven_usesDefaults', isAsynchron : false },
+         { method : 'equals_whenAllOptionsIsGiven_comparesAllOfThem', isAsynchron : false },
+         { method : 'equals_whenOnlyLanguageIsGiven_comparesOnlyLanguage', isAsynchron : false },
+         { method : 'parse_whenDelimiterIsComma_determinesLanguageCountryAndVariant', isAsynchron : false },
+         { method : 'parse_whenDelimiterIsHyphen_determinesLanguageCountryAndVariant', isAsynchron : false }]
    },
 
    constants : {
@@ -60,9 +61,17 @@ window.LocaleTest = new Class( {
       assertThat( differentInLanguage.equals( subjectLocale ), is( false ));
    },
    
-   parse_determinesLanguageCountryAndVariant : function() {
+   parse_whenDelimiterIsComma_determinesLanguageCountryAndVariant : function() {
       var locale = new Locale();
       locale.parse( "en, GB, EURO" );
+      assertEquals( "en", locale.getLanguage() );
+      assertEquals( "GB",locale.getCountry() );
+      assertEquals( "EURO", locale.getVariant() );
+   },
+
+   parse_whenDelimiterIsHyphen_determinesLanguageCountryAndVariant : function() {
+      var locale = new Locale();
+      locale.parse( "en-GB-EURO" );
       assertEquals( "en", locale.getLanguage() );
       assertEquals( "GB",locale.getCountry() );
       assertEquals( "EURO", locale.getVariant() );
