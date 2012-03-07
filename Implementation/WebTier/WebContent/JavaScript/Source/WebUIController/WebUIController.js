@@ -247,8 +247,8 @@ var WebUIController = new Class({
       this.logger.debug( this.options.componentName + ".determineCurrentUserLocale() started." );
       var browserLanguage = new Locale();
       browserLanguage.parse( navigator.language || navigator.userLanguage );
-      browserLanguage.options.country = "";
-      browserLanguage.options.variant = "";
+      browserLanguage.options.country = null;
+      browserLanguage.options.variant = null;
       if( this.locale == null ){
          var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
          if( storedState ) {
