@@ -93,6 +93,7 @@ var WebUIConfiguration = new Class({
       this.setOptions( options );
       
       //Private instance variables
+      this.availableLocales = new ArrayList();
       this.configurationURI = configurationURI;
       this.i18Element = null;
       this.isLoaded = false;
@@ -101,6 +102,7 @@ var WebUIConfiguration = new Class({
       this.webUIElement = null;
       
       this.load();
+      this.determineAvailableLocales();
    },
    
    load : function(){
@@ -125,6 +127,7 @@ var WebUIConfiguration = new Class({
    },
    
    //Public mutators and accessors
+   getAvailableLocales : function() { return this.availableLocales; },
    getAvailableSkinElements : function() {return this.xmlResource.selectNodes( this.options.availableSkinElementsSelector, this.webUIElement );},
    getConfigurationElement : function() { return this.webUIElement; },
    getDefaultSkin : function() { return this.xmlResource.selectNode( this.options.defaultSkinSelector, this.webUIElement ).nodeValue; },
@@ -399,8 +402,25 @@ var WebUIConfiguration = new Class({
       var skinElements = this.getAvailableSkinElements();
       return this.xmlResource.selectNode( this.options.skinPathAttributeSelector, skinElements[skinIndex] ).value;
    },
+   
+   isSupportedLocale: function( localeInQuestion ){
+      var isSupported = false;
+      this.availableLocales.each( function( locale, index ){
+         if( localeInQuestion.equals( locale )) isSupported = true;
+      }.bind( this ));
+      return isSupported;
+   },
       
    //Private helper methods
+   determineAvailableLocales : function(){
+      for( var i = 0; i < this.getI18LocaleElements().length; i++ ) {
+         var i18LocaleText = this.getI18Locale( i );
+         var locale = new Locale();
+         locale.parse( i18LocaleText );
+         this.availableLocales.add( locale );
+      }
+   }.protect(),
+   
    determineLoggingElementValue : function( selectorExp ) {
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
