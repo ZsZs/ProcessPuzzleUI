@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 var Locale = new Class({
    Implements: Options,
    options: {
-      delimiter : ",",
+      delimiter : ",-",
       language : "en",
       country : null,
       variant : null
