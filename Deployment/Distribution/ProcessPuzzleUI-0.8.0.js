@@ -12467,6 +12467,7 @@ var ToolBarWidget = new Class({
       this.showCaptions = parseBoolean( this.definitionXml.selectNodeText( this.options.showCaptionsSelector, null, false ));
    }
 });
+
 /*
 Name: 
     - VideoPlayerWidget
