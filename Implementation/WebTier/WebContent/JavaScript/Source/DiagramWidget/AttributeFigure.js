@@ -28,6 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 //= require ../DiagramWidget/DiagramFigure.js
+//= require ../DiagramWidget/DiagramWidget.js
 
 var AttributeFigure = new Class({
    Implements : [Events, Options],
