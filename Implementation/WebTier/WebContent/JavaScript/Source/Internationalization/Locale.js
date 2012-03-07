@@ -20,21 +20,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //= require_directory ../FundamentalTypes
 
 var Locale = new Class({
-	Implements: Options,
-	options: {
+   Implements: Options,
+   options: {
       delimiter : ",",
-		language : "en",
-		country : null,
-		variant : null
-	},
+      language : "en",
+      country : null,
+      variant : null
+   },
 	
 	//Constructor
 	initialize: function ( options ) {
-		this.setOptions ( options );
+	   this.setOptions ( options );
 	},
 	
-	//Public accessor and mutator methods
-	parse : function( localeString ) {
+   //Public accessor and mutator methods
+   equals : function( objectToCheck ){
+      return this.options.language == objectToCheck.options.language &&
+      this.options.country == objectToCheck.options.country &&
+      this.options.variant == objectToCheck.options.variant;
+   },
+	
+   parse : function( localeString ) {
       var tokenizer = new StringTokenizer( localeString, {delimiters : this.options.delimiter});
       i = 0;
       while( tokenizer.hasMoreTokens() ) {
@@ -44,9 +50,9 @@ var Locale = new Class({
          else if( i == 2 ) this.options.variant = nextLocaleConstituent;
          i++;
       }
-	},
+   },
 	
-	toString: function() {
+   toString: function() {
 	   var localeString = this.options.language;
 	   if( this.options.country != null && this.options.country != "" ) localeString += this.options.delimiter + this.options.country;
       if( this.options.variant != null && this.options.variant != "" ) localeString += this.options.delimiter + this.options.variant;

@@ -29,9 +29,12 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
    <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
    
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
 	
    <script type="text/javascript">
@@ -303,6 +306,11 @@
  	  function testGetSkinPathByIndex() {
       	assertEquals( SKIN_ONE_PATH, webUIConfiguration.getSkinPathByIndex( 0 ) );
       	assertEquals( SKIN_TWO_PATH, webUIConfiguration.getSkinPathByIndex( 1 ) );
+ 	  }
+ 	  
+ 	  function testIsSupportedLocale( locale ){
+ 	     var enLocale = new Locale({ language : "en", country : "GB" });
+ 	     assertThat( webUIConfiguration.isSupportedLocale( enLocale ), is( true ));
  	  }
       
       function testRelease(){

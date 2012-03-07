@@ -18,54 +18,19 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript"  src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
    <script type="text/javascript"  src="../../Source/Internationalization/Locale.js"></script>
 
+   <script type="text/javascript"  src="../../ObjectTests/Internationalization/LocaleTest.js"></script>
+   
    <script type="text/javascript" >
 		window.addEvent('domready', function() {
-			runTestFunction();
 		});
-  	
-		var LANGUAGE = "hu";
-		var COUNTRY = "HU";
-		var locale;
-
-		function setUp() {
-			locale = new Locale( {language:LANGUAGE, country:COUNTRY} );
-		}
-
-		function tearDown() {
-			locale = null;
-		}
-
-		function testLocale() {
-			assertEquals( LANGUAGE, locale.getLanguage() );
-			assertEquals( COUNTRY, locale.getCountry() );
-		}
-      
-		function testLocaleWithoutOptions() {
-			locale = new Locale();
-			assertEquals( "Language default is:", "en", locale.getLanguage() );
-			assertNull( "Country default is null.",locale.getCountry() );
-			assertNull( "Variant default is null", locale.getVariant() );
-		}
 		
-		function testParse() {
-			var locale = new Locale();
-			locale.parse( "en, GB, EURO" );
-			assertEquals( "en", locale.getLanguage() );
-			assertEquals( "GB",locale.getCountry() );
-			assertEquals( "EURO", locale.getVariant() );
-		}
-      
-		//runs a test function during debugging
-		function runTestFunction(){
-			setUp();
-		    testParse();
-			tearDown();
-		}
+      JsHamcrest.Integration.JsUnit();
 	</script>
 </head>
 

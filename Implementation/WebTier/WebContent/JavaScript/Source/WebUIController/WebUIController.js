@@ -245,12 +245,15 @@ var WebUIController = new Class({
 	
    determineCurrentUserLocale : function() {
       this.logger.debug( this.options.componentName + ".determineCurrentUserLocale() started." );
+      var browserLanguage = new Locale({ language : navigator.language || navigator.userLanguage });
       if( this.locale == null ){
          var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
             this.locale = new Locale();
             this.locale.parse( localeString );
+         }else if( this.webUIConfiguration.isSupportedLocale( browserLanguage )){
+            this.locale = browserLanguage;
          }else {
             this.locale = new Locale();
             this.locale.parse( this.webUIConfiguration.getI18DefaultLocale() );
