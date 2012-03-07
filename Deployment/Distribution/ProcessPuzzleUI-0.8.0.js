@@ -5715,6 +5715,788 @@ var WindowDocker = new Class({
 });
 /*
 Name: 
+    - DiagramWidget
+
+Description: 
+    - Shows an editable Visio like diagram to the user.
+
+Requires:
+    - BrowserWidget, Draw2d
+
+Provides:
+    - DiagramWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DiagramWidget = new Class({
+   Extends : BrowserWidget,
+   Binds : ['destroyCanvas', 'destroyFigures', 'drawCanvas', 'drawFigures'],
+   
+   options : {
+      authorSelector : "//pp:widgetDefinition/author",
+      canvasHeightDefault : 200,
+      canvasHeightSelector : "//pp:widgetDefinition/canvas/@height",
+      canvasWidthDefault : 300,
+      canvasWidthSelector : "//pp:widgetDefinition/canvas/@width",
+      componentName : "DiagramWidget",
+      descriptionSelector : "//pp:widgetDefinition/description",
+      figuresSelector : "//pp:widgetDefinition/figures/annotation | //pp:widgetDefinition/figures/class | //pp:widgetDefinition/figures/inheritanceConnection",
+      nameSelector : "//pp:widgetDefinition/name",
+      paintAreaId : "paintarea",
+      titleSelector : "//pp:widgetDefinition/title",
+      widgetContainerId : "DiagramWidget",
+      widgetDefinitionURI : "MenuDefinition.xml"
+   },
+   
+   //Constructor
+   initialize : function( options, resourceBundle ){
+      this.parent( options, resourceBundle );
+      
+      this.author;
+      this.canvas;
+      this.canvasHeight;
+      this.canvasWidth;
+      this.description;
+      this.figures = new ArrayList();
+      this.name;
+      this.title;
+      this.paintArea;
+   },
+   
+   //Public accessor and mutator methods
+   construct : function( configurationOptions ) {
+      this.parent();
+   },
+   
+   destroy : function() {
+      this.parent();
+   },
+      
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.unmarshallFigures();
+      return this.parent();
+   },
+   
+   //Properties
+   getAuthor : function() { return this.author; },
+   getCanvas : function() { return this.canvas; },
+   getCanvasHeight : function() { return this.canvasHeight; },
+   getCanvasWidth : function() { return this.canvasWidth; },
+   getDescription : function() { return this.i18Resource.getText( this.description ); },
+   getFigures : function() { return this.figures; },
+   getName : function() { return this.name; },
+   getTitle : function() { return this.i18Resource.getText( this.title ); },
+   getPaintArea : function() { return this.paintArea; },
+   
+   //Private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.drawCanvas, this.drawFigures, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyFigures, this.destroyCanvas, this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyCanvas : function(){
+      this.paintArea.destroy();
+      
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyFigures : function(){
+      this.figures.each( function( figure, index ){
+         figure.destroy();
+      }.bind( this ));
+      
+      this.figures.clear();
+      
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   drawCanvas : function(){
+      this.paintArea = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
+            id : this.options.paintAreaId,
+            styles : { height : this.canvasHeight, width : this.canvasWidth }
+         });
+      this.canvas = new draw2d.Workflow( this.options.paintAreaId );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   drawFigures : function(){
+      this.figures.each( function( figure, index ){
+         figure.draw( this );
+      }.bind( this ));
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   unmarshallFigures: function(){
+      var figuresElement = this.definitionXml.selectNodes( this.options.figuresSelector );
+      if( figuresElement ){
+         figuresElement.each( function( figureElement, index ){
+            var figure = DiagramFigureFactory.create( figureElement, this.i18Resource );
+            figure.unmarshall();
+            this.figures.add( figure );
+         }, this );
+      }
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.name = this.unmarshallWidgetProperty( null, this.options.nameSelector );
+      this.description = this.unmarshallWidgetProperty( "", this.options.descriptionSelector );
+      this.title = this.unmarshallWidgetProperty( "", this.options.titleSelector );
+      this.author = this.unmarshallWidgetProperty( "", this.options.authorSelector );
+      this.canvasHeight = parseInt( this.unmarshallWidgetProperty( this.options.canvasHeightDefault, this.options.canvasHeightSelector ));
+      this.canvasWidth = parseInt( this.unmarshallWidgetProperty( this.options.canvasWidthDefault, this.options.canvasWidthSelector ));
+   }.protect(),
+   
+   unmarshallWidgetProperty: function( defaultValue, selector ){
+      var propertyValue = this.definitionXml.selectNodeText( selector );
+      if( propertyValue ) return propertyValue;
+      else return defaultValue;
+   }.protect()
+});
+/*
+Name: 
+    - DiagramFigure
+
+Description: 
+    - Represents an abstract element of DiagramWidget's figure. 
+
+Requires:
+
+Provides:
+    - DiagramFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DiagramFigure = new Class({
+   Implements : [Events, Options],
+   Binds: ['addFigureToCanvas', 'finalizeDraw'],
+   
+   options : {
+      componentName : "DiagramFigure",
+      nameSelector : "@name",
+      positionXSelector : "@positionX",
+      positionYSelector : "@positionY"
+   },
+
+   //Constructor
+   initialize: function( definitionXmlElement, internationalization, options ){
+      this.setOptions( options );
+      
+      this.canvas;
+      this.definitionXml = definitionXmlElement;
+      this.diagram;
+      this.draw2dObject;
+      this.drawChain = new Chain();
+      this.internationalization = internationalization;
+      this.name;
+      this.positionX;
+      this.positionY;
+      this.state = DiagramFigure.States.INITIALIZED;
+   },
+   
+   //Public accessor and mutator methods
+   destroy: function(){
+      if( this.state == DiagramFigure.States.CONSTRUCTED ){
+         this.removeFigureFromCanvas();
+         this.state = DiagramFigure.States.INITIALIZED;
+      }
+   },
+   
+   draw: function( diagram ){
+      assertThat( diagram, not( nil() ));
+      this.diagram = diagram;
+      this.canvas = diagram.getCanvas();
+      this.compileDrawChain();
+      this.drawChain.callChain();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.state = DiagramFigure.States.UNMARSHALLED;
+   },
+   
+   //Properties
+   getDraw2dObject : function() { return this.draw2dObject; },
+   getId: function() { return this.draw2dObject.id; },
+   getName: function() { return this.name; },
+   getPositionX: function() { return this.positionX; },
+   getPositionY: function() { return this.positionY; },
+   getState: function() { return this.state; },
+   
+   //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+   
+   addFigureToCanvas : function(){
+      this.canvas.addFigure( this.draw2dObject, this.positionX, this.positionY );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   finalizeDraw : function(){
+      this.drawChain.clearChain();
+      this.state = DiagramFigure.States.CONSTRUCTED;
+      this.fireEvent( 'drawReady', this );
+   }.protect(),
+   
+   lookUpDiagramFigure : function( figureName ){
+      var searchedFigure = null;
+      this.diagram.getFigures().each( function( figure, index ){
+         if( figure.getName() == figureName ) 
+            searchedFigure = figure;
+      }.bind( this ));
+      
+      return searchedFigure;
+   }.protect(),
+   
+   removeFigureFromCanvas : function(){
+      this.canvas.removeFigure( this.draw2dObject );
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
+      this.positionX = XmlResource.selectNodeText( this.options.positionXSelector, this.definitionXml );
+      this.positionY = XmlResource.selectNodeText( this.options.positionYSelector, this.definitionXml );
+   }.protect()
+});
+
+DiagramFigure.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
+/*
+Name: 
+    - AnnotationFigure
+
+Description: 
+    - Represents an annotation figure. 
+
+Requires:
+
+Provides:
+    - AnnotationFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var AnnotationFigure = new Class({
+   Extends : DiagramFigure,
+   Implements : [Events, Options],
+   Binds: ['instantiateDraw2dObject', 'drawAttributes', 'setDimension'],
+   
+   options : {
+      componentName : "AnnotationFigure",
+      textSelector : "text",
+      heightSelector : "@height",
+      widthSelector : "@width"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      
+      this.height;
+      this.text;
+      this.width;
+   },
+   
+   //Public accessor and mutator methods
+   destroy: function(){
+      this.parent();
+   },
+   
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+   
+   //Properties
+   getHeight : function() { return this.height; },
+   getText : function() { return this.text; },
+   getWidth : function() { return this.width; },
+   
+   //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.setDimension, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.Annotation( this.text );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   setDimension : function(){
+      this.draw2dObject.setDimension( this.width, this.height );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.text = XmlResource.selectNodeText( this.options.textSelector, this.definitionXml );
+      if( this.text ) this.text = this.internationalization.getText( this.text );
+      this.height = parseInt( XmlResource.selectNodeText( this.options.heightSelector, this.definitionXml ));
+      this.width = parseInt( XmlResource.selectNodeText( this.options.widthSelector, this.definitionXml ));
+      
+      this.parent();
+   }.protect()
+   
+});
+
+/*
+Name: 
+    - AttributeFigure
+
+Description: 
+    - Represents an attribute of ClassFigure. 
+
+Requires:
+
+Provides:
+    - AttributeFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var AttributeFigure = new Class({
+   Implements : [Events, Options],
+   Binds: [],
+   
+   options : {
+      componentName : "AttributeFigure",
+      defaultValueSelector : "@defaultValue",
+      nameSelector : "@name",
+      typeSelector : "@type"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.setOptions( options );
+      
+      this.defaultValue;
+      this.definitionXml = definition;
+      this.internationalization = internationalization;
+      this.name;
+      this.type;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+   },
+   
+   //Properties
+   getDefaultValue : function() { return this.defaultValue; },
+   getName : function() { return this.name; },
+   getType : function() { return this.type; },
+   
+   //Protected, private helper methods
+   unmarshallProperties : function(){
+      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
+      this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
+      this.defaultValue = XmlResource.selectNodeText( this.options.defaultValueSelector, this.definitionXml );
+   }.protect()
+});
+
+/*
+Name: 
+    - ClassFigure
+
+Description: 
+    - Represents a figure of UML class. 
+
+Requires:
+
+Provides:
+    - ClassFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var ClassFigure = new Class({
+   Extends : DiagramFigure,
+   Implements : [Events, Options],
+   Binds: ['instantiateDraw2dObject', 'drawAttributes'],
+   
+   options : {
+      attributesSelector : "attributes/attribute",
+      componentName : "ClassFigure"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      
+      this.attributes = new ArrayList();
+   },
+   
+   //Public accessor and mutator methods
+   destroy: function(){
+      this.parent();
+   },
+   
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   unmarshall: function(){
+      this.unmarshallAttributes();
+      this.parent();
+   },
+   
+   //Properties
+   getAttributes : function() { return this.attributes; },
+   
+   //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+
+   drawAttributes : function(){
+      this.attributes.each( function( attribute, index ){
+         this.draw2dObject.addAttribute( attribute.getName(), attribute.getType(), attribute.getDefaultValue() );
+      }.bind( this ));
+      
+      this.drawChain.callChain();
+   }.protect(),
+   
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.shape.uml.Class( this.name );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallAttributes: function(){
+      var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
+      if( attributesElement ){
+         if( !attributesElement.each ) attributesElement = Array.from( attributesElement );
+         attributesElement.each( function( attributeElement, index ){
+            var attribute = new AttributeFigure( attributeElement, this.internationalization );
+            attribute.unmarshall();
+            this.attributes.add( attribute );
+         }, this );
+      }
+   }.protect()
+   
+});
+
+/*
+Name: 
+    - ConnectionFigure
+
+Description: 
+    - Represents a connection between two figures. 
+
+Requires:
+
+Provides:
+    - ConnectionFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var ConnectionFigure = new Class({
+   Extends : DiagramFigure,
+   Implements : [Events, Options],
+   Binds: ['instantiateDraw2dObject', 'linkSourceAndTarget'],
+   
+   options : {
+      componentName : "ConnectionFigure",
+      sourceSelector : "@source",
+      targetSelector : "@target"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      
+      this.sourceFigureName;
+      this.targetFigureName;
+   },
+   
+   //Public accessor and mutator methods
+   destroy: function(){
+      this.parent();
+   },
+   
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+   
+   //Properties
+   getSourceFigureName : function() { return this.sourceFigureName; },
+   getTargetFigureName : function() { return this.targetFigureName; },
+   
+   //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.linkSourceAndTarget, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.Connection( this.name );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   linkSourceAndTarget : function(){
+      var sourceFigure = this.lookUpDiagramFigure( this.sourceFigureName );
+      var targetFigure = this.lookUpDiagramFigure( this.targetFigureName );
+      this.draw2dObject.setSource( sourceFigure.getDraw2dObject().portTop );
+      this.draw2dObject.setTarget( targetFigure.getDraw2dObject().portTop );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.sourceFigureName = XmlResource.selectNodeText( this.options.sourceSelector, this.definitionXml );
+      this.targetFigureName = XmlResource.selectNodeText( this.options.targetSelector, this.definitionXml );
+      this.parent();
+   }.protect()
+});
+
+/*
+Name: DiagramFigureFactory
+
+Description: Instantiates a new subclass of DiagramFigure according to the given XML element.
+
+Requires:
+
+Provides:
+    - DiagramFigureFactory
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DiagramFigureFactory = new Class({
+   Implements: Options,
+   
+   options: {   
+   },
+   
+   initialize: function(){
+   },
+
+   create: function( definitionXmlElement, internationalization, options ){
+      var newFigure;
+      switch( definitionXmlElement.tagName.toUpperCase() ){
+      case "ANNOTATION": 
+         newFigure = new AnnotationFigure( definitionXmlElement, internationalization, options ); break;
+      case "CLASS": 
+         newFigure = new ClassFigure( definitionXmlElement, internationalization, options ); break;
+      case "INHERITANCECONNECTION":
+      default:
+         newFigure = new InheritanceConnectionFigure( definitionXmlElement, internationalization, options ); break;
+      }
+      
+      return newFigure;
+   }
+});
+
+DiagramFigureFactory.create = function(  definitionXmlElement, internationalization, options ){
+   var factory = new DiagramFigureFactory();
+   var figure = factory.create( definitionXmlElement, internationalization, options );
+   return figure;
+};
+/*
+Name: 
+    - InheritanceConnectionFigure
+
+Description: 
+    - Represents a inheritance connection between two figures. 
+
+Requires:
+
+Provides:
+    - InheritanceConnectionFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var InheritanceConnectionFigure = new Class({
+   Extends : ConnectionFigure,
+   Implements : [Events, Options],
+   Binds: ['instantiateDraw2dObject'],
+   
+   options : {
+      componentName : "InheritanceConnectionFigure"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+   },
+   
+   //Public accessor and mutator methods
+   destroy: function(){
+      this.parent();
+   },
+   
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+   
+   //Properties
+   
+   //Protected, private helper methods
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.shape.uml.InheritanceConnection( this.name );
+      this.drawChain.callChain();
+   }.protect()
+});
+
+/*
+Name: 
     - DocumentEditor
 
 Description: 
@@ -12321,6 +13103,7 @@ var TestMessageTwo = new Class({
       this.options.messageClass = TestMessageTwo;
    }
 });
+
 
 
 
