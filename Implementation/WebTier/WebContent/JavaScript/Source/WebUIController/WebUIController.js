@@ -44,6 +44,7 @@ var WebUIController = new Class({
    
    options: {
       artifactTypesXslt : "Commons/JavaScript/WebUIController/TransformBusinessDefinitionToArtifactTypes.xsl",
+      compatibleBrowserVersions : { ie : 8, firefox : 4, safari : 4, chrome : 10, opera : 10 },
       componentName : "WebUIController",
       configurationUri : "Configuration.xml",
       contextRootPrefix : "../../",
@@ -51,6 +52,7 @@ var WebUIController = new Class({
       languageSelectorElementId : "LanguageSelectorWidget",
       loggerGroupName : "WebUIController",
       reConfigurationDelay: 500,
+      unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
       urlRefreshPeriod : 3000,
       window : window
    },
@@ -84,14 +86,18 @@ var WebUIController = new Class({
       this.webUIConfiguration;
       this.webUIException;
 
-      this.loadWebUIConfiguration();
-      this.configureLogger();
+      if( this.browserIsSupported() ){
+         this.loadWebUIConfiguration();
+         this.configureLogger();
 
-      this.determineCurrentUserLocale();
-      this.determineDefaultSkin();
-      this.loadInternationalizations();
+         this.determineCurrentUserLocale();
+         this.determineDefaultSkin();
+         this.loadInternationalizations();
 
-      this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
+         this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
+      }else{
+         this.showWebUIExceptionPage( new Error( this.options.unsupportedBrowserMessage ));
+      }
    }.protect(),
 
    //public accessor and mutator methods
@@ -219,6 +225,11 @@ var WebUIController = new Class({
    setLanguage : function ( newLanguage ) { this.setLanguageInternal( newLanguage ); },
 	
    //private methods
+   browserIsSupported : function(){
+      if( Browser.version >= this.options.compatibleBrowserVersions[Browser.name] ) return true;
+      else return false;
+   }.protect(),
+   
    configureLogger : function() {		
       this.logger =  new WebUILogger( this.webUIConfiguration );
       this.logger.debug( this.options.componentName + ".configureLogger() started." );
