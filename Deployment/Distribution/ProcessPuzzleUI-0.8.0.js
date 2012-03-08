@@ -1186,7 +1186,9 @@ var ResourceUri = new Class({
    Implements: Options,
    
    options: {
-      contentType : "xml"
+      contentType : "xml",
+      documentType : null,
+      documentTypeKey : 'documentType'
    },
    
    // Constructor
@@ -1198,6 +1200,8 @@ var ResourceUri = new Class({
       
       this.locale = locale;
       this.uri = uri;
+      
+      this.determineDocumentType();
    },
    
    //Public accessors and mutators
@@ -1209,11 +1213,20 @@ var ResourceUri = new Class({
       var givenUri = new URI( this.uri );
       var documentUri = new URI( document.location.href );
       return givenUri.get( 'host' ) == "" || givenUri.get( 'host' ) == documentUri.get( 'host' ); 
-   }
+   },
   
-  // Properties
-  
-  //Private helper methods
+   // Properties
+   getDocumentType : function() { return this.options.documentType; },
+   
+   //Private helper methods
+   determineDocumentType : function(){
+      if( !this.options.documentType ){
+         var givenUri = new URI( this.uri );
+         if( givenUri.get( 'data' ) && givenUri.getData( this.options.documentTypeKey ))
+         this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
+      }
+   }.protect()
+   
 });
    
 /**
@@ -2953,10 +2966,16 @@ var WidgetElementFactory = new Class( {
 
    createAnchor : function( nodeText, anchorLink, clickEventHandler, contextElement, position, elementProperties ) {
       var defaultProperties;
+      var anchorUri = anchorLink ? new ResourceUri( anchorLink ) : null;
+      
       if( clickEventHandler ){
          defaultProperties = { href : "#", events : { click : clickEventHandler } };
-      }else if( new ResourceUri( anchorLink ).isLocal() ){
-         defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
+      }else if( anchorUri && anchorUri.isLocal() ){
+         if( anchorUri.getDocumentType() == AbstractDocument.Types.SMART ){
+            defaultProperties = { href : "#", onclick : "top.webUIController.loadSmartDocument( '" + anchorLink  + "' );" };
+         }else {
+            defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
+         }
       }else {
          defaultProperties = { href : anchorLink };
       }
@@ -7071,21 +7090,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 var Locale = new Class({
-	Implements: Options,
-	options: {
-      delimiter : ",",
-		language : "en",
-		country : null,
-		variant : null
-	},
+   Implements: Options,
+   options: {
+      delimiter : ",-",
+      language : "en",
+      country : null,
+      variant : null
+   },
 	
 	//Constructor
 	initialize: function ( options ) {
-		this.setOptions ( options );
+	   this.setOptions ( options );
 	},
 	
-	//Public accessor and mutator methods
-	parse : function( localeString ) {
+   //Public accessor and mutator methods
+   equals : function( objectToCheck ){
+      return this.options.language == objectToCheck.options.language &&
+      this.options.country == objectToCheck.options.country &&
+      this.options.variant == objectToCheck.options.variant;
+   },
+	
+   parse : function( localeString ) {
       var tokenizer = new StringTokenizer( localeString, {delimiters : this.options.delimiter});
       i = 0;
       while( tokenizer.hasMoreTokens() ) {
@@ -7095,9 +7120,9 @@ var Locale = new Class({
          else if( i == 2 ) this.options.variant = nextLocaleConstituent;
          i++;
       }
-	},
+   },
 	
-	toString: function() {
+   toString: function() {
 	   var localeString = this.options.language;
 	   if( this.options.country != null && this.options.country != "" ) localeString += this.options.delimiter + this.options.country;
       if( this.options.variant != null && this.options.variant != "" ) localeString += this.options.delimiter + this.options.variant;
@@ -11596,6 +11621,7 @@ var WebUIConfiguration = new Class({
       this.setOptions( options );
       
       //Private instance variables
+      this.availableLocales = new ArrayList();
       this.configurationURI = configurationURI;
       this.i18Element = null;
       this.isLoaded = false;
@@ -11604,6 +11630,7 @@ var WebUIConfiguration = new Class({
       this.webUIElement = null;
       
       this.load();
+      this.determineAvailableLocales();
    },
    
    load : function(){
@@ -11628,6 +11655,7 @@ var WebUIConfiguration = new Class({
    },
    
    //Public mutators and accessors
+   getAvailableLocales : function() { return this.availableLocales; },
    getAvailableSkinElements : function() {return this.xmlResource.selectNodes( this.options.availableSkinElementsSelector, this.webUIElement );},
    getConfigurationElement : function() { return this.webUIElement; },
    getDefaultSkin : function() { return this.xmlResource.selectNode( this.options.defaultSkinSelector, this.webUIElement ).nodeValue; },
@@ -11902,8 +11930,25 @@ var WebUIConfiguration = new Class({
       var skinElements = this.getAvailableSkinElements();
       return this.xmlResource.selectNode( this.options.skinPathAttributeSelector, skinElements[skinIndex] ).value;
    },
+   
+   isSupportedLocale: function( localeInQuestion ){
+      var isSupported = false;
+      this.availableLocales.each( function( locale, index ){
+         if( localeInQuestion.equals( locale )) isSupported = true;
+      }.bind( this ));
+      return isSupported;
+   },
       
    //Private helper methods
+   determineAvailableLocales : function(){
+      for( var i = 0; i < this.getI18LocaleElements().length; i++ ) {
+         var i18LocaleText = this.getI18Locale( i );
+         var locale = new Locale();
+         locale.parse( i18LocaleText );
+         this.availableLocales.add( locale );
+      }
+   }.protect(),
+   
    determineLoggingElementValue : function( selectorExp ) {
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
@@ -12654,6 +12699,7 @@ var WebUIController = new Class({
    
    options: {
       artifactTypesXslt : "Commons/JavaScript/WebUIController/TransformBusinessDefinitionToArtifactTypes.xsl",
+      compatibleBrowserVersions : { ie : 8, firefox : 4, safari : 4, chrome : 10, opera : 10 },
       componentName : "WebUIController",
       configurationUri : "Configuration.xml",
       contextRootPrefix : "../../",
@@ -12661,6 +12707,7 @@ var WebUIController = new Class({
       languageSelectorElementId : "LanguageSelectorWidget",
       loggerGroupName : "WebUIController",
       reConfigurationDelay: 500,
+      unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
       urlRefreshPeriod : 3000,
       window : window
    },
@@ -12694,14 +12741,18 @@ var WebUIController = new Class({
       this.webUIConfiguration;
       this.webUIException;
 
-      this.loadWebUIConfiguration();
-      this.configureLogger();
+      if( this.browserIsSupported() ){
+         this.loadWebUIConfiguration();
+         this.configureLogger();
 
-      this.determineCurrentUserLocale();
-      this.determineDefaultSkin();
-      this.loadInternationalizations();
+         this.determineCurrentUserLocale();
+         this.determineDefaultSkin();
+         this.loadInternationalizations();
 
-      this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
+         this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
+      }else{
+         this.showWebUIExceptionPage( new Error( this.options.unsupportedBrowserMessage ));
+      }
    }.protect(),
 
    //public accessor and mutator methods
@@ -12829,6 +12880,11 @@ var WebUIController = new Class({
    setLanguage : function ( newLanguage ) { this.setLanguageInternal( newLanguage ); },
 	
    //private methods
+   browserIsSupported : function(){
+      if( Browser.version >= this.options.compatibleBrowserVersions[Browser.name] ) return true;
+      else return false;
+   }.protect(),
+   
    configureLogger : function() {		
       this.logger =  new WebUILogger( this.webUIConfiguration );
       this.logger.debug( this.options.componentName + ".configureLogger() started." );
@@ -12855,12 +12911,18 @@ var WebUIController = new Class({
 	
    determineCurrentUserLocale : function() {
       this.logger.debug( this.options.componentName + ".determineCurrentUserLocale() started." );
+      var browserLanguage = new Locale();
+      browserLanguage.parse( navigator.language || navigator.userLanguage );
+      browserLanguage.options.country = null;
+      browserLanguage.options.variant = null;
       if( this.locale == null ){
          var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
             this.locale = new Locale();
             this.locale.parse( localeString );
+         }else if( this.webUIConfiguration.isSupportedLocale( browserLanguage )){
+            this.locale = browserLanguage;
          }else {
             this.locale = new Locale();
             this.locale.parse( this.webUIConfiguration.getI18DefaultLocale() );
