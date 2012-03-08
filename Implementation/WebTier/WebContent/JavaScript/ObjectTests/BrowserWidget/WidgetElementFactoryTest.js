@@ -10,7 +10,8 @@ window.WidgetElementFactoryTest = new Class( {
           { method : 'create_InsertsNewElementIntoGivenPosition', isAsynchron : false }, 
           { method : 'createAnchor_WhenOnClickIsNull_SetsHref', isAsynchron : false }, 
           { method : 'createAnchor_WhenOnClickIsGiven_SetsHrefToNumber', isAsynchron : false }, 
-          { method : 'createAnchor_UriIsLocal_setsOnClickToWebUiController', isAsynchron : false }, 
+          { method : 'createAnchor_whenUriIsLocal_setsOnClickToWebUiController', isAsynchron : false }, 
+          { method : 'createAnchor_whenUriIsLocal_determinesDocumentType', isAsynchron : false }, 
           { method : 'createButton_CreatesNewInputElement', isAsynchron : false }, 
           { method : 'createCollapsibleArea_CreatesNewDivElement', isAsynchron : false }, 
           { method : 'createDivisionElement', isAsynchron : false }, 
@@ -36,6 +37,7 @@ window.WidgetElementFactoryTest = new Class( {
       INTERNATIONALIZATION_URI : "../BrowserWidget/WidgetInternationalization.xml",
       LANGUAGE : "hu",
       LOCAL_ANCHOR_LINK : "Content/System/Users.hml",
+      LOCAL_ANCHOR_LINK_WITH_QUERY : "Content/System/Users.hml?documentType=SMART",
       NEW_ELEMENT_CLASS : "newElementClass",
       NEW_ELEMENT_ID : "newElementId",
       NEW_ELEMENT_TEXT : "Hello World!",
@@ -137,7 +139,7 @@ window.WidgetElementFactoryTest = new Class( {
       assertEquals( this.constants.CLICK_EVENT_HANDLER, clickEventHandler );
    },
    
-   createAnchor_UriIsLocal_setsOnClickToWebUiController : function() {
+   createAnchor_whenUriIsLocal_setsOnClickToWebUiController : function() {
       //SETUP:
       //EXCERCISE:
       this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.LOCAL_ANCHOR_LINK, null, null, null, {'id' : this.constants.ANCHOR_ID } );
@@ -145,6 +147,16 @@ window.WidgetElementFactoryTest = new Class( {
       //VERIFY:
       assertThat( this.newElement.get( 'href' ), equalTo( "#" ));
       assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadHtmlDocument( '" + this.constants.LOCAL_ANCHOR_LINK + "' );" ));
+   },
+   
+   createAnchor_whenUriIsLocal_determinesDocumentType : function() {
+      //SETUP:
+      //EXCERCISE:
+      this.newElement = this.elementFactory.createAnchor( this.constants.ANCHOR_TEXT, this.constants.LOCAL_ANCHOR_LINK_WITH_QUERY, null, null, null, {'id' : this.constants.ANCHOR_ID } );
+      
+      //VERIFY:
+      assertThat( this.newElement.get( 'href' ), equalTo( "#" ));
+      assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadSmartDocument( '" + this.constants.LOCAL_ANCHOR_LINK_WITH_QUERY + "' );" ));
    },
    
    createButton_CreatesNewInputElement : function() {
