@@ -68,11 +68,11 @@ var WidgetElementFactory = new Class( {
 
    createAnchor : function( nodeText, anchorLink, clickEventHandler, contextElement, position, elementProperties ) {
       var defaultProperties;
-      var anchorUri = new ResourceUri( anchorLink );
+      var anchorUri = anchorLink ? new ResourceUri( anchorLink ) : null;
       
       if( clickEventHandler ){
          defaultProperties = { href : "#", events : { click : clickEventHandler } };
-      }else if( anchorUri.isLocal() ){
+      }else if( anchorUri && anchorUri.isLocal() ){
          if( anchorUri.getDocumentType() == AbstractDocument.Types.SMART ){
             defaultProperties = { href : "#", onclick : "top.webUIController.loadSmartDocument( '" + anchorLink  + "' );" };
          }else {
