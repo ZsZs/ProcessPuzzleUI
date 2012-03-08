@@ -4,6 +4,8 @@ window.ResourceUriTest = new Class( {
 
    options : {
       testMethods : [
+         { method : 'determineDocumentType_whenSpecifiedByInstantiation_preservesSetting', isAsynchron : false },
+         { method : 'determineDocumentType_whenNotSpecified_checksQueryString', isAsynchron : false },
          { method : 'determineLocalizedUri_injectsLanguageCodeIntoUri', isAsynchron : false },
          { method : 'isLocal_whenUriNotContainsHostname_thanReturnsTrue', isAsynchron : false },
          { method : 'isLocal_whenUriContainsDifferentHostname_thanReturnsFalse', isAsynchron : false }]
@@ -15,6 +17,7 @@ window.ResourceUriTest = new Class( {
       LOCALIZED_XML_RESOURCE_URI : "../FundamentalTypes/TestXmlResource_hu.xml",
       HTML_RESOURCE_URI : "../FundamentalTypes/TestHtmlResource.html",
       REMOTE_RESOURCE_URI : "http://processpuzzle.com",
+      SMART_DOCUMENT_URI : "../FundamentalTypes/TestXmlResource.xml?documentType=SMART",
       XML_RESOURCE_URI : "../FundamentalTypes/TestXmlResource.xml"
    },
    
@@ -23,17 +26,27 @@ window.ResourceUriTest = new Class( {
       
       this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.htmlResourceUri;
+      this.smartDocumentUri;
       this.xmlResourceUri;
    },
 
    beforeEachTest : function(){
-      this.htmlResourceUri = new ResourceUri( this.constants.HTML_RESOURCE_URI, this.locale, { contentType : 'html' });
+      this.htmlResourceUri = new ResourceUri( this.constants.HTML_RESOURCE_URI, this.locale, { contentType : 'html', documentType : AbstractDocument.Types.HTML });
+      this.smartDocumentUri = new ResourceUri( this.constants.SMART_DOCUMENT_URI );
       this.xmlResourceUri = new ResourceUri( this.constants.XML_RESOURCE_URI, this.locale );
    },
    
    afterEachTest : function (){
       this.htmlResourceUri = null;
       this.xmlResourceUri = null;
+   },
+   
+   determineDocumentType_whenSpecifiedByInstantiation_preservesSetting : function(){
+      assertThat( this.htmlResourceUri.getDocumentType(), equalTo( AbstractDocument.Types.HTML ));
+   },
+   
+   determineDocumentType_whenNotSpecified_checksQueryString : function(){
+      assertThat( this.smartDocumentUri.getDocumentType(), equalTo( AbstractDocument.Types.SMART ));
    },
    
    determineLocalizedUri_injectsLanguageCodeIntoUri : function(){

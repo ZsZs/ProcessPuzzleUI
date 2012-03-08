@@ -29,7 +29,9 @@ var ResourceUri = new Class({
    Implements: Options,
    
    options: {
-      contentType : "xml"
+      contentType : "xml",
+      documentType : null,
+      documentTypeKey : 'documentType'
    },
    
    // Constructor
@@ -41,6 +43,8 @@ var ResourceUri = new Class({
       
       this.locale = locale;
       this.uri = uri;
+      
+      this.determineDocumentType();
    },
    
    //Public accessors and mutators
@@ -52,10 +56,19 @@ var ResourceUri = new Class({
       var givenUri = new URI( this.uri );
       var documentUri = new URI( document.location.href );
       return givenUri.get( 'host' ) == "" || givenUri.get( 'host' ) == documentUri.get( 'host' ); 
-   }
+   },
   
-  // Properties
-  
-  //Private helper methods
+   // Properties
+   getDocumentType : function() { return this.options.documentType; },
+   
+   //Private helper methods
+   determineDocumentType : function(){
+      if( !this.options.documentType ){
+         var givenUri = new URI( this.uri );
+         if( givenUri.get( 'data' ) && givenUri.getData( this.options.documentTypeKey ))
+         this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
+      }
+   }.protect()
+   
 });
    
