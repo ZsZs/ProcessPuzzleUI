@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:eventList
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <events>
+      <event>
+         <title>Unit Test Driven JavaScript Development - Training</title>
+         <link>http://honnia.hu/news</link>
+         <description>Introduction to Test Driven Development for JavaScript developers.</description>
+         <schedule isFullDay="false">
+            <startDate>Tue, 10 Jun 2003 04:00:00 GMT</startDate>
+            <endDate>Tue, 10 Jun 2003 08:00:00 GMT</endDate>
+         </schedule>
+         <location>
+            <address>Prof. Agile - virtual classroom</address>
+            <link>http://agilerenovation.com</link>
+         </location>
+         <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+      </event>  
+       
+      <event>
+         <title>Unit Test Driven Java Development - Training</title>
+         <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+         <description>Introduction to Test Driven Development for Java developers.</description>
+         <schedule isFullDay="false">
+            <startDate></startDate>
+            <endDate></endDate>
+         </schedule>
+         <location>
+            <address>Prof. Agile - virtual classroom</address>
+            <link>http://agilerenovation.com</link>
+         </location>
+         <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
+      </event>  
+   </events> 
+</pp:eventList>

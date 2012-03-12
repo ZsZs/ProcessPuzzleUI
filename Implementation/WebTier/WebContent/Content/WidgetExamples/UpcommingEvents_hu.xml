@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:eventList
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <events>
+	   <event>
+	      <title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</title>
+	      <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+	      <description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</description>
+	      <schedule isFullDay="false">
+	         <startDate>2012 április 2. 8:00 GMT+1</startDate>
+	         <endDate>2012 április 2. 14:00 GMT+1</endDate>
+	      </schedule>
+	      <location>
+	         <address>Prof. Agile - virtuális osztályterem</address>
+	         <link>http://agilerenovation.com</link>
+	      </location>
+	      <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
+	   </event>  
+	    
+	   <event>
+	      <title>Egység teszt központú Java fejlesztés - Tanfolyam</title>
+	      <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+	      <description>Bevezetés az egység teszt alapú fejlesztésbe Java fejlesztők számára.</description>
+	      <schedule isFullDay="false">
+            <startDate>2012 április 9. 8:00 GMT+1</startDate>
+            <endDate>2012 április 9. 14:00 GMT+1</endDate>
+	      </schedule>
+	      <location>
+	         <address>Prof. Agile - virtuális osztályterem</address>
+	         <link>http://agilerenovation.com</link>
+	      </location>
+	      <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
+	   </event>  
+   </events> 
+</pp:eventList>
