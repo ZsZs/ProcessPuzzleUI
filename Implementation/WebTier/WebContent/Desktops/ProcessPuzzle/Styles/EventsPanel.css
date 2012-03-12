@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+
+#UpcommingEvents a {
+   cursor: pointer;
+	text-decoration: none;
+}
+
+#UpcommingEvents .eventTitle{
+   color: teal;
+   font-size: 11px;
+   font-weight: bold;
+   padding-bottom: 3px;
+   padding-top: 3px;
+}
+
+#UpcommingEvents .eventDescription{
+	font-size: 10px;
+   font-weight: lighter;
+}
+
+#UpcommingEvents .eventLocation{
+   font-size: 10px;
+   font-weight: bold;
+}
+
+#UpcommingEvents .eventSchedule{
+   font-size: 10px;
+   font-weight: bold;
+}
