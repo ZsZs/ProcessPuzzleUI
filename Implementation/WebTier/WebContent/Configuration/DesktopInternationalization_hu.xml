@@ -85,6 +85,10 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">főszerkesztő: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmester: </Resource>
 
+    <Resource key="EventWidget.title" type="String">Események</Resource>
+    <Resource key="EventWidget.schedule" type="String">Időpont:</Resource>
+    <Resource key="EventWidget.location" type="String">Hely:</Resource>
+    
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Okos dokumentum</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML tartalom</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Statikus dokumentum</Resource>

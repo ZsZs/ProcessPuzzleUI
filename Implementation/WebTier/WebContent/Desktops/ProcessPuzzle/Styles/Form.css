@@ -49,6 +49,9 @@ div.readOnlyContainer select {
 
 div.row {
 	clear: both;
+	display: block;
+	float: none;
+	height: 18px;
 	padding-top: 3px;
 }
 

@@ -6,7 +6,7 @@
    <events>
 	   <event>
 	      <title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</title>
-	      <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+	      <link>Content/WidgetExamples/UpcommingEvents.xml?documentType=SMART</link>
 	      <description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</description>
 	      <schedule isFullDay="false">
 	         <startDate>2012 április 2. 8:00 GMT+1</startDate>
@@ -21,7 +21,7 @@
 	    
 	   <event>
 	      <title>Egység teszt központú Java fejlesztés - Tanfolyam</title>
-	      <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+	      <link>Content/WidgetExamples/UpcommingEvents.xml?documentType=SMART</link>
 	      <description>Bevezetés az egység teszt alapú fejlesztésbe Java fejlesztők számára.</description>
 	      <schedule isFullDay="false">
             <startDate>2012 április 9. 8:00 GMT+1</startDate>
