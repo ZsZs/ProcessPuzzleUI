@@ -1,5 +1,4 @@
-// XMLBundleParser.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa

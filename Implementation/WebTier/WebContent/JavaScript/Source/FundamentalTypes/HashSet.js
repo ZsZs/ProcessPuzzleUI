@@ -1,4 +1,4 @@
-/**
+/*
  * Name: HasSet
  * 
  * Description: JavaScript implementation of Java HashSet

@@ -1,4 +1,4 @@
-/****************************** TimeoutException ***************************
+/*
 Name: TimeOutException
 
 Description: Thrown when the specified component's configuration or other process timed out.
@@ -21,7 +21,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 var TimeOutException = new Class({
    Extends: WebUIException,
