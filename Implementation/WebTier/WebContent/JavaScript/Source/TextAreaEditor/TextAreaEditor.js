@@ -74,6 +74,11 @@ var TextAreaEditor = new Class({
    
    onEditorClick: function( event, editor ){
       var subjectElement = event.target;
+      
+      if( subjectElement.get( 'tag' ).toUpperCase() != 'A' && subjectElement.getParent().get( 'tag' ).toUpperCase() == 'A' ){
+         subjectElement = subjectElement.getParent();
+      }
+      
       if( subjectElement.get( 'tag' ).toUpperCase() == 'A' ){
          if( subjectElement.get( 'onclick' ) ){
             eval( subjectElement.get( 'onclick' ));
