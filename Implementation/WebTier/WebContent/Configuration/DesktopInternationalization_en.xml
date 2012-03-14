@@ -84,6 +84,10 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">managing editor: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
     
+    <Resource key="EventWidget.title" type="String">Events</Resource>
+    <Resource key="EventWidget.schedule" type="String">Date:</Resource>
+    <Resource key="EventWidget.location" type="String">Location:</Resource>
+      
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.diagram" type="String">Diagram</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>

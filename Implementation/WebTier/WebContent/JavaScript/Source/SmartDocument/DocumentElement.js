@@ -163,7 +163,7 @@ var DocumentElement = new Class({
             anchorElement.appendText( this.text );
             anchorElement.inject( this.htmlElement );
          }else {
-            this.htmlElement.appendText( this.text );
+            if( this.text ) this.htmlElement.appendText( this.text );
          }
       }
       this.constructionChain.callChain();

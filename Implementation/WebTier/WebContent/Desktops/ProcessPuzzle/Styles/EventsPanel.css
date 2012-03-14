@@ -27,3 +27,14 @@
    font-size: 10px;
    font-weight: bold;
 }
+
+#eventWrapper {
+	border: thin;
+	display: block;
+   margin-bottom: 5px;
+   margin-top: 5px;
+}
+
+#eventProperties {
+	margin: 5px;
+}

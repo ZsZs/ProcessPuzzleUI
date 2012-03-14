@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<htmlDocumentDefinition 
+<smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/HtmlDocument.xsd">
+   xsi:noNamespaceSchemaLocation="file:///e:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
    <name>Upcomming Events</name>
    <description>Shows the events in the near future.</description>
    <version>0.5</version>
-   <contentUri>Content/WidgetExamples/UpcommingEvents</contentUri>
-   <handleMenuSelectedEvents>false</handleMenuSelectedEvents>
    
    <resources>
-      <styleSheets></styleSheets>
+      <styleSheets>
+         <styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</styleSheet>
+      </styleSheets>
       <images></images>
       <javaScripts></javaScripts>
    </resources>
 
-</htmlDocumentDefinition>
+   <documentHeader tag="div" id="eventListHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1">EventWidget.title</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="eventListBody">
+      <compositeDataElement tag="div" id="eventWrapper" bind="//pp:eventList/events/event[{index}]" maxOccures="unbounded">
+         <dataElement tag="h2" elementStyle="title" id="itemTitle" bind="//pp:eventList/events/event[{index}]/title"/>
+         <dataElement tag="div" elementStyle="description" id="itemDescription" bind="//pp:eventList/events/event[{index}]/description"/>
+         <formElement id="eventProperties" method="post" bind="//pp:eventList/events/event[{index}]">
+            <formField id="link" label="EventWidget.schedule" bind="//pp:eventList/events/event[{index}]/schedule/startDate"/>
+            <formField id="description" label="EventWidget.location" bind="//pp:eventList/events/event[{index}]/location/address"/>
+         </formElement>
+      </compositeDataElement>
+   </documentBody>
+</smartDocumentDefinition>
