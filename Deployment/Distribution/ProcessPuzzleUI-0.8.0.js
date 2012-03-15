@@ -1,6 +1,6 @@
-/**Name: ArrayListDescription: JavaScript implementation of Java ArrayList class.Requires:Provides:	- ArrayListPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
+/*Name: ArrayListDescription: JavaScript implementation of Java ArrayList class.Requires:Provides:	- ArrayListPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 var ArrayList = new Class({   initialize : function() {      this.array = new Array();   },   add : function( obj ) {      this.array[this.array.length] = obj;   },      addAll : function( array ) {      if (array instanceof Array) {         for ( var i = 0; i < array.length; i++) {            this.add( array[i] );         }      } else if (array instanceof ArrayList) {         for ( var i = 0; i < array.size(); i++) {            this.add( array.get( i ) );         }      }   },      clear : function() {      this.array = new Array();   },      clone : function() {      var clonedList = new ArrayList();      this.each( function( listElement, index ){         clonedList.add( listElement );      }, this );      return clonedList;   },   contains : function( elem ) {      for ( var i = 0; i < this.array.length; i++) {         if (this.array[i] == elem )            return true;      }      return false;   },      each : function( fn, bind ){      for( var i = 0, l = this.size(); i < l; i++ ){         fn.call( bind, this.get( i ), i, this );      }   },      equals : function( anotherList ){      if( !instanceOf( anotherList, ArrayList )) return false;      if( anotherList.size() != this.size() ) return false;      for( var i = 0; i < this.size(); i++ ) {         if( this.get( i ) != anotherList.get( i )) return false;      }      return true;   },      get : function(index) {      return this.array[index];   },      indexOf : function( obj ){      var elementIndex = null;      this.array.some( function( element, index ){         if( element.equals( obj ) ){            elementIndex = index;            return true;         }       }, this );      return elementIndex;   },      isEmpty : function() {      if( this.size() > 0 ) return false;      else return true;   },      iterator : function() {      return new ArrayListIterator( this );   },      remove : function( index ){      var elementAtIndex = this.get( index );      if( elementAtIndex ) {         this.array[index] = null;         this.array = this.array.clean();      }   },      size : function() {      return this.array.length;   }   });var ArrayListIterator = new Class({      initialize : function( arrayList ) {      this.arrayList = arrayList;      this.index = 0;   },      hasNext : function() {      return this.index < this.arrayList.size();   },      next : function() {      return this.arrayList.get( this.index++ );   }});
-/**
+/*
 Name: 
 
 Description: 
@@ -23,7 +23,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 function AssertUtil(){
@@ -119,9 +119,7 @@ AssertUtil.assertMemberStateString = function(member, memberName, mandatory, val
 		}
 	}
 };
-// HashMap.js
-
-/**
+/*
 Name: HashMap
 
 Description: JavaScript implementation of Java HashMap.
@@ -412,7 +410,7 @@ var HashIterator = new Class({
       return this.current;
    }
 });
-/**
+/*
  * Name: HasSet
  * 
  * Description: JavaScript implementation of Java HashSet
@@ -545,7 +543,7 @@ var SetIterator = new Class({
    }
 });
 
-/**
+/*
 Name: WebUIException
 
 Description: 
@@ -603,7 +601,7 @@ var WebUIException = new Class({
    getName: function() { return this.options.name; },
    getSource : function() { return this.options.source; }
 });
-/****************************** IllegalArgumentException ***************************
+/*
 Name: UndefinedXmlResourceException
 
 Description: 
@@ -626,7 +624,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -643,7 +641,7 @@ var IllegalArgumentException = new Class({
       this.parameters = { argumentName : argumentName, argumentValue : argumentValue };
    }	
 });
-/**
+/*
 Name: 
 
 Description: 
@@ -666,7 +664,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 Object.extend({
@@ -917,7 +915,7 @@ Function.implement({
       return typeOf( this ) === typeOf( otherFunction );
    }
 });
-/**
+/*
 Name: LinkedHashMap
 
 Description: Hash table and linked list implementation of the Map interface, with predictable iteration order. 
@@ -941,7 +939,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var LinkedHashMap = new Class({
@@ -1077,7 +1075,7 @@ var LinkedHashIterator = new Class({
 
 /*Name: OptionsResourceDescription: Unmarshalls a set of options from an XML file and transforms to a JavaScript object.Requires:    - XmlResourceProvides:	- OptionsResourcePart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 var OptionsResource = new Class({   Implements: [Options],      options : {      nameSelector : "@name",      optionSelector : "option",      valueSelector : "@value"   },   //Constructor   initialize : function( definitionElement, options ) {      assertThat( definitionElement, not( nil() ));      this.setOptions( options );            this.definitionElement = definitionElement;      this.optionsAsText = "";      this.optionsObject;   },      //Public accessors and mutators   unmarshall: function(){      this.unmarshallOptions();      this.evaluateOptions();   },      //Properties   getOptions: function() { return this.optionsObject; },      //Protected, private helper methods   evaluateOptions: function(){      this.optionsObject = eval( "({" + this.optionsAsText + "})" );   }.protect(),      unmarshallOptions: function(){      var optionElements = XmlResource.selectNodes( this.options.optionSelector, this.definitionElement );      optionElements.each( function( optionElement, index ){         if( index > 0 ) this.optionsAsText += ", ";         var name = XmlResource.selectNodeText( this.options.nameSelector, optionElement );         var value = XmlResource.selectNodeText( this.options.valueSelector, optionElement );//         var arrayExpression = new RegExp( "^[\[]" ); //^[\[]+.*+[]$//         if( value.match( arrayExpression )) //            this.optionsAsText += name + " : " + eval( value );         this.optionsAsText += name + " : " + value ;      }, this );   }.protect()});
-/********************************* RemoteResource ******************************
+/*
 Name: RemoteResource
 
 Description: Retrieves any resource. Overrides isSuccess() of Request to handle local files.
@@ -1102,7 +1100,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var RemoteResource = new Class({
@@ -1229,7 +1227,7 @@ var ResourceUri = new Class({
    
 });
    
-/**
+/*
 Name: StringTokenizer
 
 Description: Breaks a string into tokens.  
@@ -1252,7 +1250,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var StringTokenizer = new Class( {
@@ -1334,9 +1332,9 @@ var StringTokenizer = new Class( {
    }
    
 });
-/**Name:    - TimeOutBehaviourDescription:    - Throws a TimeOutException when the timer isn't stopped within the the specified time interwal.Requires:Provides:	- TimeOutBehaviourPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
+/*Name:    - TimeOutBehaviourDescription:    - Throws a TimeOutException when the timer isn't stopped within the the specified time interwal.Requires:Provides:	- TimeOutBehaviourPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 var TimeOutBehaviour = new Class({   Implements: [Options],   Binds: ['checkTimeOut'],   options: {      delay: 200,      maxTries: 20   },      //Constructor   initialize : function( options ) {      this.setOptions( options );      this.checkedProcessName;      this.numberOfTries;      this.timer;   },      //Public accessors and mutators   checkTimeOut: function(){      this.numberOfTries++;      if( this.numberOfTries >= this.options.maxTries ){         clearInterval( this.timer );         throw new TimeOutException( this.options.componentName, this.checkedProcessName );      }   },      startTimeOutTimer: function( processName ){      this.checkedProcessName = processName;      this.numberOfTries = 0;      this.timer = this.checkTimeOut.periodical( this.options.delay );   },      stopTimeOutTimer: function(){      clearInterval( this.timer );   }});
-/****************************** TimeoutException ***************************
+/*
 Name: TimeOutException
 
 Description: Thrown when the specified component's configuration or other process timed out.
@@ -1359,7 +1357,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var TimeOutException = new Class({
@@ -1381,7 +1379,7 @@ var TimeOutException = new Class({
    getComponentName: function() { return this.componentName; },
    getProcessName: function() { return this.processName; },
 });
-/****************************** UndefinedXmlResourceException ***************************
+/*
 Name: UndefinedXmlResourceException
 
 Description: 
@@ -1404,7 +1402,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var UndefinedXmlResourceException = new Class({
@@ -1467,7 +1465,7 @@ UniqueId.generate = function( prefix ){
    var generator = new UniqueId( prefix );
    return generator.generate();
 };
-/****************************** XPathSelectionException ***************************
+/*
 Name: XPathSelectionException
 
 Description: Thrown when an XPath selector did not resulted in any element.
@@ -1490,7 +1488,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var XPathSelectionException = new Class({
@@ -1506,7 +1504,7 @@ var XPathSelectionException = new Class({
       this.parameters = { selector : selector, xmlResourceUri : xmlResourceUri };
    }	
 });
-/********************************* XmlResource ******************************
+/*
 Name: XmlResource
 
 Description: 
@@ -1529,7 +1527,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 var XmlResource = new Class({
@@ -1838,8 +1836,7 @@ if (('Element' in this) && Element.implement) Element.implement({getInstanceOf: 
 Class.getInstanceOf = gIO.bind(storage);
 
 }).call(this);
-//Configure Browser Interface logging
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -2068,8 +2065,7 @@ WebUILogger.WARN = log4javascript.Level.WARN;
 WebUILogger.ERROR = log4javascript.Level.ERROR;
 WebUILogger.FATAL = log4javascript.Level.FATAL;
 WebUILogger.NONE = log4javascript.Level.NONE;
-//WebUIMessageBus.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -2922,7 +2918,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 
 var WidgetElementFactory = new Class( {
@@ -3235,7 +3231,7 @@ WidgetElementFactory.Positions = {
    FirstChild : 2,
    LastChild : 3,
    Undefined : 4 };
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -3269,7 +3265,7 @@ var DefaultStateUriTransformer = new Class({
       return this.stateManager.toString();
    }
 });
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -5153,7 +5149,7 @@ var DesktopPanelHeader = new Class({
 });
 
 DesktopPanelHeader.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -5456,7 +5452,7 @@ var DesktopWindow = new Class({
 });
 
 DesktopWindow.Activity = { SHOW_WINDOW : 'showWindow', SHOW_NOTIFICATION : 'showNotification' };
-/****************************** NoneExistingDesktopContainerElementException ***************************
+/*
 Name: NoneExistingDesktopContainerElementException
 
 Description: Thrown when the specified desktop container element doesn't exist.
@@ -5479,7 +5475,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -5497,11 +5493,7 @@ var NoneExistingDesktopContainerElementException = new Class({
       this.parameters = { desktopContainerId : desktopContainerId };
    }	
 });
-/**
- * PanelDefinition.js
- */
-
- /**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -5604,7 +5596,7 @@ var ResourceNotFoundException = new Class({
       this.parameters = { resourceName : resourceName };
    }
 });
-/****************************** UnconfiguredDocumentElementException ***************************
+/*
 Name: UnconfiguredDesktopElementException
 
 Description: Thrown when a DesktopElement's method is invoked but the object isn't configure appropriately.
@@ -5627,7 +5619,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -7074,8 +7066,7 @@ var HierarchicalMenuWidget = new Class({
       else this.restoreComponentState();
    }.protect()
 });
-//MenuSelectedMessage.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -7267,7 +7258,7 @@ var HtmlDocument = new Class({
    }.protect()
       
 });
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -7335,8 +7326,7 @@ var Locale = new Class({
 	getVariant : function () {return this.options.variant;}
 	
 });
-// LocaleUtil.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -7477,8 +7467,7 @@ var ResourceCache = new Class({
 
 	//private methods
 });
-// ResourceKey.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -7541,8 +7530,7 @@ var ResourceKey = new Class({
 
    //private methods
 });
-// XMLBundleParser.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -7645,8 +7633,7 @@ var XMLBundleParser = new Class({
 	    return false;
 	}.protect()
 });
-// XMLResourceBundle.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -7961,7 +7948,7 @@ var LanguageSelectorWidget = new Class({
    
 });
 /*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructChannel', 'destroyChannel'],      options : {      channelOptions : {},      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructChannel, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChannel, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructChannel : function(){      this.channel.construct( this.containerElement );      this.constructionChain.callChain();   }.protect(),      destroyChannel : function(){      this.channel.destroy();   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource, this.elementFactory, this.options.channelOptions );         this.channel.unmarshall();      }         }.protect()});
-/********************************* RssChannel ******************************
+/*
 Name: RssChannel
 
 Description: Represents and RSS 2.0 channel as JavaScript object 
@@ -7984,7 +7971,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -8161,7 +8148,7 @@ var RssChannel = new Class({
       }, this );
    }.protect()
 });
-/********************************* RssItem ******************************
+/*
 Name: RssItem
 
 Description: Represents and RSS 2.0 channel item as JavaScript object 
@@ -8184,7 +8171,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -8293,7 +8280,7 @@ var RssItem = new Class({
       this.destroyPropertyElement( this.descriptionElement );
    }
 });
-/********************************* RssResource ******************************
+/*
 Name: RssResource
 
 Description: Represents and RSS 2.0 xml resource file as JavaScript object 
@@ -8316,7 +8303,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -9268,7 +9255,7 @@ var ResourceManager = new Class({
 });
 
 ResourceManager.States = { INITIALIZED : 0, UNMARSHALLED : 1, LOADED : 2 };
-/****************************** UndefinedDocumentResourceException ***************************
+/*
 Name: UndefinedXmlResourceException
 
 Description: 
@@ -9291,7 +9278,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -9313,8 +9300,7 @@ var UndefinedDocumentResourceException = new Class({
       this.parameters = { resourceName : resourceName };
    }	
 });
-//LanguageChangedMessage.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -9359,8 +9345,7 @@ var SkinChangedMessage = new Class({
    getPreviousSkin: function() { return this.options.previousSkin; }
 });
 
-//LanguageSelectorWidget.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -10967,7 +10952,7 @@ var FormField = new Class({
       this.label = this.resourceBundle.getText( XmlResource.determineAttributeValue( this.definitionElement, this.options.labelSelector ));
    }
 });
-/****************************** MissingBindVariableException ***************************
+/*
 Name: MissingBindVariableException
 
 Description: Thrown when a DataElement's 'bind' attribute doesn't contain one or more variables.
@@ -10992,7 +10977,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -11011,7 +10996,7 @@ var MissingBindVariableException = new Class({
    }	
 });
 /*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.state = AbstractDocument.States.CONSTRUCTED;      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError } );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, { onConstructed : this.onBodyConstructed, onConstructionError : this.onConstructionError } );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, { onConstructed : this.onFooterConstructed, onConstructionError : this.onConstructionError } );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
-/****************************** UnconfiguredDocumentElementException ***************************
+/*
 Name: UnconfiguredDocumentElementException
 
 Description: Thrown when a DocuementElement's method is invoked but the object isn't configure appropriatelly.
@@ -11034,7 +11019,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 
 
@@ -11052,8 +11037,7 @@ var UnconfiguredDocumentElementException = new Class({
       this.parameters = { methodName : methodName, statusName : statusName };
    }	
 });
-//UnconfiguredWidget.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -11091,8 +11075,7 @@ var DuplicatedTabException = new Class({
    //Properties
    getTabName: function() { return this.options.tabName; }
 });
-//Tab.js
-/**
+/*
  * ProcessPuzzle User Interface Backend agnostic, desktop like configurable,
  * browser font-end based on MochaUI. Copyright (C) 2012 Zsolt Zsuffa
  * 
@@ -11249,8 +11232,7 @@ var Tab = new Class( {
       this.defaultTab = parseBoolean( XmlResource.selectNodeText( this.options.isDefaultSelector, this.definitionElement, null, false ) );
       this.messageProperties = XmlResource.selectNodeText( this.options.messagePropertiesSelector, this.definitionElement );
    }.protect()} );
-//MenuSelectedMessage.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -11303,8 +11285,7 @@ var TabSelectedMessage = new Class({
    getId: function() { return this.options.tabId; }
 });
 
-// TabWidget.js
-/**
+/*
  * ProcessPuzzle User Interface Backend agnostic, desktop like configurable,
  * browser font-end based on MochaUI. Copyright (C) 2011 Joe Kueser, Zsolt
  * Zsuffa
@@ -12235,6 +12216,11 @@ var TextAreaEditor = new Class({
    
    onEditorClick: function( event, editor ){
       var subjectElement = event.target;
+      
+      if( subjectElement.get( 'tag' ).toUpperCase() != 'A' && subjectElement.getParent().get( 'tag' ).toUpperCase() == 'A' ){
+         subjectElement = subjectElement.getParent();
+      }
+      
       if( subjectElement.get( 'tag' ).toUpperCase() == 'A' ){
          if( subjectElement.get( 'onclick' ) ){
             eval( subjectElement.get( 'onclick' ));
@@ -12816,8 +12802,7 @@ function cancelModification() {
 	getWebUIController().getDocumentManager().getActiveDocument().cancel();
 }
 ;
-//UnconfiguredWidget.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -13296,8 +13281,7 @@ function WebUIInit() {
 	
 }
 ;
-//TestMessageOne.js
-/**
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
