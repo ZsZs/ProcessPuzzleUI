@@ -1,4 +1,4 @@
-/********************************* RemoteResource ******************************
+/*
 Name: RemoteResource
 
 Description: Retrieves any resource. Overrides isSuccess() of Request to handle local files.
@@ -23,7 +23,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
+*/
 
 var RemoteResource = new Class({
    Extends: Request,

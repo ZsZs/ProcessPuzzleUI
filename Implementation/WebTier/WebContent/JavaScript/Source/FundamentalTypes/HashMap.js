@@ -1,6 +1,4 @@
-// HashMap.js
-
-/**
+/*
 Name: HashMap
 
 Description: JavaScript implementation of Java HashMap.
