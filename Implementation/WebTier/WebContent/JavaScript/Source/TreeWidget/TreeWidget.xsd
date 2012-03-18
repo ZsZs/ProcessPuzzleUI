@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Zsolt Zsuffa (Zs és Zs) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="TreeView">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="RootNode">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="TreeNode" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TreeNode">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="TreeNode" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="caption" type="xs:string"/>
+			<xs:attribute name="image" type="xs:string"/>
+			<xs:attribute name="orderNumber" type="xs:int"/>
+			<xs:attribute name="nodeId" type="xs:int"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

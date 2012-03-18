@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>Test page for TreeNode.js</title>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<link type="text/css" href="TreeWidget.css" rel=stylesheet></link>
+	
+    <script type="text/javascript" src="../JsUnit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../JsHamcrest/JsHamcrest.js"></script>
+    <script type="text/javascript" src="../JSMockito/jsmockito-1.0.2.js"></script>
+    
+    <script type="text/javascript" src="../MooTools/mootools-core-1.3.js"></script>
+    <script type="text/javascript" src="../Log4JavaScript/log4javascript.js"></script>
+    
+	<script type="text/javascript" src="../CommonScripts/AssertUtil.js"></script>
+	<script type="text/javascript" src="../CommonScripts/UserException.js"></script>
+	<script type="text/javascript" src="../WebUIController/WebUIController.js"></script>
+	<script type="text/javascript" src="../WebUIController/WebUILogger.js"></script>
+
+	<script type="text/javascript" src="TreeNodeType.js"></script>
+	<script type="text/javascript" src="CompositeTreeNodeType.js"></script>
+	<script type="text/javascript" src="TreeNode.js"></script>
+	<script type="text/javascript" src="TreePath.js"></script>
+
+	<script type="text/javascript">
+		window.addEvent('domready', function() {
+		});
+
+		var NODE_ID = "treeNodeId";
+		var NODE_NAME = "treeNodeName";
+		var NODE_CAPTION = "caption of tree node";
+		var nodeType = pageNodeType;
+		var treeNode;
+		var selectableTreeNode;
+		var linkTreeNode;
+		var webUiController;
+
+		function setUp() {
+			webUiController = JsMockito.mock( WebUiController );
+			JsMockito.when( webUiController ).getText( NODE_ID ).thenReturn( NODE_CAPTION );
+			 
+			treeNode = new TreeNode( NODE_ID, nodeType, webUiController );
+			selectableTreeNode = new TreeNode( NODE_ID, nodeType, webUiController, {selectable : true} );
+			linkTreeNode = new TreeNode( NODE_ID, nodeType, webUiController, {url : 'http://itkodex.hu', target : '_blank' } );
+		}
+
+		function tearDown(){
+			treeNode = null;
+			selectableTreeNode = null;
+			linkTreeNode = null;
+		}
+
+		function testInitialization_WhenOnlyRequiredArgumentsAreGiven_UsesDefaults() {
+			//SETUP, EXCERCISE:
+			
+			//VERIFY:
+			assertNotNull( "A new TreeNode was successfully instantiated.", treeNode );
+			assertEquals( "TreeNode retains the given node id.", NODE_ID, treeNode.getID() );
+			assertEquals( "TreeNode retains the given node caption.", NODE_CAPTION, treeNode.getCaption() );
+			assertEquals( "After instantiation root node is itself.", treeNode, treeNode.getRootNode() );
+			assertEquals( "By default the node 'selectable' is:", false, treeNode.options.selectable );
+			assertEquals( "By default the 'target' is:", '_blank', treeNode.options.target );
+			assertNull( "By default the 'url' is null.", treeNode.options.url );
+			assertFalse( treeNode.isVisible() );
+		}
+		
+		function testInitialization_WhenRequiredArgumentIsMissing_ThrowsException() {
+			try{
+				new TreeNode( null );
+	      		fail( "Exception was expected. 'nodeId' parameter can't be null or empty." );
+			}catch( e ) {
+	      		assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+			}
+
+			try{
+				new TreeNode( NODE_ID );
+	      		fail( "Exception was expected. 'nodeType' parameter can't be null or empty." );
+			}catch( e ) {
+	      		assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+			}
+			
+			try{
+				new TreeNode( NODE_ID, folderNodeType );
+	      		fail( "Exception was expected. 'nodeType' parameter can't be null or empty." );
+			}catch( e ) {
+	      		assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+			}
+		}
+
+		function testShow_WhenNewlyCreated_BuildsHtmlRepresentations() {
+			//EXCERCISE:
+			treeNode.show();
+			selectableTreeNode.show();
+			linkTreeNode.show();
+			
+			//VERIFY:
+			verifyNodeContainerElement();
+			verifyTrailingImages();
+			verifyNodeImage();
+			verifyNodeCaption();						
+		}
+		
+		function verifyNodeContainerElement() {
+			var containerElement = treeNode.getContainerElement();
+			assertNotNull( containerElement );
+			assertEquals( treeNode.getID(), containerElement.get( 'id' ) );
+			assertTrue( containerElement.hasClass( nodeType.getNodeClassWhenVisible() ));
+		}
+		
+		function verifyNodeCaption() {
+			var nodeCaptionElement = treeNode.getCaptionContainer();
+			assertEquals( 'SPAN', 	nodeCaptionElement.tagName.toUpperCase() );
+			assertEquals( NODE_CAPTION, nodeCaptionElement.get( 'text' ) );
+			assertTrue( nodeCaptionElement.hasClass( nodeType.getCaptionClass() ) );
+			
+			assertEquals( NODE_CAPTION, selectableTreeNode.getCaptionContainer().get( 'text' )); 
+			assertTrue( selectableTreeNode.getCaptionContainer().hasClass( nodeType.getCaptionClassWhenSelectable() ));
+			
+			var linkElement = linkTreeNode.getCaptionContainer().getFirst();
+			assertEquals( NODE_CAPTION, linkElement.get( 'text' )); 
+			assertEquals( linkTreeNode.options.url, linkElement.get( 'href' )); 
+			assertEquals( linkTreeNode.options.target, linkElement.get( 'target' )); 
+			assertTrue( linkElement.hasClass( nodeType.getCaptionLinkClass() ));
+		}
+		
+		function verifyNodeImage() {
+			var nodeImageElement = treeNode.getNodeImageElement();
+			assertEquals( nodeType.determineNodeImage(), nodeImageElement.get( 'src' ));
+			assertTrue( nodeImageElement.hasClass( nodeType.getNodeImageClass() ));
+			assertTrue( treeNode.getContainerElement().hasChild( nodeImageElement ));
+		}
+		
+		function verifyTrailingImages() {
+			var nodeTrailerImage = treeNode.getContainerElement().getFirst();
+			assertEquals( nodeType.getLineImageWhenLast(), nodeTrailerImage.get( 'src' ));
+			assertTrue( nodeTrailerImage.hasClass( nodeType.getNodeImageClass() ));
+		}
+
+		//runs a test funcition during debugging
+		function runTestFunction(){
+			setUp();
+			testInitialization_WhenOnlyRequiredArgumentsAreGiven_UsesDefaults();
+			tearDown();
+		}
+	</script>
+</HEAD>
+
+<body>
+	<h1>TreeNode.js test page</h1>
+	<p>This page contains tests for TreeNode.js javascript class.</p>
+
+	<div id=TreeView>
+		<div id="simpleTreeView">
+			<div class="trigger">
+				<IMG class="nodeimage" src="images/minus_no_root.gif">
+				<IMG class="nodeimage" src="images/folder_open.gif">
+				<span class="treetitle" id=branch1>Node1</SPAN>
+			</DIV>
+			<div class="trigger">
+				<IMG class="nodeimage" src="images/line.gif">
+				<IMG class="nodeimage" height=0 src="images/t.gif" width="0"> 
+				<IMG class="nodeimage" src="images/page16x16.gif">
+				<span class="treetitle" id="branch1">Doc1</SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/t.gif">
+				<IMG class=nodeimage src="images/page16x16.gif">
+				<span class=treetitle id=branch1>Doc2</SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/minus.gif">
+				<IMG class=nodeimage src="images/folder_open.gif">
+				<span class='selectedHover' id=branch1>Node3</SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/lastnode.gif">
+				<IMG class=nodeimage src="images/page16x16.gif">
+				<span class='selectedHover' id=branch1><a href='http://www.itkodex.hu'>IT Kódex</a></SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/minus_last.gif">
+				<IMG class=nodeimage src="images/folder_open.gif">
+				<span class=treetitle id=branch1>Node4</SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/white.gif">
+				<IMG class=nodeimage height=0 src="images/t.gif" width="0"> 
+				<IMG class=nodeimage src="images/page16x16.gif">
+				<span class=treetitle id=branch1>Doc3</SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class=nodeimage src="images/line.gif">
+				<IMG class=nodeimage src="images/white.gif">
+				<IMG class=nodeimage src="images/lastnode.gif">
+				<IMG class=nodeimage src="images/page16x16.gif">
+				<span class='treetitle' id=branch1>Doc4</SPAN>
+			</DIV>
+			<div class=trigger>
+				<IMG class='nodeimage' src="images/plus_last.gif">
+				<IMG class=nodeimage src="images/folder_closed.gif">
+				<span class=treetitle id=branch1>Node2</SPAN>
+			</DIV>
+		</DIV>
+	</div>
+</body>
+</html>

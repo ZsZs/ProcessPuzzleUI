@@ -34,6 +34,22 @@
          </menuItem>
 		</menuItem>
 		
+      <menuItem menuItemId="Widgets" caption="HierarchicalMenuWidget.widgets">
+         <messageProperties>{ actionType : 'loadMenu', contextItemId : 'Widgets'}</messageProperties>
+               
+         <menuItem menuItemId="Widgets-NewsReader" caption="HierarchicalMenuWidget.widgets.newsReader" isDefault="true">
+            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         </menuItem>
+                  
+         <menuItem menuItemId="Widgets-Event" caption="HierarchicalMenuWidget.widgets.eventsReader">
+            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         </menuItem>
+                  
+         <menuItem menuItemId="Widgets-Tree" caption="HierarchicalMenuWidget.widgets.treeView">
+            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/TreeDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         </menuItem>
+      </menuItem>
+      
 		<menuItem menuItemId="Administration" caption="HierarchicalMenuWidget.administration">
 			<messageProperties>{ actionType : 'loadMenu', contextItemId : 'Administration'}</messageProperties>
 					

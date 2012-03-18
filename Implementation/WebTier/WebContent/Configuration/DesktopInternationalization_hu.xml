@@ -88,6 +88,10 @@
     <Resource key="EventWidget.title" type="String">Események</Resource>
     <Resource key="EventWidget.schedule" type="String">Időpont:</Resource>
     <Resource key="EventWidget.location" type="String">Hely:</Resource>
+
+    <Resource key="HierarchicalMenuWidget.administration" type="String">Adminisztráció</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.about" type="String">Névjegy</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Felhasználók</Resource>
     
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Okos dokumentum</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML tartalom</Resource>
@@ -97,10 +101,11 @@
     <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Fotó album</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Videó album</Resource>
 
-    <Resource key="HierarchicalMenuWidget.administration" type="String">Adminisztráció</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.about" type="String">Névjegy</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Felhasználók</Resource>
-
+    <Resource key="HierarchicalMenuWidget.widgets" type="String">Komponensek</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets.eventsReader" type="String">Esemény napló</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets.newsReader" type="String">Hírolvasó</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets.treeView" type="String">Fa szerkezet</Resource>
+    
     <Resource key="LanguageSelectorWidget.en" type="String">angol</Resource>
     <Resource key="LanguageSelectorWidget.hu" type="String">magyar</Resource>
     <Resource key="LanguageSelectorWidget.select" type="String">Válasszon nyelvet:</Resource>
@@ -121,5 +126,11 @@
     <Resource key="StaticDocument.introduction" type="String">Ez a példa egy olyan Okos dokumentum, amely csak statikus elemeket tartalmaz. Ezen tulajdonságok jellemzően dokumentum sablon létrehozásához használhatók.</Resource>
     <Resource key="StaticDocument.subTitle" type="String">Okos dokumentum példa</Resource>
     <Resource key="StaticDocument.title" type="String">Statikus dokumentum</Resource>
+    
+    <Resource key="TreeWidgetDocument.exampleDescription" type="String"></Resource>
+    <Resource key="TreeWidgetDocument.footer" type="String"></Resource>
+    <Resource key="TreeWidgetDocument.introduction" type="String"></Resource>
+    <Resource key="TreeWidgetDocument.subTitle" type="String">Okos dokumentum példa</Resource>
+    <Resource key="TreeWidgetDocument.title" type="String">Fa szerkezetet tartalmazó dokumentum</Resource>
   </Language>
 </pp:Resources>

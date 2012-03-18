@@ -22,6 +22,7 @@
          <styleSheet>Desktops/ProcessPuzzle/Styles/ToolBar.css</styleSheet>
 			<styleSheet>Desktops/ProcessPuzzle/Styles/Window.css</styleSheet>
          <styleSheet>Desktops/ProcessPuzzle/Styles/PhotoGalery.css</styleSheet>
+         <styleSheet>Desktops/ProcessPuzzle/Styles/TreeWidget.css</styleSheet>
 		</styleSheets>
 		<images></images>
 		<javaScripts></javaScripts>

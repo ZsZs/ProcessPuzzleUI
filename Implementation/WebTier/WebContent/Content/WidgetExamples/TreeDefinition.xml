@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:treeDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com" 
+   xsi:NamespaceSchemaLocation="C:\zszs_view\ObjectPuzzle\Implementation\WebTier\WebContent\TreeWidget\TreeWidget.xsd">
+	<rootNode isVisible="false">
+		<treeNode nodeId="10" caption="Branch1" image="Desktops/Images/TreeWidget/folder_open.gif" orderNumber="1">
+			<treeNode nodeId="11" caption="Document1" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="1"></treeNode>
+			<treeNode nodeId="12" caption="Document2" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2"></treeNode>
+         <treeNode nodeId="13" caption="Branch1-1" image="Desktops/Images/TreeWidget/folder_open.gif" orderNumber="1">
+	         <treeNode nodeId="131" caption="Document3" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="1"></treeNode>
+	         <treeNode nodeId="132" caption="Document4" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2"></treeNode>
+         </treeNode>
+		</treeNode>
+		<treeNode nodeId="20" caption="Branch2" image="Desktops/Images/TreeWidget/folder_closed.gif" orderNumber="2">
+			<treeNode nodeId="21" caption="Document5" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="1"></treeNode>
+			<treeNode nodeId="22" caption="Document6" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2"></treeNode>
+		</treeNode>
+	</rootNode>
+</pp:treeDefinition>
+

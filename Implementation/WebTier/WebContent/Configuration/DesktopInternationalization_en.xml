@@ -88,6 +88,10 @@
     <Resource key="EventWidget.schedule" type="String">Date:</Resource>
     <Resource key="EventWidget.location" type="String">Location:</Resource>
       
+    <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.about" type="String">About ProcessPuzzle</Resource>
+    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
+    
     <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.diagram" type="String">Diagram</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
@@ -96,9 +100,10 @@
     <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
     <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
 
-    <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.about" type="String">About ProcessPuzzle</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets" type="String">Widgets</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets.eventsReader" type="String">Events Reader</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets.newsReader" type="String">News Reader</Resource>
+    <Resource key="HierarchicalMenuWidget.widgets.treeView" type="String">Tree View</Resource>
     
     <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
     <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
@@ -123,5 +128,11 @@
     <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
     <Resource key="StaticDocument.title" type="String">Static Document</Resource>
     
+    
+    <Resource key="TreeWidgetDocument.exampleDescription" type="String"></Resource>
+    <Resource key="TreeWidgetDocument.footer" type="String"></Resource>
+    <Resource key="TreeWidgetDocument.introduction" type="String"></Resource>
+    <Resource key="TreeWidgetDocument.subTitle" type="String">Smart Document Example</Resource>
+    <Resource key="TreeWidgetDocument.title" type="String">Tree Widget Example</Resource>
   </Language>
 </pp:Resources>

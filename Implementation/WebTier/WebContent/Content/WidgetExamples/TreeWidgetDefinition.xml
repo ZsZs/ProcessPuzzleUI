@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:widgetDefinition
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <name>TreeWidget</name>
+   <description>Tree Widget configured for testing purposes.</description>
+   <version>0.5.0</version>
+   <options>
+   </options>
+   
+</pp:widgetDefinition>
