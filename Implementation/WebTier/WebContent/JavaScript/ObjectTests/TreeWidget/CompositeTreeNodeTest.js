@@ -6,6 +6,7 @@ window.CompositeTreeNodeTest = new Class( {
       testMethods : [
          { method : 'unmarshall_instantiatesChildNodes', isAsynchron : false },
          { method : 'unmarshall_determinesChildNodeClass', isAsynchron : false },
+         { method : 'unmarshall_setsPrevAndNextNode', isAsynchron : false },
          { method : 'construct_createsChildNodeElements', isAsynchron : false }]
    },
 
@@ -75,6 +76,19 @@ window.CompositeTreeNodeTest = new Class( {
             assertThat( instanceOf( childNode, CompositeTreeNode ), is( true ));
          else
             assertThat( instanceOf( childNode, LeafTreeNode ), is( true ));
+      }.bind( this ));
+   },
+   
+   unmarshall_setsPrevAndNextNode : function(){
+      this.compositeTreeNode.unmarshall();
+
+      this.compositeTreeNode.getChildNodes().each( function( childNode, index ){
+         var nextNodeIndex = index + 2;
+         var previousChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[" + index + "]" );
+         var nextChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[" + nextNodeIndex + "]" );
+         
+         if( previousChildDefinition.length > 0 ) assertThat( childNode.getPreviousSibling(), not( nil() ));
+         if( nextChildDefinition.length > 0 ) assertThat( childNode.getNextSibling(), not( nil() ));
       }.bind( this ));
    },
    

@@ -15,12 +15,10 @@ div.nodeWrapper {
 	border:none;
    cursor: default;
    display: inline;
-   height:20px;
    horizontal-align:left;
    margin: 0px;
    padding: 0px;
    vertical-align:middle;
-   width:19px;
 }
 
 .trailingImage {
@@ -28,11 +26,9 @@ div.nodeWrapper {
 }
 
 .nodeHandler {
-	
 }
 
 .nodeIcon {
-	
 }
 
 .nodeCaption {

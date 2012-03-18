@@ -174,6 +174,10 @@ var CompositeTreeNode = new Class( {
       if( childNodeElements ){
          childNodeElements.each( function( childNodeElement, index ){
             var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, this.options );
+            if( index > 0 && index < childNodeElements.length ){
+               this.childNodes.get( index -1 ).nextSibling = treeNode;
+               treeNode.previousSibling = this.childNodes.get( index -1 );
+            }
             treeNode.unmarshall();
             this.childNodes.add( treeNode );
          }.bind( this ));

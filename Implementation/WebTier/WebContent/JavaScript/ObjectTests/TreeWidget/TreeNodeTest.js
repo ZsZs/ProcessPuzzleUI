@@ -7,12 +7,12 @@ window.TreeNodeTest = new Class( {
          { method : 'unmarshall_determinesNodeProperties', isAsynchron : false },
          { method : 'unmarshall_determinesChildNodes', isAsynchron : false },
          { method : 'construct_createsNodeWrapper', isAsynchron : false },
-         { method : 'construct_whenParentIsLastNode_createsSpacerElement', isAsynchron : false },
-         { method : 'construct_whenParentHasNextNode_createsLineElement', isAsynchron : false },
-         { method : 'construct_whenIsLastNode_createsRectagularImageElement', isAsynchron : false },
+         { method : 'construct_whenIsLastNode_createsRectangularImageElement', isAsynchron : false },
          { method : 'construct_whenHasNextNode_createsTImageElement', isAsynchron : false },
          { method : 'construct_createsNodeIcon', isAsynchron : false },
          { method : 'construct_createsCaptionElement', isAsynchron : false },
+         { method : 'construct_whenParentIsLastNode_createsSpacerElement', isAsynchron : false },
+         { method : 'construct_whenParentHasNextNode_createsLineElement', isAsynchron : false },
          { method : 'destroy_removesAllElements', isAsynchron : false }]
    },
 
@@ -91,26 +91,7 @@ window.TreeNodeTest = new Class( {
       assertThat( nodeWrapper.hasClass( this.treeNodeType.getNodeWrapperClass() ), is( true )); 
    },
    
-   construct_whenParentIsLastNode_createsSpacerElement : function() {
-      this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
-      
-      var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getTrailingImageClass() )[0];
-      assertThat( imageElement.get( 'src' ), equalTo( this.treeNodeType.getTrailingImageWhenParentIsLast() )); 
-      assertThat( imageElement.hasClass( this.treeNodeType.getNodeImageClass() ), is( true )); 
-   },
-   
-   construct_whenParentHasNextNode_createsLineElement : function() {
-      this.parentNode.nextNode = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
-      this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
-      
-      var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getTrailingImageClass() )[1];
-      assertThat( imageElement.get( 'src' ), equalTo( this.treeNodeType.getTrailingImageWhenParentHasNext() )); 
-      assertThat( imageElement.hasClass( this.treeNodeType.getNodeImageClass() ), is( true )); 
-   },
-   
-   construct_whenIsLastNode_createsRectagularImageElement : function() {
+   construct_whenIsLastNode_createsRectangularImageElement : function() {
       this.treeNode.unmarshall();
       this.treeNode.construct( this.widgetContainerElement );
       
@@ -121,7 +102,7 @@ window.TreeNodeTest = new Class( {
    },
    
    construct_whenHasNextNode_createsTImageElement : function() {
-      this.treeNode.nextNode = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
+      this.treeNode.nextSibling = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
       this.treeNode.unmarshall();
       this.treeNode.construct( this.widgetContainerElement );
       
@@ -148,6 +129,25 @@ window.TreeNodeTest = new Class( {
       assertThat( captionElement.hasClass( this.treeNodeType.getCaptionClass() ), is( true )); 
       assertThat( captionElement.get( 'id' ), equalTo( this.treeNode.getId() )); 
       assertThat( captionElement.get( 'text' ), equalTo( this.resourceBundle.getText( this.treeNode.getCaption() ))); 
+   },
+   
+   construct_whenParentIsLastNode_createsSpacerElement : function() {
+      this.treeNode.unmarshall();
+      this.treeNode.construct( this.widgetContainerElement );
+      
+      var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getTrailingImageClass() )[0];
+      assertThat( imageElement.get( 'src' ), equalTo( this.treeNodeType.getTrailingImageWhenParentIsLast() )); 
+      assertThat( imageElement.hasClass( this.treeNodeType.getNodeImageClass() ), is( true )); 
+   },
+   
+   construct_whenParentHasNextNode_createsLineElement : function() {
+      this.parentNode.nextSibling = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
+      this.treeNode.unmarshall();
+      this.treeNode.construct( this.widgetContainerElement );
+      
+      var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getTrailingImageClass() )[1];
+      assertThat( imageElement.get( 'src' ), equalTo( this.treeNodeType.getTrailingImageWhenParentHasNext() )); 
+      assertThat( imageElement.hasClass( this.treeNodeType.getNodeImageClass() ), is( true )); 
    },
    
    destroy_removesAllElements : function(){

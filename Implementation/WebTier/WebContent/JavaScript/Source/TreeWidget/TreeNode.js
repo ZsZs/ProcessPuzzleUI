@@ -62,12 +62,12 @@ var TreeNode = new Class({
       this.nodeIconElement;
       this.nodeResource = nodeResource;
       this.nodeWrapperElement;
-      this.nextNode;
+      this.nextSibling;
       this.nodeID;
       this.nodeType = nodeType;
       this.orderNumber;
       this.parentNode = parentNode;
-      this.prevNode;
+      this.previousSibling;
       this.rootNode;
       this.selectPicElement;
       this.trailingImages = new ArrayList();
@@ -139,11 +139,13 @@ var TreeNode = new Class({
    getId : function() { return this.nodeID; },
    getImageUri : function() { return this.imageUri; },
    getNodeImageElement : function() { return this.nodeIconElement; },
+   getNextSibling : function() { return this.nextSibling; },
    getNodeType : function() { return this.nodeType; },
    getOrderNumber : function() { return this.orderNumber; },
    getParentNode : function() { return this.parentNode; },
+   getPreviousSibling : function() { return this.previousSibling; },
    getRootNode : function() { return this.rootNode; },
-   hasNext : function() { return !(this.nextNode == null); },
+   hasNext : function() { return !(this.nextSibling == null); },
    isVisible : function() { return this.visible; },
 
    // private methods
@@ -153,7 +155,7 @@ var TreeNode = new Class({
    }.protect(),
 
    createNodeHandlerImage : function() {
-      var imageSource = this.nextNode ? this.nodeType.getNodeHandlerSourceWhenHasNext() : this.nodeType.getNodeHandlerSourceWhenLast();
+      var imageSource = this.nextSibling ? this.nodeType.getNodeHandlerSourceWhenHasNext() : this.nodeType.getNodeHandlerSourceWhenLast();
       var elementOptions = { 'class' : this.nodeType.getNodeHandlerClass() + " " + this.nodeType.getNodeImageClass(), 'src' : imageSource };
       this.nodeHandlerElement = this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
    }.protect(),
@@ -190,13 +192,13 @@ var TreeNode = new Class({
    }.protect(),
 
    insertTrailingImages : function(nobrElement, thePrefix) {
-      var currentParent = this.parentNode;
-      while( currentParent ){
-         var imageSource = currentParent.hasNext() ? this.nodeType.getTrailingImageWhenParentHasNext() : this.nodeType.getTrailingImageWhenParentIsLast();
+      var currentNode = this.getParentNode();
+      while( currentNode ){
+         var imageSource = currentNode.hasNext() ? this.nodeType.getTrailingImageWhenParentHasNext() : this.nodeType.getTrailingImageWhenParentIsLast();
          var elementOptions = { 'class' : this.nodeType.getTrailingImageClass() + " " + this.nodeType.getNodeImageClass(), 'src' : imageSource };
          this.trailingImages.add( this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.FirstChild, elementOptions ));
 
-         currentParent = currentParent.getParentNode();
+         currentNode = currentNode.getParentNode();
       }
    }.protect(),
 
