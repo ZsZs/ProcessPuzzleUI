@@ -77,8 +77,8 @@ var TreeNodeType = new Class({
       return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNext() : this.getNodeHandlerSourceWhenLast();
    },
    
-	determineNodeImage : function( nodeImage ) {
-		return this.options.imagesFolder + nodeImage;
+	determineNodeImage : function( treeNode ) {
+		return this.options.imagesFolder + this.options.nodeIconImages.page;
 	},
 	
 	//Properties

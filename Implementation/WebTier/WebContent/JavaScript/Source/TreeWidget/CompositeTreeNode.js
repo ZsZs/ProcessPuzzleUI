@@ -55,8 +55,10 @@ var CompositeTreeNode = new Class( {
    // public accessor and mutator methods
    close : function() {
       if( this.isOpened ){
-         this.destroyChildNodes();
          this.isOpened = false;
+         this.destroyChildNodes();
+         this.replaceNodeImage();
+         this.replaceNodeHandlerImage();
       }
    },
    
@@ -108,6 +110,8 @@ var CompositeTreeNode = new Class( {
          this.isOpened = true;
          this.unmarshallChildNodes();
          this.constructChildNodes();
+         this.replaceNodeImage();
+         this.replaceNodeHandlerImage();
       }
    },
 
@@ -150,6 +154,14 @@ var CompositeTreeNode = new Class( {
       }.bind( this ));
       
       this.childNodes.clear();
+   }.protect(),
+   
+   replaceNodeHandlerImage : function(){
+      this.nodeHandlerElement.set( 'src', this.nodeType.determineNodeHandlerImage( this ));
+   }.protect(),
+   
+   replaceNodeImage : function(){
+      this.nodeIconElement.set( 'src', this.nodeType.determineNodeImage( this ));
    }.protect(),
    
    unmarshallChildNodes : function(){

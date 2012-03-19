@@ -11,6 +11,7 @@ window.CompositeTreeNodeTest = new Class( {
          { method : 'construct_whenIsOpened_constructsChildNodes', isAsynchron : false },
          { method : 'construct_whenNodeIsClosed_createsPlusSign', isAsynchron : false },
          { method : 'close_whenNodeIsOpened_destroysChildNodes', isAsynchron : false },
+         { method : 'close_whenNodeIsOpened_replacesPlusSign', isAsynchron : false },
          { method : 'open_whenNodeIsOpened_destroysChildNodes', isAsynchron : false }]
    },
 
@@ -104,25 +105,21 @@ window.CompositeTreeNodeTest = new Class( {
    },
    
    construct_whenIsOpened_constructsChildNodes : function(){
-      this.compositeTreeNode.unmarshall();
-      this.compositeTreeNode.construct();
+      this.constructCompositeTreeNode();
 
       var nodeElements = this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() );
       assertThat( nodeElements.length, equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1 ));
    },
    
    construct_whenNodeIsClosed_createsPlusSign : function(){
-      this.compositeTreeNode.unmarshall();
-      this.compositeTreeNode.construct();
+      this.constructCompositeTreeNode();
 
       var handlerElement = this.widgetContainerElement.getElementById( this.compositeTreeNode.getId() ).getPrevious().getPrevious();
       assertThat( handlerElement.get( "src" ), equalTo( this.compositeTreeNodeType.determineNodeHandlerImage( this.compositeTreeNode )));
    },
    
    close_whenNodeIsOpened_destroysChildNodes : function(){
-      this.compositeTreeNode.unmarshall();
-      this.compositeTreeNode.construct();
-      assumeThat( this.compositeTreeNode.isOpened, is( true ));
+      this.constructCompositeTreeNode();
       
       this.compositeTreeNode.close();
       
@@ -130,9 +127,17 @@ window.CompositeTreeNodeTest = new Class( {
       assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( 1 ));
    },
    
+   close_whenNodeIsOpened_replacesPlusSign : function(){
+      this.constructCompositeTreeNode();
+      
+      this.compositeTreeNode.close();
+      
+      var handlerElement = this.widgetContainerElement.getElementById( this.compositeTreeNode.getId() ).getPrevious().getPrevious();
+      assertThat( handlerElement.get( "src" ), equalTo( this.compositeTreeNodeType.determineNodeHandlerImage( this.compositeTreeNode )));
+   },
+   
    open_whenNodeIsOpened_destroysChildNodes : function(){
-      this.compositeTreeNode.unmarshall();
-      this.compositeTreeNode.construct();
+      this.constructCompositeTreeNode();
       this.compositeTreeNode.close();
       
       this.compositeTreeNode.open();
@@ -140,5 +145,12 @@ window.CompositeTreeNodeTest = new Class( {
       assertThat( this.compositeTreeNode.isOpened, is( true ));
       var expectedNumberOfNodes = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1;
       assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( expectedNumberOfNodes ));
-   }
+   },
+   
+   //Protected, private helper methods
+   constructCompositeTreeNode : function(){
+      this.compositeTreeNode.unmarshall();
+      this.compositeTreeNode.construct();
+      assumeThat( this.compositeTreeNode.isOpened, is( true ));
+   }.protect()
 });

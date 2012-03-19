@@ -55,9 +55,13 @@ var CompositeTreeNodeType = new Class ({
          return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNextAndClosed() : this.getNodeHandlerSourceWhenLastAndClosed();
 	},
 	
-	determineNodeImage : function( currentState ) {
-		var stateDependentImage = currentState == this.OPENED_STATE ? this.imageOpen : this.nodeImage;
-		return this.options.imagesFolder + stateDependentImage;
+	determineNodeImage : function( treeNode ) {
+	   var imageUri;
+	   
+      if( treeNode.isOpened ) imageUri = this.options.nodeIconImages.openedFolder;
+      else imageUri = this.options.nodeIconImages.closedFolder;
+
+		return this.getImagesFolder() + imageUri;
 	},
 	
 	//Properties
