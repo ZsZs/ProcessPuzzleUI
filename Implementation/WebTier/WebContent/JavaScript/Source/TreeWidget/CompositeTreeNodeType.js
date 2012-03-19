@@ -35,10 +35,11 @@ var CompositeTreeNodeType = new Class ({
 	Extends : TreeNodeType,
 	
 	options: {
-		lineImageWhenHasNextAndOpened : 'minus.gif',
-		lineImageWhenHasNextAndClosed : 'plus.gif',
-		lineImageWhenLastAndOpened : 'minus_last.gif',
-		lineImageWhenLastAndCloseed : 'plus_last.gif'
+      componentName : 'CompositeTreeNodeType',
+      nodeHandlerSourceWhenHasNextAndClosed : 'plus.gif',
+	   nodeHandlerSourceWhenHasNextAndOpened : 'minus.gif',
+      nodeHandlerSourceWhenLastAndClosed : 'plus_last.gif',
+	   nodeHandlerSourceWhenLastAndOpened : 'minus_last.gif'
 	},
 	
 	//Constructor
@@ -47,6 +48,13 @@ var CompositeTreeNodeType = new Class ({
 	},
 	
 	//public accessor and mutator methods
+	determineNodeHandlerImage : function( treeNode ){
+	   if( treeNode.isOpened )
+	      return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNextAndOpened() : this.getNodeHandlerSourceWhenLastAndOpened();
+	   else
+         return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNextAndClosed() : this.getNodeHandlerSourceWhenLastAndClosed();
+	},
+	
 	determineNodeImage : function( currentState ) {
 		var stateDependentImage = currentState == this.OPENED_STATE ? this.imageOpen : this.nodeImage;
 		return this.options.imagesFolder + stateDependentImage;
@@ -67,6 +75,10 @@ var CompositeTreeNodeType = new Class ({
 			return this.getImagesFolder() + this.options.lineImageWhenHasNextAndOpened; 
 	},
 	
+   getNodeHandlerSourceWhenHasNextAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNextAndClosed; },
+   getNodeHandlerSourceWhenHasNextAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNextAndOpened; },
+   getNodeHandlerSourceWhenLastAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenLastAndClosed; },
+   getNodeHandlerSourceWhenLastAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenLastAndOpened; },
 	getStateNameWhenClosed : function() { return this.CLOSED_STATE; },
 	getStateNameWhenOpened : function() { return this.OPENED_STATE; }
 });

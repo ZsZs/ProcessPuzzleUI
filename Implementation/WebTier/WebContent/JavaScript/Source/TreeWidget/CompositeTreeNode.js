@@ -36,29 +36,32 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeTreeNode = new Class( {
    Extends : TreeNode,
+   Binds : ['onNodeHandlerClick'],
 
    options : {
       childNodesSelector : 'treeNode',
-      initialState : 'closed'
+      componentName : "CompositeTreeNode",
+      initialyOpened : false,
+      isOpenedSelector : "@isOpened"
    },
 
    // Constructor
    initialize : function( parentNode, nodeType, nodeResource, elementFactory, options ) {
       this.parent( parentNode, nodeType, nodeResource, elementFactory, options );
       this.childNodes = new ArrayList();
-      this.state = this.options.initialState;
+      this.isOpened = this.options.initialyOpened;
    },
 
    // public accessor and mutator methods
-   collapse : function() {
-      this.childNodes.each( function(childNode, serialNumber) {
-         childNode.destroy();
-      });
-      this.options.state = this.nodeType.getStateNameWhenClosed();
+   close : function() {
+      if( this.isOpened ){
+         this.destroyChildNodes();
+         this.isOpened = false;
+      }
    },
    
-   construct : function( containerElement ){
-      this.parent( containerElement );
+   construct : function(){
+      this.parent();
       this.constructChildNodes();
    },
    
@@ -67,21 +70,20 @@ var CompositeTreeNode = new Class( {
       this.parent();
    },
 
-   expand : function() {
-      if (this.parentNode && !this.parentNode.isVisible())
-         throw new IllegalMethodCallException( "Node '" + this.nodeID + "' can't be expanded if parent is invisible." );
-
-      this.childNodes.each( function(childNode, serialNumber) {
-         childNode.show();
-      } );
-      this.options.state = this.nodeType.getStateNameWhenOpened();
-   },
-
    findChildNodeByName : function(name) {
       for( var i = 0; i < childs.length; i++) {
          if( this.childNodes[i].getName() == name ) return this.childNodes[i];
       }
       return null;
+   },
+   
+   findLastVisibleChild : function(){
+      if( this.isOpened ){
+         var lastChild = this.childNodes.getLast();
+         if( instanceOf( lastChild, CompositeTreeNode )) return lastChild.findLastVisibleChild(); 
+         else return lastChild; 
+      }
+      else return this;
    },
 
    findNodeByPath : function(path) {
@@ -96,38 +98,19 @@ var CompositeTreeNode = new Class( {
          return this.findChildNodeByName( path );
    },
 
-   onFolderClickHandler : function(theEvent) {
-      switch (this.options.state) {
-      case CLOSED_STATE:
-         state = OPENED_STATE;
-         _expand();
-         break;
-      case OPENED_STATE:
-         state = CLOSED_STATE;
-         _Collapse();
-         break;
+   onNodeHandlerClick : function() {
+      if( this.isOpened ) this.close();
+      else this.open();
+   },
+
+   open : function() {
+      if( !this.isOpened ){
+         this.isOpened = true;
+         this.unmarshallChildNodes();
+         this.constructChildNodes();
       }
    },
 
-   removeChild : function(childNode) {
-      var found = false;
-      for ( var i = 0; i < this.childNodes.length; i++) {
-         if (found) {
-            this.childNodes[i] = this.childNodes[i + 1];
-         }
-         if (this.childNodes[i] == childNode) {
-            if (i == (this.childNodes.length - 1))
-               this.childNodes[i] = null;
-            else
-               this.childNodes[i] = this.childNodes[i + 1];
-            found = true;
-         }
-      }
-      if (found)
-         this.childNodes.length = this.childNodes.length - 1;
-      return found;
-   },
-   
    unmarshall : function(){
       this.unmarshallChildNodes();
       this.parent();
@@ -149,11 +132,18 @@ var CompositeTreeNode = new Class( {
    }.protect(),
 
    constructChildNodes : function(){
-      this.childNodes.each( function( childNode, index ){
-         childNode.construct( this.containerElement );
-      }.bind( this ));
+      if( this.isOpened ){
+         this.childNodes.each( function( childNode, index ){
+            childNode.construct();
+         }.bind( this ));
+      }
    }.protect(),
    
+   createNodeHandlerImage : function() {
+      this.parent();
+      this.nodeHandlerElement.addEvent( 'click', this.onNodeHandlerClick );
+   }.protect(),
+
    destroyChildNodes : function(){
       this.childNodes.each( function( childNode, index ){
          childNode.destroy();
@@ -162,13 +152,6 @@ var CompositeTreeNode = new Class( {
       this.childNodes.clear();
    }.protect(),
    
-   determineLineIntersectionImage : function() {
-      if (this.hasNext())
-         return this.nodeType.getLineImageWhenHasNext( this.getState() );
-      else
-         return this.nodeType.getLineImageWhenLast( this.getState() );
-   }.protect(),
-
    unmarshallChildNodes : function(){
       var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
       if( childNodeElements ){
@@ -182,7 +165,10 @@ var CompositeTreeNode = new Class( {
             this.childNodes.add( treeNode );
          }.bind( this ));
       }      
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.isOpened = parseBoolean( XmlResource.selectNodeText( this.options.isOpenedSelector, this.nodeResource, this.options.dataXmlNameSpace, this.options.initialyOpened ));
+      this.parent();
    }.protect()
 });
-
-CompositeTreeNode.States = { CLOSED : 'closed', OPENED : 'opened' };

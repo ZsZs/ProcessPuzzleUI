@@ -1,5 +1,8 @@
 var LeafTreeNode = new Class({
 	Extends : TreeNode,
+	options : {
+      componentName : "LeafTreeNode",
+	},
 	
 	//Constructor
 	initialize: function( parentNode, nodeType, nodeResource, elementFactory, options ) {

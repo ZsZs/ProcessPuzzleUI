@@ -35,6 +35,7 @@ var TreeNode = new Class({
    Binds : ['onCaptionClick'],
    options : {
       captionSelector : '@caption',
+      componentName : "TreeNode",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       imageUriSelector : '@image',
       nodeIDSelector : '@nodeId',
@@ -70,7 +71,10 @@ var TreeNode = new Class({
       this.previousSibling;
       this.rootNode;
       this.selectPicElement;
+      this.state;
       this.trailingImages = new ArrayList();
+      
+      this.state = BrowserWidget.States.INITIALIZED;
    },
 
    // public accessor and mutator methods
@@ -97,9 +101,8 @@ var TreeNode = new Class({
       }
    },
    
-   construct : function( containerElement ) {
+   construct : function() {
       if( this.state == BrowserWidget.States.UNMARSHALLED ){
-         this.containerElement = containerElement;
          this.createNodeWrapperElement();
          this.createNodeHandlerImage();
          this.createNodeIcon();
@@ -121,11 +124,6 @@ var TreeNode = new Class({
       this.bubbleUpNames( new Array(), 0 );
    },
 
-   removeDivElement : function() {
-      var parent = this.containerElement.parentNode;
-      parent.removeChild( this.containerElement );
-   },
-
    unmarshall : function(){
       this.unmarshallProperties();
       //this.implementCompositeIfChildNodesExists();
@@ -135,12 +133,12 @@ var TreeNode = new Class({
    // Properties
    getCaption : function() { return this.caption; },
    getCaptionElement : function() { return this.nodeCaptionElement; },
-   getContainerElement : function() { return this.containerElement; },
    getId : function() { return this.nodeID; },
    getImageUri : function() { return this.imageUri; },
    getNodeImageElement : function() { return this.nodeIconElement; },
    getNextSibling : function() { return this.nextSibling; },
    getNodeType : function() { return this.nodeType; },
+   getNodeWrapperElement : function() { return this.nodeWrapperElement; },
    getOrderNumber : function() { return this.orderNumber; },
    getParentNode : function() { return this.parentNode; },
    getPreviousSibling : function() { return this.previousSibling; },
@@ -155,8 +153,7 @@ var TreeNode = new Class({
    }.protect(),
 
    createNodeHandlerImage : function() {
-      var imageSource = this.nextSibling ? this.nodeType.getNodeHandlerSourceWhenHasNext() : this.nodeType.getNodeHandlerSourceWhenLast();
-      var elementOptions = { 'class' : this.nodeType.getNodeHandlerClass() + " " + this.nodeType.getNodeImageClass(), 'src' : imageSource };
+      var elementOptions = { 'class' : this.nodeType.getNodeHandlerClass() + " " + this.nodeType.getNodeImageClass(), 'src' : this.nodeType.determineNodeHandlerImage( this ) };
       this.nodeHandlerElement = this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
    }.protect(),
 
@@ -166,8 +163,10 @@ var TreeNode = new Class({
    }.protect(),
 
    createNodeWrapperElement : function() {
+      var contextElement = this.determineWrapperContextElement();
+      var contextPosition = this.determinWrapperContextPosition();
       var elementOptions = { 'class' : this.nodeType.getNodeWrapperClass() };
-      this.nodeWrapperElement = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.nodeWrapperElement = this.elementFactory.create( 'div', null, contextElement, contextPosition, elementOptions );
    }.protect(),
 
    destroyNodeElement: function( nodeElement ){
@@ -181,6 +180,20 @@ var TreeNode = new Class({
       }.bind( this ));
       
       this.trailingImages.clear();
+   }.protect(),
+   
+   determineWrapperContextElement : function(){
+      if( this.previousSibling ) {
+         if( instanceOf( this.previousSibling, CompositeTreeNode )) 
+            return this.previousSibling.findLastVisibleChild().getNodeWrapperElement();
+         else return this.previousSibling.getNodeWrapperElement();
+      }else return this.parentNode.getNodeWrapperElement();
+   }.protect(),
+   
+   determinWrapperContextPosition : function(){
+      if( this.previousSibling || ( this.parentNode && !instanceOf( this.parentNode, RootTreeNode ))) 
+         return WidgetElementFactory.Positions.After;
+      else return WidgetElementFactory.Positions.LastChild;
    }.protect(),
    
    implementCompositeIfChildNodesExists : function(){

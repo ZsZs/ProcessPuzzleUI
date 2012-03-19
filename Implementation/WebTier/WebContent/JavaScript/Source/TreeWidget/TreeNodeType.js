@@ -51,7 +51,8 @@ var TreeNodeType = new Class({
 	options: {
 		captionClass : 'nodeCaption',
 		captionClassWhenSelectable : 'selectedHover', 
-		captionLinkClass : 'nodeCaptionLink', 
+		captionLinkClass : 'nodeCaptionLink',
+		componentName : 'TreeNodeType',
 		imagesFolder : 'Images/',
 		nodeClassWhenHidden : 'hiddenNode', 
 		nodeClassWhenVisible : 'nodeWrapper',
@@ -72,6 +73,10 @@ var TreeNodeType = new Class({
 	},
 	
 	//public accessor and mutator methods
+   determineNodeHandlerImage : function( treeNode ){
+      return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNext() : this.getNodeHandlerSourceWhenLast();
+   },
+   
 	determineNodeImage : function( nodeImage ) {
 		return this.options.imagesFolder + nodeImage;
 	},
@@ -92,5 +97,5 @@ var TreeNodeType = new Class({
    getNodeWrapperClass : function() { return this.options.nodeClassWhenVisible; },
 	getTrailingImageClass : function() { return this.options.trailingImageClass; },
 	getTrailingImageWhenParentHasNext : function() { return this.getImagesFolder() + this.options.trailingImageWhenParentHasNext; },
-   getTrailingImageWhenParentIsLast : function() { return this.getImagesFolder() + this.options.trailingImageWhenParentIsLast; },
+   getTrailingImageWhenParentIsLast : function() { return this.getImagesFolder() + this.options.trailingImageWhenParentIsLast; }
 });

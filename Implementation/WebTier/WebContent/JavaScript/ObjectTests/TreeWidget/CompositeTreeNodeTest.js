@@ -6,8 +6,12 @@ window.CompositeTreeNodeTest = new Class( {
       testMethods : [
          { method : 'unmarshall_instantiatesChildNodes', isAsynchron : false },
          { method : 'unmarshall_determinesChildNodeClass', isAsynchron : false },
+         { method : 'unmarshall_determinesIfNodeIsOpened', isAsynchron : false },
          { method : 'unmarshall_setsPrevAndNextNode', isAsynchron : false },
-         { method : 'construct_createsChildNodeElements', isAsynchron : false }]
+         { method : 'construct_whenIsOpened_constructsChildNodes', isAsynchron : false },
+         { method : 'construct_whenNodeIsClosed_createsPlusSign', isAsynchron : false },
+         { method : 'close_whenNodeIsOpened_destroysChildNodes', isAsynchron : false },
+         { method : 'open_whenNodeIsOpened_destroysChildNodes', isAsynchron : false }]
    },
 
    constants : {
@@ -47,8 +51,8 @@ window.CompositeTreeNodeTest = new Class( {
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
       this.compositeTreeNodeType = new CompositeTreeNodeType();
       this.rootNode = new RootTreeNode( this.compositeTreeNodeType, this.compositeTreeNodeDefinition, this.elementFactory );
+      this.rootNode.containerElement = this.widgetContainerElement;
       this.compositeTreeNode = new CompositeTreeNode( this.rootNode, this.compositeTreeNodeType, this.compositeTreeNodeDefinition, this.elementFactory );
-      
    },
    
    afterEachTest : function (){
@@ -79,6 +83,13 @@ window.CompositeTreeNodeTest = new Class( {
       }.bind( this ));
    },
    
+   
+   unmarshall_determinesIfNodeIsOpened : function(){
+      this.compositeTreeNode.unmarshall();
+      
+      assertThat( this.compositeTreeNode.isOpened, equalTo( parseBoolean( this.treeDefinition.selectNodeText( this.constants.NODE_SELECTOR + "/@isOpened" ))));
+   },
+   
    unmarshall_setsPrevAndNextNode : function(){
       this.compositeTreeNode.unmarshall();
 
@@ -92,11 +103,42 @@ window.CompositeTreeNodeTest = new Class( {
       }.bind( this ));
    },
    
-   construct_createsChildNodeElements : function(){
+   construct_whenIsOpened_constructsChildNodes : function(){
       this.compositeTreeNode.unmarshall();
       this.compositeTreeNode.construct();
 
       var nodeElements = this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() );
-      assertThat( nodeElements.length, equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "//treeNode" ).length +1 ));
+      assertThat( nodeElements.length, equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1 ));
+   },
+   
+   construct_whenNodeIsClosed_createsPlusSign : function(){
+      this.compositeTreeNode.unmarshall();
+      this.compositeTreeNode.construct();
+
+      var handlerElement = this.widgetContainerElement.getElementById( this.compositeTreeNode.getId() ).getPrevious().getPrevious();
+      assertThat( handlerElement.get( "src" ), equalTo( this.compositeTreeNodeType.determineNodeHandlerImage( this.compositeTreeNode )));
+   },
+   
+   close_whenNodeIsOpened_destroysChildNodes : function(){
+      this.compositeTreeNode.unmarshall();
+      this.compositeTreeNode.construct();
+      assumeThat( this.compositeTreeNode.isOpened, is( true ));
+      
+      this.compositeTreeNode.close();
+      
+      assertThat( this.compositeTreeNode.isOpened, is( false ));
+      assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( 1 ));
+   },
+   
+   open_whenNodeIsOpened_destroysChildNodes : function(){
+      this.compositeTreeNode.unmarshall();
+      this.compositeTreeNode.construct();
+      this.compositeTreeNode.close();
+      
+      this.compositeTreeNode.open();
+      
+      assertThat( this.compositeTreeNode.isOpened, is( true ));
+      var expectedNumberOfNodes = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1;
+      assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( expectedNumberOfNodes ));
    }
 });

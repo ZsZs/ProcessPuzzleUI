@@ -37,44 +37,38 @@ You should have received a copy of the GNU General Public License along with thi
 
 var RootTreeNode = new Class({
    Extends : CompositeTreeNode,
+   options : {
+      componentName : "RootTreeNode",
+      initialyOpened : true,
+      isVisible : false
+   },
 
    // Constructor
    initialize : function( nodeType, nodeResource, elementFactory, options ) {
       this.parent( null, nodeType, nodeResource, elementFactory, options );
 
       // private instance variables
+      this.containerElement;
+      this.isVisible = false;
    },
 
    // public accessor and mutator methods
-   show : function() {
-      if (widgetElement) {
-         if (treeWidget) {
-            if (treeWidget.getShowRootNode()) {
-               return parent.show();
-            }
-         } else {
-            exception = new UserException( "The tree widget is not defined.", "RootNode.show()", "UndefinedWidget" );
-            throw exception;
-         }
-      } else {
-         exception = new UserException( "The tree widget is not difined.", "RootNode.show()", "UndefinedWidget" );
-         throw exception;
-      }
+   construct : function( containerElement ){
+      this.containerElement = containerElement;
+      this.parent();
    },
 
    // Properties
-   getWidgetElement : function() {
-      return widgetElement;
-   },
-   setTreeWidget : function(widget) {
-      treeWidget = widget;
-   },
-   setWidgetId : function(id) {
-      widgetElement = document.getElementById( id );
-      if (!widgetElement) {
-         exception = new UserException( "Can't find the given: " + id + " id in the document.", "RootNode.setWidgetId()", "UndefinedWidgetId" );
-         throw exception;
-      }
-   }
-
-} );
+   getNodeWrapperElement : function() { return this.isVisible ? this.nodeWrapperElement : this.containerElement; },
+   getWidgetElement : function() { return widgetElement; },
+   
+   //Protected, private helper methods
+   determineWrapperContextElement : function(){
+      return this.containerElement;
+   }.protect(),
+   
+   determinWrapperContenxtPosition : function(){
+      return WidgetElementFactory.Positions.LastChild;
+   }.protect(),
+   
+});

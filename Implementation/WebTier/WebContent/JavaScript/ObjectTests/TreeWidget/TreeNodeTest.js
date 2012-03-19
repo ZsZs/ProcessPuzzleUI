@@ -5,8 +5,8 @@ window.TreeNodeTest = new Class( {
    options : {
       testMethods : [
          { method : 'unmarshall_determinesNodeProperties', isAsynchron : false },
-         { method : 'unmarshall_determinesChildNodes', isAsynchron : false },
          { method : 'construct_createsNodeWrapper', isAsynchron : false },
+         { method : 'construct_whenHasPreviousSibling_insertsWrapperAfterSibling', isAsynchron : false },
          { method : 'construct_whenIsLastNode_createsRectangularImageElement', isAsynchron : false },
          { method : 'construct_whenHasNextNode_createsTImageElement', isAsynchron : false },
          { method : 'construct_createsNodeIcon', isAsynchron : false },
@@ -17,9 +17,11 @@ window.TreeNodeTest = new Class( {
    },
 
    constants : {
-      NODE_SELECTOR : "//pp:treeDefinition/rootNode/treeNode[1]",
       CONFIGURATION_URI : "../TreeWidget/WebUIConfiguration.xml",
+      ELEMENT_AFTER_ID : "nodeAfter",
+      ELEMENT_BEFORE_ID : "nodeBefore",
       LANGUAGE : "en",
+      NODE_SELECTOR : "//pp:treeDefinition/rootNode/treeNode[1]",
       WIDGET_DATA_URI : "../TreeWidget/TreeDefinition.xml",
       WIDGET_CONTAINER_ID : "TreeWidget",
       WIDGET_DEFINITION_URI : "../TreeWidget/TreeWidgetDefinition.xml"
@@ -27,7 +29,9 @@ window.TreeNodeTest = new Class( {
    
    initialize : function( options ) {
       this.setOptions( options );
-      
+
+      this.elementAfter;
+      this.elementBefore;
       this.elementFactory;
       this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.parentNode;
@@ -50,10 +54,14 @@ window.TreeNodeTest = new Class( {
       this.treeDefinition = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
       this.treeNodeDefinition = this.treeDefinition.selectNode( this.constants.NODE_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
+      this.elementAfter = $( this.constants.ELEMENT_AFTER_ID );
+      this.elementBefore = $( this.constants.ELEMENT_BEFORE_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
       this.treeNodeType = new TreeNodeType();
       this.rootNode = new RootTreeNode( this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
+      this.rootNode.containerElement = this.widgetContainerElement;
       this.parentNode = new CompositeTreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
+      this.parentNode.nodeWrapperElement = this.elementBefore;
       this.treeNode = new TreeNode( this.parentNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
       
    },
@@ -76,24 +84,30 @@ window.TreeNodeTest = new Class( {
       assertThat( this.treeNode.getOrderNumber(), equalTo( this.treeDefinition.selectNodeText( this.constants.NODE_SELECTOR + "/@orderNumber" )));
    },
    
-   unmarshall_determinesChildNodes : function(){
-      this.treeNode.unmarshall();
-
-      //assertThat( instanceOf( this.treeNode, CompositeTreeNode ), is( true ));
-      //assertThat( this.treeNode.getChildNodes().size(), equalTo( this.treeWidget.getDataXml().selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length ));
-   },
-   
    construct_createsNodeWrapper : function() {
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
-      var nodeWrapper = this.widgetContainerElement.getChildren( 'div' )[0];
+      var nodeWrapper = this.widgetContainerElement.getChildren( 'div.' + this.treeNodeType.getNodeWrapperClass() )[0];
       assertThat( nodeWrapper.hasClass( this.treeNodeType.getNodeWrapperClass() ), is( true )); 
+   },
+   
+   construct_whenHasPreviousSibling_insertsWrapperAfterSibling : function() {
+      this.treeNode.unmarshall();
+      var previousSibling = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
+      previousSibling.nodeWrapperElement = this.elementBefore; 
+      this.treeNode.previousSibling = previousSibling;
+      
+      this.treeNode.construct();
+      
+      var nodeWrapper = this.widgetContainerElement.getChildren( 'div.' + this.treeNodeType.getNodeWrapperClass() )[0];
+      assertThat( nodeWrapper.hasClass( this.treeNodeType.getNodeWrapperClass() ), is( true )); 
+      assertThat( nodeWrapper.getPrevious(), equalTo( this.elementBefore ));
    },
    
    construct_whenIsLastNode_createsRectangularImageElement : function() {
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
       var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getNodeHandlerClass() )[0];
       assertThat( imageElement.hasClass( this.treeNodeType.getNodeHandlerClass() ), is( true )); 
@@ -104,7 +118,7 @@ window.TreeNodeTest = new Class( {
    construct_whenHasNextNode_createsTImageElement : function() {
       this.treeNode.nextSibling = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
       var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getNodeHandlerClass() )[0];
       assertThat( imageElement.hasClass( this.treeNodeType.getNodeHandlerClass() ), is( true )); 
@@ -114,7 +128,7 @@ window.TreeNodeTest = new Class( {
    
    construct_createsNodeIcon : function() {
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
       var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getNodeIconClass() )[0];
       assertThat( imageElement.hasClass( this.treeNodeType.getNodeIconClass() ), is( true )); 
@@ -123,7 +137,7 @@ window.TreeNodeTest = new Class( {
    
    construct_createsCaptionElement : function() {
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
       var captionElement = this.widgetContainerElement.getElements( 'span.' + this.treeNodeType.getCaptionClass() )[0];
       assertThat( captionElement.hasClass( this.treeNodeType.getCaptionClass() ), is( true )); 
@@ -133,7 +147,7 @@ window.TreeNodeTest = new Class( {
    
    construct_whenParentIsLastNode_createsSpacerElement : function() {
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
       var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getTrailingImageClass() )[0];
       assertThat( imageElement.get( 'src' ), equalTo( this.treeNodeType.getTrailingImageWhenParentIsLast() )); 
@@ -143,7 +157,7 @@ window.TreeNodeTest = new Class( {
    construct_whenParentHasNextNode_createsLineElement : function() {
       this.parentNode.nextSibling = new TreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       
       var imageElement = this.widgetContainerElement.getElements( 'img.' + this.treeNodeType.getTrailingImageClass() )[1];
       assertThat( imageElement.get( 'src' ), equalTo( this.treeNodeType.getTrailingImageWhenParentHasNext() )); 
@@ -152,9 +166,9 @@ window.TreeNodeTest = new Class( {
    
    destroy_removesAllElements : function(){
       this.treeNode.unmarshall();
-      this.treeNode.construct( this.widgetContainerElement );
+      this.treeNode.construct();
       this.treeNode.destroy();
       
-      assertThat( this.widgetContainerElement.getElements( '*' ).length, equalTo( 0 ));
+      assertThat( this.widgetContainerElement.getElements( 'div.' + this.treeNodeType.getNodeWrapperClass() ).length, equalTo( 0 ));
    }
 });
