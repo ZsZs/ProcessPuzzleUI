@@ -1,0 +1,58 @@
+div.nodeWrapper {
+   filter:alpha(opacity=100);
+   height:20px;
+   horizontal-align:left;
+   padding: 0px;
+   margin: 0px;
+   vertical-align:middle;
+}
+
+.hiddenNode {
+   display: none;
+}
+
+.nodeImage {
+	border:none;
+   cursor: default;
+   display: inline;
+   horizontal-align:left;
+   margin: 0px;
+   padding: 0px;
+   vertical-align:middle;
+}
+
+.trailingImage {
+   cursor: hand;
+}
+
+.nodeHandler {
+}
+
+.nodeIcon {
+}
+
+.nodeCaption {
+	padding:2px;
+	cursor: default;
+	font-family: Tahoma,Verdana,Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	vertical-align:middle;
+	horizontal-align:left;
+	margin: 0 0 0 0;
+}
+
+.nodeCaptionLink {
+	padding:2px;
+	cursor: hand;
+	font-family: Tahoma,Verdana,Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	vertical-align:middle;
+	horizontal-align:left;
+	margin: 0 0 0 0;
+}
+
+.selectedHover:hover{
+  background:#AAAAAA;
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Tree Widget Document</name>
+   <description>Demonstrates Tree widget embeded into a Smart Document.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets>
+         <styleSheet>Desktops/ProcessPuzzle/Styles/TreeWidget.css</styleSheet>
+      </styleSheets>
+      <images>
+      </images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentHeader tag="div" id="treeDocumentHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1">TreeWidgetDocument.title</element>
+         <element tag="h2">TreeWidgetDocument.subTitle</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="treeDocumentBody">
+      <element tag="p">TreeWidgetDocument.introduction</element>
+      <element tag="p">TreeWidgetDocument.exampleDescription</element>
+      <element tag="div" id="TreeContainer">
+         <plugin>
+            <widget name="TreeWidget">
+               <options>
+                  <option name="widgetContainerId" value="'TreeContainer'"/>
+                  <option name="widgetDataURI" value="'Content/WidgetExamples/TreeDefinition.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/TreeWidgetDefinition.xml'"/>
+                  <option name="nodeTypeOptions" value="{ imagesFolder : 'Desktops/Images/TreeWidget/'}"/>
+               </options>
+            </widget>
+         </plugin>
+      </element>
+   </documentBody>
+   
+</smartDocumentDefinition>
