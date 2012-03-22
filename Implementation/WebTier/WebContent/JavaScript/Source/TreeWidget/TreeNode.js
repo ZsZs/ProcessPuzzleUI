@@ -218,7 +218,7 @@ var TreeNode = new Class({
    unmarshallProperties: function(){
       this.nodeID = XmlResource.selectNodeText( this.options.nodeIDSelector, this.nodeResource );
       this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.nodeResource );
-      this.imageUri = XmlResource.selectNodeText( this.options.imageUriSelector, this.nodeResource, this.options.dataXmlNameSpace, this.nodeType.getNodeIconSource() );
+      this.imageUri = XmlResource.selectNodeText( this.options.imageUriSelector, this.nodeResource, this.options.dataXmlNameSpace, this.nodeType.determineNodeImage( this ));
       this.orderNumber = XmlResource.selectNodeText( this.options.orderNumberSelector, this.nodeResource );
    }.protect()
 });
