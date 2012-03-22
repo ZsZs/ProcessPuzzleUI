@@ -90,6 +90,7 @@ var WebUIController = new Class({
          this.loadWebUIConfiguration();
          this.configureLogger();
 
+         this.restoreStateFromUrl(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
          this.loadInternationalizations();
