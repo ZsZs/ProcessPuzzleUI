@@ -149,6 +149,22 @@
 		
       <panel name='communityPanel' columnReference='rightColumn' height='150' showHeader='true'>
          <title>DesktopConfigurator.Panel.comunityTitle</title>
+         <panelHeader>
+            <plugin>
+               <resources>
+                  <styleSheets>
+                     <styleSheet>Desktops/ProcessPuzzle/Styles/CommunityPanelTabs.css</styleSheet>
+                  </styleSheets>
+               </resources>
+               <widget name="TabWidget">
+                  <options>
+                     <option name="componentName " value="'communityTabs'"/>
+                     <option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
+                  </options>
+               </widget> 
+            </plugin>
+         </panelHeader>
       </panel>
 	</panels>
 
