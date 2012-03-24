@@ -44,6 +44,7 @@ var ComplexContentBehaviour = new Class({
       documentWrapperStyleSelector : "document/@elementStyle",
       documentWrapperTag : "div",
       documentWrapperTagSelector : "document/@tag",
+      eventSourcesSelector : "eventOriginators",
       handleMenuSelectedEvents : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
       handleTabSelectedEvents : false,
@@ -77,6 +78,7 @@ var ComplexContentBehaviour = new Class({
       this.documentWrapperStyle;
       this.documentWrapperTag;
       this.error;
+      this.eventSources = null;
       this.handleMenuSelectedEvents;
       this.handleTabSelectedEvents;
       this.header;
@@ -138,7 +140,9 @@ var ComplexContentBehaviour = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( this.state != DesktopElement.States.CONSTRUCTED ) return;
       
-      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) && webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT ) {
+      if( ( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) 
+            && ( webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT )
+            && ( this.eventSources == null || this.eventSources.contains( webUIMessage.getOriginator() ))) {
          this.destroyDocument();
          this.destroyDocumentWrapper();
          this.cleanUpContentElement();
@@ -158,6 +162,7 @@ var ComplexContentBehaviour = new Class({
    getDocumentWrapperId: function() { return this.documentWrapperId; },
    getDocumentWrapperStyle: function() { return this.documentWrapperStyle; },
    getDocumentWrapperTag: function() { return this.documentWrapperTag; },
+   getEventSources: function() { return this.eventSources; },
    getHeader: function() { return this.header; },
    getHeight: function() { return this.height; },
    getLogger: function() { return this.logger; },
@@ -343,6 +348,7 @@ var ComplexContentBehaviour = new Class({
    unmarshallProperties: function(){
       this.contentUrl = XmlResource.selectNodeText( this.options.contentUrlSelector, this.definitionElement );
       this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector, this.options.heightDefault ));
+      this.eventSources = eval( XmlResource.determineAttributeValue( this.definitionElement, this.options.eventSourcesSelector, null, this.eventSources ));
       this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );
       this.showHeader = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.showHeaderSelector ));
       this.handleMenuSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleMenuSelectedEventsSelector, this.options.handleMenuSelectedEvents ));

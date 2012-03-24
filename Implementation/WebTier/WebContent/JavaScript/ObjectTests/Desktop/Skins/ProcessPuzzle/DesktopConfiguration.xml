@@ -43,7 +43,7 @@
 			<contentURL>../Desktop/Content/TreeView.html</contentURL>
 		</panel>
 		
-		<panel name="documents-panel" columnReference="mainColumn" showHeader="true" height="400" handleMenuSelectedEvents="true">
+		<panel name="documents-panel" columnReference="mainColumn" showHeader="true" height="400" handleMenuSelectedEvents="true" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
 			<contentURL>../Desktop/Content/HelloWorldContent.html</contentURL>
          <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">

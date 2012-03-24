@@ -4,18 +4,19 @@ window.DesktopPanelTest = new Class( {
 
    options : {
       testMethods : [
-          { method : 'initialize_linksToRelatedComponentsAndSetsState', isAsynchron : false },
-          { method : 'unmarshall_setsState', isAsynchron : false },
-          { method : 'unmarshall_determinesPanelProperties', isAsynchron : false },
-          { method : 'unmarshall_unmarshallsPanelHeader', isAsynchron : false },
-          { method : 'unmarshall_determinesDocumentProperties', isAsynchron : false },
-          { method : 'construct_instantiatesMUIPanel', isAsynchron : true }, 
-          { method : 'construct_constructsHeaderWithPlugin', isAsynchron : true }, 
-          { method : 'construct_whenSpecified_constructsPlugin', isAsynchron : true }, 
-          { method : 'construct_whenSpecified_constructsSmartDocument', isAsynchron : true }, 
-          { method : 'construct_whenSpecified_subscribesForMenuSelectedMessage', isAsynchron : true },
-          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true },
-          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument', isAsynchron : true }]
+         { method : 'initialize_linksToRelatedComponentsAndSetsState', isAsynchron : false },
+         { method : 'unmarshall_setsState', isAsynchron : false },
+         { method : 'unmarshall_determinesPanelProperties', isAsynchron : false },
+         { method : 'unmarshall_unmarshallsPanelHeader', isAsynchron : false },
+         { method : 'unmarshall_determinesDocumentProperties', isAsynchron : false },
+         { method : 'construct_instantiatesMUIPanel', isAsynchron : true }, 
+         { method : 'construct_constructsHeaderWithPlugin', isAsynchron : true }, 
+         { method : 'construct_whenSpecified_constructsPlugin', isAsynchron : true }, 
+         { method : 'construct_whenSpecified_constructsSmartDocument', isAsynchron : true }, 
+         { method : 'construct_whenSpecified_subscribesForMenuSelectedMessage', isAsynchron : true },
+         { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true },
+         { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument', isAsynchron : true },
+         { method : 'webUIMessageHandler_whenEventOriginatorIsNotListed_bypassesDocument', isAsynchron : true }]
    },
 
    constants : {
@@ -102,6 +103,7 @@ window.DesktopPanelTest = new Class( {
       this.panelWithDocument.unmarshall();
       assertThat( this.panelWithDocument.getColumnReference(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@columnReference" ).value ) );
       assertThat( this.panelWithDocument.getContentUrl(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/contentURL" ) ) );
+      assertThat( this.panelWithDocument.getEventSources(), equalTo( eval( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@eventOriginators" ))));
       assertThat( this.panelWithDocument.getHeight(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@height" ).value ) );
       assertThat( this.panelWithDocument.getName(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@name" ).value ) );
       assertThat( this.panelWithDocument.getPlugin(), nil() );
@@ -209,7 +211,7 @@ window.DesktopPanelTest = new Class( {
             assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );            
          }.bind( this ),
          function(){
-            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.HTML, documentURI : this.constants.HTML_DOCUMENT_URI });
+            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.HTML, documentURI : this.constants.HTML_DOCUMENT_URI, originator : "verticalMenuColumn" });
             this.webUIMessageBus.notifySubscribers( message );
          }.bind( this ),
          function(){
@@ -229,11 +231,29 @@ window.DesktopPanelTest = new Class( {
             assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
          }.bind( this ),
          function(){
-            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI });
+            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "verticalMenuColumn" });
             this.webUIMessageBus.notifySubscribers( message );
          }.bind( this ),
          function(){
             assertThat( this.panelWithDocument.getDocumentDefinitionUri(), equalTo( this.constants.SMART_DOCUMENT_URI ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   webUIMessageHandler_whenEventOriginatorIsNotListed_bypassesDocument : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.panelWithDocument.options.handleDocumentLoadEvents = true;
+            this.constructPanel( this.panelWithDocument );
+         }.bind( this ),
+         function(){
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+         }.bind( this ),
+         function(){
+            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "invalidSource" });
+            this.webUIMessageBus.notifySubscribers( message );
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
             this.testMethodReady();
          }.bind( this )
       ).callChain();

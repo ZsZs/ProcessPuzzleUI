@@ -64,7 +64,7 @@
 			</plugin>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
          <panelHeader>
             <plugin>
@@ -81,7 +81,7 @@
          </panelHeader>
 		</panel>
 
-		<panel name='consolePanel' columnReference='mainColumn' height='200' showHeader='true' handleTabSelectedEvents="true" storeState="false">
+		<panel name='consolePanel' columnReference='mainColumn' height='200' showHeader='true' handleTabSelectedEvents="true" storeState="false" eventOriginators="['consoleTabs']">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader>
             <plugin>
@@ -147,7 +147,7 @@
          </plugin>
 		</panel>
 		
-      <panel name='communityPanel' columnReference='rightColumn' height='150' showHeader='true'>
+      <panel name='communityPanel' columnReference='rightColumn' height='150' showHeader='true' handleTabSelectedEvents="true" eventOriginators="['communityTabs']">
          <title>DesktopConfigurator.Panel.comunityTitle</title>
          <panelHeader>
             <plugin>
@@ -158,7 +158,7 @@
                </resources>
                <widget name="TabWidget">
                   <options>
-                     <option name="componentName " value="'communityTabs'"/>
+                     <option name="componentName" value="'communityTabs'"/>
                      <option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
                      <option name="widgetDefinitionURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
                   </options>
