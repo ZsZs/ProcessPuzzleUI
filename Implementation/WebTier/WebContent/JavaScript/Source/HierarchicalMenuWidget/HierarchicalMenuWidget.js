@@ -82,7 +82,7 @@ var HierarchicalMenuWidget = new Class({
       this.currentItemId = anchorElement.getParent().get( 'id' );
       var argumentText = this.determineMenuItemArguments( this.currentItemId );
       var arguments = argumentText != null ? eval( "(" + argumentText + ")" ) : null;
-      arguments['originator'] = this.options.widgetContainerId;
+      arguments['originator'] = this.options.componentName;
       
       this.containerElement.getElements( "LI" ).removeClass( this.selectedElementClass );
       anchorElement.getParent().addClass( this.selectedElementClass );

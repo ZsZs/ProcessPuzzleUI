@@ -1,0 +1,77 @@
+@CHARSET "UTF-8";
+
+#communityPanel_headerToolbox ul.Tabs {
+   background:url("../Images/PanelTabs-Background.gif") repeat-x left top;
+	background-color: transparent;
+	float: left;
+   list-style: none;
+   margin-left: 2px;
+   margin-top: 1px;
+	overflow: hidden;
+	padding: 0px;
+}
+
+#communityPanel_headerToolbox ul.Buttons {
+   float: right;
+   margin:0;
+   list-style:none;
+	padding-top:3px;
+	padding-right:5px;
+	padding-bottom:inherit;
+	padding-left:5px;
+}
+
+#communityPanel_headerToolbox ul.Tabs li {
+   float:left;
+   background:url("../Images/PanelTab-Left.gif") no-repeat left top;
+   margin-left: 0px;
+	padding-left: 10px;    
+}
+
+#communityPanel_headerToolbox ul.Buttons li {
+   float:right;
+   margin:0;
+	padding-top:0px;
+	padding-right:0;
+	padding-bottom:0;
+	padding-left:5px;
+}
+
+#communityPanel_headerToolbox ul.Tabs a {
+   display:block;
+   background:url("../Images/PanelTab-Right.gif") no-repeat right top;
+   color:#765;
+   font-size: smaller;
+   font-weight:bold;
+	padding-bottom: 4px;
+	padding-left: 0px;
+	padding-right: 22px;
+	padding-top: 4px;
+   text-decoration: none;
+}
+
+#communityPanel_headerToolbox ul.Buttons a {
+    display:block;
+    background-image:none;
+    text-decoration:underline;
+    font-weight:bold;
+    color:#765;
+}
+
+#communityPanel_headerToolbox #current {
+    background-image:url("../Images/PanelTab-Left-Selected.gif");
+}
+
+#communityPanel_headerToolbox #current a {
+    background-image:url("../Images/PanelTab-Right-Selected.gif");
+    padding-bottom:5px;
+    color:#333;
+}
+
+#communityPanel_headerToolbox a:hover {
+    color:#FF0000;
+}
+
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+#communityPanel_headerToolbox a {float:none;}
+/* End IE5-Mac hack */

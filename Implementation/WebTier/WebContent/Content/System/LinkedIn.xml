@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Honnia News</name>
+   <description>Presents site news to the visitor.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="newsDocumentBody">
+      <dataElement tag="h1" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
+      <compositeDataElement tag="div" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
+         <dataElement tag="h3" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
+         <dataElement tag="p" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+      </compositeDataElement>
+   </documentBody>
+   
+</smartDocumentDefinition>
