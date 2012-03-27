@@ -64,7 +64,7 @@
 			</plugin>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn']">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
          <panelHeader>
             <plugin>
@@ -165,6 +165,10 @@
                </widget> 
             </plugin>
          </panelHeader>
+         <document tag="div" id="communityDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
+             <documentDefinitionUri>Content/System/FacebookPanelContent.xml</documentDefinitionUri>
+             <documentContentUri>Content/System/Facebook.xml</documentContentUri>
+         </document>
       </panel>
 	</panels>
 

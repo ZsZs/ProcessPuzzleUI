@@ -5,13 +5,13 @@
 	
 	<tabWidget tabWidgetId="CommunityTabs" selectedTabClass="selectedTab" showCloseButton="false" showPrintButton="false">
 		<tab tabId="CommunityTab.faceBook" caption="CommunityTabs.faceBook" isDefault="true">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/Facebook.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/FacebookPanelContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 		<tab tabId="CommunityTab.linkedIn" caption="CommunityTabs.linkedIn" isDefault="false">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/LinkedIn.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/LinkedInPanelContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 		<tab tabId="CommunityTab.twitter" caption="CommunityTabs.twitter">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/Twitter.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/TwitterPanelContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 	</tabWidget>
 	

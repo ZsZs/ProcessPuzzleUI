@@ -4,8 +4,8 @@
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
    xsi:noNamespaceSchemaLocation="file:///e:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Honnia News</name>
-   <description>Presents site news to the visitor.</description>
+   <name>LinkedIn messages</name>
+   <description>Presents LinkedIn messages to the visitor.</description>
    <version>0.5</version>
    
    <resources>

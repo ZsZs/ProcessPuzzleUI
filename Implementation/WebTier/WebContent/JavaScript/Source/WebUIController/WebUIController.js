@@ -51,6 +51,7 @@ var WebUIController = new Class({
       errorPageUri : "Commons/FrontController/WebUiError.jsp",
       languageSelectorElementId : "LanguageSelectorWidget",
       loggerGroupName : "WebUIController",
+      messageOriginator : "webUIController",
       reConfigurationDelay: 500,
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
       urlRefreshPeriod : 3000,
@@ -146,7 +147,7 @@ var WebUIController = new Class({
    
    loadDocument : function( documentUri, contentUri, documentType ){
       this.logger.debug( this.options.componentName + ".loadDocument( '" + documentUri + "' )" );
-      var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : documentType, documentURI : documentUri, documentContentURI : contentUri });
+      var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : documentType, documentURI : documentUri, documentContentURI : contentUri, originator : this.options.messageOriginator });
       this.messageBus.notifySubscribers( message );
    },
    

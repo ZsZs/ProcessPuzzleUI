@@ -13,22 +13,22 @@
       <webMaster>peter.krima@itkodex.hu</webMaster>    
     
       <item>
-         <title>Ákos Várhegyi joined to ProcessPuzzle team</title>
-         <link>Content/System/Facebook.xml?documentType=SMART</link>
+         <title>New features in Sprint - April 2012</title>
+         <link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</link>
          <description>
-            With he's 20 years experience in complex system design he'll be strengthen the ProcessPuzzle Consultans group. He'll also lunch ProcessPuzzle Advisor Partner Program.
+            ProcessPuzzle users voted on the following features build into April 2012 release: Calendar Widget, Google Calendar synchronization and Sortable Data Table.
+            For more details please visit the <a http="http://processpuzzle.com">ProcessPuzzle Development page</a>.
          </description>
          <pubDate>Mon, 05 March 2012, 09:39:21 GMT</pubDate>
          <guid>http://processpuzzle.com#item575</guid>
       </item>  
       
       <item>
-         <title>Usability question: Toggle between edit and view mode makes sense?</title>
-         <link>Content/System/Facebook.xml?documentType=SMART</link>
+         <title>Tree Widget is ready to use</title>
+         <link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</link>
          <description>
-            ProcessPuzzle follows the "Edit in-place if you're authorized." usability rule. There is no administrative UI, special UI for content management or workflow specification. 
-            Consequently if you add a link to a TextElement of SmartDocument this link will work. This behavior seems to be logical, in the other hand clicking on link can navigate the user to another site. Can this harm the user?
-            Does it makes sense to provide view and edit mode? (supposed the user is authorized)
+            Tree Widget presents hierarchical data in tree like form. It can be used as a menu system or display complex, aggregated data structures like project plan or product catalog.
+            For more details please visit the <a http="http://processpuzzle.com">ProcessPuzzle Features page</a>.
          </description>
          <pubDate>Mon, 05 March 2012, 09:39:21 GMT</pubDate>
          <guid>http://processpuzzle.com#item575</guid>

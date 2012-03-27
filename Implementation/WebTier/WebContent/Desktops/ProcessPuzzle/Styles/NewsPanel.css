@@ -1,17 +1,12 @@
 @CHARSET "UTF-8";
 
-#TopNews a {
-   cursor: pointer;
-	text-decoration: none;
-}
-
-#TopNews .rssChannelTitle{
+div.rssChannelTitle{
    color: teal;
 	font-size: larger;
 	font-weight: bold;
 }
 
-#TopNews .rssItemTitle{
+div.rssItemTitle{
    color: teal;
    font-size: 11px;
    font-weight: bold;
@@ -19,7 +14,12 @@
    padding-top: 3px;
 }
 
-#TopNews .rssItemDescription{
+div.rssItemTitle a {
+   cursor: pointer;
+   text-decoration: none;
+}
+
+div.rssItemDescription{
 	font-size: 10px;
    font-weight: lighter;
 }

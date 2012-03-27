@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>LinkedIn messages</name>
+   <description>Presents LinkedIn messages to the visitor by using NewsReaderWidget.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="newsDocumentBody">
+      <element tag="div" id="socialNetworkMessages">
+         <plugin>
+            <widget name="NewsReaderWidget">
+               <options>
+                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+                  <option name="componentName" value="'LinkedInWidget'"/>
+                  <option name="widgetContainerId" value="'socialNetworkMessages'"/>
+                  <option name="widgetDataURI" value="'Content/System/LinkedIn.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Content/System/LinkedInWidget.xml'"/>
+               </options>
+            </widget>
+         </plugin>
+      </element>
+   </documentBody>
+   
+</smartDocumentDefinition>
