@@ -14,7 +14,7 @@
     
       <item>
          <title>Ákos Várhegyi joined to ProcessPuzzle team</title>
-         <link>Content/System/Facebook.xml?documentType=SMART</link>
+         <link>https://www.facebook.com/groups/processpuzzle</link>
          <description>
             With he's 20 years experience in complex system design he'll be strengthen the ProcessPuzzle Consultans group. He'll also lunch ProcessPuzzle Advisor Partner Program.
          </description>
@@ -24,7 +24,7 @@
       
       <item>
          <title>Usability question: Toggle between edit and view mode makes sense?</title>
-         <link>Content/System/Facebook.xml?documentType=SMART</link>
+         <link>https://www.facebook.com/groups/processpuzzle/</link>
          <description>
             ProcessPuzzle follows the "Edit in-place if you're authorized." usability rule. There is no administrative UI, special UI for content management or workflow specification. 
             Consequently if you add a link to a TextElement of SmartDocument this link will work. This behavior seems to be logical, in the other hand clicking on link can navigate the user to another site. Can this harm the user?
