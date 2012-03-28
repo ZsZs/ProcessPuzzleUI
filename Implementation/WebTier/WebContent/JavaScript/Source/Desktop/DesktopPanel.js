@@ -48,6 +48,7 @@ var DesktopPanel = new Class({
            'onMUIPanelLoaded',
            'onPluginConstructed',
            'onPluginError',
+           'restoreComponentState',
            'subscribeToWebUIMessages',
            'webUIMessageHandler'],   
    
@@ -114,7 +115,8 @@ var DesktopPanel = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( 
+      this.constructionChain.chain(
+         this.restoreComponentState,
          this.instantiateMUIPanel,
          this.determineComponentElements,
          this.constructHeader,

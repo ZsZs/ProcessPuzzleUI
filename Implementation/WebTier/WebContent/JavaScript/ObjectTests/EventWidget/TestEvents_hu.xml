@@ -8,6 +8,10 @@
 	      <title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</title>
 	      <link>http://honnia.hu/news</link>
 	      <description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</description>
+         <program>
+            <description>Részletes program.</description>
+            <link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
+         </program>
 	      <schedule isFullDay="false">
 	         <startDate></startDate>
 	         <endDate></endDate>
@@ -16,6 +20,10 @@
 	         <address>Prof. Agile - virtuális osztályterem</address>
 	         <link>http://agilerenovation.com</link>
 	      </location>
+         <language>magyar</language>
+         <registration>
+            <link>http://agilerenovation.eventbrite.com/</link>
+         </registration>
 	      <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
 	   </event>  
 	    
@@ -23,6 +31,10 @@
 	      <title>Egység teszt központú Java fejlesztés - Tanfolyam</title>
 	      <link>Content/WidgetExamples/UpcommingEvents.xml</link>
 	      <description>Bevezetés az egység teszt alapú fejlesztésbe Java fejlesztők számára.</description>
+         <program>
+            <description>Részletes program.</description>
+            <link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
+         </program>
 	      <schedule isFullDay="false">
 	         <startDate></startDate>
 	         <endDate></endDate>
@@ -31,6 +43,10 @@
 	         <address>Prof. Agile - virtuális osztályterem</address>
 	         <link>http://agilerenovation.com</link>
 	      </location>
+         <language>angol</language>
+         <registration>
+            <link>http://agilerenovation.eventbrite.com/</link>
+         </registration>
 	      <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
 	   </event>  
    </events> 

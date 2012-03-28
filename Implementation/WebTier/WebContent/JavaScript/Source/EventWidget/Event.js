@@ -42,6 +42,8 @@ var Event = new Class({
       locationAddressSelector: "location/address",
       locationLinkSelector: "location/link",
       locationStyle : "eventLocation",
+      programDescriptionSelector : "program/description",
+      programLinkSelector : "program/link",
       publicationDateSelector: "pubDate",
       scheduleStyle: "eventSchedule",
       showDescription: true,
@@ -73,6 +75,8 @@ var Event = new Class({
       this.locationAddress;
       this.locationElement;
       this.locationLink;
+      this.programDescription;
+      this.programLink;
       this.publicationDate;
       this.scheduleElement;
       this.startDate;
@@ -117,6 +121,8 @@ var Event = new Class({
    getLink: function() { return this.link; },
    getLocationAddress: function() { return this.locationAddress; },
    getLocationLink: function() { return this.locationLink; },
+   getProgramDescription: function() { return this.programDescription; },
+   getProgramLink: function() { return this.programLink; },
    getPublicationDate: function() { return this.publicationDate; },
    getStartDate: function() { return this.startDate; },
    getState: function() { return this.state; },
@@ -187,6 +193,8 @@ var Event = new Class({
    unmarshallProperties: function(){
       this.description = XmlResource.selectNodeText( this.options.descriptionSelector, this.eventResource );
       this.link = XmlResource.selectNodeText( this.options.linkSelector, this.eventResource );
+      this.programDescription = XmlResource.selectNodeText( this.options.programDescriptionSelector, this.eventResource );
+      this.programLink = XmlResource.selectNodeText( this.options.programLinkSelector, this.eventResource );
       this.publicationDate = XmlResource.selectNodeText( this.options.publicationDateSelector, this.eventResource );
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.eventResource );
    }.protect(),

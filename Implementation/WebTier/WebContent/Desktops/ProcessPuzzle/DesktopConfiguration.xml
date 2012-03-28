@@ -64,7 +64,7 @@
 			</plugin>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="true" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
          <panelHeader>
             <plugin>

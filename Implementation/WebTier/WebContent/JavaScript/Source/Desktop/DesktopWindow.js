@@ -48,6 +48,7 @@ var DesktopWindow = new Class({
       'onMUIWindowLoaded',
       'onPluginConstructed',
       'onPluginError',
+      'restoreComponentState',
       'subscribeToWebUIMessages',
       'webUIMessageHandler'],
    options : {

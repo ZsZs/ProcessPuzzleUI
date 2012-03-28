@@ -11,12 +11,14 @@ window.DesktopPanelTest = new Class( {
          { method : 'unmarshall_determinesDocumentProperties', isAsynchron : false },
          { method : 'construct_instantiatesMUIPanel', isAsynchron : true }, 
          { method : 'construct_constructsHeaderWithPlugin', isAsynchron : true }, 
+         { method : 'construct_whenEnabled_restoresComponentState', isAsynchron : true }, 
          { method : 'construct_whenSpecified_constructsPlugin', isAsynchron : true }, 
          { method : 'construct_whenSpecified_constructsSmartDocument', isAsynchron : true }, 
          { method : 'construct_whenSpecified_subscribesForMenuSelectedMessage', isAsynchron : true },
          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true },
          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument', isAsynchron : true },
-         { method : 'webUIMessageHandler_whenEventOriginatorIsNotListed_bypassesDocument', isAsynchron : true }]
+         { method : 'webUIMessageHandler_whenEventOriginatorIsNotListed_bypassesDocument', isAsynchron : true },
+         { method : 'loadDocument_whenEnabled_storesComponentState', isAsynchron : true }]
    },
 
    constants : {
@@ -26,6 +28,7 @@ window.DesktopPanelTest = new Class( {
       HTML_DOCUMENT_URI : "../Desktop/HtmlDocument.xml",
       SMART_DOCUMENT_URI : "../Desktop/StaticDocument.xml",
       PANEL_DOCUMENT_WRAPPER_ID : "panelDocumentWrapper",
+      PANEL_NAME : "documents-panel",
       PANEL_WITH_DOCUMENT_DEFINITION : "/desktopConfiguration/panels/panel[@name='documents-panel']",
       PANEL_WITH_PLUGIN_DEFINITION : "/desktopConfiguration/panels/panel[@name='newsPanel']",
       PAGE_WRAPPER_ID : "pageWrapper",
@@ -107,8 +110,9 @@ window.DesktopPanelTest = new Class( {
       assertThat( this.panelWithDocument.getHeight(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@height" ).value ) );
       assertThat( this.panelWithDocument.getName(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@name" ).value ) );
       assertThat( this.panelWithDocument.getPlugin(), nil() );
-      assertThat( this.panelWithDocument.getToolBox(), not( nil() ) );
       assertThat( this.panelWithDocument.getShowHeader(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@showHeader" ).value ) ) );
+      assertThat( this.panelWithDocument.getStoreState(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@storeState" ).value ) ) );
+      assertThat( this.panelWithDocument.getToolBox(), not( nil() ) );
       assertThat( this.panelWithDocument.getTitle(), equalTo( this.resourceBundle.getText( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/title" ) ) ) );
    },
    
@@ -157,6 +161,21 @@ window.DesktopPanelTest = new Class( {
       ).callChain();
    },
    
+   construct_whenEnabled_restoresComponentState : function() {
+      this.testCaseChain.chain(
+         function(){ 
+            var componentState = { documentDefinitionURI : this.constants.HTML_DOCUMENT_URI, documentType : AbstractDocument.Types.HTML };
+            this.componentStateManager.storeCurrentState( this.constants.PANEL_NAME, componentState );
+            this.constructPanel( this.panelWithDocument ); 
+         }.bind( this ),
+         function(){
+            assertThat( this.panelWithDocument.getDocument().getDocumentDefinitionUri(), equalTo( this.constants.HTML_DOCUMENT_URI ));
+            assertThat( instanceOf( this.panelWithDocument.getDocument(), HtmlDocument ), is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+      
    construct_whenSpecified_constructsPlugin : function() {
       this.testCaseChain.chain(
          function(){ 
@@ -254,6 +273,27 @@ window.DesktopPanelTest = new Class( {
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "invalidSource" });
             this.webUIMessageBus.notifySubscribers( message );
             assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   loadDocument_whenEnabled_storesComponentState : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.panelWithDocument.options.handleDocumentLoadEvents = true;
+            this.constructPanel( this.panelWithDocument );
+         }.bind( this ),
+         function(){
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+         }.bind( this ),
+         function(){
+            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "verticalMenuColumn" });
+            this.webUIMessageBus.notifySubscribers( message );
+         }.bind( this ),
+         function(){
+            assertThat( this.componentStateManager.retrieveCurrentState( this.constants.PANEL_NAME )['documentDefinitionURI'], equalTo( this.constants.SMART_DOCUMENT_URI ));
+            assertThat( this.componentStateManager.retrieveCurrentState( this.constants.PANEL_NAME )['documentType'], equalTo( AbstractDocument.Types.SMART ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
