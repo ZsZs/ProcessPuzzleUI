@@ -39,7 +39,7 @@
 
    JsHamcrest.Integration.JsUnit();
 	  
-   var STATE_AS_STRING = "TestComponentTwo: {subStateOne: 'SubStateOne', subStateTwo: 'SubStateTwo'}; TestComponentOne: 'State-one'";
+   var STATE_AS_STRING = "TestComponentTwo:{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'};TestComponentOne:'State-one'";
    var STATE_ONE = "State-one";
    var STATE_TWO = { subStateOne: 'SubStateOne', subStateTwo: 'SubStateTwo' };
    var TEST_COMPONENT_ONE = "TestComponentOne";
@@ -69,7 +69,7 @@
       
       //EXCERCISE:
       stateManager.reset();
-      stateManager.parse( "TestComponentTwo: {subStateOne: 'SubStateOne', subStateTwo: 'SubStateTwo'}; TestComponentOne: 'State-one'" );
+      stateManager.parse( "TestComponentTwo:{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'};TestComponentOne:'State-one'" );
       
       //VERIFY:
       assertEquals( 'State-one', stateManager.retrieveCurrentState( "TestComponentOne" ) );

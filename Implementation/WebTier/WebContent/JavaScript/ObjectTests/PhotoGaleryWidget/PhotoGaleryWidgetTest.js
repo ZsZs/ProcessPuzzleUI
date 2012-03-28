@@ -23,6 +23,7 @@ window.PhotoGaleryWidgetTest = new Class( {
       this.setOptions( options );
       this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.componentStateManager;
+      this.messageBus;
       this.photoGalery;
       this.photoGaleryContainerElement;
       this.photoGaleryData;
@@ -34,6 +35,7 @@ window.PhotoGaleryWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
+      this.messageBus = new WebUIMessageBus();
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.componentStateManager = new ComponentStateManager();
@@ -56,6 +58,7 @@ window.PhotoGaleryWidgetTest = new Class( {
       this.photoGalery.destroy();
       this.photoGaleryData.release();
       this.photoGaleryDefinition.release();
+      this.messageBus.tearDown();
    },
    
    initialization_setsState : function() {

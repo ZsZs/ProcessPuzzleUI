@@ -23,7 +23,7 @@
 
 var BrowserWidget = new Class( {
    Implements : [Events, Options],
-   Binds : ['destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
+   Binds : ['broadcastConstructedMessage', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -156,6 +156,11 @@ var BrowserWidget = new Class( {
    getState : function() { return this.state; },
 
    // Private helper methods
+   broadcastConstructedMessage: function(){
+      var constructedMessage = new WidgetConstuctedMessage({ originator : this.options.componentName });
+      this.messageBus.notifySubscribers( constructedMessage );
+   }.protect(),
+   
    compileConstructionChain: function(){
       this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
@@ -217,6 +222,7 @@ var BrowserWidget = new Class( {
       this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
       this.constructionChain.clearChain();
+      this.broadcastConstructedMessage();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    }.protect(),
    
