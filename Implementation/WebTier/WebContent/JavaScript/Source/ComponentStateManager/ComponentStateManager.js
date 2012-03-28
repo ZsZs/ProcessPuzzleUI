@@ -71,9 +71,9 @@ var ComponentStateManager = new Class({
    toString: function(){
       var stateString = "";
       this.stateMachine.each( function( componentStateEntry, index ){
-         if( stateString != "" ) stateString += "; ";
+         if( stateString != "" ) stateString += ";";
          
-         stateString += componentStateEntry.getKey() + ": ";
+         stateString += componentStateEntry.getKey() + ":";
          
          var valueString = "";
          var value = componentStateEntry.getValue();
@@ -81,8 +81,8 @@ var ComponentStateManager = new Class({
          else if( typeOf( value ) == "object" ){
             valueString = "{";
             for ( var property in value ) {
-               if( valueString != "{" ) valueString += ", ";
-               valueString += property + ": '" + value[property] + "'";
+               if( valueString != "{" ) valueString += ",";
+               valueString += property + ":'" + value[property] + "'";
             }
             valueString += "}";
          }
