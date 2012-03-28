@@ -12,14 +12,17 @@
 
 	<resources>
 		<styleSheets>
-			<styleSheet>Desktops/MochaUI/Styles/Core.css</styleSheet>
-			<styleSheet>Desktops/MochaUI/Styles/Content.css</styleSheet>
-			<styleSheet>Desktops/MochaUI/Styles/Dock.css</styleSheet>
-			<styleSheet>Desktops/MochaUI/Styles/Layout.css</styleSheet>
-			<styleSheet>Desktops/MochaUI/Styles/Panels.css</styleSheet>
-			<styleSheet>Desktops/MochaUI/Styles/Tabs.css</styleSheet>
-			<styleSheet>Desktops/MochaUI/Styles/Window.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Content.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Core.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Dock.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Form.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Layout.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Panels.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Tabs.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/ToolBar.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/Window.css</styleSheet>
          <styleSheet>Desktops/MochaUI/Styles/PhotoGalery.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/TreeWidget.css</styleSheet>
 		</styleSheets>
 		<images></images>
 		<javaScripts></javaScripts>
@@ -35,28 +38,127 @@
    
 	<columns>
 		<column name='mainColumn' placement='main' minimumWidth='100' maximumWidth='300' />
-		<column name='rightColumn' placement='right' width='220' minimumWidth='200' maximumWidth='300' />
+      <column name='rightColumn' placement='right' width='300' minimumWidth='200' maximumWidth='400' />
 	</columns>
 	
 	<panels>
 		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="false" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
+         <panelHeader>
+            <plugin>
+               <resources></resources>
+               <widget name="ToolBarWidget">
+                  <options>
+                     <option name="componentName " value="'documentEditorToolBar'"/>
+                     <option name="dividerIconImageUri" value="'Desktops/ProcessPuzzle/Images/ToolboxDivider.jpg'"/>
+                     <option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
+                  </options>
+               </widget>
+            </plugin>
+         </panelHeader>
 		</panel>
 		
-		<panel name='console' columnReference='mainColumn' height='100' showHeader='true'>
-			<title>DesktopConfigurator.Panel.consoleTitle</title>
-		</panel>
+      <panel name='consolePanel' columnReference='mainColumn' height='200' showHeader='true' handleTabSelectedEvents="true" storeState="false" eventOriginators="['consoleTabs']">
+         <title>DesktopConfigurator.Panel.consoleTitle</title>
+         <panelHeader>
+            <plugin>
+               <resources>
+                  <styleSheets>
+                     <styleSheet>Desktops/ProcessPuzzle/Styles/ConsoleTabs.css</styleSheet>
+                  </styleSheets>
+               </resources>
+               <widget name="TabWidget">
+                  <options>
+                     <option name="componentName " value="'consoleTabs'"/>
+                     <option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
+                  </options>
+               </widget> 
+            </plugin>
+         </panelHeader>
+         <document tag="div" id="consoleDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
+             <documentDefinitionUri>Content/DocumentCommentsDefinition.xml</documentDefinitionUri>
+             <documentContentUri></documentContentUri>
+         </document>
+      </panel>
 		
-		<panel name='menu-panel' columnReference='rightColumn' showHeader='true'>
-			<title>DesktopConfigurator.Panel.menusTitle</title>
-		</panel>
-		
-		<panel name='tips-panel' columnReference='rightColumn' height='150' showHeader='true'>
-			<title>DesktopConfigurator.Panel.tipsTitle</title>
-		</panel>
+      <panel name='eventsPanel' columnReference='rightColumn' showHeader='true' >
+         <title>DesktopConfigurator.Panel.eventsTitle</title>
+         <contentURL>Desktops/ProcessPuzzle/Pages/EventsPanel.html</contentURL>
+         <plugin>
+            <resources>
+               <styleSheets>
+                  <styleSheet>Desktops/MochaUI/Styles/EventsPanel.css</styleSheet>
+               </styleSheets>
+            </resources>
+            <widget name="EventWidget">
+               <options>
+                  <option name="widgetContainerId" value="'UpcommingEvents'"/>
+                  <option name="widgetDataURI" value="'Content/WidgetExamples/UpcommingEvents.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/UpcommingEventsDefinition.xml'"/>
+                  <option name="componentName" value="'UpcommingEventsWidget'"/>
+                  <option name="eventOptions" value="{ showDescription : true, showTitle : true, truncateDescription : true }"/>
+               </options>
+            </widget>
+         </plugin>
+      </panel>
+      
+      <panel name='newsPanel' columnReference='rightColumn' height='350' showHeader='true'>
+         <title>DesktopConfigurator.Panel.newsTitle</title>
+         <contentURL>Desktops/ProcessPuzzle/Pages/NewsPanel.html</contentURL>
+         <plugin>
+            <resources>
+               <styleSheets>
+                  <styleSheet>Desktops/MochaUI/Styles/NewsPanel.css</styleSheet>
+               </styleSheets>
+            </resources>
+            <widget name="NewsReaderWidget">
+               <options>
+                  <option name="widgetContainerId" value="'TopNews'"/>
+                  <option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/SiteNewsDefinition.xml'"/>
+                  <option name="componentName" value="'TopNewsWidget'"/>
+                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+               </options>
+            </widget>
+         </plugin>
+      </panel>
+      
+      <panel name='communityPanel' columnReference='rightColumn' height='150' showHeader='true' handleTabSelectedEvents="true" eventOriginators="['communityTabs']">
+         <title>DesktopConfigurator.Panel.comunityTitle</title>
+         <panelHeader>
+            <plugin>
+               <resources>
+                  <styleSheets>
+                     <styleSheet>Desktops/MochaUI/Styles/CommunityPanelTabs.css</styleSheet>
+                  </styleSheets>
+               </resources>
+               <widget name="TabWidget">
+                  <options>
+                     <option name="componentName" value="'communityTabs'"/>
+                     <option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
+                     <option name="widgetDefinitionURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
+                  </options>
+               </widget> 
+            </plugin>
+         </panelHeader>
+         <document tag="div" id="communityDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
+             <documentDefinitionUri>Content/System/FacebookPanelContent.xml</documentDefinitionUri>
+             <documentContentUri>Content/System/Facebook.xml</documentContentUri>
+         </document>
+      </panel>
 	</panels>
 	
    <windows>
+      <window name='about' height='400' width='600'>
+         <title>DesktopWindow.about.title</title>
+         <contentURL>Content/System/About.html</contentURL>
+      </window>
+      
+      <window name="documentExplorer" height="400" width="600">
+         <title>DesktopWindow.documentExplorer.title</title>
+      </window>
    </windows>
 
 </desktopConfiguration>

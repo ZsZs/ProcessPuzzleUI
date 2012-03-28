@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+div.rssChannelTitle{
+   color: teal;
+	font-size: larger;
+	font-weight: bold;
+}
+
+div.rssItemTitle{
+   color: teal;
+   font-size: 11px;
+   font-weight: bold;
+   padding-bottom: 3px;
+   padding-top: 3px;
+}
+
+div.rssItemTitle a {
+   cursor: pointer;
+   text-decoration: none;
+}
+
+div.rssItemDescription{
+	font-size: 10px;
+   font-weight: lighter;
+}

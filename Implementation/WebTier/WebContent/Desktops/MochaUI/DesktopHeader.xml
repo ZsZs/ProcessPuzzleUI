@@ -33,7 +33,7 @@
                      <options>
                         <option name="widgetContainerId" value="'HorizontalMenuBar'" />
                         <option name="widgetDefinitionURI" value="'Configuration/WebUIMenuDefinition.xml'" />
-                        <option name="componentName" value="'HorizontalMenuBar'" />
+                        <option name="componentName" value="'horizontalMenuBar'" />
                         <option name="showSubItems" value="true" />
                      </options>
                   </widget>
