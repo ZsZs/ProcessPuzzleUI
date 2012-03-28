@@ -17,6 +17,7 @@ window.BrowserWidgetTest = new Class( {
           { method : 'initialize_whenResourceBundleIsNotLoaded_throwsException', isAsynchron : false },
           { method : 'getText_usesI18Resource', isAsynchron : false },
           { method : 'removeChild_destroysNestedChildElements', isAsynchron : false },
+          { method : 'construct_broadcastsWidgetConstructedMessage', isAsynchron : true }, 
           { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }, 
           { method : 'webUIMessageHandler_whenConfigured_handlesMessages', isAsynchron : true }, 
           { method : 'webUIMessageHandler_whenNotConfigured_throwsException', isAsynchron : false }]
@@ -43,6 +44,7 @@ window.BrowserWidgetTest = new Class( {
       
       this.browserWidget;
       this.componentStateManager;
+      this.constructedMessageReceived = false;
       this.domDocument;
       this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.messageBus;
@@ -158,6 +160,22 @@ window.BrowserWidgetTest = new Class( {
       
       //VERIFY:
       assertNull( this.widgetContainerElement.getElementById( this.constants.ROW_VALUE_ID ) );
+   },
+   
+   construct_broadcastsWidgetConstructedMessage : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.messageBus.subscribeToMessage( WidgetConstuctedMessage, function( webUIMessage ){
+               this.constructedMessageReceived = true;
+               assertThat( webUIMessage.getOriginator(), equalTo( this.browserWidget.options.componentName ));
+            }.bind( this ));
+            this.browserWidget.construct();
+         }.bind( this ),
+         function(){
+            assertThat( this.constructedMessageReceived, is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    destroy_destroysAllCreatedElements : function() {

@@ -30,12 +30,14 @@ window.DiagramWidgetTest = new Class( {
       this.diagramData;
       this.diagramDefinition;
       this.diagramInternationalization;
+      this.messageBus;
       this.webUIConfiguration;
       this.webUIController;
       this.webUILogger;
    },   
 
    beforeEachTest : function(){
+      this.messageBus = new WebUIMessageBus();
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.componentStateManager = new ComponentStateManager();
@@ -58,6 +60,7 @@ window.DiagramWidgetTest = new Class( {
       this.diagram.destroy();
       this.diagramData.release();
       this.diagramDefinition.release();
+      this.messageBus.tearDown();
    },
    
    unmarshall_determinesProperties : function() {
