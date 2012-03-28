@@ -55,13 +55,13 @@ var AbstractDocument = new Class({
       componentName : "AbstractDocument",
       contentUriSelector : "contentUri",
       descriptionSelector : "description",
-      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
-      documentDefinitionUri : null,
-      documentDefinitionUriSelector: "@documentDefinition",
       documentContainerId : "DocumentContainer",
       documentContentExtension : ".xml",
       documentContentUri : null,
       documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      documentDefinitionUri : null,
+      documentDefinitionUriSelector: "@documentDefinition",
       documentEditorClass : "DocumentEditor",
       handleMenuSelectedEventsDefault : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
@@ -197,7 +197,7 @@ var AbstractDocument = new Class({
    getDocumentContent: function() { return this.documentContent; },
    getDocumentContentUri: function() { return this.options.documentContentUr; },
    getDocumentDefinition: function() { return this.documentDefinition; },
-   getDocumentDefinitionUri: function() { return this.documentDefinitionUri; },
+   getDocumentDefinitionUri: function() { return this.options.documentDefinitionUri; },
    getEditor: function() { return this.editor; },
    getError: function() { return this.error; },
    getHandleMenuSelectedEvents: function() { return this.handleMenuSelectedEvents; },
@@ -290,8 +290,8 @@ var AbstractDocument = new Class({
    
    resetProperties: function(){
       this.description = null;
-      this.documentDefinitionUri = null;
-      this.documentDefinitionUri = null;
+      this.options.documentContentUri = null;
+      this.options.documentDefinitionUri = null;
       this.editor = null;
       this.name = null;
       this.version = null;

@@ -72,7 +72,6 @@ var ComplexContentBehaviour = new Class({
       this.documentContentUri;
       this.documentContentType = AbstractDocument.Types.HTML;
       this.documentDefinitionUri;
-      this.documentType;
       this.documentWrapper;
       this.documentWrapperId;
       this.documentWrapperStyle;
@@ -87,6 +86,7 @@ var ComplexContentBehaviour = new Class({
       this.name;
       this.plugin;
       this.showHeader;
+      this.stateSpecification;
       this.storeState = false;
       this.title;
       this.width;
@@ -171,6 +171,7 @@ var ComplexContentBehaviour = new Class({
    getPlugin: function() { return this.plugin; },
    getShowHeader: function() { return this.showHeader; },
    getState: function() { return this.state; },
+   getStoreState: function() { return this.storeState; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
    getWidth: function() { return this.width; },
@@ -263,6 +264,12 @@ var ComplexContentBehaviour = new Class({
       this.constructDocument();
    }.protect(),
    
+   parseStateSpecification: function(){
+      this.documentDefinitionUri = this.stateSpecification['documentDefinitionURI'] != 'null' ? this.stateSpecification['documentDefinitionURI'] : null;
+      this.documentContentUri = this.stateSpecification['documentContentURI'] != 'null' ? this.stateSpecification['documentContentURI'] : null;
+      this.documentContentType = this.stateSpecification['documentType'] != 'null' ? this.stateSpecification['documentType'] : this.options.documentTypeDefault;
+   }.protect(),
+
    processMessageProperties: function( webUIMessage ){
       this.documentDefinitionUri = webUIMessage.getDocumentURI();
       this.documentContentUri = webUIMessage.getDocumentContentURI();
@@ -282,6 +289,27 @@ var ComplexContentBehaviour = new Class({
       this.title = null;
    }.protect(),
    
+   restoreComponentState : function() {
+      if( this.storeState ){
+         this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+         if( this.stateSpecification ) {
+            this.parseStateSpecification();
+            
+            if( this.documentDefinitionUri ){
+               this.document = this.instantiateDocument( this.documentContentType, { 
+                  documentContainerId : this.documentWrapperId, 
+                  documentDefinitionUri : this.documentDefinitionUri, 
+                  documentContentUri : this.documentContentUri,
+                  onDocumentReady : this.onDocumentReady,
+                  onDocumentError : this.onDocumentError
+               });
+               this.document.unmarshall();
+            }
+         }
+      }
+      this.constructionChain.callChain();
+   }.protect(),
+   
    revertConstruction: function(){
       this.destroyComponents();
       this.resetProperties();
@@ -289,10 +317,8 @@ var ComplexContentBehaviour = new Class({
       
    storeComponentState : function() {
       if( this.storeState ){
-         var componentState;
-         if( this.documentContentType == AbstractDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
-         else componentState = { uri : this.documentDefinitionUri, type : this.documentContentType };
-         this.componentStateManager.storeCurrentState( this.options.componentName, componentState );
+         this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
+         this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
       }
    }.protect(),
    
@@ -312,12 +338,12 @@ var ComplexContentBehaviour = new Class({
    unmarshallDocument: function(){
       this.documentContentUri = XmlResource.selectNodeText( this.options.documentContentUriSelector, this.definitionElement );
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement );
-      this.documentType = XmlResource.selectNodeText( this.options.documentTypeSelector, this.definitionElement, this.options.nameSpaces, this.options.documentTypeDefault );
+      this.documentContentType = XmlResource.selectNodeText( this.options.documentTypeSelector, this.definitionElement, this.options.nameSpaces, this.options.documentTypeDefault );
       this.documentWrapperId = XmlResource.selectNodeText( this.options.documentWrapperIdSelector, this.definitionElement, this.options.nameSpaces, this.name + this.options.documentWrapperId );
       this.documentWrapperStyle = XmlResource.selectNodeText( this.options.documentWrapperStyleSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperStyle );
       this.documentWrapperTag = XmlResource.selectNodeText( this.options.documentWrapperTagSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperTag );
       if( this.documentDefinitionUri ){
-         this.document = this.instantiateDocument( this.documentType, { 
+         this.document = this.instantiateDocument( this.documentContentType, { 
             documentContainerId : this.documentWrapperId, 
             documentDefinitionUri : this.documentDefinitionUri, 
             documentContentUri : this.documentContentUri,

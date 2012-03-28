@@ -66,6 +66,8 @@ window.EventTest = new Class( {
       assertThat( this.event.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/title" )));
       assertThat( this.event.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/link" )));
       assertThat( this.event.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/description" )));
+      assertThat( this.event.getProgramDescription(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/program/description" )));
+      assertThat( this.event.getProgramLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/program/link" )));
       assertThat( this.event.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pubDate" )));
    },
    
