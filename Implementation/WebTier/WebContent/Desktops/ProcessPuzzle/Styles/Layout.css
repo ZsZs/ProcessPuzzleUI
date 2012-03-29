@@ -289,7 +289,6 @@ body {
 }
 
 .panel-header-toolbox {
-	overflow: hidden;
 }
 
 div.toolbox.divider { /* Have to specify div here for IE6's sake */

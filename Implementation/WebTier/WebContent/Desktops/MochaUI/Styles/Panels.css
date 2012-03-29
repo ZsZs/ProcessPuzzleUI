@@ -16,14 +16,25 @@ Required by:
  
 */
 
-
-
-#documents-panel {
-	overflow: hidden;
+#documents-panel { 
+   overflow: hidden; 
 }
 
 .documentWrapper { 
-	margin-left: 5px; 
-	margin-right: 5px; 
-	padding : 2px; 
+   background: transparent;
+   margin-left: 5px; 
+   margin-right: 5px; 
+   padding : 2px; 
+}
+
+.mooeditable-container { 
+   background: transparent;
+}
+
+.mooeditable-iframe { 
+   background: transparent;
+}
+
+.panelTabs {
+   background: url( ../Images/PanelTabs-Background.gif ) repeat-x;
 }

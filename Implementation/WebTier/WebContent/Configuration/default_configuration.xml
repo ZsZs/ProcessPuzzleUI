@@ -38,7 +38,7 @@
 				<wui:skin name="MochaUI" relativePath="Desktops/MochaUI" configurationURI="Desktops/MochaUI/DesktopConfiguration.xml" />
 				<wui:skin name="ProcessPuzzle" relativePath="Desktops/ProcessPuzzle" configurationURI="Desktops/ProcessPuzzle/DesktopConfiguration.xml" />
 			</wui:availableSkins>
-			<wui:defaultSkin name="MochaUI"></wui:defaultSkin>
+			<wui:defaultSkin name="ProcessPuzzle"></wui:defaultSkin>
 		</wui:desktop>
 			
 		<wui:logging>

@@ -200,7 +200,7 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    constructHeader: function(){
-      if( this.header ) this.header.construct();
+      if( this.header ) this.header.construct( $( this.name + "_header" ));
       else this.constructionChain.callChain();
    }.protect(),
    

@@ -70,7 +70,7 @@
 		
 		<panel name="console" columnReference="mainColumn" height="100" showHeader="true">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
-         <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
+         <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html" contentStyle="DocumentTabs">
             <plugin>
                <resources>
                   <styleSheets>
