@@ -2199,13 +2199,13 @@ var AbstractDocument = new Class({
       componentName : "AbstractDocument",
       contentUriSelector : "contentUri",
       descriptionSelector : "description",
-      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
-      documentDefinitionUri : null,
-      documentDefinitionUriSelector: "@documentDefinition",
       documentContainerId : "DocumentContainer",
       documentContentExtension : ".xml",
       documentContentUri : null,
       documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      documentDefinitionUri : null,
+      documentDefinitionUriSelector: "@documentDefinition",
       documentEditorClass : "DocumentEditor",
       handleMenuSelectedEventsDefault : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
@@ -2341,7 +2341,7 @@ var AbstractDocument = new Class({
    getDocumentContent: function() { return this.documentContent; },
    getDocumentContentUri: function() { return this.options.documentContentUr; },
    getDocumentDefinition: function() { return this.documentDefinition; },
-   getDocumentDefinitionUri: function() { return this.documentDefinitionUri; },
+   getDocumentDefinitionUri: function() { return this.options.documentDefinitionUri; },
    getEditor: function() { return this.editor; },
    getError: function() { return this.error; },
    getHandleMenuSelectedEvents: function() { return this.handleMenuSelectedEvents; },
@@ -2434,8 +2434,8 @@ var AbstractDocument = new Class({
    
    resetProperties: function(){
       this.description = null;
-      this.documentDefinitionUri = null;
-      this.documentDefinitionUri = null;
+      this.options.documentContentUri = null;
+      this.options.documentDefinitionUri = null;
       this.editor = null;
       this.name = null;
       this.version = null;
@@ -2614,7 +2614,7 @@ var DocumentSelectedMessage = new Class({
 
 var BrowserWidget = new Class( {
    Implements : [Events, Options],
-   Binds : ['destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
+   Binds : ['broadcastConstructedMessage', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -2747,6 +2747,11 @@ var BrowserWidget = new Class( {
    getState : function() { return this.state; },
 
    // Private helper methods
+   broadcastConstructedMessage: function(){
+      var constructedMessage = new WidgetConstuctedMessage({ originator : this.options.componentName });
+      this.messageBus.notifySubscribers( constructedMessage );
+   }.protect(),
+   
    compileConstructionChain: function(){
       this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
@@ -2808,6 +2813,7 @@ var BrowserWidget = new Class( {
       this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
       this.constructionChain.clearChain();
+      this.broadcastConstructedMessage();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    }.protect(),
    
@@ -2891,6 +2897,66 @@ var UnconfiguredWidgetException = new Class({
       this.parent( options );
    }
 });
+/*
+Name: 
+   - WidgetConstructedMessage
+
+Description: 
+   - This message sent out when a widget is constructed.
+
+Requires:
+   - WebUIMessage
+
+Provides:
+   - WidgettedMessage
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+   - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var WidgetConstuctedMessage = new Class({
+   Extends: WebUIMessage,
+   options: {
+      actionType: null,
+      activityType: null,
+      description: "New widget was constructed.",
+      name: "WidgetConstructedMessage",
+      notification: null,
+      windowName: null
+   },
+   
+   //Constructors
+   initialize: function( options ){
+      this.setOptions( options );
+      this.options.messageClass = WidgetConstuctedMessage;
+   },
+   
+   //Public accessors
+   
+   //Properties
+   getActionType: function() { return this.options.actionType; },
+   getActivityType: function() { return this.options.activityType; },
+   getContextItemId: function() { return this.options.contextItemId; },
+   getNotification: function() { return this.options.notification; },
+   getWindowName: function() { return this.options.windowName; }
+});
+
 /*
 Name: 
     - HtmlElementFactory
@@ -3338,9 +3404,9 @@ var ComponentStateManager = new Class({
    toString: function(){
       var stateString = "";
       this.stateMachine.each( function( componentStateEntry, index ){
-         if( stateString != "" ) stateString += "; ";
+         if( stateString != "" ) stateString += ";";
          
-         stateString += componentStateEntry.getKey() + ": ";
+         stateString += componentStateEntry.getKey() + ":";
          
          var valueString = "";
          var value = componentStateEntry.getValue();
@@ -3348,8 +3414,8 @@ var ComponentStateManager = new Class({
          else if( typeOf( value ) == "object" ){
             valueString = "{";
             for ( var property in value ) {
-               if( valueString != "{" ) valueString += ", ";
-               valueString += property + ": '" + value[property] + "'";
+               if( valueString != "{" ) valueString += ",";
+               valueString += property + ":'" + value[property] + "'";
             }
             valueString += "}";
          }
@@ -3442,7 +3508,6 @@ var ComplexContentBehaviour = new Class({
       this.documentContentUri;
       this.documentContentType = AbstractDocument.Types.HTML;
       this.documentDefinitionUri;
-      this.documentType;
       this.documentWrapper;
       this.documentWrapperId;
       this.documentWrapperStyle;
@@ -3457,6 +3522,7 @@ var ComplexContentBehaviour = new Class({
       this.name;
       this.plugin;
       this.showHeader;
+      this.stateSpecification;
       this.storeState = false;
       this.title;
       this.width;
@@ -3541,6 +3607,7 @@ var ComplexContentBehaviour = new Class({
    getPlugin: function() { return this.plugin; },
    getShowHeader: function() { return this.showHeader; },
    getState: function() { return this.state; },
+   getStoreState: function() { return this.storeState; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
    getWidth: function() { return this.width; },
@@ -3569,7 +3636,7 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    constructHeader: function(){
-      if( this.header ) this.header.construct();
+      if( this.header ) this.header.construct( $( this.name + "_header" ));
       else this.constructionChain.callChain();
    }.protect(),
    
@@ -3633,6 +3700,12 @@ var ComplexContentBehaviour = new Class({
       this.constructDocument();
    }.protect(),
    
+   parseStateSpecification: function(){
+      this.documentDefinitionUri = this.stateSpecification['documentDefinitionURI'] != 'null' ? this.stateSpecification['documentDefinitionURI'] : null;
+      this.documentContentUri = this.stateSpecification['documentContentURI'] != 'null' ? this.stateSpecification['documentContentURI'] : null;
+      this.documentContentType = this.stateSpecification['documentType'] != 'null' ? this.stateSpecification['documentType'] : this.options.documentTypeDefault;
+   }.protect(),
+
    processMessageProperties: function( webUIMessage ){
       this.documentDefinitionUri = webUIMessage.getDocumentURI();
       this.documentContentUri = webUIMessage.getDocumentContentURI();
@@ -3652,6 +3725,27 @@ var ComplexContentBehaviour = new Class({
       this.title = null;
    }.protect(),
    
+   restoreComponentState : function() {
+      if( this.storeState ){
+         this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+         if( this.stateSpecification ) {
+            this.parseStateSpecification();
+            
+            if( this.documentDefinitionUri ){
+               this.document = this.instantiateDocument( this.documentContentType, { 
+                  documentContainerId : this.documentWrapperId, 
+                  documentDefinitionUri : this.documentDefinitionUri, 
+                  documentContentUri : this.documentContentUri,
+                  onDocumentReady : this.onDocumentReady,
+                  onDocumentError : this.onDocumentError
+               });
+               this.document.unmarshall();
+            }
+         }
+      }
+      this.constructionChain.callChain();
+   }.protect(),
+   
    revertConstruction: function(){
       this.destroyComponents();
       this.resetProperties();
@@ -3659,10 +3753,8 @@ var ComplexContentBehaviour = new Class({
       
    storeComponentState : function() {
       if( this.storeState ){
-         var componentState;
-         if( this.documentContentType == AbstractDocument.Types.HTML ) componentState = { uri : this.documentContentUri, type : this.documentContentType };
-         else componentState = { uri : this.documentDefinitionUri, type : this.documentContentType };
-         this.componentStateManager.storeCurrentState( this.options.componentName, componentState );
+         this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
+         this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
       }
    }.protect(),
    
@@ -3682,12 +3774,12 @@ var ComplexContentBehaviour = new Class({
    unmarshallDocument: function(){
       this.documentContentUri = XmlResource.selectNodeText( this.options.documentContentUriSelector, this.definitionElement );
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement );
-      this.documentType = XmlResource.selectNodeText( this.options.documentTypeSelector, this.definitionElement, this.options.nameSpaces, this.options.documentTypeDefault );
+      this.documentContentType = XmlResource.selectNodeText( this.options.documentTypeSelector, this.definitionElement, this.options.nameSpaces, this.options.documentTypeDefault );
       this.documentWrapperId = XmlResource.selectNodeText( this.options.documentWrapperIdSelector, this.definitionElement, this.options.nameSpaces, this.name + this.options.documentWrapperId );
       this.documentWrapperStyle = XmlResource.selectNodeText( this.options.documentWrapperStyleSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperStyle );
       this.documentWrapperTag = XmlResource.selectNodeText( this.options.documentWrapperTagSelector, this.definitionElement, this.options.nameSpaces, this.options.documentWrapperTag );
       if( this.documentDefinitionUri ){
-         this.document = this.instantiateDocument( this.documentType, { 
+         this.document = this.instantiateDocument( this.documentContentType, { 
             documentContainerId : this.documentWrapperId, 
             documentDefinitionUri : this.documentDefinitionUri, 
             documentContentUri : this.documentContentUri,
@@ -4922,6 +5014,7 @@ var DesktopPanel = new Class({
            'onMUIPanelLoaded',
            'onPluginConstructed',
            'onPluginError',
+           'restoreComponentState',
            'subscribeToWebUIMessages',
            'webUIMessageHandler'],   
    
@@ -4988,7 +5081,8 @@ var DesktopPanel = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( 
+      this.constructionChain.chain(
+         this.restoreComponentState,
          this.instantiateMUIPanel,
          this.determineComponentElements,
          this.constructHeader,
@@ -5085,6 +5179,7 @@ var DesktopPanelHeader = new Class({
    
    options: {
       componentName : "DesktopPanelHeader",
+      contentStyleSelector : "@contentStyle",
       contextRootPrefix : "",
       headerSelector : "panelHeader",
       pluginSelector : "plugin",
@@ -5097,6 +5192,9 @@ var DesktopPanelHeader = new Class({
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
       this.setOptions( options );
+      
+      this.contentStyle;
+      this.contextElement;
       this.definitionElement = definitionElement;
       this.error = false;
       this.internationalization = internationalization;
@@ -5110,8 +5208,9 @@ var DesktopPanelHeader = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      if( this.plugin ) this.plugin.construct();
-      else this.onPluginConstructed();
+      this.contextElement = contextElement;
+      this.constructPlugin();
+      this.addContentStyle();
    },
    
    destroy: function(){
@@ -5131,6 +5230,7 @@ var DesktopPanelHeader = new Class({
    },
    
    unmarshall: function(){
+      this.contentStyle = XmlResource.selectNodeText( this.options.contentStyleSelector, this.definitionElement );
       this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
       if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
@@ -5142,6 +5242,7 @@ var DesktopPanelHeader = new Class({
    },
 
    //Properties
+   getContentStyle: function() { return this.contentStyle; },
    getDefinitionElement: function() { return this.definitionElement; },
    getHeaderToolBox: function() { return this.plugin != null; },
    getPlugin: function() { return this.plugin; },
@@ -5149,6 +5250,17 @@ var DesktopPanelHeader = new Class({
    getToolBoxUrl: function() { return this.toolBoxUrl; },
    
    //Protected, private helper methods
+   addContentStyle: function(){
+      if( this.contentStyle ){
+         this.contextElement.getElementById( this.contextElement.get( 'id' ) + "Content" ).addClass( this.contentStyle );
+      }
+   }.protect(),
+   
+   constructPlugin: function(){
+      if( this.plugin ) this.plugin.construct();
+      else this.onPluginConstructed();
+   }.protect(),
+   
    revertConstruction: function(){
       if( this.plugin ) this.plugin.destroy();
    }
@@ -5377,6 +5489,7 @@ var DesktopWindow = new Class({
       'onMUIWindowLoaded',
       'onPluginConstructed',
       'onPluginError',
+      'restoreComponentState',
       'subscribeToWebUIMessages',
       'webUIMessageHandler'],
    options : {
@@ -6691,6 +6804,8 @@ var Event = new Class({
       locationAddressSelector: "location/address",
       locationLinkSelector: "location/link",
       locationStyle : "eventLocation",
+      programDescriptionSelector : "program/description",
+      programLinkSelector : "program/link",
       publicationDateSelector: "pubDate",
       scheduleStyle: "eventSchedule",
       showDescription: true,
@@ -6722,6 +6837,8 @@ var Event = new Class({
       this.locationAddress;
       this.locationElement;
       this.locationLink;
+      this.programDescription;
+      this.programLink;
       this.publicationDate;
       this.scheduleElement;
       this.startDate;
@@ -6766,6 +6883,8 @@ var Event = new Class({
    getLink: function() { return this.link; },
    getLocationAddress: function() { return this.locationAddress; },
    getLocationLink: function() { return this.locationLink; },
+   getProgramDescription: function() { return this.programDescription; },
+   getProgramLink: function() { return this.programLink; },
    getPublicationDate: function() { return this.publicationDate; },
    getStartDate: function() { return this.startDate; },
    getState: function() { return this.state; },
@@ -6836,6 +6955,8 @@ var Event = new Class({
    unmarshallProperties: function(){
       this.description = XmlResource.selectNodeText( this.options.descriptionSelector, this.eventResource );
       this.link = XmlResource.selectNodeText( this.options.linkSelector, this.eventResource );
+      this.programDescription = XmlResource.selectNodeText( this.options.programDescriptionSelector, this.eventResource );
+      this.programLink = XmlResource.selectNodeText( this.options.programLinkSelector, this.eventResource );
       this.publicationDate = XmlResource.selectNodeText( this.options.publicationDateSelector, this.eventResource );
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.eventResource );
    }.protect(),
