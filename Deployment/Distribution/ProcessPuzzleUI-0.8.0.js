@@ -3636,7 +3636,7 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    constructHeader: function(){
-      if( this.header ) this.header.construct();
+      if( this.header ) this.header.construct( $( this.name + "_header" ));
       else this.constructionChain.callChain();
    }.protect(),
    
@@ -5179,6 +5179,7 @@ var DesktopPanelHeader = new Class({
    
    options: {
       componentName : "DesktopPanelHeader",
+      contentStyleSelector : "@contentStyle",
       contextRootPrefix : "",
       headerSelector : "panelHeader",
       pluginSelector : "plugin",
@@ -5191,6 +5192,9 @@ var DesktopPanelHeader = new Class({
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
       this.setOptions( options );
+      
+      this.contentStyle;
+      this.contextElement;
       this.definitionElement = definitionElement;
       this.error = false;
       this.internationalization = internationalization;
@@ -5204,8 +5208,9 @@ var DesktopPanelHeader = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      if( this.plugin ) this.plugin.construct();
-      else this.onPluginConstructed();
+      this.contextElement = contextElement;
+      this.constructPlugin();
+      this.addContentStyle();
    },
    
    destroy: function(){
@@ -5225,6 +5230,7 @@ var DesktopPanelHeader = new Class({
    },
    
    unmarshall: function(){
+      this.contentStyle = XmlResource.selectNodeText( this.options.contentStyleSelector, this.definitionElement );
       this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
       if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
@@ -5236,6 +5242,7 @@ var DesktopPanelHeader = new Class({
    },
 
    //Properties
+   getContentStyle: function() { return this.contentStyle; },
    getDefinitionElement: function() { return this.definitionElement; },
    getHeaderToolBox: function() { return this.plugin != null; },
    getPlugin: function() { return this.plugin; },
@@ -5243,6 +5250,17 @@ var DesktopPanelHeader = new Class({
    getToolBoxUrl: function() { return this.toolBoxUrl; },
    
    //Protected, private helper methods
+   addContentStyle: function(){
+      if( this.contentStyle ){
+         this.contextElement.getElementById( this.contextElement.get( 'id' ) + "Content" ).addClass( this.contentStyle );
+      }
+   }.protect(),
+   
+   constructPlugin: function(){
+      if( this.plugin ) this.plugin.construct();
+      else this.onPluginConstructed();
+   }.protect(),
+   
    revertConstruction: function(){
       if( this.plugin ) this.plugin.destroy();
    }
