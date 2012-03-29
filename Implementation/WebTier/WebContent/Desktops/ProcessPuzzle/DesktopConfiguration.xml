@@ -83,7 +83,7 @@
 
 		<panel name='consolePanel' columnReference='mainColumn' height='200' showHeader='true' handleTabSelectedEvents="true" storeState="false" eventOriginators="['consoleTabs']">
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
-         <panelHeader>
+         <panelHeader contentStyle="documentTabs">
             <plugin>
                <resources>
                   <styleSheets>
@@ -149,7 +149,7 @@
 		
       <panel name='communityPanel' columnReference='rightColumn' height='150' showHeader='true' handleTabSelectedEvents="true" eventOriginators="['communityTabs']">
          <title>DesktopConfigurator.Panel.comunityTitle</title>
-         <panelHeader>
+         <panelHeader contentStyle="panelTabs">
             <plugin>
                <resources>
                   <styleSheets>

@@ -6,7 +6,7 @@ Panels.css for ProcessPuzzle.DesktopConfigurator
 Skin: ProcessPuzzle
 
 Copyright:
-	Copyright (c) 2010 IT Codex Llc, <http://itkodex.hu/>.
+	Copyright (c) 2012 IT Codex Llc, <http://itkodex.hu/>.
 	
 License:
 	MIT-style license.
@@ -15,8 +15,6 @@ Required by:
 	DesktopConfigurator.js
  
 */
-
-
 
 #documents-panel { 
 	overflow: hidden; 
@@ -37,3 +35,6 @@ Required by:
    background: transparent;
 }
 
+.panelTabs {
+   background: url( ../Images/PanelTabs-Background.gif ) repeat-x;
+}

@@ -4,9 +4,10 @@ window.DesktopPanelHeaderTest = new Class({
 
    options : {
       testMethods : [
-          { method : 'initialize_setsState', isAsynchron : false },
-          { method : 'unmarshall_determinesHeaderProperties', isAsynchron : false }, 
-          { method : 'construct_constructsPlugin', isAsynchron : true }]
+         { method : 'initialize_setsState', isAsynchron : false },
+         { method : 'unmarshall_determinesHeaderProperties', isAsynchron : false }, 
+         { method : 'construct_constructsPlugin', isAsynchron : true },
+         { method : 'construct_whenSpecified_addsElementStyleToHeaderContent', isAsynchron : true }]
    },
 
    constants : {
@@ -53,19 +54,33 @@ window.DesktopPanelHeaderTest = new Class({
    unmarshall_determinesHeaderProperties : function() {
       this.panelHeader.unmarshall();
       assertThat( this.panelHeader.getState(), equalTo( DesktopPanelHeader.States.UNMARSHALLED ));
-      assertThat( this.panelHeader.getToolBoxUrl(), equalTo( this.desktopConfiguration.selectNodeText( this.constants.PANEL_HEADER_SELECTOR + "/@toolBoxUrl" )));
       assertThat( this.panelHeader.getPlugin(), not( nil() ));
+      assertThat( this.panelHeader.getContentStyle(), equalTo( this.desktopConfiguration.selectNodeText( this.constants.PANEL_HEADER_SELECTOR + "/@contentStyle" )));
+      assertThat( this.panelHeader.getToolBoxUrl(), equalTo( this.desktopConfiguration.selectNodeText( this.constants.PANEL_HEADER_SELECTOR + "/@toolBoxUrl" )));
    },
    
    construct_constructsPlugin : function() {      
       this.testCaseChain.chain(
          function(){
             this.panelHeader.unmarshall();
-            this.panelHeader.construct();
+            this.panelHeader.construct($( "console_header" ));
          }.bind( this ),
          function(){
             assertThat( this.panelHeader.getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ));
             assertThat( this.panelHeader.getPlugin().getState(), equalTo( DocumentPlugin.States.CONSTRUCTED ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenSpecified_addsElementStyleToHeaderContent : function() {      
+      this.testCaseChain.chain(
+         function(){
+            this.panelHeader.unmarshall();
+            this.panelHeader.construct($( "console_header" ));
+         }.bind( this ),
+         function(){
+            assertThat( $( "console_headerContent" ).hasClass( this.panelHeader.getContentStyle() ), is( true ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
