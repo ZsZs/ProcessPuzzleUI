@@ -92,22 +92,23 @@
     <Resource key="EventWidget.schedule" type="String">Date:</Resource>
     <Resource key="EventWidget.location" type="String">Location:</Resource>
       
-    <Resource key="HierarchicalMenuWidget.administration" type="String">Administration</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.about" type="String">About ProcessPuzzle</Resource>
-    <Resource key="HierarchicalMenuWidget.administration.users" type="String">Users</Resource>
+    <Resource key="WebUIMenu.administration" type="String">Administration</Resource>
+    <Resource key="WebUIMenu.administration.about" type="String">About ProcessPuzzle</Resource>
+    <Resource key="WebUIMenu.administration.users" type="String">Users</Resource>
     
-    <Resource key="HierarchicalMenuWidget.documentExamples" type="String">Smart Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.diagram" type="String">Diagram</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.htmlContent" type="String">HTML Content</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.photoAlbum" type="String">Photo Album</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.staticDocument" type="String">Static Document</Resource>
-    <Resource key="HierarchicalMenuWidget.documentExamples.videoAlbum" type="String">Video Album</Resource>
+    <Resource key="WebUIMenu.documentExamples" type="String">Smart Document</Resource>
+    <Resource key="WebUIMenu.documentExamples.diagram" type="String">Diagram</Resource>
+    <Resource key="WebUIMenu.documentExamples.dynamicDocument" type="String">Dynamic Document</Resource>
+    <Resource key="WebUIMenu.documentExamples.htmlContent" type="String">HTML Content</Resource>
+    <Resource key="WebUIMenu.documentExamples.photoAlbum" type="String">Photo Album</Resource>
+    <Resource key="WebUIMenu.documentExamples.staticDocument" type="String">Static Document</Resource>
+    <Resource key="WebUIMenu.documentExamples.videoAlbum" type="String">Video Album</Resource>
 
-    <Resource key="HierarchicalMenuWidget.widgets" type="String">Widgets</Resource>
-    <Resource key="HierarchicalMenuWidget.widgets.eventsReader" type="String">Events Reader</Resource>
-    <Resource key="HierarchicalMenuWidget.widgets.newsReader" type="String">News Reader</Resource>
-    <Resource key="HierarchicalMenuWidget.widgets.treeView" type="String">Tree View</Resource>
+    <Resource key="WebUIMenu.widgets" type="String">Widgets</Resource>
+    <Resource key="WebUIMenu.widgets.eventsReader" type="String">Events Reader</Resource>
+    <Resource key="WebUIMenu.widgets.menuWidget" type="String">Menu</Resource>
+    <Resource key="WebUIMenu.widgets.newsReader" type="String">News Reader</Resource>
+    <Resource key="WebUIMenu.widgets.treeView" type="String">Tree View</Resource>
     
     <Resource key="LanguageSelectorWidget.en" type="String">English</Resource>
     <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>

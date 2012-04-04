@@ -1,4 +1,5 @@
 @CHARSET "UTF-8";
+
 #VerticalMenuColumn ul {
 	position: relative;
 	visibility: visible;
@@ -26,10 +27,11 @@
 
 #VerticalMenuColumn li a:hover {
 	color: red;
-    text-decoration: none;
+	text-decoration: none;
 }
 
 #VerticalMenuColumn .selectedMenuItem {
+	
 }
 
 #VerticalMenuColumn .selectedMenuItem a:hover {
@@ -46,4 +48,69 @@ img {
 	text-decoration: none;
 	border-style: none;
 	border-width: 0px;
+}
+
+.accordion {
+	margin: 0px auto;
+	padding: 0px;
+	list-style: none;
+	width: 140px;
+	font-family: Arial;
+	font-size: 90%;
+	background-color: #111;
+}
+
+.accordion li {
+	overflow: hidden;
+}
+
+.accordion li a {
+	display: block;
+	border-bottom: 1px solid #444;
+	background-color: #222;
+	text-decoration: none;
+	color: white;
+	padding: 5px;
+	outline: none 0px;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.accordion li a:hover {
+	background-color: #777;
+}
+
+.accordion>li:first-child>a:first-child {
+	border-top: 1px solid #444;
+}
+
+.accordion ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	height: 0px;
+	overflow: hidden;
+	transition: 1s;
+	-moz-transition: 1s;
+	-webkit-transition: 1s;
+}
+
+.accordion li:hover ul,.accordion:not (:hover ) li:first-child ul {
+	height: 300px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.accordion ul li a {
+	color: #AAA;
+	border: 1px solid #777;
+	border-top: 0px none;
+	background-color: #666;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.accordion ul li a:hover {
+	background-color: #999;
 }

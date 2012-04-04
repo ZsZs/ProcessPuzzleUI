@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains internalization resources for Desktop Configurator. -->
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="en">  
+    <Resource key="HierarchicalMenuWidgetDocument.exampleDescription" type="String">description</Resource>
+    <Resource key="HierarchicalMenuWidgetDocument.introduction" type="String">introduction</Resource>
+    <Resource key="HierarchicalMenuWidgetDocument.subTitle" type="String">Hierarhical Menu Widget</Resource>
+    <Resource key="HierarchicalMenuWidgetDocument.title" type="String">User Interface Widget</Resource>
+    
+    <Resource key="MenuExample.mainItemOne" type="String">Main Item One</Resource>
+    <Resource key="MenuExample.mainItemTwo" type="String">Main Item Two</Resource>
+    <Resource key="MenuExample.mainItemThree" type="String">Main Item Three</Resource>
+    <Resource key="MenuExample.itemOne" type="String">Menu Item One</Resource>
+    <Resource key="MenuExample.itemTwo" type="String">Menu Item Two</Resource>
+    <Resource key="MenuExample.itemThree" type="String">Menu Item Three</Resource>
+  </Language>
+</pp:Resources>

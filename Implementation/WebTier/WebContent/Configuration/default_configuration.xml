@@ -38,7 +38,7 @@
 				<wui:skin name="MochaUI" relativePath="Desktops/MochaUI" configurationURI="Desktops/MochaUI/DesktopConfiguration.xml" />
 				<wui:skin name="ProcessPuzzle" relativePath="Desktops/ProcessPuzzle" configurationURI="Desktops/ProcessPuzzle/DesktopConfiguration.xml" />
 			</wui:availableSkins>
-			<wui:defaultSkin name="ProcessPuzzle"></wui:defaultSkin>
+			<wui:defaultSkin name="MochaUI"></wui:defaultSkin>
 		</wui:desktop>
 			
 		<wui:logging>
@@ -168,6 +168,7 @@
 			<in:resourceBundle>Configuration/DesktopInternationalization</in:resourceBundle>
          <in:resourceBundle>Configuration/ConsoleInternationalization</in:resourceBundle>
          <in:resourceBundle>Configuration/PhotoGaleryInternationalization</in:resourceBundle>
+         <in:resourceBundle>Content/WidgetExamples/WidgetExamplesInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

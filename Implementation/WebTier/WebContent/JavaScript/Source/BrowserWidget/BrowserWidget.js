@@ -29,13 +29,17 @@ var BrowserWidget = new Class( {
       componentName : "BrowserWidget",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      descriptionSelector : "//pp:widgetDefinition/description",
       domDocument : this.document,
       eventDeliveryDelay : 5,
+      nameSelector : "//pp:widgetDefinition/name",
+      optionsSelector : "//pp:widgetDefinition/options",
       subscribeToWebUIMessages : false,
       useLocalizedData : false,
       widgetContainerId : "widgetContainer",
       widgetDataURI : null,
-      widgetDefinitionURI : null
+      widgetDefinitionURI : null,
+      widgetVersionSelector : "//pp:widgetDefinition/version"
    },
 
    // constructor
@@ -51,6 +55,7 @@ var BrowserWidget = new Class( {
       this.description;
       this.destructionChain = new Chain();
       this.elementFactory = null;
+      this.givenOptions = options;
       this.i18Resource = null;
       this.lastHandledMessage = null;
       this.locale;
@@ -59,6 +64,7 @@ var BrowserWidget = new Class( {
       this.name;
       this.state;
       this.stateSpecification;
+      this.widgetVersion;
       this.webUIController = null;
 
       // initialize object
@@ -126,6 +132,8 @@ var BrowserWidget = new Class( {
    }.protect(),
    
    unmarshall : function(){
+      this.unmarshallProperties();
+      this.unmarshallOptions();
       this.state = BrowserWidget.States.UNMARSHALLED;
       return this;
    },
@@ -136,7 +144,9 @@ var BrowserWidget = new Class( {
    },
 
    webUIMessageHandler : function( webUIMessage ) {
+      if( webUIMessage.getOriginator() == this.options.componentName ) return;
       if( this.state != BrowserWidget.States.CONSTRUCTED ) throw new UnconfiguredWidgetException( { source : 'BrowserWidget.webUIMessageHandler()'} );
+      
       this.lastHandledMessage = webUIMessage;
    },
 
@@ -275,10 +285,25 @@ var BrowserWidget = new Class( {
          }, this );
       }
    }.protect(),
+   
+   unmarshallOptions: function(){
+      if( this.definitionXml ){
+         var widgetOptionsElement = this.definitionXml.selectNode( this.options.optionsSelector );
+         if( widgetOptionsElement ){
+            var widgetOptionsResource = new OptionsResource( widgetOptionsElement );
+            widgetOptionsResource.unmarshall();
+            this.setOptions( widgetOptionsResource.getOptions() );
+         }
+         
+         this.setOptions( this.givenOptions );
+      }
+   }.protect(),
 
    unmarshallProperties: function(){
-      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
-      this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
+      if( this.definitionXml ){
+         this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
+         this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
+      }
    }.protect(),
    
    writeOffFromWebUIMessages : function(){

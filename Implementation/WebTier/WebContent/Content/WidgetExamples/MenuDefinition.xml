@@ -3,17 +3,19 @@
 	xmlns:pp="http://www.processpuzzle.com"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
-	<menuItem menuItemId="MenuWidget">
-		<menuItem menuItemId="YourMenu" caption="WebUIMenu.documentExamples" isDefault="true">
-			<messageProperties>{actionType : 'loadMenu'}</messageProperties>
-					
+	<menuWidget selectedItemClass="selectedMenuItem" />
+	
+	<menuItem menuItemId="ExampleMenuWidget">
+      <menuItem menuItemId="YourMenu" caption="WebUIMenu.documentExamples" isDefault="true">
+         <messageProperties>{actionType : 'loadMenu'}</messageProperties>
+               
          <menuItem menuItemId="YourMenu-Html" caption="WebUIMenu.documentExamples.htmlContent" isDefault="true">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument.xml', documentType : AbstractDocument.Types.HTML }</messageProperties>         
          </menuItem>       
                
-			<menuItem menuItemId="YourMenu-Static" caption="WebUIMenu.documentExamples.staticDocument" isDefault="false">
-				<messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/StaticDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>			
-			</menuItem>			
+         <menuItem menuItemId="YourMenu-Static" caption="WebUIMenu.documentExamples.staticDocument" isDefault="false">
+            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/StaticDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         </menuItem>       
                
          <menuItem menuItemId="YourMenu-Dynamic" caption="WebUIMenu.documentExamples.dynamicDocument" isDefault="false">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent', documentType : AbstractDocument.Types.SMART }</messageProperties>         
@@ -30,8 +32,8 @@
          <menuItem menuItemId="YourMenu-Diagram" caption="WebUIMenu.documentExamples.diagram" isDefault="false">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
          </menuItem>
-		</menuItem>
-		
+      </menuItem>
+      
       <menuItem menuItemId="Widgets" caption="WebUIMenu.widgets">
          <messageProperties>{ actionType : 'loadMenu'}</messageProperties>
                
@@ -51,17 +53,5 @@
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/TreeDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
          </menuItem>
       </menuItem>
-      
-		<menuItem menuItemId="Administration" caption="WebUIMenu.administration">
-			<messageProperties>{ actionType : 'loadMenu'}</messageProperties>
-					
-			<menuItem menuItemId="Administration-Users" caption="WebUIMenu.administration.users" isDefault="true">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-			</menuItem>
-						
-         <menuItem menuItemId="Administration-About" caption="WebUIMenu.administration.about">
-            <messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'about' }</messageProperties>         
-         </menuItem>
-		</menuItem>
 	</menuItem>
 </pp:menuWidgetDefinition>

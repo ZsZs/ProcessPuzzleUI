@@ -1,4 +1,4 @@
-window.CompositeTreeNodeTest = new Class( {
+window.CompositeTreeNodeTest = new Class({
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed'],
 

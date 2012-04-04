@@ -31,10 +31,11 @@
                   </resources>
                   <widget name="HierarchicalMenuWidget">
                      <options>
-                        <option name="widgetContainerId" value="'HorizontalMenuBar'" />
-                        <option name="widgetDefinitionURI" value="'Configuration/WebUIMenuDefinition.xml'" />
                         <option name="componentName" value="'horizontalMenuBar'" />
                         <option name="showSubItems" value="true" />
+                        <option name="widgetContainerId" value="'HorizontalMenuBar'" />
+                        <option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'" />
+                        <option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/MenuWidgetDefinition.xml'" />
                      </options>
                   </widget>
                </plugin>

@@ -1,0 +1,100 @@
+@CHARSET "UTF-8";
+
+a:visited {
+	text-decoration: none;
+	border-style: none;
+	border-width: 0px;
+}
+
+img {
+	text-decoration: none;
+	border-style: none;
+	border-width: 0px;
+}
+
+.accordion ul {
+   font-family: Arial;
+   font-size: 90%;
+	list-style: none;
+   margin: 0px auto;
+   padding: 0px;
+   position: relative;
+   visibility: visible;
+   width: 180px;
+}
+
+.accordion li {
+   background-image: url("../../Desktops/ProcessPuzzle/Images/VerticalMenuBackground-Normal.gif");
+   background-repeat: no-repeat;
+   list-style-type: none;
+   margin-top: 0px;
+   margin-bottom: 5px;
+   margin-left: -15px;
+   padding-top: 0px;
+   padding-bottom: 10px;
+   padding-left: 5px;
+   overflow: hidden;
+   text-decoration: none;
+}
+
+.accordion .selectedMenuItem {
+   background-image: url("../../Desktops/ProcessPuzzle/Images/VerticalMenuBackground-Selected.gif");
+}
+
+.accordion .selectedMenuItem a:hover {
+   color: navy;
+}
+
+.accordion li a {
+   color: white;
+   display: block;
+   font-weight: bold;
+   font-size: smaller;
+   outline: none 0px;
+   padding-left: 4px;
+   text-decoration: none;
+   user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+.accordion li a:hover {
+/*   background-color: #777; */
+	color: red;
+   text-decoration: none;
+}
+
+.accordion > li:first-child > a:first-child {
+/* border-top: 1px solid #444; */
+}
+
+.accordion ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	height: 0px;
+	overflow: hidden;
+	transition: 1s;
+	-moz-transition: 1s;
+	-webkit-transition: 1s;
+}
+
+.accordion li:hover ul,
+.accordion:not(:hover ) li:first-child ul {
+	height: 200px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.accordion ul li a {
+/*   background-color: #666; */
+/*   border: 1px solid #777; */
+/*   border-top: 0px none; */
+   color: #AAA;
+   overflow: hidden;
+   white-space: nowrap;
+}
+
+.accordion ul li a:hover {
+/*	background-color: #999; */
+}

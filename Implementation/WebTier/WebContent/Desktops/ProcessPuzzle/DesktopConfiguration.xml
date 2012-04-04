@@ -54,17 +54,18 @@
             </resources>
             <widget name="HierarchicalMenuWidget">
                <options>
-                  <option name="widgetContainerId" value="'VerticalMenuColumn'"/>
-                  <option name="widgetDefinitionURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
-                  <option name="contextItemId" value="'YourMenu'"/>
+                  <option name="contextItemId" value="'MenuWidget/YourMenu'"/>
                   <option name="componentName " value="'verticalMenuColumn'"/>
                   <option name="subscribeToWebUIMessages " value="[MenuSelectedMessage]"/>
+                  <option name="widgetContainerId" value="'VerticalMenuColumn'"/>
+                  <option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Desktops/ProcessPuzzle/Widgets/MenuWidgetDefinition.xml'"/>
                </options>
             </widget>
 			</plugin>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="true" eventOriginators="['horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="true" eventOriginators="['exmapleMenuWidget', 'horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
          <panelHeader>
             <plugin>
