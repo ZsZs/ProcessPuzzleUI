@@ -71,6 +71,7 @@ window.CompositeMenuTest = new Class( {
       this.compositeMenu.construct( this.widgetContainerElement );
       
       assertThat( this.widgetContainerElement.getChildren( 'UL' )[0], not( nil() ));
+      assertThat( this.widgetContainerElement.getChildren( 'UL' )[0].hasClass( this.compositeMenu.getMenuStyle() ), is( true ));
    },
    
    construct_whenEnabled_constructsSubItems : function(){

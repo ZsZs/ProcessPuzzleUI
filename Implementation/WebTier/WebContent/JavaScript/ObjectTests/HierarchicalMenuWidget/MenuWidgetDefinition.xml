@@ -7,7 +7,7 @@
    <description>Hierarchical Menu Widget configured for testing purposes.</description>
    <version>0.5.0</version>
    <options>
-      <option name="selectedItemClass" value="'selectedHorizontalMenuItem'" />
+      <option name="selectedItemStyle" value="'selectedHorizontalMenuItem'" />
       <option name="showSubItems" value="true" />
    </options>
    

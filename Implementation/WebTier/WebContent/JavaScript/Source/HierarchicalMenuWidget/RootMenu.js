@@ -67,6 +67,7 @@ var RootMenu = new Class({
    
    instantiateHtmlElements: function(){
       this.listElement = this.elementFactory.create( 'ul', null, this.parentHtmlElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
+      this.listElement.addClass( this.options.menuStyle );
       this.parentHtmlElement = this.listElement;
    }.protect()
    

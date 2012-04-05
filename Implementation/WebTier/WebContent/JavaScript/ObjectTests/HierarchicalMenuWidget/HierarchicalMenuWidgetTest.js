@@ -13,12 +13,9 @@ window.HierarchicalMenuWidgetTest = new Class( {
          { method : 'construct_whenShowSubItemsIsTrue_createsEntireList', isAsynchron : true },
          { method : 'construct_whenContextItemIdIsGiven_skipsOutOfContextElementsCreation', isAsynchron : true },
          { method : 'construct_whenComponentStateIsAvailable_overwritesDefaultValues', isAsynchron : true },
+         { method : 'onSelection_broadcastMenuSelectedMessage', isAsynchron : true }, 
+         { method : 'webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reloadsMenu', isAsynchron : true },
          { method : 'destroy_destroysAllHtmlElements', isAsynchron : true }]
-          /*
-          { method : 'construct_whenShowSubItemsIsTrue_createsNestedLists', isAsynchron : true }, 
-          { method : 'onSelection_broadcastMenuSelectedMessage', isAsynchron : true }, 
-          { method : 'webUIMessageHandler_whenEnabled_subscribesToMenuSelectedMessages', isAsynchron : true }]
-*/
    },
 
    constants : {
@@ -92,7 +89,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
       this.menuWidget.unmarshall();
       
       assertThat( this.menuWidget.getState(), equalTo( BrowserWidget.States.UNMARSHALLED ));
-      assertThat( this.menuWidget.getSelectedItemClass(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "//pp:widgetDefinition/options/option[@name='selectedItemClass']/@value" ))));
+      assertThat( this.menuWidget.getSelectedItemClass(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "//pp:widgetDefinition/options/option[@name='selectedItemStyle']/@value" ))));
    },
    
    unmarshall_instantiatesAndUnmarshallsRootMenu : function(){
@@ -180,6 +177,60 @@ window.HierarchicalMenuWidgetTest = new Class( {
       ).callChain();
    },
    
+   onSelection_broadcastMenuSelectedMessage : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.messageBus.subscribeToMessage( MenuSelectedMessage, this.onSelectCallBack );
+            this.menuWidget.givenOptions.showSubItems = false;
+            this.menuWidget.unmarshall();
+            this.menuWidget.construct();
+         }.bind( this ),
+         function(){
+            var currentItem = this.menuWidget.findItemById( "/MenuWidget/mainItemOne" );
+            var itemToSelect = this.menuWidget.findItemById( "/MenuWidget/mainItemThree" );
+            assumeThat( currentItem.getListItemElement().hasClass( this.menuWidget.getSelectedItemClass() ), is( true ));
+            
+            this.menuWidget.onSelection( itemToSelect );
+            
+            assertThat( this.callBackWasCalled, is( true ));
+            assertThat( this.callBackMessage.getActionType(), equalTo( "loadMenu" ));
+            assertThat( this.callBackMessage.getContextItemId(), equalTo( "/MenuWidget/mainItemThree" ));
+            assertThat( this.callBackMessage.getOriginator(), equalTo( this.menuWidget.options.componentName ));
+            assertThat( currentItem.getListItemElement().hasClass( this.menuWidget.getSelectedItemClass() ), is( false ));
+
+            assertThat( this.componentStateManager.retrieveCurrentState( this.menuWidget.options.componentName )['currentItemId'], equalTo( "/MenuWidget/mainItemThree" ));
+            
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reloadsMenu : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.menuWidget = new HierarchicalMenuWidget({ 
+               contextItemId : "/MenuWidget/mainItemOne",
+               onConstructed : this.onConstructed, 
+               onDestroyed : this.onDestroyed, 
+               subscribeToWebUIMessages : [MenuSelectedMessage],
+               widgetDataURI : this.constants.MENU_WIDGET_DATA_URI, 
+               widgetDefinitionURI : this.constants.MENU_WIDGET_DEFINITION_URI 
+            }, this.resourceBundle );
+            this.menuWidget.unmarshall();
+            this.menuWidget.construct();
+         }.bind( this ),
+         function(){
+            assumeThat( this.menuWidget.getCurrentItemId(), equalTo( "/MenuWidget/mainItemOne/itemOneOfOne" ));
+            
+            var menuMessage = new MenuSelectedMessage({ actionType : 'loadMenu', contextItemId : '/MenuWidget/mainItemTwo'});
+            this.messageBus.notifySubscribers( menuMessage );
+            assertThat( this.menuWidget.getCurrentItemId(), equalTo( "/MenuWidget/mainItemTwo/itemTwoOfTwo" ));
+            
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    destroy_destroysAllHtmlElements : function() {
       this.testCaseChain.chain(
          function(){
@@ -195,89 +246,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          }.bind( this )
       ).callChain();
    },
-      
-   
-   construct_whenShowSubItemsIsTrue_createsNestedLists : function() {
-      this.testCaseChain.chain(
-         function(){
-            this.menuWidget = new HierarchicalMenuWidget({ onConstructed : this.onConstructed, onDestroyed : this.onDestroyed, widgetDefinitionURI : this.constants.MENU_DEFINITION_URI, showSubItems : true }, this.resourceBundle );
-            this.menuWidget.construct();
-         }.bind( this ),
-         function(){
-            assertTrue( "MenuWidget when configured...", true );
-            assertEquals( "... creates UL elemenst for nested menus too.", 4, this.widgetContainerElement.getElements( 'UL' ).length );
-            var listElement = this.widgetContainerElement.getElements( "UL" )[1];
-            assertEquals( "This should be the 1. sub item of 'mainItemOne'.", "itemOneOfOne", listElement.getChildren( "LI" )[0].get( 'id' ));
-            assertEquals( "This should be the 2. sub item of 'mainItemOne'.", "itemTwoOfOne", listElement.getChildren( "LI" )[1].get( 'id' ));
-            assertEquals( "This should be the 3. sub item of 'mainItemOne'.", "itemThreeOfOne", listElement.getChildren( "LI" )[2].get( 'id' ));
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
-   destory_destroysAllHtmlElements : function() {
-      this.testCaseChain.chain(
-         function(){
-            this.menuWidget = new HierarchicalMenuWidget({ onConstructed : this.onConstructed, onDestroyed : this.onDestroyed, widgetDefinitionURI : this.constants.MENU_DEFINITION_URI }, this.resourceBundle );
-            this.menuWidget.construct();
-         }.bind( this ),
-         function(){
-            this.menuWidget.destroy();
-         }.bind( this ),
-         function(){
-            assertThat( this.menuWidget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
-            assertEquals( "Destroy removes all child elements of widget container.", 0, this.widgetContainerElement.getChildren().length );
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
-   onSelection_broadcastMenuSelectedMessage : function() {
-      this.testCaseChain.chain(
-         function(){
-            this.messageBus.subscribeToMessage( MenuSelectedMessage, this.onSelectCallBack );
-            
-            this.menuWidget = new HierarchicalMenuWidget({ onConstructed : this.onConstructed, onDestroyed : this.onDestroyed, widgetDefinitionURI : this.constants.MENU_DEFINITION_URI }, this.resourceBundle );
-            this.menuWidget.construct();
-         }.bind( this ),
-         function(){
-            var anchorElement = this.widgetContainerElement.getElementById( 'mainItemThree' ).getChildren( 'A' )[0];
-            anchorElement.fireEvent( 'click' );
-              
-            assertTrue( this.callBackWasCalled );
-            assertEquals( "Expected message argument is:", "loadMenu", this.callBackMessage.getActionType() );
-            assertEquals( "Expected message argument is:", "mainItemThree", this.callBackMessage.getContextItemId() );
-            assertEquals( "Expected message argument is:", "HierarchicalMenuWidget", this.callBackMessage.getOriginator() );
-            assertTrue( "Sets 'class' property of the parent LI element.", anchorElement.getParent().hasClass( "selectedMenuItem" ));
-            assertFalse( "Removes 'class' property from all other elements.", this.widgetContainerElement.getElementById( 'mainItemOne' ).hasClass( "selectedMenuItem" ));
-            assertFalse( "Removes 'class' property from all other elements.", this.widgetContainerElement.getElementById( 'mainItemTwo' ).hasClass( "selectedMenuItem" ));
 
-            assertEquals( "Stores selected item's id in ComponentStateManager.", "mainItemThree", this.componentStateManager.retrieveCurrentState( this.menuWidget.options.componentName )['currentItemId']) ; 
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
-   webUIMessageHandler_whenEnabled_subscribesToMenuSelectedMessages : function() {
-      this.testCaseChain.chain(
-         function(){
-            this.menuWidget = new HierarchicalMenuWidget({ onConstructed : this.onConstructed, onDestroyed : this.onDestroyed, widgetDefinitionURI : this.constants.MENU_DEFINITION_URI, subscribeToWebUIMessages : [MenuSelectedMessage] }, this.resourceBundle );
-            this.menuWidget.construct();
-         }.bind( this ),
-         function(){
-            var menuMessage = new MenuSelectedMessage({actionType : 'loadMenu', contextItemId : 'mainItemTwo'});
-            this.messageBus.notifySubscribers( menuMessage );
-            
-            //VERIFY:
-            assertTrue( "MenuWidget should reconfigure the whole menu with the context item of 'mainItemTwo'.", true );
-            assertEquals( "itemOneOfTwo", this.widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[0].get( 'id' ));
-            assertEquals( "itemTwoOfTwo", this.widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[1].get( 'id' ));
-            assertEquals( "itemThreeOfTwo", this.widgetContainerElement.getChildren( "UL" )[0].getChildren( "LI" )[2].get( 'id' ));
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
    onConstructed : function(){
       this.testCaseChain.callChain();
    },

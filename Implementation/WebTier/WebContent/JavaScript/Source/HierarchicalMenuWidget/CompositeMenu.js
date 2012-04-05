@@ -36,6 +36,7 @@ var CompositeMenu = new Class({
    
    options : {
       componentName : 'CompositeMenu',
+      menuStyle : 'menuWidget',
       subItemsSelector : 'menuItem'
    },
 
@@ -88,6 +89,7 @@ var CompositeMenu = new Class({
    },
    
    //Properties
+   getMenuStyle : function() { return this.options.menuStyle; },
    getSelectedElementClass : function() { return this.options.selectedElementClass; },
    getState: function() { return this.state; },
    getSubItems: function() { return this.subItems; },
@@ -121,6 +123,7 @@ var CompositeMenu = new Class({
       
       if( this.anyChildNeedsToBeDisplayed() ){
          this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
+         this.listElement.addClass( this.options.menuStyle );
          this.parentHtmlElement = this.listElement;
       }
    }.protect(),
@@ -136,10 +139,11 @@ var CompositeMenu = new Class({
             var subItem = MenuItemFactory.create( subItemElement, this.elementFactory, { 
                contextItemId : this.options.contextItemId,
                idPathSeparator : this.options.idPathSeparator,
+               menuStyle : this.options.menuStyle,
                onDefaultItem : this.onDefaultItem,
                onSelection : this.onSelection,
                parentItemId : this.getFullId(),
-               selectedItemClass : this.options.selectedItemClass, 
+               selectedItemStyle : this.options.selectedItemStyle, 
                showSubItems : this.options.showSubItems 
             });
             subItem.unmarshall();

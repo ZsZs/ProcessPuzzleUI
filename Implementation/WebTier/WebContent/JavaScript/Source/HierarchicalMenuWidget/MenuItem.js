@@ -42,7 +42,7 @@ var MenuItem = new Class({
       menuItemIdSelector : "@menuItemId",
       messagePropertiesSelector : "messageProperties",
       parentItemId : "",
-      selectedItemClass : 'selectedMenuItem',
+      selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
       target : "_self"
    },
@@ -65,7 +65,7 @@ var MenuItem = new Class({
    
    //Public accessor and mutator methods
    addClassToListItem: function(){
-      if( this.listItemElement ) this.listItemElement.addClass( this.options.selectedItemClass );
+      if( this.listItemElement ) this.listItemElement.addClass( this.options.selectedItemStyle );
    },
    
    construct: function( parentElement ){
@@ -104,7 +104,7 @@ var MenuItem = new Class({
    },
    
    removeClassFromListItem: function(){
-      if( this.listItemElement ) this.listItemElement.removeClass( this.options.selectedItemClass );
+      if( this.listItemElement ) this.listItemElement.removeClass( this.options.selectedItemStyle );
    },
    
    unmarshall: function(){
@@ -121,7 +121,7 @@ var MenuItem = new Class({
    getMessageProperties: function() { return this.messageProperties; },
    getListItemElement: function() { return this.listItemElement; },
    getParentElement: function() { return this.parentHtmlElement; },
-   getSelectedItemClass: function() { return this.options.selectedItemClass; },
+   getSelectedItemClass: function() { return this.options.selectedItemStyle; },
    getState: function() { return this.state; },
    
    //Protected, private helper methods

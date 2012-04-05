@@ -38,9 +38,11 @@ var HierarchicalMenuWidget = new Class({
       componentName : "HierarchicalMenuWidget",
       contextItemId : "",
       idPathSeparator : "/",
+      fireDefaultItem : true,
       menuItemOptions : {},
+      menuStyle : "menuWidget",
       rootMenuSelector : "//pp:menuWidgetDefinition/menuItem[1]",
-      selectedItemClass : 'selectedMenuItem',
+      selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
       widgetContainerId : "HierarchicalMenuWidget",
    },
@@ -68,7 +70,7 @@ var HierarchicalMenuWidget = new Class({
    },
    
    findItemById: function( itemFullId ){
-      if( this.state != BrowserWidget.States.UNMARSHALLED && this.state != BrowserWidget.States.CONSTRUCTED ) return null;
+      if(( itemFullId == null ) || ( this.state != BrowserWidget.States.UNMARSHALLED && this.state != BrowserWidget.States.CONSTRUCTED )) return null;
       return this.rootMenu.findItemById( itemFullId );
    },
    
@@ -106,7 +108,7 @@ var HierarchicalMenuWidget = new Class({
    getContextItemId : function() { return this.options.contextItemId; },
    getCurrentItemId : function() { return this.currentItemId; },
    getRootMenu : function() { return this.rootMenu; },
-   getSelectedItemClass : function() { return this.options.selectedItemClass; },
+   getSelectedItemClass : function() { return this.options.selectedItemStyle; },
    
    //Private helper methods
    compileConstructionChain: function(){
@@ -157,13 +159,16 @@ var HierarchicalMenuWidget = new Class({
    }.protect(),
    
    fireCurrentSelection: function(){
-      if( !this.currentItemId || ( this.findItemById( this.currentItemId ) != null && this.findItemById( this.currentItemId ).getState() != BrowserWidget.States.CONSTRUCTED )){
+      var currentItem = this.findItemById( this.currentItemId );
+      if( currentItem == null || ( currentItem != null && currentItem.getState() != BrowserWidget.States.CONSTRUCTED )){
          this.currentItemId = this.defaultItem.getFullId();
       }
       
       var itemToSelect = this.findItemById( this.currentItemId );
       itemToSelect.addClassToListItem();
-      this.onSelection( itemToSelect );      
+      if( this.options.fireDefaultItem ) this.onSelection( itemToSelect );
+      else this.selectedItem = itemToSelect;
+
       this.constructionChain.callChain();
    }.protect(),
    
@@ -199,8 +204,10 @@ var HierarchicalMenuWidget = new Class({
          this.rootMenu = new RootMenu( rootMenuElement, this.elementFactory, {
             contextItemId : this.options.contextItemId,
             idPathSeparator : this.options.idPathSeparator,
+            menuStyle : this.options.menuStyle,
             onDefaultItem : this.onDefaultItem,
             onSelection : this.onSelection,
+            selectedItemStyle : this.options.selectedItemStyle, 
             showSubItems : this.options.showSubItems 
          });
          this.rootMenu.unmarshall();
