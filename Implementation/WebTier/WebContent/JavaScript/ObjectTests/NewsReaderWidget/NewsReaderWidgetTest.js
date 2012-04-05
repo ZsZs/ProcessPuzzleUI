@@ -60,7 +60,7 @@ window.NewsReaderWidgetTest = new Class( {
    },
    
    initialize_loadsLocalizedRssVersion : function() {
-      assertThat( this.newsReaderWidget.getDataXml().getUri(), equalTo( this.constants.LOCALIZED_RSS_URI ));
+      assertThat( this.newsReaderWidget.getDataXml().getUri(), containsString( this.constants.LOCALIZED_RSS_URI ));
    },
    
    unmarshall_instantiatesChannel : function(){

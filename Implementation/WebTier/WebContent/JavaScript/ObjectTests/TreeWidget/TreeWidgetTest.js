@@ -63,7 +63,7 @@ window.TreeWidgetTest = new Class( {
    },
    
    initialize_loadsTreeDefinition : function() {
-      assertThat( this.treeWidget.getDataXml().getUri(), equalTo( this.constants.WIDGET_DATA_URI ));
+      assertThat( this.treeWidget.getDataXml().getUri(), containsString( this.constants.WIDGET_DATA_URI ));
    },
    
    initialize_instantiatesNodeTypes : function() {

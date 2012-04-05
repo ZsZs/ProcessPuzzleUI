@@ -117,7 +117,7 @@ window.BrowserWidgetTest = new Class( {
    initialize_whenUseLocalizedDataIsTrue_loadsLocalVersion : function() {
       this.browserWidget = new BrowserWidget({ useLocalizedData : true, widgetContainerId : this.constants.WIDGET_CONTAINER_ID, widgetDataURI : this.constants.WIDGET_DATA_URI }, this.resourceBundle );
       
-      assertThat( this.browserWidget.getDataXml().getUri(), equalTo( this.constants.LOCALIZED_WIDGET_DATA_URI ));
+      assertThat( this.browserWidget.getDataXml().getUri(), containsString( this.constants.LOCALIZED_WIDGET_DATA_URI ));
    },
    
    initialize_whenMessageSubsciptionsAreGiven_subscribesToMessages : function() {
