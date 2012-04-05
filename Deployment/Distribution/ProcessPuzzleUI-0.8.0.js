@@ -7415,8 +7415,10 @@ var HierarchicalMenuWidget = new Class({
    },
    
    onSelection: function( menuItem ){
-      this.deselectCurrentItem();
-      this.selectedItem = menuItem;
+      if( this.selectedItem != menuItem ){
+         this.deselectCurrentItem();
+         this.selectedItem = menuItem;
+      }
       
       this.storeComponentState();
       this.messageBus.notifySubscribers( this.createMessage( menuItem ));      
