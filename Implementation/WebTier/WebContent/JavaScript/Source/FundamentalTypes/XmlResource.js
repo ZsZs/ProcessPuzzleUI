@@ -27,8 +27,8 @@ var XmlResource = new Class({
    Extends: Request,
 
    options: {
+      applyCacheBuster : true,
       nameSpaces: "xmlns:pp='http://www.processpuzzle.com'",
-      
       onComplete: function( responseAsText ) { 
          if( responseAsText ) {
             this.xmlAsText = responseAsText;
@@ -57,6 +57,11 @@ var XmlResource = new Class({
       // parameter assertions
       assertThat( uri, not( nil() ));
       assertThat( Sarissa.XPATH_INITIALIZED, is( true ));
+      
+      if( this.options.applyCacheBuster ) {
+         this.resourceUri = new ResourceUri( uri, null, { applyCacheBuster : true });
+         uri = this.resourceUri.getUri();
+      }
       
       this.parent( options );
       this.options.url = uri;

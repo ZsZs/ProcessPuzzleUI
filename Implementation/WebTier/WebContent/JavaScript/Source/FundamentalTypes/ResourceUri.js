@@ -29,6 +29,8 @@ var ResourceUri = new Class({
    Implements: Options,
    
    options: {
+      applyCacheBuster : false,
+      componentName : "ResourceUri",
       contentType : "xml",
       documentType : null,
       documentTypeKey : 'documentType'
@@ -45,9 +47,18 @@ var ResourceUri = new Class({
       this.uri = uri;
       
       this.determineDocumentType();
+      if( this.options.applyCacheBuster ) this.uri = this.appendCacheBusterParameterToUri( this.uri );
    },
    
    //Public accessors and mutators
+   appendCacheBusterParameterToUri : function( uri ) {
+      if( uri.indexOf( "?" ) == -1 ) uri += "?";
+      else uri += "&";
+      uri += "cacheBuster=";
+      uri += new Date().getTime();
+      return uri;
+   },
+   
    determineLocalizedUri : function(){
       return this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) + "_" + this.locale.getLanguage() + "." + this.options.contentType;      
    },
@@ -60,6 +71,7 @@ var ResourceUri = new Class({
   
    // Properties
    getDocumentType : function() { return this.options.documentType; },
+   getUri : function() { return this.uri; },
    
    //Private helper methods
    determineDocumentType : function(){

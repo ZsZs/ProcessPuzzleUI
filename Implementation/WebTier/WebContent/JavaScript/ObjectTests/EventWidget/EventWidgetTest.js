@@ -60,7 +60,7 @@ window.EventWidgetTest = new Class( {
    },
    
    initialize_loadsLocalizedRssVersion : function() {
-      assertThat( this.eventWidget.getDataXml().getUri(), equalTo( this.constants.LOCALIZED_DATA_URI ));
+      assertThat( this.eventWidget.getDataXml().getUri(), containsString( this.constants.LOCALIZED_DATA_URI ));
    },
    
    unmarshall_instantiatesEvents : function(){
