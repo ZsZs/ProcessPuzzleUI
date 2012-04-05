@@ -3,11 +3,9 @@
 	xmlns:pp="http://www.processpuzzle.com"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
-	<menuWidget selectedItemClass="selectedMenuItem" />
-	
 	<menuItem menuItemId="MenuWidget">
-		<menuItem menuItemId="mainItemOne" caption="HierarchicalMenuWidget.mainItemOne">
-			<messageProperties>{actionType : 'loadMenu', contextItemId : 'mainItemOne'}</messageProperties>			
+		<menuItem menuItemId="mainItemOne" caption="HierarchicalMenuWidget.mainItemOne" isDefault="true">
+			<messageProperties>{actionType : 'loadMenu'}</messageProperties>			
 				
 			<menuItem menuItemId="itemOneOfOne" caption="HierarchicalMenuWidget.itemOne" isDefault="true">
 				<messageProperties>{actionType : 'loadDocument', documentURI : 'Content/SampleContentOne'}</messageProperties>			
@@ -23,7 +21,7 @@
 		</menuItem>
 		
 		<menuItem menuItemId="mainItemTwo" caption="HierarchicalMenuWidget.mainItemTwo" isDefault="true">
-			<messageProperties>{actionType : 'loadMenu', contextItemId : 'mainItemTwo'}</messageProperties>			
+			<messageProperties>{actionType : 'loadMenu'}</messageProperties>			
 				
 			<menuItem menuItemId="itemOneOfTwo" caption="HierarchicalMenuWidget.itemOne">
 				<messageProperties>{actionType : 'loadDocument', documentURI : 'Content/SampleContentOne'}</messageProperties>			
@@ -39,7 +37,7 @@
 		</menuItem>
 		
 		<menuItem menuItemId="mainItemThree" caption="HierarchicalMenuWidget.mainItemThree">
-			<messageProperties>{actionType : 'loadMenu', contextItemId : 'mainItemThree'}</messageProperties>			
+			<messageProperties>{actionType : 'loadMenu'}</messageProperties>			
 				
 			<menuItem menuItemId="itemOneOfThree" caption="HierarchicalMenuWidget.itemOne">
 				<messageProperties>{actionType : 'loadDocument', documentURI : 'Content/SampleContentOne'}</messageProperties>			

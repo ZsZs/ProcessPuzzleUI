@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML>
 <html>
 <head>
    <title>Test page for LanguageSelectorWiget.js</title>
@@ -25,6 +25,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
@@ -63,117 +64,14 @@
    <script type="text/javascript" src="../../Source/LanguageSelectorWidget/LanguageChangedMessage.js"></script>
    <script type="text/javascript" src="../../Source/LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
 
+   <script type="text/javascript" src="../../ObjectTests/LanguageSelectorWidget/LanguageSelectorWidgetTest.js"></script>
+   
    <script type="text/javascript">
    window.addEvent('domready', function() {
-      runTestFunction();
    });
 
    JsHamcrest.Integration.JsUnit();
    
-   var CONFIGURATION_URI = "../WebUIController/SampleConfiguration.xml";
-   var ELEMENT_SELECTOR = "LanguageSelector";
-   var LANGUAGE = "hu";
-   var WIDGET_CONTAINER_ID = "LanguageSelectorWidget";
-   var callBackMessage;
-   var callBackWasCalled = false;
-   var componentStateManager;
-   var languageSelector;
-   var locale = new Locale({ language : LANGUAGE });
-   var messageBus;
-   var webUIConfiguration;
-   var webUIController;
-   var webUILogger;
-   var widgetContainerElement;
-   
-   function setUp() {
-      messageBus = new WebUIMessageBus();
-      webUIConfiguration = new WebUIConfiguration( CONFIGURATION_URI );
-      webUILogger = new WebUILogger( webUIConfiguration );
-      componentStateManager = new ComponentStateManager();
-      resourceBundle = new XMLResourceBundle( webUIConfiguration );
-      resourceBundle.load( locale );
-      languageSelector = new LanguageSelectorWidget({ widgetContainerId : WIDGET_CONTAINER_ID }, resourceBundle, webUIConfiguration );
-      widgetContainerElement = languageSelector.getContainerElement();
-
-      callBackWasCalled = false;
-   }
-
-   function tearDown() {
-      messageBus.tearDown();
-      callBackWasCalled = false;
-      callBackMessage = null;
-   }
-
-   function test_initialization_WhenConstructorArgumentsAreGiven() {
-      assertEquals( $( WIDGET_CONTAINER_ID ), languageSelector.getContainerElement() );
-      assertEquals( "Initialization determines available locales.", 2, languageSelector.getAvailableLocales().size() ); 
-      assertEquals( "hu", languageSelector.getAvailableLocales().get( 0 ).getLanguage() );
-      assertEquals( "en", languageSelector.getAvailableLocales().get( 1 ).getLanguage() );
-      assertEquals( "GB", languageSelector.getAvailableLocales().get( 1 ).getCountry() );
-   }
-   
-   function test_initialization_WhenConstructorArgumentsAreMissing() {
-      //SETUP:
-      var webUIController = new WebUIController({ configurationUri : "../WebUIController/SampleConfiguration.xml" });
-      
-      //EXCERCISE:
-      var languageSelector = new LanguageSelectorWidget();
-      
-      //VERIFY:
-      assertTrue( "When 'LanguageSelector' is instantiated without arguments, 'WebUIController' is used as data source.", true );
-      assertEquals( webUIController.getResourceBundle(), languageSelector.getResourceBundle() );
-      assertEquals( webUIController.getWebUIConfiguration(), languageSelector.getWebUIConfiguration() );
-      assertEquals( 2, languageSelector.getAvailableLocales().size() );
-      
-      //TEARDOWN:
-      languageSelector.destroy();
-      webUIController.destroy();
-   }
-   
-   function test_configure_CreatesSelectElementWithOptions() {
-      //SETUP:
-      //EXCERCISE:
-      languageSelector.construct();
-      
-      //VERIFY:
-      var selectElement = widgetContainerElement.getElementById( ELEMENT_SELECTOR );
-      assertNotNull( selectElement );
-      assertEquals( "The number of options elements:", 3, selectElement.getChildren().length );
-      //assertEquals( languageSelector.onSelection, selectElement.hasEvent( 'change' ));
-   }
-   
-   function test_destory_destroysCreatedHtmlElements(){
-      languageSelector.construct();
-      languageSelector.destroy();
-      
-      assertThat( widgetContainerElement.getChildren( '*' ).length, equalTo( 0 ));
-   }
-   
-   function test_onSelection_NotifiesMessageBusSubscribers() {
-      //SETUP:
-      languageSelector.construct();
-      messageBus.subscribeToMessage( LanguageChangedMessage, onLanguageChangeCallback );
-      
-      //EXCERCISE:
-      var selectElement = widgetContainerElement.getElementById( ELEMENT_SELECTOR );
-   	  selectElement.fireEvent( 'change' );
-   	  
-      //VERIFY:
-   	  assertTrue( callBackWasCalled );
-   	  assertEquals( "en", callBackMessage.getNewLocale().getLanguage() );
-   }
-   
-   function onLanguageChangeCallback( message ) {
-	  callBackWasCalled = true;
-	  callBackMessage = message;
-   }
-      
-   //runs a test function during debugging
-   function runTestFunction(){
-      setUp();
-      test_initialization_WhenConstructorArgumentsAreGiven();
-      tearDown();
-   }
    </script>
 </head>
 

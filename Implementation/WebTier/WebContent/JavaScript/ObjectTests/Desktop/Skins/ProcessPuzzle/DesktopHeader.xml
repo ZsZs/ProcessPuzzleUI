@@ -33,7 +33,8 @@
                   <widget name="HierarchicalMenuWidget">
                      <options>
                         <option name="widgetContainerId" value="'HorizontalMenuBar'"/>
-                        <option name="widgetDefinitionURI" value="'../HierarchicalMenuWidget/MenuDefinition.xml'"/>
+                        <option name="widgetDataURI" value="'../HierarchicalMenuWidget/MenuDefinition.xml'"/>
+                        <option name="widgetDefinitionURI" value="'../HierarchicalMenuWidget/MenuWidgetDefinition.xml'"/>
                      </options>
                   </widget>
                </plugin>

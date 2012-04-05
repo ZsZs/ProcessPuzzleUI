@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Tree Widget Document</name>
+   <description>Demonstrates Tree widget embeded into a Smart Document.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets>
+         <styleSheet>Content/WidgetExamples/HierarchicalMenuWidget.css</styleSheet>
+      </styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentHeader tag="div" id="menuDocumentHeader">
+      <compositeElement tag="div" id="headerWrapper">
+         <element tag="h1">HierarchicalMenuWidgetDocument.title</element>
+         <element tag="h2">HierarchicalMenuWidgetDocument.subTitle</element>
+      </compositeElement>
+   </documentHeader>
+   
+   <documentBody tag="div" id="menuDocumentBody">
+      <element tag="p">HierarchicalMenuWidgetDocument.introduction</element>
+      <element tag="p">HierarchicalMenuWidgetDocument.exampleDescription</element>
+      <element tag="div" id="menuExampleContainer">
+         <plugin>
+            <widget name="HierarchicalMenuWidget">
+               <options>
+                  <option name="componentName" value="'exmapleMenuWidget'"/>
+                  <option name="listStyle" value="'accordion'"/>
+                  <option name="showSubItems" value="true" />
+                  <option name="widgetContainerId" value="'menuExampleContainer'"/>
+                  <option name="widgetDataURI" value="'Content/WidgetExamples/MenuDefinition.xml'"/>
+                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/MenuWidgetDefinition.xml'"/>
+               </options>
+            </widget>
+         </plugin>
+      </element>
+   </documentBody>
+   
+</smartDocumentDefinition>

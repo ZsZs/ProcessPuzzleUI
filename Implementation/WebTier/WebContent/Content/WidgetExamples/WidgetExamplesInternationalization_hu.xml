@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains internalization resources for Desktop Configurator. -->
+<pp:Resources 
+	xmlns:pp="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
+
+  <Language name="hu">
+    <Resource key="HierarchicalMenuWidgetDocument.exampleDescription" type="String">leírás</Resource>
+    <Resource key="HierarchicalMenuWidgetDocument.introduction" type="String">bevezetés</Resource>
+    <Resource key="HierarchicalMenuWidgetDocument.subTitle" type="String">Hierarhikus menu</Resource>
+    <Resource key="HierarchicalMenuWidgetDocument.title" type="String">Felhasználói komponens</Resource>
+    
+    <Resource key="MenuExample.mainItemOne" type="String">Fő menü egy</Resource>
+    <Resource key="MenuExample.mainItemTwo" type="String">Fő menü kettő</Resource>
+    <Resource key="MenuExample.mainItemThree" type="String">Fő menü három</Resource>
+    <Resource key="MenuExample.itemOne" type="String">Menü elem egy</Resource>
+    <Resource key="MenuExample.itemTwo" type="String">Menü elem kettő</Resource>
+    <Resource key="MenuExample.itemThree" type="String">Menü elem három</Resource>
+  </Language>
+</pp:Resources>
