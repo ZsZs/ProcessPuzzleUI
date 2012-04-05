@@ -35,7 +35,7 @@ var RootMenu = new Class({
    Binds: [],
    
    options : {
-      componentName : 'RootMenu',
+      componentName : 'RootMenu'
    },
 
    //Constructor

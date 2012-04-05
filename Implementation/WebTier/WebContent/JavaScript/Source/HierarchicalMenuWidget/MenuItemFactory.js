@@ -47,7 +47,7 @@ var MenuItemFactory = new Class({
       else treeNode = new LeafMenuItem( menuItemDefinition, elementFactory, options );
       
       return treeNode;
-   },
+   }
    
    //Properties
 });

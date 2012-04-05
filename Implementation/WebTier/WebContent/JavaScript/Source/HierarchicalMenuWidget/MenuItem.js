@@ -104,7 +104,7 @@ var MenuItem = new Class({
    },
    
    removeClassFromListItem: function(){
-      if( this.listItemElement ) this.listItemElement.removeClass( this.options.selectedItemStyle );
+      if( this.listItemElement && this.listItemElement.removeClass ) this.listItemElement.removeClass( this.options.selectedItemStyle );
    },
    
    unmarshall: function(){
@@ -164,5 +164,5 @@ var MenuItem = new Class({
       this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
       this.isDefault = parseBoolean( XmlResource.selectNodeText( this.options.isDefaultSelector, this.definitionXml, null, false ));
       this.menuItemId = XmlResource.selectNodeText( this.options.menuItemIdSelector, this.definitionXml );
-   }.protect(),
+   }.protect()
 });

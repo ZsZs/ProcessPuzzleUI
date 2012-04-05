@@ -23,7 +23,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
       LANGUAGE : "hu",
       MENU_WIDGET_DATA_URI : "../HierarchicalMenuWidget/MenuDefinition.xml",
       MENU_WIDGET_DEFINITION_URI : "../HierarchicalMenuWidget/MenuWidgetDefinition.xml",
-      MENU_WIDGET_ID : "HierarchicalMenuWidget",
+      MENU_WIDGET_ID : "HierarchicalMenuWidget"
    },
    
    initialize : function( options ) {

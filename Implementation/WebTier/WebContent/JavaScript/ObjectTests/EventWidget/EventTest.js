@@ -44,7 +44,7 @@ window.EventTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns='rss-2_0.xsd'" });
+      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
       this.eventDefinition = this.rssResource.selectNode( this.constants.EVENT_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );

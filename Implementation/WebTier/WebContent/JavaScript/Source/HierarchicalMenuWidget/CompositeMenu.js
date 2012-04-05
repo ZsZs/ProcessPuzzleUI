@@ -123,8 +123,9 @@ var CompositeMenu = new Class({
       
       if( this.anyChildNeedsToBeDisplayed() ){
          this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
-         this.listElement.addClass( this.options.menuStyle );
          this.parentHtmlElement = this.listElement;
+         
+         if( this.isTheRootItem() || this.isTheContextItem() ) this.listElement.addClass( this.options.menuStyle );
       }
    }.protect(),
    

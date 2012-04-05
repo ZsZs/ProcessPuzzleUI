@@ -44,7 +44,7 @@ var HierarchicalMenuWidget = new Class({
       rootMenuSelector : "//pp:menuWidgetDefinition/menuItem[1]",
       selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
-      widgetContainerId : "HierarchicalMenuWidget",
+      widgetContainerId : "HierarchicalMenuWidget"
    },
    
    //Constructor
