@@ -1,39 +1,52 @@
 @CHARSET "UTF-8";
 
+/* Preloading images */
+#preload-40 { background: url(../Images/VerticalMenuBackground-Normal.gif) no-repeat -9999px -9999px; }
+#preload-41 { background: url(../Images/VerticalMenuBackground-Selected.gif) no-repeat -9999px -9999px; }
+
 /* Hide automatically generated Panel padding. */
 #VerticalMenuColumn ul {
 	position: relative;
-	visibility: visible;
 }
 
 #VerticalMenuColumn li {
-	margin-top: 0px;
+   background-image: url("../Images/VerticalMenuBackground-Normal.gif");
+   background-repeat: no-repeat;
+   list-style-type: none;
+   margin-top: 0px;
 	margin-bottom: 5px;
 	margin-left: -15px;
-	padding-top: 0px;
-	padding-bottom: 10px;
+	padding-top: 2px;
+	padding-bottom: 5px;
 	padding-left: 5px;
-	list-style-type: none;
 	text-decoration: none;
-	background-image: url("../Images/VerticalMenuBackground-Normal.gif");
-	background-repeat: no-repeat;
 }
 
 #VerticalMenuColumn li a {
-	padding-left: 4px;
-	text-decoration: none;
+	padding-left: 30px;
+   padding-top: 5px;
+   text-decoration: none;
 	font-weight: bold;
 	font-size: smaller;
 	color: white;
 }
 
+#VerticalMenuColumn li:hover {
+   background-image: url(../Images/VerticalMenuBackground-Hover.gif);
+   background-repeat: no-repeat;
+}
+
 #VerticalMenuColumn li a:hover {
-	color: red;
-    text-decoration: none;
+   color: red;
+   text-decoration: none;
 }
 
 #VerticalMenuColumn .selectedMenuItem {
-	background-image: url("../Images/VerticalMenuBackground-Selected.gif");
+   background-image: url(../Images/VerticalMenuBackground-Selected.gif);
+}
+
+#VerticalMenuColumn li.selectedMenuItem:hover {
+   background-image: url(../Images/VerticalMenuBackground-Selected.gif);
 }
 
 #VerticalMenuColumn .selectedMenuItem a:hover {
