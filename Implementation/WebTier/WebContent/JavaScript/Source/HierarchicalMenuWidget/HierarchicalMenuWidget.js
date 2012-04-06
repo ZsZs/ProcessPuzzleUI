@@ -190,6 +190,7 @@ var HierarchicalMenuWidget = new Class({
       if( this.stateSpecification ){
          this.currentItemId = this.stateSpecification['currentItemId'];
          this.options.contextItemId = this.stateSpecification['contextItemId'];
+         this.givenOptions.contextItemId = this.stateSpecification['contextItemId'];
       }
    }.protect(),
    

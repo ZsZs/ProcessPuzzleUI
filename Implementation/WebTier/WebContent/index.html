@@ -145,6 +145,7 @@
    <script type="text/javascript" src="JavaScript/Source/ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SkinSelectorWidget/SkinChangedMessage.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SkinSelectorWidget/SkinSelectorWidget.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/SplashForm/SplashForm.js"></script>
 	<script type="text/javascript" src="JavaScript/Source/TabWidget/DuplicatedTabException.js"></script>
 	<script type="text/javascript" src="JavaScript/Source/TabWidget/Tab.js"></script>
 	<script type="text/javascript" src="JavaScript/Source/TabWidget/TabSelectedMessage.js"></script>
@@ -174,7 +175,7 @@
    
       window.addEvent('domready', function() {
          JsHamcrest.Integration.ProcessPuzzle();
-         webUIController = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml" });
+         webUIController = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml", showSplashForm : true });
          webUIController.configure();
       });
    </script>
@@ -182,6 +183,7 @@
 </head>
 
 <body>
+   <div id="splashForm"></div>
 	<div style="HEIGHT: 1042px" id=desktop></div>
 </body>
 </html>

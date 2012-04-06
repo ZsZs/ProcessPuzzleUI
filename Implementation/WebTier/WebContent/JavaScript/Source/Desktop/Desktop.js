@@ -63,6 +63,7 @@ var Desktop = new Class({
             'constructWindowDocker', 
             'constructWindows',
             'finalizeConstruction',
+            'hideDesktop',
             'initializeMUI', 
             'loadResources',
             'onError',
@@ -73,6 +74,7 @@ var Desktop = new Class({
             'onResourceError',
             'onResourcesLoaded',
             'onWindowDockerConstructed',
+            'showDesktop',
             'showNotification',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
@@ -140,7 +142,8 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.configurationChain.chain( 
+      this.configurationChain.chain(
+         this.hideDesktop,
          this.loadResources,
          this.constructHeader,
          this.constructWindowDocker,
@@ -151,6 +154,7 @@ var Desktop = new Class({
          this.constructPanels,
          this.constructWindows,
          this.subscribeToWebUIMessages,
+         this.showDesktop,
          this.finalizeConstruction
       ).callChain();
    },
@@ -381,6 +385,11 @@ var Desktop = new Class({
       this.state = DesktopElement.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
    }.protect(),
+   
+   hideDesktop: function(){
+      this.containerElement.setStyle( "visibility", "hidden" );
+      this.callNextConfigurationStep();
+   }.protect(),
 	
    initializeMUI : function() {
       this.logger.debug( this.options.componentName + ".initializeMUI() started." );
@@ -446,6 +455,11 @@ var Desktop = new Class({
       this.destroyColumns();
       this.removeDesktopEvents();
       this.state = DesktopElement.States.INITIALIZED;      
+   }.protect(),
+   
+   showDesktop: function(){
+      this.containerElement.setStyle( "visibility", "visible" );
+      this.callNextConfigurationStep();
    }.protect(),
    
    subscribeToWebUIMessages: function() {
