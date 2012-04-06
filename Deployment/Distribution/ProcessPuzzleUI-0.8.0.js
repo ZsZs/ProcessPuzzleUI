@@ -3947,6 +3947,7 @@ var Desktop = new Class({
             'constructWindowDocker', 
             'constructWindows',
             'finalizeConstruction',
+            'hideDesktop',
             'initializeMUI', 
             'loadResources',
             'onError',
@@ -3957,6 +3958,7 @@ var Desktop = new Class({
             'onResourceError',
             'onResourcesLoaded',
             'onWindowDockerConstructed',
+            'showDesktop',
             'showNotification',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
@@ -4024,7 +4026,8 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.configurationChain.chain( 
+      this.configurationChain.chain(
+         this.hideDesktop,
          this.loadResources,
          this.constructHeader,
          this.constructWindowDocker,
@@ -4035,6 +4038,7 @@ var Desktop = new Class({
          this.constructPanels,
          this.constructWindows,
          this.subscribeToWebUIMessages,
+         this.showDesktop,
          this.finalizeConstruction
       ).callChain();
    },
@@ -4265,6 +4269,11 @@ var Desktop = new Class({
       this.state = DesktopElement.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
    }.protect(),
+   
+   hideDesktop: function(){
+      this.containerElement.setStyle( "visibility", "hidden" );
+      this.callNextConfigurationStep();
+   }.protect(),
 	
    initializeMUI : function() {
       this.logger.debug( this.options.componentName + ".initializeMUI() started." );
@@ -4330,6 +4339,11 @@ var Desktop = new Class({
       this.destroyColumns();
       this.removeDesktopEvents();
       this.state = DesktopElement.States.INITIALIZED;      
+   }.protect(),
+   
+   showDesktop: function(){
+      this.containerElement.setStyle( "visibility", "visible" );
+      this.callNextConfigurationStep();
    }.protect(),
    
    subscribeToWebUIMessages: function() {
@@ -7525,6 +7539,7 @@ var HierarchicalMenuWidget = new Class({
       if( this.stateSpecification ){
          this.currentItemId = this.stateSpecification['currentItemId'];
          this.options.contextItemId = this.stateSpecification['contextItemId'];
+         this.givenOptions.contextItemId = this.stateSpecification['contextItemId'];
       }
    }.protect(),
    
@@ -13539,6 +13554,7 @@ var WebUIController = new Class({
    Binds : ['changeLanguage', 
             'constructDesktop',
             'configureLogger',
+            'destroySplashForm',
             'determineCurrentUserLocale',
             'finalizeConfiguration',
             'loadDocument', 
@@ -13563,6 +13579,8 @@ var WebUIController = new Class({
       loggerGroupName : "WebUIController",
       messageOriginator : "webUIController",
       reConfigurationDelay: 500,
+      showSplashForm : false,
+      splashFormUri : "Desktops/Images/SplashForm.png",
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
       urlRefreshPeriod : 3000,
       window : window
@@ -13590,6 +13608,7 @@ var WebUIController = new Class({
       this.recentHash = this.determineCurrentHash();
       this.refreshUrlTimer;
       this.skin;
+      this.splashForm;
       this.stateManager = new ComponentStateManager();
       this.userName;
       this.userLocation;
@@ -13598,6 +13617,7 @@ var WebUIController = new Class({
       this.webUIException;
 
       if( this.browserIsSupported() ){
+         if( this.options.showSplashForm ) this.showSplashForm();
          this.loadWebUIConfiguration();
          this.configureLogger();
 
@@ -13637,6 +13657,7 @@ var WebUIController = new Class({
          this.constructDesktop,
          this.subscribeToWebUIMessages,
          this.storeComponentState,
+         this.destroySplashForm,
          this.finalizeConfiguration
       ).callChain();
    },
@@ -13759,6 +13780,11 @@ var WebUIController = new Class({
          this.onError( e );
       }
    }.protect(),
+   
+   destroySplashForm : function(){
+      if( this.splashForm ) this.splashForm.destroy();
+      this.configurationChain.callChain();
+   }.protect(),
 	
    determineCurrentHash: function() {
       if( this.options.window.location.hash.indexOf( "#" ) != -1 )
@@ -13849,6 +13875,11 @@ var WebUIController = new Class({
             this.loadInternationalizations(applicationConfiguration.getBundlePath(),locale);
          }
       }
+   }.protect(),
+   
+   showSplashForm : function(){
+      this.splashForm = new SplashForm({ imageUri : this.options.splashFormUri });
+      this.splashForm.construct();
    }.protect(),
 	
    showWebUIExceptionPage : function( exception ) {
