@@ -16,6 +16,7 @@
 //= require_directory ./Singleton
 //= require_directory ./SkinSelectorWidget
 //= require_directory ./SmartDocument
+//= require_directory ./SplashForm
 //= require_directory ./TabWidget
 //= require_directory ./TextAreaEditor
 //= require_directory ./ToolBarWidget
