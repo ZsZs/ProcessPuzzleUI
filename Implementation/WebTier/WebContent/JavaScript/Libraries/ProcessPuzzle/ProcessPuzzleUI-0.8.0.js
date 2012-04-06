@@ -3947,6 +3947,7 @@ var Desktop = new Class({
             'constructWindowDocker', 
             'constructWindows',
             'finalizeConstruction',
+            'hideDesktop',
             'initializeMUI', 
             'loadResources',
             'onError',
@@ -3957,6 +3958,7 @@ var Desktop = new Class({
             'onResourceError',
             'onResourcesLoaded',
             'onWindowDockerConstructed',
+            'showDesktop',
             'showNotification',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
@@ -4024,7 +4026,8 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.configurationChain.chain( 
+      this.configurationChain.chain(
+         this.hideDesktop,
          this.loadResources,
          this.constructHeader,
          this.constructWindowDocker,
@@ -4035,6 +4038,7 @@ var Desktop = new Class({
          this.constructPanels,
          this.constructWindows,
          this.subscribeToWebUIMessages,
+         this.showDesktop,
          this.finalizeConstruction
       ).callChain();
    },
@@ -4265,6 +4269,11 @@ var Desktop = new Class({
       this.state = DesktopElement.States.CONSTRUCTED;
       this.fireEvent('constructed', this ); 
    }.protect(),
+   
+   hideDesktop: function(){
+      this.containerElement.setStyle( "visibility", "hidden" );
+      this.callNextConfigurationStep();
+   }.protect(),
 	
    initializeMUI : function() {
       this.logger.debug( this.options.componentName + ".initializeMUI() started." );
@@ -4330,6 +4339,11 @@ var Desktop = new Class({
       this.destroyColumns();
       this.removeDesktopEvents();
       this.state = DesktopElement.States.INITIALIZED;      
+   }.protect(),
+   
+   showDesktop: function(){
+      this.containerElement.setStyle( "visibility", "visible" );
+      this.callNextConfigurationStep();
    }.protect(),
    
    subscribeToWebUIMessages: function() {
@@ -7415,8 +7429,10 @@ var HierarchicalMenuWidget = new Class({
    },
    
    onSelection: function( menuItem ){
-      this.deselectCurrentItem();
-      this.selectedItem = menuItem;
+      if( this.selectedItem != menuItem ){
+         this.deselectCurrentItem();
+         this.selectedItem = menuItem;
+      }
       
       this.storeComponentState();
       this.messageBus.notifySubscribers( this.createMessage( menuItem ));      
@@ -7523,6 +7539,7 @@ var HierarchicalMenuWidget = new Class({
       if( this.stateSpecification ){
          this.currentItemId = this.stateSpecification['currentItemId'];
          this.options.contextItemId = this.stateSpecification['contextItemId'];
+         this.givenOptions.contextItemId = this.stateSpecification['contextItemId'];
       }
    }.protect(),
    
@@ -11707,6 +11724,129 @@ var UnconfiguredDocumentElementException = new Class({
    }	
 });
 /*
+Name: 
+    - SplashForm
+
+Description: 
+    - Shows an image animates the progress, while desktop load (or other long running task) finishes. 
+
+Requires:
+
+Provides:
+    - SplashForm
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var SplashForm = new Class({
+   Implements: [Events, Options],
+   Binds: ['constructForm', 'finalizeConstruction', 'onImageLoaded', 'onImageLoadError', 'preloadImage'],
+   options : {
+      componentName : "SplashForm",
+      containerElementId : "splashForm",
+      imageId : "splashFormImage",
+      imageTitle : "Splashform Image",
+      imageUri : "Desktops/Images/SplashForm.png"
+   },
+
+   // Constructor
+   initialize : function( options ) {
+      this.setOptions( options );
+
+      this.constructionChain = new Chain();
+      this.containerElement = $( this.options.containerElementId );
+      this.imageElement;
+      this.splashFormElement;
+   },
+
+   // public accessor and mutator methods
+   construct : function() {
+      this.constructionChain.chain( this.preloadImage, this.constructForm, this.finalizeConstruction );
+      this.constructionChain.callChain();
+   },
+
+   destroy : function() {
+      this.destroyElement( this.imageElement );
+      this.destroyElement( this.splashFormElement );
+   },
+   
+   onImageLoaded : function(){
+      this.constructionChain.callChain();
+   },
+   
+   onImageLoadError : function( error ){
+      this.error = error;
+      this.fireEvent( 'error', error );
+      this.destroy();
+   },
+
+   // Properties
+   getContainerElement : function() { return this.containerElement; },
+   getImageElement : function() { return this.imageElement; },
+   getSplashFormElement : function() { return this.splashFormElement; },
+   
+   // private methods
+   constructForm : function() {
+      
+      this.splashFormElement = new Element( 'div', {
+         id : 'splashForm',
+         styles : {
+            left : '50%',
+            position : 'absolute',
+            visibility : 'hidden',
+            top : '50%',
+            zIndex : '999'
+         }
+      });
+      
+      this.containerElement.grab( this.splashFormElement, 'top' );
+      this.splashFormElement.grab( this.imageElement );
+
+      this.splashFormElement.setStyle( 'margin-left', -(this.splashFormElement.getStyle( 'width' ).toInt() / 2) );
+      this.splashFormElement.setStyle( 'margin-top', -(this.splashFormElement.getStyle( 'height' ).toInt() / 2) );
+      this.splashFormElement.setStyle( 'visibility', 'visible' );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyElement : function( element ){
+      if( element ){
+         if( element.removeEvents ) element.removeEvents();
+         if( element.destroy ) element.destroy();
+      }
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this );
+   }.protect(),
+
+   preloadImage : function() {
+      this.imageElement = Asset.image( this.options.imageUri, { 
+         id: this.options.imageId, 
+         title: this.options.imageTitle,
+         onAbort: function(){ this.onImageLoadError(); }.bind( this ),
+         onError: function(){ this.onImageLoadError(); }.bind( this ),
+         onLoad: function(){ this.onImageLoaded(); }.bind( this )
+      });
+   }.protect()
+});
+/*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
 Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
@@ -13537,6 +13677,7 @@ var WebUIController = new Class({
    Binds : ['changeLanguage', 
             'constructDesktop',
             'configureLogger',
+            'destroySplashForm',
             'determineCurrentUserLocale',
             'finalizeConfiguration',
             'loadDocument', 
@@ -13561,6 +13702,8 @@ var WebUIController = new Class({
       loggerGroupName : "WebUIController",
       messageOriginator : "webUIController",
       reConfigurationDelay: 500,
+      showSplashForm : false,
+      splashFormUri : "Desktops/Images/SplashForm.png",
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
       urlRefreshPeriod : 3000,
       window : window
@@ -13588,6 +13731,7 @@ var WebUIController = new Class({
       this.recentHash = this.determineCurrentHash();
       this.refreshUrlTimer;
       this.skin;
+      this.splashForm;
       this.stateManager = new ComponentStateManager();
       this.userName;
       this.userLocation;
@@ -13596,6 +13740,7 @@ var WebUIController = new Class({
       this.webUIException;
 
       if( this.browserIsSupported() ){
+         if( this.options.showSplashForm ) this.showSplashForm();
          this.loadWebUIConfiguration();
          this.configureLogger();
 
@@ -13635,6 +13780,7 @@ var WebUIController = new Class({
          this.constructDesktop,
          this.subscribeToWebUIMessages,
          this.storeComponentState,
+         this.destroySplashForm,
          this.finalizeConfiguration
       ).callChain();
    },
@@ -13757,6 +13903,11 @@ var WebUIController = new Class({
          this.onError( e );
       }
    }.protect(),
+   
+   destroySplashForm : function(){
+      if( this.splashForm ) this.splashForm.destroy();
+      this.configurationChain.callChain();
+   }.protect(),
 	
    determineCurrentHash: function() {
       if( this.options.window.location.hash.indexOf( "#" ) != -1 )
@@ -13847,6 +13998,11 @@ var WebUIController = new Class({
             this.loadInternationalizations(applicationConfiguration.getBundlePath(),locale);
          }
       }
+   }.protect(),
+   
+   showSplashForm : function(){
+      this.splashForm = new SplashForm({ imageUri : this.options.splashFormUri });
+      this.splashForm.construct();
    }.protect(),
 	
    showWebUIExceptionPage : function( exception ) {
@@ -13955,6 +14111,7 @@ var TestMessageTwo = new Class({
       this.options.messageClass = TestMessageTwo;
    }
 });
+
 
 
 
