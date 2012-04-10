@@ -119,11 +119,11 @@ this.MooEditable = new Class({
       this.container = new Element( 'div', {
          id : (this.textarea.id) ? this.textarea.id + '-mooeditable-container' : null,
          'class' : 'mooeditable-container',
-         styles : { overflowY : 'hidden', width : dimensions.x }
+         styles : { overflowY : 'hidden', width : dimensions.x  + "px" }
       });
 
       // Override all textarea styles
-      this.textarea.addClass( 'mooeditable-textarea' ).setStyle( 'height', dimensions.y );
+      this.textarea.addClass( 'mooeditable-textarea' ).setStyle( 'height', dimensions.y + "px" );
 
       // Build the iframe
       this.iframe = new Element( 'IFrame', {
@@ -131,7 +131,7 @@ this.MooEditable = new Class({
          frameBorder : 0,
          scrolling : 'no',
          src : 'javascript:""', // Workaround for HTTPs warning in IE6/7
-         styles : { height : dimensions.y, width : dimensions.x }
+         styles : { height : dimensions.y + "px", width : dimensions.x  + "px" }
       });
       
       this.toolbar = new MooEditable.UI.Toolbar({
@@ -172,13 +172,12 @@ this.MooEditable = new Class({
    }.protect(),
    
    tryToDecreaseHeight: function(){
-      while( this.iframe.contentWindow.getScroll().y == 0 && this.iframe.getStyle( 'height' ).toInt() > 0 ) {
+      if( Browser.ie ) return;
+      
+      while( this.getFrameScrollTop() == 0 && this.iframe.getStyle( 'height' ).toInt() > 0 ) {
          var currentHeight = this.iframe.getStyle( 'height' ).toInt();
          var decreasedHeight = ( currentHeight - this.options.estimatedRowHeight ) >= 0 ? currentHeight - this.options.estimatedRowHeight : 0;
          this.iframe.setStyle( 'height', decreasedHeight );
-         this.iframe.contentWindow.scrollTo( null, 1 );
-         this.iframe.scrollTop = 1;
-
       }
       
       if( this.iframe.contentWindow.getScroll().y > 0 )
@@ -282,7 +281,7 @@ this.MooEditable = new Class({
          document.id( this.doc.body );
       }
 
-      this.setContent( this.textarea.get( 'value' ) );
+      this.setContent( this.textarea.get( 'html' ));
 
       // Bind all events
       this.doc.addEvents( {
@@ -350,8 +349,8 @@ this.MooEditable = new Class({
       this.saveContent();
       this.textarea.setStyle( 'display', '' ).removeClass( 'mooeditable-textarea' ).inject( this.container, 'before' );
       this.textarea.removeEvent( 'keypress', this.textarea.retrieve( 'mooeditable:textareaKeyListener' ) );
-      if( this.doc.removeEvents ) this.doc.removeEvents();
-      if( this.win.removeEvents ) this.win.removeEvents();
+      if( this.doc && this.doc.removeEvents ) this.doc.removeEvents();
+      if( this.win && this.win.removeEvents ) this.win.removeEvents();
       this.container.dispose();
       this.fireEvent( 'detach', this );
       this.removeEvents();
@@ -668,6 +667,11 @@ this.MooEditable = new Class({
          return protect[b.toInt()];
       } );
       return this.cleanup( this.ensureRootElement( html ) );
+   },
+   
+   getFrameScrollTop : function(){
+      if( Browser.ie ) return this.doc.documentElement.scrollTop; 
+      else return this.iframe.contentWindow.getScroll().y; 
    },
 
    setContent : function( content ) {

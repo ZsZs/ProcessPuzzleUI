@@ -69,11 +69,9 @@ var HtmlDocument = new Class({
    resizeTextArea: function(){
       var oldScrollTop = this.textArea.getScroll().y;
       this.textArea.scrollTo( null, 1 );
-      var grew = false;
       
       while( this.textArea.getScroll().y > 0 ) {
          var oldHeight = this.textArea.clientHeight;
-         grew = true;
          this.textArea.rows++;
    
          if( this.textArea.clientHeight == oldHeight ) {
@@ -83,14 +81,6 @@ var HtmlDocument = new Class({
          }
    
          this.textArea.scrollTop = 1; // perhaps +1 row is not enough, do it again
-      }
-
-      if( !grew ) {
-         while( this.textArea.getScroll().y == 0 && this.textArea.rows > this.textArea.__originalRows ) {
-             this.textArea.rows--;
-             this.textArea.scrollTo( null, 1 );
-         }
-         if( this.textArea.getScroll().y > 0 )  this.textArea.rows++;
       }
    
       if( !this.textArea.getStyle( 'overflowY' )) this.textArea.setStyle( 'overflowY', 'hidden' );
@@ -123,6 +113,7 @@ var HtmlDocument = new Class({
          id : this.name, styles : { border: 0, margin: 0, padding: 0, visibility : 'hidden', overflowY : 'hidden' }});
       this.textArea.set( 'html', this.documentContent.xmlAsText );
       this.textArea.setStyle( 'width', this.containerElement.getSize().x );
+      this.textArea.setStyle( 'height', this.textArea.getScrollSize().y );
       this.resizeTextArea();
       this.constructionChain.callChain();
    },

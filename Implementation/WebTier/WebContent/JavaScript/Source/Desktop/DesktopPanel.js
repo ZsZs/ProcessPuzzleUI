@@ -32,7 +32,8 @@ You should have received a copy of the GNU General Public License along with thi
 var DesktopPanel = new Class({
    Extends: DesktopElement,
    Implements: [ComplexContentBehaviour],
-   Binds: ['constructDocument', 
+   Binds: ['addScrollBars',
+           'constructDocument', 
            'constructPlugin', 
            'constructHeader', 
            'determineComponentElements',
@@ -57,7 +58,7 @@ var DesktopPanel = new Class({
       componentContentIdPostfix : "",
       componentName : "DesktopPanel",
       componentRootElementIdPostfix : "_wrapper",
-      panelContentElementSuffix : "_pad",
+      panelContentElementSuffix : "_pad"
    },
 
    //Constructor
@@ -122,6 +123,7 @@ var DesktopPanel = new Class({
          this.constructHeader,
          this.constructPlugin,
          this.constructDocument,
+         this.addScrollBars,
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
@@ -137,7 +139,7 @@ var DesktopPanel = new Class({
    instantiateMUIPanel: function(){
       var panelTitle = this.header && this.header.getPlugin() ? "" : this.title;
       try{
-         this.MUIPanel = new MUI.Panel({ 
+         this.MUIPanel = new MUI.Panel({
             column : this.columnReference,
             content : "",
             onContentLoaded : this.header ? null : this.onMUIPanelLoaded,
@@ -150,6 +152,7 @@ var DesktopPanel = new Class({
             headerToolboxURL : this.header ? this.header.getToolBoxUrl() : null,
             height : this.height,
             onResize : this.onContainerResize,
+            scrollbars : true,
             title : panelTitle 
          });
       }catch( exception ){
