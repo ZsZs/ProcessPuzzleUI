@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Test page for ScrollBar.js</title>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   <link rel="stylesheet" type="text/css" href="../../../Desktops/ProcessPuzzle/Styles/ScrollBar.css">
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../Libraries/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+   
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollBar/NoneExistingScrollableElementException.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollBar/ScrollBar.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollBar/ScrollArea.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollBar/SmoothScroll.js"></script>
+   
+   <script type="text/javascript" src="../../ObjectTests/ScrollBar/ScrollBarTest.js"></script>
+   <script type="text/javascript" src="../../ObjectTests/ScrollBar/ScrollAreaTest.js"></script>
+   
+   <script type="text/javascript">
+	   window.addEvent('domready', function() {
+	      showScrollBar();
+	   });
+	
+	   JsHamcrest.Integration.JsUnit();
+	   JsMockito.Integration.JsUnit();
+	   
+	   function showScrollBar(){
+	      var scrollBar = new ScrollBar( "scrollableContent" );
+	      scrollBar.construct();
+	   }
+   </script>
+</head>
+
+<body>
+   <h1>ScrollBar.js test page</h1>
+   <div id="scrollableContent" style="border:1px; height:100px; width:300px; paddig:5px">
+   <p>
+	   Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, 
+	   eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. 
+	   Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. 
+	   Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, 
+	   sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, 
+	   quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? 
+      Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"   
+	</p>
+   </div>
+</body>
+</html>

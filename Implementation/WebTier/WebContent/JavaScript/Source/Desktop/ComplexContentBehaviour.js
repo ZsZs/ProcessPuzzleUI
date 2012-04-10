@@ -33,6 +33,7 @@ var ComplexContentBehaviour = new Class({
    
    options : {
       contentUrlSelector : "contentURL",
+      disableScrollBars : true,
       documentContentUriSelector : "document/documentContentUri",
       documentDefinitionUriSelector : "document/documentDefinitionUri",
       documentNameSeparator : "_",
@@ -55,6 +56,7 @@ var ComplexContentBehaviour = new Class({
       nameSelector : "name",
       nameSpaces : "xmlns:pp='http://www.processpuzzle.com'",
       pluginSelector : "plugin",
+      scrollBarStyle : "scroll",
       showHeaderSelector : "showHeader",
       storeStateSelector : "storeState",
       titleSelector : "title",
@@ -89,6 +91,7 @@ var ComplexContentBehaviour = new Class({
       this.stateSpecification;
       this.storeState = false;
       this.title;
+      this.verticalScrollBar;
       this.width;
    },
    
@@ -96,6 +99,7 @@ var ComplexContentBehaviour = new Class({
    onContainerResize: function(){
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
          this.document.onContainerResize( this.contentContainerElement.getSize() );
+         if( this.verticalScrollBar ) this.verticalScrollBar.refresh();
       }
    },
    
@@ -109,6 +113,9 @@ var ComplexContentBehaviour = new Class({
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
       this.storeComponentState();
+      if( !this.options.disableScrollBars ){
+         this.verticalScrollBar = new ScrollBar( this.getContentContainerId(), {} );
+      }
       this.fireEvent( 'documentLoaded', this.documentDefinitionUri );
       this.constructionChain.callChain();
    },
@@ -127,6 +134,7 @@ var ComplexContentBehaviour = new Class({
    
    onPluginConstructed: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s plugin finished." );
+      if( this.verticalScrollBar ) this.verticalScrollBar.refresh();
       this.constructionChain.callChain();
    },
    
@@ -155,6 +163,7 @@ var ComplexContentBehaviour = new Class({
    //Properties
    getColumnReference: function() { return this.columnReference; },
    getComponentStateManager: function() { return this.componentStateManager; },
+   getContentContainerId: function() { return this.name + this.options.componentContentIdPostfix; },
    getContentUrl: function() { return this.contentUrl; },
    getDocument: function() { return this.document; },
    getDocumentContentUri: function() { return this.documentContentUri; },
@@ -174,11 +183,22 @@ var ComplexContentBehaviour = new Class({
    getStoreState: function() { return this.storeState; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
+   getVerticalScrollBar: function() { return this.verticalScrollBar; },
    getWidth: function() { return this.width; },
    isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
+   addScrollBars: function(){
+      if( !this.options.disableScrollBars ){
+         this.verticalScrollBar = new ScrollBar( this.getContentContainerId(), {});
+      }
+      this.constructionChain.callChain();
+   }.protect(),
+   
    cleanUpContentElement: function(){
+      if( this.verticalScrollBar ) this.verticalScrollBar.destroy();
+      this.verticalScrollBar = null;
+      
       if( this.contentContainerElement ){
          var childElements = this.contentContainerElement.getElements ? this.contentContainerElement.getElements( '*' ) : Array.from( this.contentContainerElement.getElementsByTagName( '*' ));  
          childElements.each( function( childElement, index ){
@@ -234,10 +254,10 @@ var ComplexContentBehaviour = new Class({
    determineComponentElements: function(){
       this.componentRootElement = $( this.name + this.options.componentRootElementIdPostfix );
       this.componentRootElement = $( this.componentRootElement );     //required by Internet Explorer
-      this.contentContainerElement = $( this.name + this.options.componentContentIdPostfix );
+      this.contentContainerElement = $( this.getContentContainerId() );
       this.contentContainerElement = document.id( this.contentContainerElement ); //Applies Element's methods, required by Internet Explorer
       this.constructionChain.callChain();
-   },
+   }.protect(),
    
    instantiateDocument: function( documentType, documentOptions ){
       var newDocument = null;

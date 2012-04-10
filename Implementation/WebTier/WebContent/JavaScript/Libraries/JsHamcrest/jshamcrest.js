@@ -312,8 +312,8 @@ JsHamcrest.Matchers.raises = function(exceptionName) {
     matches: function(actualFunction) {
       try {
         actualFunction();
-      } catch (e) {
-        if (e.name == exceptionName) {
+      } catch( e ) {
+        if( instanceOf( e, exceptionName ) || ( e.name && e.name == exceptionName ) || ( e.options.name && e.options.name == exceptionName )) {
           return true;
         } else {
           throw e;
@@ -770,7 +770,7 @@ JsHamcrest.Matchers.hasFunction = function(functionName) {
 JsHamcrest.Matchers.instanceOf = function(clazz) {
   return new JsHamcrest.SimpleMatcher({
     matches: function(actual) {
-      return !!(actual instanceof clazz);
+      return !!( actual instanceof clazz ) && !! instanceOf( actual, clazz );
     },
 
     describeTo: function(description) {

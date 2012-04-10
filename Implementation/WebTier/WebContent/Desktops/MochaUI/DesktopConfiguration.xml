@@ -18,6 +18,7 @@
          <styleSheet>Desktops/MochaUI/Styles/Form.css</styleSheet>
          <styleSheet>Desktops/MochaUI/Styles/Layout.css</styleSheet>
          <styleSheet>Desktops/MochaUI/Styles/Panels.css</styleSheet>
+         <styleSheet>Desktops/MochaUI/Styles/ScrollBar.css</styleSheet>
          <styleSheet>Desktops/MochaUI/Styles/Tabs.css</styleSheet>
          <styleSheet>Desktops/MochaUI/Styles/ToolBar.css</styleSheet>
          <styleSheet>Desktops/MochaUI/Styles/Window.css</styleSheet>

@@ -1,5 +1,6 @@
 /Implementation/Build/local.build.properties
 /Implementation/Build/Logs/ProcessPuzzle.log
+/Implementation/Deployment/Distribution/
 /Implementation/DomainTier/Binaries/application_configuration
 /Implementation/DomainTier/Binaries/com
 /Implementation/DomainTier/Binaries/hu
