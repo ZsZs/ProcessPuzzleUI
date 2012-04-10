@@ -22,7 +22,6 @@
  *       THE SOFTWARE.
  */
 
-//= require_directory ../MooTools
 //= require_directory ../FundamentalTypes
 
 var SmoothScroll = new Class({
