@@ -119,7 +119,6 @@
  *  
  */
 
-//= require_directory ../MooTools
 //= require_directory ../FundamentalTypes
 
 var ScrollBar = new Class({
