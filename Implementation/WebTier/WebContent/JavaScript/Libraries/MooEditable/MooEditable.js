@@ -166,7 +166,8 @@ this.MooEditable = new Class({
    },
 
    adjustIFrameHeight: function(){
-      if( !this.tryToIncreaseHeight() ) this.tryToDecreaseHeight();
+      var innerDoc = (this.iframe.contentDocument) ? this.iframe.contentDocument : this.iframe.contentWindow.document;
+      this.iframe.setStyle( 'height', innerDoc.body.offsetHeight +10 );
    
       if( !this.iframe.getStyle( 'overflowY' )) this.iframe.setStyle( 'overflowY', 'hidden' );
    }.protect(),
@@ -281,7 +282,8 @@ this.MooEditable = new Class({
          document.id( this.doc.body );
       }
 
-      this.setContent( this.textarea.get( 'html' ));
+      if( Browser.ie ) this.setContent( this.textarea.get( 'html' ));
+      else this.setContent( this.textarea.get( 'text' ));
 
       // Bind all events
       this.doc.addEvents( {
