@@ -311,7 +311,7 @@ var ComplexContentBehaviour = new Class({
    
    restoreComponentState : function() {
       if( this.storeState ){
-         this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+         this.stateSpecification = this.componentStateManager.retrieveComponentState( this.options.componentName ); 
          if( this.stateSpecification ) {
             this.parseStateSpecification();
             
@@ -338,7 +338,7 @@ var ComplexContentBehaviour = new Class({
    storeComponentState : function() {
       if( this.storeState ){
          this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
-         this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+         this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
       }
    }.protect(),
    

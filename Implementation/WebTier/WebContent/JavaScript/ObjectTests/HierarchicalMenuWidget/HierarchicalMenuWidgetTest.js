@@ -77,7 +77,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
    },
       
    initialize_whenComponentStateIsAvailable_overwritesDefaultValues : function() {
-      this.componentStateManager.storeCurrentState( "HierarchicalMenuWidget", { currentItemId : 'itemThreeOfThree', contextItemId : 'mainItemThree' } );
+      this.componentStateManager.storeComponentState( "HierarchicalMenuWidget", { currentItemId : 'itemThreeOfThree', contextItemId : 'mainItemThree' } );
       
       this.menuWidget = new HierarchicalMenuWidget({ widgetDataURI : this.constants.MENU_WIDGET_DATA_URI, widgetDefinitionURI : this.constants.MENU_WIDGET_DEFINITION_URI }, this.resourceBundle );
       
@@ -157,7 +157,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
    construct_whenComponentStateIsAvailable_overwritesDefaultValues : function() {
       this.testCaseChain.chain(
          function(){
-            this.componentStateManager.storeCurrentState( "HierarchicalMenuWidget", { contextItemId : '/MenuWidget/mainItemThree', currentItemId : '/MenuWidget/mainItemThree/itemTwoOfThree' } );
+            this.componentStateManager.storeComponentState( "HierarchicalMenuWidget", { contextItemId : '/MenuWidget/mainItemThree', currentItemId : '/MenuWidget/mainItemThree/itemTwoOfThree' } );
 
             this.menuWidget = new HierarchicalMenuWidget({ 
                onConstructed : this.onConstructed, 
@@ -198,7 +198,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
             assertThat( this.callBackMessage.getOriginator(), equalTo( this.menuWidget.options.componentName ));
             assertThat( currentItem.getListItemElement().hasClass( this.menuWidget.getSelectedItemClass() ), is( false ));
 
-            assertThat( this.componentStateManager.retrieveCurrentState( this.menuWidget.options.componentName )['currentItemId'], equalTo( "/MenuWidget/mainItemThree" ));
+            assertThat( this.componentStateManager.retrieveComponentState( this.menuWidget.options.componentName )['currentItemId'], equalTo( "/MenuWidget/mainItemThree" ));
             
             this.testMethodReady();
          }.bind( this )

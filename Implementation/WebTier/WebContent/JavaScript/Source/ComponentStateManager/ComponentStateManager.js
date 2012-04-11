@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //= require ../ComponentStateManager/DefaultStateUriTransformer.js
 
 var ComponentStateManager = new Class({
-   Implements: [Options, Class.Singleton],
+   Implements: [Events, Options, Class.Singleton],
+   Binds: ['onComponentStateParse'],
    
    options: {
-      stateUriTransformer: DefaultStateUriTransformer
+      componentName : "ComponentStateManager",
+      stateUriTransformer: DefaultStateTransformer
    },
    
    //Constructors
@@ -34,70 +36,46 @@ var ComponentStateManager = new Class({
    
    setUp : function( options ) {
       this.setOptions( options );
-      this.stateMachine = new HashMap();
-      this.stateUriTransformer = new this.options.stateUriTransformer( this );
+      this.stateMachine = new LinkedHashMap();
+      this.stateTransformer = new this.options.stateUriTransformer( this.stateMachine, { onComponentStateParse : this.onComponentStateParse } );
    }.protect(),
 
    //Public accessor and mutator methods
-   parse : function( sourceString ){
-      var tokenizer = new StringTokenizer( sourceString, { delimiters : ';' } );
-      while( tokenizer.hasMoreTokens() ){
-         var token = tokenizer.nextToken();
-         var componentName = token.substring( 0, token.indexOf( ":" ));
-         var componentStateString = token.substring( token.indexOf( ":" ) +1 );
-         var componentState = eval( "(" + componentStateString.trim() + ")" );
-         
-         this.storeCurrentState( componentName.trim(), componentState );
-      };
+   onComponentStateParse : function( componentState ){
+      this.storeComponentState( componentState[0].trim(), componentState[1] );
+   },
+   
+   parse : function( stateString ){
+      this.stateTransformer.parse( stateString );
+   },
+   
+   persist : function(){
+      $.jStorage.set( this.options.componentName, this.toString() );
    },
    
    reset : function() {
       this.stateMachine.clear();
    },
    
-   resetStateFromUri: function( uri ){
-      this.reset();
-      this.stateUriTransformer.transformUriToState( uri );
+   restore : function(){
+      var stateString = $.jStorage.get( this.options.componentName );
+      this.parse( stateString );
    },
    
-   retrieveCurrentState : function( componentName ){
+   retrieveComponentState : function( componentName ){
       return this.stateMachine.get( componentName );
    },
    
-   storeCurrentState : function( componentName, currentState ){
+   storeComponentState : function( componentName, currentState ){
       if( componentName && currentState ) this.stateMachine.put( componentName, currentState );
    },
    
    toString: function(){
-      var stateString = "";
-      this.stateMachine.each( function( componentStateEntry, index ){
-         if( stateString != "" ) stateString += ";";
-         
-         stateString += componentStateEntry.getKey() + ":";
-         
-         var valueString = "";
-         var value = componentStateEntry.getValue();
-         if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
-         else if( typeOf( value ) == "object" ){
-            valueString = "{";
-            for ( var property in value ) {
-               if( valueString != "{" ) valueString += ",";
-               valueString += property + ":'" + value[property] + "'";
-            }
-            valueString += "}";
-         }
-         else valueString = "'" + value.toString() + "'";
-    
-         stateString += valueString;
-      }, this );
-      
-      return stateString;
-   },
-   
-   transformStateToUri: function(){
-      return this.stateUriTransformer.transformStateToUri();
+      return this.stateTransformer.toString();
    },
    
    //Properties
-   getStateUriTransformer: function() { return this.stateUriTransformer; }
+   getStateUriTransformer: function() { return this.stateTransformer; },
+   
+   //Protected, private helper methods
 });
