@@ -178,7 +178,7 @@ window.TabWidgetTest = new Class( {
       
       this.tabWidget.activateTab( "tab_tabOne" );
       
-      assertThat( this.componentStateManager.retrieveCurrentState( this.tabWidget.options.componentName ).currentTabId, equalTo( "tab_tabOne" ));
+      assertThat( this.componentStateManager.retrieveComponentState( this.tabWidget.options.componentName ).currentTabId, equalTo( "tab_tabOne" ));
    },
    
    onTabSelected_activatesTabAndNotifiesSubscribers : function() {

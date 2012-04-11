@@ -21,147 +21,37 @@
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.0-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/jStorage/jstorage.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
    
-   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateUriTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/StateTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/FixedComponentOrderedTransformer.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
 
+   <script type="text/javascript" src="../../ObjectTests/ComponentStateManager/ComponentStateManagerTest.js"></script>
+   <script type="text/javascript" src="../../ObjectTests/ComponentStateManager/FixedComponentOrderedTransformerTest.js"></script>
+   
    <script type="text/javascript">
    window.addEvent('domready', function() {
-      runTestFunction();
    });
 
    JsHamcrest.Integration.JsUnit();
+   JsMockito.Integration.JsUnit();   
 	  
-   var STATE_AS_STRING = "TestComponentTwo:{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'};TestComponentOne:'State-one'";
-   var STATE_ONE = "State-one";
-   var STATE_TWO = { subStateOne: 'SubStateOne', subStateTwo: 'SubStateTwo' };
-   var TEST_COMPONENT_ONE = "TestComponentOne";
-   var TEST_COMPONENT_TWO = "TestComponentTwo";
-   
-   var stateManager = null;
-   
-   function setUp() {
-      stateManager = new ComponentStateManager();
-   }
-
-   function tearDown() {
-      stateManager.reset();
-      stateManager = null;
-   }
-
-   function testInitialization() {
-      assertNull( "Initialization set component states to null.", stateManager.retrieveCurrentState( TEST_COMPONENT_ONE ));
-      assertNull( "Initialization set component states to null.", stateManager.retrieveCurrentState( TEST_COMPONENT_ONE ));
-      assertTrue( "Default StateUriTransform is:", instanceOf( stateManager.getStateUriTransformer(), DefaultStateUriTransformer ));
-   }
-   
-   function testParse() {
-      //SETUP:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //EXCERCISE:
-      stateManager.reset();
-      stateManager.parse( "TestComponentTwo:{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'};TestComponentOne:'State-one'" );
-      
-      //VERIFY:
-      assertEquals( 'State-one', stateManager.retrieveCurrentState( "TestComponentOne" ) );
-      assertEquals( 'SubStateOne', stateManager.retrieveCurrentState( "TestComponentTwo" )['subStateOne'] );
-      assertEquals( 'SubStateTwo', stateManager.retrieveCurrentState( "TestComponentTwo" )['subStateTwo'] );
-   }
-   
-   function testReset() {
-      //SETUP:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //EXCERCISE:
-      stateManager.reset();
-      
-      //VERIFY:
-      assertNull( "As after initialization component state is null.", stateManager.retrieveCurrentState( TEST_COMPONENT_ONE ));
-      assertNull( "As after initialization component state null.", stateManager.retrieveCurrentState( TEST_COMPONENT_ONE ));
-   }
-   
-   function testResetStateFromUri() {
-      //SETUP:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //EXCERCISE:
-      stateManager.resetStateFromUri( STATE_AS_STRING );
-      
-      //VERIFY:
-      assertEquals( 'State-one', stateManager.retrieveCurrentState( "TestComponentOne" ) );
-      assertEquals( 'SubStateOne', stateManager.retrieveCurrentState( "TestComponentTwo" )['subStateOne'] );
-      assertEquals( 'SubStateTwo', stateManager.retrieveCurrentState( "TestComponentTwo" )['subStateTwo'] );
-   }
-   
-   function testRetrieveCurrentState() {
-      //SETUP:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //EXCERCISE, VERIFY:
-      assertEquals( STATE_ONE, stateManager.retrieveCurrentState( TEST_COMPONENT_ONE )); 
-      assertEquals( STATE_TWO, stateManager.retrieveCurrentState( TEST_COMPONENT_TWO )); 
-   }
-   
-   function testStoreCurrentState() {
-      //SETUP:
-      //EXCERCISE:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //VERIFY:
-      assertEquals( STATE_ONE, stateManager.retrieveCurrentState( TEST_COMPONENT_ONE )); 
-      assertEquals( STATE_TWO, stateManager.retrieveCurrentState( TEST_COMPONENT_TWO )); 
-   }
-   
-   function testToString() {
-      //SETUP:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //EXCERCISE:
-      var stateString = stateManager.toString();
-      
-      //VERIFY:
-      assertEquals( STATE_AS_STRING, stateString );
-   }
-   
-   function testTransformStateToUri() {
-      //SETUP:
-      stateManager.storeCurrentState( TEST_COMPONENT_ONE, STATE_ONE );
-      stateManager.storeCurrentState( TEST_COMPONENT_TWO, STATE_TWO );
-      
-      //EXCERCISE:
-      var uri = stateManager.transformStateToUri();
-      
-      //VERIFY:
-      assertTrue( "With the DefaultStateUriTransformer the result is the same as the toString().", true );
-      assertEquals( STATE_AS_STRING, uri );
-   }
-      
-   //runs a test function during debugging
-   function runTestFunction(){
-      setUp();
-      testResetStateFromUri();
-      tearDown();
-   }
    </script>
 </head>
 
 <body>
    <h1>ComponentStateManager.js test page</h1>
-
 </body>
 </html>

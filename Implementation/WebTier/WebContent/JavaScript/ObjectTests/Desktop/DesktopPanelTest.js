@@ -178,7 +178,7 @@ window.DesktopPanelTest = new Class( {
       this.testCaseChain.chain(
          function(){ 
             var componentState = { documentDefinitionURI : this.constants.HTML_DOCUMENT_URI, documentType : AbstractDocument.Types.HTML };
-            this.componentStateManager.storeCurrentState( this.constants.PANEL_NAME, componentState );
+            this.componentStateManager.storeComponentState( this.constants.PANEL_NAME, componentState );
             this.constructPanel( this.panelWithDocument ); 
          }.bind( this ),
          function(){
@@ -305,8 +305,8 @@ window.DesktopPanelTest = new Class( {
             this.webUIMessageBus.notifySubscribers( message );
          }.bind( this ),
          function(){
-            assertThat( this.componentStateManager.retrieveCurrentState( this.constants.PANEL_NAME )['documentDefinitionURI'], equalTo( this.constants.SMART_DOCUMENT_URI ));
-            assertThat( this.componentStateManager.retrieveCurrentState( this.constants.PANEL_NAME )['documentType'], equalTo( AbstractDocument.Types.SMART ));
+            assertThat( this.componentStateManager.retrieveComponentState( this.constants.PANEL_NAME )['documentDefinitionURI'], equalTo( this.constants.SMART_DOCUMENT_URI ));
+            assertThat( this.componentStateManager.retrieveComponentState( this.constants.PANEL_NAME )['documentType'], equalTo( AbstractDocument.Types.SMART ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

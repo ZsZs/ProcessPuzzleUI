@@ -122,13 +122,13 @@ var BrowserWidget = new Class( {
    },
    
    restoreComponentState : function() {
-      this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+      this.stateSpecification = this.componentStateManager.retrieveComponentState( this.options.componentName ); 
       this.parseStateSpecification();
    },
    
    storeComponentState : function() {
       this.compileStateSpecification();
-      this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+      this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
    }.protect(),
    
    unmarshall : function(){

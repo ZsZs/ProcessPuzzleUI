@@ -180,7 +180,7 @@ var WebUIController = new Class({
       if( this.options.window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
-            this.stateManager.resetStateFromUri( this.options.window.location.hash.substring(2) );
+            this.stateManager.parse( this.options.window.location.hash.substring(2) );
             this.messageBus.notifySubscribers( new WebUIStateRestoredMessage() );
          }catch( e ){
             this.stateManager.parse( currentState );
@@ -274,7 +274,7 @@ var WebUIController = new Class({
       browserLanguage.options.country = null;
       browserLanguage.options.variant = null;
       if( this.locale == null ){
-         var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
+         var storedState = this.stateManager.retrieveComponentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
             this.locale = new Locale();
@@ -383,7 +383,7 @@ var WebUIController = new Class({
 	
    storeComponentState : function() {
       this.logger.debug( this.options.componentName + ".storeComponentState() started." );
-      this.stateManager.storeCurrentState( this.options.componentName, {locale : this.locale.toString()} );
+      this.stateManager.storeComponentState( this.options.componentName, {locale : this.locale.toString()} );
       this.configurationChain.callChain();
    }.protect(),
    
