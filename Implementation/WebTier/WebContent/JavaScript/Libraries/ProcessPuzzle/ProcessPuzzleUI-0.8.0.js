@@ -2730,13 +2730,13 @@ var BrowserWidget = new Class( {
    },
    
    restoreComponentState : function() {
-      this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+      this.stateSpecification = this.componentStateManager.retrieveComponentState( this.options.componentName ); 
       this.parseStateSpecification();
    },
    
    storeComponentState : function() {
       this.compileStateSpecification();
-      this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+      this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
    }.protect(),
    
    unmarshall : function(){
@@ -3340,38 +3340,145 @@ WidgetElementFactory.Positions = {
    LastChild : 3,
    Undefined : 4 };
 /*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+Name: 
+    - StateTransformer
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Description: 
+    - Abstract class of all state transformers.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Requires:
+    - 
+Provides:
+    - StateTransformer
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//DefaultStateUriTransformer.js
 
-var DefaultStateUriTransformer = new Class({
-   initialize: function( stateManager ){
-      this.stateManager = stateManager;
+
+var StateTransformer = new Class({
+   Implements: [Events, Options],
+   options: {
+      
+   },
+
+   //Constructor
+   initialize: function( stateMachine, options ){
+      assertThat( stateMachine, not( nil() ));
+      this.setOptions( options );
+      this.stateMachine = stateMachine;
    },
    
-   transformUriToState: function( uri ) {
-      this.stateManager.parse( uri );
+   //Public accessors and mutators
+   parse : function(){
+      //Needs to be overwritten
    },
    
-   transformStateToUri: function(){
-      return this.stateManager.toString();
+   toString : function(){
+      //Needs to be overwritten
+   },
+   
+   //Protected, private helper methods
+   transformComponentStateToString : function( componentStateEntry ){
+      var valueString = "";
+      
+      var value = componentStateEntry.getValue();
+      if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
+      else if( typeOf( value ) == "object" ){
+         valueString = "{";
+         for ( var property in value ) {
+            if( valueString != "{" ) valueString += ",";
+            valueString += property + ":'" + value[property] + "'";
+         }
+         valueString += "}";
+      }
+      else valueString = "'" + value.toString() + "'";
+      
+      return valueString;
+   }.protect()
+   
+});
+/*
+Name: 
+    - DefaultStateTransformer
+
+Description: 
+    - Transforms component's state by using component / state names and specific delimiters.
+
+Requires:
+    - 
+Provides:
+    - DefaultStateTransformer
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DefaultStateTransformer = new Class({
+   Extends: StateTransformer,
+   options: {
+      
+   },
+
+   //Constructor
+   initialize: function( stateMachine, options ){
+      this.parent( stateMachine, options );
+   },
+   
+   //Public accessors and mutators
+   parse: function( stateString ) {
+      var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
+      while( tokenizer.hasMoreTokens() ){
+         var token = tokenizer.nextToken();
+         var componentName = token.substring( 0, token.indexOf( ":" ));
+         var componentStateString = token.substring( token.indexOf( ":" ) +1 );
+         var componentState = eval( "(" + componentStateString.trim() + ")" );
+         
+         this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
+      };
+   },
+   
+   toString: function(){
+      var stateString = "";
+      this.stateMachine.each( function( componentStateEntry, index ){
+         if( stateString != "" ) stateString += ";";
+         stateString += componentStateEntry.getKey() + ":";
+         stateString += this.transformComponentStateToString( componentStateEntry );
+      }, this );
+      
+      return stateString;
    }
+   
+   //Protected, private helper methods
+   
 });
 /*
 ProcessPuzzle User Interface
@@ -3398,10 +3505,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 var ComponentStateManager = new Class({
-   Implements: [Options, Class.Singleton],
+   Implements: [Events, Options, Class.Singleton],
+   Binds: ['onComponentStateParse'],
    
    options: {
-      stateUriTransformer: DefaultStateUriTransformer
+      componentName : "ComponentStateManager",
+      stateUriTransformer: DefaultStateTransformer
    },
    
    //Constructors
@@ -3409,72 +3518,140 @@ var ComponentStateManager = new Class({
    
    setUp : function( options ) {
       this.setOptions( options );
-      this.stateMachine = new HashMap();
-      this.stateUriTransformer = new this.options.stateUriTransformer( this );
+      this.stateMachine = new LinkedHashMap();
+      this.stateTransformer = new this.options.stateUriTransformer( this.stateMachine, { onComponentStateParse : this.onComponentStateParse } );
    }.protect(),
 
    //Public accessor and mutator methods
-   parse : function( sourceString ){
-      var tokenizer = new StringTokenizer( sourceString, { delimiters : ';' } );
-      while( tokenizer.hasMoreTokens() ){
-         var token = tokenizer.nextToken();
-         var componentName = token.substring( 0, token.indexOf( ":" ));
-         var componentStateString = token.substring( token.indexOf( ":" ) +1 );
-         var componentState = eval( "(" + componentStateString.trim() + ")" );
-         
-         this.storeCurrentState( componentName.trim(), componentState );
-      };
+   onComponentStateParse : function( componentState ){
+      this.storeComponentState( componentState[0].trim(), componentState[1] );
+   },
+   
+   parse : function( stateString ){
+      this.stateTransformer.parse( stateString );
+   },
+   
+   persist : function(){
+      $.jStorage.set( this.options.componentName, this.toString() );
    },
    
    reset : function() {
       this.stateMachine.clear();
    },
    
-   resetStateFromUri: function( uri ){
-      this.reset();
-      this.stateUriTransformer.transformUriToState( uri );
+   restore : function(){
+      var stateString = $.jStorage.get( this.options.componentName );
+      this.parse( stateString );
    },
    
-   retrieveCurrentState : function( componentName ){
+   retrieveComponentState : function( componentName ){
       return this.stateMachine.get( componentName );
    },
    
-   storeCurrentState : function( componentName, currentState ){
+   storeComponentState : function( componentName, currentState ){
       if( componentName && currentState ) this.stateMachine.put( componentName, currentState );
+   },
+   
+   toString: function(){
+      return this.stateTransformer.toString();
+   },
+   
+   //Properties
+   getStateUriTransformer: function() { return this.stateTransformer; },
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - FixedComponentOrderedTransformer
+
+Description: 
+    - Relies on the predefined order of components when parsing state string.
+
+Requires:
+    - 
+Provides:
+    - FixedComponentOrderedTransformer
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var FixedComponentOrderedTransformer = new Class({
+   Extends: StateTransformer,
+   options: {
+      
+   },
+
+   //Constructor
+   initialize: function( stateMachine, componentList, options ){
+      assertThat( componentList, not( nil() ));
+      this.parent( stateMachine, options );
+      
+      this.componentList = componentList;
+   },
+   
+   //Public accessors and mutators
+   parse: function( stateString ) {
+      var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
+      var componentIndex = 0;
+      
+      while( tokenizer.hasMoreTokens() ){
+         var componentName = this.componentList[componentIndex++];
+         var componentStateString = tokenizer.nextToken();
+         var componentState = eval( "(" + componentStateString.trim() + ")" );
+         
+         this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
+      };
    },
    
    toString: function(){
       var stateString = "";
       this.stateMachine.each( function( componentStateEntry, index ){
-         if( stateString != "" ) stateString += ";";
-         
-         stateString += componentStateEntry.getKey() + ":";
-         
-         var valueString = "";
-         var value = componentStateEntry.getValue();
-         if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
-         else if( typeOf( value ) == "object" ){
-            valueString = "{";
-            for ( var property in value ) {
-               if( valueString != "{" ) valueString += ",";
-               valueString += property + ":'" + value[property] + "'";
-            }
-            valueString += "}";
+         if( this.componentList.contains( componentStateEntry.getKey() )){
+            if( stateString != "" ) stateString += ";";
+            stateString += this.transformComponentStateToString( componentStateEntry );
          }
-         else valueString = "'" + value.toString() + "'";
-    
-         stateString += valueString;
       }, this );
       
       return stateString;
    },
    
-   transformStateToUri: function(){
-      return this.stateUriTransformer.transformStateToUri();
-   },
+   //Protected, private helper methods
+   transformComponentStateToString : function( componentStateEntry ){
+      var valueString = "";
+      
+      var value = componentStateEntry.getValue();
+      if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
+      else if( typeOf( value ) == "object" ){
+         valueString = "{";
+         for ( var property in value ) {
+            if( valueString != "{" ) valueString += ",";
+            valueString += property + ":'" + value[property] + "'";
+         }
+         valueString += "}";
+      }
+      else valueString = "'" + value.toString() + "'";
+      
+      return valueString;
+   }.protect()
    
-   //Properties
-   getStateUriTransformer: function() { return this.stateUriTransformer; }
 });
 /*
 Name: 
@@ -3789,7 +3966,7 @@ var ComplexContentBehaviour = new Class({
    
    restoreComponentState : function() {
       if( this.storeState ){
-         this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+         this.stateSpecification = this.componentStateManager.retrieveComponentState( this.options.componentName ); 
          if( this.stateSpecification ) {
             this.parseStateSpecification();
             
@@ -3816,7 +3993,7 @@ var ComplexContentBehaviour = new Class({
    storeComponentState : function() {
       if( this.storeState ){
          this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
-         this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+         this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
       }
    }.protect(),
    
@@ -14715,7 +14892,7 @@ var WebUIController = new Class({
       if( this.options.window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
-            this.stateManager.resetStateFromUri( this.options.window.location.hash.substring(2) );
+            this.stateManager.parse( this.options.window.location.hash.substring(2) );
             this.messageBus.notifySubscribers( new WebUIStateRestoredMessage() );
          }catch( e ){
             this.stateManager.parse( currentState );
@@ -14809,7 +14986,7 @@ var WebUIController = new Class({
       browserLanguage.options.country = null;
       browserLanguage.options.variant = null;
       if( this.locale == null ){
-         var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
+         var storedState = this.stateManager.retrieveComponentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
             this.locale = new Locale();
@@ -14918,7 +15095,7 @@ var WebUIController = new Class({
 	
    storeComponentState : function() {
       this.logger.debug( this.options.componentName + ".storeComponentState() started." );
-      this.stateManager.storeCurrentState( this.options.componentName, {locale : this.locale.toString()} );
+      this.stateManager.storeComponentState( this.options.componentName, {locale : this.locale.toString()} );
       this.configurationChain.callChain();
    }.protect(),
    
