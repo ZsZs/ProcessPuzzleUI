@@ -94,9 +94,13 @@ var DocumentEditor = new Class({
    }.protect(),
    
    determineStyleSheets: function(){
-      var linkElements = this.subjectElement.getDocument().getElements("link"); 
+      var linkElements = this.subjectElement.getDocument().getElements( 'link' ); 
       linkElements.each( function( linkElement, index ){
-         this.styleSheets.add( linkElement.get( 'href' ));
+         try{
+            this.styleSheets.add( linkElement.get( 'href' ));
+         }catch( e ){
+            this.logger.error( this.options.componentName + ".determineStyleSheets() caused an error." );
+         }
       }, this );
       this.attachChain.callChain();
    }.protect(),

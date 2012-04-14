@@ -253,7 +253,7 @@
                   this.timer = this._preload.delay( 50, this );
                   [this.a, this.b].each( function( img ) {
                      ['morph', 'tween'].each( function( p ) {
-                        if( this.retrieve( p ) )
+                        if( this.retrieve && this.retrieve( p ))
                            this.get( p ).resume();
                      }, img );
                   } );
@@ -374,7 +374,7 @@
                   this.options[i] && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
                }, this );
                typeOf( this.el[p] ) == 'function' && this.el[p]();
-               delete this.el.uid;
+               this.el.eliminate( 'uid' );
                if( this.preloader && this.preloader.removeEvents ) this.preloader.removeEvents();
                if( this.preloader && this.preloader.destroy ) this.preloader.destroy();
             },
@@ -903,7 +903,11 @@
             (function( a ) {
                var visible = i == this.slide ? 'active' : 'inactive';
                if( a.store ){
-                  a.store( 'loaded', true ).get( 'morph' ).set( this.classes.get( 'thumbnails', 'hidden' ) ).start( this.classes.get( 'thumbnails', visible ) );
+                  a.store( 'loaded', true );
+                  var morphProperty = a.get( 'morph' );
+                  morphProperty.set( this.classes.get( 'thumbnails', 'hidden' ));
+                  morphProperty.start( this.classes.get( 'thumbnails', visible ));
+                  
                }
             }).delay( Math.max( 1000 / this.data.thumbnails.length, 100 ), this, a );
          }

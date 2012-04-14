@@ -4,10 +4,13 @@ window.ComponentStateManagerTest = new Class( {
 
    options : {
       testMethods : [
+          { method : 'initialize_instantiatesStateTransformers', isAsynchron : false }, 
           { method : 'parse_transformsStringToObject', isAsynchron : false }, 
+          { method : 'parseUri_transformsStringToObject', isAsynchron : false }, 
           { method : 'retrieveComponentState_returnsStoredStateOfComponent', isAsynchron : false }, 
           { method : 'storeComponentState_storesComponentStateObject', isAsynchron : false }, 
           { method : 'toString_transformsStateObjectsToString', isAsynchron : false }, 
+          { method : 'toUri_transformsStateObjectsToString', isAsynchron : false }, 
           { method : 'persist_storesStatesInBrowser', isAsynchron : false }, 
           { method : 'restore_retrieveStatesFromBrowser', isAsynchron : false }, 
           { method : 'reset_setsComponentStatesToNull', isAsynchron : false }]
@@ -18,7 +21,8 @@ window.ComponentStateManagerTest = new Class( {
       STATE_ONE : "State-one",
       STATE_TWO : { subStateOne: "SubStateOne", subStateTwo: "SubStateTwo" },
       TEST_COMPONENT_ONE : "TestComponentOne",
-      TEST_COMPONENT_TWO : "TestComponentTwo"
+      TEST_COMPONENT_TWO : "TestComponentTwo",
+      URI_AS_STRING : "'State-one';{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'}",
    },
    
    initialize : function( options ) {
@@ -28,7 +32,7 @@ window.ComponentStateManagerTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.stateManager = new ComponentStateManager();
+      this.stateManager = new ComponentStateManager({ componentsInUri : [this.constants.TEST_COMPONENT_ONE, this.constants.TEST_COMPONENT_TWO] });
       this.stateManager.storeComponentState( this.constants.TEST_COMPONENT_ONE, this.constants.STATE_ONE );
       this.stateManager.storeComponentState( this.constants.TEST_COMPONENT_TWO, this.constants.STATE_TWO );
    },
@@ -38,7 +42,32 @@ window.ComponentStateManagerTest = new Class( {
       this.stateManager = null;
    },
    
+   initialize_instantiatesStateTransformers : function() {
+      //VERIFY:
+      assertThat( this.stateManager.getDefaultTransformer() );
+      assertThat( this.stateManager.getUriTransformer() );
+   },
+   
    parse_transformsStringToObject : function() {
+      //SETUP:
+      this.stateManager.reset();
+      
+      //EXCERCISE:
+      this.stateManager.parse( this.constants.STATE_AS_STRING );
+      
+      //VERIFY:
+      assertEquals( 'State-one', this.stateManager.retrieveComponentState( "TestComponentOne" ) );
+      assertEquals( 'SubStateOne', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateOne'] );
+      assertEquals( 'SubStateTwo', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo'] );
+   },
+   
+   parseUri_transformsStringToObject : function() {
+      //SETUP:
+      this.stateManager.reset();
+      
+      //EXCERCISE:
+      this.stateManager.parseUri( this.constants.URI_AS_STRING );
+      
       //VERIFY:
       assertEquals( 'State-one', this.stateManager.retrieveComponentState( "TestComponentOne" ) );
       assertEquals( 'SubStateOne', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateOne'] );
@@ -58,11 +87,11 @@ window.ComponentStateManagerTest = new Class( {
    },
    
    toString_transformsStateObjectsToString : function(){
-      //EXCERCISE:
-      var stateString = this.stateManager.toString();
-      
-      //VERIFY:
-      assertEquals( this.constants.STATE_AS_STRING, stateString );
+      assertThat( this.stateManager.toString(), this.constants.STATE_AS_STRING );
+   },
+   
+   toUri_transformsStateObjectsToString : function(){
+      assertThat( this.stateManager.toUri(), this.constants.URI_AS_STRING );
    },
    
    persist_storesStatesInBrowser : function(){

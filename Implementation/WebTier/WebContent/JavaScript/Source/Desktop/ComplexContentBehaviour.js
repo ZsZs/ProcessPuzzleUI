@@ -58,6 +58,7 @@ var ComplexContentBehaviour = new Class({
       pluginSelector : "plugin",
       scrollBarStyle : "scroll",
       showHeaderSelector : "showHeader",
+      storeStateInUriSelector : "storeStateInUri",
       storeStateSelector : "storeState",
       titleSelector : "title",
       widthDefault : 300,
@@ -89,7 +90,9 @@ var ComplexContentBehaviour = new Class({
       this.plugin;
       this.showHeader;
       this.stateSpecification;
+      this.storedDocumentNeedsToBeRestored = false;
       this.storeState = false;
+      this.storeStateInUri = false;
       this.title;
       this.verticalScrollBar;
       this.width;
@@ -148,9 +151,15 @@ var ComplexContentBehaviour = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( this.state != DesktopElement.States.CONSTRUCTED ) return;
       
-      if( ( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) 
-            && ( webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT )
-            && ( this.eventSources == null || this.eventSources.contains( webUIMessage.getOriginator() ))) {
+      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) 
+           && ( webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT )
+           && ( this.eventSources == null || this.eventSources.contains( webUIMessage.getOriginator() ))) {
+         
+         if( this.storedContentHasPrecedence( webUIMessage )){
+            this.storedDocumentNeedsToBeRestored = false;
+            return;
+         }
+         
          this.destroyDocument();
          this.destroyDocumentWrapper();
          this.cleanUpContentElement();
@@ -181,6 +190,7 @@ var ComplexContentBehaviour = new Class({
    getShowHeader: function() { return this.showHeader; },
    getState: function() { return this.state; },
    getStoreState: function() { return this.storeState; },
+   getStoreStateInUri: function() { return this.storeStateInUri; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
    getVerticalScrollBar: function() { return this.verticalScrollBar; },
@@ -215,8 +225,14 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    constructPlugin: function(){
-      if( this.plugin ) this.plugin.construct();
-      else this.constructionChain.callChain();
+      if( this.plugin ){
+         try{
+            this.plugin.construct();
+         }catch( e ){
+            this.logger.error( "Constructing plugin of panel: '" + this.name + "' caused error." );
+            throw new DesktopElementConfigurationException( this.name );
+         }
+      } else this.constructionChain.callChain();
    }.protect(),
    
    constructHeader: function(){
@@ -316,6 +332,8 @@ var ComplexContentBehaviour = new Class({
             this.parseStateSpecification();
             
             if( this.documentDefinitionUri ){
+               this.storedDocumentNeedsToBeRestored = true;
+               
                this.document = this.instantiateDocument( this.documentContentType, { 
                   documentContainerId : this.documentWrapperId, 
                   documentDefinitionUri : this.documentDefinitionUri, 
@@ -340,6 +358,10 @@ var ComplexContentBehaviour = new Class({
          this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
          this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
       }
+   }.protect(),
+   
+   storedContentHasPrecedence : function(  webUIMessage ){
+      return this.storedDocumentNeedsToBeRestored == true && webUIMessage.isDefault();
    }.protect(),
    
    subscribeToWebUIMessages: function() {
@@ -400,9 +422,12 @@ var ComplexContentBehaviour = new Class({
       this.handleMenuSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleMenuSelectedEventsSelector, this.options.handleMenuSelectedEvents ));
       this.handleTabSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleTabSelectedEventsSelector, this.options.handleTabSelectedEvents ));
       this.storeState = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.storeStateSelector, false ));
+      this.storeStateInUri = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.storeStateInUriSelector, false ));
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.definitionElement );
       if( this.internationalization ) this.title = this.internationalization.getText( this.title );
       this.width = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.widthSelector, this.options.widthDefault ));
       this.options.componentName = this.name;
+      
+      if( this.storeStateInUri ) this.componentStateManager.includeComponentNameToUri( this.name );
    }.protect()
 });

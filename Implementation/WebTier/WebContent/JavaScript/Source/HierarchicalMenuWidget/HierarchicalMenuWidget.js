@@ -133,6 +133,7 @@ var HierarchicalMenuWidget = new Class({
    createMessage : function( menuItem ){
       var messageProperties = menuItem.getMessageProperties();
       messageProperties['originator'] = this.options.componentName;
+      if( this.state == BrowserWidget.States.UNMARSHALLED )  messageProperties['isDefault'] = true;
       return new MenuSelectedMessage( messageProperties );
    }.protect(),
    

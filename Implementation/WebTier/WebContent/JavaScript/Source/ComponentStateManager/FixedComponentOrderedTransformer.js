@@ -45,6 +45,10 @@ var FixedComponentOrderedTransformer = new Class({
    },
    
    //Public accessors and mutators
+   addComponentName: function( componentName ){
+      this.componentList.include( componentName );
+   },
+   
    parse: function( stateString ) {
       var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
       var componentIndex = 0;
@@ -69,6 +73,9 @@ var FixedComponentOrderedTransformer = new Class({
       
       return stateString;
    },
+   
+   //Properties
+   getComponentNames: function(){ return this.componentList; },
    
    //Protected, private helper methods
    transformComponentStateToString : function( componentStateEntry ){

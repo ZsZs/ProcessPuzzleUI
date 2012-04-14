@@ -87,6 +87,7 @@ var DesktopElement = new Class({
    },
    
    //Properties
+   getComponentStateManager: function() { return this.componentStateManager; },
    getContainerElement: function() { return this.containerElement; },
    getContainerElementId: function() { return this.options.componentContainerId; }, 
    getDefinitionElement: function() { return this.definitionElement; },

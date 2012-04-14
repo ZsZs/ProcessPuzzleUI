@@ -1,21 +1,25 @@
-window.FixedComponentOrderedTest = new Class( {
+window.DefaultStateTransformerTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onComponentStateParse'],
 
    options : {
       testMethods : [
-         { method : 'addComponent_addsComponentNameToTheList', isAsynchron : false },
          { method : 'parse_transformsStringToObject', isAsynchron : false },
-         { method : 'toString_transformsStateObjectsToString', isAsynchron : false }]
+         { method : 'parse_whenStateValueIsUnknow_setsValueToNull', isAsynchron : false },
+         { method : 'toString_transformsStateObjectsToString', isAsynchron : false },
+         { method : 'toString_whenStateIsNull_setsValueToUnknown', isAsynchron : false }]
    },
 
    constants : {
       COMPONENT_LIST : ["TestComponentOne", "TestComponentTwo"],
-      STATE_AS_STRING : "'State-one';{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'}",
+      STATE_AS_STRING : "TestComponentOne:'State-one';TestComponentTwo:{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'}",
+      STATE_AS_STRING_WITH_UNKNOWNS : ";TestComponentThree:'unknown';TestComponentFour:{subStateOne:'SubStateOne',subStateTwo:'unknown'}",
       STATE_ONE : "State-one",
       STATE_TWO : { subStateOne: "SubStateOne", subStateTwo: "SubStateTwo" },
       TEST_COMPONENT_ONE : "TestComponentOne",
-      TEST_COMPONENT_TWO : "TestComponentTwo"
+      TEST_COMPONENT_TWO : "TestComponentTwo",
+      TEST_COMPONENT_THREE : "TestComponentThree",
+      TEST_COMPONENT_FOUR : "TestComponentFour"
    },
    
    initialize : function( options ) {
@@ -26,8 +30,7 @@ window.FixedComponentOrderedTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.stateTransformer = new FixedComponentOrderedTransformer( this.stateMachine, this.constants.COMPONENT_LIST, { onComponentStateParse : this.onComponentStateParse });
-      this.addComponentStates();
+      this.stateTransformer = new DefaultStateTransformer( this.stateMachine, { onComponentStateParse : this.onComponentStateParse });
    },
    
    afterEachTest : function (){
@@ -49,9 +52,31 @@ window.FixedComponentOrderedTest = new Class( {
       assertEquals( 'SubStateTwo', this.stateMachine.get( "TestComponentTwo" )['subStateTwo'] );
    },
       
+   parse_whenStateValueIsUnknow_setsValueToNull : function() {
+      //EXCERCISE:
+      this.stateTransformer.parse( this.constants.STATE_AS_STRING + this.constants.STATE_AS_STRING_WITH_UNKNOWNS );
+      
+      //VERIFY:
+      assertThat( this.stateMachine.get( this.constants.TEST_COMPONENT_THREE ), is( nil() ));
+      assertThat( this.stateMachine.get( this.constants.TEST_COMPONENT_FOUR )['subStateTwo'], is( nil() ));
+   },
+      
    toString_transformsStateObjectsToString : function(){
+      //SETUP:
+      this.addComponentStates();
+      
       //EXCERCISE, VERIFY:
       assertThat( this.stateTransformer.toString(), equalTo( this.constants.STATE_AS_STRING ));
+   },
+   
+   toString_whenStateIsNull_setsValueToUnknown : function(){
+      //SETUP:
+      this.addComponentStates();
+      this.stateMachine.put( this.constants.TEST_COMPONENT_THREE, null );
+      this.stateMachine.put( this.constants.TEST_COMPONENT_FOUR, { subStateOne: "SubStateOne", subStateTwo: null } );
+      
+      //EXCERCISE, VERIFY:
+      assertThat( this.stateTransformer.toString(), equalTo( this.constants.STATE_AS_STRING  + this.constants.STATE_AS_STRING_WITH_UNKNOWNS ));
    },
    
    //Protected, private helper methods

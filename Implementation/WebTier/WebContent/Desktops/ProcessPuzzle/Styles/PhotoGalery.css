@@ -223,7 +223,7 @@ Notes:
 	background-color: #FFF; opacity: 0;
 }
 .slideshow-thumbnails-inactive {
-	background-color: #FFF; opacity: .5;
+	background-color: #FFF; opacity: 0.5;
 }
 .slideshow-thumbnails-active {
 	background-color: #9FF; opacity: 1;

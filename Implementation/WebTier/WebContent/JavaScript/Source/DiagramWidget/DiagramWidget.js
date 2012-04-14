@@ -101,7 +101,7 @@ var DiagramWidget = new Class({
    }.protect(),
    
    destroyCanvas : function(){
-      this.paintArea.destroy();
+      if( this.paintArea && this.paintArea.destroy ) this.paintArea.destroy();
       
       this.destructionChain.callChain();
    }.protect(),

@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 var StateTransformer = new Class({
    Implements: [Events, Options],
    options: {
-      
+      unknownValue : 'unknown'
    },
 
    //Constructor
@@ -51,16 +51,28 @@ var StateTransformer = new Class({
    },
    
    //Protected, private helper methods
+   setUnknowsValuesToNull : function( componentState ){
+      if( componentState == this.options.unknownValue ) return null;
+         
+      for( var property in componentState ){
+         if( componentState[property] == this.options.unknownValue ) componentState[property] = null;
+      }
+      
+      return componentState;
+   }.protect(),
+   
    transformComponentStateToString : function( componentStateEntry ){
       var valueString = "";
       
       var value = componentStateEntry.getValue();
+      if( value == null ) value = this.options.unknownValue;
       if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
       else if( typeOf( value ) == "object" ){
          valueString = "{";
          for ( var property in value ) {
             if( valueString != "{" ) valueString += ",";
-            valueString += property + ":'" + value[property] + "'";
+            if( value[property] == null ) valueString += property + ":'" + this.options.unknownValue + "'";
+            else valueString += property + ":'" + value[property] + "'";
          }
          valueString += "}";
       }
