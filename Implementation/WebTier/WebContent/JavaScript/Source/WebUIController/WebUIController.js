@@ -37,9 +37,9 @@ var WebUIController = new Class({
             'loadWebUIConfiguration',
             'onDesktopConstructed', 
             'onError', 
-            'restoreStateFromUrl',
-            'storeComponentState',
-            'storeStateInUrl',
+            'restoreComponentsState',
+            'storeComponentsState',
+            'storeWebUIState',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
    
@@ -96,7 +96,7 @@ var WebUIController = new Class({
          this.loadWebUIConfiguration();
          this.configureLogger();
 
-         this.restoreStateFromUrl(),
+         this.restoreComponentsState(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
          this.loadInternationalizations();
@@ -126,12 +126,12 @@ var WebUIController = new Class({
       this.configurationChain.chain( 
          this.loadWebUIConfiguration,
          this.configureLogger,
-         this.restoreStateFromUrl,
+         this.restoreComponentsState,
          this.determineCurrentUserLocale,
          this.loadInternationalizations,
          this.constructDesktop,
          this.subscribeToWebUIMessages,
-         this.storeComponentState,
+         this.storeWebUIState,
          this.destroySplashForm,
          this.finalizeConfiguration
       ).callChain();
@@ -175,23 +175,26 @@ var WebUIController = new Class({
       this.showWebUIExceptionPage( this.error );
    },
 	
-   restoreStateFromUrl : function(){
-      this.logger.debug( this.options.componentName + ".restoreStateFromUrl() started." );
+   restoreComponentsState : function(){
+      this.logger.debug( this.options.componentName + ".restoreComponentsState() started." );
+      this.stateManager.restore();
       if( this.options.window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
-            this.stateManager.parse( this.options.window.location.hash.substring(2) );
+            this.stateManager.parseUri( this.options.window.location.hash.substring(2) );
             this.messageBus.notifySubscribers( new WebUIStateRestoredMessage() );
          }catch( e ){
             this.stateManager.parse( currentState );
-            this.logger.debug( "restoreStateFromUrl() exception: " + e );
+            this.logger.debug( "restoreComponentsState() exception: " + e );
          }
       }
       this.configurationChain.callChain();
    },
    
-   storeStateInUrl : function() {
-	   var stateAsString = this.stateManager.toString(); 
+   storeComponentsState : function() {
+      this.stateManager.persist();
+      
+	   var stateAsString = this.stateManager.toUri(); 
 	   if( this.recentHash != stateAsString ){
 	      this.recentHash = stateAsString;
 	      this.options.window.location.hash = "!" + stateAsString;
@@ -294,7 +297,7 @@ var WebUIController = new Class({
    }.protect(),
    
    finalizeConfiguration: function(){
-      this.refreshUrlTimer = this.storeStateInUrl.periodical( this.options.urlRefreshPeriod, this );
+      this.refreshUrlTimer = this.storeComponentsState.periodical( this.options.urlRefreshPeriod, this );
       this.isConfigured = true;
       this.fireEvent( 'configured', this );
    }.protect(),
@@ -381,8 +384,8 @@ var WebUIController = new Class({
       }
    }.protect(),
 	
-   storeComponentState : function() {
-      this.logger.debug( this.options.componentName + ".storeComponentState() started." );
+   storeWebUIState : function() {
+      this.logger.debug( this.options.componentName + ".storeWebUIState() started." );
       this.stateManager.storeComponentState( this.options.componentName, {locale : this.locale.toString()} );
       this.configurationChain.callChain();
    }.protect(),

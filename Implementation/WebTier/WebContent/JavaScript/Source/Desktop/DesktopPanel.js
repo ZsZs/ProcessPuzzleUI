@@ -96,7 +96,6 @@ var DesktopPanel = new Class({
    
    //Properties
    getColumnReference: function() { return this.columnReference; },
-   getComponentStateManager: function() { return this.componentStateManager; },
    getContentUrl: function() { return this.contentUrl; },
    getDocument: function() { return this.document; },
    getDocumentContentUri: function() { return this.documentContentUri; },

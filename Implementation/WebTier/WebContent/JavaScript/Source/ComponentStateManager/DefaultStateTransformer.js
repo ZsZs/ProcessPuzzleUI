@@ -48,7 +48,7 @@ var DefaultStateTransformer = new Class({
          var componentName = token.substring( 0, token.indexOf( ":" ));
          var componentStateString = token.substring( token.indexOf( ":" ) +1 );
          var componentState = eval( "(" + componentStateString.trim() + ")" );
-         
+         componentState = this.setUnknowsValuesToNull( componentState );
          this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
       };
    },

@@ -9,6 +9,7 @@ window.DesktopPanelTest = new Class( {
          { method : 'unmarshall_determinesPanelProperties', isAsynchron : false },
          { method : 'unmarshall_unmarshallsPanelHeader', isAsynchron : false },
          { method : 'unmarshall_determinesDocumentProperties', isAsynchron : false },
+         { method : 'unmarshall_whenEnabled_includesComponentInUri', isAsynchron : false },
          { method : 'construct_instantiatesMUIPanel', isAsynchron : true }, 
          { method : 'construct_constructsHeaderWithPlugin', isAsynchron : true }, 
          { method : 'construct_whenNotDisabled_createsScrollBars', isAsynchron : true }, 
@@ -113,6 +114,7 @@ window.DesktopPanelTest = new Class( {
       assertThat( this.panelWithDocument.getPlugin(), nil() );
       assertThat( this.panelWithDocument.getShowHeader(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@showHeader" ).value ) ) );
       assertThat( this.panelWithDocument.getStoreState(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@storeState" ).value ) ) );
+      assertThat( this.panelWithDocument.getStoreStateInUri(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@storeStateInUri" ).value ) ) );
       assertThat( this.panelWithDocument.getToolBox(), not( nil() ) );
       assertThat( this.panelWithDocument.getTitle(), equalTo( this.resourceBundle.getText( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/title" ) ) ) );
    },
@@ -133,6 +135,16 @@ window.DesktopPanelTest = new Class( {
       assertThat( this.panelWithDocument.getDocumentWrapperId(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/@id" ) ) );
       assertThat( this.panelWithDocument.getDocumentWrapperStyle(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/@elementStyle" ) ) );
       assertThat( this.panelWithDocument.getDocumentWrapperTag(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/@tag" ) ) );
+   },
+   
+   unmarshall_whenSpecified_subscribesForMenuSelectedMessage : function() {
+      this.panelWithDocument.unmarshall();
+      assertThat( this.webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( this.panelWithDocument.webUIMessageHandler ), is( true ));
+   },
+   
+   unmarshall_whenEnabled_includesComponentInUri : function() {
+      this.panelWithDocument.unmarshall();
+      assertThat( this.panelWithDocument.getComponentStateManager().getUriTransformer().getComponentNames(), hasItem( this.panelWithDocument.getName() ));
    },
    
    construct_instantiatesMUIPanel : function() {

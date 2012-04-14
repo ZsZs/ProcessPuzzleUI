@@ -107,6 +107,7 @@ var Desktop = new Class({
       this.setOptions( options );
 
 	//Private instance variables
+      this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.columns = new LinkedHashMap();
       this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
       this.configurationChain = new Chain();
@@ -245,6 +246,7 @@ var Desktop = new Class({
       this.unmarshallColumns();
       this.unmarshallPanels();
       this.unmarshallWindows();
+      this.componentStateManager.restoreStateFromUri();
       this.state = DesktopElement.States.UNMARSHALLED;
    },
 	   

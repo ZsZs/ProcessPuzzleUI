@@ -28,6 +28,7 @@ var ComponentStateManager = new Class({
    
    options: {
       componentName : "ComponentStateManager",
+      componentsInUri : [],
       stateUriTransformer: DefaultStateTransformer
    },
    
@@ -37,16 +38,25 @@ var ComponentStateManager = new Class({
    setUp : function( options ) {
       this.setOptions( options );
       this.stateMachine = new LinkedHashMap();
-      this.stateTransformer = new this.options.stateUriTransformer( this.stateMachine, { onComponentStateParse : this.onComponentStateParse } );
+      this.stateTransformer = new DefaultStateTransformer( this.stateMachine, { onComponentStateParse : this.onComponentStateParse } );
+      this.uriTransformer = new FixedComponentOrderedTransformer( this.stateMachine, this.options.componentsInUri, { onComponentStateParse : this.onComponentStateParse } );
    }.protect(),
 
    //Public accessor and mutator methods
+   includeComponentNameToUri : function( componentName ){
+      this.uriTransformer.addComponentName( componentName );
+   },
+   
    onComponentStateParse : function( componentState ){
       this.storeComponentState( componentState[0].trim(), componentState[1] );
    },
    
    parse : function( stateString ){
-      this.stateTransformer.parse( stateString );
+      if( stateString ) this.stateTransformer.parse( stateString );
+   },
+   
+   parseUri : function( stateString ){
+      this.uriTransformer.parse( stateString );
    },
    
    persist : function(){
@@ -62,6 +72,17 @@ var ComponentStateManager = new Class({
       this.parse( stateString );
    },
    
+   restoreStateFromUri : function(){
+      if( window.location.hash.substring(2)) {
+         var currentState = this.toString();
+         try {
+            this.parseUri( window.location.hash.substring(2) );
+         }catch( e ){
+            this.parse( currentState );
+         }
+      }
+   },
+   
    retrieveComponentState : function( componentName ){
       return this.stateMachine.get( componentName );
    },
@@ -74,8 +95,13 @@ var ComponentStateManager = new Class({
       return this.stateTransformer.toString();
    },
    
+   toUri: function(){
+      return this.uriTransformer.toString();
+   },
+   
    //Properties
-   getStateUriTransformer: function() { return this.stateTransformer; },
+   getDefaultTransformer: function() { return this.stateTransformer; },
+   getUriTransformer: function() { return this.uriTransformer; },
    
    //Protected, private helper methods
 });

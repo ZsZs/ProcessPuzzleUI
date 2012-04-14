@@ -196,7 +196,7 @@
         }
         /* Check if browser supports userData behavior */
         else {
-            _storage_elm = document.createElement('link');
+            _storage_elm = new Element( 'link' );
             if(_storage_elm.addBehavior){
 
                 /* Use a DOM element to act as userData storage */
@@ -488,7 +488,7 @@
         reInit: function(){
             var new_storage_elm, data;
             if(_storage_elm && _storage_elm.addBehavior){
-                new_storage_elm = document.createElement('link');
+                new_storage_elm = new Element( 'link' );
 
                 _storage_elm.parentNode.replaceChild(new_storage_elm, _storage_elm);
                 _storage_elm = new_storage_elm;

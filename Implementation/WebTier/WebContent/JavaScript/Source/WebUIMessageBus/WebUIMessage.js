@@ -6,6 +6,7 @@ var WebUIMessage = new Class({
    Implements: Options,
    options: {
       description: "Generic Browser Interface message. Normally this message should be overwritten by subclasses.",
+      isDefault: false,
       messageClass: null,
       name: "WebUIMessage",       //Please note, that subclasses should overwrite this.
       originator: null
@@ -22,7 +23,8 @@ var WebUIMessage = new Class({
    getClass: function() { return this.options.messageClass; },
    getDescription: function() { return this.options.description; },
    getName: function() { return this.options.name; },
-   getOriginator: function() { return this.options.originator; }
+   getOriginator: function() { return this.options.originator; },
+   isDefault: function() { return this.options.isDefault; }
    
    //Private helper methods
 });

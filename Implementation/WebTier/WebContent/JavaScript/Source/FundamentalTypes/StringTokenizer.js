@@ -32,6 +32,7 @@ var StringTokenizer = new Class( {
    
    //Constructors
    initialize: function( string, options ) {
+      assertThat( string, not( nil() ));
       this.setOptions( options );
       this.s = string;
       this.current = 0;

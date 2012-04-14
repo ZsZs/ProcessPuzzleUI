@@ -56,7 +56,7 @@
             <widget name="HierarchicalMenuWidget">
                <options>
                   <option name="contextItemId" value="'MenuWidget/YourMenu'"/>
-                  <option name="componentName " value="'verticalMenuColumn'"/>
+                  <option name="componentName" value="'verticalMenuColumn'"/>
                   <option name="subscribeToWebUIMessages " value="[MenuSelectedMessage]"/>
                   <option name="widgetContainerId" value="'VerticalMenuColumn'"/>
                   <option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
@@ -66,7 +66,7 @@
 			</plugin>
 		</panel>
 		
-		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="true" eventOriginators="['exmapleMenuWidget', 'horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
+		<panel name='documents-panel' columnReference='mainColumn' showHeader='true' handleMenuSelectedEvents="true" storeState="true" storeStateInUri="true" eventOriginators="['exmapleMenuWidget', 'horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
          <panelHeader>
             <plugin>
