@@ -168,7 +168,7 @@ window.WidgetElementFactoryTest = new Class( {
       assertEquals( "INPUT", this.newElement.tagName.toUpperCase() );
       assertEquals( "button", this.newElement.get( 'type' ));
       assertEquals( this.i18Resource.getText( this.constants.RESOURCE_KEY ), this.newElement.get( 'value' ));
-      assertTrue( this.newElement.hasClass( this.elementFactory.options.buttonClass ) );
+      assertTrue( this.newElement.hasClass( this.elementFactory.options.buttonClassName ) );
       assertEquals( this.constants.CLICK_EVENT_HANDLER, this.newElement.retrieve( 'events' )['click'].keys[0] );
    },
    

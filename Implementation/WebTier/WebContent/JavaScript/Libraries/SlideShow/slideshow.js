@@ -257,6 +257,7 @@
                            this.get( p ).resume();
                      }, img );
                   } );
+                  
                   this.controller && this.el.retrieve( 'pause' ).getParent().removeClass( this.classes.play );
                }else{ // pause
                   this.paused = true;
@@ -264,11 +265,15 @@
                   clearTimeout( this.timer );
                   [this.a, this.b].each( function( img ) {
                      ['morph', 'tween'].each( function( p ) {
-                        if( this.retrieve( p ) )
+                        if( this.retrieve && this.retrieve( p ) )
                            this.get( p ).pause();
                      }, img );
-                  } );
-                  this.controller && this.el.retrieve( 'pause' ).getParent().addClass( this.classes.play );
+                  });
+                  
+                  if( this.controller && this.el.retrieve && this.el.retrieve( 'pause' )){
+                     var pauseValue = this.el.retrieve( 'pause' );
+                     if( pauseValue.getParent() ) pauseValue.getParent().addClass( this.classes.play );
+                  };
                }
             },
 
@@ -371,10 +376,10 @@
                } );
                this.pause( 1 );
                'caption loader thumbnails'.split( ' ' ).each( function( i, timer ) {
-                  this.options[i] && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
+                  this.options[i] && this[i].retrieve && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
                }, this );
                typeOf( this.el[p] ) == 'function' && this.el[p]();
-               this.el.eliminate( 'uid' );
+               if( this.el.eliminate ) this.el.eliminate( 'uid' );
                if( this.preloader && this.preloader.removeEvents ) this.preloader.removeEvents();
                if( this.preloader && this.preloader.destroy ) this.preloader.destroy();
             },
