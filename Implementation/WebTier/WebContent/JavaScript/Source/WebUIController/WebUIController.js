@@ -57,8 +57,7 @@ var WebUIController = new Class({
       showSplashForm : false,
       splashFormUri : "Desktops/Images/SplashForm.png",
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
-      urlRefreshPeriod : 3000,
-      window : window
+      urlRefreshPeriod : 3000
    },
    
    //Constructors
@@ -145,7 +144,7 @@ var WebUIController = new Class({
          this.desktop.destroy();
          this.webUIConfiguration.release();
          this.resourceBundle.release();
-         this.options.window.location.hash = "";
+         window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
       }
@@ -178,10 +177,10 @@ var WebUIController = new Class({
    restoreComponentsState : function(){
       this.logger.debug( this.options.componentName + ".restoreComponentsState() started." );
       this.stateManager.restore();
-      if( this.options.window.location.hash.substring(2)) {
+      if( window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
-            this.stateManager.parseUri( this.options.window.location.hash.substring(2) );
+            this.stateManager.parseUri( window.location.hash.substring(2) );
             this.messageBus.notifySubscribers( new WebUIStateRestoredMessage() );
          }catch( e ){
             this.stateManager.parse( currentState );
@@ -197,7 +196,7 @@ var WebUIController = new Class({
 	   var stateAsString = this.stateManager.toUri(); 
 	   if( this.recentHash != stateAsString ){
 	      this.recentHash = stateAsString;
-	      this.options.window.location.hash = "!" + stateAsString;
+	      window.location.hash = "!" + stateAsString;
 	   }
    },
    
@@ -265,8 +264,8 @@ var WebUIController = new Class({
    }.protect(),
 	
    determineCurrentHash: function() {
-      if( this.options.window.location.hash.indexOf( "#" ) != -1 )
-         return this.options.window.location.hash.substring(1);
+      if( window.location.hash.indexOf( "#" ) != -1 )
+         return window.location.hash.substring(1);
       else return "";
    }.protect(),
 	
