@@ -84,7 +84,7 @@ var WebUIController = new Class({
       this.refreshUrlTimer;
       this.skin;
       this.splashForm;
-      this.stateManager = new ComponentStateManager();
+      this.stateManager;
       this.userName;
       this.userLocation;
       this.warningContainer;
@@ -95,7 +95,7 @@ var WebUIController = new Class({
          if( this.options.showSplashForm ) this.showSplashForm();
          this.loadWebUIConfiguration();
          this.configureLogger();
-
+         this.instantiateComponentStateManager();
          this.restoreComponentsState(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
@@ -319,6 +319,13 @@ var WebUIController = new Class({
          }
       }
       return returnValue;	
+   }.protect(),
+   
+   instantiateComponentStateManager : function(){
+      var applicationSpecificName = this.webUIConfiguration.getApplicationName();
+      applicationSpecificName += "." + this.webUIConfiguration.getApplicationVersion();
+      applicationSpecificName += ".ComponentStateManager";
+      this.stateManager = new ComponentStateManager({ componentName : applicationSpecificName });
    }.protect(),
 	
    loadInternationalizations : function () {
