@@ -65,6 +65,7 @@ var ComponentStateManager = new Class({
    
    reset : function() {
       this.stateMachine.clear();
+      $.jStorage.flush();
    },
    
    restore : function(){

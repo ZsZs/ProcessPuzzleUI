@@ -203,8 +203,9 @@ window.WidgetElementFactoryTest = new Class( {
       assertNotNull( "A new FIELDSET element was created.", this.newElement ); 
       assertEquals( "FIELDSET", this.newElement.tagName.toUpperCase() );
       
-      assertEquals( this.elementFactory.options.fieldSetStyle["border-color"], this.newElement.getStyle( "border-color" ));
-      assertEquals( this.elementFactory.options.fieldSetStyle["width"], this.newElement.getStyle( "width" ));
+      assertThat( this.newElement.getStyle( "border-color" ), equalTo( this.elementFactory.options.fieldSetStyle["border-color"] ));
+      if( Browser.ie ) assertThat( this.newElement.style.width, equalTo( this.elementFactory.options.fieldSetStyle["width"] ));
+      else assertThat( this.newElement.getStyle( "width" ), equalTo( this.elementFactory.options.fieldSetStyle["width"] ));
       
       var legend = this.newElement.getElement( "LEGEND" );
       assertNotNull( "Fieldset has a LEGEND child element.", legend );

@@ -51,6 +51,7 @@ window.SkinSelectorWidgetTest = new Class( {
    afterEachTest : function (){
    	this.skinSelector.destroy();
       this.messageBus.tearDown();
+      this.componentStateManager.reset();
       this.callBackMessage = null;
    },
    

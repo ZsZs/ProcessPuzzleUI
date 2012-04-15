@@ -102,7 +102,7 @@ window.ComponentStateManagerTest = new Class( {
    
    restore_retrieveStatesFromBrowser : function(){
       this.stateManager.persist();
-      this.stateManager.reset();
+      this.stateManager.stateMachine.clear();
       
       this.stateManager.restore();
       

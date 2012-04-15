@@ -61,6 +61,7 @@ window.DiagramWidgetTest = new Class( {
       this.diagramData.release();
       this.diagramDefinition.release();
       this.messageBus.tearDown();
+      this.componentStateManager.reset();
    },
    
    unmarshall_determinesProperties : function() {

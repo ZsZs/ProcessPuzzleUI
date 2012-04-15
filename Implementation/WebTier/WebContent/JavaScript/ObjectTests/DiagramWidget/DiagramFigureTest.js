@@ -63,6 +63,7 @@ window.DiagramFigureTest = new Class({
       this.diagramData.release();
       this.diagramDefinition.release();
       this.elementFactory = null;
+      this.componentStateManager.reset();
    },
    
    //Event handling methods

@@ -59,6 +59,7 @@ window.PhotoGaleryWidgetTest = new Class( {
       this.photoGaleryData.release();
       this.photoGaleryDefinition.release();
       this.messageBus.tearDown();
+      this.componentStateManager.reset();
    },
    
    initialization_setsState : function() {
