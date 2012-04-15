@@ -50,8 +50,8 @@ window.DesktopDocumentTest = new Class( {
    
    afterEachTest : function (){
       if( this.desktopDocument.getState() > DesktopElement.States.INITIALIZED ) this.desktopDocument.destroy();
+      this.componentStateManager.reset();
       this.desktopDocument = null;
-      this.inform( "afterEachTest" );
    },
    
    initialize_setsState : function() {

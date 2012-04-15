@@ -72,6 +72,7 @@ window.BrowserWidgetTest = new Class( {
       });
      
       this.messageBus.tearDown();
+      this.componentStateManager.reset();
    },
    
    initialize_whenArgumentsAreGiven_deducesAssociatedObjects : function() {

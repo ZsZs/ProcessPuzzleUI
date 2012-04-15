@@ -102,7 +102,7 @@ window.ComponentStateManagerTest = new Class( {
    
    restore_retrieveStatesFromBrowser : function(){
       this.stateManager.persist();
-      this.stateManager.reset();
+      this.stateManager.stateMachine.clear();
       
       this.stateManager.restore();
       
@@ -117,5 +117,6 @@ window.ComponentStateManagerTest = new Class( {
       //VERIFY:
       assertNull( "As after initialization component state is null.", this.stateManager.retrieveComponentState( this.constants.TEST_COMPONENT_ONE ));
       assertNull( "As after initialization component state null.", this.stateManager.retrieveComponentState( this.constants.TEST_COMPONENT_ONE ));
+      assertThat( $.jStorage.index().length, equalTo( 0 ));
    }
 });

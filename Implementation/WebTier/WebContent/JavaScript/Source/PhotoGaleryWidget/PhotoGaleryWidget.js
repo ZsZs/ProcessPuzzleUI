@@ -209,7 +209,7 @@ var PhotoGaleryWidget = new Class({
    }.protect(),
    
    destroyChildElements: function( parentElement ){
-      var childElements = parentElement.getChildren( '*' );
+      var childElements = parentElement.getChildren ? parentElement.getChildren( '*' ) : new Array();
       childElements.each( function( childElement, index ){
          if( childElement.getChildren( '*' ).length > 0 ) this.destroyChildElements( childElement );
          

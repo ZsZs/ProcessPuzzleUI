@@ -49,6 +49,7 @@ window.LanguageSelectorWidgetTest = new Class( {
    afterEachTest : function (){
       this.languageSelector.destroy();
       this.messageBus.tearDown();
+      this.componentStateManager.reset();
       this.callBackWasCalled = false;
       this.callBackMessage = null;
    },

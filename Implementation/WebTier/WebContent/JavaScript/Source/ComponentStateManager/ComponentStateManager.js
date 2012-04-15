@@ -29,7 +29,8 @@ var ComponentStateManager = new Class({
    options: {
       componentName : "ComponentStateManager",
       componentsInUri : [],
-      stateUriTransformer: DefaultStateTransformer
+      stateUriTransformer: DefaultStateTransformer,
+      stateValidityPeriod: 900000
    },
    
    //Constructors
@@ -61,10 +62,12 @@ var ComponentStateManager = new Class({
    
    persist : function(){
       $.jStorage.set( this.options.componentName, this.toString() );
+      $.jStorage.setTTL( this.options.componentName, this.options.stateValidityPeriod );
    },
    
    reset : function() {
       this.stateMachine.clear();
+      $.jStorage.flush();
    },
    
    restore : function(){

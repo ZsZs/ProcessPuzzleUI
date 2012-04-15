@@ -9,6 +9,7 @@
 //= require_directory ./HierarchicalMenuWidget
 //= require_directory ./HtmlDocument
 //= require_directory ./Internationalization
+//= require_directory ./jStorage
 //= require_directory ./LanguageSelectorWidget
 //= require_directory ./NewsReaderWidget
 //= require_directory ./PhotoGaleryWidget
