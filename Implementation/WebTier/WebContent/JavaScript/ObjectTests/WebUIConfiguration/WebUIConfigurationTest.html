@@ -83,10 +83,16 @@
       assertNotNull( "Selects and strores 'internationalization' element.", webUIConfiguration.getI18Element() );
    }
       
-//Internationalization, Locale
-	  function testGetI18DefaultLocale() {
-	  	assertEquals( "hu", webUIConfiguration.getI18DefaultLocale() );
-	  }
+   //Application properties
+   function testGetApplicationName() {
+      assertThat( webUIConfiguration.getApplicationName(), equalTo( "ProcessPuzzle" ));
+      assertThat( webUIConfiguration.getApplicationVersion(), equalTo( "1.0" ));
+   }
+ 
+   //Internationalization, Locale
+   function testGetI18DefaultLocale() {
+      assertEquals( "hu", webUIConfiguration.getI18DefaultLocale() );
+   }
 	  
       function testGetI18Locale() {
       	assertEquals( LOCALE_ONE, webUIConfiguration.getI18Locale( 0 ) );

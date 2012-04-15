@@ -50,6 +50,8 @@ var FixedComponentOrderedTransformer = new Class({
    },
    
    parse: function( stateString ) {
+      stateString = stateString.replace( "%7B", "{" );
+      stateString = stateString.replace( "%7D", "}" );
       var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
       var componentIndex = 0;
       
@@ -57,6 +59,7 @@ var FixedComponentOrderedTransformer = new Class({
          var componentName = this.componentList[componentIndex++];
          var componentStateString = tokenizer.nextToken();
          var componentState = eval( "(" + componentStateString.trim() + ")" );
+         componentState = this.setUnknowsValuesToNull( componentState );
          
          this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
       };
@@ -78,22 +81,5 @@ var FixedComponentOrderedTransformer = new Class({
    getComponentNames: function(){ return this.componentList; },
    
    //Protected, private helper methods
-   transformComponentStateToString : function( componentStateEntry ){
-      var valueString = "";
-      
-      var value = componentStateEntry.getValue();
-      if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
-      else if( typeOf( value ) == "object" ){
-         valueString = "{";
-         for ( var property in value ) {
-            if( valueString != "{" ) valueString += ",";
-            valueString += property + ":'" + value[property] + "'";
-         }
-         valueString += "}";
-      }
-      else valueString = "'" + value.toString() + "'";
-      
-      return valueString;
-   }.protect()
    
 });

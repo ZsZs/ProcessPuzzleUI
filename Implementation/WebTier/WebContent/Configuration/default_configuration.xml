@@ -19,7 +19,7 @@
 
 	<!-- Application -->
 	<ac:application>
-		<ac:applicationName>ProcessPuzzle</ac:applicationName>
+		<ac:applicationName>ProcessPuzzleUI</ac:applicationName>
 		<ac:version>1.0</ac:version>
 		<ac:serverWorkingFolder>c:\\processpuzzle</ac:serverWorkingFolder>
 		<ac:clientWorkingFolder>c:\\processpuzzle</ac:clientWorkingFolder>

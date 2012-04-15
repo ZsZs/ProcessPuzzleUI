@@ -24,12 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 var WebUIConfiguration = new Class({
    Implements: [Class.Singleton, Options], 
    options: {
-	  appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
-	  appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
-	  appenderComplainAboutPopUpBlockingSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@complainAboutPopUpBlocking",
+      appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
+      appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
+      appenderComplainAboutPopUpBlockingSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@complainAboutPopUpBlocking",
       appenderContainerElementIdSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@containerElementId",
-	  appenderFailCallbackSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@failCallback",
-	  appenderFocusPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@focusPopUp",
+      appenderFailCallbackSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@failCallback",
+      appenderFocusPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@focusPopUp",
       appenderHeightSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@height | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@height | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@height | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@height",
       appenderInitiallyMinimizedSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@initiallyMinimized",
       appenderLayoutSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@layoutReference",
@@ -52,6 +52,8 @@ var WebUIConfiguration = new Class({
       appenderUseOldPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@useOldPopUp",
       appenderWaitForResponseSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@waitForResponse",
       appenderWidthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@width | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@width | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@width | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@width",
+      applicationNameSelector : "/pp:processPuzzleConfiguration/ac:application/ac:applicationName",
+      applicationVersionSelector : "/pp:processPuzzleConfiguration/ac:application/ac:version",
       availableSkinElementsSelector : "wui:desktop/wui:availableSkins/wui:skin",
       defaultSkinSelector : "wui:desktop/wui:defaultSkin/@name",
       desktopConfigurationURISelector : "/pp:processPuzzleConfiguration/wui:webUI/wui:desktop/@configurationURI",
@@ -93,6 +95,8 @@ var WebUIConfiguration = new Class({
       this.setOptions( options );
       
       //Private instance variables
+      this.applicationName;
+      this.applicationVersion;
       this.availableLocales = new ArrayList();
       this.configurationURI = configurationURI;
       this.i18Element = null;
@@ -127,6 +131,8 @@ var WebUIConfiguration = new Class({
    },
    
    //Public mutators and accessors
+   getApplicationName : function() { return this.xmlResource.selectNodeText( this.options.applicationNameSelector, this.webUIElement ); },
+   getApplicationVersion : function() { return this.xmlResource.selectNodeText( this.options.applicationVersionSelector, this.webUIElement ); },
    getAvailableLocales : function() { return this.availableLocales; },
    getAvailableSkinElements : function() {return this.xmlResource.selectNodes( this.options.availableSkinElementsSelector, this.webUIElement );},
    getConfigurationElement : function() { return this.webUIElement; },
