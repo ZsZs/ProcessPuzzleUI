@@ -3003,6 +3003,50 @@ var WidgetConstuctedMessage = new Class({
 });
 
 /*
+Name: WidgetConstructionException
+
+Description: Thrown when constructing a BrowserWidget caused error.
+
+Requires: WebUIException
+
+Provides: WidgetConstructionException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var WidgetConstructionException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Constructing widget: '{widgetName}' caused the following error: '{configurationErrorDescription}'.",
+      name: "WidgetConstructionException"
+   },
+   
+   //Constructor
+   initialize : function( widgetName, configurationErrorDescription, options ){
+      this.parent( options );
+      this.parameters = { widgetName : widgetName, configurationErrorDescription : configurationErrorDescription };
+   },
+   
+   //Properties
+   getConfigurationErrorDescription : function() { return this.parameters['ConfigurationErrorDescription']; },
+   getWidgetName : function() { return this.parameters['widgetName']; },
+});
+/*
 Name: 
     - HtmlElementFactory
 
@@ -3657,6 +3701,8 @@ var FixedComponentOrderedTransformer = new Class({
    },
    
    parse: function( stateString ) {
+      stateString = stateString.replace( "%7B", "{" );
+      stateString = stateString.replace( "%7D", "}" );
       var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
       var componentIndex = 0;
       
@@ -3664,6 +3710,7 @@ var FixedComponentOrderedTransformer = new Class({
          var componentName = this.componentList[componentIndex++];
          var componentStateString = tokenizer.nextToken();
          var componentState = eval( "(" + componentStateString.trim() + ")" );
+         componentState = this.setUnknowsValuesToNull( componentState );
          
          this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
       };
@@ -3685,23 +3732,6 @@ var FixedComponentOrderedTransformer = new Class({
    getComponentNames: function(){ return this.componentList; },
    
    //Protected, private helper methods
-   transformComponentStateToString : function( componentStateEntry ){
-      var valueString = "";
-      
-      var value = componentStateEntry.getValue();
-      if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
-      else if( typeOf( value ) == "object" ){
-         valueString = "{";
-         for ( var property in value ) {
-            if( valueString != "{" ) valueString += ",";
-            valueString += property + ":'" + value[property] + "'";
-         }
-         valueString += "}";
-      }
-      else valueString = "'" + value.toString() + "'";
-      
-      return valueString;
-   }.protect()
    
 });
 /*
@@ -7786,7 +7816,7 @@ var HierarchicalMenuWidget = new Class({
    
    //Private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructMenuItems, this.fireCurrentSelection, this.finalizeConstruction );
+      this.constructionChain.chain( this.constructMenuItems, this.determineCurrentItemId, this.fireCurrentSelection, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
@@ -7824,6 +7854,10 @@ var HierarchicalMenuWidget = new Class({
    }.protect(),
    
    determineCurrentItemId : function(){
+      if( this.options.contextItemId ){
+         if( this.findItemById( this.options.contextItemId ) == null )
+            throw new WidgetConstructionException( this.options.componentName, "ContextItemId is invalid" );
+      }
       if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
       this.constructionChain.callChain();
    }.protect(),
@@ -14248,12 +14282,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 var WebUIConfiguration = new Class({
    Implements: [Class.Singleton, Options], 
    options: {
-	  appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
-	  appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
-	  appenderComplainAboutPopUpBlockingSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@complainAboutPopUpBlocking",
+      appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
+      appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
+      appenderComplainAboutPopUpBlockingSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@complainAboutPopUpBlocking",
       appenderContainerElementIdSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@containerElementId",
-	  appenderFailCallbackSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@failCallback",
-	  appenderFocusPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@focusPopUp",
+      appenderFailCallbackSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@failCallback",
+      appenderFocusPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@focusPopUp",
       appenderHeightSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@height | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@height | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@height | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@height",
       appenderInitiallyMinimizedSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@initiallyMinimized",
       appenderLayoutSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@layoutReference",
@@ -14276,6 +14310,8 @@ var WebUIConfiguration = new Class({
       appenderUseOldPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@useOldPopUp",
       appenderWaitForResponseSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@waitForResponse",
       appenderWidthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@width | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@width | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@width | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@width",
+      applicationNameSelector : "/pp:processPuzzleConfiguration/ac:application/ac:applicationName",
+      applicationVersionSelector : "/pp:processPuzzleConfiguration/ac:application/ac:version",
       availableSkinElementsSelector : "wui:desktop/wui:availableSkins/wui:skin",
       defaultSkinSelector : "wui:desktop/wui:defaultSkin/@name",
       desktopConfigurationURISelector : "/pp:processPuzzleConfiguration/wui:webUI/wui:desktop/@configurationURI",
@@ -14317,6 +14353,8 @@ var WebUIConfiguration = new Class({
       this.setOptions( options );
       
       //Private instance variables
+      this.applicationName;
+      this.applicationVersion;
       this.availableLocales = new ArrayList();
       this.configurationURI = configurationURI;
       this.i18Element = null;
@@ -14351,6 +14389,8 @@ var WebUIConfiguration = new Class({
    },
    
    //Public mutators and accessors
+   getApplicationName : function() { return this.xmlResource.selectNodeText( this.options.applicationNameSelector, this.webUIElement ); },
+   getApplicationVersion : function() { return this.xmlResource.selectNodeText( this.options.applicationVersionSelector, this.webUIElement ); },
    getAvailableLocales : function() { return this.availableLocales; },
    getAvailableSkinElements : function() {return this.xmlResource.selectNodes( this.options.availableSkinElementsSelector, this.webUIElement );},
    getConfigurationElement : function() { return this.webUIElement; },
@@ -15412,8 +15452,7 @@ var WebUIController = new Class({
       showSplashForm : false,
       splashFormUri : "Desktops/Images/SplashForm.png",
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
-      urlRefreshPeriod : 3000,
-      window : window
+      urlRefreshPeriod : 3000
    },
    
    //Constructors
@@ -15439,7 +15478,7 @@ var WebUIController = new Class({
       this.refreshUrlTimer;
       this.skin;
       this.splashForm;
-      this.stateManager = new ComponentStateManager();
+      this.stateManager;
       this.userName;
       this.userLocation;
       this.warningContainer;
@@ -15450,7 +15489,7 @@ var WebUIController = new Class({
          if( this.options.showSplashForm ) this.showSplashForm();
          this.loadWebUIConfiguration();
          this.configureLogger();
-
+         this.instantiateComponentStateManager();
          this.restoreComponentsState(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
@@ -15500,7 +15539,7 @@ var WebUIController = new Class({
          this.desktop.destroy();
          this.webUIConfiguration.release();
          this.resourceBundle.release();
-         this.options.window.location.hash = "";
+         window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
       }
@@ -15533,10 +15572,10 @@ var WebUIController = new Class({
    restoreComponentsState : function(){
       this.logger.debug( this.options.componentName + ".restoreComponentsState() started." );
       this.stateManager.restore();
-      if( this.options.window.location.hash.substring(2)) {
+      if( window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
-            this.stateManager.parseUri( this.options.window.location.hash.substring(2) );
+            this.stateManager.parseUri( window.location.hash.substring(2) );
             this.messageBus.notifySubscribers( new WebUIStateRestoredMessage() );
          }catch( e ){
             this.stateManager.parse( currentState );
@@ -15552,7 +15591,7 @@ var WebUIController = new Class({
 	   var stateAsString = this.stateManager.toUri(); 
 	   if( this.recentHash != stateAsString ){
 	      this.recentHash = stateAsString;
-	      this.options.window.location.hash = "!" + stateAsString;
+	      window.location.hash = "!" + stateAsString;
 	   }
    },
    
@@ -15620,8 +15659,8 @@ var WebUIController = new Class({
    }.protect(),
 	
    determineCurrentHash: function() {
-      if( this.options.window.location.hash.indexOf( "#" ) != -1 )
-         return this.options.window.location.hash.substring(1);
+      if( window.location.hash.indexOf( "#" ) != -1 )
+         return window.location.hash.substring(1);
       else return "";
    }.protect(),
 	
@@ -15674,6 +15713,13 @@ var WebUIController = new Class({
          }
       }
       return returnValue;	
+   }.protect(),
+   
+   instantiateComponentStateManager : function(){
+      var applicationSpecificName = this.webUIConfiguration.getApplicationName();
+      applicationSpecificName += "." + this.webUIConfiguration.getApplicationVersion();
+      applicationSpecificName += ".ComponentStateManager";
+      this.stateManager = new ComponentStateManager({ componentName : applicationSpecificName });
    }.protect(),
 	
    loadInternationalizations : function () {
