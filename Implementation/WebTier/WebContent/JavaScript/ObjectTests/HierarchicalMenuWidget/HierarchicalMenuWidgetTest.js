@@ -12,6 +12,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          { method : 'construct_whenShowSubItemsIsFalse_createsSingleLevelListElements', isAsynchron : true },
          { method : 'construct_whenShowSubItemsIsTrue_createsEntireList', isAsynchron : true },
          { method : 'construct_whenContextItemIdIsGiven_skipsOutOfContextElementsCreation', isAsynchron : true },
+         { method : 'construct_whenContextItemIdIsInvalid_throwsException', isAsynchron : false },
          { method : 'construct_whenComponentStateIsAvailable_overwritesDefaultValues', isAsynchron : true },
          { method : 'onSelection_broadcastMenuSelectedMessage', isAsynchron : true }, 
          { method : 'webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reloadsMenu', isAsynchron : true },
@@ -152,6 +153,13 @@ window.HierarchicalMenuWidgetTest = new Class( {
             this.testMethodReady();
          }.bind( this )
       ).callChain();
+   },
+   
+   construct_whenContextItemIdIsInvalid_throwsexception : function() {
+      this.menuWidget.givenOptions.contextItemId = "/MenuWidget/mainItemOne";
+      this.menuWidget.unmarshall();
+      
+      assertThat( this.menuWidget.construct(), raises( WidgetConstructionException ));
    },
    
    construct_whenComponentStateIsAvailable_overwritesDefaultValues : function() {
