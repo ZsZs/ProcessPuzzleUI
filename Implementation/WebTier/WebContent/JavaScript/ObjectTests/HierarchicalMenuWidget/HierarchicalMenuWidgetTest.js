@@ -155,11 +155,15 @@ window.HierarchicalMenuWidgetTest = new Class( {
       ).callChain();
    },
    
-   construct_whenContextItemIdIsInvalid_throwsexception : function() {
-      this.menuWidget.givenOptions.contextItemId = "/MenuWidget/mainItemOne";
+   construct_whenContextItemIdIsInvalid_throwsException : function() {
+      this.menuWidget.givenOptions.contextItemId = "/invalidContext";
       this.menuWidget.unmarshall();
       
-      assertThat( this.menuWidget.construct(), raises( WidgetConstructionException ));
+      try{
+         this.menuWidget.construct();         
+      }catch( e ){
+         assertThat( e, JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
+      }
    },
    
    construct_whenComponentStateIsAvailable_overwritesDefaultValues : function() {
@@ -264,6 +268,10 @@ window.HierarchicalMenuWidgetTest = new Class( {
    },
    
    //Protected, private helper methods
+   callMenuWidgetConstruct : function(){
+      this.menuWidget.construct();
+   },
+   
    onSelectCallBack : function( webUIMessage ) {
       this.callBackMessage = webUIMessage;
       this.callBackWasCalled = true;
