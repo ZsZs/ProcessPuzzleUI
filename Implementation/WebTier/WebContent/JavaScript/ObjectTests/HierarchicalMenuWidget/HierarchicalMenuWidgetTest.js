@@ -12,6 +12,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          { method : 'construct_whenShowSubItemsIsFalse_createsSingleLevelListElements', isAsynchron : true },
          { method : 'construct_whenShowSubItemsIsTrue_createsEntireList', isAsynchron : true },
          { method : 'construct_whenContextItemIdIsGiven_skipsOutOfContextElementsCreation', isAsynchron : true },
+         { method : 'construct_whenContextItemIdIsInvalid_throwsException', isAsynchron : false },
          { method : 'construct_whenComponentStateIsAvailable_overwritesDefaultValues', isAsynchron : true },
          { method : 'onSelection_broadcastMenuSelectedMessage', isAsynchron : true }, 
          { method : 'webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reloadsMenu', isAsynchron : true },
@@ -154,6 +155,17 @@ window.HierarchicalMenuWidgetTest = new Class( {
       ).callChain();
    },
    
+   construct_whenContextItemIdIsInvalid_throwsException : function() {
+      this.menuWidget.givenOptions.contextItemId = "/invalidContext";
+      this.menuWidget.unmarshall();
+      
+      try{
+         this.menuWidget.construct();         
+      }catch( e ){
+         assertThat( e, JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
+      }
+   },
+   
    construct_whenComponentStateIsAvailable_overwritesDefaultValues : function() {
       this.testCaseChain.chain(
          function(){
@@ -256,6 +268,10 @@ window.HierarchicalMenuWidgetTest = new Class( {
    },
    
    //Protected, private helper methods
+   callMenuWidgetConstruct : function(){
+      this.menuWidget.construct();
+   },
+   
    onSelectCallBack : function( webUIMessage ) {
       this.callBackMessage = webUIMessage;
       this.callBackWasCalled = true;

@@ -114,7 +114,7 @@ var HierarchicalMenuWidget = new Class({
    
    //Private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructMenuItems, this.fireCurrentSelection, this.finalizeConstruction );
+      this.constructionChain.chain( this.constructMenuItems, this.determineCurrentItemId, this.fireCurrentSelection, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
@@ -152,6 +152,10 @@ var HierarchicalMenuWidget = new Class({
    }.protect(),
    
    determineCurrentItemId : function(){
+      if( this.options.contextItemId ){
+         if( this.findItemById( this.options.contextItemId ) == null )
+            throw new WidgetConstructionException( this.options.componentName, "ContextItemId is invalid" );
+      }
       if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
       this.constructionChain.callChain();
    }.protect(),
