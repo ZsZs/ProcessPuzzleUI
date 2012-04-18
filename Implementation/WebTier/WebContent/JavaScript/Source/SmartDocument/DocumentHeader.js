@@ -40,6 +40,10 @@ var DocumentHeader = new Class({
    },
    
    //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.parent( contextElement, where );
+   },
+   
    unmarshall: function(){
       this.parent();
    }

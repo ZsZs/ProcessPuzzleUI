@@ -44,6 +44,8 @@ var DocumentElement = new Class({
    
    //Constructor
    initialize: function( definitionElement, bundle, options ){
+      assertThat( definitionElement, not( nil() ));
+      assertThat( bundle, not( nil() ));
       this.setOptions( options );
 
       //Protected, private variables
@@ -121,6 +123,7 @@ var DocumentElement = new Class({
    getId: function() { return this.id; },
    getPlugin: function() { return this.plugin; },
    getReference: function() { return this.reference; },
+   getResourceBundle: function() { return this.resourceBundle; },
    getState: function() { return this.status; },
    getStyle: function() { return this.style; },
    getTag: function() { return this.tag; },

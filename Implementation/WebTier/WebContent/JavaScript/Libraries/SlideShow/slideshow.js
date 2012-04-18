@@ -950,7 +950,7 @@
             }
          }
          
-         var units = Math.floor( div[width] / li[width] );
+         var units = div[width] >= li[width] ? Math.floor( div[width] / li[width] ) : 1;
          var x = Math.ceil( this.data.images.length / units );
          var r = this.data.images.length % units;
          var len = x * li[length], ul = thumbnails.getElement( 'ul' ).setStyle( length, len );
