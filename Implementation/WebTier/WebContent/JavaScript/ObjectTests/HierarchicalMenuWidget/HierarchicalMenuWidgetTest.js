@@ -91,6 +91,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
       
       assertThat( this.menuWidget.getState(), equalTo( BrowserWidget.States.UNMARSHALLED ));
       assertThat( this.menuWidget.getSelectedItemClass(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "//pp:widgetDefinition/options/option[@name='selectedItemStyle']/@value" ))));
+      assertThat( this.menuWidget.getAccordionBehaviour(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "//pp:widgetDefinition/options/option[@name='accordionBehaviour']/@value" ))));
    },
    
    unmarshall_instantiatesAndUnmarshallsRootMenu : function(){

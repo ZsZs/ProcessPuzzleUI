@@ -30,9 +30,10 @@
          <plugin>
             <widget name="HierarchicalMenuWidget">
                <options>
+                  <option name="accordionBehaviour" value="true" />
                   <option name="componentName" value="'exmapleMenuWidget'"/>
                   <option name="listStyle" value="'accordion'"/>
-                  <option name="showSubItems" value="true" />
+                  <option name="showSubItems" value="false" />
                   <option name="widgetContainerId" value="'menuExampleContainer'"/>
                   <option name="widgetDataURI" value="'Content/WidgetExamples/MenuDefinition.xml'"/>
                   <option name="widgetDefinitionURI" value="'Content/WidgetExamples/MenuWidgetDefinition.xml'"/>

@@ -33,6 +33,8 @@ var MenuItem = new Class({
    Binds: ['onClick'],
    
    options : {
+      accordionBehaviour : false,
+      accordionParent : "",
       captionSelector : "@caption",
       componentName : "MenuItem",
       contextItemId : "",
@@ -71,7 +73,7 @@ var MenuItem = new Class({
    construct: function( parentElement ){
       assertThat( parentElement, not( nil() ));
       this.parentHtmlElement = parentElement;
-      if( this.needsToBeDisplayed() ) {
+      if( this.state == BrowserWidget.States.UNMARSHALLED && this.needsToBeDisplayed() ) {
          this.instantiateHtmlElements();
          this.state = BrowserWidget.States.CONSTRUCTED;
          if( this.isDefault ) this.fireEvent( 'onDefaultItem', this );
@@ -95,7 +97,8 @@ var MenuItem = new Class({
              this.isContextItemUndefined() && this.options.showSubItems ||
              this.isTheContextItem() ||
              this.isDirectChildOfContextItem() ||
-             this.isChildOfContextItem() && this.options.showSubItems;
+             this.isChildOfContextItem() && this.options.showSubItems ||
+             this.isDirectChildOfAccordionParent() && this.options.accordionBehaviour;
    },
    
    onClick : function() {
@@ -134,12 +137,20 @@ var MenuItem = new Class({
       return this.options.parentItemId != "" && this.getFullId().contains( this.options.contextItemId + this.options.idPathSeparator );
    }.protect(),
    
+   isAccordionParentUndefined: function(){
+      return this.options.accordionParent == "";
+   }.protect(),
+   
    isContextItemUndefined: function(){
       return this.options.contextItemId == "";
    }.protect(),
    
    isDirectChildOfContextItem: function(){
       return !this.isContextItemUndefined() && (( this.options.contextItemId + this.options.idPathSeparator + this.menuItemId ) == this.getFullId());
+   }.protect(),
+   
+   isDirectChildOfAccordionParent: function(){
+      return !this.isAccordionParentUndefined() && (( this.options.accordionParent + this.options.idPathSeparator + this.menuItemId ) == this.getFullId());
    }.protect(),
    
    isDirectChildOfRootItem: function(){

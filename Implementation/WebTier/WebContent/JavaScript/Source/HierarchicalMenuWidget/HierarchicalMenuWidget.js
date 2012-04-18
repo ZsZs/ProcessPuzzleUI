@@ -35,6 +35,7 @@ var HierarchicalMenuWidget = new Class({
    Binds : ['constructMenuItems', 'destroyMenuItems', 'determineCurrentItemId', 'fireCurrentSelection', 'onDefaultItem', 'onSelection'],
    
    options : {
+      accordionBehaviour : false,
       componentName : "HierarchicalMenuWidget",
       contextItemId : "",
       idPathSeparator : "/",
@@ -107,6 +108,7 @@ var HierarchicalMenuWidget = new Class({
    },
    
    //Properties
+   getAccordionBehaviour : function() { return this.options.accordionBehaviour; },
    getContextItemId : function() { return this.options.contextItemId; },
    getCurrentItemId : function() { return this.currentItemId; },
    getRootMenu : function() { return this.rootMenu; },
@@ -210,6 +212,7 @@ var HierarchicalMenuWidget = new Class({
       this.standardizeContextItemId();
       if( rootMenuElement ){
          this.rootMenu = new RootMenu( rootMenuElement, this.elementFactory, {
+            accordionBehaviour : this.options.accordionBehaviour,
             contextItemId : this.options.contextItemId,
             idPathSeparator : this.options.idPathSeparator,
             menuStyle : this.options.menuStyle,

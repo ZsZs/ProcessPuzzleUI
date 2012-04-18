@@ -8,6 +8,8 @@ window.CompositeMenuTest = new Class( {
          { method : 'unmarshall_instantiatesSubItems', isAsynchron : false },
          { method : 'construct_constructsListElement', isAsynchron : false },
          { method : 'construct_whenEnabled_constructsSubItems', isAsynchron : false },
+         { method : 'onClick_whenAccordionBehaviourEnabled_constructsSubItems', isAsynchron : false },
+         { method : 'onClick_whenAccordionBehaviourEnabledAndItemIsExpanded_destroysSubItems', isAsynchron : false },
          { method : 'destroy_destroysAllElements', isAsynchron : false }]
    },
 
@@ -79,7 +81,28 @@ window.CompositeMenuTest = new Class( {
       this.compositeMenu.unmarshall();
       this.compositeMenu.construct( this.widgetContainerElement );
       
-      assertThat( $( "MenuWidget" ).getChildren( 'li' ).length, equalTo( this.compositeMenu.getSubItems().size() ));
+      assertThat( $( "MenuWidget" ).getElements( 'li' ).length, equalTo( XmlResource.selectNodes( "//menuItem", this.compositeMenuDefinition ).length -1 ));
+   },
+
+   onClick_whenAccordionBehaviourEnabled_constructsSubItems : function(){
+      this.compositeMenu.options.accordionBehaviour = true;
+      this.compositeMenu.unmarshall();
+      this.compositeMenu.construct( this.widgetContainerElement );
+      assumeThat( $( "MenuWidget" ).getChildren( 'li' ).length, equalTo( this.compositeMenu.getSubItems().size() ));
+      
+      this.compositeMenu.getSubItems().get( 0 ).onClick();
+      
+      assertThat( $( "MenuWidget" ).getElements( 'li' ).length, equalTo( this.compositeMenu.getSubItems().size() + this.compositeMenu.getSubItems().get( 0 ).getSubItems().size() ));
+   },
+
+   onClick_whenAccordionBehaviourEnabledAndItemIsExpanded_destroysSubItems : function(){
+      this.compositeMenu.options.accordionBehaviour = true;
+      this.compositeMenu.unmarshall();
+      this.compositeMenu.construct( this.widgetContainerElement );
+      this.compositeMenu.getSubItems().get( 0 ).onClick();
+      this.compositeMenu.getSubItems().get( 0 ).onClick();
+      
+      assumeThat( $( "MenuWidget" ).getElements( 'li' ).length, equalTo( this.compositeMenu.getSubItems().size() ));
    },
 
    destroy_destroysAllElements : function(){
