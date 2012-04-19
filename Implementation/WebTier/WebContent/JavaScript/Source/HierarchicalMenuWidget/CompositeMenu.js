@@ -44,11 +44,18 @@ var CompositeMenu = new Class({
    initialize: function( definition, elementFactory, options ){
       this.parent( definition, elementFactory, options );
 
+      this.isExpanded;
       this.listElement;
       this.subItems = new ArrayList();
    },
    
    //Public accessor and mutator methods
+   collapse: function(){
+      this.destroySubItems();
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      this.isExpanded = false;
+   },
+   
    construct: function( parentElement ){
       this.parent( parentElement );
       this.constructSubItems();
@@ -58,6 +65,14 @@ var CompositeMenu = new Class({
       if( this.options.showSubItems ) this.destroySubItems();
       if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
       this.parent();
+   },
+   
+   expand: function(){
+      if( this.isExpanded != undefined ) this.unmarshall();
+      this.options.accordionParent = this.getFullId();
+      this.createListContainerElement();
+      this.constructSubItems();
+      this.isExpanded = true;
    },
    
    findItemById: function( itemFullId ){
@@ -73,6 +88,14 @@ var CompositeMenu = new Class({
       }
       
       return foundItem;
+   },
+   
+   onClick : function() {
+      if( this.options.accordionBehaviour ){
+         if( !this.isExpanded ) this.expand();
+         else this.collapse();
+      };
+      this.parent();
    },
    
    onDefaultItem: function( menuItem ){
@@ -106,8 +129,14 @@ var CompositeMenu = new Class({
    
    constructSubItems: function(){
       this.subItems.each( function( subItem, index ){
+         subItem.options.accordionParent = this.options.accordionParent;
          subItem.construct( this.parentHtmlElement );
       }.bind( this ));
+   }.protect(),
+   
+   createListContainerElement: function(){
+      this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
+      this.parentHtmlElement = this.listElement;
    }.protect(),
    
    destroySubItems: function(){
@@ -122,9 +151,7 @@ var CompositeMenu = new Class({
       if( !this.isTheContextItem() ) this.parent();
       
       if( this.anyChildNeedsToBeDisplayed() ){
-         this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
-         this.parentHtmlElement = this.listElement;
-         
+         this.createListContainerElement();         
          if( this.isTheRootItem() || this.isTheContextItem() ) this.listElement.addClass( this.options.menuStyle );
       }
    }.protect(),
@@ -138,6 +165,7 @@ var CompositeMenu = new Class({
       if( subElements ){
          subElements.each( function( subItemElement, index ){
             var subItem = MenuItemFactory.create( subItemElement, this.elementFactory, { 
+               accordionBehaviour : this.options.accordionBehaviour,
                contextItemId : this.options.contextItemId,
                idPathSeparator : this.options.idPathSeparator,
                menuStyle : this.options.menuStyle,
