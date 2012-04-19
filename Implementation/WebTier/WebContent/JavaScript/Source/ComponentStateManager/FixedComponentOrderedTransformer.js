@@ -52,6 +52,7 @@ var FixedComponentOrderedTransformer = new Class({
    parse: function( stateString ) {
       stateString = stateString.replace( "%7B", "{" );
       stateString = stateString.replace( "%7D", "}" );
+      stateString = stateString.replace( "%27", "'" );
       var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
       var componentIndex = 0;
       
