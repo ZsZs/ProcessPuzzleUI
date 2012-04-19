@@ -7411,6 +7411,8 @@ var MenuItem = new Class({
    Binds: ['onClick'],
    
    options : {
+      accordionBehaviour : false,
+      accordionParent : "",
       captionSelector : "@caption",
       componentName : "MenuItem",
       contextItemId : "",
@@ -7449,7 +7451,7 @@ var MenuItem = new Class({
    construct: function( parentElement ){
       assertThat( parentElement, not( nil() ));
       this.parentHtmlElement = parentElement;
-      if( this.needsToBeDisplayed() ) {
+      if( this.state == BrowserWidget.States.UNMARSHALLED && this.needsToBeDisplayed() ) {
          this.instantiateHtmlElements();
          this.state = BrowserWidget.States.CONSTRUCTED;
          if( this.isDefault ) this.fireEvent( 'onDefaultItem', this );
@@ -7473,7 +7475,8 @@ var MenuItem = new Class({
              this.isContextItemUndefined() && this.options.showSubItems ||
              this.isTheContextItem() ||
              this.isDirectChildOfContextItem() ||
-             this.isChildOfContextItem() && this.options.showSubItems;
+             this.isChildOfContextItem() && this.options.showSubItems ||
+             this.isDirectChildOfAccordionParent() && this.options.accordionBehaviour;
    },
    
    onClick : function() {
@@ -7512,12 +7515,20 @@ var MenuItem = new Class({
       return this.options.parentItemId != "" && this.getFullId().contains( this.options.contextItemId + this.options.idPathSeparator );
    }.protect(),
    
+   isAccordionParentUndefined: function(){
+      return this.options.accordionParent == "";
+   }.protect(),
+   
    isContextItemUndefined: function(){
       return this.options.contextItemId == "";
    }.protect(),
    
    isDirectChildOfContextItem: function(){
       return !this.isContextItemUndefined() && (( this.options.contextItemId + this.options.idPathSeparator + this.menuItemId ) == this.getFullId());
+   }.protect(),
+   
+   isDirectChildOfAccordionParent: function(){
+      return !this.isAccordionParentUndefined() && (( this.options.accordionParent + this.options.idPathSeparator + this.menuItemId ) == this.getFullId());
    }.protect(),
    
    isDirectChildOfRootItem: function(){
@@ -7590,11 +7601,18 @@ var CompositeMenu = new Class({
    initialize: function( definition, elementFactory, options ){
       this.parent( definition, elementFactory, options );
 
+      this.isExpanded;
       this.listElement;
       this.subItems = new ArrayList();
    },
    
    //Public accessor and mutator methods
+   collapse: function(){
+      this.destroySubItems();
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      this.isExpanded = false;
+   },
+   
    construct: function( parentElement ){
       this.parent( parentElement );
       this.constructSubItems();
@@ -7604,6 +7622,14 @@ var CompositeMenu = new Class({
       if( this.options.showSubItems ) this.destroySubItems();
       if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
       this.parent();
+   },
+   
+   expand: function(){
+      if( this.isExpanded != undefined ) this.unmarshall();
+      this.options.accordionParent = this.getFullId();
+      this.createListContainerElement();
+      this.constructSubItems();
+      this.isExpanded = true;
    },
    
    findItemById: function( itemFullId ){
@@ -7619,6 +7645,14 @@ var CompositeMenu = new Class({
       }
       
       return foundItem;
+   },
+   
+   onClick : function() {
+      if( this.options.accordionBehaviour ){
+         if( !this.isExpanded ) this.expand();
+         else this.collapse();
+      };
+      this.parent();
    },
    
    onDefaultItem: function( menuItem ){
@@ -7652,8 +7686,14 @@ var CompositeMenu = new Class({
    
    constructSubItems: function(){
       this.subItems.each( function( subItem, index ){
+         subItem.options.accordionParent = this.options.accordionParent;
          subItem.construct( this.parentHtmlElement );
       }.bind( this ));
+   }.protect(),
+   
+   createListContainerElement: function(){
+      this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
+      this.parentHtmlElement = this.listElement;
    }.protect(),
    
    destroySubItems: function(){
@@ -7668,9 +7708,7 @@ var CompositeMenu = new Class({
       if( !this.isTheContextItem() ) this.parent();
       
       if( this.anyChildNeedsToBeDisplayed() ){
-         this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
-         this.parentHtmlElement = this.listElement;
-         
+         this.createListContainerElement();         
          if( this.isTheRootItem() || this.isTheContextItem() ) this.listElement.addClass( this.options.menuStyle );
       }
    }.protect(),
@@ -7684,6 +7722,7 @@ var CompositeMenu = new Class({
       if( subElements ){
          subElements.each( function( subItemElement, index ){
             var subItem = MenuItemFactory.create( subItemElement, this.elementFactory, { 
+               accordionBehaviour : this.options.accordionBehaviour,
                contextItemId : this.options.contextItemId,
                idPathSeparator : this.options.idPathSeparator,
                menuStyle : this.options.menuStyle,
@@ -7737,6 +7776,7 @@ var HierarchicalMenuWidget = new Class({
    Binds : ['constructMenuItems', 'destroyMenuItems', 'determineCurrentItemId', 'fireCurrentSelection', 'onDefaultItem', 'onSelection'],
    
    options : {
+      accordionBehaviour : false,
       componentName : "HierarchicalMenuWidget",
       contextItemId : "",
       idPathSeparator : "/",
@@ -7809,6 +7849,7 @@ var HierarchicalMenuWidget = new Class({
    },
    
    //Properties
+   getAccordionBehaviour : function() { return this.options.accordionBehaviour; },
    getContextItemId : function() { return this.options.contextItemId; },
    getCurrentItemId : function() { return this.currentItemId; },
    getRootMenu : function() { return this.rootMenu; },
@@ -7912,6 +7953,7 @@ var HierarchicalMenuWidget = new Class({
       this.standardizeContextItemId();
       if( rootMenuElement ){
          this.rootMenu = new RootMenu( rootMenuElement, this.elementFactory, {
+            accordionBehaviour : this.options.accordionBehaviour,
             contextItemId : this.options.contextItemId,
             idPathSeparator : this.options.idPathSeparator,
             menuStyle : this.options.menuStyle,
