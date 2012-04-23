@@ -125,7 +125,7 @@ var ScrollBar = new Class({
    Implements : Options,
    options : {
       selector : '.scroll',
-      increment : 30,
+      increment : 15,
       upBtnClass : 'upBtn',
       downBtnClass : 'downBtn',
       scrollBarClass : 'scrollBar',
@@ -173,7 +173,7 @@ var ScrollBar = new Class({
    },
    
    destroy : function(){
-      this.scrollArea.destroy();
+      if( this.scrollArea ) this.scrollArea.destroy();
    },
 
    loadContent : function( content ) {

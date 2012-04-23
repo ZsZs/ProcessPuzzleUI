@@ -34,13 +34,13 @@ var ScrollArea = new Class({
             'onScrollableElementMouseWheel',
             'onWindowResize'],
    options : {
-      contentElementClass : 'contentEl',
+      contentViewElementClass : 'contentEl',
       disabledOpacity : 0,
       downBtnClass : 'downBtn',
       handleOpacity : 1,
       handleActiveOpacity : 0.85,
       fullWindowMode : false,
-      increment : 30,
+      increment : 15,
       paddingElementClass : 'paddingEl',
       scrollBarClass : 'scrollBar',
       scrollHandleClass : 'scrollHandle',
@@ -57,30 +57,35 @@ var ScrollArea = new Class({
       this.setOptions( options );
 
       this.borderHeight;
-      this.contentEl;
-      this.scrollableElement = scrollableElement.setProperty( 'rel', 'MooScrollArea' );
+      this.contentViewElement;
+      this.contentWrapperElement;
+      this.downInterval;
+      this.hasFocusTimeout;
+      this.scrollableElement = scrollableElement;
       this.scrollableElementPadding = this.scrollableElement.getStyles( 'padding-top', 'padding-right', 'padding-bottom', 'padding-left' );
+      this.sliderTimeout;
+      this.step;
       this.overHang;
-      this.paddingEl;
       this.paddingHeight;
       this.paddingWidth;
       this.slider;
+      this.upInterval;
       this.viewPort = { x : $( window ).getSize().x, y : $( window ).getSize().y };
       this.windowFxScroll = windowFxScroll;
    },
 
    // Public accessors and mutators
    construct : function() {
-      this.createContentElement();
-      this.adjustScrollableElementSize();
+      this.createContentViewElement();
       this.determineBorderHeight();
-      this.setContentElementStyle();
       this.createPaddingElement();
+      this.setContentElementStyle();
       
       if( this.options.fullWindowMode )  this.switchToFullWindowMode();
       this.createControlElements();
       this.fixIE6CSSbugs();
       this.determineOverHang();
+      this.adjustContentWrapperWidth();
       this.setHandleHeight();
 
       if( this.overHang <= 0 ) { this.greyOut(); return; }
@@ -92,7 +97,7 @@ var ScrollArea = new Class({
       this.addDocumentEvents();
       this.addWindowEvents();
       this.addUpButtonEvents();
-      this.addDownButtonEvents();
+      this.addDownButtonEvents();      
    },
 
    destroy : function() {
@@ -103,7 +108,10 @@ var ScrollArea = new Class({
       this.removeScrollHandleEvents();
       this.removeUpButtonEvents();
       this.removeWindowEvents();
+
+      clearInterval( this.sliderTimeout );
       
+      this.restoreContentElementPosition();
       this.destroyControlElements();
       this.destroyPaddingElement();
       this.destroyContentElement();
@@ -111,7 +119,7 @@ var ScrollArea = new Class({
 
    loadContent : function(content) {
       this.slider.set( 0 );
-      this.paddingEl.empty().set( 'html', content );
+      this.contentWrapperElement.empty().set( 'html', content );
       this.refresh();
    },
    
@@ -120,21 +128,21 @@ var ScrollArea = new Class({
    },
    
    onDocumentKeyDown : function( e ){
-      if ((this.hasFocus || this.options.fullWindowMode) && (e.key === 'down' || e.key === 'space' || e.key === 'up')) {
+      if(( this.hasFocus || this.options.fullWindowMode ) && ( e.key === 'down' || e.key === 'space' || e.key === 'up' )) {
          this.scrollableElement.fireEvent( 'keydown', e );
       }
    },
    
    onDocumentMouseUp : function( e ){
       this.scrollHandle.removeClass( this.options.scrollHandleClass + '-Active' ).setStyle( 'opacity', this.options.handleOpacity );
-      this.upBtn.removeClass( this.options.upBtnClass + '-Active' );
-      this.downBtn.removeClass( this.options.downBtnClass + '-Active' );
+      this.stopScrollUp();
+      this.stopScrollDown();
    },
    
    onScrollableElementClick : function( e ){
       this.hasFocus = true;
       this.hasFocusTimeout = (function() {
-         $clear( this.hasFocusTimeout );
+         clearInterval( this.hasFocusTimeout );
          this.hasFocus = true;
       }.bind( this )).delay( 50 );
    },
@@ -156,10 +164,10 @@ var ScrollArea = new Class({
    },
    
    onWindowResize : function( e ){
-      $clear( this.refreshTimeout );
+      clearInterval( this.refreshTimeout );
       if (this.options.fullWindowMode) {
          this.refreshTimeout = (function() {
-            $clear( this.refreshTimeout );
+            clearInterval( this.refreshTimeout );
             if (this.viewPort.x != $( window ).getSize().x || this.viewPort.y != $( window ).getSize().y) {
                this.refresh();
                this.viewPort.x = $( window ).getSize().x;
@@ -171,23 +179,20 @@ var ScrollArea = new Class({
 
    refresh : function() {
       var scrollPercent = Math.round( ((100 * this.step) / this.overHang) );
-      if (this.options.fullWindowMode) {
-         this.scrollableElement.setStyles( {
-            width : '100%',
-            height : '100%'
-         });
+      if( this.options.fullWindowMode ) {
+         this.scrollableElement.setStyles({ width : '100%', height : '100%' });
       }
       this.fixIE6CSSbugs();
-      this.overHang = this.paddingEl.getSize().y - this.scrollableElement.getSize().y;
+      this.overHang = this.contentWrapperElement.getSize().y - this.scrollableElement.getSize().y;
       this.setHandleHeight();
-      if (this.overHang <= 0) {
+      if( this.overHang <= 0 ) {
          this.greyOut();
          return;
       } else {
          this.unGrey();
       }
       this.scrollHandle.removeEvents();
-      var newStep = Math.round( (scrollPercent * this.overHang) / 100 );
+      var newStep = Math.round(( scrollPercent * this.overHang) / 100 );
       this.initSlider();
       this.slider.set( newStep );
 
@@ -200,15 +205,15 @@ var ScrollArea = new Class({
          this.smoothMooScroll = new SmoothMooScroll( {
             toAnchor : this.options.smoothMooScroll.toAnchor,
             toMooScrollArea : this.options.smoothMooScroll.toMooScrollArea
-         }, this.contentEl, this.windowFxScroll );
+         }, this.contentViewElement, this.windowFxScroll );
       }
    },
 
    // Protected, private helper methods
    addContentElementEvents : function(){
-      this.contentEl.addEvents({
+      this.contentViewElement.addEvents({
          'scroll' : function(e) {
-            this.slider.set( this.contentEl.getScroll().y );
+            this.slider.set( this.contentViewElement.getScroll().y );
          }.bind( this )
       });
    }.protect(),
@@ -223,33 +228,22 @@ var ScrollArea = new Class({
    
    addDownButtonEvents : function(){
       this.downBtn.addEvents({
-         'mousedown' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
+         'mousedown' : function( e ) {
+            clearInterval( this.upInterval );
+            clearInterval( this.downInterval );
             this.downInterval = this.scrollDown.periodical( 10, this );
             this.downBtn.addClass( this.options.downBtnClass + '-Active' );
          }.bind( this ),
 
-         'mouseup' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this ),
-
-         'mouseout' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this )
+         'mouseup' : function( e ) { this.stopScrollDown(); }.bind( this ),
+         'mouseout' : function( e ) { this.stopScrollDown(); }.bind( this )
       });
    }.protect(),
    
-   adjustScrollableElementSize : function(){
-      this.determinePadding();
-      
-      this.scrollableElement.setStyle( 'overflow', 'hidden' ).setStyles({ 
-         'padding' : 0,
-         width : parseFloat( this.scrollableElement.getStyle( 'width' )) + this.paddingWidth,
-         height : parseFloat( this.scrollableElement.getStyle( 'height' )) + this.paddingHeight
-      });
+   adjustContentWrapperWidth : function(){
+      var rightMargin = this.overHang <= 0 ? '0px' : '15px';
+      this.contentWrapperElement.setStyle( 'margin-right', rightMargin );
+      this.determineOverHang();
    }.protect(),
 
    addScrollableElementEvents : function(){
@@ -270,22 +264,15 @@ var ScrollArea = new Class({
    
    addUpButtonEvents : function(){
       this.upBtn.addEvents({
-         'mousedown' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
+         'mousedown' : function( e ) {
+            clearInterval( this.upInterval );
+            clearInterval( this.downInterval );
             this.upInterval = this.scrollUp.periodical( 10, this );
             this.upBtn.addClass( this.options.upBtnClass + '-Active' );
          }.bind( this ),
 
-         'mouseup' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this ),
-
-         'mouseout' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this )
+         'mouseup' : function( e ) { this.stopScrollUp(); }.bind( this ),
+         'mouseout' : function( e ) { this.stopScrollUp(); }.bind( this )
       } );
    }.protect(),
    
@@ -293,12 +280,22 @@ var ScrollArea = new Class({
       window.addEvent( 'resize', this.onWindowResize );
    }.protect(),
    
-   createContentElement : function(){
-      this.contentEl = new Element( 'div', { 'class' : this.options.contentElementClass }).adopt( this.scrollableElement.getChildren() ).inject( this.scrollableElement, 'top' );
+   createContentViewElement : function(){
+      this.contentViewElement = new Element( 'div', { 'class' : this.options.contentViewElementClass });
+      this.contentViewElement.wraps( this.scrollableElement );
+      
+      this.determinePadding();
+      
+      this.contentViewElement.setStyles({ 
+         overflow : 'hidden',
+         padding : 0,
+         width : parseFloat( this.scrollableElement.getStyle( 'width' )) + this.paddingWidth,
+         height : parseFloat( this.scrollableElement.getStyle( 'height' )) + this.paddingHeight
+      });
    }.protect(),
    
    createControlElements : function() {
-      this.scrollControlsYWrapper = new Element( 'div', { 'class' : this.options.scrollControlsYClass }).inject( this.scrollableElement, 'bottom' );
+      this.scrollControlsYWrapper = new Element( 'div', { 'class' : this.options.scrollControlsYClass }).inject( this.contentViewElement, 'bottom' );
       this.upBtn = new Element( 'div', { 'class' : this.options.upBtnClass }).inject( this.scrollControlsYWrapper, 'bottom' );
       this.downBtn = new Element( 'div', { 'class' : this.options.downBtnClass }).inject( this.scrollControlsYWrapper, 'bottom' );
       this.scrollBar = new Element( 'div', { 'class' : this.options.scrollBarClass }).inject( this.scrollControlsYWrapper, 'bottom' );
@@ -311,28 +308,38 @@ var ScrollArea = new Class({
    }.protect(),
    
    createPaddingElement : function(){
-      this.paddingEl = new Element( 'div', { 'class' : this.options.paddingElementClass }).adopt( this.contentEl.getChildren() ).inject( this.contentEl, 'top' ).setStyles( this.scrollableElementPadding );
+      this.contentWrapperElement = new Element( 'div', { 'class' : this.options.paddingElementClass });
+      this.contentWrapperElement.adopt( this.contentViewElement.getChildren() );
+      this.contentWrapperElement.inject( this.contentViewElement, 'top' );
+      this.contentWrapperElement.setStyles( this.scrollableElementPadding );
+      this.contentWrapperElement.setStyles({ display : 'inline', float : 'left' });
    }.protect(),
    
    destroyContentElement : function(){
-      if( this.contentEl && this.contentEl.destroy ) this.contentEl.destroy();
+      if( this.contentViewElement && this.contentViewElement.destroy ){
+         this.contentViewElement.destroy();
+         this.contentViewElement = null;
+      }
    }.protect(),
    
    destroyControlElements : function(){
-      if( this.scrollControlsYWrapper ) this.scrollControlsYWrapper.destroy();
-      if( this.upBtn ) this.upBtn.destroy();
-      if( this.downBtn ) this.downBtn.destroy();
-      if( this.scrollBar ) this.scrollBar.destroy();
-      if( this.scrollHandle ) this.scrollHandle.destroy();
-      if( this.scrollHandleTop ) this.scrollHandleTop.destroy();
-      if( this.scrollHandleBG ) this.scrollHandleBG.destroy();
-      if( this.scrollHandleMiddle ) this.scrollHandleMiddle.destroy();
-      if( this.scrollHandleBottom ) this.scrollHandleBottom.destroy();
-      if( this.coverUp ) this.coverUp.destroy();
+      if( this.upBtn ){ this.upBtn.destroy(); this.upBtn = null; }
+      if( this.downBtn ){ this.downBtn.destroy(); this.downBtn = null; }
+      if( this.scrollHandleTop ){ this.scrollHandleTop.destroy(); this.scrollHandleTop = null; }
+      if( this.scrollHandleBG ){ this.scrollHandleBG.destroy(); this.scrollHandleBG = null; }
+      if( this.scrollHandleMiddle ){ this.scrollHandleMiddle.destroy(); this.scrollHandleMiddle = null; }
+      if( this.scrollHandleBottom ){ this.scrollHandleBottom.destroy(); this.scrollHandleBottom = null; }
+      if( this.scrollHandle ){ this.scrollHandle.destroy(); this.scrollHandle = null; }
+      if( this.coverUp ){ this.coverUp.destroy(); this.coverUp = null; }
+      if( this.scrollControlsYWrapper ){ this.scrollControlsYWrapper.destroy(); this.scrollControlsYWrapper = null; }
+      if( this.scrollBar && this.scrollBar.destroy ){ this.scrollBar.destroy(); this.scrollBar = null; }
    }.protect(),
    
    destroyPaddingElement : function(){
-      if( this.paddingEl && this.paddingEl.destroy ) this.paddingEl.destroy();
+      if( this.contentWrapperElement && this.contentWrapperElement.destroy ){ 
+         this.contentWrapperElement.destroy();
+         this.contentWrapperElement = null;
+      }
    }.protect(),
    
    determineBorderHeight : function(){
@@ -340,39 +347,37 @@ var ScrollArea = new Class({
    }.protect(),
    
    determineOverHang : function(){
-      this.overHang = this.paddingEl.getSize().y - this.scrollableElement.getSize().y;
+      this.overHang = this.contentWrapperElement.getSize().y - this.contentViewElement.getSize().y;
    }.protect(),
    
    determinePadding : function(){
       this.paddingHeight = parseFloat( this.scrollableElement.getStyle( 'padding-top' )) + parseFloat( this.scrollableElement.getStyle( 'padding-bottom' ) );
       this.paddingWidth = parseFloat( this.scrollableElement.getStyle( 'padding-left' )) + parseFloat( this.scrollableElement.getStyle( 'padding-right' ) );
    }.protect(),
-
+   
    initSlider : function() {
       this.slider = new Slider( this.scrollBar, this.scrollHandle, {
          range : [ 0, Math.round( this.overHang ) ],
          mode : 'vertical',
-         onChange : function(step, e) {
-            this.contentEl.scrollTo( 0, step );
+         onChange : function( step, e ) {
+            this.contentViewElement.scrollTo( 0, step );
             this.webKitKludge( step );
          }.bind( this )
-      } ).set( 0 );
+      });
+      
+      this.slider.set( 0 );
    }.protect(),
    
    fixIE6CSSbugs : function() {
       // fix some CSS bugs for IE6
       if (Browser.Engine.trident4) {
          this.scrollableElement.setStyle( 'height', this.scrollableElement.getStyle( 'height' ) );
-         this.contentEl.setStyle( 'height', this.scrollableElement.getStyle( 'height' ) );
+         this.contentViewElement.setStyle( 'height', this.scrollableElement.getStyle( 'height' ) );
          var top = this.scrollBar.getStyle( 'top' ).toInt();
          var bottom = this.scrollBar.getStyle( 'bottom' ).toInt();
-         var parentHeight = this.scrollableElement.getSize().y - this.borderHeight;
-         this.scrollControlsYWrapper.setStyles( {
-            'height' : parentHeight
-         } );
-         this.scrollBar.setStyles( {
-            'height' : parentHeight - top - bottom
-         } );
+         var parentHeight = this.contentViewElement.getSize().y - this.borderHeight;
+         this.scrollControlsYWrapper.setStyles({ 'height' : parentHeight });
+         this.scrollBar.setStyles({ 'height' : parentHeight - top - bottom });
       }
    }.protect(),
 
@@ -395,7 +400,7 @@ var ScrollArea = new Class({
    }.protect(),
 
    removeContentElementEvents : function(){
-      if( this.contentEl ) this.contentEl.removeEvents();
+      if( this.contentViewElement && this.contentViewElement.removeEvents ) this.contentViewElement.removeEvents();
    }.protect(),
    
    removeDocumentEvents : function(){
@@ -405,11 +410,11 @@ var ScrollArea = new Class({
    }.protect(),
    
    removeDownButtonEvents : function(){
-      if( this.downBtn ) this.downBtn.removeEvents();
+      if( this.downBtn && this.downBtn.removeEvents ) this.downBtn.removeEvents();
    }.protect(),
    
    removeScrollableElementEvents : function(){
-      if( this.scrollableElement ){
+      if( this.scrollableElement && this.scrollableElement.removeEvent ){
          this.scrollableElement.removeEvent( 'mousewheel', this.onScrollableElementMouseWheel );
          this.scrollableElement.removeEvent( 'keydown', this.onScrollableElementKeyDown );
          this.scrollableElement.removeEvent( 'click', this.onScrollableElementClick );
@@ -417,80 +422,77 @@ var ScrollArea = new Class({
    }.protect(),
    
    removeScrollHandleEvents : function(){
-      if( this.scrollHandle ) this.scrollHandle.removeEvents();
+      if( this.scrollHandle && this.scrollHandle.removeEvents ) this.scrollHandle.removeEvents();
    }.protect(),
    
    removeUpButtonEvents : function(){
-      if( this.upBtn ) this.upBtn.removeEvents();
+      if( this.upBtn && this.upBtn.removeEvents ) this.upBtn.removeEvents();
    }.protect(),
    
    removeWindowEvents : function(){
       window.removeEvent( 'resize', this.onWindowResize );
    }.protect(),
    
-   scrollUp : function(scrollPageWhenDone) {
-      var target = this.contentEl.getScroll().y - 30;// this.options.increment;
-      this.slider.set( target );
-      if (this.contentEl.getScroll().y <= 0 && scrollPageWhenDone) {
-         document.window.scrollTo( 0, document.window.getScroll().y - this.options.increment );
+   restoreContentElementPosition : function(){
+      if( this.contentViewElement ){
+         this.scrollableElement.dispose();
+         this.scrollableElement.inject( this.contentViewElement, 'before' );
       }
+   }.protect(),
+   
+   scrollUp : function(scrollPageWhenDone) {
+      var target = this.contentViewElement.getScroll().y - this.options.increment;
+      this.slider.set( target );
    },
 
    scrollDown : function(scrollPageWhenDone) {
-      var target = this.contentEl.getScroll().y + this.options.increment;
+      var target = this.contentViewElement.getScroll().y + this.options.increment;
       this.slider.set( target );
-      var onePercent = (1 * this.paddingEl.getSize().y) / 100;
-      var atBottom = (this.paddingEl.getSize().y - this.scrollableElement.getSize().y) <= (this.contentEl.getScroll().y + onePercent);
-      if (atBottom && scrollPageWhenDone) {
-         document.window.scrollTo( 0, document.window.getScroll().y + this.options.increment );
-      }
    },
 
    setContentElementStyle : function(){
-      this.contentEl.setStyles({
-         'height' : this.scrollableElement.getSize().y - this.borderHeight,
-         overflow : 'hidden',
-         'padding' : 0
-      });
+      this.scrollableElement.setStyles({ height : '100%', margin : '0px', padding : '0px', width : '100%' });
    }.protect(),
    
    setHandleHeight : function() {
-      var handleHeightPercent = (100 - ((this.overHang * 100) / this.paddingEl.getSize().y));
-      this.handleHeight = ((handleHeightPercent * this.scrollableElement.getSize().y) / 100) - (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y);
+      var handleHeightPercent = (100 - (( this.overHang * 100 ) / this.contentViewElement.getSize().y));
+      this.handleHeight = (( handleHeightPercent * this.scrollableElement.getSize().y) / 100 ) - (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y );
       if ((this.handleHeight + this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y) >= this.scrollBar.getSize().y) {
          this.handleHeight -= (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y) * 2;
       }
-      if (this.scrollHandle.getStyle( 'min-height' ) && this.handleHeight < parseFloat( this.scrollHandle.getStyle( 'min-height' ) )) {
+      
+      if( this.scrollHandle.getStyle( 'min-height' ) && this.handleHeight < parseFloat( this.scrollHandle.getStyle( 'min-height' ) )) {
          this.handleHeight = parseFloat( this.scrollHandle.getStyle( 'min-height' ) ) + this.scrollHandleBottom.getSize().y + this.scrollHandleTop.getSize().y;
       }
-      this.scrollHandle.setStyles( {
-         'height' : this.handleHeight
-      } );
+      
+      this.scrollHandle.setStyles({ 'height' : this.handleHeight });
    }.protect(),
 
    setSlider : function(v) {
-      if (v == 'top') {
-         this.slider.set( 0 );
-      } else if (v == 'bottom') {
-         this.slider.set( '100%' );
-      } else {
-         this.slider.set( v );
-      }
+      if( v == 'top' ) { this.slider.set( 0 );
+      }else if ( v == 'bottom' ) { this.slider.set( '100%' );
+      }else { this.slider.set( v ); }
    }.protect(),
    
+   stopScroll : function(){
+      this.stopScrollDown();
+      this.stopScrollUp();
+   }.protect(),
+   
+   stopScrollDown : function(){
+      clearInterval( this.downInterval );
+      this.downBtn.removeClass( this.options.downBtnClass + '-Active' );
+   },
+   
+   stopScrollUp : function(){
+      clearInterval( this.downInterval );
+      this.upBtn.removeClass( this.options.upBtnClass + '-Active' );
+   },
+   
    switchToFullWindowMode : function(){
-      // turn off overflow for html element here so non-javascript users can still scroll
       $( document ).getElement( 'html' ).setStyle( 'overflow', 'hidden' );
-      this.scrollableElement.setStyles( {
-         'height' : '100%',
-         'width' : '100%',
-         'position' : 'absolute'
-      });
-      this.contentEl.setStyles( {
-         'height' : '100%',
-         'width' : '100%',
-         'position' : 'absolute'
-      });
+      this.scrollableElement.setStyles({ 'height' : '100%', 'width' : '100%', 'position' : 'absolute' });
+      this.contentViewElement.setStyles({ 'height' : '100%', 'width' : '100%', 'position' : 'absolute' });
    }.protect(),
 
    unGrey : function() {
@@ -507,34 +509,34 @@ var ScrollArea = new Class({
       if (!Browser.Engine.webkit) {
          return;
       }
-      // if scrollHandle is withing 1% of the bottom, kick it down that last
+      // if scrollHandle is within 1% of the bottom, kick it down that last
       // little bit since webkit browsers seem to
       // have trouble getting it that last little bit sometimes (varies with
       // amount of content.. probably due to rounding)
-      if (this.step > step) {
+      if( this.step > step ) {
          this.step = step;
          return;
       }
-      $clear( this.sliderTimeout );
+      clearInterval( this.sliderTimeout );
       this.sliderTimeout = (function() {
-         $clear( this.sliderTimeout );
-         var onePercent = (1 * this.paddingEl.getSize().y) / 100;
+         clearInterval( this.sliderTimeout );
+         var onePercent = (1 * this.contentWrapperElement.getSize().y) / 100;
          if ((onePercent + step) >= this.overHang) {
-            if (this.paddingElTopMargin == null) {
-               this.paddingElTopMargin = parseFloat( this.paddingEl.getStyle( 'margin-top' ) );
+            if (this.contentWrapperElementTopMargin == null) {
+               this.contentWrapperElementTopMargin = parseFloat( this.contentWrapperElement.getStyle( 'margin-top' ) );
             }
-            this.paddingEl.setStyle( 'margin-top', this.paddingElTopMargin - onePercent );
+            this.contentWrapperElement.setStyle( 'margin-top', this.contentWrapperElementTopMargin - onePercent );
             if (!this.scrollHandleTopMargin) {
                this.scrollHandleTopMargin = parseFloat( this.scrollHandle.getStyle( 'margin-top' ) );
             }
             this.scrollHandle.setStyle( 'margin-top', this.scrollHandleTopMargin + 2 );
-            this.contentEl.scrollTo( 0, this.overHang );
+            this.contentViewElement.scrollTo( 0, this.overHang );
             this.step = this.overHang;
 
          } else {
-            this.paddingEl.setStyle( 'margin-top', this.paddingElTopMargin );
+            this.contentWrapperElement.setStyle( 'margin-top', this.contentWrapperElementTopMargin );
             this.scrollHandle.setStyle( 'margin-top', this.scrollHandleTopMargin );
-            this.contentEl.scrollTo( 0, step );
+            this.contentViewElement.scrollTo( 0, step );
             this.step = step;
          }
       }.bind( this )).delay( 10 );
