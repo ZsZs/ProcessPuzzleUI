@@ -44,7 +44,7 @@
 	</columns>
 	
 	<panels>
-		<panel name='menuPanel' columnReference='leftColumn'>
+		<panel name='menuPanel' columnReference='leftColumn' disableScrollBars="true">
 			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
          <contentURL>Desktops/ProcessPuzzle/Pages/VerticalMenuColumn.html</contentURL>
 			<plugin>

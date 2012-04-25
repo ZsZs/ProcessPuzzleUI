@@ -4,10 +4,11 @@ window.DesktopColumnTest = new Class( {
 
    options : {
       testMethods : [
-          { method : 'initialize_setsState', isAsynchron : false },
-          { method : 'unmarshall_SetsState', isAsynchron : false },
-          { method : 'unmarshall_determinesProperties', isAsynchron : false },
-          { method : 'construct_instantiatesMUIColumn', isAsynchron : true }]
+         { method : 'initialize_setsState', isAsynchron : false },
+         { method : 'unmarshall_SetsState', isAsynchron : false },
+         { method : 'unmarshall_determinesProperties', isAsynchron : false },
+         { method : 'construct_instantiatesMUIColumn', isAsynchron : true },
+         { method : 'destroy_destroysMUIColumn', isAsynchron : true }]
    },
 
    constants : {
@@ -79,6 +80,24 @@ window.DesktopColumnTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.column.getMUIColumn(), not( nil() ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   destroy_destroysMUIColumn : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.column.unmarshall();
+            MUI.myChain = new Chain();
+            MUI.myChain.chain( function(){ MUI.Desktop.initialize({ desktop : this.constants.DESKTOP_CONTAINER_ID, pageWrapper : this.constants.PAGE_WRAPPER_ID });}.bind( this ) );
+            MUI.myChain.callChain();
+            this.column.construct();
+         }.bind( this ),
+         function(){
+            this.column.destroy();
+            
+            assertThat( this.pageWrapperElement.getChildren( '*' ).length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

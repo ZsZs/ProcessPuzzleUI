@@ -5,10 +5,15 @@ window.ScrollAreaTest = new Class( {
    options : {
       testMethods : [
          { method : 'initialize_whenScrollableElementNotDefined_throwsExeption', isAsynchron : false },
+         { method : 'construct_whenContentSizeIsGiven_setsContentViewSize', isAsynchron : false },
+         { method : 'construct_whenContentSizeIsNotGiven_usesScrollableElementSize', isAsynchron : false },
          { method : 'construct_adjustsScrollableElementSize', isAsynchron : false },
          { method : 'construct_wrapsContentElementWithPaddingElement', isAsynchron : false },
          { method : 'construct_wrapsContentElementWithContentViewElement', isAsynchron : false },
          { method : 'construct_createsScrollBarElements', isAsynchron : false },
+         { method : 'refresh_whenContentIsLess_destroysScrollControl', isAsynchron : false },
+         { method : 'refresh_whenContentBecomeLarge_recreatesScrollControl', isAsynchron : false },
+         { method : 'refresh_whenContentSizeIsGiven_setsContentViewSize', isAsynchron : false },
          { method : 'destroy_destroysAllCreatedElements', isAsynchron : false }]
    },
 
@@ -38,6 +43,26 @@ window.ScrollAreaTest = new Class( {
    
    initialize_whenScrollableElementNotDefined_throwsExeption : function() {
       assertThat( this.instantiateScrollAreaWithoutArguments, raises( JsUnit.Failure ));
+   },
+   
+   construct_whenContentSizeIsGiven_setsContentViewSize : function() {
+      this.scrollArea.options.contentHeight = '250';
+      this.scrollArea.options.contentWidth = '450';
+      
+      this.scrollArea.construct();
+
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'height' ), equalTo( this.scrollArea.options.contentHeight + "px" ));
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( this.scrollArea.options.contentWidth + "px" ));
+   },
+   
+   construct_whenContentSizeIsNotGiven_usesScrollableElementSize : function() {
+      var scrollableElementHeight = this.scrollableElement.getStyle( 'height' ); 
+      var scrollableElementWidth = this.scrollableElement.getStyle( 'width' ); 
+      
+      this.scrollArea.construct();
+
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'height' ), equalTo( scrollableElementHeight ));
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( scrollableElementWidth ));
    },
    
    construct_adjustsScrollableElementSize : function() {
@@ -73,7 +98,40 @@ window.ScrollAreaTest = new Class( {
       
       assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 1 ));
    },
+   
+   refresh_whenContentIsLess_destroysScrollControl : function() {
+      var originalText = this.scrollableElement.get( 'text' ); 
+      this.scrollArea.construct();
+      this.scrollableElement.set( 'text', "Very short text" );
+      this.scrollArea.refresh();
       
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 0 ));
+      assertThat( this.scrollArea.getContentWrapperElement().getStyle( 'margin-right' ), equalTo( '0px' ));
+      
+      //TEAR DOWN:
+      this.scrollableElement.set( 'text', originalText );
+   },
+   
+   refresh_whenContentBecomeLarge_recreatesScrollControl : function() {
+      var originalText = this.scrollableElement.get( 'text' ); 
+      this.scrollArea.construct();
+      this.scrollableElement.set( 'text', "Very short text" );
+      this.scrollArea.refresh();
+      this.scrollableElement.set( 'text', originalText );
+      this.scrollArea.refresh();
+      
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 1 ));
+      assertThat( this.scrollArea.getContentWrapperElement().getStyle( 'margin-right' ), equalTo( '15px' ));
+   },
+      
+   refresh_whenContentSizeIsGiven_setsContentViewSize : function() {
+      this.scrollArea.construct();
+      this.scrollArea.refresh({ x: 450, y: 250 });
+
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'height' ), equalTo( "250px" ));
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( "450px" ));
+   },
+   
    destroy_destroysAllCreatedElements : function() {
       this.scrollArea.construct();
       this.scrollArea.destroy();

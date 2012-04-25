@@ -124,10 +124,15 @@
 var ScrollBar = new Class({
    Implements : Options,
    options : {
-      selector : '.scroll',
-      increment : 15,
-      upBtnClass : 'upBtn',
+      contentHeight : null,
+      contentWidth : null,
+      disabledOpacity : 0,
       downBtnClass : 'downBtn',
+      fullWindowMode : false,
+      handleOpacity : 1,
+      handleActiveOpacity : 0.85,
+      increment : 15,
+      restrictedBrowsers : [ Browser.Engine.presto925, Browser.Platform.ipod, Browser.Engine.webkit419 ],
       scrollBarClass : 'scrollBar',
       scrollHandleClass : 'scrollHandle',
       scrollHandleBGClass : 'scrollHandleBG',
@@ -135,20 +140,17 @@ var ScrollBar = new Class({
       scrollHandleMiddleClass : 'scrollHandleMiddle',
       scrollHandleBottomClass : 'scrollHandleBottom',
       scrollControlsYClass : 'scrollControlsY',
-      handleOpacity : 1,
-      handleActiveOpacity : 0.85,
-      disabledOpacity : 0,
-      fullWindowMode : false,
+      selector : '.scroll',
       smoothMooScroll : {
          toAnchor : true,
          toMooScrollArea : true
       },
-      restrictedBrowsers : [ Browser.Engine.presto925, Browser.Platform.ipod, Browser.Engine.webkit419 ]
+      upBtnClass : 'upBtn'
    // Opera 9.25 or lower, Safari 2 or lower, iPhone/iPod Touch
    },
 
    //Constructor
-   initialize : function( scrollableElementId, options ) {
+   initialize : function( scrollableElement, options ) {
       if( this.options.restrictedBrowsers.contains( true )) { return; }
       this.setOptions( options );
 
@@ -156,7 +158,7 @@ var ScrollBar = new Class({
       this.scrollableElement;
       this.windowFxScroll = new Fx.Scroll( document.window, { wait : false });
       
-      this.identifyScrollableElement( scrollableElementId );
+      this.identifyScrollableElement( scrollableElement );
    },
    
    //Public accessors and mutators
@@ -180,16 +182,12 @@ var ScrollBar = new Class({
       this.scrollArea.loadContent( content );
    },
 
-   refresh : function() {
-      this.mooScrollAreas.each( function( item, index ) {
-         item.refresh();
-      });
+   refresh : function( size ) {
+      this.scrollArea.refresh( size );
    },
 
    setSlider : function(v) {
-      this.mooScrollAreas.each( function(item, index) {
-         item.setSlider( v );
-      });
+      this.scrollAreas.setSlider( v );
    },
    
    //Properties
@@ -197,8 +195,8 @@ var ScrollBar = new Class({
    getScrollArea : function() { return this.scrollArea; },
    
    //Protected, private helper methods
-   identifyScrollableElement : function( scrollableElementId ){
-      this.scrollableElement = $( scrollableElementId );
-      if( !this.scrollableElement ) throw new NoneExistingScrollableElementException( scrollableElementId );
+   identifyScrollableElement : function( scrollableElement ){
+      this.scrollableElement = $( scrollableElement );
+      if( !this.scrollableElement ) throw new NoneExistingScrollableElementException( scrollableElement );
    }
 });

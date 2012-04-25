@@ -38,7 +38,7 @@
 	</columns>
 	
 	<panels>
-		<panel name="documents-browser" columnReference="leftColumn" height="250">
+		<panel name="documents-browser" columnReference="leftColumn" disableScrollBars="true" height="250">
 			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
 			<contentURL>../Desktop/Content/TreeView.html</contentURL>
 		</panel>
