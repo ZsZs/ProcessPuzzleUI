@@ -1274,6 +1274,7 @@ var StringTokenizer = new Class( {
    
    //Constructors
    initialize: function( string, options ) {
+      assertThat( string, not( nil() ));
       this.setOptions( options );
       this.s = string;
       this.current = 0;
@@ -2520,6 +2521,7 @@ var WebUIMessage = new Class({
    Implements: Options,
    options: {
       description: "Generic Browser Interface message. Normally this message should be overwritten by subclasses.",
+      isDefault: false,
       messageClass: null,
       name: "WebUIMessage",       //Please note, that subclasses should overwrite this.
       originator: null
@@ -2536,7 +2538,8 @@ var WebUIMessage = new Class({
    getClass: function() { return this.options.messageClass; },
    getDescription: function() { return this.options.description; },
    getName: function() { return this.options.name; },
-   getOriginator: function() { return this.options.originator; }
+   getOriginator: function() { return this.options.originator; },
+   isDefault: function() { return this.options.isDefault; }
    
    //Private helper methods
 });
@@ -2730,13 +2733,13 @@ var BrowserWidget = new Class( {
    },
    
    restoreComponentState : function() {
-      this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+      this.stateSpecification = this.componentStateManager.retrieveComponentState( this.options.componentName ); 
       this.parseStateSpecification();
    },
    
    storeComponentState : function() {
       this.compileStateSpecification();
-      this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+      this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
    }.protect(),
    
    unmarshall : function(){
@@ -3000,6 +3003,50 @@ var WidgetConstuctedMessage = new Class({
 });
 
 /*
+Name: WidgetConstructionException
+
+Description: Thrown when constructing a BrowserWidget caused error.
+
+Requires: WebUIException
+
+Provides: WidgetConstructionException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var WidgetConstructionException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Constructing widget: '{widgetName}' caused the following error: '{configurationErrorDescription}'.",
+      name: "WidgetConstructionException"
+   },
+   
+   //Constructor
+   initialize : function( widgetName, configurationErrorDescription, options ){
+      this.parent( options );
+      this.parameters = { widgetName : widgetName, configurationErrorDescription : configurationErrorDescription };
+   },
+   
+   //Properties
+   getConfigurationErrorDescription : function() { return this.parameters['ConfigurationErrorDescription']; },
+   getWidgetName : function() { return this.parameters['widgetName']; },
+});
+/*
 Name: 
     - HtmlElementFactory
 
@@ -3090,7 +3137,7 @@ var WidgetElementFactory = new Class( {
    },
 
    createButton : function( buttonCaption, clickEventHandler, contextElement, position, elementProperties ) {
-      var defaultProperties = { 'class' : this.BUTTON_CLASS, type : "button", value : buttonCaption, events : { click : clickEventHandler } };
+      var defaultProperties = { 'class' : this.options.buttonClassName, type : "button", value : buttonCaption, events : { click : clickEventHandler } };
       var properties = this.mergeProperties( defaultProperties, elementProperties );
       var button = this.create( "INPUT", null, contextElement, position, properties );
       if( buttonCaption ) {
@@ -3340,38 +3387,157 @@ WidgetElementFactory.Positions = {
    LastChild : 3,
    Undefined : 4 };
 /*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+Name: 
+    - StateTransformer
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Description: 
+    - Abstract class of all state transformers.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Requires:
+    - 
+Provides:
+    - StateTransformer
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//DefaultStateUriTransformer.js
 
-var DefaultStateUriTransformer = new Class({
-   initialize: function( stateManager ){
-      this.stateManager = stateManager;
+
+var StateTransformer = new Class({
+   Implements: [Events, Options],
+   options: {
+      unknownValue : 'unknown'
+   },
+
+   //Constructor
+   initialize: function( stateMachine, options ){
+      assertThat( stateMachine, not( nil() ));
+      this.setOptions( options );
+      this.stateMachine = stateMachine;
    },
    
-   transformUriToState: function( uri ) {
-      this.stateManager.parse( uri );
+   //Public accessors and mutators
+   parse : function(){
+      //Needs to be overwritten
    },
    
-   transformStateToUri: function(){
-      return this.stateManager.toString();
+   toString : function(){
+      //Needs to be overwritten
+   },
+   
+   //Protected, private helper methods
+   setUnknowsValuesToNull : function( componentState ){
+      if( componentState == this.options.unknownValue ) return null;
+         
+      for( var property in componentState ){
+         if( componentState[property] == this.options.unknownValue ) componentState[property] = null;
+      }
+      
+      return componentState;
+   }.protect(),
+   
+   transformComponentStateToString : function( componentStateEntry ){
+      var valueString = "";
+      
+      var value = componentStateEntry.getValue();
+      if( value == null ) value = this.options.unknownValue;
+      if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
+      else if( typeOf( value ) == "object" ){
+         valueString = "{";
+         for ( var property in value ) {
+            if( valueString != "{" ) valueString += ",";
+            if( value[property] == null ) valueString += property + ":'" + this.options.unknownValue + "'";
+            else valueString += property + ":'" + value[property] + "'";
+         }
+         valueString += "}";
+      }
+      else valueString = "'" + value.toString() + "'";
+      
+      return valueString;
+   }.protect()
+   
+});
+/*
+Name: 
+    - DefaultStateTransformer
+
+Description: 
+    - Transforms component's state by using component / state names and specific delimiters.
+
+Requires:
+    - 
+Provides:
+    - DefaultStateTransformer
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DefaultStateTransformer = new Class({
+   Extends: StateTransformer,
+   options: {
+      
+   },
+
+   //Constructor
+   initialize: function( stateMachine, options ){
+      this.parent( stateMachine, options );
+   },
+   
+   //Public accessors and mutators
+   parse: function( stateString ) {
+      var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
+      while( tokenizer.hasMoreTokens() ){
+         var token = tokenizer.nextToken();
+         var componentName = token.substring( 0, token.indexOf( ":" ));
+         var componentStateString = token.substring( token.indexOf( ":" ) +1 );
+         var componentState = eval( "(" + componentStateString.trim() + ")" );
+         componentState = this.setUnknowsValuesToNull( componentState );
+         this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
+      };
+   },
+   
+   toString: function(){
+      var stateString = "";
+      this.stateMachine.each( function( componentStateEntry, index ){
+         if( stateString != "" ) stateString += ";";
+         stateString += componentStateEntry.getKey() + ":";
+         stateString += this.transformComponentStateToString( componentStateEntry );
+      }, this );
+      
+      return stateString;
    }
+   
+   //Protected, private helper methods
+   
 });
 /*
 ProcessPuzzle User Interface
@@ -3398,10 +3564,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 var ComponentStateManager = new Class({
-   Implements: [Options, Class.Singleton],
+   Implements: [Events, Options, Class.Singleton],
+   Binds: ['onComponentStateParse'],
    
    options: {
-      stateUriTransformer: DefaultStateUriTransformer
+      componentName : "ComponentStateManager",
+      componentsInUri : [],
+      stateUriTransformer: DefaultStateTransformer,
+      stateValidityPeriod: 900000
    },
    
    //Constructors
@@ -3409,72 +3579,160 @@ var ComponentStateManager = new Class({
    
    setUp : function( options ) {
       this.setOptions( options );
-      this.stateMachine = new HashMap();
-      this.stateUriTransformer = new this.options.stateUriTransformer( this );
+      this.stateMachine = new LinkedHashMap();
+      this.stateTransformer = new DefaultStateTransformer( this.stateMachine, { onComponentStateParse : this.onComponentStateParse } );
+      this.uriTransformer = new FixedComponentOrderedTransformer( this.stateMachine, this.options.componentsInUri, { onComponentStateParse : this.onComponentStateParse } );
    }.protect(),
 
    //Public accessor and mutator methods
-   parse : function( sourceString ){
-      var tokenizer = new StringTokenizer( sourceString, { delimiters : ';' } );
-      while( tokenizer.hasMoreTokens() ){
-         var token = tokenizer.nextToken();
-         var componentName = token.substring( 0, token.indexOf( ":" ));
-         var componentStateString = token.substring( token.indexOf( ":" ) +1 );
-         var componentState = eval( "(" + componentStateString.trim() + ")" );
-         
-         this.storeCurrentState( componentName.trim(), componentState );
-      };
+   includeComponentNameToUri : function( componentName ){
+      this.uriTransformer.addComponentName( componentName );
+   },
+   
+   onComponentStateParse : function( componentState ){
+      this.storeComponentState( componentState[0].trim(), componentState[1] );
+   },
+   
+   parse : function( stateString ){
+      if( stateString ) this.stateTransformer.parse( stateString );
+   },
+   
+   parseUri : function( stateString ){
+      this.uriTransformer.parse( stateString );
+   },
+   
+   persist : function(){
+      $.jStorage.set( this.options.componentName, this.toString() );
+      $.jStorage.setTTL( this.options.componentName, this.options.stateValidityPeriod );
    },
    
    reset : function() {
       this.stateMachine.clear();
+      $.jStorage.flush();
    },
    
-   resetStateFromUri: function( uri ){
-      this.reset();
-      this.stateUriTransformer.transformUriToState( uri );
+   restore : function(){
+      var stateString = $.jStorage.get( this.options.componentName );
+      this.parse( stateString );
    },
    
-   retrieveCurrentState : function( componentName ){
+   restoreStateFromUri : function(){
+      if( window.location.hash.substring(2)) {
+         var currentState = this.toString();
+         try {
+            this.parseUri( window.location.hash.substring(2) );
+         }catch( e ){
+            this.parse( currentState );
+         }
+      }
+   },
+   
+   retrieveComponentState : function( componentName ){
       return this.stateMachine.get( componentName );
    },
    
-   storeCurrentState : function( componentName, currentState ){
+   storeComponentState : function( componentName, currentState ){
       if( componentName && currentState ) this.stateMachine.put( componentName, currentState );
+   },
+   
+   toString: function(){
+      return this.stateTransformer.toString();
+   },
+   
+   toUri: function(){
+      return this.uriTransformer.toString();
+   },
+   
+   //Properties
+   getDefaultTransformer: function() { return this.stateTransformer; },
+   getUriTransformer: function() { return this.uriTransformer; },
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - FixedComponentOrderedTransformer
+
+Description: 
+    - Relies on the predefined order of components when parsing state string.
+
+Requires:
+    - 
+Provides:
+    - FixedComponentOrderedTransformer
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var FixedComponentOrderedTransformer = new Class({
+   Extends: StateTransformer,
+   options: {
+      
+   },
+
+   //Constructor
+   initialize: function( stateMachine, componentList, options ){
+      assertThat( componentList, not( nil() ));
+      this.parent( stateMachine, options );
+      
+      this.componentList = componentList;
+   },
+   
+   //Public accessors and mutators
+   addComponentName: function( componentName ){
+      this.componentList.include( componentName );
+   },
+   
+   parse: function( stateString ) {
+      stateString = stateString.replace( "%7B", "{" );
+      stateString = stateString.replace( "%7D", "}" );
+      var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
+      var componentIndex = 0;
+      
+      while( tokenizer.hasMoreTokens() ){
+         var componentName = this.componentList[componentIndex++];
+         var componentStateString = tokenizer.nextToken();
+         var componentState = eval( "(" + componentStateString.trim() + ")" );
+         componentState = this.setUnknowsValuesToNull( componentState );
+         
+         this.fireEvent( 'componentStateParse',  [[componentName, componentState]] );
+      };
    },
    
    toString: function(){
       var stateString = "";
       this.stateMachine.each( function( componentStateEntry, index ){
-         if( stateString != "" ) stateString += ";";
-         
-         stateString += componentStateEntry.getKey() + ":";
-         
-         var valueString = "";
-         var value = componentStateEntry.getValue();
-         if( typeOf( value ) == "string" ) valueString = "'" + value + "'";
-         else if( typeOf( value ) == "object" ){
-            valueString = "{";
-            for ( var property in value ) {
-               if( valueString != "{" ) valueString += ",";
-               valueString += property + ":'" + value[property] + "'";
-            }
-            valueString += "}";
+         if( this.componentList.contains( componentStateEntry.getKey() )){
+            if( stateString != "" ) stateString += ";";
+            stateString += this.transformComponentStateToString( componentStateEntry );
          }
-         else valueString = "'" + value.toString() + "'";
-    
-         stateString += valueString;
       }, this );
       
       return stateString;
    },
    
-   transformStateToUri: function(){
-      return this.stateUriTransformer.transformStateToUri();
-   },
-   
    //Properties
-   getStateUriTransformer: function() { return this.stateUriTransformer; }
+   getComponentNames: function(){ return this.componentList; },
+   
+   //Protected, private helper methods
+   
 });
 /*
 Name: 
@@ -3536,6 +3794,7 @@ var ComplexContentBehaviour = new Class({
       pluginSelector : "plugin",
       scrollBarStyle : "scroll",
       showHeaderSelector : "showHeader",
+      storeStateInUriSelector : "storeStateInUri",
       storeStateSelector : "storeState",
       titleSelector : "title",
       widthDefault : 300,
@@ -3567,7 +3826,9 @@ var ComplexContentBehaviour = new Class({
       this.plugin;
       this.showHeader;
       this.stateSpecification;
+      this.storedDocumentNeedsToBeRestored = false;
       this.storeState = false;
+      this.storeStateInUri = false;
       this.title;
       this.verticalScrollBar;
       this.width;
@@ -3626,9 +3887,15 @@ var ComplexContentBehaviour = new Class({
    webUIMessageHandler: function( webUIMessage ){
       if( this.state != DesktopElement.States.CONSTRUCTED ) return;
       
-      if( ( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) 
-            && ( webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT )
-            && ( this.eventSources == null || this.eventSources.contains( webUIMessage.getOriginator() ))) {
+      if(( instanceOf( webUIMessage, MenuSelectedMessage ) || instanceOf( webUIMessage, TabSelectedMessage )) 
+           && ( webUIMessage.getActivityType() == AbstractDocument.Activity.LOAD_DOCUMENT )
+           && ( this.eventSources == null || this.eventSources.contains( webUIMessage.getOriginator() ))) {
+         
+         if( this.storedContentHasPrecedence( webUIMessage )){
+            this.storedDocumentNeedsToBeRestored = false;
+            return;
+         }
+         
          this.destroyDocument();
          this.destroyDocumentWrapper();
          this.cleanUpContentElement();
@@ -3659,6 +3926,7 @@ var ComplexContentBehaviour = new Class({
    getShowHeader: function() { return this.showHeader; },
    getState: function() { return this.state; },
    getStoreState: function() { return this.storeState; },
+   getStoreStateInUri: function() { return this.storeStateInUri; },
    getTitle: function() { return this.title; },
    getToolBox: function() { return this.header; },
    getVerticalScrollBar: function() { return this.verticalScrollBar; },
@@ -3693,8 +3961,14 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    constructPlugin: function(){
-      if( this.plugin ) this.plugin.construct();
-      else this.constructionChain.callChain();
+      if( this.plugin ){
+         try{
+            this.plugin.construct();
+         }catch( e ){
+            this.logger.error( "Constructing plugin of panel: '" + this.name + "' caused error." );
+            throw new DesktopElementConfigurationException( this.name );
+         }
+      } else this.constructionChain.callChain();
    }.protect(),
    
    constructHeader: function(){
@@ -3789,11 +4063,13 @@ var ComplexContentBehaviour = new Class({
    
    restoreComponentState : function() {
       if( this.storeState ){
-         this.stateSpecification = this.componentStateManager.retrieveCurrentState( this.options.componentName ); 
+         this.stateSpecification = this.componentStateManager.retrieveComponentState( this.options.componentName ); 
          if( this.stateSpecification ) {
             this.parseStateSpecification();
             
             if( this.documentDefinitionUri ){
+               this.storedDocumentNeedsToBeRestored = true;
+               
                this.document = this.instantiateDocument( this.documentContentType, { 
                   documentContainerId : this.documentWrapperId, 
                   documentDefinitionUri : this.documentDefinitionUri, 
@@ -3816,8 +4092,12 @@ var ComplexContentBehaviour = new Class({
    storeComponentState : function() {
       if( this.storeState ){
          this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
-         this.componentStateManager.storeCurrentState( this.options.componentName, this.stateSpecification );
+         this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
       }
+   }.protect(),
+   
+   storedContentHasPrecedence : function(  webUIMessage ){
+      return this.storedDocumentNeedsToBeRestored == true && webUIMessage.isDefault();
    }.protect(),
    
    subscribeToWebUIMessages: function() {
@@ -3878,10 +4158,13 @@ var ComplexContentBehaviour = new Class({
       this.handleMenuSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleMenuSelectedEventsSelector, this.options.handleMenuSelectedEvents ));
       this.handleTabSelectedEvents = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.handleTabSelectedEventsSelector, this.options.handleTabSelectedEvents ));
       this.storeState = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.storeStateSelector, false ));
+      this.storeStateInUri = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.storeStateInUriSelector, false ));
       this.title = XmlResource.selectNodeText( this.options.titleSelector, this.definitionElement );
       if( this.internationalization ) this.title = this.internationalization.getText( this.title );
       this.width = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.widthSelector, this.options.widthDefault ));
       this.options.componentName = this.name;
+      
+      if( this.storeStateInUri ) this.componentStateManager.includeComponentNameToUri( this.name );
    }.protect()
 });
 //UnconfiguredWidget.js
@@ -4011,6 +4294,7 @@ var Desktop = new Class({
       this.setOptions( options );
 
 	//Private instance variables
+      this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.columns = new LinkedHashMap();
       this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
       this.configurationChain = new Chain();
@@ -4149,6 +4433,7 @@ var Desktop = new Class({
       this.unmarshallColumns();
       this.unmarshallPanels();
       this.unmarshallWindows();
+      this.componentStateManager.restoreStateFromUri();
       this.state = DesktopElement.States.UNMARSHALLED;
    },
 	   
@@ -4538,6 +4823,7 @@ var DesktopElement = new Class({
    },
    
    //Properties
+   getComponentStateManager: function() { return this.componentStateManager; },
    getContainerElement: function() { return this.containerElement; },
    getContainerElementId: function() { return this.options.componentContainerId; }, 
    getDefinitionElement: function() { return this.definitionElement; },
@@ -4858,6 +5144,47 @@ var DesktopDocument = new Class({
    }.protect()
 });
 /*
+Name: DesktopElementConfigurationException
+
+Description: Thrown when configuring a desktop element failed.
+
+Requires: WebUIException
+
+Provides: DesktopElementConfigurationException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+   - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var DesktopElementConfigurationException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Configuring '{desktopElementName}' caused error.",
+      name: "ConfigurationTimeoutException"
+   },
+   
+   //Constructor
+   initialize : function( desktopElementName, options ){
+      this.setOptions( options );
+      this.parent( options );
+      this.parameters = { desktopElementName : desktopElementName };
+   }
+});
+/*
 Name: DesktopElementFactory
 
 Description: Instantiates a new subclass of DesktopElement according to the given XML element.
@@ -5138,7 +5465,6 @@ var DesktopPanel = new Class({
    
    //Properties
    getColumnReference: function() { return this.columnReference; },
-   getComponentStateManager: function() { return this.componentStateManager; },
    getContentUrl: function() { return this.contentUrl; },
    getDocument: function() { return this.document; },
    getDocumentContentUri: function() { return this.documentContentUri; },
@@ -6025,7 +6351,7 @@ var DiagramWidget = new Class({
    }.protect(),
    
    destroyCanvas : function(){
-      this.paintArea.destroy();
+      if( this.paintArea && this.paintArea.destroy ) this.paintArea.destroy();
       
       this.destructionChain.callChain();
    }.protect(),
@@ -6800,9 +7126,13 @@ var DocumentEditor = new Class({
    }.protect(),
    
    determineStyleSheets: function(){
-      var linkElements = this.subjectElement.getDocument().getElements("link"); 
+      var linkElements = this.subjectElement.getDocument().getElements( 'link' ); 
       linkElements.each( function( linkElement, index ){
-         this.styleSheets.add( linkElement.get( 'href' ));
+         try{
+            this.styleSheets.add( linkElement.get( 'href' ));
+         }catch( e ){
+            this.logger.error( this.options.componentName + ".determineStyleSheets() caused an error." );
+         }
       }, this );
       this.attachChain.callChain();
    }.protect(),
@@ -7081,6 +7411,8 @@ var MenuItem = new Class({
    Binds: ['onClick'],
    
    options : {
+      accordionBehaviour : false,
+      accordionParent : "",
       captionSelector : "@caption",
       componentName : "MenuItem",
       contextItemId : "",
@@ -7119,7 +7451,7 @@ var MenuItem = new Class({
    construct: function( parentElement ){
       assertThat( parentElement, not( nil() ));
       this.parentHtmlElement = parentElement;
-      if( this.needsToBeDisplayed() ) {
+      if( this.state == BrowserWidget.States.UNMARSHALLED && this.needsToBeDisplayed() ) {
          this.instantiateHtmlElements();
          this.state = BrowserWidget.States.CONSTRUCTED;
          if( this.isDefault ) this.fireEvent( 'onDefaultItem', this );
@@ -7143,7 +7475,8 @@ var MenuItem = new Class({
              this.isContextItemUndefined() && this.options.showSubItems ||
              this.isTheContextItem() ||
              this.isDirectChildOfContextItem() ||
-             this.isChildOfContextItem() && this.options.showSubItems;
+             this.isChildOfContextItem() && this.options.showSubItems ||
+             this.isDirectChildOfAccordionParent() && this.options.accordionBehaviour;
    },
    
    onClick : function() {
@@ -7182,12 +7515,20 @@ var MenuItem = new Class({
       return this.options.parentItemId != "" && this.getFullId().contains( this.options.contextItemId + this.options.idPathSeparator );
    }.protect(),
    
+   isAccordionParentUndefined: function(){
+      return this.options.accordionParent == "";
+   }.protect(),
+   
    isContextItemUndefined: function(){
       return this.options.contextItemId == "";
    }.protect(),
    
    isDirectChildOfContextItem: function(){
       return !this.isContextItemUndefined() && (( this.options.contextItemId + this.options.idPathSeparator + this.menuItemId ) == this.getFullId());
+   }.protect(),
+   
+   isDirectChildOfAccordionParent: function(){
+      return !this.isAccordionParentUndefined() && (( this.options.accordionParent + this.options.idPathSeparator + this.menuItemId ) == this.getFullId());
    }.protect(),
    
    isDirectChildOfRootItem: function(){
@@ -7260,11 +7601,18 @@ var CompositeMenu = new Class({
    initialize: function( definition, elementFactory, options ){
       this.parent( definition, elementFactory, options );
 
+      this.isExpanded;
       this.listElement;
       this.subItems = new ArrayList();
    },
    
    //Public accessor and mutator methods
+   collapse: function(){
+      this.destroySubItems();
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      this.isExpanded = false;
+   },
+   
    construct: function( parentElement ){
       this.parent( parentElement );
       this.constructSubItems();
@@ -7274,6 +7622,14 @@ var CompositeMenu = new Class({
       if( this.options.showSubItems ) this.destroySubItems();
       if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
       this.parent();
+   },
+   
+   expand: function(){
+      if( this.isExpanded != undefined ) this.unmarshall();
+      this.options.accordionParent = this.getFullId();
+      this.createListContainerElement();
+      this.constructSubItems();
+      this.isExpanded = true;
    },
    
    findItemById: function( itemFullId ){
@@ -7289,6 +7645,14 @@ var CompositeMenu = new Class({
       }
       
       return foundItem;
+   },
+   
+   onClick : function() {
+      if( this.options.accordionBehaviour ){
+         if( !this.isExpanded ) this.expand();
+         else this.collapse();
+      };
+      this.parent();
    },
    
    onDefaultItem: function( menuItem ){
@@ -7322,8 +7686,14 @@ var CompositeMenu = new Class({
    
    constructSubItems: function(){
       this.subItems.each( function( subItem, index ){
+         subItem.options.accordionParent = this.options.accordionParent;
          subItem.construct( this.parentHtmlElement );
       }.bind( this ));
+   }.protect(),
+   
+   createListContainerElement: function(){
+      this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
+      this.parentHtmlElement = this.listElement;
    }.protect(),
    
    destroySubItems: function(){
@@ -7338,9 +7708,7 @@ var CompositeMenu = new Class({
       if( !this.isTheContextItem() ) this.parent();
       
       if( this.anyChildNeedsToBeDisplayed() ){
-         this.listElement = this.elementFactory.create( 'ul', null, this.listItemElement, WidgetElementFactory.Positions.lastChild, { id : this.menuItemId } );
-         this.parentHtmlElement = this.listElement;
-         
+         this.createListContainerElement();         
          if( this.isTheRootItem() || this.isTheContextItem() ) this.listElement.addClass( this.options.menuStyle );
       }
    }.protect(),
@@ -7354,6 +7722,7 @@ var CompositeMenu = new Class({
       if( subElements ){
          subElements.each( function( subItemElement, index ){
             var subItem = MenuItemFactory.create( subItemElement, this.elementFactory, { 
+               accordionBehaviour : this.options.accordionBehaviour,
                contextItemId : this.options.contextItemId,
                idPathSeparator : this.options.idPathSeparator,
                menuStyle : this.options.menuStyle,
@@ -7407,6 +7776,7 @@ var HierarchicalMenuWidget = new Class({
    Binds : ['constructMenuItems', 'destroyMenuItems', 'determineCurrentItemId', 'fireCurrentSelection', 'onDefaultItem', 'onSelection'],
    
    options : {
+      accordionBehaviour : false,
       componentName : "HierarchicalMenuWidget",
       contextItemId : "",
       idPathSeparator : "/",
@@ -7479,6 +7849,7 @@ var HierarchicalMenuWidget = new Class({
    },
    
    //Properties
+   getAccordionBehaviour : function() { return this.options.accordionBehaviour; },
    getContextItemId : function() { return this.options.contextItemId; },
    getCurrentItemId : function() { return this.currentItemId; },
    getRootMenu : function() { return this.rootMenu; },
@@ -7486,7 +7857,7 @@ var HierarchicalMenuWidget = new Class({
    
    //Private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructMenuItems, this.fireCurrentSelection, this.finalizeConstruction );
+      this.constructionChain.chain( this.constructMenuItems, this.determineCurrentItemId, this.fireCurrentSelection, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
@@ -7505,6 +7876,7 @@ var HierarchicalMenuWidget = new Class({
    createMessage : function( menuItem ){
       var messageProperties = menuItem.getMessageProperties();
       messageProperties['originator'] = this.options.componentName;
+      if( this.state == BrowserWidget.States.UNMARSHALLED )  messageProperties['isDefault'] = true;
       return new MenuSelectedMessage( messageProperties );
    }.protect(),
    
@@ -7523,6 +7895,10 @@ var HierarchicalMenuWidget = new Class({
    }.protect(),
    
    determineCurrentItemId : function(){
+      if( this.options.contextItemId ){
+         if( this.findItemById( this.options.contextItemId ) == null )
+            throw new WidgetConstructionException( this.options.componentName, "ContextItemId is invalid" );
+      }
       if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
       this.constructionChain.callChain();
    }.protect(),
@@ -7577,6 +7953,7 @@ var HierarchicalMenuWidget = new Class({
       this.standardizeContextItemId();
       if( rootMenuElement ){
          this.rootMenu = new RootMenu( rootMenuElement, this.elementFactory, {
+            accordionBehaviour : this.options.accordionBehaviour,
             contextItemId : this.options.contextItemId,
             idPathSeparator : this.options.idPathSeparator,
             menuStyle : this.options.menuStyle,
@@ -8487,6 +8864,525 @@ var XMLResourceBundle = new Class( {
       return true;
    }.protect()
 } );
+/*
+ * ----------------------------- JSTORAGE -------------------------------------
+ * Simple local storage wrapper to save data on the browser side, supporting
+ * all major browsers - IE6+, Firefox2+, Safari4+, Chrome4+ and Opera 10.5+
+ *
+ * Copyright (c) 2010 Andris Reinman, andris.reinman@gmail.com
+ * Project homepage: www.jstorage.info
+ *
+ * Licensed under MIT-style license:
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/**
+ * $.jStorage
+ *
+ * USAGE:
+ *
+ * jStorage requires Prototype, MooTools or jQuery! If jQuery is used, then
+ * jQuery-JSON (http://code.google.com/p/jquery-json/) is also needed.
+ * (jQuery-JSON needs to be loaded BEFORE jStorage!)
+ *
+ * Methods:
+ *
+ * -set(key, value)
+ * $.jStorage.set(key, value) -> saves a value
+ *
+ * -get(key[, default])
+ * value = $.jStorage.get(key [, default]) ->
+ *    retrieves value if key exists, or default if it doesn't
+ *
+ * -deleteKey(key)
+ * $.jStorage.deleteKey(key) -> removes a key from the storage
+ *
+ * -flush()
+ * $.jStorage.flush() -> clears the cache
+ *
+ * -storageObj()
+ * $.jStorage.storageObj() -> returns a read-ony copy of the actual storage
+ *
+ * -storageSize()
+ * $.jStorage.storageSize() -> returns the size of the storage in bytes
+ *
+ * -index()
+ * $.jStorage.index() -> returns the used keys as an array
+ *
+ * -storageAvailable()
+ * $.jStorage.storageAvailable() -> returns true if storage is available
+ *
+ * -reInit()
+ * $.jStorage.reInit() -> reloads the data from browser storage
+ *
+ * <value> can be any JSON-able value, including objects and arrays.
+ *
+ **/
+
+
+(function($){
+    if(!$ || !($.toJSON || Object.toJSON || window.JSON)){
+        throw new Error("jQuery, MooTools or Prototype needs to be loaded before jStorage!");
+    }
+
+    var
+        /* This is the object, that holds the cached values */
+        _storage = {},
+
+        /* Actual browser storage (localStorage or globalStorage['domain']) */
+        _storage_service = {jStorage:"{}"},
+
+        /* DOM element for older IE versions, holds userData behavior */
+        _storage_elm = null,
+
+        /* How much space does the storage take */
+        _storage_size = 0,
+
+        /* function to encode objects to JSON strings */
+        json_encode = $.toJSON || Object.toJSON || (window.JSON && (JSON.encode || JSON.stringify)),
+
+        /* function to decode objects from JSON strings */
+        json_decode = $.evalJSON || (window.JSON && (JSON.decode || JSON.parse)) || function(str){
+            return String(str).evalJSON();
+        },
+
+        /* which backend is currently used */
+        _backend = false,
+
+        /* Next check for TTL */
+        _ttl_timeout,
+
+        /**
+         * XML encoding and decoding as XML nodes can't be JSON'ized
+         * XML nodes are encoded and decoded if the node is the value to be saved
+         * but not if it's as a property of another object
+         * Eg. -
+         *   $.jStorage.set("key", xmlNode);        // IS OK
+         *   $.jStorage.set("key", {xml: xmlNode}); // NOT OK
+         */
+        _XMLService = {
+
+            /**
+             * Validates a XML node to be XML
+             * based on jQuery.isXML function
+             */
+            isXML: function(elm){
+                var documentElement = (elm ? elm.ownerDocument || elm : 0).documentElement;
+                return documentElement ? documentElement.nodeName !== "HTML" : false;
+            },
+
+            /**
+             * Encodes a XML node to string
+             * based on http://www.mercurytide.co.uk/news/article/issues-when-working-ajax/
+             */
+            encode: function(xmlNode) {
+                if(!this.isXML(xmlNode)){
+                    return false;
+                }
+                try{ // Mozilla, Webkit, Opera
+                    return new XMLSerializer().serializeToString(xmlNode);
+                }catch(E1) {
+                    try {  // IE
+                        return xmlNode.xml;
+                    }catch(E2){}
+                }
+                return false;
+            },
+
+            /**
+             * Decodes a XML node from string
+             * loosely based on http://outwestmedia.com/jquery-plugins/xmldom/
+             */
+            decode: function(xmlString){
+                var dom_parser = ("DOMParser" in window && (new DOMParser()).parseFromString) ||
+                        (window.ActiveXObject && function(_xmlString) {
+                    var xml_doc = new ActiveXObject('Microsoft.XMLDOM');
+                    xml_doc.async = 'false';
+                    xml_doc.loadXML(_xmlString);
+                    return xml_doc;
+                }),
+                resultXML;
+                if(!dom_parser){
+                    return false;
+                }
+                resultXML = dom_parser.call("DOMParser" in window && (new DOMParser()) || window, xmlString, 'text/xml');
+                return this.isXML(resultXML)?resultXML:false;
+            }
+        };
+
+    ////////////////////////// PRIVATE METHODS ////////////////////////
+
+    /**
+     * Initialization function. Detects if the browser supports DOM Storage
+     * or userData behavior and behaves accordingly.
+     * @returns undefined
+     */
+    function _init(){
+        /* Check if browser supports localStorage */
+        var localStorageReallyWorks = false;
+        if("localStorage" in window){
+            try {
+                window.localStorage.setItem('_tmptest', 'tmpval');
+                localStorageReallyWorks = true;
+                window.localStorage.removeItem('_tmptest');
+            } catch(BogusQuotaExceededErrorOnIos5) {
+                // Thanks be to iOS5 Private Browsing mode which throws
+                // QUOTA_EXCEEDED_ERRROR DOM Exception 22.
+            }
+        }
+        if(localStorageReallyWorks){
+            try {
+                if(window.localStorage) {
+                    _storage_service = window.localStorage;
+                    _backend = "localStorage";
+                }
+            } catch(E3) {/* Firefox fails when touching localStorage and cookies are disabled */}
+        }
+        /* Check if browser supports globalStorage */
+        else if("globalStorage" in window){
+            try {
+                if(window.globalStorage) {
+                    _storage_service = window.globalStorage[window.location.hostname];
+                    _backend = "globalStorage";
+                }
+            } catch(E4) {/* Firefox fails when touching localStorage and cookies are disabled */}
+        }
+        /* Check if browser supports userData behavior */
+        else {
+            _storage_elm = new Element( 'link' );
+            if(_storage_elm.addBehavior){
+
+                /* Use a DOM element to act as userData storage */
+                _storage_elm.style.behavior = 'url(#default#userData)';
+
+                /* userData element needs to be inserted into the DOM! */
+                document.getElementsByTagName('head')[0].appendChild(_storage_elm);
+
+                _storage_elm.load("jStorage");
+                var data = "{}";
+                try{
+                    data = _storage_elm.getAttribute("jStorage");
+                }catch(E5){}
+                _storage_service.jStorage = data;
+                _backend = "userDataBehavior";
+            }else{
+                _storage_elm = null;
+                return;
+            }
+        }
+
+        _load_storage();
+
+        // remove dead keys
+        _handleTTL();
+    }
+
+    /**
+     * Loads the data from the storage based on the supported mechanism
+     * @returns undefined
+     */
+    function _load_storage(){
+        /* if jStorage string is retrieved, then decode it */
+        if(_storage_service.jStorage){
+            try{
+                _storage = json_decode(String(_storage_service.jStorage));
+            }catch(E6){_storage_service.jStorage = "{}";}
+        }else{
+            _storage_service.jStorage = "{}";
+        }
+        _storage_size = _storage_service.jStorage?String(_storage_service.jStorage).length:0;
+    }
+
+    /**
+     * This functions provides the "save" mechanism to store the jStorage object
+     * @returns undefined
+     */
+    function _save(){
+        try{
+            _storage_service.jStorage = json_encode(_storage);
+            // If userData is used as the storage engine, additional
+            if(_storage_elm) {
+                _storage_elm.setAttribute("jStorage",_storage_service.jStorage);
+                _storage_elm.save("jStorage");
+            }
+            _storage_size = _storage_service.jStorage?String(_storage_service.jStorage).length:0;
+        }catch(E7){/* probably cache is full, nothing is saved this way*/}
+    }
+
+    /**
+     * Function checks if a key is set and is string or numberic
+     */
+    function _checkKey(key){
+        if(!key || (typeof key != "string" && typeof key != "number")){
+            throw new TypeError('Key name must be string or numeric');
+        }
+        if(key == "__jstorage_meta"){
+            throw new TypeError('Reserved key name');
+        }
+        return true;
+    }
+
+    /**
+     * Removes expired keys
+     */
+    function _handleTTL(){
+        var curtime, i, TTL, nextExpire = Infinity, changed = false;
+
+        clearTimeout(_ttl_timeout);
+
+        if(!_storage.__jstorage_meta || typeof _storage.__jstorage_meta.TTL != "object"){
+            // nothing to do here
+            return;
+        }
+
+        curtime = +new Date();
+        TTL = _storage.__jstorage_meta.TTL;
+        for(i in TTL){
+            if(TTL.hasOwnProperty(i)){
+                if(TTL[i] <= curtime){
+                    delete TTL[i];
+                    delete _storage[i];
+                    changed = true;
+                }else if(TTL[i] < nextExpire){
+                    nextExpire = TTL[i];
+                }
+            }
+        }
+
+        // set next check
+        if(nextExpire != Infinity){
+            _ttl_timeout = setTimeout(_handleTTL, nextExpire - curtime);
+        }
+
+        // save changes
+        if(changed){
+            _save();
+        }
+    }
+
+    ////////////////////////// PUBLIC INTERFACE /////////////////////////
+
+    $.jStorage = {
+        /* Version number */
+        version: "0.1.6.1",
+
+        /**
+         * Sets a key's value.
+         *
+         * @param {String} key - Key to set. If this value is not set or not
+         *              a string an exception is raised.
+         * @param value - Value to set. This can be any value that is JSON
+         *              compatible (Numbers, Strings, Objects etc.).
+         * @returns the used value
+         */
+        set: function(key, value){
+            _checkKey(key);
+            if(_XMLService.isXML(value)){
+                value = {_is_xml:true,xml:_XMLService.encode(value)};
+            }else if(typeof value == "function"){
+                value = null; // functions can't be saved!
+            }else if(value && typeof value == "object"){
+                // clone the object before saving to _storage tree
+                value = json_decode(json_encode(value));
+            }
+            _storage[key] = value;
+            _save();
+            return value;
+        },
+
+        /**
+         * Looks up a key in cache
+         *
+         * @param {String} key - Key to look up.
+         * @param {mixed} def - Default value to return, if key didn't exist.
+         * @returns the key value, default value or <null>
+         */
+        get: function(key, def){
+            _checkKey(key);
+            if(key in _storage){
+                if(_storage[key] && typeof _storage[key] == "object" &&
+                        _storage[key]._is_xml &&
+                            _storage[key]._is_xml){
+                    return _XMLService.decode(_storage[key].xml);
+                }else{
+                    return _storage[key];
+                }
+            }
+            return typeof(def) == 'undefined' ? null : def;
+        },
+
+        /**
+         * Deletes a key from cache.
+         *
+         * @param {String} key - Key to delete.
+         * @returns true if key existed or false if it didn't
+         */
+        deleteKey: function(key){
+            _checkKey(key);
+            if(key in _storage){
+                delete _storage[key];
+                // remove from TTL list
+                if(_storage.__jstorage_meta &&
+                  typeof _storage.__jstorage_meta.TTL == "object" &&
+                  key in _storage.__jstorage_meta.TTL){
+                    delete _storage.__jstorage_meta.TTL[key];
+                }
+                _save();
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Sets a TTL for a key, or remove it if ttl value is 0 or below
+         *
+         * @param {String} key - key to set the TTL for
+         * @param {Number} ttl - TTL timeout in milliseconds
+         * @returns true if key existed or false if it didn't
+         */
+        setTTL: function(key, ttl){
+            var curtime = +new Date();
+            _checkKey(key);
+            ttl = Number(ttl) || 0;
+            if(key in _storage){
+
+                if(!_storage.__jstorage_meta){
+                    _storage.__jstorage_meta = {};
+                }
+                if(!_storage.__jstorage_meta.TTL){
+                    _storage.__jstorage_meta.TTL = {};
+                }
+
+                // Set TTL value for the key
+                if(ttl>0){
+                    _storage.__jstorage_meta.TTL[key] = curtime + ttl;
+                }else{
+                    delete _storage.__jstorage_meta.TTL[key];
+                }
+
+                _save();
+
+                _handleTTL();
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Deletes everything in cache.
+         *
+         * @return true
+         */
+        flush: function(){
+            _storage = {};
+            _save();
+            return true;
+        },
+
+        /**
+         * Returns a read-only copy of _storage
+         *
+         * @returns Object
+        */
+        storageObj: function(){
+            function F() {}
+            F.prototype = _storage;
+            return new F();
+        },
+
+        /**
+         * Returns an index of all used keys as an array
+         * ['key1', 'key2',..'keyN']
+         *
+         * @returns Array
+        */
+        index: function(){
+            var index = [], i;
+            for(i in _storage){
+                if(_storage.hasOwnProperty(i) && i != "__jstorage_meta"){
+                    index.push(i);
+                }
+            }
+            return index;
+        },
+
+        /**
+         * How much space in bytes does the storage take?
+         *
+         * @returns Number
+         */
+        storageSize: function(){
+            return _storage_size;
+        },
+
+        /**
+         * Which backend is currently in use?
+         *
+         * @returns String
+         */
+        currentBackend: function(){
+            return _backend;
+        },
+
+        /**
+         * Test if storage is available
+         *
+         * @returns Boolean
+         */
+        storageAvailable: function(){
+            return !!_backend;
+        },
+
+        /**
+         * Reloads the data from browser storage
+         *
+         * @returns undefined
+         */
+        reInit: function(){
+            var new_storage_elm, data;
+            if(_storage_elm && _storage_elm.addBehavior){
+                new_storage_elm = new Element( 'link' );
+
+                _storage_elm.parentNode.replaceChild(new_storage_elm, _storage_elm);
+                _storage_elm = new_storage_elm;
+
+                /* Use a DOM element to act as userData storage */
+                _storage_elm.style.behavior = 'url(#default#userData)';
+
+                /* userData element needs to be inserted into the DOM! */
+                document.getElementsByTagName('head')[0].appendChild(_storage_elm);
+
+                _storage_elm.load("jStorage");
+                data = "{}";
+                try{
+                    data = _storage_elm.getAttribute("jStorage");
+                }catch(E5){}
+                _storage_service.jStorage = data;
+                _backend = "userDataBehavior";
+            }
+
+            _load_storage();
+        }
+    };
+
+    // Initialize jStorage
+    _init();
+
+})(window.jQuery || window.$);
 //LanguageChangedMessage.js
 /**
 ProcessPuzzle User Interface
@@ -9366,7 +10262,7 @@ var PhotoGaleryWidget = new Class({
    }.protect(),
    
    destroyChildElements: function( parentElement ){
-      var childElements = parentElement.getChildren( '*' );
+      var childElements = parentElement.getChildren ? parentElement.getChildren( '*' ) : new Array();
       childElements.each( function( childElement, index ){
          if( childElement.getChildren( '*' ).length > 0 ) this.destroyChildElements( childElement );
          
@@ -11073,6 +11969,8 @@ var DocumentElement = new Class({
    
    //Constructor
    initialize: function( definitionElement, bundle, options ){
+      assertThat( definitionElement, not( nil() ));
+      assertThat( bundle, not( nil() ));
       this.setOptions( options );
 
       //Protected, private variables
@@ -11150,6 +12048,7 @@ var DocumentElement = new Class({
    getId: function() { return this.id; },
    getPlugin: function() { return this.plugin; },
    getReference: function() { return this.reference; },
+   getResourceBundle: function() { return this.resourceBundle; },
    getState: function() { return this.status; },
    getStyle: function() { return this.style; },
    getTag: function() { return this.tag; },
@@ -12131,6 +13030,10 @@ var DocumentFooter = new Class({
    },
    
    //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.parent( contextElement, where );
+   },
+   
    unmarshall: function(){
       this.parent();
    }
@@ -12179,6 +13082,10 @@ var DocumentHeader = new Class({
    },
    
    //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.parent( contextElement, where );
+   },
+   
    unmarshall: function(){
       this.parent();
    }
@@ -12568,7 +13475,7 @@ var MissingBindVariableException = new Class({
       this.parameters = { dataElementId : dataElementId };
    }	
 });
-/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.state = AbstractDocument.States.CONSTRUCTED;      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError } );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, { onConstructed : this.onBodyConstructed, onConstructionError : this.onConstructionError } );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, { onConstructed : this.onFooterConstructed, onConstructionError : this.onConstructionError } );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
+/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError } );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, { onConstructed : this.onBodyConstructed, onConstructionError : this.onConstructionError } );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, { onConstructed : this.onFooterConstructed, onConstructionError : this.onConstructionError } );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
 /*
 Name: UnconfiguredDocumentElementException
 
@@ -13428,12 +14335,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 var WebUIConfiguration = new Class({
    Implements: [Class.Singleton, Options], 
    options: {
-	  appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
-	  appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
-	  appenderComplainAboutPopUpBlockingSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@complainAboutPopUpBlocking",
+      appenderBatchSizeSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@batchSize | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@batchSize",
+      appenderCommandLineObjectExpansionDepthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@commandLineObjectExpansionDepth",
+      appenderComplainAboutPopUpBlockingSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@complainAboutPopUpBlocking | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@complainAboutPopUpBlocking",
       appenderContainerElementIdSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@containerElementId | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@containerElementId",
-	  appenderFailCallbackSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@failCallback",
-	  appenderFocusPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@focusPopUp",
+      appenderFailCallbackSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@failCallback | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@failCallback",
+      appenderFocusPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@focusPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@focusPopUp",
       appenderHeightSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@height | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@height | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@height | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@height",
       appenderInitiallyMinimizedSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@initiallyMinimized | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@initiallyMinimized",
       appenderLayoutSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@layoutReference | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@layoutReference",
@@ -13456,6 +14363,8 @@ var WebUIConfiguration = new Class({
       appenderUseOldPopUpSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@useOldPopUp | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@useOldPopUp",
       appenderWaitForResponseSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@waitForResponse | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@waitForResponse",
       appenderWidthSelector : "wui:appenders/wui:ajaxAppender[@name='{appenderName}']/@width | wui:appenders/wui:popUpAppender[@name='{appenderName}']/@width | wui:appenders/wui:inPageAppender[@name='{appenderName}']/@width | wui:appenders/wui:browserConsoleAppender[@name='{appenderName}']/@width",
+      applicationNameSelector : "/pp:processPuzzleConfiguration/ac:application/ac:applicationName",
+      applicationVersionSelector : "/pp:processPuzzleConfiguration/ac:application/ac:version",
       availableSkinElementsSelector : "wui:desktop/wui:availableSkins/wui:skin",
       defaultSkinSelector : "wui:desktop/wui:defaultSkin/@name",
       desktopConfigurationURISelector : "/pp:processPuzzleConfiguration/wui:webUI/wui:desktop/@configurationURI",
@@ -13497,6 +14406,8 @@ var WebUIConfiguration = new Class({
       this.setOptions( options );
       
       //Private instance variables
+      this.applicationName;
+      this.applicationVersion;
       this.availableLocales = new ArrayList();
       this.configurationURI = configurationURI;
       this.i18Element = null;
@@ -13531,6 +14442,8 @@ var WebUIConfiguration = new Class({
    },
    
    //Public mutators and accessors
+   getApplicationName : function() { return this.xmlResource.selectNodeText( this.options.applicationNameSelector, this.webUIElement ); },
+   getApplicationVersion : function() { return this.xmlResource.selectNodeText( this.options.applicationVersionSelector, this.webUIElement ); },
    getAvailableLocales : function() { return this.availableLocales; },
    getAvailableSkinElements : function() {return this.xmlResource.selectNodes( this.options.availableSkinElementsSelector, this.webUIElement );},
    getConfigurationElement : function() { return this.webUIElement; },
@@ -14572,9 +15485,9 @@ var WebUIController = new Class({
             'loadWebUIConfiguration',
             'onDesktopConstructed', 
             'onError', 
-            'restoreStateFromUrl',
-            'storeComponentState',
-            'storeStateInUrl',
+            'restoreComponentsState',
+            'storeComponentsState',
+            'storeWebUIState',
             'subscribeToWebUIMessages',
             'webUIMessageHandler'],
    
@@ -14592,8 +15505,7 @@ var WebUIController = new Class({
       showSplashForm : false,
       splashFormUri : "Desktops/Images/SplashForm.png",
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
-      urlRefreshPeriod : 3000,
-      window : window
+      urlRefreshPeriod : 3000
    },
    
    //Constructors
@@ -14619,7 +15531,7 @@ var WebUIController = new Class({
       this.refreshUrlTimer;
       this.skin;
       this.splashForm;
-      this.stateManager = new ComponentStateManager();
+      this.stateManager;
       this.userName;
       this.userLocation;
       this.warningContainer;
@@ -14630,8 +15542,8 @@ var WebUIController = new Class({
          if( this.options.showSplashForm ) this.showSplashForm();
          this.loadWebUIConfiguration();
          this.configureLogger();
-
-         this.restoreStateFromUrl(),
+         this.instantiateComponentStateManager();
+         this.restoreComponentsState(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
          this.loadInternationalizations();
@@ -14661,12 +15573,12 @@ var WebUIController = new Class({
       this.configurationChain.chain( 
          this.loadWebUIConfiguration,
          this.configureLogger,
-         this.restoreStateFromUrl,
+         this.restoreComponentsState,
          this.determineCurrentUserLocale,
          this.loadInternationalizations,
          this.constructDesktop,
          this.subscribeToWebUIMessages,
-         this.storeComponentState,
+         this.storeWebUIState,
          this.destroySplashForm,
          this.finalizeConfiguration
       ).callChain();
@@ -14680,7 +15592,7 @@ var WebUIController = new Class({
          this.desktop.destroy();
          this.webUIConfiguration.release();
          this.resourceBundle.release();
-         this.options.window.location.hash = "";
+         window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
       }
@@ -14710,26 +15622,29 @@ var WebUIController = new Class({
       this.showWebUIExceptionPage( this.error );
    },
 	
-   restoreStateFromUrl : function(){
-      this.logger.debug( this.options.componentName + ".restoreStateFromUrl() started." );
-      if( this.options.window.location.hash.substring(2)) {
+   restoreComponentsState : function(){
+      this.logger.debug( this.options.componentName + ".restoreComponentsState() started." );
+      this.stateManager.restore();
+      if( window.location.hash.substring(2)) {
          var currentState = this.stateManager.toString();
          try {
-            this.stateManager.resetStateFromUri( this.options.window.location.hash.substring(2) );
+            this.stateManager.parseUri( window.location.hash.substring(2) );
             this.messageBus.notifySubscribers( new WebUIStateRestoredMessage() );
          }catch( e ){
             this.stateManager.parse( currentState );
-            this.logger.debug( "restoreStateFromUrl() exception: " + e );
+            this.logger.debug( "restoreComponentsState() exception: " + e );
          }
       }
       this.configurationChain.callChain();
    },
    
-   storeStateInUrl : function() {
-	   var stateAsString = this.stateManager.toString(); 
+   storeComponentsState : function() {
+      this.stateManager.persist();
+      
+	   var stateAsString = this.stateManager.toUri(); 
 	   if( this.recentHash != stateAsString ){
 	      this.recentHash = stateAsString;
-	      this.options.window.location.hash = "!" + stateAsString;
+	      window.location.hash = "!" + stateAsString;
 	   }
    },
    
@@ -14797,8 +15712,8 @@ var WebUIController = new Class({
    }.protect(),
 	
    determineCurrentHash: function() {
-      if( this.options.window.location.hash.indexOf( "#" ) != -1 )
-         return this.options.window.location.hash.substring(1);
+      if( window.location.hash.indexOf( "#" ) != -1 )
+         return window.location.hash.substring(1);
       else return "";
    }.protect(),
 	
@@ -14809,7 +15724,7 @@ var WebUIController = new Class({
       browserLanguage.options.country = null;
       browserLanguage.options.variant = null;
       if( this.locale == null ){
-         var storedState = this.stateManager.retrieveCurrentState( this.options.componentName ); 
+         var storedState = this.stateManager.retrieveComponentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
             this.locale = new Locale();
@@ -14829,7 +15744,7 @@ var WebUIController = new Class({
    }.protect(),
    
    finalizeConfiguration: function(){
-      this.refreshUrlTimer = this.storeStateInUrl.periodical( this.options.urlRefreshPeriod, this );
+      this.refreshUrlTimer = this.storeComponentsState.periodical( this.options.urlRefreshPeriod, this );
       this.isConfigured = true;
       this.fireEvent( 'configured', this );
    }.protect(),
@@ -14851,6 +15766,13 @@ var WebUIController = new Class({
          }
       }
       return returnValue;	
+   }.protect(),
+   
+   instantiateComponentStateManager : function(){
+      var applicationSpecificName = this.webUIConfiguration.getApplicationName();
+      applicationSpecificName += "." + this.webUIConfiguration.getApplicationVersion();
+      applicationSpecificName += ".ComponentStateManager";
+      this.stateManager = new ComponentStateManager({ componentName : applicationSpecificName });
    }.protect(),
 	
    loadInternationalizations : function () {
@@ -14916,9 +15838,9 @@ var WebUIController = new Class({
       }
    }.protect(),
 	
-   storeComponentState : function() {
-      this.logger.debug( this.options.componentName + ".storeComponentState() started." );
-      this.stateManager.storeCurrentState( this.options.componentName, {locale : this.locale.toString()} );
+   storeWebUIState : function() {
+      this.logger.debug( this.options.componentName + ".storeWebUIState() started." );
+      this.stateManager.storeComponentState( this.options.componentName, {locale : this.locale.toString()} );
       this.configurationChain.callChain();
    }.protect(),
    
@@ -14998,6 +15920,7 @@ var TestMessageTwo = new Class({
       this.options.messageClass = TestMessageTwo;
    }
 });
+
 
 
 
