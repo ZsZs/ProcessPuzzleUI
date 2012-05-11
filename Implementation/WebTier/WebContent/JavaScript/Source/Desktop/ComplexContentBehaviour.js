@@ -32,8 +32,10 @@ var ComplexContentBehaviour = new Class({
    Implements: [Events, Options],
    
    options : {
+      contentAreaElementStyle : "complexContentArea",
       contentUrlSelector : "contentURL",
-      disableScrollBars : true,
+      disableScrollBars : false,
+      disableScrollBarsSelector: "disableScrollBars",
       documentContentUriSelector : "document/documentContentUri",
       documentDefinitionUriSelector : "document/documentDefinitionUri",
       documentNameSeparator : "_",
@@ -69,6 +71,7 @@ var ComplexContentBehaviour = new Class({
    initialize: function( definitionElement, bundle, options ){
       this.setOptions( options );
       this.componentRootElement;
+      this.contentAreaElement;
       this.contentContainerElement;
       this.contentUrl;
       this.document;
@@ -100,10 +103,11 @@ var ComplexContentBehaviour = new Class({
    
    //Public accessor and mutator methods
    onContainerResize: function(){
+      if( this.verticalScrollBar ) this.verticalScrollBar.refresh( this.contentContainerElement.getSize() );
+      
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
          this.document.onContainerResize( this.contentContainerElement.getSize() );
-         if( this.verticalScrollBar ) this.verticalScrollBar.refresh();
-      }
+      }      
    },
    
    onDocumentError: function( error ){
@@ -115,10 +119,8 @@ var ComplexContentBehaviour = new Class({
    
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
+      this.onContainerResize();
       this.storeComponentState();
-      if( !this.options.disableScrollBars ){
-         this.verticalScrollBar = new ScrollBar( this.getContentContainerId(), {} );
-      }
       this.fireEvent( 'documentLoaded', this.documentDefinitionUri );
       this.constructionChain.callChain();
    },
@@ -162,7 +164,7 @@ var ComplexContentBehaviour = new Class({
          
          this.destroyDocument();
          this.destroyDocumentWrapper();
-         this.cleanUpContentElement();
+         //this.cleanUpContentElement();
          this.processMessageProperties( webUIMessage );
          this.loadDocument( webUIMessage.getDocumentType() );
       }
@@ -172,6 +174,7 @@ var ComplexContentBehaviour = new Class({
    //Properties
    getColumnReference: function() { return this.columnReference; },
    getComponentStateManager: function() { return this.componentStateManager; },
+   getContentAreaElement: function(){ return this.contentAreaElement; },
    getContentContainerId: function() { return this.name + this.options.componentContentIdPostfix; },
    getContentUrl: function() { return this.contentUrl; },
    getDocument: function() { return this.document; },
@@ -200,15 +203,16 @@ var ComplexContentBehaviour = new Class({
    //Protected, private helper methods
    addScrollBars: function(){
       if( !this.options.disableScrollBars ){
-         this.verticalScrollBar = new ScrollBar( this.getContentContainerId(), {});
+         this.verticalScrollBar = new ScrollBar( this.contentAreaElement, {
+            contentHeight: this.contentContainerElement.getSize().y,
+            contentWidth: this.contentContainerElement.getSize().x
+         });
+         this.verticalScrollBar.construct();
       }
       this.constructionChain.callChain();
    }.protect(),
    
    cleanUpContentElement: function(){
-      if( this.verticalScrollBar ) this.verticalScrollBar.destroy();
-      this.verticalScrollBar = null;
-      
       if( this.contentContainerElement ){
          var childElements = this.contentContainerElement.getElements ? this.contentContainerElement.getElements( '*' ) : Array.from( this.contentContainerElement.getElementsByTagName( '*' ));  
          childElements.each( function( childElement, index ){
@@ -240,14 +244,29 @@ var ComplexContentBehaviour = new Class({
       else this.constructionChain.callChain();
    }.protect(),
    
+   createContentAreaElement: function(){
+      var paddingElementForStaticContent = this.contentContainerElement.getChildren( '#' + this.name + '_pad' )[0]; 
+      if( paddingElementForStaticContent ){
+         this.contentAreaElement = paddingElementForStaticContent;
+      }else{
+         this.contentAreaElement = new Element( 'div' );
+         this.contentContainerElement.grab( this.contentAreaElement );
+      }
+      this.contentAreaElement.addClass( this.options.contentAreaElementStyle );
+      
+      if( !this.options.disableScrollBars ) this.contentContainerElement.setStyle( 'overflow', 'hidden' );
+      this.constructionChain.callChain();      
+   }.protect(),
+   
    createDocumentWrapper: function(){
       this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, 'class' : this.documentWrapperStyle } );
-      this.contentContainerElement.grab( this.documentWrapper );
+      this.contentAreaElement.grab( this.documentWrapper );
    }.protect(),
       
    destroyComponents: function(){
       this.destroyDocument();
       this.destroyDocumentWrapper();
+      if( this.verticalScrollBar ){ this.verticalScrollBar.destroy(); this.verticalScrollBar = null; }
       this.cleanUpContentElement();
       if( this.header ) this.header.destroy();
       if( this.plugin ) this.plugin.destroy();
@@ -415,6 +434,7 @@ var ComplexContentBehaviour = new Class({
    
    unmarshallProperties: function(){
       this.contentUrl = XmlResource.selectNodeText( this.options.contentUrlSelector, this.definitionElement );
+      this.options.disableScrollBars = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.disableScrollBarsSelector, this.options.disableScrollBars ));
       this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector, this.options.heightDefault ));
       this.eventSources = eval( XmlResource.determineAttributeValue( this.definitionElement, this.options.eventSourcesSelector, null, this.eventSources ));
       this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );

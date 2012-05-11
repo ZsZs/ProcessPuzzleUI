@@ -34,12 +34,17 @@ var DesktopWindow = new Class({
    Extends: DesktopElement,
    Implements: [ComplexContentBehaviour],
    Binds: [
+      'addScrollBars',
       'constructDocument',
       'constructHeader',
       'constructPlugin',
+      'createContentAreaElement',
       'destroy',
       'determineComponentElements', 
+      'finalizeConstruction',
       'instantiateMUIWindow', 
+      'loadHtmlDocument',
+      'loadSmartDocument',
       'onContainerResize', 
       'onDocumentError', 
       'onDocumentReady', 
@@ -100,8 +105,10 @@ var DesktopWindow = new Class({
          this.instantiateMUIWindow, 
          this.determineComponentElements, 
          this.constructHeader,
+         this.createContentAreaElement,
          this.constructPlugin,
          this.constructDocument,
+         this.addScrollBars,
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );

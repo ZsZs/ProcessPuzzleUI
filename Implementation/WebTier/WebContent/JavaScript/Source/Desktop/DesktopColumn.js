@@ -58,6 +58,7 @@ var DesktopColumn = new Class({
    },
    
    destroy: function(){
+      if( this.MUIColumn ) this.MUIColumn.close();
       this.parent();
    },
    

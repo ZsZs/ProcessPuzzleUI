@@ -12,6 +12,7 @@ window.DesktopPanelTest = new Class( {
          { method : 'unmarshall_whenEnabled_includesComponentInUri', isAsynchron : false },
          { method : 'construct_instantiatesMUIPanel', isAsynchron : true }, 
          { method : 'construct_constructsHeaderWithPlugin', isAsynchron : true }, 
+         { method : 'construct_createsContentAreaElement', isAsynchron : true }, 
          { method : 'construct_whenNotDisabled_createsScrollBars', isAsynchron : true }, 
          { method : 'construct_whenEnabled_restoresComponentState', isAsynchron : true }, 
          { method : 'construct_whenSpecified_constructsPlugin', isAsynchron : true }, 
@@ -174,13 +175,25 @@ window.DesktopPanelTest = new Class( {
       ).callChain();
    },
    
+   construct_createsContentAreaElement : function() {
+      this.testCaseChain.chain(
+         function(){ this.constructPanel( this.panelWithDocument ); }.bind( this ),
+         function(){
+            assertThat( this.panelWithDocument.getContentAreaElement(), equalTo( this.pageWrapperElement.getElements( '.' + this.panelWithDocument.options.contentAreaElementStyle )[0] ));
+         }.bind( this ),
+         function(){
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    construct_whenNotDisabled_createsScrollBars : function() {
       this.testCaseChain.chain(
          function(){ this.constructPanel( this.panelWithDocument ); }.bind( this ),
          function(){
          }.bind( this ),
          function(){
-            //assertThat( this.panelWithDocument.getVerticalScrollBar(), not( nil() ));
+            assertThat( this.panelWithDocument.getVerticalScrollBar(), not( nil() ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -340,9 +353,10 @@ window.DesktopPanelTest = new Class( {
       
       MUI.myChain = new Chain();
       MUI.myChain.chain( function() {
-         MUI.Desktop.initialize( {
+         MUI.Desktop.initialize({
             desktop : this.constants.DESKTOP_CONTAINER_ID,
-            pageWrapper : this.constants.PAGE_WRAPPER_ID} );
+            pageWrapper : this.constants.PAGE_WRAPPER_ID 
+         });
       }.bind( this ));
       MUI.myChain.callChain();
       this.column.construct();

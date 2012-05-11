@@ -25,6 +25,8 @@ window.ScrollBarTest = new Class( {
    },
    
    afterEachTest : function (){
+      this.scrollBar.destroy();
+      this.scrollBar = null;
    },
    
    initialize_identifiesTheScrollableElement : function() {
@@ -44,10 +46,12 @@ window.ScrollBarTest = new Class( {
    destroy_invokesScrollAreaDestroy : function() {
       this.scrollBar.construct();
       
+      var scrollAreaDestroyMethod = this.scrollBar.getScrollArea().destroy;
       this.scrollBar.getScrollArea().destroy = spy( this.scrollBar.getScrollArea().destroy );
       this.scrollBar.destroy();
       
       verify( this.scrollBar.getScrollArea().destroy )();
+      this.scrollBar.getScrollArea().destroy = scrollAreaDestroyMethod; 
    },
       
    //Protected, private helper methods

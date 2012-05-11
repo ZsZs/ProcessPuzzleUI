@@ -63,7 +63,7 @@ var HtmlDocument = new Class({
    },
    
    onContainerResize: function( newSize ){
-      this.editor.onContainerResize( this.containerElement.getSize() );
+      this.editor.onContainerResize( newSize );
    },
    
    resizeTextArea: function(){

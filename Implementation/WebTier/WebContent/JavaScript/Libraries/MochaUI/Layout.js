@@ -378,7 +378,7 @@ MUI.Column = new Class({
 		var instanceID = instances.get(options.id);
 
 		if (options.container == null) {
-			options.container = MUI.Desktop.pageWrapper
+			options.container = MUI.Desktop.pageWrapper;
 		}
 		else {
 			$(options.container).setStyle('overflow', 'hidden');
@@ -507,6 +507,10 @@ MUI.Column = new Class({
 
 		MUI.rWidth();
 
+	},
+	
+	close: function(){
+	   MUI.closeColumn( this.options.id );
 	},
 
     columnCollapse: function(){
