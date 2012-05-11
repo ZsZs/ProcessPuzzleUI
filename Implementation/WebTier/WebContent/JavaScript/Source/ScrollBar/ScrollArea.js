@@ -274,6 +274,7 @@ var ScrollArea = new Class({
       this.contentViewElement = new Element( 'div', { 'class' : this.options.contentViewElementClass });
       this.contentViewElement.wraps( this.scrollableElement );
       this.contentViewElement.setStyles({  overflow : 'hidden', padding : 0, });
+      this.determinePadding();
       this.setContentViewSize();
    }.protect(),
    
@@ -443,21 +444,25 @@ var ScrollArea = new Class({
       this.scrollableElement.setStyles({ height : '100%', margin : '0px', padding : '0px', width : '100%' });
    }.protect(),
    
-   setContentViewSize : function( size ){
+   setContentViewSize : function( size ){      
       if( size && size.x && size.y ){
          this.options.contentHeight = size.y - this.paddingHeight;
          this.options.contentWidth = this.overHang <= 0 ? size.x - this.paddingWidth : size.x -15 - this.paddingWidth;
+      }else if( !this.options.contentHeight && !this.options.contentWidth ){
+         this.options.contentHeight = parseInt( this.scrollableElement.getStyle( 'height' )) - this.paddingHeight;;
+         this.options.contentWidth = parseInt( this.scrollableElement.getStyle( 'width' )) - this.paddingWidth;
       }
 
-      var height = this.options.contentHeight ? this.options.contentHeight : parseInt( this.scrollableElement.getStyle( 'height' )) - this.paddingHeight;  
-      var width = this.options.contentWidth ? this.options.contentWidth : parseInt( this.scrollableElement.getStyle( 'width' )) - this.paddingWidth;  
+      var height = this.options.contentHeight;  
+      var width = this.options.contentWidth;  
       this.contentViewElement.setStyles({ width : width + 'px', height : height + 'px' });
    }.protect(),
    
    setHandleHeight : function() {
-      var handleHeightPercent = (100 - (( this.overHang * 100 ) / this.contentViewElement.getSize().y));
-      this.handleHeight = (( handleHeightPercent * this.scrollableElement.getSize().y) / 100 ) - (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y );
-      if ((this.handleHeight + this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y) >= this.scrollBar.getSize().y) {
+      var handleHeightPercent = this.contentViewElement.getSize().y > 0 ? (100 - (( this.overHang * 100 ) / this.contentViewElement.getSize().y )) : 0;
+      this.handleHeight = (( handleHeightPercent * this.scrollableElement.getSize().y ) / 100 ) - (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y );
+      
+      if(( this.handleHeight + this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y ) >= this.scrollBar.getSize().y ) {
          this.handleHeight -= (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y) * 2;
       }
       
@@ -481,12 +486,12 @@ var ScrollArea = new Class({
    
    stopScrollDown : function(){
       clearInterval( this.downInterval );
-      this.downBtn.removeClass( this.options.downBtnClass + '-Active' );
+      if( this.downBtn ) this.downBtn.removeClass( this.options.downBtnClass + '-Active' );
    },
    
    stopScrollUp : function(){
       clearInterval( this.downInterval );
-      this.upBtn.removeClass( this.options.upBtnClass + '-Active' );
+      if( this.upBtn ) this.upBtn.removeClass( this.options.upBtnClass + '-Active' );
    },
    
    switchToFullWindowMode : function(){

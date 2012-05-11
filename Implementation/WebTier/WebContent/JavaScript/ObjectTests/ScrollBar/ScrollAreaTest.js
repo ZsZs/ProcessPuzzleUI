@@ -11,7 +11,7 @@ window.ScrollAreaTest = new Class( {
          { method : 'construct_wrapsContentElementWithPaddingElement', isAsynchron : false },
          { method : 'construct_wrapsContentElementWithContentViewElement', isAsynchron : false },
          { method : 'construct_createsScrollBarElements', isAsynchron : false },
-         { method : 'refresh_whenContentIsLess_destroysScrollControl', isAsynchron : false },
+         { method : 'refresh_whenContentIsLess_turnsScrollControlToOpaque', isAsynchron : false },
          { method : 'refresh_whenContentBecomeLarge_recreatesScrollControl', isAsynchron : false },
          { method : 'refresh_whenContentSizeIsGiven_setsContentViewSize', isAsynchron : false },
          { method : 'destroy_destroysAllCreatedElements', isAsynchron : false }]
@@ -99,13 +99,13 @@ window.ScrollAreaTest = new Class( {
       assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 1 ));
    },
    
-   refresh_whenContentIsLess_destroysScrollControl : function() {
+   refresh_whenContentIsLess_turnsScrollControlToOpaque : function() {
       var originalText = this.scrollableElement.get( 'text' ); 
       this.scrollArea.construct();
       this.scrollableElement.set( 'text', "Very short text" );
       this.scrollArea.refresh();
       
-      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 0 ));
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass )[0].getStyle( 'opacity' ), equalTo( this.scrollArea.options.disabledOpacity ));
       assertThat( this.scrollArea.getContentWrapperElement().getStyle( 'margin-right' ), equalTo( '0px' ));
       
       //TEAR DOWN:
@@ -129,7 +129,7 @@ window.ScrollAreaTest = new Class( {
       this.scrollArea.refresh({ x: 450, y: 250 });
 
       assertThat( this.scrollArea.getContentViewElement().getStyle( 'height' ), equalTo( "250px" ));
-      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( "450px" ));
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( "435px" ));
    },
    
    destroy_destroysAllCreatedElements : function() {
