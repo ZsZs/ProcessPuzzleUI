@@ -163,7 +163,7 @@ var ScrollArea = new Class({
       this.contentWrapperElement.adopt( this.contentViewElement.getChildren() );
       this.contentWrapperElement.inject( this.contentViewElement, 'top' );
       this.contentWrapperElement.setStyles( this.scrollableElementPadding );
-      this.contentWrapperElement.setStyles({ display: 'inline', float: 'left' });
+      this.contentWrapperElement.setStyles({ display: 'inline', 'float': 'left' });
    }.protect(),
    
    destroyContentElement : function(){
