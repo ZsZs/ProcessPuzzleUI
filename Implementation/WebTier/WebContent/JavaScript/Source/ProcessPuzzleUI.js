@@ -14,7 +14,7 @@
 //= require_directory ./NewsReaderWidget
 //= require_directory ./PhotoGaleryWidget
 //= require_directory ./ResourceManager
-//= require_directory ./ScrollBar
+//= require_directory ./ScrollingBehaviour
 //= require_directory ./Singleton
 //= require_directory ./SkinSelectorWidget
 //= require_directory ./SmartDocument
