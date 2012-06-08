@@ -103,10 +103,16 @@ var ComplexContentBehaviour = new Class({
    
    //Public accessor and mutator methods
    onContainerResize: function(){
-      if( this.verticalScrollBar ) this.verticalScrollBar.refresh( this.contentContainerElement.getSize() );
+      var containerEffectiveSize = this.contentContainerElement.getSize();
+      
+      if( this.verticalScrollBar ){
+        this.verticalScrollBar.refresh( this.contentContainerElement.getSize() );
+        containerEffectiveSize = this.verticalScrollBar.getContentViewSize();
+      } 
       
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
-         this.document.onContainerResize( this.contentContainerElement.getSize() );
+         this.adjustDocumentWrapperSize( containerEffectiveSize );
+         this.document.onContainerResize( this.documentWrapper.getSize() );
       }      
    },
    
@@ -164,7 +170,6 @@ var ComplexContentBehaviour = new Class({
          
          this.destroyDocument();
          this.destroyDocumentWrapper();
-         //this.cleanUpContentElement();
          this.processMessageProperties( webUIMessage );
          this.loadDocument( webUIMessage.getDocumentType() );
       }
@@ -203,13 +208,20 @@ var ComplexContentBehaviour = new Class({
    //Protected, private helper methods
    addScrollBars: function(){
       if( !this.options.disableScrollBars ){
-         this.verticalScrollBar = new ScrollBar( this.contentAreaElement, {
+         this.verticalScrollBar = new ScrollingBehaviour( this.contentAreaElement, {
             contentHeight: this.contentContainerElement.getSize().y,
             contentWidth: this.contentContainerElement.getSize().x
          });
          this.verticalScrollBar.construct();
       }
       this.constructionChain.callChain();
+   }.protect(),
+   
+   adjustDocumentWrapperSize: function( containerEffectiveSize ){
+      var framingWidth = parseInt( this.documentWrapper.getStyle( 'margin-left' )) + parseInt( this.documentWrapper.getStyle( 'margin-right' ));  
+      framingWidth += 2 * parseInt( this.documentWrapper.getStyle( 'border' ));  
+      framingWidth += parseInt( this.documentWrapper.getStyle( 'padding-left' )) + parseInt( this.documentWrapper.getStyle( 'padding-right' ));  
+      this.documentWrapper.setStyles({ width : ( containerEffectiveSize.x - framingWidth ) + 'px' });
    }.protect(),
    
    cleanUpContentElement: function(){
@@ -261,12 +273,13 @@ var ComplexContentBehaviour = new Class({
    createDocumentWrapper: function(){
       this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, 'class' : this.documentWrapperStyle } );
       this.contentAreaElement.grab( this.documentWrapper );
+      this.documentWrapper.setStyle( 'width', this.contentContainerElement.getSize().x + 'px' );
    }.protect(),
       
    destroyComponents: function(){
       this.destroyDocument();
       this.destroyDocumentWrapper();
-      if( this.verticalScrollBar ){ this.verticalScrollBar.destroy(); this.verticalScrollBar = null; }
+      this.destroyScrollBars();
       this.cleanUpContentElement();
       if( this.header ) this.header.destroy();
       if( this.plugin ) this.plugin.destroy();
@@ -284,6 +297,10 @@ var ComplexContentBehaviour = new Class({
    destroyDocumentWrapper: function(){
       if( this.documentWrapper && this.documentWrapper.destroy ) this.documentWrapper.destroy();
       this.documentWrapper = null;
+   }.protect(),
+   
+   destroyScrollBars: function(){
+      if( this.verticalScrollBar ){ this.verticalScrollBar.destroy(); this.verticalScrollBar = null; }
    }.protect(),
    
    determineComponentElements: function(){

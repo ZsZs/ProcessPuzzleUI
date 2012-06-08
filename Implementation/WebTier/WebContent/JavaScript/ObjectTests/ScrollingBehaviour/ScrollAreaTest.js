@@ -10,7 +10,7 @@ window.ScrollAreaTest = new Class( {
          { method : 'construct_adjustsScrollableElementSize', isAsynchron : false },
          { method : 'construct_wrapsContentElementWithPaddingElement', isAsynchron : false },
          { method : 'construct_wrapsContentElementWithContentViewElement', isAsynchron : false },
-         { method : 'construct_createsScrollBarElements', isAsynchron : false },
+         { method : 'construct_createsScrollControlElements', isAsynchron : false },
          { method : 'refresh_whenContentIsLess_turnsScrollControlToOpaque', isAsynchron : false },
          { method : 'refresh_whenContentBecomeLarge_recreatesScrollControl', isAsynchron : false },
          { method : 'refresh_whenContentSizeIsGiven_setsContentViewSize', isAsynchron : false },
@@ -93,10 +93,11 @@ window.ScrollAreaTest = new Class( {
       assertThat( this.scrollableElement.getParent( "." + this.scrollArea.options.contentViewElementClass ), not( nil() ));
    },
    
-   construct_createsScrollBarElements : function() {
+   construct_createsScrollControlElements : function() {
       this.scrollArea.construct();
       
-      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 1 ));
+      assertThat( this.scrollArea.scrollControls, JsHamcrest.Matchers.instanceOf( ScrollControls ));
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.scrollControls.options.scrollControlsYClass ).length, equalTo( 1 ));
    },
    
    refresh_whenContentIsLess_turnsScrollControlToOpaque : function() {
@@ -105,7 +106,7 @@ window.ScrollAreaTest = new Class( {
       this.scrollableElement.set( 'text', "Very short text" );
       this.scrollArea.refresh();
       
-      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass )[0].getStyle( 'opacity' ), equalTo( this.scrollArea.options.disabledOpacity ));
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.scrollControls.options.scrollControlsYClass )[0].getStyle( 'opacity' ), equalTo( this.scrollArea.scrollControls.options.disabledOpacity ));
       assertThat( this.scrollArea.getContentWrapperElement().getStyle( 'margin-right' ), equalTo( '0px' ));
       
       //TEAR DOWN:
@@ -120,7 +121,8 @@ window.ScrollAreaTest = new Class( {
       this.scrollableElement.set( 'text', originalText );
       this.scrollArea.refresh();
       
-      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.options.scrollBarClass ).length, equalTo( 1 ));
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.scrollControls.options.scrollControlsYClass ).length, equalTo( 1 ));
+      assertThat( $( this.constants.SCROLLABLE_CONTAINER_ID ).getElements( 'div.' + this.scrollArea.scrollControls.options.scrollControlsYClass )[0].getStyle( 'opacity' ), equalTo( 1 ));
       assertThat( this.scrollArea.getContentWrapperElement().getStyle( 'margin-right' ), equalTo( '15px' ));
    },
       
@@ -129,7 +131,7 @@ window.ScrollAreaTest = new Class( {
       this.scrollArea.refresh({ x: 450, y: 250 });
 
       assertThat( this.scrollArea.getContentViewElement().getStyle( 'height' ), equalTo( "250px" ));
-      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( "435px" ));
+      assertThat( this.scrollArea.getContentViewElement().getStyle( 'width' ), equalTo( "450px" ));
    },
    
    destroy_destroysAllCreatedElements : function() {

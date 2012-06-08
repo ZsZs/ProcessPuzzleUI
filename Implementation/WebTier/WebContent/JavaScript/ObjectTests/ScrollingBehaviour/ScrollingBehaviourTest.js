@@ -1,4 +1,4 @@
-window.ScrollBarTest = new Class( {
+window.ScrollingBehaviourTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onFailure', 'onSuccess'],
 
@@ -21,7 +21,7 @@ window.ScrollBarTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.scrollBar = new ScrollBar( this.constants.SCROLLABLE_ELEMENT_ID, {});
+      this.scrollBar = new ScrollingBehaviour( this.constants.SCROLLABLE_ELEMENT_ID, {});
    },
    
    afterEachTest : function (){
@@ -56,7 +56,7 @@ window.ScrollBarTest = new Class( {
       
    //Protected, private helper methods
    instantiateScrollBarWithoutArguments : function(){
-      new ScrollBar();
+      new ScrollingBehaviour();
    }
 
 });

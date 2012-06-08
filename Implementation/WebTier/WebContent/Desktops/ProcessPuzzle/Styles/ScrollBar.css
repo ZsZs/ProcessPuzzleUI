@@ -1,17 +1,19 @@
 .scrollControlsY{
-	display:block;
-	position: absolute;
-	top:0;
-	right:-1px;
-	height:100%;
-	width:15px;
 	background: url(../Images/ScrollBar.gif) no-repeat right top;
+	display: block;
+	height:100%;
+	margin: 0px;
+	padding: 0px;
+	position: absolute;
+	right: 0px;
+	top: 0;
+	width: 15px;
 }
 
 .upBtn{
 	display:block;
 	position:absolute;
-	bottom:15px;
+	bottom:17px;
 	right:0;
 	width:15px;
 	height:17px;
@@ -28,14 +30,14 @@
 }
 
 .downBtn{
-	display:block;
-	position:absolute;
-	bottom:0;
-	right:0;
-	width:15px;
-	height:15px;
 	background: url(../Images/ScrollDownButton.gif) no-repeat 0 -34px;
-	cursor:pointer;
+	bottom: 0px;
+	cursor: pointer;
+	display: block;
+	height: 17px;
+	position: absolute;
+	right: 0px;
+	width:15px;
 }
 
 .downBtn:hover{
@@ -46,35 +48,35 @@
 	background: url(../Images/ScrollDownButton.gif) no-repeat 0 0;
 }
 
-.scrollBar{
-	display:block;
+.scrollSlot{
+	display: block;
+	margin: 0px;
+	padding: 0px;	
 	position: absolute;
-	top:-10px;
-	right:0;
-	padding: 0 0 0 0;	
-	bottom:41px;
-	width:15px;
+	top: 0px;
+	right: 0;
+	width: 15px;
 }
 
 .scrollHandle{
-	display:block;
-	position:absolute;
-	top:0px;
-	right:0;
-	width:15px;
-	height:35px;
-	min-height:4px;
 	cursor: pointer;
-	padding:11px 0;
-	margin:13px 0 0 0;
+	display:block;
+	margin: 0px;
+	min-height: 4px;
+	padding: 0px;
+	position:absolute;
+	right: 0px;
+	top: 0px;
+	width: 15px;
 }
 
 .scrollHandleBG{
-	display:block;
-	position: relative;
-	height:100%;
-	width:15px;
 	background: url(../Images/ScrollHandleBackground.gif) repeat-y 0 0 ;
+	display:block;
+	height:100%;
+	position: relative;
+	top: 11px;
+	width:15px;
 }
 
 .scrollHandle .scrollHandleBG:hover, .scrollHandle:hover .scrollHandleBG{
@@ -100,7 +102,7 @@
 	width:15px;
 	height:11px;
 	background: url(../Images/ScrollHandleTop.gif) no-repeat 0 0;
-	top:2px;
+	top:0px;
 	margin:0 0 0 0;
 }
 
