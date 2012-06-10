@@ -37,8 +37,11 @@ var DesktopPanel = new Class({
            'constructPlugin', 
            'constructHeader', 
            'createContentAreaElement',
+           'destroyComponents',
+           'destroyMUIPanel',
            'determineComponentElements',
            'finalizeConstruction',
+           'finalizeDestruction',
            'instantiateMUIPanel',
            'loadHtmlDocument',
            'loadSmartDocument',
@@ -128,6 +131,20 @@ var DesktopPanel = new Class({
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.destroyMUIPanel, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyMUIPanel: function(){
+      if( this.MUIPanel ){
+         this.MUIPanel.removeEvents();
+         this.MUIPanel.destroy();
+         this.MUIPanel = null;
+      }
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    determinePanelElement: function(){

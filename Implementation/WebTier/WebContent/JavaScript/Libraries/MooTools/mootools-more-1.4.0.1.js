@@ -6960,7 +6960,7 @@ var Slider = new Class({
 		onChange: function(intStep){},
 		onComplete: function(strStep){},*/
 		onTick: function(position){
-			this.setKnobPosition(position);
+			this.setKnobPosition( Math.round( position ));
 		},
 		initialStep: 0,
 		snap: false,
@@ -7041,8 +7041,7 @@ var Slider = new Class({
 	},
 
 	autosize: function(){
-		this.setSliderDimensions()
-			.setKnobPosition(this.toPosition(this.step));
+		this.setSliderDimensions().setKnobPosition(this.toPosition(this.step));
 		this.drag.options.limit[this.axis] = [-this.options.offset, this.full - this.options.offset];
 		if (this.options.snap) this.setSnap();
 		return this;
@@ -7057,7 +7056,7 @@ var Slider = new Class({
 
 	setKnobPosition: function(position){
 		if (this.options.snap) position = this.toPosition(this.step);
-		this.knob.setStyle(this.property, position);
+		this.knob.setStyle(this.property, Math.round( position ));
 		return this;
 	},
 
@@ -7085,8 +7084,8 @@ var Slider = new Class({
 		this.range = this.max - this.min;
 		this.steps = this.options.steps || this.full;
 		this.stepSize = Math.abs(this.range) / this.steps;
-		this.stepWidth = this.stepSize * this.full / Math.abs(this.range);
-		if (range) this.set(Array.pick([pos, this.step]).floor(this.min).max(this.max));
+		this.stepWidth = this.stepSize * this.full / ( this.range > 0 ? Math.abs(this.range) : 1 );
+		if( range ) this.set( Array.pick( [pos, this.step] ).floor( this.min ).max( this.max ));
 		return this;
 	},
 
@@ -7145,7 +7144,7 @@ var Slider = new Class({
 	},
 
 	toPosition: function(step){
-		return (this.full * Math.abs(this.min - step)) / (this.steps * this.stepSize) - this.options.offset;
+		return (this.full * Math.abs(this.min - step)) / ( this.steps > 0 && this.stepSize > 0 ? (this.steps * this.stepSize) - this.options.offset : 1 );
 	}
 
 });

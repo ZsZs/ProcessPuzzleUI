@@ -42,14 +42,23 @@ var DesktopContentArea = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
-      this.createHtmlElement();
       this.parent();
    },
    
    unmarshall: function(){
       this.unmarshallElementProperties();
       this.parent();
-   }
+   },
 
    //Properties
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createHtmlElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect()
+   
 });

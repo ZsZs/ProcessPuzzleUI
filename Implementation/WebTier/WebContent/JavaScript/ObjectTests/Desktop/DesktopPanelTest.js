@@ -1,6 +1,6 @@
 window.DesktopPanelTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onDocumentLoaded', 'onPanelConstructed'],
+   Binds : ['onDocumentLoaded', 'onPanelConstructed', 'onPanelDestructed'],
 
    options : {
       testMethods : [
@@ -21,7 +21,8 @@ window.DesktopPanelTest = new Class( {
          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true },
          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument', isAsynchron : true },
          { method : 'webUIMessageHandler_whenEventOriginatorIsNotListed_bypassesDocument', isAsynchron : true },
-         { method : 'loadDocument_whenEnabled_storesComponentState', isAsynchron : true }]
+         { method : 'loadDocument_whenEnabled_storesComponentState', isAsynchron : true },
+         { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
    },
 
    constants : {
@@ -73,10 +74,12 @@ window.DesktopPanelTest = new Class( {
       this.column = new DesktopColumn( this.columnDefinition, { componentContainerId : this.constants.PAGE_WRAPPER_ID } );
       
       this.panelWithDocumentDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION );
-      this.panelWithDocument = new DesktopPanel( this.panelWithDocumentDefinition, this.resourceBundle, { componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDocumentLoaded : this.onDocumentLoaded } );
+      this.panelWithDocument = new DesktopPanel( this.panelWithDocumentDefinition, this.resourceBundle, { 
+         componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDestructed : this.onPanelDestructed, onDocumentLoaded : this.onDocumentLoaded } );
       
       this.panelWithPluginDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_PLUGIN_DEFINITION );
-      this.panelWithPlugin = new DesktopPanel( this.panelWithPluginDefinition, this.resourceBundle, { componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDocumentLoaded : this.onDocumentLoaded } );
+      this.panelWithPlugin = new DesktopPanel( this.panelWithPluginDefinition, this.resourceBundle, { 
+         componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDestructed : this.onPanelDestructed, onDocumentLoaded : this.onDocumentLoaded } );
       
       this.desktopContainerElement = $( this.constants.DESKTOP_CONTAINER_ID );
       this.pageWrapperElement = $( this.constants.PAGE_WRAPPER_ID );
@@ -205,6 +208,9 @@ window.DesktopPanelTest = new Class( {
             var componentState = { documentDefinitionURI : this.constants.HTML_DOCUMENT_URI, documentType : AbstractDocument.Types.HTML };
             this.componentStateManager.storeComponentState( this.constants.PANEL_NAME, componentState );
             this.constructPanel( this.panelWithDocument ); 
+         }.bind( this ),
+         function(){
+            //documentLoaded event was fired
          }.bind( this ),
          function(){
             assertThat( this.panelWithDocument.getDocument().getDocumentDefinitionUri(), equalTo( this.constants.HTML_DOCUMENT_URI ));
@@ -337,12 +343,36 @@ window.DesktopPanelTest = new Class( {
       ).callChain();
    },
    
+   destroy_destroysAllCreatedElements : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.constructPanel( this.panelWithDocument );
+         }.bind( this ),
+         function(){
+            //documentLoaded event was fired
+         }.bind( this ),
+         function(){
+            this.panelWithDocument.destroy();
+         }.bind( this ),
+         function(){
+            //destructed event was fired
+            assertThat( $( this.column.name ).getElements( '*' ).length, equalTo( 0 ));
+
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    onDocumentLoaded : function( documentUri ) {
       this.loadedDocumentUri = documentUri;
       this.testCaseChain.callChain();
    },
 
    onPanelConstructed : function() {
+      this.testCaseChain.callChain();
+   },
+   
+   onPanelDestructed : function() {
       this.testCaseChain.callChain();
    },
    

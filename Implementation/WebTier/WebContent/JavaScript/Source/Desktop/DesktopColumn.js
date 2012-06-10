@@ -31,6 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopColumn = new Class({
    Extends: DesktopElement,
+   Binds: ['constructMUIColumn', 'destroyMUIColumn'],
    options : {
       componentName : "DesktopColumn",
       maximumWidthSelector : "maximumWidth",
@@ -53,12 +54,10 @@ var DesktopColumn = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });
       this.parent();
    },
    
    destroy: function(){
-      if( this.MUIColumn ) this.MUIColumn.close();
       this.parent();
    },
    
@@ -77,8 +76,25 @@ var DesktopColumn = new Class({
    getMUIColumn: function() { return this.MUIColumn; },
    getName: function() { return this.name; },
    getPlacement: function() { return this.placement; },
-   getWidth: function() { return this.width; }
+   getWidth: function() { return this.width; },
    
    //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructMUIColumn, this.finalizeConstruction );
+   }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyMUIColumn, this.finalizeDestruction );
+   }.protect(),
+   
+   constructMUIColumn: function(){
+      this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyMUIColumn: function(){
+      if( this.MUIColumn ) this.MUIColumn.close();
+      
+      this.destructionChain.callChain();
+   }.protect()
 });

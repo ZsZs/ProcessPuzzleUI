@@ -40,6 +40,7 @@ var DesktopWindow = new Class({
       'constructPlugin',
       'createContentAreaElement',
       'destroy',
+      'destroyMUIWindow',
       'determineComponentElements', 
       'finalizeConstruction',
       'instantiateMUIWindow', 
@@ -112,6 +113,20 @@ var DesktopWindow = new Class({
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.destroyMUIWindow, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyMUIWindow: function(){
+      if( this.MUIWindow ){
+         this.MUIWindow.removeEvents();
+         this.MUIWindow.destroy();
+         this.MUIWindow = null;
+      }
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    instantiateMUIWindow: function(){

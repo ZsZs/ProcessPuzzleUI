@@ -510,14 +510,16 @@ MUI.extend({
 	
 	*/
 	underlayInitialize: function(){
-		var windowUnderlay = new Element('div', {
-			'id': 'windowUnderlay',
-			'styles': {
-				'height': window.getCoordinates().height,
-				'opacity': .01,
-				'display': 'none'
-			}
-		}).inject(document.body);
+	   if( !$( 'windowUnderlay' )){
+         var windowUnderlay = new Element('div', {
+            'id': 'windowUnderlay',
+            'styles': {
+               'height': window.getCoordinates().height,
+               'opacity': .01,
+               'display': 'none'
+            }
+         }).inject(document.body);
+	   }
 	},
 	setUnderlaySize: function(){
 		$('windowUnderlay').setStyle('height', window.getCoordinates().height);

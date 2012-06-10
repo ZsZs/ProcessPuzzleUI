@@ -78,10 +78,12 @@ var ScrollArea = new Class({
 
    destroy : function() {
       this.removeScrollableElementEvents();
-
+      
       this.restoreContentElement();
+      
+      this.destroyScrollControls();
       this.destroyPaddingElement();
-      this.destroyContentElement();
+      this.destroyContentViewElement();
    },
 
    onScrollContent : function( step ){
@@ -166,7 +168,7 @@ var ScrollArea = new Class({
       this.contentWrapperElement.setStyles({ display: 'inline', 'float': 'left' });
    }.protect(),
    
-   destroyContentElement : function(){
+   destroyContentViewElement : function(){
       if( this.contentViewElement && this.contentViewElement.destroy ){
          this.contentViewElement.destroy();
          this.contentViewElement = null;
@@ -177,6 +179,13 @@ var ScrollArea = new Class({
       if( this.contentWrapperElement && this.contentWrapperElement.destroy ){ 
          this.contentWrapperElement.destroy();
          this.contentWrapperElement = null;
+      }
+   }.protect(),
+   
+   destroyScrollControls : function(){
+      if( this.scrollControls ){
+         this.scrollControls.removeEvent( 'scrollContent', this.onScrollContent );
+         this.scrollControls.destroy();      
       }
    }.protect(),
    

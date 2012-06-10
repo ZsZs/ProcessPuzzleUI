@@ -1,6 +1,6 @@
 window.DesktopTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onError', 'onWindowReady'],
+   Binds : ['onConstructed', 'onDestructed', 'onError', 'onWindowReady'],
 
    options : {
       testMethods : [
@@ -9,7 +9,8 @@ window.DesktopTest = new Class( {
           { method : 'construct_constructsWholeDekstop', isAsynchron : true }, 
           { method : 'construct_subscribesForMenuSelectedMessage', isAsynchron : true }, 
           { method : 'showNotification_delegatesToMUI', isAsynchron : true }, 
-          { method : 'showWindow_constructsDesktopWindow', isAsynchron : true }]
+          { method : 'showWindow_constructsDesktopWindow', isAsynchron : true },
+          { method : 'destroy_destroysCreatedElements', isAsynchron : true }]
    },
 
    constants : {
@@ -23,7 +24,7 @@ window.DesktopTest = new Class( {
       DESKTOP_DOCKER_WRAPPER_ELEMENT_ID : 'dockWrapper',
       DESKTOP_DOCKER_ELEMENT_ID : 'dock',
       DESKTOP_DOCUMENT_CONTAINER_ELEMENT_ID : 'pageWrapper',
-      DESKTOP_ELEMENT_ID : 'desktop',
+      DESKTOP_ELEMENT_ID : 'desktopContainer',
       DESKTOP_FOOTER_ELEMENT_ID : 'desktopFooterWrapper',
       DESKTOP_FOOTER_BAR_ELEMENT_ID : 'desktopFooter',
       DESKTOP_HEADER_ELEMENT_ID : 'desktopHeader',
@@ -65,7 +66,7 @@ window.DesktopTest = new Class( {
       this.webUILogger = this.webUIController.getLogger();
       this.webUIMessageBus = new WebUIMessageBus();
       this.resourceBundle = this.webUIController.getResourceBundle();
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : this.constants.DESKTOP_CONFIGURATION_URI, onConstructed : this.onConstructed, onError : this.onError });
+      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : this.constants.DESKTOP_CONFIGURATION_URI, onConstructed : this.onConstructed, onDestructed : this.onDestructed, onError : this.onError });
       this.desktopConfiguration = this.desktop.getConfigurationXml();
       this.desktopElement = $( this.constants.DESKTOP_ELEMENT_ID );
    },
@@ -156,7 +157,25 @@ window.DesktopTest = new Class( {
       ).callChain();
    },
    
+   destroy_destroysCreatedElements : function() {
+      this.testCaseChain.chain(
+         function(){ this.desktop.unmarshall(); this.desktop.construct(); }.bind( this ),
+         function(){
+            this.desktop.destroy();
+         }.bind( this ),
+         function(){
+            assertThat( this.desktop.getState(), equalTo( DesktopElement.States.INITIALIZED ));
+            assertThat( this.desktopElement.getElements( '*' ).length, equalTo( 0 ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    onConstructed : function(){
+      this.testCaseChain.callChain();
+   },
+   
+   onDestructed : function(){
       this.testCaseChain.callChain();
    },
    
