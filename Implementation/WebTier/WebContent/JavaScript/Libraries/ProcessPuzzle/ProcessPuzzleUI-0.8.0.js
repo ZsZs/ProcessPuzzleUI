@@ -3849,12 +3849,8 @@ var ComplexContentBehaviour = new Class({
       
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
          this.adjustDocumentWrapperSize( containerEffectiveSize );
-<<<<<<< HEAD
-         this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});      }      
-=======
          this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});
       }      
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    },
    
    onDocumentError: function( error ){
@@ -4016,19 +4012,8 @@ var ComplexContentBehaviour = new Class({
       this.contentAreaElement.grab( this.documentWrapper );
       this.documentWrapper.setStyle( 'width', this.contentContainerElement.getSize().x + 'px' );
    }.protect(),
-<<<<<<< HEAD
-      
-   destroyComponents: function(){
-      this.destroyDocument();
-      this.destroyDocumentWrapper();
-      this.destroyScrollBars();
-      this.cleanUpContentElement();
-      if( this.header ) this.header.destroy();
-      if( this.plugin ) this.plugin.destroy();
-=======
    
    destroyComponentRootElement: function(){
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       if( this.componentRootElement ) {
          if( this.componentRootElement.destroy ) this.componentRootElement.destroy();
          else this.componentRootElement.removeNode();
@@ -4059,8 +4044,6 @@ var ComplexContentBehaviour = new Class({
       this.documentWrapper = null;
    }.protect(),
    
-<<<<<<< HEAD
-=======
    destroyHeader: function(){
       if( this.header ){
          this.header.removeEvents();
@@ -4075,7 +4058,6 @@ var ComplexContentBehaviour = new Class({
       }
    }.protect(),
    
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    destroyScrollBars: function(){
       if( this.verticalScrollBar ){ this.verticalScrollBar.destroy(); this.verticalScrollBar = null; }
    }.protect(),
@@ -5162,7 +5144,6 @@ var DesktopColumn = new Class({
    },
    
    destroy: function(){
-      if( this.MUIColumn ) this.MUIColumn.close();
       this.parent();
    },
    
@@ -5648,11 +5629,8 @@ var DesktopPanel = new Class({
            'constructPlugin', 
            'constructHeader', 
            'createContentAreaElement',
-<<<<<<< HEAD
-=======
            'destroyComponents',
            'destroyMUIPanel',
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
            'determineComponentElements',
            'finalizeConstruction',
            'finalizeDestruction',
@@ -11334,15 +11312,10 @@ var ScrollArea = new Class({
 
    destroy : function() {
       this.removeScrollableElementEvents();
-<<<<<<< HEAD
-
-      this.restoreContentElement();
-=======
       
       this.restoreContentElement();
       
       this.destroyScrollControls();
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       this.destroyPaddingElement();
       this.destroyContentViewElement();
    },
@@ -11389,12 +11362,8 @@ var ScrollArea = new Class({
       var contentWidth = this.contentViewElement.getSize().x;
       contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'margin-left' )) + parseInt( this.contentWrapperElement.getStyle( 'margin-right' ));
       contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'padding-left' )) + parseInt( this.contentWrapperElement.getStyle( 'padding-right' ));
-<<<<<<< HEAD
-      contentWidth += this.scrollControls.getEffectiveWidth();      if( this.scrollControls.isVisible() ) contentWidth -= this.scrollControls.getWidth();
-=======
       contentWidth += this.scrollControls.getEffectiveWidth();
       if( this.scrollControls.isVisible() ) contentWidth -= this.scrollControls.getWidth();
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       return { x : contentWidth, y : this.contentViewElement.getSize().y }; },
    getContentWrapperElement : function(){ return this.contentWrapperElement; },
 
@@ -11434,200 +11403,6 @@ var ScrollArea = new Class({
       this.contentWrapperElement.setStyles({ display: 'inline', 'float': 'left' });
    }.protect(),
    
-<<<<<<< HEAD
-   destroyContentElement : function(){
-      if( this.contentViewElement && this.contentViewElement.destroy ){
-         this.contentViewElement.destroy();
-         this.contentViewElement = null;
-      }
-   }.protect(),
-   
-   destroyPaddingElement : function(){
-      if( this.contentWrapperElement && this.contentWrapperElement.destroy ){ 
-         this.contentWrapperElement.destroy();
-         this.contentWrapperElement = null;
-      }
-   }.protect(),
-   
-   determineBorderHeight : function(){
-      this.borderHeight = parseFloat( this.scrollableElement.getStyle( 'border-top-width' )) + parseFloat( this.scrollableElement.getStyle( 'border-bottom-width' ));
-   }.protect(),
-   
-   determineOverHang : function(){
-      this.overHang = this.scrollableElement.getSize().y + parseInt( this.contentWrapperElement.getStyle( 'padding-top' )) - this.contentViewElement.getSize().y;
-   }.protect(),
-   
-   determinePadding : function(){
-      this.paddingHeight = parseFloat( this.scrollableElement.getStyle( 'padding-top' )) + parseFloat( this.scrollableElement.getStyle( 'padding-bottom' ) );
-      this.paddingWidth = parseFloat( this.scrollableElement.getStyle( 'padding-left' )) + parseFloat( this.scrollableElement.getStyle( 'padding-right' ) );
-   }.protect(),
-   
-   removeScrollableElementEvents : function(){
-      if( this.scrollableElement && this.scrollableElement.removeEvent ){
-         this.scrollableElement.removeEvent( 'mousewheel', this.onScrollableElementMouseWheel );
-         this.scrollableElement.removeEvent( 'keydown', this.onScrollableElementKeyDown );
-         this.scrollableElement.removeEvent( 'click', this.onScrollableElementClick );
-      }
-   }.protect(),
-   
-   restoreContentElement : function(){
-      if( this.contentViewElement ){
-         this.scrollableElement.dispose();
-         this.scrollableElement.inject( this.contentViewElement, 'before' );
-      }
-      
-      this.scrollableElement.setStyles( this.scrollableElementSize );
-   }.protect(),
-   
-   setContentElementStyle : function(){
-      this.scrollableElement.setStyles({ height : '100%', margin : '0px', padding : '0px', width : '100%' });
-   }.protect(),
-   
-   setContentViewSize : function( size ){      
-      if( size && size.x && size.y ){
-         this.options.contentHeight = size.y;
-         this.options.contentWidth = size.x;
-      }else if( !this.options.contentHeight && !this.options.contentWidth ){
-         this.options.contentHeight = parseInt( this.scrollableElement.getStyle( 'height' ));
-         this.options.contentWidth = parseInt( this.scrollableElement.getStyle( 'width' ));
-      }
-
-      this.contentViewElement.setStyles({ width : this.options.contentWidth + 'px', height : this.options.contentHeight + 'px' });
-   }.protect()
- 
-});
-/*
-Name: 
-    - ScrollControls
-
-Description: 
-    - User interface for the scrolling behaviour.
-
-Requires:
-    - 
-Provides:
-    - ScrollConstrols
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-var ScrollControls = new Class({
-   Implements : [Events, Options],
-   Binds : ['onDocumentClick', 'onDocumentKeyDown', 'onDocumentMouseUp', 'scrollDown', 'scrollUp'],
-   options : {
-      componentName : "ScrollControls",
-      disabledOpacity : 0,
-      downBtnClass : 'downBtn',
-      increment : 15,
-      scrollBarClass : 'scrollBar',
-      scrollControlsYClass : 'scrollControlsY',
-      scrollHandleClass : 'scrollHandle',
-      scrollHandleBGClass : 'scrollHandleBG',
-      scrollHandleTopClass : 'scrollHandleTop',
-      scrollHandleMiddleClass : 'scrollHandleMiddle',
-      scrollHandleBottomClass : 'scrollHandleBottom',
-      scrollSlotClass : 'scrollSlot',
-      upBtnClass : 'upBtn'
-   },
-
-   initialize : function( contentViewElement, overHang, options ) {
-      assertThat( contentViewElement, not( nil() ));
-      assertThat( overHang, not( nil() ));
-      this.setOptions( options );
-
-      this.contentViewElement = contentViewElement;
-      this.downButton;
-      this.downInterval;
-      this.overHang = overHang;
-      this.scrollSlot;
-      this.scrollHandle;
-      this.scrollHandleBG;
-      this.slider;
-      this.state = BrowserWidget.States.INITIALIZED;
-      this.upButton;
-      this.upInterval;
-   },
-
-   // Public accessors and mutators
-   construct : function() {
-      this.createControlElements();
-      this.setHeights();
-      this.createSlider();
-      this.illuminateScrollControls();      
-      
-      this.addScrollHandleEvents();
-      this.addUpButtonEvents();
-      this.addDownButtonEvents();
-      this.addContentViewEvents();
-      this.addDocumentEvents();
-      
-      this.state = BrowserWidget.States.CONSTRUCTED;
-   },
-
-   destroy : function() {
-      clearInterval( this.sliderTimeout );
-      
-      this.removeScrollHandleEvents();
-      this.removeDownButtonEvents();
-      this.removeUpButtonEvents();
-      this.removeContentViewEvents();
-      this.removeDocumentEvents();
-      this.destroyControlElements();
-      this.state = BrowserWidget.States.INITIALIZED;
-   },
-   
-   onDocumentClick : function( e ){
-      this.hasFocus = false;
-   },
-   
-   onDocumentKeyDown : function( e ){
-      if(( this.hasFocus || this.options.fullWindowMode ) && ( e.key === 'down' || e.key === 'space' || e.key === 'up' )) {
-         this.scrollableElement.fireEvent( 'keydown', e );
-      }
-   },
-   
-   onDocumentMouseUp : function( e ){
-      this.scrollHandle.removeClass( this.options.scrollHandleClass + '-Active' ).setStyle( 'opacity', this.options.handleOpacity );
-      this.stopScrollUp();
-      this.stopScrollDown();
-   },
-   
-   refresh : function( overHang ){
-      this.overHang = overHang;
-      this.updateSlider();
-      this.illuminateScrollControls();      
-      this.setHeights();
-   },
-   
-   scrollDown : function() {
-      var target = this.contentViewElement.getScroll().y + this.options.increment;
-      this.slider.set( target );
-   },
-
-   scrollUp : function() {
-      var target = this.contentViewElement.getScroll().y - this.options.increment;
-      if( target < 0 ) target = 0;
-      this.slider.set( target );
-   },
-
-   //Properties
-   getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },   getSlider : function() { return this.slider; },
-=======
    destroyContentViewElement : function(){
       if( this.contentViewElement && this.contentViewElement.destroy ){
          this.contentViewElement.destroy();
@@ -11830,7 +11605,6 @@ var ScrollControls = new Class({
    //Properties
    getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },
    getSlider : function() { return this.slider; },
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    getWidth : function() { return this.scrollControlsYWrapper ? this.scrollControlsYWrapper.getSize().x : 0; },
    isVisible : function() { return this.overHang > 0 ? true : false; },
 
@@ -11926,8 +11700,6 @@ var ScrollControls = new Class({
       if( this.scrollControlsYWrapper ){ this.scrollControlsYWrapper.destroy(); this.scrollControlsYWrapper = null; }
    }.protect(),
    
-<<<<<<< HEAD
-=======
    destroySlider: function(){
       if( this.slider ){
          this.slider.removeEvents();
@@ -11935,16 +11707,12 @@ var ScrollControls = new Class({
       }
    }.protect(),
    
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    greyOut : function() {
       this.scrollHandle.setStyles({ opacity : this.options.disabledOpacity });
-<<<<<<< HEAD
-=======
       this.scrollHandleTop.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollHandleBG.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollHandleMiddle.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollHandleBottom.setStyles({ opacity : this.options.disabledOpacity });
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       this.upButton.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollControlsYWrapper.setStyles({ opacity : this.options.disabledOpacity });
       this.downButton.setStyles({ opacity : this.options.disabledOpacity });
@@ -12016,28 +11784,6 @@ var ScrollControls = new Class({
    
    stopScrollDown : function(){
       clearInterval( this.downInterval );
-<<<<<<< HEAD
-      if( this.downButton ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
-   },
-   
-   stopScrollUp : function(){
-      clearInterval( this.downInterval );
-      if( this.upButton ) this.upButton.removeClass( this.options.upBtnClass + '-Active' );
-   },
-   
-   unGrey : function() {
-      this.scrollHandle.setStyles({ display : 'block', opacity : 1 });
-      this.scrollControlsYWrapper.setStyles({ opacity : 1 });
-      this.upButton.setStyles({ opacity : 1 });
-      this.downButton.setStyles({ opacity : 1 });
-      this.scrollSlot.setStyles({ opacity : 1 });
-   }.protect(),
-   
-   updateSlider : function(){
-      if( this.overHang > 0 ) this.slider.setRange([ 0, this.overHang ]);
-      this.slider.set( 0 );
-      //this.slider.set( this.contentViewElement.getScroll().y );
-=======
       if( this.downButton && this.downButton.removeClass ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
    },
    
@@ -12061,7 +11807,6 @@ var ScrollControls = new Class({
    updateSlider : function(){
       if( this.overHang > 0 ) this.slider.setRange([ 0, this.overHang ]);
       this.slider.set( 0 );
->>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    }
 
 });
