@@ -3703,6 +3703,7 @@ var FixedComponentOrderedTransformer = new Class({
    parse: function( stateString ) {
       stateString = stateString.replace( "%7B", "{" );
       stateString = stateString.replace( "%7D", "}" );
+      stateString = stateString.replace( "%27", "'" );
       var tokenizer = new StringTokenizer( stateString, { delimiters : ';' } );
       var componentIndex = 0;
       
@@ -3768,8 +3769,10 @@ var ComplexContentBehaviour = new Class({
    Implements: [Events, Options],
    
    options : {
+      contentAreaElementStyle : "complexContentArea",
       contentUrlSelector : "contentURL",
-      disableScrollBars : true,
+      disableScrollBars : false,
+      disableScrollBarsSelector: "disableScrollBars",
       documentContentUriSelector : "document/documentContentUri",
       documentDefinitionUriSelector : "document/documentDefinitionUri",
       documentNameSeparator : "_",
@@ -3805,6 +3808,7 @@ var ComplexContentBehaviour = new Class({
    initialize: function( definitionElement, bundle, options ){
       this.setOptions( options );
       this.componentRootElement;
+      this.contentAreaElement;
       this.contentContainerElement;
       this.contentUrl;
       this.document;
@@ -3836,10 +3840,17 @@ var ComplexContentBehaviour = new Class({
    
    //Public accessor and mutator methods
    onContainerResize: function(){
+      var containerEffectiveSize = this.contentContainerElement.getSize();
+      
+      if( this.verticalScrollBar ){
+        this.verticalScrollBar.refresh( this.contentContainerElement.getSize() );
+        containerEffectiveSize = this.verticalScrollBar.getContentViewSize();
+      } 
+      
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
-         this.document.onContainerResize( this.contentContainerElement.getSize() );
-         if( this.verticalScrollBar ) this.verticalScrollBar.refresh();
-      }
+         this.adjustDocumentWrapperSize( containerEffectiveSize );
+         this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});
+      }      
    },
    
    onDocumentError: function( error ){
@@ -3851,10 +3862,8 @@ var ComplexContentBehaviour = new Class({
    
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
+      this.onContainerResize();
       this.storeComponentState();
-      if( !this.options.disableScrollBars ){
-         this.verticalScrollBar = new ScrollBar( this.getContentContainerId(), {} );
-      }
       this.fireEvent( 'documentLoaded', this.documentDefinitionUri );
       this.constructionChain.callChain();
    },
@@ -3898,7 +3907,6 @@ var ComplexContentBehaviour = new Class({
          
          this.destroyDocument();
          this.destroyDocumentWrapper();
-         this.cleanUpContentElement();
          this.processMessageProperties( webUIMessage );
          this.loadDocument( webUIMessage.getDocumentType() );
       }
@@ -3908,6 +3916,7 @@ var ComplexContentBehaviour = new Class({
    //Properties
    getColumnReference: function() { return this.columnReference; },
    getComponentStateManager: function() { return this.componentStateManager; },
+   getContentAreaElement: function(){ return this.contentAreaElement; },
    getContentContainerId: function() { return this.name + this.options.componentContentIdPostfix; },
    getContentUrl: function() { return this.contentUrl; },
    getDocument: function() { return this.document; },
@@ -3936,15 +3945,23 @@ var ComplexContentBehaviour = new Class({
    //Protected, private helper methods
    addScrollBars: function(){
       if( !this.options.disableScrollBars ){
-         this.verticalScrollBar = new ScrollBar( this.getContentContainerId(), {});
+         this.verticalScrollBar = new ScrollingBehaviour( this.contentAreaElement, {
+            contentHeight: this.contentContainerElement.getSize().y,
+            contentWidth: this.contentContainerElement.getSize().x
+         });
+         this.verticalScrollBar.construct();
       }
       this.constructionChain.callChain();
    }.protect(),
    
+   adjustDocumentWrapperSize: function( containerEffectiveSize ){
+      var framingWidth = parseInt( this.documentWrapper.getStyle( 'margin-left' )) + parseInt( this.documentWrapper.getStyle( 'margin-right' ));  
+      framingWidth += 2 * parseInt( this.documentWrapper.getStyle( 'border' ));  
+      framingWidth += parseInt( this.documentWrapper.getStyle( 'padding-left' )) + parseInt( this.documentWrapper.getStyle( 'padding-right' ));  
+      this.documentWrapper.setStyles({ width : ( containerEffectiveSize.x - framingWidth ) + 'px' });
+   }.protect(),
+   
    cleanUpContentElement: function(){
-      if( this.verticalScrollBar ) this.verticalScrollBar.destroy();
-      this.verticalScrollBar = null;
-      
       if( this.contentContainerElement ){
          var childElements = this.contentContainerElement.getElements ? this.contentContainerElement.getElements( '*' ) : Array.from( this.contentContainerElement.getElementsByTagName( '*' ));  
          childElements.each( function( childElement, index ){
@@ -3976,31 +3993,73 @@ var ComplexContentBehaviour = new Class({
       else this.constructionChain.callChain();
    }.protect(),
    
+   createContentAreaElement: function(){
+      var paddingElementForStaticContent = this.contentContainerElement.getChildren( '#' + this.name + '_pad' )[0]; 
+      if( paddingElementForStaticContent ){
+         this.contentAreaElement = paddingElementForStaticContent;
+      }else{
+         this.contentAreaElement = new Element( 'div' );
+         this.contentContainerElement.grab( this.contentAreaElement );
+      }
+      this.contentAreaElement.addClass( this.options.contentAreaElementStyle );
+      
+      if( !this.options.disableScrollBars ) this.contentContainerElement.setStyle( 'overflow', 'hidden' );
+      this.constructionChain.callChain();      
+   }.protect(),
+   
    createDocumentWrapper: function(){
       this.documentWrapper = new Element( this.documentWrapperTag, { id : this.documentWrapperId, 'class' : this.documentWrapperStyle } );
-      this.contentContainerElement.grab( this.documentWrapper );
+      this.contentAreaElement.grab( this.documentWrapper );
+      this.documentWrapper.setStyle( 'width', this.contentContainerElement.getSize().x + 'px' );
    }.protect(),
-      
-   destroyComponents: function(){
-      this.destroyDocument();
-      this.destroyDocumentWrapper();
-      this.cleanUpContentElement();
-      if( this.header ) this.header.destroy();
-      if( this.plugin ) this.plugin.destroy();
+   
+   destroyComponentRootElement: function(){
       if( this.componentRootElement ) {
          if( this.componentRootElement.destroy ) this.componentRootElement.destroy();
          else this.componentRootElement.removeNode();
       }
    }.protect(),
+      
+   destroyComponents: function(){
+      this.destroyDocument();
+      this.destroyDocumentWrapper();
+      this.destroyScrollBars();
+      this.cleanUpContentElement();
+      this.destroyHeader();
+      this.destroyPlugin();
+      
+      this.destructionChain.callChain();
+   }.protect(),
    
    destroyDocument: function(){
-      if( this.document )  this.document.destroy();
+      if( this.document ){
+         this.document.removeEvents();
+         this.document.destroy();
+      }  
       this.document = null;
    }.protect(),
    
    destroyDocumentWrapper: function(){
       if( this.documentWrapper && this.documentWrapper.destroy ) this.documentWrapper.destroy();
       this.documentWrapper = null;
+   }.protect(),
+   
+   destroyHeader: function(){
+      if( this.header ){
+         this.header.removeEvents();
+         this.header.destroy();
+      }
+   }.protect(),
+   
+   destroyPlugin: function(){
+      if( this.plugin ) {
+         this.plugin.removeEvents();
+         this.plugin.destroy();
+      }
+   }.protect(),
+   
+   destroyScrollBars: function(){
+      if( this.verticalScrollBar ){ this.verticalScrollBar.destroy(); this.verticalScrollBar = null; }
    }.protect(),
    
    determineComponentElements: function(){
@@ -4059,6 +4118,8 @@ var ComplexContentBehaviour = new Class({
       this.name = null;
       this.showHeader = null;
       this.title = null;
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    restoreComponentState : function() {
@@ -4151,6 +4212,7 @@ var ComplexContentBehaviour = new Class({
    
    unmarshallProperties: function(){
       this.contentUrl = XmlResource.selectNodeText( this.options.contentUrlSelector, this.definitionElement );
+      this.options.disableScrollBars = parseBoolean( XmlResource.determineAttributeValue( this.definitionElement, this.options.disableScrollBarsSelector, this.options.disableScrollBars ));
       this.height = parseInt( XmlResource.determineAttributeValue( this.definitionElement, this.options.heightSelector, this.options.heightDefault ));
       this.eventSources = eval( XmlResource.determineAttributeValue( this.definitionElement, this.options.eventSourcesSelector, null, this.eventSources ));
       this.name = XmlResource.determineAttributeValue( this.definitionElement, this.options.nameSelector );
@@ -4249,18 +4311,34 @@ var Desktop = new Class({
             'constructPanels', 
             'constructWindowDocker', 
             'constructWindows',
+            'destroyColumns',
+            'destroyContentArea',
+            'destroyFooter',
+            'destroyHeader',
+            'destroyHiddenElements',
+            'destroyPanels',
+            'destroyWindowDocker',
+            'destroyWindows',
             'finalizeConstruction',
+            'finalizeDestruction',
             'hideDesktop',
             'initializeMUI', 
             'loadResources',
-            'onError',
+            'onColumnConstructed',
+            'onColumnDestructed',
             'onContentAreaConstructed',
+            'onError',
             'onFooterConstructed',
             'onHeaderConstructed',
             'onPanelConstructed',
+            'onPanelDestructed',
             'onResourceError',
             'onResourcesLoaded',
+            'onWindowConstructed',
+            'onWindowDestructed',
             'onWindowDockerConstructed',
+            'releaseResources',
+            'removeDesktopEvents',
             'showDesktop',
             'showNotification',
             'subscribeToWebUIMessages',
@@ -4275,6 +4353,7 @@ var Desktop = new Class({
       contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
       descriptionSelector : "/desktopConfiguration/description",
+      eventFireDelay : 5,
       footerSelector : "/desktopConfiguration/footer",
       headerSelector : "/desktopConfiguration/header",
       nameSelector : "/desktopConfiguration/name",
@@ -4297,12 +4376,13 @@ var Desktop = new Class({
       this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.columns = new LinkedHashMap();
       this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
-      this.configurationChain = new Chain();
+      this.constructionChain = new Chain();
       this.containerElement;
       this.containerId;
       this.contentArea;
       this.currentLocale = null;
       this.description;
+      this.destructionChain = new Chain();
       this.dock = null;
       this.error;
       this.footer;
@@ -4312,7 +4392,9 @@ var Desktop = new Class({
       this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.MUIDesktop = null;
       this.name;
+      this.numberOfConstructedColumns = 0;
       this.numberOfConstructedPanels = 0;
+      this.numberOfConstructedWindows = 0;
       this.panels = new LinkedHashMap();
       this.resourceBundle = resourceBundle;
       this.resources = null;
@@ -4330,7 +4412,7 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.configurationChain.chain(
+      this.constructionChain.chain(
          this.hideDesktop,
          this.loadResources,
          this.constructHeader,
@@ -4349,17 +4431,37 @@ var Desktop = new Class({
 	
    destroy : function() {
       if( this.state > DesktopElement.States.UNMARSHALLED ){
-         if( this.resources ) this.resources.release();
-         if( this.header ) this.header.destroy();
-         if( this.contentArea ) this.contentArea.destroy();
-         if( this.footer ) this.footer.destroy();
-         if( this.windowDocker ) this.windowDocker.destroy();
-         this.destroyWindows();
-         this.destroyPanels();
-         this.destroyColumns();
-         this.removeDesktopEvents();
-         this.state = DesktopElement.States.INITIALIZED;
+         this.destructionChain.chain(
+            this.releaseResources,
+            this.removeDesktopEvents,
+            this.destroyWindows,
+            this.destroyPanels,
+            this.destroyColumns,
+            this.destroyHeader,
+            this.destroyContentArea,
+            this.destroyFooter,
+            this.destroyWindowDocker,
+            this.destroyHiddenElements,
+            this.finalizeDestruction
+         ).callChain();
       }
+   },
+   
+   onColumnConstructed: function( column ){
+      this.numberOfConstructedColumns++;
+      if( this.numberOfConstructedColumns == this.columns.size() ){
+         this.logger.debug( this.options.componentName + ", loading desktop column is finished." );
+         this.callNextConfigurationStep();
+      } 
+   },
+   
+   onColumnDestructed: function( panel ){
+      this.numberOfConstructedColumns--;
+      if( this.numberOfConstructedColumns == 0 ){
+         this.logger.debug( this.options.componentName + ", destroy of desktop columns is finished." );
+         this.columns.clear();
+         this.destructionChain.callChain();
+      } 
    },
    
    onContentAreaConstructed: function(){
@@ -4389,6 +4491,15 @@ var Desktop = new Class({
       } 
    },
    
+   onPanelDestructed: function( panel ){
+      this.numberOfConstructedPanels--;
+      if( this.numberOfConstructedPanels == 0 ){
+         this.logger.debug( this.options.componentName + ", destroy of desktop panels is finished." );
+         this.panels.clear();
+         this.destructionChain.callChain();
+      } 
+   },
+   
    onResourceError: function( error ){
       this.error = error;
    },
@@ -4398,14 +4509,22 @@ var Desktop = new Class({
       this.callNextConfigurationStep();      
    },
    
-   onWindowDockerConstructed: function(){
-      this.logger.debug( this.options.componentName + ", constructing desktop window docker is finished." );
-      this.callNextConfigurationStep();
-   },
-   
    onWindowConstructed: function( window ){
       this.logger.debug( this.options.componentName + ", constructing desktop window " + window.getName() + " is finished." );
       if( window.getOnReadyCallback() && typeOf( window.getOnReadyCallback() ) == 'function' ) window.getOnReadyCallback()();
+   },
+   
+   onWindowDestructed: function( panel ){
+      this.numberOfConstructedWindows--;
+      if( this.numberOfConstructedWindows == 0 ){
+         this.windows.clear();
+         this.destructionChain.callChain();
+      } 
+   },
+   
+   onWindowDockerConstructed: function(){
+      this.logger.debug( this.options.componentName + ", constructing desktop window docker is finished." );
+      this.callNextConfigurationStep();
    },
    
    showNotification: function( notificationText ){
@@ -4471,7 +4590,7 @@ var Desktop = new Class({
 	
    //Private methods
    callNextConfigurationStep: function(){
-      if( this.isSuccess() ) this.configurationChain.callChain();
+      if( this.isSuccess() ) this.constructionChain.callChain();
       else{
          this.revertConstruction();
          this.fireEvent( 'error', this.error );
@@ -4484,15 +4603,13 @@ var Desktop = new Class({
 	
    constructColumns : function() {
       this.logger.debug( this.options.componentName + ".constructColumns() started." );
-      this.columns.each( function( columnEntry, index ){
-         var column = columnEntry.getValue();
-         try{
-            column.construct();
-         }catch( e ){
-            this.onError( e );
-         }
-      }, this );
-      this.callNextConfigurationStep();
+      if( this.columns.size() > 0 ){
+         this.columns.each( function( columnEntry, index ){
+            var column = columnEntry.getValue();
+            try{ column.construct();
+            }catch( e ){ this.onError( e ); }
+         }, this );
+      }else this.callNextConfigurationStep();
    }.protect(),
    
    constructContentArea : function(){
@@ -4518,11 +4635,8 @@ var Desktop = new Class({
       if( this.panels.size() > 0 ){
          this.panels.each( function( panelEntry, index ){
             var panel = panelEntry.getValue();
-            try{
-               panel.construct();
-            }catch( e ){
-               this.onError( e );
-            }
+            try{ panel.construct();
+            }catch( e ){ this.onError( e ); }
          }, this );
       } else this.callNextConfigurationStep();
    }.protect(),
@@ -4544,7 +4658,33 @@ var Desktop = new Class({
          var column = columnEntry.getValue();
          column.destroy();
       }, this );
-      this.columns.clear();
+   }.protect(),
+   
+   destroyContentArea: function(){
+      if( this.contentArea ) this.contentArea.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyElementById: function( elementId ){
+      if( $( elementId )) $( elementId ).destroy(); 
+   }.protect(),
+   
+   destroyFooter: function(){
+      if( this.footer ) this.footer.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHeader: function(){
+      if( this.header ) this.header.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHiddenElements: function(){
+      this.destroyElementById( 'windowUnderlay' );
+      this.destroyElementById( 'lbOverlay' );
+      this.destroyElementById( 'lbCenter' );
+      this.destroyElementById( 'lbBottomContainer' );
+      this.destructionChain.callChain();
    }.protect(),
 	
    destroyPanels: function() {
@@ -4553,13 +4693,22 @@ var Desktop = new Class({
          var panel = panelEntry.getValue();
          panel.destroy();
       }, this );
-      this.panels.clear();
-      this.numberOfConstructedPanels = 0;
+   }.protect(),
+   
+   destroyWindowDocker: function(){
+      if( this.windowDocker ) this.windowDocker.destroy();
+      this.destructionChain.callChain();
    }.protect(),
 	
    destroyWindows: function() {
       this.logger.debug( this.options.componentName + ".destroyWindows() started." );
-      this.windows.clear();
+      this.numberOfConstructedWindows = this.windows.size();
+      if( this.numberOfConstructedWindows > 0 ){
+         this.windows.each( function( windowEntry, index ) {
+            var window = windowEntry.getValue();
+            window.destroy();
+         }, this );
+      }else this.destructionChain.callChain(); 
    }.protect(),
 	
    determineCurrentLocale : function() {
@@ -4572,7 +4721,14 @@ var Desktop = new Class({
    
    finalizeConstruction: function(){
       this.state = DesktopElement.States.CONSTRUCTED;
-      this.fireEvent('constructed', this ); 
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.state = DesktopElement.States.INITIALIZED;
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
    hideDesktop: function(){
@@ -4626,11 +4782,18 @@ var Desktop = new Class({
       if( this.pendingResourcesCounter > 0 ) return false;
       else this.callNextConfigurationStep();
    }.protect(),
+   
+   releaseResources : function(){
+      if( this.resources ) this.resources.release();
+      this.destructionChain.callChain();
+   }.protect(),
 
    removeDesktopEvents : function(){
       this.containerElement.removeEvents();
       window.removeEvents();
       document.removeEvents();
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -4660,7 +4823,7 @@ var Desktop = new Class({
    unmarshallColumns: function(){
       var columnDefinitionElements = this.configurationXml.selectNodes( this.options.columnSelector );
       columnDefinitionElements.each( function( columnDefinition, index ){
-         var desktopColumn = new DesktopColumn( columnDefinition, { componentContainerId : this.containerId } );
+         var desktopColumn = new DesktopColumn( columnDefinition, { componentContainerId : this.containerId, onConstructed: this.onColumnConstructed, onDestructed: this.onColumnDestructed, onError : this.onError  } );
          desktopColumn.unmarshall();
          this.columns.put( desktopColumn.getName(), desktopColumn );
       }, this );
@@ -4703,7 +4866,7 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onPanelConstructed } );
+         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onPanelConstructed, onDestructed: this.onPanelDestructed, onError : this.onError });
          desktopPanel.unmarshall();
          this.panels.put( desktopPanel.getName(), desktopPanel );
       }, this );
@@ -4720,7 +4883,7 @@ var Desktop = new Class({
    unmarshallWindowDocker: function(){
       var windowDockerDefinitionElement = this.configurationXml.selectNode( this.options.windowDockerSelector );
       if( windowDockerDefinitionElement ){
-         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed } );
+         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed, onError : this.onError } );
          this.windowDocker.unmarshall();         
       }
    }.protect(),
@@ -4728,7 +4891,7 @@ var Desktop = new Class({
    unmarshallWindows: function(){
       var windowDefinitionElements = this.configurationXml.selectNodes( this.options.windowSelector );
       windowDefinitionElements.each( function( windowDefinition, index ){
-         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowConstructed } );
+         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onWindowConstructed, onDestructed: this.onWindowDestructed, onError : this.onError });
          desktopWindow.unmarshall();
          this.windows.put( desktopWindow.getName(), desktopWindow );
       }, this );
@@ -4764,7 +4927,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['constructed', 'finalizeConstruction', 'onConstructionError'],
+   Binds: ['constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
    
    options: {
       componentContainerId: "desktop",
@@ -4783,6 +4946,7 @@ var DesktopElement = new Class({
       this.constructionChain = new Chain();
       this.containerElement;
       this.definitionElement = definitionElement;
+      this.destructionChain = new Chain();
       this.error;
       this.htmlElement;
       this.id;
@@ -4806,10 +4970,11 @@ var DesktopElement = new Class({
    
    destroy: function(){
       this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "' started." );
-      if( this.state == DesktopElement.States.CONSTRUCTED ) this.destroyComponents();
-      this.resetProperties();
-      if( this.htmlElement ) this.htmlElement.destroy();      
-      this.state = DesktopElement.States.INITIALIZED;
+      if( this.state == DesktopElement.States.CONSTRUCTED ){
+         this.startTimeOutTimer( 'destruct' );
+         this.compileDestructionChain();
+         this.destructionChain.callChain();
+      }else this.finalizeDestruction();      
    },
    
    onConstructionError: function( error ){
@@ -4836,6 +5001,10 @@ var DesktopElement = new Class({
       this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect(),
+   
    configureLogger : function() {
       if( this.webUIController == null ){
          this.logger = Class.getInstanceOf( WebUILogger );
@@ -4851,6 +5020,8 @@ var DesktopElement = new Class({
          if( this.id ) this.htmlElement.set( 'id', this.id );
          this.htmlElement.inject( this.containerElement );
       }
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    definitionElementAttribute: function( selector ){
@@ -4861,17 +5032,31 @@ var DesktopElement = new Class({
    
    destroyComponents: function(){
       //Abstract method, should be overwritten
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHtmlElement: function(){
+      if( this.htmlElement ) this.htmlElement.destroy();      
+      this.destructionChain.callChain();
    }.protect(),
    
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
-      this.fireEvent('constructed', this, this.options.eventFireDelay ); 
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.stopTimeOutTimer();
+      this.state = DesktopElement.States.INITIALIZED;
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
    resetProperties: function(){
       //Abstract method, should be overwritten.
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -4932,6 +5117,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopColumn = new Class({
    Extends: DesktopElement,
+   Binds: ['constructMUIColumn', 'destroyMUIColumn'],
    options : {
       componentName : "DesktopColumn",
       maximumWidthSelector : "maximumWidth",
@@ -4954,7 +5140,6 @@ var DesktopColumn = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });
       this.parent();
    },
    
@@ -4977,10 +5162,27 @@ var DesktopColumn = new Class({
    getMUIColumn: function() { return this.MUIColumn; },
    getName: function() { return this.name; },
    getPlacement: function() { return this.placement; },
-   getWidth: function() { return this.width; }
+   getWidth: function() { return this.width; },
    
    //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructMUIColumn, this.finalizeConstruction );
+   }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyMUIColumn, this.finalizeDestruction );
+   }.protect(),
+   
+   constructMUIColumn: function(){
+      this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyMUIColumn: function(){
+      if( this.MUIColumn ) this.MUIColumn.close();
+      
+      this.destructionChain.callChain();
+   }.protect()
 });
 /*
 Name: DesktopContentArea
@@ -5026,16 +5228,25 @@ var DesktopContentArea = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
-      this.createHtmlElement();
       this.parent();
    },
    
    unmarshall: function(){
       this.unmarshallElementProperties();
       this.parent();
-   }
+   },
 
    //Properties
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createHtmlElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect()
+   
 });
 /*
 Name: DesktopDocument
@@ -5087,11 +5298,11 @@ var DesktopDocument = new Class({
    },
    
    //Public mutators and accessor methods
+   construct: function(){
+      this.parent();
+   },
+   
    destroy: function(){
-      if( this.document ) this.document.destroy();
-      this.document = null;
-      this.documentDataUri = null;
-      this.documentDefinitionUri = null;
       this.parent();
    },
    
@@ -5122,6 +5333,11 @@ var DesktopDocument = new Class({
       this.document.construct();
    }.protect(),
    
+   destroyComponents: function(){
+      if( this.document ) this.document.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    instantiateDocument: function(){
       this.document = new SmartDocument( this.internationalization, {  
          documentContainerId : this.options.componentContainerId, 
@@ -5131,6 +5347,13 @@ var DesktopDocument = new Class({
          onDocumentError : this.onDocumentError
       });
       this.document.unmarshall();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.document = null;
+      this.documentDataUri = null;
+      this.documentDefinitionUri = null;
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -5405,8 +5628,12 @@ var DesktopPanel = new Class({
            'constructDocument', 
            'constructPlugin', 
            'constructHeader', 
+           'createContentAreaElement',
+           'destroyComponents',
+           'destroyMUIPanel',
            'determineComponentElements',
            'finalizeConstruction',
+           'finalizeDestruction',
            'instantiateMUIPanel',
            'loadHtmlDocument',
            'loadSmartDocument',
@@ -5489,12 +5716,27 @@ var DesktopPanel = new Class({
          this.instantiateMUIPanel,
          this.determineComponentElements,
          this.constructHeader,
+         this.createContentAreaElement,
          this.constructPlugin,
          this.constructDocument,
          this.addScrollBars,
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.destroyMUIPanel, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyMUIPanel: function(){
+      if( this.MUIPanel ){
+         this.MUIPanel.removeEvents();
+         this.MUIPanel.destroy();
+         this.MUIPanel = null;
+      }
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    determinePanelElement: function(){
@@ -5514,7 +5756,6 @@ var DesktopPanel = new Class({
             contentURL : this.contentUrl,
             id : this.name,
             header : this.showHeader,
-            //headerToolbox : this.header.getToolBoxUrl() ? true : false,
             headerToolbox : this.header ? true : false,
             headerToolboxOnload : this.header ? this.onMUIPanelLoaded : null,
             headerToolboxURL : this.header ? this.header.getToolBoxUrl() : null,
@@ -5880,12 +6121,18 @@ var DesktopWindow = new Class({
    Extends: DesktopElement,
    Implements: [ComplexContentBehaviour],
    Binds: [
+      'addScrollBars',
       'constructDocument',
       'constructHeader',
       'constructPlugin',
+      'createContentAreaElement',
       'destroy',
+      'destroyMUIWindow',
       'determineComponentElements', 
+      'finalizeConstruction',
       'instantiateMUIWindow', 
+      'loadHtmlDocument',
+      'loadSmartDocument',
       'onContainerResize', 
       'onDocumentError', 
       'onDocumentReady', 
@@ -5946,11 +6193,27 @@ var DesktopWindow = new Class({
          this.instantiateMUIWindow, 
          this.determineComponentElements, 
          this.constructHeader,
+         this.createContentAreaElement,
          this.constructPlugin,
          this.constructDocument,
+         this.addScrollBars,
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.destroyMUIWindow, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyMUIWindow: function(){
+      if( this.MUIWindow ){
+         this.MUIWindow.removeEvents();
+         this.MUIWindow.destroy();
+         this.MUIWindow = null;
+      }
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    instantiateMUIWindow: function(){
@@ -6192,7 +6455,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var WindowDocker = new Class({
    Extends: DesktopElement,
-   
+   Binds: ['createDockerElements', 'injectDockerElement'],   
    options: {
       componentName : "WindowDocker",
       dockerAutoHideId : 'dockAutoHide',
@@ -6217,36 +6480,68 @@ var WindowDocker = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
-      this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
-      this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
-      this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
-      this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
-      this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
-
-      this.createHtmlElement();
-      this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
-      this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
-      
       this.parent();
    },
    
    destroy: function(){
-      this.dockerClearElement.destroy();
-      this.dockerSortElement.destroy();
-      this.dockerAutoHideElement.destroy();
-      this.dockerPlacementElement.destroy();
       this.parent();
    },
    
    unmarshall: function(){
       this.unmarshallElementProperties();
       this.parent();
-   }
+   },
 
    //Properties
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createDockerElements, this.createHtmlElement, this.injectDockerElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect(),
+   
+   createDockerElements: function(){
+      this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
+      this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
+      this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
+      this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
+      this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyComponents: function(){
+      this.dockerClearElement.destroy();
+      this.dockerSortElement.destroy();
+      this.dockerAutoHideElement.destroy();
+      this.dockerPlacementElement.destroy();
+      
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   injectDockerElement: function(){
+      this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
+      this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.dockerAutoHideElement = null;
+      this.dockerClearElement = null;
+      this.dockerControlsElement = null;
+      this.dockerPlacementElement = null;
+      this.dockerSortElement = null;
+      
+      this.destructionChain.callChain();
+   }.protect()
+   
 });
 /*
 Name: 
@@ -8273,7 +8568,7 @@ var HtmlDocument = new Class({
    },
    
    onContainerResize: function( newSize ){
-      this.editor.onContainerResize( this.containerElement.getSize() );
+      this.editor.onContainerResize( newSize );
    },
    
    resizeTextArea: function(){
@@ -10938,57 +11233,46 @@ var NoneExistingScrollableElementException = new Class({
    }	
 });
 /*
- * MooScroll beta [for mootools 1.2]
- * @author Jason J. Jaeger | greengeckodesign.com
- * @version 0.59
- * @license MIT-style License
- *       Permission is hereby granted, free of charge, to any person obtaining a copy
- *       of this software and associated documentation files (the "Software"), to deal
- *       in the Software without restriction, including without limitation the rights
- *       to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *       copies of the Software, and to permit persons to whom the Software is
- *       furnished to do so, subject to the following conditions:
- * 
- *       The above copyright notice and this permission notice shall be included in
- *       all copies or substantial portions of the Software.
- * 
- *       THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *       IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *       FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *       AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *       LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *       OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *       THE SOFTWARE.
- */
+Name: 
+    - ScrollArea
+
+Description: 
+    - Wraps scrollable element into a scroll window and adds scroll controls.
+
+Requires:
+    - 
+Provides:
+    - ScrollingArea
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 
 
 var ScrollArea = new Class({
    Implements : Options,
-   Binds : ['onDocumentClick', 
-            'onDocumentKeyDown', 
-            'onDocumentMouseUp', 
-            'onScrollableElementClick', 
-            'onScrollableElementKeyDown', 
-            'onScrollableElementMouseWheel',
-            'onWindowResize'],
+   Binds : ['onScrollContent', 'onScrollableElementClick', 'onScrollableElementKeyDown', 'onScrollableElementMouseWheel'],
    options : {
-      contentElementClass : 'contentEl',
-      disabledOpacity : 0,
-      downBtnClass : 'downBtn',
+      componentName : "ScrollArea",
+      contentHeight : null,
+      contentViewElementClass : 'contentEl',
+      contentWidth : null,
       handleOpacity : 1,
       handleActiveOpacity : 0.85,
-      fullWindowMode : false,
-      increment : 30,
       paddingElementClass : 'paddingEl',
-      scrollBarClass : 'scrollBar',
-      scrollHandleClass : 'scrollHandle',
-      scrollHandleBGClass : 'scrollHandleBG',
-      scrollHandleTopClass : 'scrollHandleTop',
-      scrollHandleMiddleClass : 'scrollHandleMiddle',
-      scrollHandleBottomClass : 'scrollHandleBottom',
-      scrollControlsYClass : 'scrollControlsY',
-      upBtnClass : 'upBtn'
    },
 
    initialize : function( scrollableElement, windowFxScroll, options ) {
@@ -10996,84 +11280,54 @@ var ScrollArea = new Class({
       this.setOptions( options );
 
       this.borderHeight;
-      this.contentEl;
-      this.scrollableElement = scrollableElement.setProperty( 'rel', 'MooScrollArea' );
+      this.contentViewElement;
+      this.contentWrapperElement;
+      this.hasFocusTimeout;
+      this.scrollableElement = scrollableElement;
       this.scrollableElementPadding = this.scrollableElement.getStyles( 'padding-top', 'padding-right', 'padding-bottom', 'padding-left' );
+      this.scrollableElementSize = this.scrollableElement.getStyles( 'height', 'width' );
+      this.scrollControls;
+      this.sliderTimeout;
+      this.step;
       this.overHang;
-      this.paddingEl;
       this.paddingHeight;
       this.paddingWidth;
-      this.slider;
-      this.viewPort = { x : $( window ).getSize().x, y : $( window ).getSize().y };
       this.windowFxScroll = windowFxScroll;
    },
 
    // Public accessors and mutators
    construct : function() {
-      this.createContentElement();
-      this.adjustScrollableElementSize();
+      this.createContentViewElement();
       this.determineBorderHeight();
-      this.setContentElementStyle();
+      this.determinePadding();
       this.createPaddingElement();
+      this.setContentElementStyle();
       
-      if( this.options.fullWindowMode )  this.switchToFullWindowMode();
-      this.createControlElements();
-      this.fixIE6CSSbugs();
+      this.adjustContentWrapperWidth();
       this.determineOverHang();
-      this.setHandleHeight();
-
-      if( this.overHang <= 0 ) { this.greyOut(); return; }
-
-      this.initSlider();
+      this.constructScrollControls();
+      
       this.addScrollableElementEvents();
-      this.addContentElementEvents();
-      this.addScrollHandleEvents();
-      this.addDocumentEvents();
-      this.addWindowEvents();
-      this.addUpButtonEvents();
-      this.addDownButtonEvents();
    },
 
    destroy : function() {
-      this.removeContentElementEvents();
-      this.removeDocumentEvents();
-      this.removeDownButtonEvents();
       this.removeScrollableElementEvents();
-      this.removeScrollHandleEvents();
-      this.removeUpButtonEvents();
-      this.removeWindowEvents();
       
-      this.destroyControlElements();
+      this.restoreContentElement();
+      
+      this.destroyScrollControls();
       this.destroyPaddingElement();
-      this.destroyContentElement();
+      this.destroyContentViewElement();
    },
 
-   loadContent : function(content) {
-      this.slider.set( 0 );
-      this.paddingEl.empty().set( 'html', content );
-      this.refresh();
-   },
-   
-   onDocumentClick : function( e ){
-      this.hasFocus = false;
-   },
-   
-   onDocumentKeyDown : function( e ){
-      if ((this.hasFocus || this.options.fullWindowMode) && (e.key === 'down' || e.key === 'space' || e.key === 'up')) {
-         this.scrollableElement.fireEvent( 'keydown', e );
-      }
-   },
-   
-   onDocumentMouseUp : function( e ){
-      this.scrollHandle.removeClass( this.options.scrollHandleClass + '-Active' ).setStyle( 'opacity', this.options.handleOpacity );
-      this.upBtn.removeClass( this.options.upBtnClass + '-Active' );
-      this.downBtn.removeClass( this.options.downBtnClass + '-Active' );
+   onScrollContent : function( step ){
+      this.contentViewElement.scrollTo( 0, step );
    },
    
    onScrollableElementClick : function( e ){
       this.hasFocus = true;
       this.hasFocusTimeout = (function() {
-         $clear( this.hasFocusTimeout );
+         clearInterval( this.hasFocusTimeout );
          this.hasFocus = true;
       }.bind( this )).delay( 50 );
    },
@@ -11081,73 +11335,285 @@ var ScrollArea = new Class({
    onScrollableElementKeyDown : function( e ){
       if( e.key === 'up' ) {
          e = new Event( e ).stop();
-         this.scrollUp( true );
+         this.scrollControls.scrollUp();
       }else if (e.key === 'down' || e.key === 'space') {
          e = new Event( e ).stop();
-         this.scrollDown( true );
+         this.scrollControls.scrollDown();
       }
    },
    
-   onScrollableElementMouseWheel : function( e ){
-      e = new Event( e ).stop();
-      if( e.wheel > 0) { this.scrollUp( true ); }
-      else if( e.wheel < 0 ) { this.scrollDown( true ); }
+   onScrollableElementMouseWheel : function( mouseWheelEvent ){
+      //event = new Event( mouseWheelEvent )
+      mouseWheelEvent.stop();
+      if( mouseWheelEvent.wheel > 0) { this.scrollControls.scrollUp(); }
+      else if( mouseWheelEvent.wheel < 0 ) { this.scrollControls.scrollDown(); }
    },
    
-   onWindowResize : function( e ){
-      $clear( this.refreshTimeout );
-      if (this.options.fullWindowMode) {
-         this.refreshTimeout = (function() {
-            $clear( this.refreshTimeout );
-            if (this.viewPort.x != $( window ).getSize().x || this.viewPort.y != $( window ).getSize().y) {
-               this.refresh();
-               this.viewPort.x = $( window ).getSize().x;
-               this.viewPort.y = $( window ).getSize().y;
-            }
-         }.bind( this )).delay( 250 );
-      }
+   refresh : function( size ) {
+      this.setContentViewSize( size );
+      this.adjustContentWrapperWidth();
+      this.determineOverHang();
+      this.scrollControls.refresh( this.overHang );
    },
-
-   refresh : function() {
-      var scrollPercent = Math.round( ((100 * this.step) / this.overHang) );
-      if (this.options.fullWindowMode) {
-         this.scrollableElement.setStyles( {
-            width : '100%',
-            height : '100%'
-         });
-      }
-      this.fixIE6CSSbugs();
-      this.overHang = this.paddingEl.getSize().y - this.scrollableElement.getSize().y;
-      this.setHandleHeight();
-      if (this.overHang <= 0) {
-         this.greyOut();
-         return;
-      } else {
-         this.unGrey();
-      }
-      this.scrollHandle.removeEvents();
-      var newStep = Math.round( (scrollPercent * this.overHang) / 100 );
-      this.initSlider();
-      this.slider.set( newStep );
-
-      // another IE6 kludge
-      if (Browser.Engine.trident4) {
-         this.scrollHandleBG.setStyle( 'height', '0' ).setStyle( 'height', '100%' );
-      }
-
-      if (this.options.smoothMooScroll.toAnchor || this.options.smoothMooScroll.toMooScrollArea) {
-         this.smoothMooScroll = new SmoothMooScroll( {
-            toAnchor : this.options.smoothMooScroll.toAnchor,
-            toMooScrollArea : this.options.smoothMooScroll.toMooScrollArea
-         }, this.contentEl, this.windowFxScroll );
-      }
-   },
+   
+   //Properties
+   getContentViewElement : function() { return this.contentViewElement; },
+   getContentViewSize : function() { 
+      var contentWidth = this.contentViewElement.getSize().x;
+      contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'margin-left' )) + parseInt( this.contentWrapperElement.getStyle( 'margin-right' ));
+      contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'padding-left' )) + parseInt( this.contentWrapperElement.getStyle( 'padding-right' ));
+      contentWidth += this.scrollControls.getEffectiveWidth();
+      if( this.scrollControls.isVisible() ) contentWidth -= this.scrollControls.getWidth();
+      return { x : contentWidth, y : this.contentViewElement.getSize().y }; },
+   getContentWrapperElement : function(){ return this.contentWrapperElement; },
 
    // Protected, private helper methods
-   addContentElementEvents : function(){
-      this.contentEl.addEvents({
+   adjustContentWrapperWidth : function(){
+      this.determineOverHang();
+      var rightMargin = this.overHang <= 0 ? '0px' : '15px';
+      this.contentWrapperElement.setStyle( 'margin-right', rightMargin );
+   }.protect(),
+
+   addScrollableElementEvents : function(){
+      this.scrollableElement.addEvents({
+         'mousewheel' : this.onScrollableElementMouseWheel,
+         'keydown' : this.onScrollableElementKeyDown,
+         'click' : this.onScrollableElementClick
+      });
+   }.protect(),
+   
+   constructScrollControls : function(){
+      this.scrollControls = new ScrollControls( this.contentViewElement, this.overHang, { onScrollContent : this.onScrollContent } );
+      this.scrollControls.construct();
+   }.protect(),
+   
+   createContentViewElement : function(){
+      this.contentViewElement = new Element( 'div', { 'class' : this.options.contentViewElementClass });
+      this.contentViewElement.wraps( this.scrollableElement );
+      this.contentViewElement.setStyles({  overflow : 'hidden', padding : 0, });
+      this.determinePadding();
+      this.setContentViewSize();
+   }.protect(),
+   
+   createPaddingElement : function(){
+      this.contentWrapperElement = new Element( 'div', { 'class' : this.options.paddingElementClass });
+      this.contentWrapperElement.adopt( this.contentViewElement.getChildren() );
+      this.contentWrapperElement.inject( this.contentViewElement, 'top' );
+      this.contentWrapperElement.setStyles( this.scrollableElementPadding );
+      this.contentWrapperElement.setStyles({ display: 'inline', 'float': 'left' });
+   }.protect(),
+   
+   destroyContentViewElement : function(){
+      if( this.contentViewElement && this.contentViewElement.destroy ){
+         this.contentViewElement.destroy();
+         this.contentViewElement = null;
+      }
+   }.protect(),
+   
+   destroyPaddingElement : function(){
+      if( this.contentWrapperElement && this.contentWrapperElement.destroy ){ 
+         this.contentWrapperElement.destroy();
+         this.contentWrapperElement = null;
+      }
+   }.protect(),
+   
+   destroyScrollControls : function(){
+      if( this.scrollControls ){
+         this.scrollControls.removeEvent( 'scrollContent', this.onScrollContent );
+         this.scrollControls.destroy();      
+      }
+   }.protect(),
+   
+   determineBorderHeight : function(){
+      this.borderHeight = parseFloat( this.scrollableElement.getStyle( 'border-top-width' )) + parseFloat( this.scrollableElement.getStyle( 'border-bottom-width' ));
+   }.protect(),
+   
+   determineOverHang : function(){
+      this.overHang = this.scrollableElement.getSize().y + parseInt( this.contentWrapperElement.getStyle( 'padding-top' )) - this.contentViewElement.getSize().y;
+   }.protect(),
+   
+   determinePadding : function(){
+      this.paddingHeight = parseFloat( this.scrollableElement.getStyle( 'padding-top' )) + parseFloat( this.scrollableElement.getStyle( 'padding-bottom' ) );
+      this.paddingWidth = parseFloat( this.scrollableElement.getStyle( 'padding-left' )) + parseFloat( this.scrollableElement.getStyle( 'padding-right' ) );
+   }.protect(),
+   
+   removeScrollableElementEvents : function(){
+      if( this.scrollableElement && this.scrollableElement.removeEvent ){
+         this.scrollableElement.removeEvent( 'mousewheel', this.onScrollableElementMouseWheel );
+         this.scrollableElement.removeEvent( 'keydown', this.onScrollableElementKeyDown );
+         this.scrollableElement.removeEvent( 'click', this.onScrollableElementClick );
+      }
+   }.protect(),
+   
+   restoreContentElement : function(){
+      if( this.contentViewElement ){
+         this.scrollableElement.dispose();
+         this.scrollableElement.inject( this.contentViewElement, 'before' );
+      }
+      
+      this.scrollableElement.setStyles( this.scrollableElementSize );
+   }.protect(),
+   
+   setContentElementStyle : function(){
+      this.scrollableElement.setStyles({ height : '100%', margin : '0px', padding : '0px', width : '100%' });
+   }.protect(),
+   
+   setContentViewSize : function( size ){      
+      if( size && size.x && size.y ){
+         this.options.contentHeight = size.y;
+         this.options.contentWidth = size.x;
+      }else if( !this.options.contentHeight && !this.options.contentWidth ){
+         this.options.contentHeight = parseInt( this.scrollableElement.getStyle( 'height' ));
+         this.options.contentWidth = parseInt( this.scrollableElement.getStyle( 'width' ));
+      }
+
+      this.contentViewElement.setStyles({ width : this.options.contentWidth + 'px', height : this.options.contentHeight + 'px' });
+   }.protect()
+ 
+});
+/*
+Name: 
+    - ScrollControls
+
+Description: 
+    - User interface for the scrolling behaviour.
+
+Requires:
+    - 
+Provides:
+    - ScrollConstrols
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var ScrollControls = new Class({
+   Implements : [Events, Options],
+   Binds : ['onDocumentClick', 'onDocumentKeyDown', 'onDocumentMouseUp', 'scrollDown', 'scrollUp'],
+   options : {
+      componentName : "ScrollControls",
+      disabledOpacity : 0,
+      downBtnClass : 'downBtn',
+      increment : 15,
+      scrollBarClass : 'scrollBar',
+      scrollControlsYClass : 'scrollControlsY',
+      scrollHandleClass : 'scrollHandle',
+      scrollHandleBGClass : 'scrollHandleBG',
+      scrollHandleTopClass : 'scrollHandleTop',
+      scrollHandleMiddleClass : 'scrollHandleMiddle',
+      scrollHandleBottomClass : 'scrollHandleBottom',
+      scrollSlotClass : 'scrollSlot',
+      upBtnClass : 'upBtn'
+   },
+
+   initialize : function( contentViewElement, overHang, options ) {
+      assertThat( contentViewElement, not( nil() ));
+      assertThat( overHang, not( nil() ));
+      this.setOptions( options );
+
+      this.contentViewElement = contentViewElement;
+      this.downButton;
+      this.downInterval;
+      this.overHang = overHang;
+      this.scrollSlot;
+      this.scrollHandle;
+      this.scrollHandleBG;
+      this.slider;
+      this.state = BrowserWidget.States.INITIALIZED;
+      this.upButton;
+      this.upInterval;
+   },
+
+   // Public accessors and mutators
+   construct : function() {
+      this.createControlElements();
+      this.setHeights();
+      this.createSlider();
+      this.illuminateScrollControls();      
+      
+      this.addScrollHandleEvents();
+      this.addUpButtonEvents();
+      this.addDownButtonEvents();
+      this.addContentViewEvents();
+      this.addDocumentEvents();
+      
+      this.state = BrowserWidget.States.CONSTRUCTED;
+   },
+
+   destroy : function() {
+      clearInterval( this.sliderTimeout );
+      this.removeScrollHandleEvents();
+      this.removeDownButtonEvents();
+      this.removeUpButtonEvents();
+      this.removeContentViewEvents();
+      this.removeDocumentEvents();
+      
+      this.destroySlider();
+      this.destroyControlElements();
+      
+      this.state = BrowserWidget.States.INITIALIZED;
+   },
+   
+   onDocumentClick : function( e ){
+      this.hasFocus = false;
+   },
+   
+   onDocumentKeyDown : function( e ){
+      if(( this.hasFocus || this.options.fullWindowMode ) && ( e.key === 'down' || e.key === 'space' || e.key === 'up' )) {
+         this.scrollableElement.fireEvent( 'keydown', e );
+      }
+   },
+   
+   onDocumentMouseUp : function( e ){
+      this.scrollHandle.removeClass( this.options.scrollHandleClass + '-Active' ).setStyle( 'opacity', this.options.handleOpacity );
+      this.stopScrollUp();
+      this.stopScrollDown();
+   },
+   
+   refresh : function( overHang ){
+      this.overHang = overHang;
+      this.updateSlider();
+      this.illuminateScrollControls();      
+      this.setHeights();
+   },
+   
+   scrollDown : function() {
+      var target = this.contentViewElement.getScroll().y + this.options.increment;
+      this.slider.set( target );
+   },
+
+   scrollUp : function() {
+      var target = this.contentViewElement.getScroll().y - this.options.increment;
+      if( target < 0 ) target = 0;
+      this.slider.set( target );
+   },
+
+   //Properties
+   getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },
+   getSlider : function() { return this.slider; },
+   getWidth : function() { return this.scrollControlsYWrapper ? this.scrollControlsYWrapper.getSize().x : 0; },
+   isVisible : function() { return this.overHang > 0 ? true : false; },
+
+
+   // Protected, private helper methods
+   addContentViewEvents : function(){
+      this.contentViewElement.addEvents({
          'scroll' : function(e) {
-            this.slider.set( this.contentEl.getScroll().y );
+            this.slider.set( this.contentViewElement.getScroll().y );
          }.bind( this )
       });
    }.protect(),
@@ -11161,41 +11627,16 @@ var ScrollArea = new Class({
    }.protect(),
    
    addDownButtonEvents : function(){
-      this.downBtn.addEvents({
-         'mousedown' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
+      this.downButton.addEvents({
+         'mousedown' : function( e ) {
+            clearInterval( this.upInterval );
+            clearInterval( this.downInterval );
             this.downInterval = this.scrollDown.periodical( 10, this );
-            this.downBtn.addClass( this.options.downBtnClass + '-Active' );
+            this.downButton.addClass( this.options.downBtnClass + '-Active' );
          }.bind( this ),
 
-         'mouseup' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this ),
-
-         'mouseout' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this )
-      });
-   }.protect(),
-   
-   adjustScrollableElementSize : function(){
-      this.determinePadding();
-      
-      this.scrollableElement.setStyle( 'overflow', 'hidden' ).setStyles({ 
-         'padding' : 0,
-         width : parseFloat( this.scrollableElement.getStyle( 'width' )) + this.paddingWidth,
-         height : parseFloat( this.scrollableElement.getStyle( 'height' )) + this.paddingHeight
-      });
-   }.protect(),
-
-   addScrollableElementEvents : function(){
-      this.scrollableElement.addEvents({
-         'mousewheel' : this.onScrollableElementMouseWheel,
-         'keydown' : this.onScrollableElementKeyDown,
-         'click' : this.onScrollableElementClick
+         'mouseup' : function( e ) { this.stopScrollDown(); }.bind( this ),
+         'mouseout' : function( e ) { this.stopScrollDown(); }.bind( this )
       });
    }.protect(),
    
@@ -11208,133 +11649,83 @@ var ScrollArea = new Class({
    }.protect(),
    
    addUpButtonEvents : function(){
-      this.upBtn.addEvents({
-         'mousedown' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
+      this.upButton.addEvents({
+         'mousedown' : function( e ) {
+            clearInterval( this.upInterval );
+            clearInterval( this.downInterval );
             this.upInterval = this.scrollUp.periodical( 10, this );
-            this.upBtn.addClass( this.options.upBtnClass + '-Active' );
+            this.upButton.addClass( this.options.upBtnClass + '-Active' );
          }.bind( this ),
 
-         'mouseup' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this ),
-
-         'mouseout' : function(e) {
-            $clear( this.upInterval );
-            $clear( this.downInterval );
-         }.bind( this )
+         'mouseup' : function( e ) { this.stopScrollUp(); }.bind( this ),
+         'mouseout' : function( e ) { this.stopScrollUp(); }.bind( this )
       } );
    }.protect(),
-   
-   addWindowEvents : function(){
-      window.addEvent( 'resize', this.onWindowResize );
-   }.protect(),
-   
-   createContentElement : function(){
-      this.contentEl = new Element( 'div', { 'class' : this.options.contentElementClass }).adopt( this.scrollableElement.getChildren() ).inject( this.scrollableElement, 'top' );
-   }.protect(),
-   
+      
    createControlElements : function() {
-      this.scrollControlsYWrapper = new Element( 'div', { 'class' : this.options.scrollControlsYClass }).inject( this.scrollableElement, 'bottom' );
-      this.upBtn = new Element( 'div', { 'class' : this.options.upBtnClass }).inject( this.scrollControlsYWrapper, 'bottom' );
-      this.downBtn = new Element( 'div', { 'class' : this.options.downBtnClass }).inject( this.scrollControlsYWrapper, 'bottom' );
-      this.scrollBar = new Element( 'div', { 'class' : this.options.scrollBarClass }).inject( this.scrollControlsYWrapper, 'bottom' );
-      this.scrollHandle = new Element( 'div', { 'class' : this.options.scrollHandleClass }).inject( this.scrollBar, 'inside' );
+      this.scrollControlsYWrapper = new Element( 'div', { 'class' : this.options.scrollControlsYClass }).inject( this.contentViewElement, 'bottom' );
+      this.upButton = new Element( 'div', { 'class' : this.options.upBtnClass }).inject( this.scrollControlsYWrapper, 'bottom' );
+      this.downButton = new Element( 'div', { 'class' : this.options.downBtnClass }).inject( this.scrollControlsYWrapper, 'bottom' );
+      this.scrollSlot = new Element( 'div', { 'class' : this.options.scrollSlotClass }).inject( this.scrollControlsYWrapper, 'bottom' );
+      this.scrollHandle = new Element( 'div', { 'class' : this.options.scrollHandleClass }).inject( this.scrollSlot, 'inside' );
       this.scrollHandleTop = new Element( 'div', { 'class' : this.options.scrollHandleTopClass }).inject( this.scrollHandle, 'inside' );
       this.scrollHandleBG = new Element( 'div', { 'class' : this.options.scrollHandleBGClass }).inject( this.scrollHandle, 'inside' );
       this.scrollHandleMiddle = new Element( 'div', { 'class' : this.options.scrollHandleMiddleClass }).inject( this.scrollHandle, 'inside' );
       this.scrollHandleBottom = new Element( 'div', { 'class' : this.options.scrollHandleBottomClass }).inject( this.scrollHandle, 'inside' );
-      this.coverUp = new Element( 'div' ).inject( this.scrollControlsYWrapper, 'bottom' );
    }.protect(),
    
-   createPaddingElement : function(){
-      this.paddingEl = new Element( 'div', { 'class' : this.options.paddingElementClass }).adopt( this.contentEl.getChildren() ).inject( this.contentEl, 'top' ).setStyles( this.scrollableElementPadding );
-   }.protect(),
-   
-   destroyContentElement : function(){
-      if( this.contentEl && this.contentEl.destroy ) this.contentEl.destroy();
+   createSlider : function() {
+      var upperBound = this.overHang >= 0 ? Math.round( this.overHang ) : 0;
+      this.slider = new Slider( this.scrollSlot, this.scrollHandle, {
+         range : [ 0, upperBound ],
+         mode : 'vertical',
+         snap : true,
+         onChange : function( step, e ) {
+            if( this.state == BrowserWidget.States.CONSTRUCTED ) this.fireEvent( 'scrollContent', step );
+         }.bind( this )
+      });
+      
+      this.slider.set( 0 );
    }.protect(),
    
    destroyControlElements : function(){
-      if( this.scrollControlsYWrapper ) this.scrollControlsYWrapper.destroy();
-      if( this.upBtn ) this.upBtn.destroy();
-      if( this.downBtn ) this.downBtn.destroy();
-      if( this.scrollBar ) this.scrollBar.destroy();
-      if( this.scrollHandle ) this.scrollHandle.destroy();
-      if( this.scrollHandleTop ) this.scrollHandleTop.destroy();
-      if( this.scrollHandleBG ) this.scrollHandleBG.destroy();
-      if( this.scrollHandleMiddle ) this.scrollHandleMiddle.destroy();
-      if( this.scrollHandleBottom ) this.scrollHandleBottom.destroy();
-      if( this.coverUp ) this.coverUp.destroy();
+      if( this.upButton ){ this.upButton.destroy(); this.upButton = null; }
+      if( this.downButton ){ this.downButton.destroy(); this.downButton = null; }
+      if( this.scrollHandleTop ){ this.scrollHandleTop.destroy(); this.scrollHandleTop = null; }
+      if( this.scrollHandleBG ){ this.scrollHandleBG.destroy(); this.scrollHandleBG = null; }
+      if( this.scrollHandleMiddle ){ this.scrollHandleMiddle.destroy(); this.scrollHandleMiddle = null; }
+      if( this.scrollHandleBottom ){ this.scrollHandleBottom.destroy(); this.scrollHandleBottom = null; }
+      if( this.scrollHandle ){ this.scrollHandle.destroy(); this.scrollHandle = null; }
+      if( this.scrollSlot ){ this.scrollSlot.destroy(); this.scrollSlot = null; }
+      if( this.scrollControlsYWrapper ){ this.scrollControlsYWrapper.destroy(); this.scrollControlsYWrapper = null; }
    }.protect(),
    
-   destroyPaddingElement : function(){
-      if( this.paddingEl && this.paddingEl.destroy ) this.paddingEl.destroy();
-   }.protect(),
-   
-   determineBorderHeight : function(){
-      this.borderHeight = parseFloat( this.scrollableElement.getStyle( 'border-top-width' )) + parseFloat( this.scrollableElement.getStyle( 'border-bottom-width' ));
-   }.protect(),
-   
-   determineOverHang : function(){
-      this.overHang = this.paddingEl.getSize().y - this.scrollableElement.getSize().y;
-   }.protect(),
-   
-   determinePadding : function(){
-      this.paddingHeight = parseFloat( this.scrollableElement.getStyle( 'padding-top' )) + parseFloat( this.scrollableElement.getStyle( 'padding-bottom' ) );
-      this.paddingWidth = parseFloat( this.scrollableElement.getStyle( 'padding-left' )) + parseFloat( this.scrollableElement.getStyle( 'padding-right' ) );
-   }.protect(),
-
-   initSlider : function() {
-      this.slider = new Slider( this.scrollBar, this.scrollHandle, {
-         range : [ 0, Math.round( this.overHang ) ],
-         mode : 'vertical',
-         onChange : function(step, e) {
-            this.contentEl.scrollTo( 0, step );
-            this.webKitKludge( step );
-         }.bind( this )
-      } ).set( 0 );
-   }.protect(),
-   
-   fixIE6CSSbugs : function() {
-      // fix some CSS bugs for IE6
-      if (Browser.Engine.trident4) {
-         this.scrollableElement.setStyle( 'height', this.scrollableElement.getStyle( 'height' ) );
-         this.contentEl.setStyle( 'height', this.scrollableElement.getStyle( 'height' ) );
-         var top = this.scrollBar.getStyle( 'top' ).toInt();
-         var bottom = this.scrollBar.getStyle( 'bottom' ).toInt();
-         var parentHeight = this.scrollableElement.getSize().y - this.borderHeight;
-         this.scrollControlsYWrapper.setStyles( {
-            'height' : parentHeight
-         } );
-         this.scrollBar.setStyles( {
-            'height' : parentHeight - top - bottom
-         } );
+   destroySlider: function(){
+      if( this.slider ){
+         this.slider.removeEvents();
+         this.slider = null;
       }
    }.protect(),
-
+   
    greyOut : function() {
-      this.scrollHandle.setStyles({ 'display' : 'none' });
-      this.upBtn.setStyles({ 'opacity' : this.options.disabledOpacity });
+      this.scrollHandle.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleTop.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleBG.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleMiddle.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleBottom.setStyles({ opacity : this.options.disabledOpacity });
+      this.upButton.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollControlsYWrapper.setStyles({ opacity : this.options.disabledOpacity });
-      this.downBtn.setStyles({ 'opacity' : this.options.disabledOpacity });
-      this.scrollBar.setStyles({ 'opacity' : this.options.disabledOpacity });
-      this.coverUp.setStyles({
-         'display' : 'block',
-         'position' : 'absolute',
-         'background' : 'white',
-         'opacity' : 0.01,
-         'right' : '0',
-         'top' : '0',
-         'width' : '100%',
-         'height' : this.scrollControlsYWrapper.getSize().y
-      });
+      this.downButton.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollSlot.setStyles({ opacity : this.options.disabledOpacity });
+   }.protect(),
+   
+   illuminateScrollControls : function(){
+      if( this.overHang <= 0 ){ this.greyOut();
+      }else{ this.unGrey(); }
    }.protect(),
 
-   removeContentElementEvents : function(){
-      if( this.contentEl ) this.contentEl.removeEvents();
+   removeContentViewEvents : function(){
+      if( this.contentViewElement && this.contentViewElement.removeEvents ) this.contentViewElement.removeEvents();
    }.protect(),
    
    removeDocumentEvents : function(){
@@ -11344,273 +11735,123 @@ var ScrollArea = new Class({
    }.protect(),
    
    removeDownButtonEvents : function(){
-      if( this.downBtn ) this.downBtn.removeEvents();
-   }.protect(),
-   
-   removeScrollableElementEvents : function(){
-      if( this.scrollableElement ){
-         this.scrollableElement.removeEvent( 'mousewheel', this.onScrollableElementMouseWheel );
-         this.scrollableElement.removeEvent( 'keydown', this.onScrollableElementKeyDown );
-         this.scrollableElement.removeEvent( 'click', this.onScrollableElementClick );
-      }
+      if( this.downButton && this.downButton.removeEvents ) this.downButton.removeEvents();
+      this.stopScrollDown();
    }.protect(),
    
    removeScrollHandleEvents : function(){
-      if( this.scrollHandle ) this.scrollHandle.removeEvents();
+      if( this.scrollHandle && this.scrollHandle.removeEvents ) this.scrollHandle.removeEvents();
    }.protect(),
    
    removeUpButtonEvents : function(){
-      if( this.upBtn ) this.upBtn.removeEvents();
-   }.protect(),
-   
-   removeWindowEvents : function(){
-      window.removeEvent( 'resize', this.onWindowResize );
-   }.protect(),
-   
-   scrollUp : function(scrollPageWhenDone) {
-      var target = this.contentEl.getScroll().y - 30;// this.options.increment;
-      this.slider.set( target );
-      if (this.contentEl.getScroll().y <= 0 && scrollPageWhenDone) {
-         document.window.scrollTo( 0, document.window.getScroll().y - this.options.increment );
-      }
-   },
-
-   scrollDown : function(scrollPageWhenDone) {
-      var target = this.contentEl.getScroll().y + this.options.increment;
-      this.slider.set( target );
-      var onePercent = (1 * this.paddingEl.getSize().y) / 100;
-      var atBottom = (this.paddingEl.getSize().y - this.scrollableElement.getSize().y) <= (this.contentEl.getScroll().y + onePercent);
-      if (atBottom && scrollPageWhenDone) {
-         document.window.scrollTo( 0, document.window.getScroll().y + this.options.increment );
-      }
-   },
-
-   setContentElementStyle : function(){
-      this.contentEl.setStyles({
-         'height' : this.scrollableElement.getSize().y - this.borderHeight,
-         overflow : 'hidden',
-         'padding' : 0
-      });
+      if( this.upButton && this.upButton.removeEvents ) this.upButton.removeEvents();
+      this.stopScrollUp();
+      
    }.protect(),
    
    setHandleHeight : function() {
-      var handleHeightPercent = (100 - ((this.overHang * 100) / this.paddingEl.getSize().y));
-      this.handleHeight = ((handleHeightPercent * this.scrollableElement.getSize().y) / 100) - (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y);
-      if ((this.handleHeight + this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y) >= this.scrollBar.getSize().y) {
-         this.handleHeight -= (this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y) * 2;
+      var handleHeightRatio = this.overHang > 0 ? 1 / ( 1 + this.overHang / this.contentViewElement.getSize().y ) : 1;
+      var slotHeight = this.scrollSlot.getSize().y;
+      var handleHeight = Math.round( handleHeightRatio * slotHeight );
+      
+      var minimumHandleHeight = this.scrollHandleBottom.getSize().y + this.scrollHandleTop.getSize().y;
+      if( handleHeight < minimumHandleHeight ) {
+         handleHeight = minimumHandleHeight;
       }
-      if (this.scrollHandle.getStyle( 'min-height' ) && this.handleHeight < parseFloat( this.scrollHandle.getStyle( 'min-height' ) )) {
-         this.handleHeight = parseFloat( this.scrollHandle.getStyle( 'min-height' ) ) + this.scrollHandleBottom.getSize().y + this.scrollHandleTop.getSize().y;
-      }
-      this.scrollHandle.setStyles( {
-         'height' : this.handleHeight
-      } );
-   }.protect(),
-
-   setSlider : function(v) {
-      if (v == 'top') {
-         this.slider.set( 0 );
-      } else if (v == 'bottom') {
-         this.slider.set( '100%' );
-      } else {
-         this.slider.set( v );
-      }
+      
+      this.scrollHandle.setStyles({ height : handleHeight + 'px' });
+      
+      var handleMiddleHeight = handleHeight - ( this.scrollHandleTop.getSize().y + this.scrollHandleBottom.getSize().y );
+      handleMiddleHeight = handleMiddleHeight > 0 ? handleMiddleHeight : 0;
+      this.scrollHandleBG.setStyles({ height : handleMiddleHeight + 'px' });
    }.protect(),
    
-   switchToFullWindowMode : function(){
-      // turn off overflow for html element here so non-javascript users can still scroll
-      $( document ).getElement( 'html' ).setStyle( 'overflow', 'hidden' );
-      this.scrollableElement.setStyles( {
-         'height' : '100%',
-         'width' : '100%',
-         'position' : 'absolute'
-      });
-      this.contentEl.setStyles( {
-         'height' : '100%',
-         'width' : '100%',
-         'position' : 'absolute'
-      });
-   }.protect(),
-
-   unGrey : function() {
-      this.scrollHandle.setStyles({ 'display' : 'block', 'height' : 'auto' });
-      this.scrollControlsYWrapper.setStyles({ opacity : 1 });
-      this.upBtn.setStyles({ 'opacity' : 1 });
-      this.downBtn.setStyles({ 'opacity' : 1 });
-      this.scrollBar.setStyles({ 'opacity' : 1 });
-      this.coverUp.setStyles({ 'display' : 'none', 'width' : 0, 'height' : 0 });
+   setHeights : function(){
+      this.setScrollSlotHeight();
       this.setHandleHeight();
    }.protect(),
+   
+   setScrollSlotHeight : function(){
+      var slotHeight = this.contentViewElement.getSize().y - ( this.downButton.getSize().y + this.upButton.getSize().y + parseInt( this.scrollSlot.getStyle( 'top' )) + parseInt( this.scrollSlot.getStyle( 'margin-bottom' )));
+      slotHeight = slotHeight > 0 ? slotHeight : 0;
+      this.scrollSlot.setStyles({ height : slotHeight + 'px' });
+   }.protect(),
 
-   webKitKludge : function(step) {
-      if (!Browser.Engine.webkit) {
-         return;
-      }
-      // if scrollHandle is withing 1% of the bottom, kick it down that last
-      // little bit since webkit browsers seem to
-      // have trouble getting it that last little bit sometimes (varies with
-      // amount of content.. probably due to rounding)
-      if (this.step > step) {
-         this.step = step;
-         return;
-      }
-      $clear( this.sliderTimeout );
-      this.sliderTimeout = (function() {
-         $clear( this.sliderTimeout );
-         var onePercent = (1 * this.paddingEl.getSize().y) / 100;
-         if ((onePercent + step) >= this.overHang) {
-            if (this.paddingElTopMargin == null) {
-               this.paddingElTopMargin = parseFloat( this.paddingEl.getStyle( 'margin-top' ) );
-            }
-            this.paddingEl.setStyle( 'margin-top', this.paddingElTopMargin - onePercent );
-            if (!this.scrollHandleTopMargin) {
-               this.scrollHandleTopMargin = parseFloat( this.scrollHandle.getStyle( 'margin-top' ) );
-            }
-            this.scrollHandle.setStyle( 'margin-top', this.scrollHandleTopMargin + 2 );
-            this.contentEl.scrollTo( 0, this.overHang );
-            this.step = this.overHang;
-
-         } else {
-            this.paddingEl.setStyle( 'margin-top', this.paddingElTopMargin );
-            this.scrollHandle.setStyle( 'margin-top', this.scrollHandleTopMargin );
-            this.contentEl.scrollTo( 0, step );
-            this.step = step;
-         }
-      }.bind( this )).delay( 10 );
-
+   stopScroll : function(){
+      this.stopScrollDown();
+      this.stopScrollUp();
+   }.protect(),
+   
+   stopScrollDown : function(){
+      clearInterval( this.downInterval );
+      if( this.downButton && this.downButton.removeClass ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
+   },
+   
+   stopScrollUp : function(){
+      clearInterval( this.downInterval );
+      if( this.upButton && this.upButton.removeClass ) this.upButton.removeClass( this.options.upBtnClass + '-Active' );
+   },
+   
+   unGrey : function() {
+      this.scrollHandle.setStyles({ display : 'block', opacity : 1 });
+      this.scrollHandleTop.setStyles({ opacity : 1 });
+      this.scrollHandleBG.setStyles({ opacity : 1 });
+      this.scrollHandleMiddle.setStyles({ opacity : 1 });
+      this.scrollHandleBottom.setStyles({ opacity : 1 });
+      this.scrollControlsYWrapper.setStyles({ opacity : 1 });
+      this.upButton.setStyles({ opacity : 1 });
+      this.downButton.setStyles({ opacity : 1 });
+      this.scrollSlot.setStyles({ opacity : 1 });
+   }.protect(),
+   
+   updateSlider : function(){
+      if( this.overHang > 0 ) this.slider.setRange([ 0, this.overHang ]);
+      this.slider.set( 0 );
    }
 
 });
 /*
- * MooScroll beta [for mootools 1.2]
- * @author Jason J. Jaeger | greengeckodesign.com
- * @version 0.59
- * @license MIT-style License
- *			Permission is hereby granted, free of charge, to any person obtaining a copy
- *			of this software and associated documentation files (the "Software"), to deal
- *			in the Software without restriction, including without limitation the rights
- *			to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *			copies of the Software, and to permit persons to whom the Software is
- *			furnished to do so, subject to the following conditions:
- *	
- *			The above copyright notice and this permission notice shall be included in
- *			all copies or substantial portions of the Software.
- *	
- *			THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *			IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *			FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *			AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *			LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *			OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *			THE SOFTWARE.
- *	
- *  @changeLog_________________________________________________________________________________
- *  
- *  Jan 3nd 2008
- *  JJJ - Incremented version to 0.59
- *  	- Finished adding smoothMooScroll.toAnchor and smoothMooScroll.toMooScrollArea options
- *  	  Thanks for Ivan Gascon and David Fink for the suggestions and contribution.
- *  
- *  Dec 28th 2008
- *  JJJ - Adding smoothMooScroll option
- *  
- *  Dec 27th 2008
- *  JJJ - Adding smoothMooScroll option (customized version of smoothscroll) and setSlider function
- *  
- *  Dec 24th 2008
- *  JJJ - Added refresh function to main MooScroll class (thanks to David's post on the blog for the suggestion)
- *  
- *  Dec 7th 2008
- *  JJJ - Incremented version to 0.58
- *  	- Implemented bug fixes (for ie6 and webkit) submitted by Mattia Placido Opizzi of moikano.it
- *  
- *  Nov 8th 2008
- *  JJJ	- Incremented version to 0.57.2
- *  	- Added line to unGrey method to bring full opacity back after a scollbar had been greyed out and then brought back
- *  
- *  Nov 8th 2008
- *  JJJ	- Incremented version to 0.57
- *  	- Fixed bug related to the disabledOpacity option (Thanks to Simon Terres at gmx.net) 
- *  
- *  Sept 21st 2008
- *  JJJ	- Incremented version to 0.56
- *  	- Added restrictedBrowsers option. Made Opera 9.25 or lower, Safari 2 or lower, and iPhone/iPod Touch the default restricted browsers
- *  	- Fixed small bug introduced with previous webkit fix which prevented webkit browsers from scrolling the document down when the MooScroll
- *  		area is all the way scrolled down and the end-user is still scrolling via mousewheel or keyboard.
- *  
- *  Sept 21st 2008
- *  JJJ - Incremented version to 0.55
- *  	- Fixed jitter bug for webkit browsers
- *  	- Made arrow keys and space key work in Firefox, Opera, Safari, and Chrome
- *  
- *  Sept 20th 2008
- *  JJJ - Incremented version to 0.54
- *  	- Disabled MooScroll for iphone/ipod touch until I can get an iphone to test on 
- *  	- Factored in border height when setting content area height
- *  
- *  Sept 6th 2008
- *  JJJ - Incremented version to 0.53
- *  	- Changed initialize function so that instead of wrapping the original element, an empty div (contentEl) adopts the children and is 
- *  		then injected into the the original element (parentEl). This way all the stlying of the original element is perfectly preserved.
- *  		An extra element then wraps the children of the contentDiv and the padding from the original element is transfered to 
- *  		this padding element (paddingEl).
- *  	- Added refresh function
- *  	- Added fullWindowMode option
- *  	- Added loadContent function
- *  
- *  August 31st 2008
- *  JJJ - Made the wrapper element absorb certain styles from the parentEl so that it works in layouts where the scrolled
- *  		element is positioned (thanks to Bob Ralian for suggesting and contributing to this feature!)
- *  		This allowed the styles for the parentEl (.scroll) to be separated out to the example.css file (from mooScroll.css)
- *  		in the example (where it should be). Also this makes appling MooScroll to a scrollable area in a pre-existing design easier.  
- *  	- Fixed bug which kept the scrollHandle from going all the way to the bottom sometimes when scrolling via the down button
- *  	- Moved some code from init function to dedicated functions (setHandleHeight and greyOut) in order to prepare to add refresh function
- *  	- Ran across some Mootools 1.2 bugs:
- *  		a.) In Firefox 2 and 3  element.getStyle('width') reports the actual element dimension in px even when the width is set in percent in the CSS
- *  		b.) In Firefox 3 element.getScrollSize().y is not including padding (this means that in FF3 you loose any bottom padding 
- *  			you may have set on the scollElement 
- *  	- Added unGrey function
- *  
- *  August 9th 2008
- *  JJJ - Incremented version to 0.52
- *  	- Disabled for Safari 2 to atleast keep it from crashig or looking messed up due to bugs that I don't currently have time to fix, Sorry Safari 2 users :(
- *  
- *  August 2nd 2008
- *  JJJ	- Incremented version to 0.51
- *  	- Made tweaks for IE6's poor CSS support
- *  	- Wrapped scroll controls in wrapper div so positioning can be easily tweaked via CSS
- *  	- Made scrollHandle position update when scroll area is scrolled via tabbing through links
- *  	- Made Scroll area scroll via arrow keys when that scroll area (or something in it) is in focus
- *  	- Made page scroll up if you are scrolling up through a scroll area via the mousewheel and you get to 
- *  	  the top of the scroll area but you keep scrolling up with the wheel (same with down).
- *  	- Made greyed out scroll controlls non-functional (css hover overs and all)
- *  	- Added opacity of greyed out scroll controls option (disabledOpacity)
- *  	- Added refresh option
- *  
- *  July 26th 2008
- *  JJJ - Incremented version to 0.50
- *  	- Improved class I had previously written to prepare it for public release:
- *  		* Updated for MooTools 1.2
- *  		* Made able to have multiple instances on a page
- *  
- *  
- *  
- *  TO DO:
- *  --------------------
- *  1. Add horizontal scrollbar ability
- *  2. Add Callback functions
- *  
- */
+Name: 
+    - ScrollingBehaviour
+
+Description: 
+    - Add scrolling behaviour to any div or span element.
+
+Requires:
+    - 
+Provides:
+    - ScrollingBehaviour
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 
 
-var ScrollBar = new Class({
+var ScrollingBehaviour = new Class({
    Implements : Options,
    options : {
-      selector : '.scroll',
-      increment : 30,
-      upBtnClass : 'upBtn',
+      contentHeight : null,
+      contentWidth : null,
+      disabledOpacity : 0,
       downBtnClass : 'downBtn',
+      fullWindowMode : false,
+      handleOpacity : 1,
+      handleActiveOpacity : 0.85,
+      increment : 15,
+      restrictedBrowsers : [ Browser.Engine.presto925, Browser.Platform.ipod, Browser.Engine.webkit419 ],
       scrollBarClass : 'scrollBar',
       scrollHandleClass : 'scrollHandle',
       scrollHandleBGClass : 'scrollHandleBG',
@@ -11618,20 +11859,17 @@ var ScrollBar = new Class({
       scrollHandleMiddleClass : 'scrollHandleMiddle',
       scrollHandleBottomClass : 'scrollHandleBottom',
       scrollControlsYClass : 'scrollControlsY',
-      handleOpacity : 1,
-      handleActiveOpacity : 0.85,
-      disabledOpacity : 0,
-      fullWindowMode : false,
+      selector : '.scroll',
       smoothMooScroll : {
          toAnchor : true,
          toMooScrollArea : true
       },
-      restrictedBrowsers : [ Browser.Engine.presto925, Browser.Platform.ipod, Browser.Engine.webkit419 ]
+      upBtnClass : 'upBtn'
    // Opera 9.25 or lower, Safari 2 or lower, iPhone/iPod Touch
    },
 
    //Constructor
-   initialize : function( scrollableElementId, options ) {
+   initialize : function( scrollableElement, options ) {
       if( this.options.restrictedBrowsers.contains( true )) { return; }
       this.setOptions( options );
 
@@ -11639,7 +11877,7 @@ var ScrollBar = new Class({
       this.scrollableElement;
       this.windowFxScroll = new Fx.Scroll( document.window, { wait : false });
       
-      this.identifyScrollableElement( scrollableElementId );
+      this.identifyScrollableElement( scrollableElement );
    },
    
    //Public accessors and mutators
@@ -11656,33 +11894,30 @@ var ScrollBar = new Class({
    },
    
    destroy : function(){
-      this.scrollArea.destroy();
+      if( this.scrollArea ) this.scrollArea.destroy();
    },
 
    loadContent : function( content ) {
       this.scrollArea.loadContent( content );
    },
 
-   refresh : function() {
-      this.mooScrollAreas.each( function( item, index ) {
-         item.refresh();
-      });
+   refresh : function( size ) {
+      this.scrollArea.refresh( size );
    },
 
    setSlider : function(v) {
-      this.mooScrollAreas.each( function(item, index) {
-         item.setSlider( v );
-      });
+      this.scrollAreas.setSlider( v );
    },
    
    //Properties
+   getContentViewSize : function() { return this.scrollArea.getContentViewSize(); },
    getScrollableElement : function() { return this.scrollableElement; },
    getScrollArea : function() { return this.scrollArea; },
    
    //Protected, private helper methods
-   identifyScrollableElement : function( scrollableElementId ){
-      this.scrollableElement = $( scrollableElementId );
-      if( !this.scrollableElement ) throw new NoneExistingScrollableElementException( scrollableElementId );
+   identifyScrollableElement : function( scrollableElement ){
+      this.scrollableElement = $( scrollableElement );
+      if( !this.scrollableElement ) throw new NoneExistingScrollableElementException( scrollableElement );
    }
 });
 /*
