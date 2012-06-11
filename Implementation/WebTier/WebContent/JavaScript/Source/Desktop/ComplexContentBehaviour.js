@@ -112,7 +112,7 @@ var ComplexContentBehaviour = new Class({
       
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
          this.adjustDocumentWrapperSize( containerEffectiveSize );
-         this.document.onContainerResize( this.documentWrapper.getSize() );
+         this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});
       }      
    },
    
@@ -275,28 +275,50 @@ var ComplexContentBehaviour = new Class({
       this.contentAreaElement.grab( this.documentWrapper );
       this.documentWrapper.setStyle( 'width', this.contentContainerElement.getSize().x + 'px' );
    }.protect(),
+   
+   destroyComponentRootElement: function(){
+      if( this.componentRootElement ) {
+         if( this.componentRootElement.destroy ) this.componentRootElement.destroy();
+         else this.componentRootElement.removeNode();
+      }
+   }.protect(),
       
    destroyComponents: function(){
       this.destroyDocument();
       this.destroyDocumentWrapper();
       this.destroyScrollBars();
       this.cleanUpContentElement();
-      if( this.header ) this.header.destroy();
-      if( this.plugin ) this.plugin.destroy();
-      if( this.componentRootElement ) {
-         if( this.componentRootElement.destroy ) this.componentRootElement.destroy();
-         else this.componentRootElement.removeNode();
-      }
+      this.destroyHeader();
+      this.destroyPlugin();
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    destroyDocument: function(){
-      if( this.document )  this.document.destroy();
+      if( this.document ){
+         this.document.removeEvents();
+         this.document.destroy();
+      }  
       this.document = null;
    }.protect(),
    
    destroyDocumentWrapper: function(){
       if( this.documentWrapper && this.documentWrapper.destroy ) this.documentWrapper.destroy();
       this.documentWrapper = null;
+   }.protect(),
+   
+   destroyHeader: function(){
+      if( this.header ){
+         this.header.removeEvents();
+         this.header.destroy();
+      }
+   }.protect(),
+   
+   destroyPlugin: function(){
+      if( this.plugin ) {
+         this.plugin.removeEvents();
+         this.plugin.destroy();
+      }
    }.protect(),
    
    destroyScrollBars: function(){
@@ -359,6 +381,8 @@ var ComplexContentBehaviour = new Class({
       this.name = null;
       this.showHeader = null;
       this.title = null;
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    restoreComponentState : function() {

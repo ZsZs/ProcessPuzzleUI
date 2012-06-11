@@ -83,13 +83,15 @@ var ScrollControls = new Class({
 
    destroy : function() {
       clearInterval( this.sliderTimeout );
-      
       this.removeScrollHandleEvents();
       this.removeDownButtonEvents();
       this.removeUpButtonEvents();
       this.removeContentViewEvents();
       this.removeDocumentEvents();
+      
+      this.destroySlider();
       this.destroyControlElements();
+      
       this.state = BrowserWidget.States.INITIALIZED;
    },
    
@@ -128,6 +130,7 @@ var ScrollControls = new Class({
    },
 
    //Properties
+   getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },
    getSlider : function() { return this.slider; },
    getWidth : function() { return this.scrollControlsYWrapper ? this.scrollControlsYWrapper.getSize().x : 0; },
    isVisible : function() { return this.overHang > 0 ? true : false; },
@@ -224,8 +227,19 @@ var ScrollControls = new Class({
       if( this.scrollControlsYWrapper ){ this.scrollControlsYWrapper.destroy(); this.scrollControlsYWrapper = null; }
    }.protect(),
    
+   destroySlider: function(){
+      if( this.slider ){
+         this.slider.removeEvents();
+         this.slider = null;
+      }
+   }.protect(),
+   
    greyOut : function() {
       this.scrollHandle.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleTop.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleBG.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleMiddle.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleBottom.setStyles({ opacity : this.options.disabledOpacity });
       this.upButton.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollControlsYWrapper.setStyles({ opacity : this.options.disabledOpacity });
       this.downButton.setStyles({ opacity : this.options.disabledOpacity });
@@ -297,16 +311,20 @@ var ScrollControls = new Class({
    
    stopScrollDown : function(){
       clearInterval( this.downInterval );
-      if( this.downButton ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
+      if( this.downButton && this.downButton.removeClass ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
    },
    
    stopScrollUp : function(){
       clearInterval( this.downInterval );
-      if( this.upButton ) this.upButton.removeClass( this.options.upBtnClass + '-Active' );
+      if( this.upButton && this.upButton.removeClass ) this.upButton.removeClass( this.options.upBtnClass + '-Active' );
    },
    
    unGrey : function() {
       this.scrollHandle.setStyles({ display : 'block', opacity : 1 });
+      this.scrollHandleTop.setStyles({ opacity : 1 });
+      this.scrollHandleBG.setStyles({ opacity : 1 });
+      this.scrollHandleMiddle.setStyles({ opacity : 1 });
+      this.scrollHandleBottom.setStyles({ opacity : 1 });
       this.scrollControlsYWrapper.setStyles({ opacity : 1 });
       this.upButton.setStyles({ opacity : 1 });
       this.downButton.setStyles({ opacity : 1 });
@@ -316,7 +334,6 @@ var ScrollControls = new Class({
    updateSlider : function(){
       if( this.overHang > 0 ) this.slider.setRange([ 0, this.overHang ]);
       this.slider.set( 0 );
-      //this.slider.set( this.contentViewElement.getScroll().y );
    }
 
 });

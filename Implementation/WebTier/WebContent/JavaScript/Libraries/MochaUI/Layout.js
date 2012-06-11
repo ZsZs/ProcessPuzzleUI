@@ -47,12 +47,12 @@ MUI.Desktop = {
 	},
 	initialize: function( options ){
 	   this.options.desktop = options['desktop'] ? options['desktop'] : this.options.desktop;            
-       this.options.desktopHeader = options['desktopHeader'] ? options['desktopHeader'] : this.options.desktopHeader;            
-       this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
-       this.options.desktopNavBar = options['desktopNavBar'] ? options['desktopNavBar'] : this.options.desktopNavBar;            
-       this.options.pageWrapper = options['pageWrapper'] ? options['pageWrapper'] : this.options.pageWrapper;            
-       this.options.page = options['page'] ? options['page'] : this.options.page;            
-       this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
+      this.options.desktopHeader = options['desktopHeader'] ? options['desktopHeader'] : this.options.desktopHeader;            
+      this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
+      this.options.desktopNavBar = options['desktopNavBar'] ? options['desktopNavBar'] : this.options.desktopNavBar;            
+      this.options.pageWrapper = options['pageWrapper'] ? options['pageWrapper'] : this.options.pageWrapper;            
+      this.options.page = options['page'] ? options['page'] : this.options.page;            
+      this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
 
 		this.desktop         = $(this.options.desktop);
 		this.desktopHeader   = $(this.options.desktopHeader);
@@ -61,6 +61,8 @@ MUI.Desktop = {
 		this.page            = $(this.options.page);
 		this.desktopFooter   = $(this.options.desktopFooter);
 
+      MUI.underlayInitialize();
+      
 		if (this.desktop) {
 			($$('body')).setStyles({
 				overflow: 'hidden',
@@ -663,6 +665,7 @@ MUI.Panel = new Class({
 	},
 	initialize: function(options){
 		this.setOptions(options);
+		this.isClosing = false;
 
 		$extend(this, {
 			timestamp: $time(),
@@ -810,6 +813,11 @@ MUI.Panel = new Class({
 			this.newPanel();
 		}
 	},
+	
+	destroy: function(){
+	   MUI.closePanel( this.panelEl );
+	},
+	
 	newPanel: function(){
 
 		options = this.options;
@@ -1533,38 +1541,36 @@ MUI.extend({
 
 	*/
 	closePanel: function(panelEl){
-        panelEl=$(panelEl);
-        if(panelEl==null) return;
+      panelEl=$(panelEl);
+      if( panelEl==null) return;
 		var instances = MUI.Panels.instances;
 		var instance = instances.get(panelEl.id);
-		if (panelEl != $(panelEl) || instance.isClosing) return;
+		if( panelEl != $(panelEl ) || instance.isClosing ) return;
 
 		var column = instance.options.column;
-
 		instance.isClosing = true;
 
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(column);
 
-		if (columnInstance.options.sortable){
-			columnInstance.options.container.retrieve('sortables').removeItems(instance.panelWrapperEl);
+		if( columnInstance.options.sortable ){
+			columnInstance.options.container.retrieve( 'sortables' ).removeItems( instance.panelWrapperEl );
 		}
 
+      instance.removeEvents();
 		instance.panelWrapperEl.destroy();
 
-		if (MUI.Desktop) {
-			MUI.Desktop.resizePanels();
-		}
+		if( MUI.Desktop ) { MUI.Desktop.resizePanels(); }
 
 		// Do this when creating and removing panels
-        var panels=$(column).getElements('.panelWrapper');
+      var panels=$(column).getElements('.panelWrapper');
 		panels.each(function(panelWrapper){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
-        if(panels.length>0) panels.getLast().getElement('.panel').addClass('bottomPanel');
+		
+      if(panels.length>0) panels.getLast().getElement('.panel').addClass('bottomPanel');
 
-		instances.erase(instance.options.id);
+		instances.erase( instance.options.id );
 		return true;
-
 	}
 });

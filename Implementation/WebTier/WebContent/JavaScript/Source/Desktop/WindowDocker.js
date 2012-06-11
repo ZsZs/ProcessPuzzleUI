@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var WindowDocker = new Class({
    Extends: DesktopElement,
-   
+   Binds: ['createDockerElements', 'injectDockerElement'],   
    options: {
       componentName : "WindowDocker",
       dockerAutoHideId : 'dockAutoHide',
@@ -54,34 +54,66 @@ var WindowDocker = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
-      this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
-      this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
-      this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
-      this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
-      this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
-
-      this.createHtmlElement();
-      this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
-      this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
-      
       this.parent();
    },
    
    destroy: function(){
-      this.dockerClearElement.destroy();
-      this.dockerSortElement.destroy();
-      this.dockerAutoHideElement.destroy();
-      this.dockerPlacementElement.destroy();
       this.parent();
    },
    
    unmarshall: function(){
       this.unmarshallElementProperties();
       this.parent();
-   }
+   },
 
    //Properties
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createDockerElements, this.createHtmlElement, this.injectDockerElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect(),
+   
+   createDockerElements: function(){
+      this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
+      this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
+      this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
+      this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
+      this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyComponents: function(){
+      this.dockerClearElement.destroy();
+      this.dockerSortElement.destroy();
+      this.dockerAutoHideElement.destroy();
+      this.dockerPlacementElement.destroy();
+      
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   injectDockerElement: function(){
+      this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
+      this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.dockerAutoHideElement = null;
+      this.dockerClearElement = null;
+      this.dockerControlsElement = null;
+      this.dockerPlacementElement = null;
+      this.dockerSortElement = null;
+      
+      this.destructionChain.callChain();
+   }.protect()
+   
 });

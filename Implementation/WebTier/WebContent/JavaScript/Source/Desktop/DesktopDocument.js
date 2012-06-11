@@ -48,11 +48,11 @@ var DesktopDocument = new Class({
    },
    
    //Public mutators and accessor methods
+   construct: function(){
+      this.parent();
+   },
+   
    destroy: function(){
-      if( this.document ) this.document.destroy();
-      this.document = null;
-      this.documentDataUri = null;
-      this.documentDefinitionUri = null;
       this.parent();
    },
    
@@ -83,6 +83,11 @@ var DesktopDocument = new Class({
       this.document.construct();
    }.protect(),
    
+   destroyComponents: function(){
+      if( this.document ) this.document.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    instantiateDocument: function(){
       this.document = new SmartDocument( this.internationalization, {  
          documentContainerId : this.options.componentContainerId, 
@@ -92,6 +97,13 @@ var DesktopDocument = new Class({
          onDocumentError : this.onDocumentError
       });
       this.document.unmarshall();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.document = null;
+      this.documentDataUri = null;
+      this.documentDefinitionUri = null;
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){

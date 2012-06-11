@@ -2142,6 +2142,10 @@ MUI.Window = new Class({
 	show: function(){
 		this.windowEl.setStyle('display', 'block');
 		return this;
+	},
+	
+	destroy: function(){
+	   MUI.closeWindow( this.windowEl );
 	}
 
 });

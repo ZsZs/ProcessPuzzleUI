@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['constructed', 'finalizeConstruction', 'onConstructionError'],
+   Binds: ['constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
    
    options: {
       componentContainerId: "desktop",
@@ -47,6 +47,7 @@ var DesktopElement = new Class({
       this.constructionChain = new Chain();
       this.containerElement;
       this.definitionElement = definitionElement;
+      this.destructionChain = new Chain();
       this.error;
       this.htmlElement;
       this.id;
@@ -70,10 +71,11 @@ var DesktopElement = new Class({
    
    destroy: function(){
       this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "' started." );
-      if( this.state == DesktopElement.States.CONSTRUCTED ) this.destroyComponents();
-      this.resetProperties();
-      if( this.htmlElement ) this.htmlElement.destroy();      
-      this.state = DesktopElement.States.INITIALIZED;
+      if( this.state == DesktopElement.States.CONSTRUCTED ){
+         this.startTimeOutTimer( 'destruct' );
+         this.compileDestructionChain();
+         this.destructionChain.callChain();
+      }else this.finalizeDestruction();      
    },
    
    onConstructionError: function( error ){
@@ -100,6 +102,10 @@ var DesktopElement = new Class({
       this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect(),
+   
    configureLogger : function() {
       if( this.webUIController == null ){
          this.logger = Class.getInstanceOf( WebUILogger );
@@ -115,6 +121,8 @@ var DesktopElement = new Class({
          if( this.id ) this.htmlElement.set( 'id', this.id );
          this.htmlElement.inject( this.containerElement );
       }
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    definitionElementAttribute: function( selector ){
@@ -125,17 +133,31 @@ var DesktopElement = new Class({
    
    destroyComponents: function(){
       //Abstract method, should be overwritten
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHtmlElement: function(){
+      if( this.htmlElement ) this.htmlElement.destroy();      
+      this.destructionChain.callChain();
    }.protect(),
    
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
-      this.fireEvent('constructed', this, this.options.eventFireDelay ); 
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.stopTimeOutTimer();
+      this.state = DesktopElement.States.INITIALIZED;
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
    resetProperties: function(){
       //Abstract method, should be overwritten.
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
