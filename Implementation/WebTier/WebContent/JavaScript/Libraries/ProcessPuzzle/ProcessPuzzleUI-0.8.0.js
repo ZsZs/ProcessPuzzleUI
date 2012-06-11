@@ -3849,7 +3849,12 @@ var ComplexContentBehaviour = new Class({
       
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
          this.adjustDocumentWrapperSize( containerEffectiveSize );
+<<<<<<< HEAD
          this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});      }      
+=======
+         this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});
+      }      
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    },
    
    onDocumentError: function( error ){
@@ -4011,6 +4016,7 @@ var ComplexContentBehaviour = new Class({
       this.contentAreaElement.grab( this.documentWrapper );
       this.documentWrapper.setStyle( 'width', this.contentContainerElement.getSize().x + 'px' );
    }.protect(),
+<<<<<<< HEAD
       
    destroyComponents: function(){
       this.destroyDocument();
@@ -4019,14 +4025,32 @@ var ComplexContentBehaviour = new Class({
       this.cleanUpContentElement();
       if( this.header ) this.header.destroy();
       if( this.plugin ) this.plugin.destroy();
+=======
+   
+   destroyComponentRootElement: function(){
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       if( this.componentRootElement ) {
          if( this.componentRootElement.destroy ) this.componentRootElement.destroy();
          else this.componentRootElement.removeNode();
       }
    }.protect(),
+      
+   destroyComponents: function(){
+      this.destroyDocument();
+      this.destroyDocumentWrapper();
+      this.destroyScrollBars();
+      this.cleanUpContentElement();
+      this.destroyHeader();
+      this.destroyPlugin();
+      
+      this.destructionChain.callChain();
+   }.protect(),
    
    destroyDocument: function(){
-      if( this.document )  this.document.destroy();
+      if( this.document ){
+         this.document.removeEvents();
+         this.document.destroy();
+      }  
       this.document = null;
    }.protect(),
    
@@ -4035,6 +4059,23 @@ var ComplexContentBehaviour = new Class({
       this.documentWrapper = null;
    }.protect(),
    
+<<<<<<< HEAD
+=======
+   destroyHeader: function(){
+      if( this.header ){
+         this.header.removeEvents();
+         this.header.destroy();
+      }
+   }.protect(),
+   
+   destroyPlugin: function(){
+      if( this.plugin ) {
+         this.plugin.removeEvents();
+         this.plugin.destroy();
+      }
+   }.protect(),
+   
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    destroyScrollBars: function(){
       if( this.verticalScrollBar ){ this.verticalScrollBar.destroy(); this.verticalScrollBar = null; }
    }.protect(),
@@ -4095,6 +4136,8 @@ var ComplexContentBehaviour = new Class({
       this.name = null;
       this.showHeader = null;
       this.title = null;
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    restoreComponentState : function() {
@@ -4286,18 +4329,34 @@ var Desktop = new Class({
             'constructPanels', 
             'constructWindowDocker', 
             'constructWindows',
+            'destroyColumns',
+            'destroyContentArea',
+            'destroyFooter',
+            'destroyHeader',
+            'destroyHiddenElements',
+            'destroyPanels',
+            'destroyWindowDocker',
+            'destroyWindows',
             'finalizeConstruction',
+            'finalizeDestruction',
             'hideDesktop',
             'initializeMUI', 
             'loadResources',
-            'onError',
+            'onColumnConstructed',
+            'onColumnDestructed',
             'onContentAreaConstructed',
+            'onError',
             'onFooterConstructed',
             'onHeaderConstructed',
             'onPanelConstructed',
+            'onPanelDestructed',
             'onResourceError',
             'onResourcesLoaded',
+            'onWindowConstructed',
+            'onWindowDestructed',
             'onWindowDockerConstructed',
+            'releaseResources',
+            'removeDesktopEvents',
             'showDesktop',
             'showNotification',
             'subscribeToWebUIMessages',
@@ -4312,6 +4371,7 @@ var Desktop = new Class({
       contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
       descriptionSelector : "/desktopConfiguration/description",
+      eventFireDelay : 5,
       footerSelector : "/desktopConfiguration/footer",
       headerSelector : "/desktopConfiguration/header",
       nameSelector : "/desktopConfiguration/name",
@@ -4334,12 +4394,13 @@ var Desktop = new Class({
       this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.columns = new LinkedHashMap();
       this.configurationXml = new XmlResource( this.options.configurationURI, { nameSpaces : this.options.configurationXmlNameSpace } );
-      this.configurationChain = new Chain();
+      this.constructionChain = new Chain();
       this.containerElement;
       this.containerId;
       this.contentArea;
       this.currentLocale = null;
       this.description;
+      this.destructionChain = new Chain();
       this.dock = null;
       this.error;
       this.footer;
@@ -4349,7 +4410,9 @@ var Desktop = new Class({
       this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.MUIDesktop = null;
       this.name;
+      this.numberOfConstructedColumns = 0;
       this.numberOfConstructedPanels = 0;
+      this.numberOfConstructedWindows = 0;
       this.panels = new LinkedHashMap();
       this.resourceBundle = resourceBundle;
       this.resources = null;
@@ -4367,7 +4430,7 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
-      this.configurationChain.chain(
+      this.constructionChain.chain(
          this.hideDesktop,
          this.loadResources,
          this.constructHeader,
@@ -4386,17 +4449,37 @@ var Desktop = new Class({
 	
    destroy : function() {
       if( this.state > DesktopElement.States.UNMARSHALLED ){
-         if( this.resources ) this.resources.release();
-         if( this.header ) this.header.destroy();
-         if( this.contentArea ) this.contentArea.destroy();
-         if( this.footer ) this.footer.destroy();
-         if( this.windowDocker ) this.windowDocker.destroy();
-         this.destroyWindows();
-         this.destroyPanels();
-         this.destroyColumns();
-         this.removeDesktopEvents();
-         this.state = DesktopElement.States.INITIALIZED;
+         this.destructionChain.chain(
+            this.releaseResources,
+            this.removeDesktopEvents,
+            this.destroyWindows,
+            this.destroyPanels,
+            this.destroyColumns,
+            this.destroyHeader,
+            this.destroyContentArea,
+            this.destroyFooter,
+            this.destroyWindowDocker,
+            this.destroyHiddenElements,
+            this.finalizeDestruction
+         ).callChain();
       }
+   },
+   
+   onColumnConstructed: function( column ){
+      this.numberOfConstructedColumns++;
+      if( this.numberOfConstructedColumns == this.columns.size() ){
+         this.logger.debug( this.options.componentName + ", loading desktop column is finished." );
+         this.callNextConfigurationStep();
+      } 
+   },
+   
+   onColumnDestructed: function( panel ){
+      this.numberOfConstructedColumns--;
+      if( this.numberOfConstructedColumns == 0 ){
+         this.logger.debug( this.options.componentName + ", destroy of desktop columns is finished." );
+         this.columns.clear();
+         this.destructionChain.callChain();
+      } 
    },
    
    onContentAreaConstructed: function(){
@@ -4426,6 +4509,15 @@ var Desktop = new Class({
       } 
    },
    
+   onPanelDestructed: function( panel ){
+      this.numberOfConstructedPanels--;
+      if( this.numberOfConstructedPanels == 0 ){
+         this.logger.debug( this.options.componentName + ", destroy of desktop panels is finished." );
+         this.panels.clear();
+         this.destructionChain.callChain();
+      } 
+   },
+   
    onResourceError: function( error ){
       this.error = error;
    },
@@ -4435,14 +4527,22 @@ var Desktop = new Class({
       this.callNextConfigurationStep();      
    },
    
-   onWindowDockerConstructed: function(){
-      this.logger.debug( this.options.componentName + ", constructing desktop window docker is finished." );
-      this.callNextConfigurationStep();
-   },
-   
    onWindowConstructed: function( window ){
       this.logger.debug( this.options.componentName + ", constructing desktop window " + window.getName() + " is finished." );
       if( window.getOnReadyCallback() && typeOf( window.getOnReadyCallback() ) == 'function' ) window.getOnReadyCallback()();
+   },
+   
+   onWindowDestructed: function( panel ){
+      this.numberOfConstructedWindows--;
+      if( this.numberOfConstructedWindows == 0 ){
+         this.windows.clear();
+         this.destructionChain.callChain();
+      } 
+   },
+   
+   onWindowDockerConstructed: function(){
+      this.logger.debug( this.options.componentName + ", constructing desktop window docker is finished." );
+      this.callNextConfigurationStep();
    },
    
    showNotification: function( notificationText ){
@@ -4508,7 +4608,7 @@ var Desktop = new Class({
 	
    //Private methods
    callNextConfigurationStep: function(){
-      if( this.isSuccess() ) this.configurationChain.callChain();
+      if( this.isSuccess() ) this.constructionChain.callChain();
       else{
          this.revertConstruction();
          this.fireEvent( 'error', this.error );
@@ -4521,15 +4621,13 @@ var Desktop = new Class({
 	
    constructColumns : function() {
       this.logger.debug( this.options.componentName + ".constructColumns() started." );
-      this.columns.each( function( columnEntry, index ){
-         var column = columnEntry.getValue();
-         try{
-            column.construct();
-         }catch( e ){
-            this.onError( e );
-         }
-      }, this );
-      this.callNextConfigurationStep();
+      if( this.columns.size() > 0 ){
+         this.columns.each( function( columnEntry, index ){
+            var column = columnEntry.getValue();
+            try{ column.construct();
+            }catch( e ){ this.onError( e ); }
+         }, this );
+      }else this.callNextConfigurationStep();
    }.protect(),
    
    constructContentArea : function(){
@@ -4555,11 +4653,8 @@ var Desktop = new Class({
       if( this.panels.size() > 0 ){
          this.panels.each( function( panelEntry, index ){
             var panel = panelEntry.getValue();
-            try{
-               panel.construct();
-            }catch( e ){
-               this.onError( e );
-            }
+            try{ panel.construct();
+            }catch( e ){ this.onError( e ); }
          }, this );
       } else this.callNextConfigurationStep();
    }.protect(),
@@ -4581,7 +4676,33 @@ var Desktop = new Class({
          var column = columnEntry.getValue();
          column.destroy();
       }, this );
-      this.columns.clear();
+   }.protect(),
+   
+   destroyContentArea: function(){
+      if( this.contentArea ) this.contentArea.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyElementById: function( elementId ){
+      if( $( elementId )) $( elementId ).destroy(); 
+   }.protect(),
+   
+   destroyFooter: function(){
+      if( this.footer ) this.footer.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHeader: function(){
+      if( this.header ) this.header.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHiddenElements: function(){
+      this.destroyElementById( 'windowUnderlay' );
+      this.destroyElementById( 'lbOverlay' );
+      this.destroyElementById( 'lbCenter' );
+      this.destroyElementById( 'lbBottomContainer' );
+      this.destructionChain.callChain();
    }.protect(),
 	
    destroyPanels: function() {
@@ -4590,13 +4711,22 @@ var Desktop = new Class({
          var panel = panelEntry.getValue();
          panel.destroy();
       }, this );
-      this.panels.clear();
-      this.numberOfConstructedPanels = 0;
+   }.protect(),
+   
+   destroyWindowDocker: function(){
+      if( this.windowDocker ) this.windowDocker.destroy();
+      this.destructionChain.callChain();
    }.protect(),
 	
    destroyWindows: function() {
       this.logger.debug( this.options.componentName + ".destroyWindows() started." );
-      this.windows.clear();
+      this.numberOfConstructedWindows = this.windows.size();
+      if( this.numberOfConstructedWindows > 0 ){
+         this.windows.each( function( windowEntry, index ) {
+            var window = windowEntry.getValue();
+            window.destroy();
+         }, this );
+      }else this.destructionChain.callChain(); 
    }.protect(),
 	
    determineCurrentLocale : function() {
@@ -4609,7 +4739,14 @@ var Desktop = new Class({
    
    finalizeConstruction: function(){
       this.state = DesktopElement.States.CONSTRUCTED;
-      this.fireEvent('constructed', this ); 
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.state = DesktopElement.States.INITIALIZED;
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
    hideDesktop: function(){
@@ -4663,11 +4800,18 @@ var Desktop = new Class({
       if( this.pendingResourcesCounter > 0 ) return false;
       else this.callNextConfigurationStep();
    }.protect(),
+   
+   releaseResources : function(){
+      if( this.resources ) this.resources.release();
+      this.destructionChain.callChain();
+   }.protect(),
 
    removeDesktopEvents : function(){
       this.containerElement.removeEvents();
       window.removeEvents();
       document.removeEvents();
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -4697,7 +4841,7 @@ var Desktop = new Class({
    unmarshallColumns: function(){
       var columnDefinitionElements = this.configurationXml.selectNodes( this.options.columnSelector );
       columnDefinitionElements.each( function( columnDefinition, index ){
-         var desktopColumn = new DesktopColumn( columnDefinition, { componentContainerId : this.containerId } );
+         var desktopColumn = new DesktopColumn( columnDefinition, { componentContainerId : this.containerId, onConstructed: this.onColumnConstructed, onDestructed: this.onColumnDestructed, onError : this.onError  } );
          desktopColumn.unmarshall();
          this.columns.put( desktopColumn.getName(), desktopColumn );
       }, this );
@@ -4740,7 +4884,7 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onPanelConstructed } );
+         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onPanelConstructed, onDestructed: this.onPanelDestructed, onError : this.onError });
          desktopPanel.unmarshall();
          this.panels.put( desktopPanel.getName(), desktopPanel );
       }, this );
@@ -4757,7 +4901,7 @@ var Desktop = new Class({
    unmarshallWindowDocker: function(){
       var windowDockerDefinitionElement = this.configurationXml.selectNode( this.options.windowDockerSelector );
       if( windowDockerDefinitionElement ){
-         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed } );
+         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed, onError : this.onError } );
          this.windowDocker.unmarshall();         
       }
    }.protect(),
@@ -4765,7 +4909,7 @@ var Desktop = new Class({
    unmarshallWindows: function(){
       var windowDefinitionElements = this.configurationXml.selectNodes( this.options.windowSelector );
       windowDefinitionElements.each( function( windowDefinition, index ){
-         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowConstructed } );
+         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onWindowConstructed, onDestructed: this.onWindowDestructed, onError : this.onError });
          desktopWindow.unmarshall();
          this.windows.put( desktopWindow.getName(), desktopWindow );
       }, this );
@@ -4801,7 +4945,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['constructed', 'finalizeConstruction', 'onConstructionError'],
+   Binds: ['constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
    
    options: {
       componentContainerId: "desktop",
@@ -4820,6 +4964,7 @@ var DesktopElement = new Class({
       this.constructionChain = new Chain();
       this.containerElement;
       this.definitionElement = definitionElement;
+      this.destructionChain = new Chain();
       this.error;
       this.htmlElement;
       this.id;
@@ -4843,10 +4988,11 @@ var DesktopElement = new Class({
    
    destroy: function(){
       this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "' started." );
-      if( this.state == DesktopElement.States.CONSTRUCTED ) this.destroyComponents();
-      this.resetProperties();
-      if( this.htmlElement ) this.htmlElement.destroy();      
-      this.state = DesktopElement.States.INITIALIZED;
+      if( this.state == DesktopElement.States.CONSTRUCTED ){
+         this.startTimeOutTimer( 'destruct' );
+         this.compileDestructionChain();
+         this.destructionChain.callChain();
+      }else this.finalizeDestruction();      
    },
    
    onConstructionError: function( error ){
@@ -4873,6 +5019,10 @@ var DesktopElement = new Class({
       this.constructionChain.chain( this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect(),
+   
    configureLogger : function() {
       if( this.webUIController == null ){
          this.logger = Class.getInstanceOf( WebUILogger );
@@ -4888,6 +5038,8 @@ var DesktopElement = new Class({
          if( this.id ) this.htmlElement.set( 'id', this.id );
          this.htmlElement.inject( this.containerElement );
       }
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    definitionElementAttribute: function( selector ){
@@ -4898,17 +5050,31 @@ var DesktopElement = new Class({
    
    destroyComponents: function(){
       //Abstract method, should be overwritten
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyHtmlElement: function(){
+      if( this.htmlElement ) this.htmlElement.destroy();      
+      this.destructionChain.callChain();
    }.protect(),
    
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
-      this.fireEvent('constructed', this, this.options.eventFireDelay ); 
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.stopTimeOutTimer();
+      this.state = DesktopElement.States.INITIALIZED;
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
    resetProperties: function(){
       //Abstract method, should be overwritten.
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -4969,6 +5135,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopColumn = new Class({
    Extends: DesktopElement,
+   Binds: ['constructMUIColumn', 'destroyMUIColumn'],
    options : {
       componentName : "DesktopColumn",
       maximumWidthSelector : "maximumWidth",
@@ -4991,7 +5158,6 @@ var DesktopColumn = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });
       this.parent();
    },
    
@@ -5015,10 +5181,27 @@ var DesktopColumn = new Class({
    getMUIColumn: function() { return this.MUIColumn; },
    getName: function() { return this.name; },
    getPlacement: function() { return this.placement; },
-   getWidth: function() { return this.width; }
+   getWidth: function() { return this.width; },
    
    //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructMUIColumn, this.finalizeConstruction );
+   }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyMUIColumn, this.finalizeDestruction );
+   }.protect(),
+   
+   constructMUIColumn: function(){
+      this.MUIColumn = new MUI.Column({ id: this.name, placement: this.placement, width: this.width, resizeLimit: [this.minimumWidth, this.maximumWidth] });      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyMUIColumn: function(){
+      if( this.MUIColumn ) this.MUIColumn.close();
+      
+      this.destructionChain.callChain();
+   }.protect()
 });
 /*
 Name: DesktopContentArea
@@ -5064,16 +5247,25 @@ var DesktopContentArea = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
-      this.createHtmlElement();
       this.parent();
    },
    
    unmarshall: function(){
       this.unmarshallElementProperties();
       this.parent();
-   }
+   },
 
    //Properties
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createHtmlElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect()
+   
 });
 /*
 Name: DesktopDocument
@@ -5125,11 +5317,11 @@ var DesktopDocument = new Class({
    },
    
    //Public mutators and accessor methods
+   construct: function(){
+      this.parent();
+   },
+   
    destroy: function(){
-      if( this.document ) this.document.destroy();
-      this.document = null;
-      this.documentDataUri = null;
-      this.documentDefinitionUri = null;
       this.parent();
    },
    
@@ -5160,6 +5352,11 @@ var DesktopDocument = new Class({
       this.document.construct();
    }.protect(),
    
+   destroyComponents: function(){
+      if( this.document ) this.document.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
    instantiateDocument: function(){
       this.document = new SmartDocument( this.internationalization, {  
          documentContainerId : this.options.componentContainerId, 
@@ -5169,6 +5366,13 @@ var DesktopDocument = new Class({
          onDocumentError : this.onDocumentError
       });
       this.document.unmarshall();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.document = null;
+      this.documentDataUri = null;
+      this.documentDefinitionUri = null;
+      this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function(){
@@ -5444,8 +5648,14 @@ var DesktopPanel = new Class({
            'constructPlugin', 
            'constructHeader', 
            'createContentAreaElement',
+<<<<<<< HEAD
+=======
+           'destroyComponents',
+           'destroyMUIPanel',
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
            'determineComponentElements',
            'finalizeConstruction',
+           'finalizeDestruction',
            'instantiateMUIPanel',
            'loadHtmlDocument',
            'loadSmartDocument',
@@ -5535,6 +5745,20 @@ var DesktopPanel = new Class({
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.destroyMUIPanel, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyMUIPanel: function(){
+      if( this.MUIPanel ){
+         this.MUIPanel.removeEvents();
+         this.MUIPanel.destroy();
+         this.MUIPanel = null;
+      }
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    determinePanelElement: function(){
@@ -5925,6 +6149,7 @@ var DesktopWindow = new Class({
       'constructPlugin',
       'createContentAreaElement',
       'destroy',
+      'destroyMUIWindow',
       'determineComponentElements', 
       'finalizeConstruction',
       'instantiateMUIWindow', 
@@ -5997,6 +6222,20 @@ var DesktopWindow = new Class({
          this.subscribeToWebUIMessages,
          this.finalizeConstruction
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.destroyMUIWindow, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyMUIWindow: function(){
+      if( this.MUIWindow ){
+         this.MUIWindow.removeEvents();
+         this.MUIWindow.destroy();
+         this.MUIWindow = null;
+      }
+      
+      this.destructionChain.callChain();
    }.protect(),
    
    instantiateMUIWindow: function(){
@@ -6238,7 +6477,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var WindowDocker = new Class({
    Extends: DesktopElement,
-   
+   Binds: ['createDockerElements', 'injectDockerElement'],   
    options: {
       componentName : "WindowDocker",
       dockerAutoHideId : 'dockAutoHide',
@@ -6263,36 +6502,68 @@ var WindowDocker = new Class({
    
    //Public mutators and accessor methods
    construct: function(){
-      this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
-      this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
-      this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
-      this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
-      this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
-
-      this.createHtmlElement();
-      this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
-      this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
-      this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
-      
       this.parent();
    },
    
    destroy: function(){
-      this.dockerClearElement.destroy();
-      this.dockerSortElement.destroy();
-      this.dockerAutoHideElement.destroy();
-      this.dockerPlacementElement.destroy();
       this.parent();
    },
    
    unmarshall: function(){
       this.unmarshallElementProperties();
       this.parent();
-   }
+   },
 
    //Properties
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createDockerElements, this.createHtmlElement, this.injectDockerElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyComponents, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
+   }.protect(),
+   
+   createDockerElements: function(){
+      this.dockerControlsElement = new Element( 'div', { id : this.options.dockerControlsId });
+      this.dockerPlacementElement = new Element( 'div', { id : this.options.dockerPlacementId });
+      this.dockerAutoHideElement = new Element( 'div', { id : this.options.dockerAutoHideId });
+      this.dockerSortElement = new Element( 'div', { id : this.options.dockerSortId } );
+      this.dockerClearElement = new Element( 'div', { id : this.options.dockerClearId, 'class' : this.options.dockerClearClass });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyComponents: function(){
+      this.dockerClearElement.destroy();
+      this.dockerSortElement.destroy();
+      this.dockerAutoHideElement.destroy();
+      this.dockerPlacementElement.destroy();
+      
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   injectDockerElement: function(){
+      this.htmlElement.grab( this.dockerControlsElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerPlacementElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerAutoHideElement, 'bottom' );
+      this.dockerControlsElement.grab( this.dockerSortElement, 'bottom' );
+      this.dockerSortElement.grab( this.dockerClearElement, 'bottom' );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.dockerAutoHideElement = null;
+      this.dockerClearElement = null;
+      this.dockerControlsElement = null;
+      this.dockerPlacementElement = null;
+      this.dockerSortElement = null;
+      
+      this.destructionChain.callChain();
+   }.protect()
+   
 });
 /*
 Name: 
@@ -11063,10 +11334,17 @@ var ScrollArea = new Class({
 
    destroy : function() {
       this.removeScrollableElementEvents();
+<<<<<<< HEAD
 
       this.restoreContentElement();
+=======
+      
+      this.restoreContentElement();
+      
+      this.destroyScrollControls();
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       this.destroyPaddingElement();
-      this.destroyContentElement();
+      this.destroyContentViewElement();
    },
 
    onScrollContent : function( step ){
@@ -11111,7 +11389,12 @@ var ScrollArea = new Class({
       var contentWidth = this.contentViewElement.getSize().x;
       contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'margin-left' )) + parseInt( this.contentWrapperElement.getStyle( 'margin-right' ));
       contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'padding-left' )) + parseInt( this.contentWrapperElement.getStyle( 'padding-right' ));
+<<<<<<< HEAD
       contentWidth += this.scrollControls.getEffectiveWidth();      if( this.scrollControls.isVisible() ) contentWidth -= this.scrollControls.getWidth();
+=======
+      contentWidth += this.scrollControls.getEffectiveWidth();
+      if( this.scrollControls.isVisible() ) contentWidth -= this.scrollControls.getWidth();
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       return { x : contentWidth, y : this.contentViewElement.getSize().y }; },
    getContentWrapperElement : function(){ return this.contentWrapperElement; },
 
@@ -11151,6 +11434,7 @@ var ScrollArea = new Class({
       this.contentWrapperElement.setStyles({ display: 'inline', 'float': 'left' });
    }.protect(),
    
+<<<<<<< HEAD
    destroyContentElement : function(){
       if( this.contentViewElement && this.contentViewElement.destroy ){
          this.contentViewElement.destroy();
@@ -11343,6 +11627,210 @@ var ScrollControls = new Class({
 
    //Properties
    getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },   getSlider : function() { return this.slider; },
+=======
+   destroyContentViewElement : function(){
+      if( this.contentViewElement && this.contentViewElement.destroy ){
+         this.contentViewElement.destroy();
+         this.contentViewElement = null;
+      }
+   }.protect(),
+   
+   destroyPaddingElement : function(){
+      if( this.contentWrapperElement && this.contentWrapperElement.destroy ){ 
+         this.contentWrapperElement.destroy();
+         this.contentWrapperElement = null;
+      }
+   }.protect(),
+   
+   destroyScrollControls : function(){
+      if( this.scrollControls ){
+         this.scrollControls.removeEvent( 'scrollContent', this.onScrollContent );
+         this.scrollControls.destroy();      
+      }
+   }.protect(),
+   
+   determineBorderHeight : function(){
+      this.borderHeight = parseFloat( this.scrollableElement.getStyle( 'border-top-width' )) + parseFloat( this.scrollableElement.getStyle( 'border-bottom-width' ));
+   }.protect(),
+   
+   determineOverHang : function(){
+      this.overHang = this.scrollableElement.getSize().y + parseInt( this.contentWrapperElement.getStyle( 'padding-top' )) - this.contentViewElement.getSize().y;
+   }.protect(),
+   
+   determinePadding : function(){
+      this.paddingHeight = parseFloat( this.scrollableElement.getStyle( 'padding-top' )) + parseFloat( this.scrollableElement.getStyle( 'padding-bottom' ) );
+      this.paddingWidth = parseFloat( this.scrollableElement.getStyle( 'padding-left' )) + parseFloat( this.scrollableElement.getStyle( 'padding-right' ) );
+   }.protect(),
+   
+   removeScrollableElementEvents : function(){
+      if( this.scrollableElement && this.scrollableElement.removeEvent ){
+         this.scrollableElement.removeEvent( 'mousewheel', this.onScrollableElementMouseWheel );
+         this.scrollableElement.removeEvent( 'keydown', this.onScrollableElementKeyDown );
+         this.scrollableElement.removeEvent( 'click', this.onScrollableElementClick );
+      }
+   }.protect(),
+   
+   restoreContentElement : function(){
+      if( this.contentViewElement ){
+         this.scrollableElement.dispose();
+         this.scrollableElement.inject( this.contentViewElement, 'before' );
+      }
+      
+      this.scrollableElement.setStyles( this.scrollableElementSize );
+   }.protect(),
+   
+   setContentElementStyle : function(){
+      this.scrollableElement.setStyles({ height : '100%', margin : '0px', padding : '0px', width : '100%' });
+   }.protect(),
+   
+   setContentViewSize : function( size ){      
+      if( size && size.x && size.y ){
+         this.options.contentHeight = size.y;
+         this.options.contentWidth = size.x;
+      }else if( !this.options.contentHeight && !this.options.contentWidth ){
+         this.options.contentHeight = parseInt( this.scrollableElement.getStyle( 'height' ));
+         this.options.contentWidth = parseInt( this.scrollableElement.getStyle( 'width' ));
+      }
+
+      this.contentViewElement.setStyles({ width : this.options.contentWidth + 'px', height : this.options.contentHeight + 'px' });
+   }.protect()
+ 
+});
+/*
+Name: 
+    - ScrollControls
+
+Description: 
+    - User interface for the scrolling behaviour.
+
+Requires:
+    - 
+Provides:
+    - ScrollConstrols
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var ScrollControls = new Class({
+   Implements : [Events, Options],
+   Binds : ['onDocumentClick', 'onDocumentKeyDown', 'onDocumentMouseUp', 'scrollDown', 'scrollUp'],
+   options : {
+      componentName : "ScrollControls",
+      disabledOpacity : 0,
+      downBtnClass : 'downBtn',
+      increment : 15,
+      scrollBarClass : 'scrollBar',
+      scrollControlsYClass : 'scrollControlsY',
+      scrollHandleClass : 'scrollHandle',
+      scrollHandleBGClass : 'scrollHandleBG',
+      scrollHandleTopClass : 'scrollHandleTop',
+      scrollHandleMiddleClass : 'scrollHandleMiddle',
+      scrollHandleBottomClass : 'scrollHandleBottom',
+      scrollSlotClass : 'scrollSlot',
+      upBtnClass : 'upBtn'
+   },
+
+   initialize : function( contentViewElement, overHang, options ) {
+      assertThat( contentViewElement, not( nil() ));
+      assertThat( overHang, not( nil() ));
+      this.setOptions( options );
+
+      this.contentViewElement = contentViewElement;
+      this.downButton;
+      this.downInterval;
+      this.overHang = overHang;
+      this.scrollSlot;
+      this.scrollHandle;
+      this.scrollHandleBG;
+      this.slider;
+      this.state = BrowserWidget.States.INITIALIZED;
+      this.upButton;
+      this.upInterval;
+   },
+
+   // Public accessors and mutators
+   construct : function() {
+      this.createControlElements();
+      this.setHeights();
+      this.createSlider();
+      this.illuminateScrollControls();      
+      
+      this.addScrollHandleEvents();
+      this.addUpButtonEvents();
+      this.addDownButtonEvents();
+      this.addContentViewEvents();
+      this.addDocumentEvents();
+      
+      this.state = BrowserWidget.States.CONSTRUCTED;
+   },
+
+   destroy : function() {
+      clearInterval( this.sliderTimeout );
+      this.removeScrollHandleEvents();
+      this.removeDownButtonEvents();
+      this.removeUpButtonEvents();
+      this.removeContentViewEvents();
+      this.removeDocumentEvents();
+      
+      this.destroySlider();
+      this.destroyControlElements();
+      
+      this.state = BrowserWidget.States.INITIALIZED;
+   },
+   
+   onDocumentClick : function( e ){
+      this.hasFocus = false;
+   },
+   
+   onDocumentKeyDown : function( e ){
+      if(( this.hasFocus || this.options.fullWindowMode ) && ( e.key === 'down' || e.key === 'space' || e.key === 'up' )) {
+         this.scrollableElement.fireEvent( 'keydown', e );
+      }
+   },
+   
+   onDocumentMouseUp : function( e ){
+      this.scrollHandle.removeClass( this.options.scrollHandleClass + '-Active' ).setStyle( 'opacity', this.options.handleOpacity );
+      this.stopScrollUp();
+      this.stopScrollDown();
+   },
+   
+   refresh : function( overHang ){
+      this.overHang = overHang;
+      this.updateSlider();
+      this.illuminateScrollControls();      
+      this.setHeights();
+   },
+   
+   scrollDown : function() {
+      var target = this.contentViewElement.getScroll().y + this.options.increment;
+      this.slider.set( target );
+   },
+
+   scrollUp : function() {
+      var target = this.contentViewElement.getScroll().y - this.options.increment;
+      if( target < 0 ) target = 0;
+      this.slider.set( target );
+   },
+
+   //Properties
+   getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },
+   getSlider : function() { return this.slider; },
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    getWidth : function() { return this.scrollControlsYWrapper ? this.scrollControlsYWrapper.getSize().x : 0; },
    isVisible : function() { return this.overHang > 0 ? true : false; },
 
@@ -11438,8 +11926,25 @@ var ScrollControls = new Class({
       if( this.scrollControlsYWrapper ){ this.scrollControlsYWrapper.destroy(); this.scrollControlsYWrapper = null; }
    }.protect(),
    
+<<<<<<< HEAD
+=======
+   destroySlider: function(){
+      if( this.slider ){
+         this.slider.removeEvents();
+         this.slider = null;
+      }
+   }.protect(),
+   
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    greyOut : function() {
       this.scrollHandle.setStyles({ opacity : this.options.disabledOpacity });
+<<<<<<< HEAD
+=======
+      this.scrollHandleTop.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleBG.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleMiddle.setStyles({ opacity : this.options.disabledOpacity });
+      this.scrollHandleBottom.setStyles({ opacity : this.options.disabledOpacity });
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
       this.upButton.setStyles({ opacity : this.options.disabledOpacity });
       this.scrollControlsYWrapper.setStyles({ opacity : this.options.disabledOpacity });
       this.downButton.setStyles({ opacity : this.options.disabledOpacity });
@@ -11511,6 +12016,7 @@ var ScrollControls = new Class({
    
    stopScrollDown : function(){
       clearInterval( this.downInterval );
+<<<<<<< HEAD
       if( this.downButton ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
    },
    
@@ -11531,6 +12037,31 @@ var ScrollControls = new Class({
       if( this.overHang > 0 ) this.slider.setRange([ 0, this.overHang ]);
       this.slider.set( 0 );
       //this.slider.set( this.contentViewElement.getScroll().y );
+=======
+      if( this.downButton && this.downButton.removeClass ) this.downButton.removeClass( this.options.downBtnClass + '-Active' );
+   },
+   
+   stopScrollUp : function(){
+      clearInterval( this.downInterval );
+      if( this.upButton && this.upButton.removeClass ) this.upButton.removeClass( this.options.upBtnClass + '-Active' );
+   },
+   
+   unGrey : function() {
+      this.scrollHandle.setStyles({ display : 'block', opacity : 1 });
+      this.scrollHandleTop.setStyles({ opacity : 1 });
+      this.scrollHandleBG.setStyles({ opacity : 1 });
+      this.scrollHandleMiddle.setStyles({ opacity : 1 });
+      this.scrollHandleBottom.setStyles({ opacity : 1 });
+      this.scrollControlsYWrapper.setStyles({ opacity : 1 });
+      this.upButton.setStyles({ opacity : 1 });
+      this.downButton.setStyles({ opacity : 1 });
+      this.scrollSlot.setStyles({ opacity : 1 });
+   }.protect(),
+   
+   updateSlider : function(){
+      if( this.overHang > 0 ) this.slider.setRange([ 0, this.overHang ]);
+      this.slider.set( 0 );
+>>>>>>> branch 'master' of https://ZsZs@github.com/ZsZs/ProcessPuzzleUI.git
    }
 
 });
