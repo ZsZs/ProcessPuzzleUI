@@ -126,8 +126,9 @@ var ScrollArea = new Class({
    getContentViewElement : function() { return this.contentViewElement; },
    getContentViewSize : function() { 
       var contentWidth = this.contentViewElement.getSize().x;
-      contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'margin-left' )) - parseInt( this.contentWrapperElement.getStyle( 'margin-right' ));
+      contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'margin-left' )) + parseInt( this.contentWrapperElement.getStyle( 'margin-right' ));
       contentWidth -= parseInt( this.contentWrapperElement.getStyle( 'padding-left' )) + parseInt( this.contentWrapperElement.getStyle( 'padding-right' ));
+      contentWidth += this.scrollControls.getEffectiveWidth();
       if( this.scrollControls.isVisible() ) contentWidth -= this.scrollControls.getWidth();
       return { x : contentWidth, y : this.contentViewElement.getSize().y }; },
    getContentWrapperElement : function(){ return this.contentWrapperElement; },

@@ -130,6 +130,7 @@ var ScrollControls = new Class({
    },
 
    //Properties
+   getEffectiveWidth : function() { return ( this.isVisible() ? this.getWidth() : 0 ); },
    getSlider : function() { return this.slider; },
    getWidth : function() { return this.scrollControlsYWrapper ? this.scrollControlsYWrapper.getSize().x : 0; },
    isVisible : function() { return this.overHang > 0 ? true : false; },

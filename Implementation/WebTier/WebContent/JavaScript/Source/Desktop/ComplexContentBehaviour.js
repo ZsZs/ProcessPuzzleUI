@@ -112,7 +112,7 @@ var ComplexContentBehaviour = new Class({
       
       if( this.document && this.document.getState() == AbstractDocument.States.CONSTRUCTED ) {
          this.adjustDocumentWrapperSize( containerEffectiveSize );
-         this.document.onContainerResize( this.documentWrapper.getSize() );
+         this.document.onContainerResize({ x : parseInt( this.documentWrapper.getStyle( 'width' )), y : parseInt( this.documentWrapper.getStyle( 'height' ))});
       }      
    },
    
