@@ -38,6 +38,7 @@ var DocumentElement = new Class({
       isEditable : false,
       pluginSelector : "plugin",
       referenceSelector : "@href",
+      sourceSelector : "@source",
       styleSelector : "@elementStyle",
       tagSelector : "@tag"
    },
@@ -64,6 +65,7 @@ var DocumentElement = new Class({
       this.plugin;
       this.reference;
       this.resourceBundle = bundle;
+      this.source;
       this.status = DocumentElement.States.INITIALIZED;
       this.style;
       this.tag;
@@ -108,6 +110,7 @@ var DocumentElement = new Class({
    unmarshall: function(){
       this.unmarshallId();
       this.unmarshallReference();
+      this.unmarshallSource();
       this.unmarshallStyle();
       this.unmarshallTag();
       this.unmarshallText();
@@ -124,6 +127,7 @@ var DocumentElement = new Class({
    getPlugin: function() { return this.plugin; },
    getReference: function() { return this.reference; },
    getResourceBundle: function() { return this.resourceBundle; },
+   getSource: function(){ return this.source; },
    getState: function() { return this.status; },
    getStyle: function() { return this.style; },
    getTag: function() { return this.tag; },
@@ -160,6 +164,7 @@ var DocumentElement = new Class({
       if( this.tag ){
          this.htmlElement = new Element( this.tag );
          if( this.id ) this.htmlElement.set( 'id', this.id );
+         if( this.source ) this.htmlElement.set( 'src', this.source );
          if( this.style ) this.htmlElement.addClass( this.style );
          if( this.reference ){
             var anchorElement = new Element( 'a', { href : this.reference } );
@@ -228,6 +233,10 @@ var DocumentElement = new Class({
    
    unmarshallReference: function(){
       this.reference = this.definitionElementAttribute( this.options.referenceSelector );
+   }.protect(),
+   
+   unmarshallSource: function(){
+      this.source = this.definitionElementAttribute( this.options.sourceSelector );
    }.protect(),
    
    unmarshallStyle: function(){

@@ -25,6 +25,7 @@
    <documentHeader tag="div" id="smartDocumentHeader">
       <compositeElement tag="div" id="headerWrapper">
          <element tag="h1" elementStyle="headerText" id="smartDocumentTitle" href="http://opensource.processpuzzle.com">SmartDocument.headerText</element>
+         <element tag="img" id="processPuzzleLogo" source="../SmartDocument/Images/ProcessPuzzleLogo.jpg" />
       </compositeElement>
    </documentHeader>
    

@@ -7,11 +7,13 @@ window.DocumentElementTest = new Class( {
           { method : 'initialize_setsStateToInitialized', isAsynchron : false },
           { method : 'unmarshall_setsStateToUnMarshalled', isAsynchron : false },
           { method : 'unmarshall_determinesElementProperties', isAsynchron : false },
+          { method : 'unmarshall_whenElementIsImage_determinesSource', isAsynchron : false },
           { method : 'unmarshall_whenIdNotGiven_generatesOne', isAsynchron : false },
           { method : 'unmarshall_whenPluginIsSpecified_instantiatesAndUnmarshallsPluginObject', isAsynchron : false },
           { method : 'construct_setsStatusToConstructed', isAsynchron : true }, 
           { method : 'construct_createsNewHtmlElement', isAsynchron : true }, 
           { method : 'consturct_whenElementIsEditable_instantiatesAndassociatesEditor', isAsynchron : true }, 
+          { method : 'construct_whenElementIsImage_addsSrcAttribute', isAsynchron : true }, 
           { method : 'construct_whenNotUnmarshalled_raisesException', isAsynchron : false }, 
           { method : 'construct_whenPluginIsSpecified_CallsPluginConstruct', isAsynchron : true }, 
           { method : 'construct_whenPluginResourceIsUnavailable_firesError', isAsynchron : true }, 
@@ -24,6 +26,7 @@ window.DocumentElementTest = new Class( {
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
       DOCUMENT_CONTAINER_ID : "smartDocument",
       ELEMENT_DEFINITION_WITH_LINK : "/smartDocumentDefinition/documentHeader/compositeElement/element[@id='smartDocumentTitle']",
+      ELEMENT_DEFINITION_WITH_SOURCE : "/smartDocumentDefinition/documentHeader/compositeElement/element[@id='processPuzzleLogo']",
       ELEMENT_DEFINITION_WITH_PLUGIN : "/smartDocumentDefinition/documentBody/compositeElement/element[@id='languageSelector']",
       ELEMENT_DEFINITION_WITHOUT_ID : "/smartDocumentDefinition/documentFooter/compositeElement/element[@elementStyle='footerText']",
       ERRONEOUS_DOCUMENT_DEFINITION_URI : "../SmartDocument/ErroneousDocumentDefinition.xml",
@@ -40,6 +43,7 @@ window.DocumentElementTest = new Class( {
       this.documentElementWithLink;
       this.documentElementWithoutId;
       this.documentElementWithPlugin;
+      this.documentElementWithSource;
       this.desktopInternationalization;
       this.webUIConfiguration;
       this.webUIController;
@@ -58,6 +62,7 @@ window.DocumentElementTest = new Class( {
       this.documentElementWithLink = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITH_LINK ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed } );
       this.documentElementWithoutId = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITHOUT_ID ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed } );
       this.documentElementWithPlugin = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITH_PLUGIN ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });
+      this.documentElementWithSource = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITH_SOURCE ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });
       this.documentContainerElement = $( this.constants.DOCUMENT_CONTAINER_ID );
    },
    
@@ -69,6 +74,7 @@ window.DocumentElementTest = new Class( {
       if( this.documentElementWithLink.getState() > DocumentElement.States.INITIALIZED ) this.documentElementWithLink.destroy();
       if( this.documentElementWithoutId.getState() > DocumentElement.States.INITIALIZED ) this.documentElementWithoutId.destroy();
       if( this.documentElementWithPlugin.getState() > DocumentElement.States.INITIALIZED ) this.documentElementWithPlugin.destroy();
+      if( this.documentElementWithSource.getState() > DocumentElement.States.INITIALIZED ) this.documentElementWithSource.destroy();
       this.documentElementWithLink = null;
       this.documentContainerElement = null;
    },
@@ -91,6 +97,11 @@ window.DocumentElementTest = new Class( {
       assertThat( this.documentElementWithLink.getStyle(), equalTo( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_WITH_LINK + "/@elementStyle" )));
       assertThat( this.documentElementWithLink.getText(), equalTo( this.desktopInternationalization.getText( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_WITH_LINK ))));
       assertThat( this.documentElementWithLink.getReference(), equalTo( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_WITH_LINK + "/@href" )));
+   },
+   
+   unmarshall_whenElementIsImage_determinesSource : function() {
+      this.documentElementWithSource.unmarshall();
+      assertThat( this.documentElementWithSource.getSource(), equalTo( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_WITH_SOURCE + "/@source" )));
    },
    
    unmarshall_whenIdNotGiven_generatesOne : function() {
@@ -149,6 +160,19 @@ window.DocumentElementTest = new Class( {
          function(){
             assertThat( instanceOf( this.documentElementWithLink.getEditor(), DocumentElementEditor ), is( true ));
             assertThat( this.documentElementWithLink.getEditor().getSubjectElement(), equalTo( this.documentElementWithLink.getHtmlElement() ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenElementIsImage_addsSrcAttribute : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.documentElementWithSource.unmarshall();
+            this.documentElementWithSource.construct( this.documentContainerElement, "bottom" );
+         }.bind( this ),
+         function(){
+            assertThat( this.documentElementWithSource.getHtmlElement().get( 'src' ), equalTo( this.documentElementWithSource.getSource() ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
