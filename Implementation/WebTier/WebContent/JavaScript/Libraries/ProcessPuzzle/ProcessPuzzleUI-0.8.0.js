@@ -1192,51 +1192,80 @@ var ResourceUri = new Class({
    },
    
    // Constructor
-   initialize: function ( uri, locale, options ) {
+   initialize: function ( fullUri, locale, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
+      assertThat( fullUri, not( nil() ));
       
       this.setOptions( options );
       
+      this.documentContentUri;
+      this.documentVariables;
       this.locale = locale;
-      this.uri = uri;
+      this.fullUri = fullUri;
+      this.uri;
       
+      this.determineStrippedUri();
+      this.determineDocumentContentUri();
       this.determineDocumentType();
-      if( this.options.applyCacheBuster ) this.uri = this.appendCacheBusterParameterToUri( this.uri );
+      this.determineDocumentVariables();
+      if( this.options.applyCacheBuster ) this.fullUri = this.appendCacheBusterParameterToUri( this.fullUri );
    },
    
    //Public accessors and mutators
-   appendCacheBusterParameterToUri : function( uri ) {
-      if( uri.indexOf( "?" ) == -1 ) uri += "?";
-      else uri += "&";
-      uri += "cacheBuster=";
-      uri += new Date().getTime();
-      return uri;
+   appendCacheBusterParameterToUri : function( fullUri ) {
+      if( fullUri.indexOf( "?" ) == -1 ) fullUri += "?";
+      else fullUri += "&";
+      fullUri += "cacheBuster=";
+      fullUri += new Date().getTime();
+      return fullUri;
    },
    
    determineLocalizedUri : function(){
-      return this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) + "_" + this.locale.getLanguage() + "." + this.options.contentType;      
+      var localizedUri = this.fullUri.indexOf( "." + this.options.contentType ) >= 0 ? this.fullUri.substring( 0, this.fullUri.lastIndexOf( "." + this.options.contentType )) : this.fullUri; 
+      localizedUri += "_" + this.locale.getLanguage() + "." + this.options.contentType;
+      return localizedUri;
    },
    
    isLocal : function(){
-      var givenUri = new URI( this.uri );
+      var givenUri = new URI( this.fullUri );
       var documentUri = new URI( document.location.href );
       return givenUri.get( 'host' ) == "" || givenUri.get( 'host' ) == documentUri.get( 'host' ); 
    },
   
    // Properties
+   getDocumentContentUri : function() { return this.documentContentUri; },
    getDocumentType : function() { return this.options.documentType; },
+   getDocumentVariables : function() { return this.documentVariables; },
    getUri : function() { return this.uri; },
    
    //Private helper methods
+   determineDocumentContentUri : function(){
+      var givenUri = new URI( this.fullUri );
+      if( givenUri.get( 'data' ) && givenUri.getData( 'contentUri' )){
+         this.documentContentUri = eval( givenUri.getData( 'contentUri' ));
+      }else this.documentContentUri = null;
+   }.protect(),
+   
    determineDocumentType : function(){
       if( !this.options.documentType ){
-         var givenUri = new URI( this.uri );
+         var givenUri = new URI( this.fullUri );
          if( givenUri.get( 'data' ) && givenUri.getData( this.options.documentTypeKey ))
-         this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
+            this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
       }
-   }.protect()
+   }.protect(),
    
+   determineDocumentVariables : function(){
+      var givenUri = new URI( this.fullUri );
+      if( givenUri.get( 'data' ) && givenUri.getData( 'documentVariables' )){
+         this.documentVariables = givenUri.getData( 'documentVariables' );
+      }else this.documentVariables = null;
+   }.protect(),
+   
+   determineStrippedUri : function(){
+      if( this.fullUri.indexOf( '?' ) > 0 )
+         this.uri = this.fullUri.substring( 0, this.fullUri.indexOf( '?' ))
+      else this.uri = this.fullUri;
+   }
 });
    
 /*
@@ -2200,6 +2229,7 @@ var AbstractDocument = new Class({
            'finalizeConstruction', 
            'finalizeDestruction',
            'instantiateEditor',
+           'loadDocumentContent',
            'loadResources', 
            'onConstructionError', 
            'onContainerResize',
@@ -2225,6 +2255,7 @@ var AbstractDocument = new Class({
       documentDefinitionUri : null,
       documentDefinitionUriSelector: "@documentDefinition",
       documentEditorClass : "DocumentEditor",
+      documentVariables : null,
       handleMenuSelectedEventsDefault : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
       nameSelector : "name",
@@ -2417,7 +2448,8 @@ var AbstractDocument = new Class({
    loadDocumentContent: function() {
       if( this.options.documentContentUri ){
          try{
-            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension );
+            var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), { contentType: this.options.documentContentExtension.substring( 1 ) });
+            this.documentContent = new XmlResource( resourceUri.determineLocalizedUri() );
          }catch( e ){
             try{
                this.documentContent = new XmlResource( this.options.documentContentUri );
@@ -2480,6 +2512,8 @@ var AbstractDocument = new Class({
       this.handleMenuSelectedEvents = parseBoolean( this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.handleMenuSelectedEventsSelector, null, this.options.handleMenuSelectedEventsDefault ));
       this.name = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.nameSelector );
       this.version = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.versionSelector );
+      this.contentUri = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.contentUriSelector );
+      //if( !this.options.documentContentUri && this.contentUri ) this.options.documentContentUri = this.contentUri;
    }.protect(),
       
    unmarshallResources: function(){
@@ -3123,9 +3157,13 @@ var WidgetElementFactory = new Class( {
          defaultProperties = { href : "#", events : { click : clickEventHandler } };
       }else if( anchorUri && anchorUri.isLocal() ){
          if( anchorUri.getDocumentType() == AbstractDocument.Types.SMART ){
-            defaultProperties = { href : "#", onclick : "top.webUIController.loadSmartDocument( '" + anchorLink  + "' );" };
+            var onClickCommand = "top.webUIController.loadSmartDocument('" + anchorUri.getUri()  + "'";
+            onClickCommand += anchorUri.getDocumentContentUri() ? ", '" + anchorUri.getDocumentContentUri() + "'" : "";
+            onClickCommand += anchorUri.getDocumentVariables() ? ", " + anchorUri.getDocumentVariables() : "";
+            onClickCommand +=  ");";
+            defaultProperties = { href : "#", onclick : onClickCommand };
          }else {
-            defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
+            defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument('" + anchorLink  + "');" };
          }
       }else {
          defaultProperties = { href : anchorLink };
@@ -3819,6 +3857,7 @@ var ComplexContentBehaviour = new Class({
       this.documentWrapperId;
       this.documentWrapperStyle;
       this.documentWrapperTag;
+      this.documentVariables;
       this.error;
       this.eventSources = null;
       this.handleMenuSelectedEvents;
@@ -4088,6 +4127,7 @@ var ComplexContentBehaviour = new Class({
          documentContainerId : this.documentWrapperId, 
          documentDefinitionUri : this.documentDefinitionUri, 
          documentContentUri : this.documentContentUri,
+         documentVariables : this.documentVariables,
          onDocumentReady : this.onDocumentReady,
          onDocumentError : this.onDocumentError
       });
@@ -4105,6 +4145,7 @@ var ComplexContentBehaviour = new Class({
       this.documentDefinitionUri = webUIMessage.getDocumentURI();
       this.documentContentUri = webUIMessage.getDocumentContentURI();
       this.documentContentType = webUIMessage.getDocumentType();
+      this.documentVariables = webUIMessage.getDocumentVariables();
    }.protect(),
       
    resetProperties: function(){
@@ -4432,6 +4473,7 @@ var Desktop = new Class({
    destroy : function() {
       if( this.state > DesktopElement.States.UNMARSHALLED ){
          this.destructionChain.chain(
+            this.hideDesktop,
             this.releaseResources,
             this.removeDesktopEvents,
             this.destroyWindows,
@@ -4733,6 +4775,7 @@ var Desktop = new Class({
    
    hideDesktop: function(){
       this.containerElement.setStyle( "visibility", "hidden" );
+      if( this.destructionChain.$chain.length > 0 ) this.destructionChain.callChain();
       this.callNextConfigurationStep();
    }.protect(),
 	
@@ -4934,7 +4977,7 @@ var DesktopElement = new Class({
       componentName: "DesktopElement",
       defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      eventFireDelay : 5,
+      eventFireDelay : 2,
       idSelector : "@id",
       tagSelector : "@tag",
    },
@@ -8404,6 +8447,7 @@ var MenuSelectedMessage = new Class({
       documentContentURI: null,
       documentType: AbstractDocument.Types.SMART,
       documentURI: null,
+      documentVariables: null,
       contextItemId : null,
       name: "MenuSelectedMessage",
       notification: null,
@@ -8425,6 +8469,7 @@ var MenuSelectedMessage = new Class({
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },
    getDocumentURI: function() { return this.options.documentURI; },
+   getDocumentVariables: function() { return this.options.documentVariables; },
    getNotification: function() { return this.options.notification; },
    getWindowName: function() { return this.options.windowName; }
 });
@@ -8600,7 +8645,7 @@ var HtmlDocument = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( 
+      this.constructionChain.chain(
          this.determineContainerElement, 
          this.instantiateEditor, 
          this.createTextArea, 
@@ -12193,6 +12238,7 @@ var DocumentElement = new Class({
    options: {
       componentName : "DocumentElement",
       defaultTag : "div",
+      eventFireDelay : 2,
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       isEditable : false,
@@ -12354,7 +12400,7 @@ var DocumentElement = new Class({
       this.stopTimeOutTimer();
       this.status = DocumentElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
-      this.fireEvent( 'constructed', this );
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay );
    }.protect(),
    
    injectHtmlElement: function(){
@@ -12520,7 +12566,9 @@ var CompositeDocumentElement = new Class({
    }.protect(),
    
    instantiateDocumentElement: function( elementDefinition ){
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError } );
+      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
    revertConstruction: function(){
@@ -12757,8 +12805,9 @@ var CompositeDataElement = new Class({
    },
    
    instantiateDocumentElement: function( elementDefinition ){
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { 
-         onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError, variables : this.options.variables });
+      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
    unmarshall: function( dataElementIndex ){
@@ -13719,7 +13768,7 @@ var MissingBindVariableException = new Class({
       this.parameters = { dataElementId : dataElementId };
    }	
 });
-/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError } );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, { onConstructed : this.onBodyConstructed, onConstructionError : this.onConstructionError } );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, { onConstructed : this.onFooterConstructed, onConstructionError : this.onConstructionError } );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
+/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      var documentComponentOptions = { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError };      if( this.options.documentVariables ) documentComponentOptions['variables'] = this.options.documentVariables      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, documentComponentOptions );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, documentComponentOptions );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, documentComponentOptions );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
 /*
 Name: UnconfiguredDocumentElementException
 
@@ -15842,18 +15891,24 @@ var WebUIController = new Class({
       }
    },
    
-   loadDocument : function( documentUri, contentUri, documentType ){
+   loadDocument : function( documentUri, contentUri, documentVariables, documentType ){
       this.logger.debug( this.options.componentName + ".loadDocument( '" + documentUri + "' )" );
-      var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : documentType, documentURI : documentUri, documentContentURI : contentUri, originator : this.options.messageOriginator });
+      var message = new MenuSelectedMessage({ 
+         activityType : AbstractDocument.Activity.LOAD_DOCUMENT, 
+         documentType : documentType, 
+         documentURI : documentUri, 
+         documentContentURI : contentUri, 
+         documentVariables : documentVariables,
+         originator : this.options.messageOriginator });
       this.messageBus.notifySubscribers( message );
    },
    
    loadHtmlDocument : function( documentUri ){
-      this.loadDocument( documentUri, null, AbstractDocument.Types.HTML );
+      this.loadDocument( documentUri, null, null, AbstractDocument.Types.HTML );
    },
    
-   loadSmartDocument : function( documentUri, contentUri ){
-      this.loadDocument( documentUri, contentUri, AbstractDocument.Types.SMART );
+   loadSmartDocument : function( documentUri, contentUri, documentVariables ){
+      this.loadDocument( documentUri, contentUri, documentVariables, AbstractDocument.Types.SMART );
    },
    
    onDesktopConstructed : function(){
