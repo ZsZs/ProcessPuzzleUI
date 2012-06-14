@@ -43,10 +43,12 @@ var ResourceUri = new Class({
       
       this.setOptions( options );
       
+      this.documentVariables;
       this.locale = locale;
       this.uri = uri;
       
       this.determineDocumentType();
+      this.determineDocumentVariables();
       if( this.options.applyCacheBuster ) this.uri = this.appendCacheBusterParameterToUri( this.uri );
    },
    
@@ -73,6 +75,7 @@ var ResourceUri = new Class({
   
    // Properties
    getDocumentType : function() { return this.options.documentType; },
+   getDocumentVariables : function() { return this.documentVariables; },
    getUri : function() { return this.uri; },
    
    //Private helper methods
@@ -80,8 +83,15 @@ var ResourceUri = new Class({
       if( !this.options.documentType ){
          var givenUri = new URI( this.uri );
          if( givenUri.get( 'data' ) && givenUri.getData( this.options.documentTypeKey ))
-         this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
+            this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
       }
+   }.protect(),
+   
+   determineDocumentVariables : function(){
+      var givenUri = new URI( this.uri );
+      if( givenUri.get( 'data' ) && givenUri.getData( 'documentVariables' )){
+         this.documentVariables = eval( "(" + givenUri.getData( 'documentVariables' ) + ")" );
+      }else this.documentVariables = null;
    }.protect()
    
 });
