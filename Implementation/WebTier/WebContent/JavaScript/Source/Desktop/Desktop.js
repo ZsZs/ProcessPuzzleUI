@@ -183,6 +183,7 @@ var Desktop = new Class({
    destroy : function() {
       if( this.state > DesktopElement.States.UNMARSHALLED ){
          this.destructionChain.chain(
+            this.hideDesktop,
             this.releaseResources,
             this.removeDesktopEvents,
             this.destroyWindows,
@@ -484,6 +485,7 @@ var Desktop = new Class({
    
    hideDesktop: function(){
       this.containerElement.setStyle( "visibility", "hidden" );
+      if( this.destructionChain.$chain.length > 0 ) this.destructionChain.callChain();
       this.callNextConfigurationStep();
    }.protect(),
 	

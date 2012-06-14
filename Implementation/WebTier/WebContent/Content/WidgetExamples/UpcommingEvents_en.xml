@@ -6,7 +6,7 @@
    <events>
       <event>
          <title>Unit Test Driven JavaScript Development - Training</title>
-         <link>Content/WidgetExamples/UpcommingEvents.xml?documentType=SMART</link>
+         <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentType=SMART</link>
          <description>Introduction to Test Driven Development for JavaScript developers.</description>
          <schedule isFullDay="false">
             <startDate>Tue, 10 Jun 2003 04:00:00 GMT</startDate>
@@ -21,7 +21,7 @@
        
       <event>
          <title>Unit Test Driven Java Development - Training</title>
-         <link>Content/WidgetExamples/UpcommingEvents.xml?documentType=SMART</link>
+         <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentType=SMART</link>
          <description>Introduction to Test Driven Development for Java developers.</description>
          <schedule isFullDay="false">
             <startDate></startDate>

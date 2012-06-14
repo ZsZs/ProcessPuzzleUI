@@ -35,7 +35,7 @@ var DesktopElement = new Class({
       componentName: "DesktopElement",
       defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      eventFireDelay : 5,
+      eventFireDelay : 2,
       idSelector : "@id",
       tagSelector : "@tag",
    },
