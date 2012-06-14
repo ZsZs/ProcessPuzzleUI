@@ -146,7 +146,7 @@ window.WidgetElementFactoryTest = new Class( {
       
       //VERIFY:
       assertThat( this.newElement.get( 'href' ), equalTo( "#" ));
-      assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadHtmlDocument( '" + this.constants.LOCAL_ANCHOR_LINK + "' );" ));
+      assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadHtmlDocument('" + this.constants.LOCAL_ANCHOR_LINK + "');" ));
    },
    
    createAnchor_whenUriIsLocal_determinesDocumentType : function() {
@@ -156,7 +156,7 @@ window.WidgetElementFactoryTest = new Class( {
       
       //VERIFY:
       assertThat( this.newElement.get( 'href' ), equalTo( "#" ));
-      assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadSmartDocument( '" + this.constants.LOCAL_ANCHOR_LINK_WITH_QUERY + "' );" ));
+      assertThat( this.newElement.get( 'onclick' ), equalTo( "top.webUIController.loadSmartDocument('" + this.constants.LOCAL_ANCHOR_LINK + "');" ));
    },
    
    createButton_CreatesNewInputElement : function() {

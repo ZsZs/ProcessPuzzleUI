@@ -74,12 +74,13 @@ var WidgetElementFactory = new Class( {
          defaultProperties = { href : "#", events : { click : clickEventHandler } };
       }else if( anchorUri && anchorUri.isLocal() ){
          if( anchorUri.getDocumentType() == AbstractDocument.Types.SMART ){
-            var onClickCommand = "top.webUIController.loadSmartDocument( '" + anchorUri.getUri()  + "'";
+            var onClickCommand = "top.webUIController.loadSmartDocument('" + anchorUri.getUri()  + "'";
             onClickCommand += anchorUri.getDocumentContentUri() ? ", '" + anchorUri.getDocumentContentUri() + "'" : "";
+            onClickCommand += anchorUri.getDocumentVariables() ? ", '" + anchorUri.getDocumentVariables() + "'" : "";
             onClickCommand +=  ");";
             defaultProperties = { href : "#", onclick : onClickCommand };
          }else {
-            defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
+            defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument('" + anchorLink  + "');" };
          }
       }else {
          defaultProperties = { href : anchorLink };

@@ -82,6 +82,7 @@ var ComplexContentBehaviour = new Class({
       this.documentWrapperId;
       this.documentWrapperStyle;
       this.documentWrapperTag;
+      this.documentVariables;
       this.error;
       this.eventSources = null;
       this.handleMenuSelectedEvents;
@@ -351,6 +352,7 @@ var ComplexContentBehaviour = new Class({
          documentContainerId : this.documentWrapperId, 
          documentDefinitionUri : this.documentDefinitionUri, 
          documentContentUri : this.documentContentUri,
+         documentVariables : this.documentVariables,
          onDocumentReady : this.onDocumentReady,
          onDocumentError : this.onDocumentError
       });
@@ -368,6 +370,7 @@ var ComplexContentBehaviour = new Class({
       this.documentDefinitionUri = webUIMessage.getDocumentURI();
       this.documentContentUri = webUIMessage.getDocumentContentURI();
       this.documentContentType = webUIMessage.getDocumentType();
+      this.documentVariables = webUIMessage.getDocumentVariables();
    }.protect(),
       
    resetProperties: function(){

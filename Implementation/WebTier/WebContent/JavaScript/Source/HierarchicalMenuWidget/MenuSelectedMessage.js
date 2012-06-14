@@ -29,6 +29,7 @@ var MenuSelectedMessage = new Class({
       documentContentURI: null,
       documentType: AbstractDocument.Types.SMART,
       documentURI: null,
+      documentVariables: null,
       contextItemId : null,
       name: "MenuSelectedMessage",
       notification: null,
@@ -39,6 +40,7 @@ var MenuSelectedMessage = new Class({
    initialize: function( options ){
       this.setOptions( options );
       this.options.messageClass = MenuSelectedMessage;
+      if( this.options.documentVariables ) this.options.documentVariables = eval( "(" + this.options.documentVariables + ")" );
    },
    
    //Public accessors
@@ -50,6 +52,7 @@ var MenuSelectedMessage = new Class({
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },
    getDocumentURI: function() { return this.options.documentURI; },
+   getDocumentVariables: function() { return this.options.documentVariables; },
    getNotification: function() { return this.options.notification; },
    getWindowName: function() { return this.options.windowName; }
 });

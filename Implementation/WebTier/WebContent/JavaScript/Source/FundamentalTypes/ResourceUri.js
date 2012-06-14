@@ -102,7 +102,7 @@ var ResourceUri = new Class({
    determineDocumentVariables : function(){
       var givenUri = new URI( this.fullUri );
       if( givenUri.get( 'data' ) && givenUri.getData( 'documentVariables' )){
-         this.documentVariables = eval( "(" + givenUri.getData( 'documentVariables' ) + ")" );
+         this.documentVariables = givenUri.getData( 'documentVariables' );
       }else this.documentVariables = null;
    }.protect(),
    
