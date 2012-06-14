@@ -74,7 +74,10 @@ var WidgetElementFactory = new Class( {
          defaultProperties = { href : "#", events : { click : clickEventHandler } };
       }else if( anchorUri && anchorUri.isLocal() ){
          if( anchorUri.getDocumentType() == AbstractDocument.Types.SMART ){
-            defaultProperties = { href : "#", onclick : "top.webUIController.loadSmartDocument( '" + anchorLink  + "' );" };
+            var onClickCommand = "top.webUIController.loadSmartDocument( '" + anchorUri.getUri()  + "'";
+            onClickCommand += anchorUri.getDocumentContentUri() ? ", '" + anchorUri.getDocumentContentUri() + "'" : "";
+            onClickCommand +=  ");";
+            defaultProperties = { href : "#", onclick : onClickCommand };
          }else {
             defaultProperties = { href : "#", onclick : "top.webUIController.loadHtmlDocument( '" + anchorLink  + "' );" };
          }

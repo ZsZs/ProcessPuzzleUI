@@ -150,18 +150,24 @@ var WebUIController = new Class({
       }
    },
    
-   loadDocument : function( documentUri, contentUri, documentType ){
+   loadDocument : function( documentUri, contentUri, documentVariables, documentType ){
       this.logger.debug( this.options.componentName + ".loadDocument( '" + documentUri + "' )" );
-      var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : documentType, documentURI : documentUri, documentContentURI : contentUri, originator : this.options.messageOriginator });
+      var message = new MenuSelectedMessage({ 
+         activityType : AbstractDocument.Activity.LOAD_DOCUMENT, 
+         documentType : documentType, 
+         documentURI : documentUri, 
+         documentContentURI : contentUri, 
+         documentVariables : documentVariables,
+         originator : this.options.messageOriginator });
       this.messageBus.notifySubscribers( message );
    },
    
    loadHtmlDocument : function( documentUri ){
-      this.loadDocument( documentUri, null, AbstractDocument.Types.HTML );
+      this.loadDocument( documentUri, null, null, AbstractDocument.Types.HTML );
    },
    
-   loadSmartDocument : function( documentUri, contentUri ){
-      this.loadDocument( documentUri, contentUri, AbstractDocument.Types.SMART );
+   loadSmartDocument : function( documentUri, contentUri, documentVariables ){
+      this.loadDocument( documentUri, contentUri, documentVariables, AbstractDocument.Types.SMART );
    },
    
    onDesktopConstructed : function(){

@@ -37,62 +37,79 @@ var ResourceUri = new Class({
    },
    
    // Constructor
-   initialize: function ( uri, locale, options ) {
+   initialize: function ( fullUri, locale, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
+      assertThat( fullUri, not( nil() ));
       
       this.setOptions( options );
       
+      this.documentContentUri;
       this.documentVariables;
       this.locale = locale;
-      this.uri = uri;
+      this.fullUri = fullUri;
+      this.uri;
       
+      this.determineStrippedUri();
+      this.determineDocumentContentUri();
       this.determineDocumentType();
       this.determineDocumentVariables();
-      if( this.options.applyCacheBuster ) this.uri = this.appendCacheBusterParameterToUri( this.uri );
+      if( this.options.applyCacheBuster ) this.fullUri = this.appendCacheBusterParameterToUri( this.fullUri );
    },
    
    //Public accessors and mutators
-   appendCacheBusterParameterToUri : function( uri ) {
-      if( uri.indexOf( "?" ) == -1 ) uri += "?";
-      else uri += "&";
-      uri += "cacheBuster=";
-      uri += new Date().getTime();
-      return uri;
+   appendCacheBusterParameterToUri : function( fullUri ) {
+      if( fullUri.indexOf( "?" ) == -1 ) fullUri += "?";
+      else fullUri += "&";
+      fullUri += "cacheBuster=";
+      fullUri += new Date().getTime();
+      return fullUri;
    },
    
    determineLocalizedUri : function(){
-      var localizedUri = this.uri.indexOf( "." + this.options.contentType ) >= 0 ? this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) : this.uri; 
+      var localizedUri = this.fullUri.indexOf( "." + this.options.contentType ) >= 0 ? this.fullUri.substring( 0, this.fullUri.lastIndexOf( "." + this.options.contentType )) : this.fullUri; 
       localizedUri += "_" + this.locale.getLanguage() + "." + this.options.contentType;
       return localizedUri;
    },
    
    isLocal : function(){
-      var givenUri = new URI( this.uri );
+      var givenUri = new URI( this.fullUri );
       var documentUri = new URI( document.location.href );
       return givenUri.get( 'host' ) == "" || givenUri.get( 'host' ) == documentUri.get( 'host' ); 
    },
   
    // Properties
+   getDocumentContentUri : function() { return this.documentContentUri; },
    getDocumentType : function() { return this.options.documentType; },
    getDocumentVariables : function() { return this.documentVariables; },
    getUri : function() { return this.uri; },
    
    //Private helper methods
+   determineDocumentContentUri : function(){
+      var givenUri = new URI( this.fullUri );
+      if( givenUri.get( 'data' ) && givenUri.getData( 'contentUri' )){
+         this.documentContentUri = eval( givenUri.getData( 'contentUri' ));
+      }else this.documentContentUri = null;
+   }.protect(),
+   
    determineDocumentType : function(){
       if( !this.options.documentType ){
-         var givenUri = new URI( this.uri );
+         var givenUri = new URI( this.fullUri );
          if( givenUri.get( 'data' ) && givenUri.getData( this.options.documentTypeKey ))
             this.options.documentType = AbstractDocument.Types[givenUri.getData( this.options.documentTypeKey )];
       }
    }.protect(),
    
    determineDocumentVariables : function(){
-      var givenUri = new URI( this.uri );
+      var givenUri = new URI( this.fullUri );
       if( givenUri.get( 'data' ) && givenUri.getData( 'documentVariables' )){
          this.documentVariables = eval( "(" + givenUri.getData( 'documentVariables' ) + ")" );
       }else this.documentVariables = null;
-   }.protect()
+   }.protect(),
    
+   determineStrippedUri : function(){
+      if( this.fullUri.indexOf( '?' ) > 0 )
+         this.uri = this.fullUri.substring( 0, this.fullUri.indexOf( '?' ))
+      else this.uri = this.fullUri;
+   }
 });
    
