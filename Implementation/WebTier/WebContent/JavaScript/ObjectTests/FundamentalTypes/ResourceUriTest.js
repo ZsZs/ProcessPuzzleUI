@@ -59,7 +59,6 @@ window.ResourceUriTest = new Class( {
    
    determineDocumentVariables_whenGiven_instantiatesObject : function(){
       assertThat( this.htmlResourceUri.getDocumentVariables(), is( nil() ));
-      assertThat( this.smartDocumentUri.getDocumentVariables(), JsHamcrest.Matchers.typeOf( 'string' ));
       assertThat( this.smartDocumentUri.getDocumentVariables(), equalTo( "{variable_1:'variable_1',variable_2:'variable_2'}" ));
    },
    

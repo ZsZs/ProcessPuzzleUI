@@ -40,7 +40,6 @@ var MenuSelectedMessage = new Class({
    initialize: function( options ){
       this.setOptions( options );
       this.options.messageClass = MenuSelectedMessage;
-      if( this.options.documentVariables ) this.options.documentVariables = eval( "(" + this.options.documentVariables + ")" );
    },
    
    //Public accessors

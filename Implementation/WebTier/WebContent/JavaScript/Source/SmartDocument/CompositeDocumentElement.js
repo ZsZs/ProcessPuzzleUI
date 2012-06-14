@@ -101,7 +101,9 @@ var CompositeDocumentElement = new Class({
    }.protect(),
    
    instantiateDocumentElement: function( elementDefinition ){
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError } );
+      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
    revertConstruction: function(){

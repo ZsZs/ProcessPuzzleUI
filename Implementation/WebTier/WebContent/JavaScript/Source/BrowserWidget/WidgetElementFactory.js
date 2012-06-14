@@ -76,7 +76,7 @@ var WidgetElementFactory = new Class( {
          if( anchorUri.getDocumentType() == AbstractDocument.Types.SMART ){
             var onClickCommand = "top.webUIController.loadSmartDocument('" + anchorUri.getUri()  + "'";
             onClickCommand += anchorUri.getDocumentContentUri() ? ", '" + anchorUri.getDocumentContentUri() + "'" : "";
-            onClickCommand += anchorUri.getDocumentVariables() ? ", '" + anchorUri.getDocumentVariables() + "'" : "";
+            onClickCommand += anchorUri.getDocumentVariables() ? ", " + anchorUri.getDocumentVariables() : "";
             onClickCommand +=  ");";
             defaultProperties = { href : "#", onclick : onClickCommand };
          }else {

@@ -64,6 +64,7 @@ var AbstractDocument = new Class({
       documentDefinitionUri : null,
       documentDefinitionUriSelector: "@documentDefinition",
       documentEditorClass : "DocumentEditor",
+      documentVariables : null,
       handleMenuSelectedEventsDefault : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
       nameSelector : "name",

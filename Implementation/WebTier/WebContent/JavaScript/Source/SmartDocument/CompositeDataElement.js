@@ -65,8 +65,9 @@ var CompositeDataElement = new Class({
    },
    
    instantiateDocumentElement: function( elementDefinition ){
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, { 
-         onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError, variables : this.options.variables });
+      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
    unmarshall: function( dataElementIndex ){
