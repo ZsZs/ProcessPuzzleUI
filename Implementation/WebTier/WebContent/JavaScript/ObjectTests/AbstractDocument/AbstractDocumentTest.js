@@ -81,6 +81,7 @@ window.AbstractDocumentTest = new Class( {
       assertThat( this.abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/handleMenuSelectedEvents" ))));
       assertThat( this.abstractDocument.getName(), equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/name" )));
       assertThat( this.abstractDocument.getVersion(), equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/version" )));
+      assertThat( this.abstractDocument.contentUri, equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/contentUri" )));
    },
    
    unmarshall_whenSpecified_instantiatesAndUnmarshallsResources : function() {

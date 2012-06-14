@@ -7,7 +7,6 @@
    <name>Example Html Document Definition</name>
    <description>This definition demonstrates how simple html content should be specified.</description>
    <version>0.5</version>
-   <contentUri>../HtmlDocument/HtmlDocument</contentUri>
    <handleMenuSelectedEvents>true</handleMenuSelectedEvents>
    
    <resources>

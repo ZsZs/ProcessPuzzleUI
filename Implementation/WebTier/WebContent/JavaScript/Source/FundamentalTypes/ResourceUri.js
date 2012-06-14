@@ -60,7 +60,9 @@ var ResourceUri = new Class({
    },
    
    determineLocalizedUri : function(){
-      return this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) + "_" + this.locale.getLanguage() + "." + this.options.contentType;      
+      var localizedUri = this.uri.indexOf( "." + this.options.contentType ) >= 0 ? this.uri.substring( 0, this.uri.lastIndexOf( "." + this.options.contentType )) : this.uri; 
+      localizedUri += "_" + this.locale.getLanguage() + "." + this.options.contentType;
+      return localizedUri;
    },
    
    isLocal : function(){

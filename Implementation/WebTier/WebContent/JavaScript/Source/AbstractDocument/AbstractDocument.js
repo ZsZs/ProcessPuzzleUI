@@ -38,6 +38,7 @@ var AbstractDocument = new Class({
            'finalizeConstruction', 
            'finalizeDestruction',
            'instantiateEditor',
+           'loadDocumentContent',
            'loadResources', 
            'onConstructionError', 
            'onContainerResize',
@@ -255,7 +256,8 @@ var AbstractDocument = new Class({
    loadDocumentContent: function() {
       if( this.options.documentContentUri ){
          try{
-            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension );
+            var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), { contentType: this.options.documentContentExtension.substring( 1 ) });
+            this.documentContent = new XmlResource( resourceUri.determineLocalizedUri() );
          }catch( e ){
             try{
                this.documentContent = new XmlResource( this.options.documentContentUri );
@@ -318,6 +320,8 @@ var AbstractDocument = new Class({
       this.handleMenuSelectedEvents = parseBoolean( this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.handleMenuSelectedEventsSelector, null, this.options.handleMenuSelectedEventsDefault ));
       this.name = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.nameSelector );
       this.version = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.versionSelector );
+      this.contentUri = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.contentUriSelector );
+      //if( !this.options.documentContentUri && this.contentUri ) this.options.documentContentUri = this.contentUri;
    }.protect(),
       
    unmarshallResources: function(){

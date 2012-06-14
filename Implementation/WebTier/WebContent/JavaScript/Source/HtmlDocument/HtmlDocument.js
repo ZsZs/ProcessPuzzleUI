@@ -95,7 +95,7 @@ var HtmlDocument = new Class({
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( 
+      this.constructionChain.chain(
          this.determineContainerElement, 
          this.instantiateEditor, 
          this.createTextArea, 

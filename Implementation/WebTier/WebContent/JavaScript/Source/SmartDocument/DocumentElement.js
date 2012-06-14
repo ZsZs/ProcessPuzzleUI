@@ -33,6 +33,7 @@ var DocumentElement = new Class({
    options: {
       componentName : "DocumentElement",
       defaultTag : "div",
+      eventFireDelay : 2,
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       isEditable : false,
@@ -194,7 +195,7 @@ var DocumentElement = new Class({
       this.stopTimeOutTimer();
       this.status = DocumentElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
-      this.fireEvent( 'constructed', this );
+      this.fireEvent( 'constructed', this, this.options.eventFireDelay );
    }.protect(),
    
    injectHtmlElement: function(){

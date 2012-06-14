@@ -16,7 +16,7 @@
 			</menuItem>			
                
          <menuItem menuItemId="YourMenu-Dynamic" caption="WebUIMenu.documentExamples.dynamicDocument" isDefault="false">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
          </menuItem>
          
          <menuItem menuItemId="YourMenu-PhotoAlbum" caption="WebUIMenu.documentExamples.photoAlbum" isDefault="false">
