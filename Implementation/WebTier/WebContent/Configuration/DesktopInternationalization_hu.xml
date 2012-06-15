@@ -89,9 +89,11 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">főszerkesztő: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmester: </Resource>
 
-    <Resource key="EventWidget.title" type="String">Események</Resource>
-    <Resource key="EventWidget.schedule" type="String">Időpont:</Resource>
     <Resource key="EventWidget.location" type="String">Hely:</Resource>
+    <Resource key="EventWidget.program" type="String">Program:</Resource>
+    <Resource key="EventWidget.registration" type="String">Jelentkezés:</Resource>
+    <Resource key="EventWidget.schedule" type="String">Időpont:</Resource>
+    <Resource key="EventWidget.title" type="String">Események</Resource>
 
     <Resource key="WebUIMenu.administration" type="String">Adminisztráció</Resource>
     <Resource key="WebUIMenu.administration.about" type="String">Névjegy</Resource>
@@ -115,6 +117,9 @@
     <Resource key="LanguageSelectorWidget.hu" type="String">magyar</Resource>
     <Resource key="LanguageSelectorWidget.select" type="String">Válasszon nyelvet:</Resource>
 
+    <Resource key="NewsWidget.link" type="String">Hivatkozás:</Resource>
+    <Resource key="NewsWidget.publicationDate" type="String">Publikálva:</Resource>
+      
     <Resource key="PhotoGaleryDocument.title" type="String">Dokumentum beépülő modullal</Resource>
     <Resource key="PhotoGaleryDocument.introduction" type="String">Egy okos dokumentumba tetszőleges számú modul építhető be. A beépülő modulok többnyire speciális módon jelenítenek meg tartamat.</Resource>
     <Resource key="PhotoGaleryDocument.exampleDescription" type="String">A lenti példa egy slide show modul bepítését szemlélteti.</Resource>

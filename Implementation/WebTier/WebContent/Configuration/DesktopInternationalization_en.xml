@@ -88,9 +88,11 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">managing editor: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
     
-    <Resource key="EventWidget.title" type="String">Events</Resource>
-    <Resource key="EventWidget.schedule" type="String">Date:</Resource>
     <Resource key="EventWidget.location" type="String">Location:</Resource>
+    <Resource key="EventWidget.program" type="String">Program:</Resource>
+    <Resource key="EventWidget.registration" type="String">Registration:</Resource>
+    <Resource key="EventWidget.schedule" type="String">Date:</Resource>
+    <Resource key="EventWidget.title" type="String">Events</Resource>
       
     <Resource key="WebUIMenu.administration" type="String">Administration</Resource>
     <Resource key="WebUIMenu.administration.about" type="String">About ProcessPuzzle</Resource>
@@ -114,6 +116,9 @@
     <Resource key="LanguageSelectorWidget.hu" type="String">Hungarian</Resource>
     <Resource key="LanguageSelectorWidget.select" type="String">Choose language:</Resource>
 
+    <Resource key="NewsWidget.link" type="String">Link:</Resource>
+    <Resource key="NewsWidget.publicationDate" type="String">Publication date:</Resource>
+      
     <Resource key="PersonalToDoList.introduction" type="String">To Do list of the logged in user.</Resource>
     <Resource key="PersonalToDoList.title" type="String">Personal To Do List</Resource>
     

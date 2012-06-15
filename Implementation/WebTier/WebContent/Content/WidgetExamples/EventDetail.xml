@@ -16,9 +16,15 @@
    </resources>
 
    <documentBody tag="div" id="eventDocumentBody">
-      <compositeDataElement tag="div" id="channelItemsContainer" bind="//pp:eventList/events/event[{index}]" maxOccures="1">
-         <dataElement tag="h1" elementStyle="title" id="eventTitle" bind="//pp:eventList/events/event[{index}]/title"/>
-         <dataElement tag="p" elementStyle="description" id="eventDescription" bind="//pp:eventList/events/event[{index}]/description"/>
+      <compositeDataElement tag="div" id="eventWrapper" bind="//pp:eventList/events/event[{index}]" maxOccures="1">
+         <dataElement tag="h1" elementStyle="title" id="itemTitle" bind="//pp:eventList/events/event[{index}]/title"/>
+         <dataElement tag="div" elementStyle="description" id="itemDescription" bind="//pp:eventList/events/event[{index}]/description"/>
+         <formElement id="eventProperties" method="post" bind="//pp:eventList/events/event[{index}]">
+            <formField id="program" label="EventWidget.program" bind="//pp:eventList/events/event[{index}]/program/description"/>
+            <formField id="link" label="EventWidget.schedule" bind="//pp:eventList/events/event[{index}]/schedule/startDate"/>
+            <formField id="location" label="EventWidget.location" bind="//pp:eventList/events/event[{index}]/location/address"/>
+            <formField id="registration" label="EventWidget.registration" bind="//pp:eventList/events/event[{index}]/registration/link"/>
+         </formElement>
       </compositeDataElement>
    </documentBody>
 </smartDocumentDefinition>

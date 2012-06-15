@@ -14,7 +14,7 @@
     
       <item>
          <title>HONNIA bútor tervezés</title>
-         <link>http://honnia.hu</link>
+         <link>Content/WidgetExamples/NewsDetail.xml?contentUri='Content/WidgetExamples/SiteNews.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</link>
          <description>Cerasus Kft. elindította új, a ProcessPuzzle üzleti platformra épülő, világszerte elérhető Internetes szolgáltatását. A Honniával postosan a saját stílusában tervezheti meg bútotát, éppen az adottságainak megfelelő méretben.</description>
          <pubDate>2003 június 10, 04:00:00 GMT</pubDate>
          <guid>http://processpuzzle.com#item573</guid>
@@ -22,7 +22,7 @@
     
       <item>
          <title>ProcessPuzzle hírolvasó komponens</title>
-         <link>Content/WidgetExamples/UpcommingEvents.xml</link>
+         <link>Content/WidgetExamples/NewsDetail.xml?contentUri='Content/WidgetExamples/SiteNews.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</link>
          <description>IT Kódex Kft. új felhasználói felület komponenst fejlesztett ki az RSS hírcsatornák megjelenítésére. A NewsReaderWidget a híreket testre szabható módon jeleníti meg és bármely okos dokumentumba beépíthető.</description>
          <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
          <guid>http://processpuzzle.com#item575</guid>
