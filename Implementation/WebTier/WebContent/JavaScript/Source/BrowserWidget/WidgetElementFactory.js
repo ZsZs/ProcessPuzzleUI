@@ -157,10 +157,13 @@ var WidgetElementFactory = new Class( {
       return this.create( 'span', valueText, contextElement, position, { id : valueElementId, 'class' : this.options.valueClassName } );
    },
 
-   createStaticRow : function( labelText, valueText, valueElementId, contextElement, position ) {
+   createStaticRow : function( labelText, valueText, valueElementId, contextElement, position, valueLink ) {
       var staticRow = this.create( 'div', null, contextElement, position, { 'class' : this.options.rowClassName } );
       this.create( 'label', labelText, staticRow, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.labelClassName } );
-      this.create( 'span', valueText, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
+      if( valueLink ){
+         var valueSpanElement = this.create( 'span', null, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
+         this.createAnchor( valueText, valueLink, null, valueSpanElement );
+      }else this.create( 'span', valueText, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
       return staticRow;
    },
 

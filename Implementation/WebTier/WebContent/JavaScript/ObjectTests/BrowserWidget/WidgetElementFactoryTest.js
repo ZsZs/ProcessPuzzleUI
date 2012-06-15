@@ -21,6 +21,7 @@ window.WidgetElementFactoryTest = new Class( {
           { method : 'createRowLabel_InstantiatesSpanWithGivenTextAndClass', isAsynchron : false }, 
           { method : 'createRowValue_InstantiatesSpanWithClass', isAsynchron : false }, 
           { method : 'createStaticRow_AppendsNewDivWithLabelAndSpan', isAsynchron : false },
+          { method : 'createStaticRow_whenLinkIsGiven_wrapsValueTextWithAnchor', isAsynchron : false },
           { method : 'createTable_InstantiatesTableHeaderAndRowsElements', isAsynchron : false }]
    },
 
@@ -282,6 +283,17 @@ window.WidgetElementFactoryTest = new Class( {
       assertThat( this.newElement.getLast().get( 'class' ), equalTo( this.elementFactory.options.valueClassName ));
       assertThat( this.newElement.getLast().get( 'text' ), equalTo( this.constants.ROW_VALUE ));
       assertThat( this.newElement.getLast().get( 'id' ), equalTo( this.constants.ROW_VALUE_ID ));
+   },
+   
+   createStaticRow_whenLinkIsGiven_wrapsValueTextWithAnchor : function() {
+      //SETUP: See setUp()
+      
+      //EXCERCISE:
+      this.newElement = this.elementFactory.createStaticRow( this.constants.ROW_LABEL, this.constants.ROW_VALUE, this.constants.ROW_VALUE_ID, this.contextElement, WidgetElementFactory.Positions, "http://processpuzzle.com" );
+
+      //VERIFY:
+      var valueElement = this.newElement.getChildren( 'SPAN.' + this.elementFactory.options.valueClassName + ' A' )[0];
+      assertThat( valueElement.get( 'href' ), equalTo( 'http://processpuzzle.com' ));
    },
    
    createTable_InstantiatesTableHeaderAndRowsElements : function() {
