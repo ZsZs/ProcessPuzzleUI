@@ -8,7 +8,9 @@
         <xs:element ref="name"/>
         <xs:element ref="description"/>
         <xs:element ref="version"/>
-        <xs:element ref="resources"/>
+        <xs:element ref="contentUri" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="handleMenuSelectedEvents" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="resources" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="documentHeader" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="documentBody" minOccurs="1" maxOccurs="1"/>
         <xs:element ref="documentFooter" minOccurs="0" maxOccurs="1"/>
@@ -19,6 +21,8 @@
   <xs:element name="name" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="version" type="xs:decimal"/>
+  <xs:element name="contentUri" type="xs:string" />
+  <xs:element name="handleMenuSelectedEvents" type="xs:boolean"/>
 
   <xs:element name="resources">
     <xs:complexType>
@@ -110,12 +114,9 @@
   <xs:complexType name="CompositeDataElement" mixed="true">
     <xs:complexContent>
       <xs:extension base="CompositeElement">
-        <xs:choice>
-        </xs:choice>
-	    <xs:attribute name="bind" use="required" type="xs:string"/>
-        <xs:attribute name="maxOccures" use="optional" type="xs:NCName"/>
+         <xs:attribute name="bind" use="required" type="xs:string"/>
+         <xs:attribute name="maxOccures" use="optional" type="xs:NCName"/>
 	    <xs:attribute name="minOccures" use="optional" type="xs:NCName"/>
-    	<xs:attribute name="source" use="optional" type="xs:string"/>
       </xs:extension>
 	</xs:complexContent>
   </xs:complexType>
@@ -127,6 +128,7 @@
     <xs:attribute name="elementStyle" use="optional" type="xs:NCName"/>
     <xs:attribute name="href" type="xs:anyURI"/>
     <xs:attribute name="id" use="optional" type="xs:NCName"/>
+    <xs:attribute name="source" use="optional" type="xs:anyURI"/>
     <xs:attribute name="tag" use="optional" type="xs:NCName"/>
   </xs:complexType>
 
@@ -148,9 +150,11 @@
   </xs:complexType>
 
   <xs:complexType name="FormField">
-    <xs:attribute name="id" use="required" type="xs:NCName"/>
-    <xs:attribute name="label" use="required" type="xs:NCName"/>
-    <xs:attribute name="bind" use="required" type="xs:string"/>
+    <xs:complexContent>
+      <xs:extension base="DataElement">
+        <xs:attribute name="label" use="required" type="xs:NCName"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="Plugin">
@@ -198,7 +202,6 @@
           </xs:simpleType>
 		</xs:attribute>
 	    <xs:attribute name="minOccures" type="xs:nonNegativeInteger" use="optional" default="1"/>
-    	<xs:attribute name="source" use="optional" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
