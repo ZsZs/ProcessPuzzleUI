@@ -54,7 +54,7 @@ provides: [ProcessPuzzle.Desktop]
 //= require_directory ../FundamentalTypes
 
 var Desktop = new Class({
-   Implements : [Events, Options], 
+   Implements : [Events, Options, TimeOutBehaviour], 
    Binds : ['constructColumns', 
             'constructContentArea', 
             'constructFooter', 
@@ -163,6 +163,7 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
+      this.startTimeOutTimer( 'construct' );
       this.constructionChain.chain(
          this.hideDesktop,
          this.loadResources,
@@ -473,6 +474,7 @@ var Desktop = new Class({
    
    finalizeConstruction: function(){
       this.state = DesktopElement.States.CONSTRUCTED;
+      this.stopTimeOutTimer( 'construct' );
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
    }.protect(),
