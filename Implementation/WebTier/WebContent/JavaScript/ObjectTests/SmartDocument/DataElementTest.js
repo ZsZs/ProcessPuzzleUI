@@ -11,6 +11,7 @@ window.DataElementTest = new Class( {
           { method : 'construct_retrievesBindedData', isAsynchron : true }, 
           { method : 'construct_addsClass', isAsynchron : true }, 
           { method : 'construct_whenMaxOccuresLargetThanOne_createsMultipleElements', isAsynchron : true }, 
+          { method : 'construct_whenHrefIsGiven_wrapsElementWithAnchor', isAsynchron : true }, 
           { method : 'destroy_whenUnmarshalled_resetsProperties', isAsynchron : false }, 
           { method : 'destroy_whenConstructed_removesHtmlElement', isAsynchron : true }, 
           { method : 'destroy_whenNotUnmarshalled_raisesException', isAsynchron : false }]
@@ -124,6 +125,19 @@ window.DataElementTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.documentContainerElement.getChildren().length, equalTo( this.documentContentResource.selectNodes( "userProfile/addresses/address" ).length ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenHrefIsGiven_wrapsElementWithAnchor : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.dataElement.unmarshall();
+            this.dataElement.construct( this.documentContainerElement, "bottom" );
+         }.bind( this ),
+         function(){
+            assertThat( this.documentContainerElement.getElements( 'a' )[0].get( 'href' ), equalTo( this.documentContentResource.selectNodeText( "/userProfile/userName/@href" ) ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

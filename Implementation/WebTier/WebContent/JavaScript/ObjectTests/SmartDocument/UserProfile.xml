@@ -3,7 +3,7 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:up="http://www.processpuzzle.com/UserProfile">
-   <userName>john.smith</userName>
+   <userName href="http://hu.linkedin.com/in/zsoltzsuffa">zsolt.zsuffa</userName>
    <addresses>
       <address>Uvita, Costa Rica</address>
       <address>john.smith@gmail.com</address>

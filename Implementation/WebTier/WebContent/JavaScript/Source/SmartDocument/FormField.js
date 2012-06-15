@@ -76,7 +76,7 @@ var FormField = new Class({
    }.protect(),
    
    createHtmlElement : function(){
-      this.htmlElement = this.elementFactory.createStaticRow( this.label, this.text, this.id, this.contextElement, WidgetElementFactory.Positions.LastChild );
+      this.htmlElement = this.elementFactory.createStaticRow( this.label, this.text, this.id, this.contextElement, WidgetElementFactory.Positions.LastChild, this.reference );
       this.labelElement = this.htmlElement.getChildren( 'label' )[0];
       this.valueElement = this.htmlElement.getChildren( 'span' )[0];
       this.constructionChain.callChain();

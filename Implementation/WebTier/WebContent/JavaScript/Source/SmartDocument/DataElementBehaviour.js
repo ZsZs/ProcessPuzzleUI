@@ -29,8 +29,10 @@ You should have received a copy of the GNU General Public License along with thi
 var DataElementBehaviour = new Class({
    options: {
       bindSelector : "@bind",
+      hrefSelector : "/@href",
       maxOccuresSelector : "@maxOccures",
       minOccuresSelector : "@minOccures",
+      overwriteElementReference : true,
       sourceSelector : "@source",
       variables : { index : "'*'" }
    },
@@ -43,6 +45,7 @@ var DataElementBehaviour = new Class({
       this.dataXml = data;
       //this.dataElementsIndex = index ? index : 0;
       this.dataElementsNumber;
+      this.href;
       this.maxOccures;
       this.minOccures;
       this.numberOfConstructedSiblings;
@@ -127,6 +130,8 @@ var DataElementBehaviour = new Class({
          var dataSelector = this.bind.substitute( this.options.variables );
          this.text = this.dataXml.selectNodeText( dataSelector );
          if( this.text ) this.text.trim();
+         var href = this.dataXml.selectNodeText( dataSelector + this.options.hrefSelector );
+         if( href && this.options.overwriteElementReference ) this.reference = href;
       }      
       this.constructionChain.callChain();
    }.protect(),

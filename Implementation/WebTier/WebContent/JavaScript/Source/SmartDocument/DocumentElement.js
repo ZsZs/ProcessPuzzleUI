@@ -161,19 +161,21 @@ var DocumentElement = new Class({
       }else this.constructionChain.callChain();
    }.protect(),
    
+   createAnchorIfNeeded: function(){
+      if( this.reference ){
+         var anchorElement = this.elementFactory.createAnchor( this.text, this.reference, null, this.htmlElement );
+      }else {
+         if( this.text ) this.htmlElement.appendText( this.text );
+      }
+   }.protect(),
+   
    createHtmlElement: function(){
       if( this.tag ){
          this.htmlElement = new Element( this.tag );
          if( this.id ) this.htmlElement.set( 'id', this.id );
          if( this.source ) this.htmlElement.set( 'src', this.source );
          if( this.style ) this.htmlElement.addClass( this.style );
-         if( this.reference ){
-            var anchorElement = new Element( 'a', { href : this.reference } );
-            anchorElement.appendText( this.text );
-            anchorElement.inject( this.htmlElement );
-         }else {
-            if( this.text ) this.htmlElement.appendText( this.text );
-         }
+         this.createAnchorIfNeeded();
       }
       this.constructionChain.callChain();
    }.protect(),
