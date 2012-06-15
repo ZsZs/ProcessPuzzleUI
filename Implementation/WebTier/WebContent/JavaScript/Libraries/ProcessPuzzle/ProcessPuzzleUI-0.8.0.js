@@ -3240,10 +3240,13 @@ var WidgetElementFactory = new Class( {
       return this.create( 'span', valueText, contextElement, position, { id : valueElementId, 'class' : this.options.valueClassName } );
    },
 
-   createStaticRow : function( labelText, valueText, valueElementId, contextElement, position ) {
+   createStaticRow : function( labelText, valueText, valueElementId, contextElement, position, valueLink ) {
       var staticRow = this.create( 'div', null, contextElement, position, { 'class' : this.options.rowClassName } );
       this.create( 'label', labelText, staticRow, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.labelClassName } );
-      this.create( 'span', valueText, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
+      if( valueLink ){
+         var valueSpanElement = this.create( 'span', null, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
+         this.createAnchor( valueText, valueLink, null, valueSpanElement );
+      }else this.create( 'span', valueText, staticRow, WidgetElementFactory.Positions.LastChild, { id : valueElementId, 'class' : this.options.valueClassName } );
       return staticRow;
    },
 
@@ -4344,7 +4347,7 @@ provides: [ProcessPuzzle.Desktop]
 
 
 var Desktop = new Class({
-   Implements : [Events, Options], 
+   Implements : [Events, Options, TimeOutBehaviour], 
    Binds : ['constructColumns', 
             'constructContentArea', 
             'constructFooter', 
@@ -4453,6 +4456,7 @@ var Desktop = new Class({
 		
    //Public accessor and mutator methods
    construct : function() {
+      this.startTimeOutTimer( 'construct' );
       this.constructionChain.chain(
          this.hideDesktop,
          this.loadResources,
@@ -4763,6 +4767,7 @@ var Desktop = new Class({
    
    finalizeConstruction: function(){
       this.state = DesktopElement.States.CONSTRUCTED;
+      this.stopTimeOutTimer( 'construct' );
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this, this.options.eventFireDelay ); 
    }.protect(),
@@ -8417,22 +8422,31 @@ MenuItemFactory.create = function(  definitionXmlElement, htmlElementFactory, op
 
 MenuItemFactory.singleInstance;
 /*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+Name: 
+    - MenuSelectedMessage
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Description: 
+    - Represents the event when a MenuItem of a MenuWidget was selected.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Requires:
+    - WebUIMessage
+Provides:
+    - MenuSelectedMessage
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -12366,19 +12380,21 @@ var DocumentElement = new Class({
       }else this.constructionChain.callChain();
    }.protect(),
    
+   createAnchorIfNeeded: function(){
+      if( this.reference ){
+         var anchorElement = this.elementFactory.createAnchor( this.text, this.reference, null, this.htmlElement );
+      }else {
+         if( this.text ) this.htmlElement.appendText( this.text );
+      }
+   }.protect(),
+   
    createHtmlElement: function(){
       if( this.tag ){
          this.htmlElement = new Element( this.tag );
          if( this.id ) this.htmlElement.set( 'id', this.id );
          if( this.source ) this.htmlElement.set( 'src', this.source );
          if( this.style ) this.htmlElement.addClass( this.style );
-         if( this.reference ){
-            var anchorElement = new Element( 'a', { href : this.reference } );
-            anchorElement.appendText( this.text );
-            anchorElement.inject( this.htmlElement );
-         }else {
-            if( this.text ) this.htmlElement.appendText( this.text );
-         }
+         this.createAnchorIfNeeded();
       }
       this.constructionChain.callChain();
    }.protect(),
@@ -12627,8 +12643,10 @@ You should have received a copy of the GNU General Public License along with thi
 var DataElementBehaviour = new Class({
    options: {
       bindSelector : "@bind",
+      hrefSelector : "/@href",
       maxOccuresSelector : "@maxOccures",
       minOccuresSelector : "@minOccures",
+      overwriteElementReference : true,
       sourceSelector : "@source",
       variables : { index : "'*'" }
    },
@@ -12641,6 +12659,7 @@ var DataElementBehaviour = new Class({
       this.dataXml = data;
       //this.dataElementsIndex = index ? index : 0;
       this.dataElementsNumber;
+      this.href;
       this.maxOccures;
       this.minOccures;
       this.numberOfConstructedSiblings;
@@ -12725,6 +12744,8 @@ var DataElementBehaviour = new Class({
          var dataSelector = this.bind.substitute( this.options.variables );
          this.text = this.dataXml.selectNodeText( dataSelector );
          if( this.text ) this.text.trim();
+         var href = this.dataXml.selectNodeText( dataSelector + this.options.hrefSelector );
+         if( href && this.options.overwriteElementReference ) this.reference = href;
       }      
       this.constructionChain.callChain();
    }.protect(),
@@ -13715,7 +13736,7 @@ var FormField = new Class({
    }.protect(),
    
    createHtmlElement : function(){
-      this.htmlElement = this.elementFactory.createStaticRow( this.label, this.text, this.id, this.contextElement, WidgetElementFactory.Positions.LastChild );
+      this.htmlElement = this.elementFactory.createStaticRow( this.label, this.text, this.id, this.contextElement, WidgetElementFactory.Positions.LastChild, this.reference );
       this.labelElement = this.htmlElement.getChildren( 'label' )[0];
       this.valueElement = this.htmlElement.getChildren( 'span' )[0];
       this.constructionChain.callChain();
@@ -14129,22 +14150,31 @@ var Tab = new Class( {
       this.messageProperties = XmlResource.selectNodeText( this.options.messagePropertiesSelector, this.definitionElement );
    }.protect()} );
 /*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+Name: 
+    - TabSelectedMessage
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Description: 
+    - Represents the event when a Tab of a TabWidget was selected.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Requires:
+    - WebUIMessage
+Provides:
+    - TabSelectedMessage
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
@@ -14159,6 +14189,7 @@ var TabSelectedMessage = new Class({
       documentContentURI: null,
       documentType: AbstractDocument.Types.SMART,
       documentURI: null,
+      documentVariables: null,
       name: "TabSelectedMessage",
       tabId: null
    },
@@ -14178,6 +14209,7 @@ var TabSelectedMessage = new Class({
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },
    getDocumentURI: function() { return this.options.documentURI; },
+   getDocumentVariables: function() { return this.options.documentVariables; },
    getId: function() { return this.options.tabId; }
 });
 
