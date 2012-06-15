@@ -8,6 +8,10 @@
          <title>Unit Test Driven JavaScript Development - Training</title>
          <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</link>
          <description>Introduction to Test Driven Development for JavaScript developers.</description>
+         <program>
+            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Detailed agenda</description>
+            <link>http://processpuzzle.com/#!WebUIController: {locale: 'en'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
+         </program>
          <schedule isFullDay="false">
             <startDate>Tue, 10 Jun 2003 04:00:00 GMT</startDate>
             <endDate>Tue, 10 Jun 2003 08:00:00 GMT</endDate>
@@ -16,6 +20,10 @@
             <address>Prof. Agile - virtual classroom</address>
             <link>http://agilerenovation.com</link>
          </location>
+         <language>English</language>
+         <registration>
+            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</link>
+         </registration>
          <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
       </event>  
        
@@ -23,6 +31,10 @@
          <title>Acceptance Test Driven Java Development - Training</title>
          <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</link>
          <description>Introduction to Acceptance Test Driven Development for Java developers.</description>
+         <program>
+            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Detailed agenda</description>
+            <link>http://processpuzzle.com/#!WebUIController: {locale: 'en'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
+         </program>
          <schedule isFullDay="false">
             <startDate></startDate>
             <endDate></endDate>
@@ -31,6 +43,10 @@
             <address>Prof. Agile - virtual classroom</address>
             <link>http://agilerenovation.com</link>
          </location>
+         <language>English</language>
+         <registration>
+            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</link>
+         </registration>
          <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
       </event>  
    </events> 

@@ -15,9 +15,8 @@
    </resources>
 
    <documentBody tag="div" id="newsDocumentBody">
-      <dataElement tag="h1" id="title" elementStyle="channelTitle" bind="//rss/channel/title"/>
+      <dataElement tag="h1" elementStyle="title" id="itemTitle" bind="//rss/channel/item[{index}]/title"/>
       <compositeDataElement tag="div" id="channelItemsContainer" bind="//rss/channel/item[{index}]" maxOccures="unbounded">
-         <dataElement tag="h3" elementStyle="title" id="itemTitle" bind="//rss/channel/item[{index}]/title"/>
          <dataElement tag="p" elementStyle="description" id="itemDescription" bind="//rss/channel/item[{index}]/description"/>
          <formElement id="newsProperties" method="post" bind="//rss/channel/item[{index}]">
             <formField id="publicationDate" label="NewsWidget.publicationDate" bind="//rss/channel/item[{index}]/pubDate"/>
