@@ -76,10 +76,11 @@ window.WebUIControllerTest = new Class( {
             assertEquals( "... registers itself to 'LanguageChangedMessage'.", this.controller.webUIMessageHandler, messageBus.getSubscribersToMessage( LanguageChangedMessage ).get(0) );
             this.testMethodReady();
          }.bind( this )
-      ).callChain();
+      );
+      currentTestCaseChain = this.testCaseChain;
+      this.testCaseChain.callChain();
    },
    
-/*   
    changeLanguage_reConstructsTheDesktopWithNewLocale : function() {
       this.testCaseChain.chain(
          function(){ 
@@ -229,8 +230,8 @@ window.WebUIControllerTest = new Class( {
          }.bind( this )
       ).callChain();
    },
-*/   
-   onConfigured : function(){
+
+   onConfigured : function( webUIController ){
       this.testCaseChain.callChain();
    },
    

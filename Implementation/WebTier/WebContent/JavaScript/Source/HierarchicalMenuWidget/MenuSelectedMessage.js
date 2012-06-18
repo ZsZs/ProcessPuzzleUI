@@ -62,6 +62,7 @@ var MenuSelectedMessage = new Class({
    getDocumentURI: function() { return this.options.documentURI; },
    getDocumentVariables: function() { return this.options.documentVariables; },
    getNotification: function() { return this.options.notification; },
+   getProperty: function( propertyName ) { return this.options[propertyName]; },
    getWindowName: function() { return this.options.windowName; }
 });
 

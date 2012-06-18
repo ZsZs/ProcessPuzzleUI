@@ -50,6 +50,7 @@ var WebUIController = new Class({
       configurationUri : "Configuration.xml",
       contextRootPrefix : "../../",
       errorPageUri : "Commons/FrontController/WebUiError.jsp",
+      eventFireDelay : 5,
       languageSelectorElementId : "LanguageSelectorWidget",
       loggerGroupName : "WebUIController",
       messageOriginator : "webUIController",
@@ -116,9 +117,11 @@ var WebUIController = new Class({
    
    changeSkin : function( newSkinName ){
       this.logger.debug( this.options.componentName + ".changeSkin()." );
-      this.destroy();
-      this.skin = newSkinName;
-      this.configure.delay( this.options.reConfigurationDelay, this );
+      if( newSkinName != this.getCurrentSkin() ){
+         this.destroy();
+         this.skin = newSkinName;
+         this.configure.delay( this.options.reConfigurationDelay, this );
+      }
    },
    
    configure : function() {
@@ -211,8 +214,10 @@ var WebUIController = new Class({
       
       if( instanceOf( webUIMessage, LanguageChangedMessage ) && webUIMessage.getNewLocale() != this.getCurrentLocale() ){
          this.changeLanguage( webUIMessage.getNewLocale() );
-      }else if( instanceOf( webUIMessage, SkinChangedMessage ) && webUIMessage.getNewSkin() != this.getCurrentSkin() ){
+      }else if( instanceOf( webUIMessage, SkinChangedMessage )){
          this.changeSkin( webUIMessage.getNewSkin() );
+      }else if( instanceOf( webUIMessage, MenuSelectedMessage ) && webUIMessage.getActionType() == 'changeSkin' ){
+         this.changeSkin( webUIMessage.getProperty( 'skinName' ));
       }
       
       this.lastHandledMessage = webUIMessage;
@@ -304,7 +309,7 @@ var WebUIController = new Class({
    finalizeConfiguration: function(){
       this.refreshUrlTimer = this.storeComponentsState.periodical( this.options.urlRefreshPeriod, this );
       this.isConfigured = true;
-      this.fireEvent( 'configured', this );
+      this.fireEvent( 'configured', this, this.options.eventFireDelay );
    }.protect(),
 
    getTextInternal : function ( key, defaultValue ) {
@@ -405,6 +410,7 @@ var WebUIController = new Class({
    subscribeToWebUIMessages: function() {
       this.logger.debug( this.options.componentName + ".subscribeToWebUIMessages() started." );
       this.messageBus.subscribeToMessage( LanguageChangedMessage, this.webUIMessageHandler );
+      this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
       this.messageBus.subscribeToMessage( SkinChangedMessage, this.webUIMessageHandler );
       //this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
       this.configurationChain.callChain();

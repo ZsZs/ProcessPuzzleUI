@@ -50,6 +50,7 @@
     
    <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructedMessage.js"></script> 
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
    <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/StateTransformer.js"></script>
@@ -87,7 +88,12 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/UniqueId.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuItem.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuItemFactory.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/CompositeMenu.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/LeafMenuItem.js"></script>
    <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/RootMenu.js"></script>
    <script type="text/javascript" src="../../Source/HtmlDocument/HtmlDocument.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
@@ -97,11 +103,19 @@
    <script type="text/javascript" src="../../Source/Internationalization/XMLResourceBundle.js"></script>
    <script type="text/javascript" src="../../Source/LanguageSelectorWidget/LanguageChangedMessage.js"></script>
    <script type="text/javascript" src="../../Source/LanguageSelectorWidget/LanguageSelectorWidget.js"></script>
+   <script type="text/javascript" src="../../Source/NewsReaderWidget/NewsReaderWidget.js"></script>
+   <script type="text/javascript" src="../../Source/NewsReaderWidget/RssChannel.js"></script>
+   <script type="text/javascript" src="../../Source/NewsReaderWidget/RssItem.js"></script>
    <script type="text/javascript" src="../../Source/ResourceManager/DocumentResource.js"></script>
    <script type="text/javascript" src="../../Source/ResourceManager/DocumentImage.js"></script>
    <script type="text/javascript" src="../../Source/ResourceManager/DocumentScript.js"></script>
    <script type="text/javascript" src="../../Source/ResourceManager/DocumentStyleSheet.js"></script>
    <script type="text/javascript" src="../../Source/ResourceManager/ResourceManager.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollingBehaviour/NoneExistingScrollableElementException.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollingBehaviour/ScrollArea.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollingBehaviour/ScrollControls.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollingBehaviour/ScrollingBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/ScrollingBehaviour/SmoothScroll.js"></script>
    <script type="text/javascript" src="../../Source/SkinSelectorWidget/SkinChangedMessage.js"></script>
    <script type="text/javascript" src="../../Source/SkinSelectorWidget/SkinSelectorWidget.js"></script>
    <script type="text/javascript" src="../../Source/SmartDocument/DocumentElement.js"></script>
@@ -142,7 +156,9 @@
       window.addEvent('domready', function() {
       });
   	  
-      JsHamcrest.Integration.JsUnit();		
+      JsHamcrest.Integration.JsUnit();	
+      
+      var currentTestCaseChain;
 	</script>
 </head>
 
