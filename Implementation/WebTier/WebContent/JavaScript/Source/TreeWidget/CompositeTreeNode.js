@@ -165,6 +165,7 @@ var CompositeTreeNode = new Class( {
    }.protect(),
    
    unmarshallChildNodes : function(){
+      this.childNodes.clear();
       var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
       if( childNodeElements ){
          childNodeElements.each( function( childNodeElement, index ){

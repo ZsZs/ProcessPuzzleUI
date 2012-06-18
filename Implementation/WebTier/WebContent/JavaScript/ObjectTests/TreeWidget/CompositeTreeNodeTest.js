@@ -12,6 +12,7 @@ window.CompositeTreeNodeTest = new Class({
          { method : 'construct_whenNodeIsClosed_createsPlusSign', isAsynchron : false },
          { method : 'close_whenNodeIsOpened_destroysChildNodes', isAsynchron : false },
          { method : 'close_whenNodeIsOpened_replacesPlusSign', isAsynchron : false },
+         { method : 'open_whenNodeIsClosed_constructsChildNodes', isAsynchron : false },
          { method : 'open_whenNodeIsOpened_destroysChildNodes', isAsynchron : false }]
    },
 
@@ -27,15 +28,15 @@ window.CompositeTreeNodeTest = new Class({
    initialize : function( options ) {
       this.setOptions( options );
       
+      this.compositeTreeNode;
+      this.compositeTreeNodeDefinition;
+      this.compositeTreeNodeType;
       this.elementFactory;
       this.locale = new Locale({ language : this.constants.LANGUAGE });
       this.parentNode;
       this.resourceBundle;
       this.rootNode;
       this.treeDefinition;
-      this.compositeTreeNode;
-      this.compositeTreeNodeDefinition;
-      this.compositeTreeNodeType;
       this.webUILogger;
       this.webUIConfiguration;
       this.widgetContainerElement;
@@ -136,9 +137,21 @@ window.CompositeTreeNodeTest = new Class({
       assertThat( handlerElement.get( "src" ), equalTo( this.compositeTreeNodeType.determineNodeHandlerImage( this.compositeTreeNode )));
    },
    
+   open_whenNodeIsClosed_constructsChildNodes : function(){
+      this.constructCompositeTreeNode();
+      var previousNumberOfConstructedNodes = this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length;
+      var compositeNode = this.compositeTreeNode.findLastVisibleChild();      
+      compositeNode.open();
+      
+      assertThat( compositeNode.isOpened, is( true ));
+      var expectedNumberOfNodes = previousNumberOfConstructedNodes + this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[@nodeId='13']/treeNode" ).length;
+      assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( expectedNumberOfNodes ));
+   },
+   
    open_whenNodeIsOpened_destroysChildNodes : function(){
       this.constructCompositeTreeNode();
       this.compositeTreeNode.close();
+      assumeThat( this.compositeTreeNode.isOpened, is( false ));
       
       this.compositeTreeNode.open();
       

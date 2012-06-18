@@ -118,6 +118,8 @@ var TreeNode = new Class({
       this.destroyNodeElement( this.nodeCaptionElement );
       this.destroyNodeElement( this.nodeWrapperElement );
       this.destroyTrailingImages();
+      
+      this.state = BrowserWidget.States.INITIALIZED;
    },
 
    onCaptionClick : function(theEvent) {
@@ -133,6 +135,7 @@ var TreeNode = new Class({
    // Properties
    getCaption : function() { return this.caption; },
    getCaptionElement : function() { return this.nodeCaptionElement; },
+   getContainerElement : function() { return this.containerElement; },
    getId : function() { return this.nodeID; },
    getImageUri : function() { return this.imageUri; },
    getNodeImageElement : function() { return this.nodeIconElement; },
