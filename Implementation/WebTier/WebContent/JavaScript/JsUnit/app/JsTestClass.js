@@ -1,6 +1,7 @@
 var JsTestClass = new Class({
    Implements: [Events, Options],
    options: {
+      componentName: "JsTestClass",
       testCase: null,
       testMethods: []
    },

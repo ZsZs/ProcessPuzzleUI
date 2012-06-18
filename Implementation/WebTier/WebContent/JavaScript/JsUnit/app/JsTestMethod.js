@@ -6,7 +6,8 @@ var JsTestMethod = new Class({
    Extends : JsTestCase,
    Binds: ['onRunTestFinished', 'runTestMethod'],
    options : {
-      className : null
+      className : null,
+      componentName : "JsTestMethod"
    },
    
    //Constructor

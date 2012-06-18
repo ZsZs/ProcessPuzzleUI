@@ -4,6 +4,7 @@ var JsTestFunction = new Class({
    Extends : JsTestCase,
    
    options : {
+      componentName : "JsTestFunction",
       functionNamePrefix : "",
       setUpFunctionName : "setUp",
       tearDownFunctionName : "tearDown"
