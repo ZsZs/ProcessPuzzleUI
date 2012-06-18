@@ -52,16 +52,24 @@
          </menuItem>
       </menuItem>
       
-		<menuItem menuItemId="Administration" caption="WebUIMenu.administration">
-			<messageProperties>{ actionType : 'loadMenu'}</messageProperties>
+      <menuItem menuItemId="Administration" caption="WebUIMenu.administration">
+         <messageProperties>{ actionType : 'loadMenu'}</messageProperties>
 					
-			<menuItem menuItemId="Administration-Users" caption="WebUIMenu.administration.users" isDefault="true">
+         <menuItem menuItemId="Administration-Users" caption="WebUIMenu.administration.users" isDefault="true">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-			</menuItem>
+         </menuItem>
 						
          <menuItem menuItemId="Administration-About" caption="WebUIMenu.administration.about">
             <messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'about' }</messageProperties>         
          </menuItem>
-		</menuItem>
-	</menuItem>
+						
+         <menuItem menuItemId="Administration-PPSkin" caption="WebUIMenu.administration.processPuzzleSkin">
+            <messageProperties>{ actionType : 'changeSkin', skinName : 'ProcessPuzzle' }</messageProperties>         
+         </menuItem>
+						
+         <menuItem menuItemId="Administration-MochaSkin" caption="WebUIMenu.administration.mochaUiSkin">
+            <messageProperties>{ actionType : 'changeSkin', skinName : 'MochaUI' }</messageProperties>         
+         </menuItem>
+      </menuItem>
+   </menuItem>
 </pp:menuWidgetDefinition>

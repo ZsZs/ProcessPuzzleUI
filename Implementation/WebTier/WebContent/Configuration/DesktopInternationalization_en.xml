@@ -96,6 +96,8 @@
       
     <Resource key="WebUIMenu.administration" type="String">Administration</Resource>
     <Resource key="WebUIMenu.administration.about" type="String">About ProcessPuzzle</Resource>
+    <Resource key="WebUIMenu.administration.mochaUiSkin" type="String">MochaUI Skin</Resource>
+    <Resource key="WebUIMenu.administration.processPuzzleSkin" type="String">ProcessPuzzle Skin</Resource>
     <Resource key="WebUIMenu.administration.users" type="String">Users</Resource>
     
     <Resource key="WebUIMenu.documentExamples" type="String">Smart Document</Resource>
