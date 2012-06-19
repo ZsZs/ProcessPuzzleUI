@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TreeWidget = new Class( {
    Extends : BrowserWidget,
-   Binds : ['constructTreeNodes', 'destroyTreeNodes'],
+   Binds : ['constructTreeNodes', 'destroyTreeNodes', 'onRootNodeConstructed'],
    constants : {
    },
    
@@ -51,6 +51,7 @@ var TreeWidget = new Class( {
 
       this.compositeTreeNodeType;
       this.rootNode;
+      this.rootNodeType;
       this.treeNodeType;
       
       this.instantiateNodeFactory();
@@ -75,6 +76,10 @@ var TreeWidget = new Class( {
       return this.rootNode.findNodeByPath( this.getSelectedNodeFullCaption() );
    },
 
+   onRootNodeConstructed : function( rootNode ){
+      this.constructionChain.callChain();
+   },
+   
    unmarshall : function() {
       this.unmarshallRootNode();
    },
@@ -97,7 +102,6 @@ var TreeWidget = new Class( {
    
    constructTreeNodes : function(){
       this.rootNode.construct( this.containerElement );
-      this.constructionChain.callChain();
    }.protect(),
    
    destroyTreeNodes : function(){
@@ -113,12 +117,14 @@ var TreeWidget = new Class( {
    instantiateNodeTypes : function(){
       this.treeNodeType = TreeNodeFactory.singleInstance.getTreeNodeType();
       this.compositeTreeNodeType = TreeNodeFactory.singleInstance.getCompositeTreeNodeType();
+      this.rootNodeType = TreeNodeFactory.singleInstance.getRootTreeNodeType();
    }.protect(),
    
    unmarshallRootNode : function(){
       var rootNodeElement = this.dataXml.selectNode( this.options.rootNodeSelector );
       if( rootNodeElement ){
-         this.rootNode = new RootTreeNode( this.compositeTreeNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
+         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed });
+         this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
          this.rootNode.unmarshall();
       }      
    }.protect()   

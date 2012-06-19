@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeTreeNode = new Class( {
    Extends : TreeNode,
-   Binds : ['onNodeHandlerClick'],
+   Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick'],
 
    options : {
       childNodesSelector : 'treeNode',
@@ -50,6 +50,7 @@ var CompositeTreeNode = new Class( {
       this.parent( parentNode, nodeType, nodeResource, elementFactory, options );
       this.childNodes = new ArrayList();
       this.isOpened = this.options.initialyOpened;
+      this.numberOfConstructedChildNodes = 0;
    },
 
    // public accessor and mutator methods
@@ -64,7 +65,6 @@ var CompositeTreeNode = new Class( {
    
    construct : function(){
       this.parent();
-      this.constructChildNodes();
    },
    
    destroy : function(){
@@ -98,6 +98,12 @@ var CompositeTreeNode = new Class( {
             return null;
       } else
          return this.findChildNodeByName( path );
+   },
+   
+   onChildNodeConstructed : function( childNode ){
+      this.numberOfConstructedChildNodes++;
+      if( this.numberOfConstructedChildNodes == this.childNodes.size() ) this.constructionChain.callChain();
+
    },
 
    onNodeHandlerClick : function() {
@@ -135,12 +141,24 @@ var CompositeTreeNode = new Class( {
       this.nodeImageElement.addEvent( 'click', this.onFolderClickHandler );
    }.protect(),
 
+   compileConstructionChain : function(){
+      this.constructionChain.chain( 
+         this.createNodeWrapperElement, 
+         this.createNodeHandlerImage, 
+         this.createNodeIcon, 
+         this.createNodeCaption, 
+         this.insertTrailingImages, 
+         this.constructChildNodes,
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
    constructChildNodes : function(){
       if( this.isOpened ){
          this.childNodes.each( function( childNode, index ){
             childNode.construct();
          }.bind( this ));
-      }
+      }else this.constructionChain.callChain();
    }.protect(),
    
    createNodeHandlerImage : function() {
@@ -154,6 +172,7 @@ var CompositeTreeNode = new Class( {
       }.bind( this ));
       
       this.childNodes.clear();
+      this.numberOfConstructedChildNodes = 0;
    }.protect(),
    
    replaceNodeHandlerImage : function(){
@@ -169,7 +188,7 @@ var CompositeTreeNode = new Class( {
       var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
       if( childNodeElements ){
          childNodeElements.each( function( childNodeElement, index ){
-            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, this.options );
+            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, { onConstructed : this.onChildNodeConstructed });
             if( index > 0 && index < childNodeElements.length ){
                this.childNodes.get( index -1 ).nextSibling = treeNode;
                treeNode.previousSibling = this.childNodes.get( index -1 );

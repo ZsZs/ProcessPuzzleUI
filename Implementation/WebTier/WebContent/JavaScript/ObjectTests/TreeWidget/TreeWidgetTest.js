@@ -9,7 +9,8 @@ window.TreeWidgetTest = new Class( {
          { method : 'initialize_instantiatesNodeFactory', isAsynchron : false },
          { method : 'unmarshall_instantiatesRootNode', isAsynchron : false },
          { method : 'unmarshall_instantiatesChildNodes', isAsynchron : false },
-         { method : 'construct_constructsChildNodes', isAsynchron : true }]
+         { method : 'construct_constructsChildNodes', isAsynchron : true },
+         { method : 'construct_whenEnabled_constructsRootNode', isAsynchron : true }]
    },
 
    constants : {
@@ -95,15 +96,32 @@ window.TreeWidgetTest = new Class( {
    
    construct_constructsChildNodes : function() {
       this.testCaseChain.chain(
+         function(){ 
+            this.treeWidget.unmarshall(); 
+            this.treeWidget.construct(); 
+         }.bind( this ),
          function(){
+            assertThat( this.treeWidget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            assertThat( this.treeWidget.getRootNode().getState(), equalTo( BrowserWidget.States.UNMARSHALLED ));
+            
+            this.treeWidget.getRootNode().getChildNodes().each( function( treeNode, index ){
+               assertThat( treeNode.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            }.bind( this ));
+            
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenEnabled_constructsRootNode : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.treeWidget.options.showRootNode = true;
             this.treeWidget.unmarshall();
             this.treeWidget.construct();
          }.bind( this ),
          function(){
-            assertThat( this.treeWidget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
-            this.treeWidget.getRootNode().getChildNodes().each( function( treeNode, index ){
-               assertThat( treeNode.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
-            }.bind( this ));
+            assertThat( this.treeWidget.getRootNode().getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

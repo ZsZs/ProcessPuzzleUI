@@ -39,6 +39,7 @@ var TreeNodeFactory = new Class({
       
       this.treeNodeType = new TreeNodeType( this.options.nodeTypeOptions );
       this.compositeTreeNodeType = new CompositeTreeNodeType( this.options.nodeTypeOptions );
+      this.rootTreeNodeType = new RootTreeNodeType( this.options.nodeTypeOptions );
    },
 
    //Public mutators and accessors
@@ -54,12 +55,13 @@ var TreeNodeFactory = new Class({
    
    //Properties
    getCompositeTreeNodeType : function() { return this.compositeTreeNodeType; },
+   getRootTreeNodeType : function() { return this.rootTreeNodeType; },
    getTreeNodeType : function() { return this.treeNodeType; }
 });
 
-TreeNodeFactory.create = function(  definitionXmlElement, htmlElementFactory, options ){
+TreeNodeFactory.create = function( parentNode, definitionXmlElement, htmlElementFactory, options ){
    if( !TreeNodeFactory.singleInstance ) TreeNodeFactory.singleInstance = new TreeNodeFactory();
-   return TreeNodeFactory.singleInstance.create( definitionXmlElement, htmlElementFactory, options );
+   return TreeNodeFactory.singleInstance.create( parentNode, definitionXmlElement, htmlElementFactory, options );
 };
 
 TreeNodeFactory.singleInstance;

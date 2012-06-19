@@ -31,8 +31,8 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../BrowserWidget/BrowserWidget.js
 
 var TreeNode = new Class({
-   Implements : [Options],
-   Binds : ['onCaptionClick'],
+   Implements : [Events, Options],
+   Binds : ['createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
    options : {
       captionSelector : '@caption',
       componentName : "TreeNode",
@@ -55,6 +55,7 @@ var TreeNode = new Class({
 
       // private instance variables
       this.caption;
+      this.constructionChain = new Chain();
       this.containerElement;
       this.elementFactory = elementFactory;
       this.imageUri;
@@ -103,12 +104,8 @@ var TreeNode = new Class({
    
    construct : function() {
       if( this.state == BrowserWidget.States.UNMARSHALLED ){
-         this.createNodeWrapperElement();
-         this.createNodeHandlerImage();
-         this.createNodeIcon();
-         this.createNodeCaption();
-         this.insertTrailingImages();
-         this.state = BrowserWidget.States.CONSTRUCTED;
+         this.compileConstructionChain();
+         this.constructionChain.callChain();
       }
    },
    
@@ -150,19 +147,33 @@ var TreeNode = new Class({
    isVisible : function() { return this.visible; },
 
    // private methods
+   compileConstructionChain : function(){
+      this.constructionChain.chain( 
+         this.createNodeWrapperElement, 
+         this.createNodeHandlerImage, 
+         this.createNodeIcon, 
+         this.createNodeCaption, 
+         this.insertTrailingImages, 
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
    createNodeCaption : function(nobrElement) {
       var elementOptions = { 'class' : this.nodeType.getCaptionClass(), 'id' : this.nodeID };
       this.nodeCaptionElement = this.elementFactory.create( 'span', this.caption, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.constructionChain.callChain();
    }.protect(),
 
    createNodeHandlerImage : function() {
       var elementOptions = { 'class' : this.nodeType.getNodeHandlerClass() + " " + this.nodeType.getNodeImageClass(), 'src' : this.nodeType.determineNodeHandlerImage( this ) };
       this.nodeHandlerElement = this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.constructionChain.callChain();
    }.protect(),
 
    createNodeIcon : function() {
       var elementOptions = { 'class' : this.nodeType.getNodeIconClass() + " " + this.nodeType.getNodeImageClass(), 'src' : this.imageUri };
       this.nodeIconElement = this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.constructionChain.callChain();
    }.protect(),
 
    createNodeWrapperElement : function() {
@@ -170,6 +181,7 @@ var TreeNode = new Class({
       var contextPosition = this.determinWrapperContextPosition();
       var elementOptions = { 'class' : this.nodeType.getNodeWrapperClass() };
       this.nodeWrapperElement = this.elementFactory.create( 'div', null, contextElement, contextPosition, elementOptions );
+      this.constructionChain.callChain();
    }.protect(),
 
    destroyNodeElement: function( nodeElement ){
@@ -199,6 +211,12 @@ var TreeNode = new Class({
       else return WidgetElementFactory.Positions.LastChild;
    }.protect(),
    
+   finalizeConstruction : function(){
+      this.state = BrowserWidget.States.CONSTRUCTED;
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this );
+   }.protect(),
+   
    implementCompositeIfChildNodesExists : function(){
       var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
       if( childNodeElements ){
@@ -216,6 +234,7 @@ var TreeNode = new Class({
 
          currentNode = currentNode.getParentNode();
       }
+      this.constructionChain.callChain();
    }.protect(),
 
    unmarshallProperties: function(){

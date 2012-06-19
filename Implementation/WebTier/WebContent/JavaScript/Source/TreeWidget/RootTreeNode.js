@@ -63,6 +63,14 @@ var RootTreeNode = new Class({
    getWidgetElement : function() { return widgetElement; },
    
    //Protected, private helper methods
+   compileConstructionChain : function(){
+      if( this.options.isVisible ){
+         this.constructionChain.chain( this.createNodeWrapperElement, this.createNodeHandlerImage, this.createNodeIcon, this.createNodeCaption, this.insertTrailingImages, this.constructChildNodes, this.finalizeConstruction );
+      }else{
+         this.constructionChain.chain( this.constructChildNodes, this.finalizeConstruction );
+      }
+   }.protect(),
+   
    determineWrapperContextElement : function(){
       return this.containerElement;
    }.protect(),
@@ -70,5 +78,14 @@ var RootTreeNode = new Class({
    determinWrapperContenxtPosition : function(){
       return WidgetElementFactory.Positions.LastChild;
    }.protect(),
+   
+   finalizeConstruction : function(){
+      if( this.options.isVisible ) this.parent()
+      else {
+         this.state = BrowserWidget.States.UNMARSHALLED;
+         this.constructionChain.clearChain();
+         this.fireEvent( 'constructed', this );
+      }
+   }.protect() 
    
 });
