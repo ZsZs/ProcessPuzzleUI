@@ -32,14 +32,18 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../TreeWidget/TreeNodeType.js
 
 var CompositeTreeNodeType = new Class ({
-	Extends : TreeNodeType,
+   Extends : TreeNodeType,
 	
-	options: {
+   options: {
       componentName : 'CompositeTreeNodeType',
+      nodeHandlerSourceWhenFirstAndClosed : 'plus_last_no_root.gif',
+      nodeHandlerSourceWhenFirstAndOpened : 'minus_last_no_root.gif',
+      nodeHandlerSourceWhenFirstAndHasNextAndClosed : 'plus_no_root.gif',
+      nodeHandlerSourceWhenFirstAndHasNextAndOpened : 'minus_no_root.gif',
       nodeHandlerSourceWhenHasNextAndClosed : 'plus.gif',
-	   nodeHandlerSourceWhenHasNextAndOpened : 'minus.gif',
+      nodeHandlerSourceWhenHasNextAndOpened : 'minus.gif',
       nodeHandlerSourceWhenLastAndClosed : 'plus_last.gif',
-	   nodeHandlerSourceWhenLastAndOpened : 'minus_last.gif'
+      nodeHandlerSourceWhenLastAndOpened : 'minus_last.gif'
 	},
 	
 	//Constructor
@@ -49,10 +53,15 @@ var CompositeTreeNodeType = new Class ({
 	
 	//public accessor and mutator methods
 	determineNodeHandlerImage : function( treeNode ){
-	   if( treeNode.isOpened )
-	      return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNextAndOpened() : this.getNodeHandlerSourceWhenLastAndOpened();
-	   else
-         return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNextAndClosed() : this.getNodeHandlerSourceWhenLastAndClosed();
+	   if( treeNode.isOpened ){
+	      if( treeNode.previousSibling && treeNode.nextSibling ) return this.getNodeHandlerSourceWhenHasNextAndOpened();
+	      else if( treeNode.previousSibling && !treeNode.nextSibling ) return this.getNodeHandlerSourceWhenLastAndOpened();
+         else if( !treeNode.previousSibling && treeNode.nextSibling )return this.getNodeHandlerSourceWhenFirstAndHasNextAndOpened();
+	   }else{
+         if( treeNode.previousSibling && treeNode.nextSibling ) return this.getNodeHandlerSourceWhenHasNextAndClosed();
+         else if( treeNode.previousSibling && !treeNode.nextSibling ) return this.getNodeHandlerSourceWhenLastAndClosed();
+         else if( !treeNode.previousSibling && treeNode.nextSibling )return this.getNodeHandlerSourceWhenFirstAndHasNextAndClosed();
+	   }
 	},
 	
 	determineNodeImage : function( treeNode ) {
@@ -79,6 +88,10 @@ var CompositeTreeNodeType = new Class ({
 			return this.getImagesFolder() + this.options.lineImageWhenHasNextAndOpened; 
 	},
 	
+   getNodeHandlerSourceWhenFirstAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndClosed; },
+   getNodeHandlerSourceWhenFirstAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndOpened; },
+   getNodeHandlerSourceWhenFirstAndHasNextAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndHasNextAndClosed; },
+   getNodeHandlerSourceWhenFirstAndHasNextAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndHasNextAndOpened; },
    getNodeHandlerSourceWhenHasNextAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNextAndClosed; },
    getNodeHandlerSourceWhenHasNextAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNextAndOpened; },
    getNodeHandlerSourceWhenLastAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenLastAndClosed; },
