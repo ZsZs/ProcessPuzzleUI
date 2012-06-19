@@ -93,5 +93,3 @@ userNodeType = new TreeNodeType( "user", "user_16x16.gif" );
 pageNodeType = new TreeNodeType( "page", "page16x16.gif" );
 helpNodeType = new TreeNodeType( "help", "help_16x16.gif" );
 
-CompositeTreeNode.States = { CLOSED : 'closed', OPENED : 'opened' };
-

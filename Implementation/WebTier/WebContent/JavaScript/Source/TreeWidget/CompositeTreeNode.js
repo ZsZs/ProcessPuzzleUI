@@ -185,3 +185,5 @@ var CompositeTreeNode = new Class( {
       this.parent();
    }.protect()
 });
+
+CompositeTreeNode.States = { CLOSED : 'closed', OPENED : 'opened' };
