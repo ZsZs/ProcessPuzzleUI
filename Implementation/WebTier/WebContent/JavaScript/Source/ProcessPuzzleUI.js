@@ -22,6 +22,7 @@
 //= require_directory ./TabWidget
 //= require_directory ./TextAreaEditor
 //= require_directory ./ToolBarWidget
+//= require_directory ./TreeWidget
 //= require_directory ./VideoPlayerWidget
 //= require_directory ./WebUIConfiguration
 //= require_directory ./WebUIController
