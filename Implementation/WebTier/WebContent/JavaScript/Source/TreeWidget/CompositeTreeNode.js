@@ -38,6 +38,10 @@ var CompositeTreeNode = new Class( {
    Extends : TreeNode,
    Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick'],
 
+   constants : {
+      NODE_PATH_SEPARATOR : "/"
+   },
+   
    options : {
       childNodesSelector : 'treeNode',
       componentName : "CompositeTreeNode",
@@ -72,11 +76,13 @@ var CompositeTreeNode = new Class( {
       this.parent();
    },
 
-   findChildNodeByName : function(name) {
-      for( var i = 0; i < childs.length; i++) {
-         if( this.childNodes[i].getName() == name ) return this.childNodes[i];
-      }
-      return null;
+   findChildNodeByName : function( caption ) {
+      var searchedNode = null;
+      this.childNodes.each( function( childNode, index ){
+         if( childNode.getCaption() == caption ) searchedNode = childNode;
+      }.bind( this )); 
+      
+      return searchedNode;
    },
    
    findLastVisibleChild : function(){
@@ -88,16 +94,15 @@ var CompositeTreeNode = new Class( {
       else return this;
    },
 
-   findNodeByPath : function(path) {
-      if (path.indexOf( this.NODE_PATH_SEPARATOR ) > 0) {
-         var nodeName = path.substring( 0, path.indexOf( this.NODE_PATH_SEPARATOR ) );
-         var childNode = this.findChildNodeByName( nodeName );
-         if (childNode != null)
-            return this.childNode.findNodeByPath( path.substring( path.indexOf( this.NODE_PATH_SEPARATOR ) + 1 ) );
-         else
-            return null;
-      } else
-         return this.findChildNodeByName( path );
+   findNodeByPath : function( path ) {
+      if( this.pathStartsWithThisNode( path )) {
+         if( this.pathRefersToSubnode( path )){
+            var nextNodeName = this.nextNodeNameInPath( path );
+            var childNode = this.findChildNodeByName( nextNodeName );
+            if( childNode != null ) return childNode.findNodeByPath( this.nextNodePathFragment( path ));
+            else return null;
+         }else return this;
+      }else return this.findChildNodeByName( path );
    },
    
    onChildNodeConstructed : function( childNode ){
@@ -165,6 +170,10 @@ var CompositeTreeNode = new Class( {
       this.parent();
       this.nodeHandlerElement.addEvent( 'click', this.onNodeHandlerClick );
    }.protect(),
+   
+   currentNodeNameInPath : function( path ){
+      return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) >= 0 ? path.substring( 0, path.indexOf( this.constants.NODE_PATH_SEPARATOR )) : path;
+   }.protect(),
 
    destroyChildNodes : function(){
       this.childNodes.each( function( childNode, index ){
@@ -174,6 +183,18 @@ var CompositeTreeNode = new Class( {
       this.childNodes.clear();
       this.numberOfConstructedChildNodes = 0;
    }.protect(),
+   
+   nextNodePathFragment : function( path ){
+      return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) >= 0 ? path.substring( path.indexOf( this.constants.NODE_PATH_SEPARATOR ) +1 ) : path;
+   }.protect(),
+   
+   nextNodeNameInPath : function( path ){
+      var nextPathFragment = path.substring( this.currentNodeNameInPath( path ).length +1 ); 
+      return this.currentNodeNameInPath( nextPathFragment );
+   }.protect(),
+   
+   pathRefersToSubnode : function( path ){ return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) > 0 }.protect(),
+   pathStartsWithThisNode : function( path ){ return this.currentNodeNameInPath( path ) == this.caption; }.protect(),
    
    replaceNodeHandlerImage : function(){
       this.nodeHandlerElement.set( 'src', this.nodeType.determineNodeHandlerImage( this ));

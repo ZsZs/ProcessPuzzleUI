@@ -17,5 +17,15 @@
     <Resource key="MenuExample.itemOne" type="String">Menü elem egy</Resource>
     <Resource key="MenuExample.itemTwo" type="String">Menü elem kettő</Resource>
     <Resource key="MenuExample.itemThree" type="String">Menü elem három</Resource>
+    
+    <Resource key="TreeWidget.Branch1" type="String">Mappa egy</Resource>
+    <Resource key="TreeWidget.Branch1-1" type="String">Almappa egy</Resource>
+    <Resource key="TreeWidget.Branch2" type="String">Mappa kettő</Resource>
+    <Resource key="TreeWidget.Document1" type="String">Dokumentum egy</Resource>
+    <Resource key="TreeWidget.Document2" type="String">Dokumentum kettő</Resource>
+    <Resource key="TreeWidget.Document3" type="String">Dokumentum három</Resource>
+    <Resource key="TreeWidget.Document4" type="String">Dokumnetum négy</Resource>
+    <Resource key="TreeWidget.Document5" type="String">Dokumentum öt</Resource>
+    <Resource key="TreeWidget.Document6" type="String">Dokumentum hat</Resource>
   </Language>
 </pp:Resources>

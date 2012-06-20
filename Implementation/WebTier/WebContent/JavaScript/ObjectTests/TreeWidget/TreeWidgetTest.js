@@ -1,6 +1,6 @@
 window.TreeWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onSelectCallBack'],
 
    options : {
       testMethods : [
@@ -11,6 +11,7 @@ window.TreeWidgetTest = new Class( {
          { method : 'unmarshall_instantiatesChildNodes', isAsynchron : false },
          { method : 'construct_constructsChildNodes', isAsynchron : true },
          { method : 'construct_whenEnabled_constructsRootNode', isAsynchron : true }]
+//         { method : 'onCaptionClick_broadcastMenuSelectedMessage', isAsynchron : true }]
    },
 
    constants : {
@@ -127,12 +128,38 @@ window.TreeWidgetTest = new Class( {
       ).callChain();
    },
    
+   onCaptionClick_broadcastMenuSelectedMessage : function() {
+      this.testCaseChain.chain(
+         function(){ 
+            this.treeWidget.unmarshall(); 
+            this.treeWidget.construct(); 
+         }.bind( this ),
+         function(){
+            this.messageBus.subscribeToMessage( MenuSelectedMessage, this.onSelectCallBack );
+            var leafNode = this.treeWidget.findNodeByPath( "TreeWidget.Root/TreeWidget.Branch1/TreeWidget.Document1" );
+            leafNode.onCaptionClick();
+         }.bind( this ),
+         function(){
+            assertThat( this.callBackWasCalled, is( true ));
+            assertThat( this.callBackMessage.getActivityType(), equalTo( AbstractDocument.Activity.LOAD_DOCUMENT ));
+            assertThat( this.callBackMessage.getOriginator(), equalTo( this.treeWidget.options.componentName ));
+            
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
    onDestroyed : function( error ){
       this.testCaseChain.callChain();
-   }
+   },
 
+   onSelectCallBack : function( webUIMessage ) {
+      this.callBackMessage = webUIMessage;
+      this.callBackWasCalled = true;
+      this.testCaseChain.callChain();
+   }
 });

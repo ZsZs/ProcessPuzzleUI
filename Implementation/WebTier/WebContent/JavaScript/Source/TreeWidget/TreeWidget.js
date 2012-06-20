@@ -70,6 +70,10 @@ var TreeWidget = new Class( {
    destroy : function() {
       this.parent();
    },
+   
+   findNodeByPath : function( path ){
+      return this.rootNode ? this.rootNode.findNodeByPath( path ) : null;
+   },
 
    getSelectedNode : function() {
       if (this.getSelectedNameListSize() == 0) return null;

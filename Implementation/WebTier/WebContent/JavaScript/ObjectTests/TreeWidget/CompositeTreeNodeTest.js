@@ -13,7 +13,8 @@ window.CompositeTreeNodeTest = new Class({
          { method : 'close_whenNodeIsOpened_destroysChildNodes', isAsynchron : false },
          { method : 'close_whenNodeIsOpened_replacesPlusSign', isAsynchron : false },
          { method : 'open_whenNodeIsClosed_constructsChildNodes', isAsynchron : false },
-         { method : 'open_whenNodeIsOpened_destroysChildNodes', isAsynchron : false }]
+         { method : 'open_whenNodeIsOpened_destroysChildNodes', isAsynchron : false },
+         { method : 'findNodeByPath_returnsSpecifiedChildNode', isAsynchron : false }]
    },
 
    constants : {
@@ -158,6 +159,13 @@ window.CompositeTreeNodeTest = new Class({
       assertThat( this.compositeTreeNode.isOpened, is( true ));
       var expectedNumberOfNodes = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1;
       assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( expectedNumberOfNodes ));
+   },
+   
+   findNodeByPath_returnsSpecifiedChildNode : function(){
+      this.constructCompositeTreeNode();
+
+      assertThat( this.compositeTreeNode.findNodeByPath( "TreeWidget.Branch1/TreeWidget.Document1" ), JsHamcrest.Matchers.instanceOf( LeafTreeNode ));
+      assertThat( this.compositeTreeNode.findNodeByPath( "TreeWidget.Branch1/TreeWidget.Document1" ).getCaption(), equalTo( "TreeWidget.Document1" ));
    },
    
    //Protected, private helper methods

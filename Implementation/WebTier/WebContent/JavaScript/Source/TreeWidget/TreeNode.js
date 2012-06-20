@@ -38,6 +38,7 @@ var TreeNode = new Class({
       componentName : "TreeNode",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       imageUriSelector : '@image',
+      messageSelector : '//messageProperties',
       nodeIDSelector : '@nodeId',
       orderNumberSelector : '@orderNumber',
       selectable : false,
@@ -59,6 +60,7 @@ var TreeNode = new Class({
       this.containerElement;
       this.elementFactory = elementFactory;
       this.imageUri;
+      this.message;
       this.nodeCaptionElement;
       this.nodeHandlerElement;
       this.nodeIconElement;
@@ -70,7 +72,6 @@ var TreeNode = new Class({
       this.orderNumber;
       this.parentNode = parentNode;
       this.previousSibling;
-      this.rootNode;
       this.selectPicElement;
       this.state;
       this.trailingImages = new ArrayList();
@@ -79,13 +80,8 @@ var TreeNode = new Class({
    },
 
    // public accessor and mutator methods
-   bubbleUpNames : function(list, index) {
-      if( this == this.rootNode) {
-         this.widget.setSelectedNameList( list, index );
-      }else {
-         list[index] = this.name;
-         this.parentNode.bubbleUpNames( list, index + 1 );
-      }
+   bubbleUpNames : function() {
+      return this.parentNode ? this.parentNode.bubbleUpNames() + "/" + this.caption : this.caption;
    },
 
    changeCaption : function() {
@@ -118,14 +114,20 @@ var TreeNode = new Class({
       
       this.state = BrowserWidget.States.INITIALIZED;
    },
+   
+   findNodeByPath : function( path ) {
+      if( path == this.caption ) return this;
+      else null;
+   },
+   
 
-   onCaptionClick : function(theEvent) {
-      this.bubbleUpNames( new Array(), 0 );
+   onCaptionClick : function() {
+      this.fireEvent( 'nodeSelected', this );
    },
 
    unmarshall : function(){
       this.unmarshallProperties();
-      //this.implementCompositeIfChildNodesExists();
+      this.unmarshallMessage();
       this.state = BrowserWidget.States.UNMARSHALLED;
    },
 
@@ -135,6 +137,7 @@ var TreeNode = new Class({
    getContainerElement : function() { return this.containerElement; },
    getId : function() { return this.nodeID; },
    getImageUri : function() { return this.imageUri; },
+   getMessage : function() { return this.message; },
    getNodeImageElement : function() { return this.nodeIconElement; },
    getNextSibling : function() { return this.nextSibling; },
    getNodeType : function() { return this.nodeType; },
@@ -142,7 +145,6 @@ var TreeNode = new Class({
    getOrderNumber : function() { return this.orderNumber; },
    getParentNode : function() { return this.parentNode; },
    getPreviousSibling : function() { return this.previousSibling; },
-   getRootNode : function() { return this.rootNode; },
    hasNext : function() { return !(this.nextSibling == null); },
    isVisible : function() { return this.visible; },
 
@@ -237,6 +239,14 @@ var TreeNode = new Class({
       this.constructionChain.callChain();
    }.protect(),
 
+   unmarshallMessage: function(){
+      var messageResource = XmlResource.selectNode( this.options.messageSelector, this.nodeResource );
+      if( messageResource ){
+         this.message = new WebUIMessage({ messageResource : messageResource });
+         this.message.unmarshall();
+      } 
+   }.protect(),
+   
    unmarshallProperties: function(){
       this.nodeID = XmlResource.selectNodeText( this.options.nodeIDSelector, this.nodeResource );
       this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.nodeResource );

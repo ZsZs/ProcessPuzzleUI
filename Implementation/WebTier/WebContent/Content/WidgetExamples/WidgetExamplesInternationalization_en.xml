@@ -17,5 +17,15 @@
     <Resource key="MenuExample.itemOne" type="String">Menu Item One</Resource>
     <Resource key="MenuExample.itemTwo" type="String">Menu Item Two</Resource>
     <Resource key="MenuExample.itemThree" type="String">Menu Item Three</Resource>
+    
+    <Resource key="TreeWidget.Branch1" type="String">Folder one</Resource>
+    <Resource key="TreeWidget.Branch1-1" type="String">Nested folder one</Resource>
+    <Resource key="TreeWidget.Branch2" type="String">Folder two</Resource>
+    <Resource key="TreeWidget.Document1" type="String">Document one</Resource>
+    <Resource key="TreeWidget.Document2" type="String">Document two</Resource>
+    <Resource key="TreeWidget.Document3" type="String">Document three</Resource>
+    <Resource key="TreeWidget.Document4" type="String">Document four</Resource>
+    <Resource key="TreeWidget.Document5" type="String">Document five</Resource>
+    <Resource key="TreeWidget.Document6" type="String">Document six</Resource>
   </Language>
 </pp:Resources>

@@ -55,7 +55,7 @@
                               batchSize="5"
                               failCallback="function() {alert('Logging error occured.')}"
                               layoutReference="xmlLayout"
-							  lazyInit="true"
+							         lazyInit="true"
                               postVariableName="logData"
                               requestSuccessCallback="function() { alert('Log was successfully sent') };"
                               sendAllOnUnload="no"
@@ -107,6 +107,7 @@
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
          <in:resourceBundle>../BrowserWidget/WidgetInternationalization</in:resourceBundle>
+         <in:resourceBundle>../TreeWidget/TreeWidgetInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

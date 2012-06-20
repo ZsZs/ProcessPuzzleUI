@@ -1,10 +1,11 @@
 window.TreeNodeTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onNodeSelected'],
 
    options : {
       testMethods : [
          { method : 'unmarshall_determinesNodeProperties', isAsynchron : false },
+         { method : 'unmarshall_instantiatesMessageObject', isAsynchron : false },
          { method : 'construct_createsNodeWrapper', isAsynchron : false },
          { method : 'construct_whenHasPreviousSibling_insertsWrapperAfterSibling', isAsynchron : false },
          { method : 'construct_whenIsLastNode_createsRectangularImageElement', isAsynchron : false },
@@ -13,6 +14,7 @@ window.TreeNodeTest = new Class( {
          { method : 'construct_createsCaptionElement', isAsynchron : false },
          { method : 'construct_whenParentIsLastNode_createsSpacerElement', isAsynchron : false },
          { method : 'construct_whenParentHasNextNode_createsLineElement', isAsynchron : false },
+         { method : 'onCaptionClick_firesNodeSelected', isAsynchron : true },
          { method : 'destroy_removesAllElements', isAsynchron : false }]
    },
 
@@ -62,7 +64,7 @@ window.TreeNodeTest = new Class( {
       this.rootNode.containerElement = this.widgetContainerElement;
       this.parentNode = new CompositeTreeNode( this.rootNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
       this.parentNode.nodeWrapperElement = this.elementBefore;
-      this.treeNode = new TreeNode( this.parentNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory );
+      this.treeNode = new TreeNode( this.parentNode, this.treeNodeType, this.treeNodeDefinition, this.elementFactory, { onNodeSelected : this.onNodeSelected });
       
    },
    
@@ -82,6 +84,12 @@ window.TreeNodeTest = new Class( {
       assertThat( this.treeNode.getCaption(), equalTo( this.treeDefinition.selectNodeText( this.constants.NODE_SELECTOR + "/@caption" )));
       assertThat( this.treeNode.getImageUri(), equalTo( this.treeDefinition.selectNodeText( this.constants.NODE_SELECTOR + "/@image" )));
       assertThat( this.treeNode.getOrderNumber(), equalTo( this.treeDefinition.selectNodeText( this.constants.NODE_SELECTOR + "/@orderNumber" )));
+   },
+   
+   unmarshall_instantiatesMessageObject : function(){
+      this.treeNode.unmarshall();
+
+      assertThat( this.treeNode.getMessage(), JsHamcrest.Matchers.instanceOf( WebUIMessage ));      
    },
    
    construct_createsNodeWrapper : function() {
@@ -164,11 +172,31 @@ window.TreeNodeTest = new Class( {
       assertThat( imageElement.hasClass( this.treeNodeType.getNodeImageClass() ), is( true )); 
    },
    
+   onCaptionClick_firesNodeSelected : function() {
+      this.testCaseChain.chain(
+         function(){ 
+            this.treeNode.unmarshall(); 
+            this.treeNode.construct(); 
+            this.treeNode.onCaptionClick();
+         }.bind( this ),
+         function(){
+            assertThat( this.selectedNode, equalTo( this.treeNode ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    destroy_removesAllElements : function(){
       this.treeNode.unmarshall();
       this.treeNode.construct();
       this.treeNode.destroy();
       
       assertThat( this.widgetContainerElement.getElements( 'div.' + this.treeNodeType.getNodeWrapperClass() ).length, equalTo( 0 ));
+   },
+   
+   //Protected, private helper methods
+   onNodeSelected : function( selectedNode ){
+      this.selectedNode = selectedNode;
+      this.testCaseChain.callChain();
    }
 });
