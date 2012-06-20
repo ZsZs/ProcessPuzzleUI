@@ -19,8 +19,12 @@
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.5-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
@@ -29,20 +33,26 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ResourceUri.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XPathSelectionException.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/TestMessageOne.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/TestMessageTwo.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
-   <script type="text/javascript">
-   window.addEvent('domready', function() {
-      runTestFunction();
-   });
+   <script type="text/javascript" src="../../ObjectTests/WebUIMessageBus/WebUIMessageTest.js"></script>
    
-   JsHamcrest.Integration.JsUnit();
+   <script type="text/javascript">
+      window.addEvent('domready', function() {
+      });
+   
+      JsHamcrest.Integration.JsUnit();
 	  
-   var messageBus = null;
-   var eventHandlerOneWasCalled = false;
-   var eventHandlerTwoWasCalled = false;
+      var messageBus = null;
+      var eventHandlerOneWasCalled = false;
+      var eventHandlerTwoWasCalled = false;
    
    function setUp() {
       messageBus = new WebUIMessageBus();
