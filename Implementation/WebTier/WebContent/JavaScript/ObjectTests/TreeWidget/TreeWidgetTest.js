@@ -10,8 +10,8 @@ window.TreeWidgetTest = new Class( {
          { method : 'unmarshall_instantiatesRootNode', isAsynchron : false },
          { method : 'unmarshall_instantiatesChildNodes', isAsynchron : false },
          { method : 'construct_constructsChildNodes', isAsynchron : true },
-         { method : 'construct_whenEnabled_constructsRootNode', isAsynchron : true }]
-//         { method : 'onCaptionClick_broadcastMenuSelectedMessage', isAsynchron : true }]
+         { method : 'construct_whenEnabled_constructsRootNode', isAsynchron : true },
+         { method : 'onCaptionClick_broadcastMenuSelectedMessage', isAsynchron : true }]
    },
 
    constants : {

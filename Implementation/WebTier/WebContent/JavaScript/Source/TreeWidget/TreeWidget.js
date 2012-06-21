@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TreeWidget = new Class( {
    Extends : BrowserWidget,
-   Binds : ['constructTreeNodes', 'destroyTreeNodes', 'onRootNodeConstructed'],
+   Binds : ['constructTreeNodes', 'destroyTreeNodes', 'onNodeSelected', 'onRootNodeConstructed'],
    constants : {
    },
    
@@ -52,6 +52,7 @@ var TreeWidget = new Class( {
       this.compositeTreeNodeType;
       this.rootNode;
       this.rootNodeType;
+      this.selectedNode;
       this.treeNodeType;
       
       this.instantiateNodeFactory();
@@ -80,6 +81,11 @@ var TreeWidget = new Class( {
       return this.rootNode.findNodeByPath( this.getSelectedNodeFullCaption() );
    },
 
+   onNodeSelected : function( selectedNode ){
+      this.selectedNode = selectedNode;
+      this.messageBus.notifySubscribers( this.adjustMessage( selectedNode.getMessage() ));      
+   },
+
    onRootNodeConstructed : function( rootNode ){
       this.constructionChain.callChain();
    },
@@ -96,6 +102,10 @@ var TreeWidget = new Class( {
    getTreeNodeType : function() { return this.treeNodeType; },
 
    // Protected, private helper methods
+   adjustMessage : function( message ){
+      message.options.originator = this.options.componentName;
+      return message;
+   }.protect(),
    compileConstructionChain: function(){
       this.constructionChain.chain( this.constructTreeNodes, this.finalizeConstruction );
    }.protect(),
@@ -127,7 +137,7 @@ var TreeWidget = new Class( {
    unmarshallRootNode : function(){
       var rootNodeElement = this.dataXml.selectNode( this.options.rootNodeSelector );
       if( rootNodeElement ){
-         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed });
+         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed, onNodeSelected : this.onNodeSelected });
          this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
          this.rootNode.unmarshall();
       }      

@@ -32,8 +32,6 @@ You should have received a copy of the GNU General Public License along with thi
 var MenuSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
-      actionType: null,
-      activityType: null,
       description: "A message about the event that a menu or tool bar item was selected.",
       documentContentURI: null,
       documentType: AbstractDocument.Types.SMART,
@@ -54,8 +52,6 @@ var MenuSelectedMessage = new Class({
    //Public accessors
    
    //Properties
-   getActionType: function() { return this.options.actionType; },
-   getActivityType: function() { return this.options.activityType; },
    getContextItemId: function() { return this.options.contextItemId; },
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },

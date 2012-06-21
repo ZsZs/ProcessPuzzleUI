@@ -31,6 +31,7 @@
          <plugin>
             <widget name="TreeWidget">
                <options>
+                  <option name="componentName " value="'menuTree'"/>
                   <option name="widgetContainerId" value="'TreeContainer'"/>
                   <option name="widgetDataURI" value="'Content/WidgetExamples/TreeDefinition.xml'"/>
                   <option name="widgetDefinitionURI" value="'Content/WidgetExamples/TreeWidgetDefinition.xml'"/>

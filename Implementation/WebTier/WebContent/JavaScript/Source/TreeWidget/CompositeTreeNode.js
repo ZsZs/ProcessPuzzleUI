@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeTreeNode = new Class( {
    Extends : TreeNode,
-   Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick'],
+   Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick', 'onNodeSelected'],
 
    constants : {
       NODE_PATH_SEPARATOR : "/"
@@ -114,6 +114,10 @@ var CompositeTreeNode = new Class( {
    onNodeHandlerClick : function() {
       if( this.isOpened ) this.close();
       else this.open();
+   },
+   
+   onNodeSelected : function( selectedNode ){
+      this.fireEvent( 'nodeSelected', selectedNode );
    },
 
    open : function() {
@@ -209,7 +213,7 @@ var CompositeTreeNode = new Class( {
       var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
       if( childNodeElements ){
          childNodeElements.each( function( childNodeElement, index ){
-            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, { onConstructed : this.onChildNodeConstructed });
+            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, { onConstructed : this.onChildNodeConstructed, onNodeSelected : this.onNodeSelected });
             if( index > 0 && index < childNodeElements.length ){
                this.childNodes.get( index -1 ).nextSibling = treeNode;
                treeNode.previousSibling = this.childNodes.get( index -1 );

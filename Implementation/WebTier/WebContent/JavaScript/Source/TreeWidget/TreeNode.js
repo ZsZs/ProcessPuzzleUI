@@ -32,13 +32,13 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TreeNode = new Class({
    Implements : [Events, Options],
-   Binds : ['createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
+   Binds : ['addNodeEvents', 'createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
    options : {
       captionSelector : '@caption',
       componentName : "TreeNode",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       imageUriSelector : '@image',
-      messageSelector : '//messageProperties',
+      messageSelector : 'messageProperties',
       nodeIDSelector : '@nodeId',
       orderNumberSelector : '@orderNumber',
       selectable : false,
@@ -149,13 +149,22 @@ var TreeNode = new Class({
    isVisible : function() { return this.visible; },
 
    // private methods
+   addNodeEvents : function(){
+      this.nodeCaptionElement.addEvents({
+         'click' : this.onCaptionClick
+      });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
    compileConstructionChain : function(){
       this.constructionChain.chain( 
          this.createNodeWrapperElement, 
          this.createNodeHandlerImage, 
          this.createNodeIcon, 
          this.createNodeCaption, 
-         this.insertTrailingImages, 
+         this.insertTrailingImages,
+         this.addNodeEvents, 
          this.finalizeConstruction
       );
    }.protect(),
@@ -238,11 +247,11 @@ var TreeNode = new Class({
       }
       this.constructionChain.callChain();
    }.protect(),
-
+   
    unmarshallMessage: function(){
       var messageResource = XmlResource.selectNode( this.options.messageSelector, this.nodeResource );
       if( messageResource ){
-         this.message = new WebUIMessage({ messageResource : messageResource });
+         this.message = new MenuSelectedMessage({ messageResource : messageResource });
          this.message.unmarshall();
       } 
    }.protect(),

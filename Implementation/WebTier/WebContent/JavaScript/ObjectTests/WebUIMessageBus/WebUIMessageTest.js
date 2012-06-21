@@ -35,7 +35,7 @@ window.WebUIMessageTest = new Class({
    unmarshall_determinesProperties : function() {
       this.message.unmarshall();
       
-      assertThat( this.message.getMessageProperties(), hasMember( 'documentURI' ));    
+      assertThat( this.message.getOptions(), hasMember( 'documentURI' ));    
       assertThat( this.message.getActionType(), equalTo( this.messageValues['actionType'] ));  
    }
    

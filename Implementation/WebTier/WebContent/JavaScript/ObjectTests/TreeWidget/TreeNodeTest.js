@@ -89,7 +89,7 @@ window.TreeNodeTest = new Class( {
    unmarshall_instantiatesMessageObject : function(){
       this.treeNode.unmarshall();
 
-      assertThat( this.treeNode.getMessage(), JsHamcrest.Matchers.instanceOf( WebUIMessage ));      
+      assertThat( this.treeNode.getMessage(), JsHamcrest.Matchers.instanceOf( MenuSelectedMessage ));      
    },
    
    construct_createsNodeWrapper : function() {
