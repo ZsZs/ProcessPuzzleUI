@@ -15634,6 +15634,1029 @@ var ToolBarWidget = new Class({
 
 });
 /*
+Name:
+    - TreeNodeType
+    
+Description: 
+    - Clamps shared properties of tree node instances.
+    
+Requires:
+    - BrowserWidget
+    
+Provides:
+    - TreeNodeType
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TreeNodeType = new Class({
+
+	//node images
+	dMinusPicture: "minus.gif",
+	dPlusPicture: "plus.gif",
+	dMinus_lastPicture: "minus_last.gif",
+	dPlus_lastPicture: "plus_last.gif",
+
+	//line images
+	dMinus_nolinesPicture: "minus_nolines.gif",
+	dMinus_no_rootPicture: "minus_no_root.gif",
+	dMinus_last_no_rootPicture: "minus_last_no_root.gif",
+	dPlus_nolinesPicture: "plus_nolines.gif",
+	dPlus_no_rootPicture: "plus_no_root.gif",
+	dPlus_last_no_rootPicture: "plus_last_no_root.gif",
+	dT_no_rootPicture: "t_no_root.gif",
+
+	Implements: [Options],
+	options: {
+		captionClass : 'nodeCaption',
+		captionClassWhenSelectable : 'selectedHover', 
+		captionLinkClass : 'nodeCaptionLink',
+		componentName : 'TreeNodeType',
+		imagesFolder : 'Images/',
+		nodeClassWhenHidden : 'hiddenNode', 
+		nodeClassWhenVisible : 'nodeWrapper',
+		nodeHandlerClass : 'nodeHandler',
+      nodeHandlerSourceWhenHasNext : 't.gif',
+      nodeHandlerSourceWhenLast : 'lastnode.gif',
+		nodeIconClass : 'nodeIcon',
+		nodeImageClass : 'nodeImage',
+		nodeIconImages : { closedFolder: "folder_closed.gif", openedFolder: "folder_open.gif", help: "help_16x16.gif", page: "page16x16.gif", user: "user_16x16.gif" },
+      trailingImageClass : 'trailingImage',
+		trailingImageWhenParentHasNext : 'line.gif',
+		trailingImageWhenParentIsLast : 'white.gif'
+	},
+
+	//Constructor
+	initialize: function( options ) {
+		this.setOptions( options );
+	},
+	
+	//public accessor and mutator methods
+   determineNodeHandlerImage : function( treeNode ){
+      return treeNode.nextSibling ? this.getNodeHandlerSourceWhenHasNext() : this.getNodeHandlerSourceWhenLast();
+   },
+   
+	determineNodeImage : function( treeNode ) {
+		return this.options.imagesFolder + this.options.nodeIconImages.page;
+	},
+	
+	//Properties
+	getCaptionClass : function() { return this.options.captionClass; },
+	getCaptionClassWhenSelectable : function() { return this.options.captionClassWhenSelectable; },
+	getCaptionLinkClass : function() { return this.options.captionLinkClass; },
+	getImagesFolder : function() { return this.options.imagesFolder; },
+	getLineImageWhenLast : function() { return this.getImagesFolder() + this.options.lineImageWhenLast; },
+	getLineImageWhenHasNext : function() { return this.getImagesFolder() + this.options.lineImageWhenHasNext; },
+	getNodeHandlerClass : function() { return this.options.nodeHandlerClass; },
+   getNodeHandlerSourceWhenLast : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenLast; },
+   getNodeHandlerSourceWhenHasNext : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNext; },
+	getNodeIconClass : function() { return this.options.nodeIconClass; },
+	getNodeIconSource : function() { return this.getImagesFolder() + this.options.nodeIconImages.page; },
+	getNodeImageClass : function() { return this.options.nodeImageClass; },
+   getNodeWrapperClass : function() { return this.options.nodeClassWhenVisible; },
+	getTrailingImageClass : function() { return this.options.trailingImageClass; },
+	getTrailingImageWhenParentHasNext : function() { return this.getImagesFolder() + this.options.trailingImageWhenParentHasNext; },
+   getTrailingImageWhenParentIsLast : function() { return this.getImagesFolder() + this.options.trailingImageWhenParentIsLast; }
+});
+/*
+Name:
+    - CompositeTreeNodeType
+    
+Description: 
+    - Clamps shared properties of composite tree node instances.
+    
+Requires:
+    - TreeNodeType
+    
+Provides:
+    - CompositeTreeNodeType
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var CompositeTreeNodeType = new Class ({
+   Extends : TreeNodeType,
+	
+   options: {
+      componentName : 'CompositeTreeNodeType',
+      nodeHandlerSourceWhenFirstAndClosed : 'plus_last_no_root.gif',
+      nodeHandlerSourceWhenFirstAndOpened : 'minus_last_no_root.gif',
+      nodeHandlerSourceWhenFirstAndHasNextAndClosed : 'plus_no_root.gif',
+      nodeHandlerSourceWhenFirstAndHasNextAndOpened : 'minus_no_root.gif',
+      nodeHandlerSourceWhenHasNextAndClosed : 'plus.gif',
+      nodeHandlerSourceWhenHasNextAndOpened : 'minus.gif',
+      nodeHandlerSourceWhenLastAndClosed : 'plus_last.gif',
+      nodeHandlerSourceWhenLastAndOpened : 'minus_last.gif'
+	},
+	
+	//Constructor
+	initialize: function( options ) {
+		this.parent( options );
+	},
+	
+	//public accessor and mutator methods
+	determineNodeHandlerImage : function( treeNode ){
+	   if( treeNode.isOpened ){
+	      if( treeNode.previousSibling && treeNode.nextSibling ) return this.getNodeHandlerSourceWhenHasNextAndOpened();
+	      else if( treeNode.previousSibling && !treeNode.nextSibling ) return this.getNodeHandlerSourceWhenLastAndOpened();
+         else if( !treeNode.previousSibling && treeNode.nextSibling )return this.getNodeHandlerSourceWhenFirstAndHasNextAndOpened();
+	   }else{
+         if( treeNode.previousSibling && treeNode.nextSibling ) return this.getNodeHandlerSourceWhenHasNextAndClosed();
+         else if( treeNode.previousSibling && !treeNode.nextSibling ) return this.getNodeHandlerSourceWhenLastAndClosed();
+         else if( !treeNode.previousSibling && treeNode.nextSibling )return this.getNodeHandlerSourceWhenFirstAndHasNextAndClosed();
+	   }
+	},
+	
+	determineNodeImage : function( treeNode ) {
+	   var imageUri;
+	   
+      if( treeNode.isOpened ) imageUri = this.options.nodeIconImages.openedFolder;
+      else imageUri = this.options.nodeIconImages.closedFolder;
+
+		return this.getImagesFolder() + imageUri;
+	},
+	
+	//Properties
+	getLineImageWhenLast : function( nodeState ) { 
+		if( nodeState == this.getStateNameWhenClosed() )
+			return this.getImagesFolder() + this.options.lineImageWhenLastAndCloseed; 
+		else
+			return this.getImagesFolder() + this.options.lineImageWhenLastAndOpened; 
+	},
+	
+	getLineImageWhenHasNext : function( nodeState ) { 
+		if( nodeState == this.getStateNameWhenClosed() )
+			return this.getImagesFolder() + this.options.lineImageWhenHasNextAndClosed; 
+		else
+			return this.getImagesFolder() + this.options.lineImageWhenHasNextAndOpened; 
+	},
+	
+   getNodeHandlerSourceWhenFirstAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndClosed; },
+   getNodeHandlerSourceWhenFirstAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndOpened; },
+   getNodeHandlerSourceWhenFirstAndHasNextAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndHasNextAndClosed; },
+   getNodeHandlerSourceWhenFirstAndHasNextAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenFirstAndHasNextAndOpened; },
+   getNodeHandlerSourceWhenHasNextAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNextAndClosed; },
+   getNodeHandlerSourceWhenHasNextAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenHasNextAndOpened; },
+   getNodeHandlerSourceWhenLastAndClosed : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenLastAndClosed; },
+   getNodeHandlerSourceWhenLastAndOpened : function() { return this.getImagesFolder() + this.options.nodeHandlerSourceWhenLastAndOpened; },
+	getStateNameWhenClosed : function() { return this.CLOSED_STATE; },
+	getStateNameWhenOpened : function() { return this.OPENED_STATE; }
+});
+
+/*** TreeNodeType instances ***/
+folderNodeType = new CompositeTreeNodeType( "folder", "folder_closed.gif", "folder_open.gif" );
+userNodeType = new TreeNodeType( "user", "user_16x16.gif" );
+pageNodeType = new TreeNodeType( "page", "page16x16.gif" );
+helpNodeType = new TreeNodeType( "help", "help_16x16.gif" );
+
+/*
+Name:
+    - TreeNode
+
+Description: 
+    - Displays a single node in the tree structure.
+
+Requires:
+    - BrowserWidget
+
+Provides:
+    - TreeNode
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TreeNode = new Class({
+   Implements : [Events, Options],
+   Binds : ['createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
+   options : {
+      captionSelector : '@caption',
+      componentName : "TreeNode",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      imageUriSelector : '@image',
+      nodeIDSelector : '@nodeId',
+      orderNumberSelector : '@orderNumber',
+      selectable : false,
+      target : '_blank',
+      url : null
+   },
+
+   // constructor
+   initialize : function( parentNode, nodeType, nodeResource, elementFactory, options ) {
+      // parameter assertions
+      assertThat( nodeType, not( nil() ) );
+      assertThat( nodeResource, not( nil() ) );
+      assertThat( elementFactory, not( nil() ) );
+      this.setOptions( options );
+
+      // private instance variables
+      this.caption;
+      this.constructionChain = new Chain();
+      this.containerElement;
+      this.elementFactory = elementFactory;
+      this.imageUri;
+      this.nodeCaptionElement;
+      this.nodeHandlerElement;
+      this.nodeIconElement;
+      this.nodeResource = nodeResource;
+      this.nodeWrapperElement;
+      this.nextSibling;
+      this.nodeID;
+      this.nodeType = nodeType;
+      this.orderNumber;
+      this.parentNode = parentNode;
+      this.previousSibling;
+      this.rootNode;
+      this.selectPicElement;
+      this.state;
+      this.trailingImages = new ArrayList();
+      
+      this.state = BrowserWidget.States.INITIALIZED;
+   },
+
+   // public accessor and mutator methods
+   bubbleUpNames : function(list, index) {
+      if( this == this.rootNode) {
+         this.widget.setSelectedNameList( list, index );
+      }else {
+         list[index] = this.name;
+         this.parentNode.bubbleUpNames( list, index + 1 );
+      }
+   },
+
+   changeCaption : function() {
+      this.caption = this.webUiController.getText( this.name );
+
+      if (this.nodeCaptionElement != null && this.captionTextNode != null) {
+         this.nodeCaptionElement.removeChild( this.captionTextNode );
+         this.captionTextNode = document.createTextNode( this.caption );
+         this.nodeCaptionElement.appendChild( this.captionTextNode );
+      }
+
+      for ( var i = 0; i < this.childs.length; i++) {
+         this.childs[i].changeCaption( this.webUiController );
+      }
+   },
+   
+   construct : function() {
+      if( this.state == BrowserWidget.States.UNMARSHALLED ){
+         this.compileConstructionChain();
+         this.constructionChain.callChain();
+      }
+   },
+   
+   destroy : function(){
+      this.destroyNodeElement( this.nodeHandlerElement );
+      this.destroyNodeElement( this.nodeIconElement );
+      this.destroyNodeElement( this.nodeCaptionElement );
+      this.destroyNodeElement( this.nodeWrapperElement );
+      this.destroyTrailingImages();
+      
+      this.state = BrowserWidget.States.INITIALIZED;
+   },
+
+   onCaptionClick : function(theEvent) {
+      this.bubbleUpNames( new Array(), 0 );
+   },
+
+   unmarshall : function(){
+      this.unmarshallProperties();
+      //this.implementCompositeIfChildNodesExists();
+      this.state = BrowserWidget.States.UNMARSHALLED;
+   },
+
+   // Properties
+   getCaption : function() { return this.caption; },
+   getCaptionElement : function() { return this.nodeCaptionElement; },
+   getContainerElement : function() { return this.containerElement; },
+   getId : function() { return this.nodeID; },
+   getImageUri : function() { return this.imageUri; },
+   getNodeImageElement : function() { return this.nodeIconElement; },
+   getNextSibling : function() { return this.nextSibling; },
+   getNodeType : function() { return this.nodeType; },
+   getNodeWrapperElement : function() { return this.nodeWrapperElement; },
+   getOrderNumber : function() { return this.orderNumber; },
+   getParentNode : function() { return this.parentNode; },
+   getPreviousSibling : function() { return this.previousSibling; },
+   getRootNode : function() { return this.rootNode; },
+   hasNext : function() { return !(this.nextSibling == null); },
+   isVisible : function() { return this.visible; },
+
+   // private methods
+   compileConstructionChain : function(){
+      this.constructionChain.chain( 
+         this.createNodeWrapperElement, 
+         this.createNodeHandlerImage, 
+         this.createNodeIcon, 
+         this.createNodeCaption, 
+         this.insertTrailingImages, 
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
+   createNodeCaption : function(nobrElement) {
+      var elementOptions = { 'class' : this.nodeType.getCaptionClass(), 'id' : this.nodeID };
+      this.nodeCaptionElement = this.elementFactory.create( 'span', this.caption, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.constructionChain.callChain();
+   }.protect(),
+
+   createNodeHandlerImage : function() {
+      var elementOptions = { 'class' : this.nodeType.getNodeHandlerClass() + " " + this.nodeType.getNodeImageClass(), 'src' : this.nodeType.determineNodeHandlerImage( this ) };
+      this.nodeHandlerElement = this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.constructionChain.callChain();
+   }.protect(),
+
+   createNodeIcon : function() {
+      var elementOptions = { 'class' : this.nodeType.getNodeIconClass() + " " + this.nodeType.getNodeImageClass(), 'src' : this.imageUri };
+      this.nodeIconElement = this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      this.constructionChain.callChain();
+   }.protect(),
+
+   createNodeWrapperElement : function() {
+      var contextElement = this.determineWrapperContextElement();
+      var contextPosition = this.determinWrapperContextPosition();
+      var elementOptions = { 'class' : this.nodeType.getNodeWrapperClass() };
+      this.nodeWrapperElement = this.elementFactory.create( 'div', null, contextElement, contextPosition, elementOptions );
+      this.constructionChain.callChain();
+   }.protect(),
+
+   destroyNodeElement: function( nodeElement ){
+      if( nodeElement && nodeElement.removeEvents ) nodeElement.removeEvents();
+      if( nodeElement && nodeElement.destroy ) nodeElement.destroy();
+   }.protect(),
+   
+   destroyTrailingImages : function(){
+      this.trailingImages.each( function( imageElement, index ){
+         this.destroyNodeElement( imageElement );
+      }.bind( this ));
+      
+      this.trailingImages.clear();
+   }.protect(),
+   
+   determineWrapperContextElement : function(){
+      if( this.previousSibling ) {
+         if( instanceOf( this.previousSibling, CompositeTreeNode )) 
+            return this.previousSibling.findLastVisibleChild().getNodeWrapperElement();
+         else return this.previousSibling.getNodeWrapperElement();
+      }else return this.parentNode.getNodeWrapperElement();
+   }.protect(),
+   
+   determinWrapperContextPosition : function(){
+      if( this.previousSibling || ( this.parentNode && !instanceOf( this.parentNode, RootTreeNode ))) 
+         return WidgetElementFactory.Positions.After;
+      else return WidgetElementFactory.Positions.LastChild;
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.state = BrowserWidget.States.CONSTRUCTED;
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this );
+   }.protect(),
+   
+   implementCompositeIfChildNodesExists : function(){
+      var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
+      if( childNodeElements ){
+         this.implement({ alert: function(text){ alert(text); }});
+         this.unmarshallChildNodes();
+      }
+   }.protect(),
+
+   insertTrailingImages : function(nobrElement, thePrefix) {
+      var currentNode = this.getParentNode();
+      while( currentNode ){
+         var imageSource = currentNode.hasNext() ? this.nodeType.getTrailingImageWhenParentHasNext() : this.nodeType.getTrailingImageWhenParentIsLast();
+         var elementOptions = { 'class' : this.nodeType.getTrailingImageClass() + " " + this.nodeType.getNodeImageClass(), 'src' : imageSource };
+         this.trailingImages.add( this.elementFactory.create( 'img', null, this.nodeWrapperElement, WidgetElementFactory.Positions.FirstChild, elementOptions ));
+
+         currentNode = currentNode.getParentNode();
+      }
+      this.constructionChain.callChain();
+   }.protect(),
+
+   unmarshallProperties: function(){
+      this.nodeID = XmlResource.selectNodeText( this.options.nodeIDSelector, this.nodeResource );
+      this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.nodeResource );
+      this.imageUri = XmlResource.selectNodeText( this.options.imageUriSelector, this.nodeResource, this.options.dataXmlNameSpace, this.nodeType.determineNodeImage( this ));
+      this.orderNumber = XmlResource.selectNodeText( this.options.orderNumberSelector, this.nodeResource );
+   }.protect()
+});
+/*
+Name:
+    - CompositeTreeNode
+
+Description: 
+    - Displays a composite (has child nodes) node in the tree structure.
+
+Requires:
+    - TreeNode
+    - TreeNodeType
+    - CompositeTreeNodeType
+
+Provides:
+    - CompositeTreeNode
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+var CompositeTreeNode = new Class( {
+   Extends : TreeNode,
+   Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick'],
+
+   options : {
+      childNodesSelector : 'treeNode',
+      componentName : "CompositeTreeNode",
+      initialyOpened : false,
+      isOpenedSelector : "@isOpened"
+   },
+
+   // Constructor
+   initialize : function( parentNode, nodeType, nodeResource, elementFactory, options ) {
+      this.parent( parentNode, nodeType, nodeResource, elementFactory, options );
+      this.childNodes = new ArrayList();
+      this.isOpened = this.options.initialyOpened;
+      this.numberOfConstructedChildNodes = 0;
+   },
+
+   // public accessor and mutator methods
+   close : function() {
+      if( this.isOpened ){
+         this.isOpened = false;
+         this.destroyChildNodes();
+         this.replaceNodeImage();
+         this.replaceNodeHandlerImage();
+      }
+   },
+   
+   construct : function(){
+      this.parent();
+   },
+   
+   destroy : function(){
+      this.destroyChildNodes();
+      this.parent();
+   },
+
+   findChildNodeByName : function(name) {
+      for( var i = 0; i < childs.length; i++) {
+         if( this.childNodes[i].getName() == name ) return this.childNodes[i];
+      }
+      return null;
+   },
+   
+   findLastVisibleChild : function(){
+      if( this.isOpened ){
+         var lastChild = this.childNodes.getLast();
+         if( instanceOf( lastChild, CompositeTreeNode )) return lastChild.findLastVisibleChild(); 
+         else return lastChild; 
+      }
+      else return this;
+   },
+
+   findNodeByPath : function(path) {
+      if (path.indexOf( this.NODE_PATH_SEPARATOR ) > 0) {
+         var nodeName = path.substring( 0, path.indexOf( this.NODE_PATH_SEPARATOR ) );
+         var childNode = this.findChildNodeByName( nodeName );
+         if (childNode != null)
+            return this.childNode.findNodeByPath( path.substring( path.indexOf( this.NODE_PATH_SEPARATOR ) + 1 ) );
+         else
+            return null;
+      } else
+         return this.findChildNodeByName( path );
+   },
+   
+   onChildNodeConstructed : function( childNode ){
+      this.numberOfConstructedChildNodes++;
+      if( this.numberOfConstructedChildNodes == this.childNodes.size() ) this.constructionChain.callChain();
+
+   },
+
+   onNodeHandlerClick : function() {
+      if( this.isOpened ) this.close();
+      else this.open();
+   },
+
+   open : function() {
+      if( !this.isOpened ){
+         this.isOpened = true;
+         this.unmarshallChildNodes();
+         this.constructChildNodes();
+         this.replaceNodeImage();
+         this.replaceNodeHandlerImage();
+      }
+   },
+
+   unmarshall : function(){
+      this.unmarshallChildNodes();
+      this.parent();
+   },
+
+   // Properties
+   getChildCount : function() { return this.childNodes.length; },
+   getChildNodes : function() { return this.childNodes; },
+   getFirstChild : function() { if (this.hasChilds()) return this.childNodes[0]; return null; },
+   getLastChild : function() { if (this.hasChilds()) return this.childNodes[this.childNodes.length - 1]; return null; },
+   getState : function() { return this.state; },
+   hasChilds : function() { return (this.childNodes.length > 0); },
+
+   // private methods
+   appendNodeImage : function() {
+      this.parent();
+      this.nodeImageElement.set( "src", this.nodeType.determineNodeImage( this.options.state ) );
+      this.nodeImageElement.addEvent( 'click', this.onFolderClickHandler );
+   }.protect(),
+
+   compileConstructionChain : function(){
+      this.constructionChain.chain( 
+         this.createNodeWrapperElement, 
+         this.createNodeHandlerImage, 
+         this.createNodeIcon, 
+         this.createNodeCaption, 
+         this.insertTrailingImages, 
+         this.constructChildNodes,
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
+   constructChildNodes : function(){
+      if( this.isOpened ){
+         this.childNodes.each( function( childNode, index ){
+            childNode.construct();
+         }.bind( this ));
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
+   createNodeHandlerImage : function() {
+      this.parent();
+      this.nodeHandlerElement.addEvent( 'click', this.onNodeHandlerClick );
+   }.protect(),
+
+   destroyChildNodes : function(){
+      this.childNodes.each( function( childNode, index ){
+         childNode.destroy();
+      }.bind( this ));
+      
+      this.childNodes.clear();
+      this.numberOfConstructedChildNodes = 0;
+   }.protect(),
+   
+   replaceNodeHandlerImage : function(){
+      this.nodeHandlerElement.set( 'src', this.nodeType.determineNodeHandlerImage( this ));
+   }.protect(),
+   
+   replaceNodeImage : function(){
+      this.nodeIconElement.set( 'src', this.nodeType.determineNodeImage( this ));
+   }.protect(),
+   
+   unmarshallChildNodes : function(){
+      this.childNodes.clear();
+      var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
+      if( childNodeElements ){
+         childNodeElements.each( function( childNodeElement, index ){
+            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, { onConstructed : this.onChildNodeConstructed });
+            if( index > 0 && index < childNodeElements.length ){
+               this.childNodes.get( index -1 ).nextSibling = treeNode;
+               treeNode.previousSibling = this.childNodes.get( index -1 );
+            }
+            treeNode.unmarshall();
+            this.childNodes.add( treeNode );
+         }.bind( this ));
+      }      
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.isOpened = parseBoolean( XmlResource.selectNodeText( this.options.isOpenedSelector, this.nodeResource, this.options.dataXmlNameSpace, this.options.initialyOpened ));
+      this.parent();
+   }.protect()
+});
+
+CompositeTreeNode.States = { CLOSED : 'closed', OPENED : 'opened' };
+var LeafTreeNode = new Class({
+	Extends : TreeNode,
+	options : {
+      componentName : "LeafTreeNode",
+	},
+	
+	//Constructor
+	initialize: function( parentNode, nodeType, nodeResource, elementFactory, options ) {
+		this.parent( parentNode, nodeType, nodeResource, elementFactory, options );
+	}
+
+	//public accessor and mutator methods
+
+	//Properties
+
+	//private methods
+});
+/*
+Name:
+    - RootTreeNode
+
+Description: 
+    - A special composite node as it has no parent node.
+
+Requires:
+    - TreeNode
+    - TreeNodeType
+    - CompositeTreeNode
+    - CompositeTreeNodeType
+
+Provides:
+    - RootTreeNode
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+var RootTreeNode = new Class({
+   Extends : CompositeTreeNode,
+   options : {
+      componentName : "RootTreeNode",
+      initialyOpened : true,
+      isVisible : false
+   },
+
+   // Constructor
+   initialize : function( nodeType, nodeResource, elementFactory, options ) {
+      this.parent( null, nodeType, nodeResource, elementFactory, options );
+
+      // private instance variables
+      this.containerElement;
+      this.isVisible = false;
+   },
+
+   // public accessor and mutator methods
+   construct : function( containerElement ){
+      this.containerElement = containerElement;
+      this.parent();
+   },
+
+   // Properties
+   getNodeWrapperElement : function() { return this.isVisible ? this.nodeWrapperElement : this.containerElement; },
+   getWidgetElement : function() { return widgetElement; },
+   
+   //Protected, private helper methods
+   compileConstructionChain : function(){
+      if( this.options.isVisible ){
+         this.constructionChain.chain( this.createNodeWrapperElement, this.createNodeHandlerImage, this.createNodeIcon, this.createNodeCaption, this.insertTrailingImages, this.constructChildNodes, this.finalizeConstruction );
+      }else{
+         this.constructionChain.chain( this.constructChildNodes, this.finalizeConstruction );
+      }
+   }.protect(),
+   
+   determineWrapperContextElement : function(){
+      return this.containerElement;
+   }.protect(),
+   
+   determinWrapperContenxtPosition : function(){
+      return WidgetElementFactory.Positions.LastChild;
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      if( this.options.isVisible ) this.parent()
+      else {
+         this.state = BrowserWidget.States.UNMARSHALLED;
+         this.constructionChain.clearChain();
+         this.fireEvent( 'constructed', this );
+      }
+   }.protect() 
+   
+});
+/*
+Name:
+    - RootTreeNodeType
+    
+Description: 
+    - Clamps shared properties of root tree node instances.
+    
+Requires:
+    - CompositeNodeType
+    
+Provides:
+    - RottTreeNodeType
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+var RootTreeNodeType = new Class ({
+	Extends : CompositeTreeNodeType,
+	
+	options: {
+      componentName : 'RootTreeNodeType',
+      nodeHandlerSourceWhenHasNextAndClosed : 'plus_no_root.gif',
+	   nodeHandlerSourceWhenHasNextAndOpened : 'minus_no_root.gif',
+	},
+	
+	//Constructor
+	initialize: function( options ) {
+		this.parent( options );
+	},
+	
+	//public accessor and mutator methods
+	
+	//Properties
+});
+
+
+/*
+Name: TreeNodeFactory
+
+Description: Instantiates a new subclass of TreeNode according to the given XML element.
+
+Requires:
+
+Provides:
+    - TreeNodeFactory
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var TreeNodeFactory = new Class({
+   Implements: Options,
+   
+   options: {
+      nodeTypeOptions : {}
+   },
+   
+   //Constructor
+   initialize: function( options ){
+      this.setOptions( options );
+      
+      this.treeNodeType = new TreeNodeType( this.options.nodeTypeOptions );
+      this.compositeTreeNodeType = new CompositeTreeNodeType( this.options.nodeTypeOptions );
+      this.rootTreeNodeType = new RootTreeNodeType( this.options.nodeTypeOptions );
+   },
+
+   //Public mutators and accessors
+   create: function( parentNode, nodeResource, elementFactory, options ){
+      var hasChildNodes = XmlResource.selectNodes( "treeNode", nodeResource ).length > 0 ? true : false;
+      var treeNode;
+      
+      if( hasChildNodes ) treeNode = new CompositeTreeNode( parentNode, this.compositeTreeNodeType, nodeResource, elementFactory, options );
+      else treeNode = new LeafTreeNode( parentNode, this.treeNodeType, nodeResource, elementFactory, options );
+      
+      return treeNode;
+   },
+   
+   //Properties
+   getCompositeTreeNodeType : function() { return this.compositeTreeNodeType; },
+   getRootTreeNodeType : function() { return this.rootTreeNodeType; },
+   getTreeNodeType : function() { return this.treeNodeType; }
+});
+
+TreeNodeFactory.create = function( parentNode, definitionXmlElement, htmlElementFactory, options ){
+   if( !TreeNodeFactory.singleInstance ) TreeNodeFactory.singleInstance = new TreeNodeFactory();
+   return TreeNodeFactory.singleInstance.create( parentNode, definitionXmlElement, htmlElementFactory, options );
+};
+
+TreeNodeFactory.singleInstance;
+/*
+Name:
+    - TreeWidget
+Description: 
+    - Displays a tree structure - given by an xml - as a tree.
+Requires:
+    - BrowserWidget
+Provides:
+    - TreeWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
+
+
+var TreeWidget = new Class( {
+   Extends : BrowserWidget,
+   Binds : ['constructTreeNodes', 'destroyTreeNodes', 'onRootNodeConstructed'],
+   constants : {
+   },
+   
+   options : {
+      componentName : "TreeWidget",
+      imagesFolder : "",
+      nodeOptions : {},
+      nodeTypeOptions : {},
+      pathSeparator : ".",
+      rootNodeSelector : "//pp:treeDefinition/rootNode",
+      showRootNode : false,
+      widgetContainerId : "TreeWidget"
+   },
+
+   // constructor
+   initialize : function( options, resourceBundle, elementFactoryOptions ) {
+      this.parent( options, resourceBundle, elementFactoryOptions );
+
+      this.compositeTreeNodeType;
+      this.rootNode;
+      this.rootNodeType;
+      this.treeNodeType;
+      
+      this.instantiateNodeFactory();
+      this.instantiateNodeTypes();
+   },
+
+   // public accessor and mutator methods
+   changeCaptions : function() {
+      if( this.rootNode != null ) this.rootNode.changeCaption( this.controller );
+   },
+
+   construct : function() {
+      this.parent();
+   },
+
+   destroy : function() {
+      this.parent();
+   },
+
+   getSelectedNode : function() {
+      if (this.getSelectedNameListSize() == 0) return null;
+      return this.rootNode.findNodeByPath( this.getSelectedNodeFullCaption() );
+   },
+
+   onRootNodeConstructed : function( rootNode ){
+      this.constructionChain.callChain();
+   },
+   
+   unmarshall : function() {
+      this.unmarshallRootNode();
+   },
+
+   // Properties
+   getCompositeTreeNodeType : function() { return this.compositeTreeNodeType; },
+   getRootNode : function() { return this.rootNode; },
+   getSelectedNameList : function() { return this.selectedNameList; },
+   getSelectedNameListSize : function() { return this.selectedNameListSize; },
+   getTreeNodeType : function() { return this.treeNodeType; },
+
+   // Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructTreeNodes, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain : function(){
+      this.destructionChain.chain( this.destroyTreeNodes, this.finalizeDestruction );
+   }.protect(),
+   
+   constructTreeNodes : function(){
+      this.rootNode.construct( this.containerElement );
+   }.protect(),
+   
+   destroyTreeNodes : function(){
+      this.rootNode.destroy();
+      this.rootNode = null;
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   instantiateNodeFactory : function(){
+      TreeNodeFactory.singleInstance = new  TreeNodeFactory({ nodeTypeOptions : this.options.nodeTypeOptions });
+   }.protect(),
+
+   instantiateNodeTypes : function(){
+      this.treeNodeType = TreeNodeFactory.singleInstance.getTreeNodeType();
+      this.compositeTreeNodeType = TreeNodeFactory.singleInstance.getCompositeTreeNodeType();
+      this.rootNodeType = TreeNodeFactory.singleInstance.getRootTreeNodeType();
+   }.protect(),
+   
+   unmarshallRootNode : function(){
+      var rootNodeElement = this.dataXml.selectNode( this.options.rootNodeSelector );
+      if( rootNodeElement ){
+         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed });
+         this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
+         this.rootNode.unmarshall();
+      }      
+   }.protect()   
+});
+/*
 Name: 
     - VideoPlayerWidget
 
@@ -16258,6 +17281,7 @@ var TestMessageTwo = new Class({
       this.options.messageClass = TestMessageTwo;
    }
 });
+
 
 
 
