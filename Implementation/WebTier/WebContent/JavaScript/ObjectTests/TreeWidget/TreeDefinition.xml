@@ -5,6 +5,7 @@ xmlns:pp="http://www.processpuzzle.com"
 xsi:NamespaceSchemaLocation="C:\zszs_view\ObjectPuzzle\Implementation\WebTier\WebContent\TreeWidget\TreeWidget.xsd">
 	<rootNode nodeId="10" caption="TreeWidget.Root" isVisible="false">
 		<treeNode nodeId="10" caption="TreeWidget.Branch1" image="Images/folder_open.gif" isOpened="true" orderNumber="1">
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument.xml', documentType : AbstractDocument.Types.HTML }</messageProperties>            
 			<treeNode nodeId="11" caption="TreeWidget.Document1" image="Images/page16x16.gif" orderNumber="1">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument.xml', documentType : AbstractDocument.Types.HTML }</messageProperties>			   
 			</treeNode>
