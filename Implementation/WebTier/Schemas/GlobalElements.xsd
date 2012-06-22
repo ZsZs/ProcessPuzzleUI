@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:pp="http://www.processpuzzle.com/GlobalElements" 
+	targetNamespace="http://www.processpuzzle.com/GlobalElements" >
+
+  <xs:element name="userName" type="xs:NCName" />
+  <xs:element name="password" type="xs:string" />
+  <xs:element name="fullClassName" type="xs:NCName" />
+  <xs:element name="nameSpace" type="xs:NCName" />
+  <xs:element name="schema" type="xs:anyURI"/>
+  <xs:element name="mapping" type="xs:anyURI"/>
+</xs:schema>

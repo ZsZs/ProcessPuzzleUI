@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:pr="http://www.processpuzzle.com/PersistenceConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/PersistenceConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <!-- Persistence Configuration -->
+  <xs:element name="persistence">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:persistenceStrategies"/>
+        <xs:element ref="pr:repositories"/>
+        <xs:element ref="pr:persistentClasses"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="persistenceStrategies">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:persistenceStrategy"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="persistenceStrategy">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:repositoryEventHandlers"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="repositoryEventHandlers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:repositoryEventHandler" minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="repositoryEventHandler">
+    <xs:complexType>
+      <xs:sequence>
+	  	<xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1" />
+        <xs:element ref="pr:eventHandlerClass" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="pr:hibernate" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="pr:persistenceProviders" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" />
+      <xs:attribute name="kind" type="xs:NCName" />
+      <xs:attribute name="description" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="eventHandlerClass" type="xs:NCName"/>
+
+  <xs:element name="hibernate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:connection"/>
+        <xs:element ref="pr:dialect"/>
+        <xs:element ref="pr:current_session_context_class"/>
+        <xs:element ref="pr:show_sql"/>
+        <xs:element ref="pr:transaction"/>
+        <xs:element ref="pr:cache"/>
+        <xs:element ref="pr:c3p0"/>
+        <xs:element ref="pr:hbm2ddl"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="connection">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:driver_class"/>
+        <xs:element ref="pr:url"/>
+        <xs:element ref="ge:userName"/>
+        <xs:element ref="ge:password"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="driver_class" type="xs:string"/>
+  <xs:element name="url" type="xs:anyURI"/>
+  <xs:element name="username" type="xs:NCName"/>
+  <xs:element name="dialect" type="xs:string"/>
+  <xs:element name="current_session_context_class" type="xs:NCName"/>
+  <xs:element name="show_sql" type="xs:boolean"/>
+  <xs:element name="transaction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:factory_class"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="factory_class" type="xs:string"/>
+
+  <xs:element name="cache">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:provider_class"/>
+        <xs:element ref="pr:use_second_level_cache"/>
+        <xs:element ref="pr:use_query_cache"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="provider_class" type="xs:string"/>
+  <xs:element name="use_second_level_cache" type="xs:boolean"/>
+  <xs:element name="use_query_cache" type="xs:boolean"/>
+  <xs:element name="c3p0">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:max_size"/>
+        <xs:element ref="pr:min_size"/>
+        <xs:element ref="pr:timeout"/>
+        <xs:element ref="pr:max_statements"/>
+        <xs:element ref="pr:idle_test_period"/>
+        <xs:element ref="pr:acquire_increment"/>
+        <xs:element ref="pr:validate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="max_size" type="xs:integer"/>
+  <xs:element name="min_size" type="xs:integer"/>
+  <xs:element name="timeout" type="xs:integer"/>
+  <xs:element name="max_statements" type="xs:integer"/>
+  <xs:element name="idle_test_period" type="xs:integer"/>
+  <xs:element name="acquire_increment" type="xs:integer"/>
+  <xs:element name="validate" type="xs:boolean"/>
+  <xs:element name="hbm2ddl">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:auto"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="auto" type="xs:NCName"/>
+ 
+  <xs:element name="persistenceProviders">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="persistenceProviderClass" type="xs:NCName" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="repositories">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:repositoryList" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="pr:repository" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="repositoryList">
+    <xs:complexType>
+      <xs:attribute name="class" type="xs:NCName" use="required"/>
+      <xs:attribute name="strategy" type="xs:NCName" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="repository">
+    <xs:complexType>
+      <xs:attribute name="class" type="xs:NCName" use="required"/>
+      <xs:attribute name="strategy" type="xs:NCName" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="persistentClasses">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:persistentClassList" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="pr:persistentClass" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="persistentClassList">
+    <xs:complexType>
+      <xs:attribute name="class" type="xs:NCName" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="persistentClass">
+    <xs:complexType>
+      <xs:attribute name="class" type="xs:NCName" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+</xs:schema>

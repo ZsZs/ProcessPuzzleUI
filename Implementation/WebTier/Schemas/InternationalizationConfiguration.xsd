@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:in="http://www.processpuzzle.com/InternationalizationConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/InternationalizationConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <!-- Internationalization Configuration -->
+  <xs:element name="internationalization">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="in:resouceBundles"/>
+        <xs:element ref="in:availableLocales"/>
+        <xs:element ref="in:defaultLocale"/>
+        <xs:element ref="in:localeDefinitions"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="resouceBundles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="in:resourceBundle"/>
+      </xs:sequence>
+	  <xs:attribute name="nameSpace" type="xs:anyURI" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="resourceBundle" type="xs:anyURI"/>
+
+  <xs:element name="availableLocales">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="in:locale"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="locale" type="xs:string"/>
+  <xs:element name="defaultLocale" type="xs:string"/>
+  <xs:element name="localeDefinitions" type="xs:anyURI"/>
+  
+</xs:schema>

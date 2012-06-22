@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:pp="http://www.processpuzzle.com"
+	xmlns:ac="http://www.processpuzzle.com/ApplicationConfiguration" 
+	xmlns:bc="http://www.processpuzzle.com/BeanContainerConfiguration" 
+	xmlns:bd="http://www.processpuzzle.com/BusinessDefinitionsConfiguration" 
+	xmlns:bi="http://www.processpuzzle.com/BusinessImplementationsConfiguration" 
+	xmlns:dl="http://www.processpuzzle.com/DataLoadersConfiguration" 
+	xmlns:em="http://www.processpuzzle.com/EmailConfiguration" 
+	xmlns:fc="http://www.processpuzzle.com/FrontControllerConfiguration" 
+	xmlns:in="http://www.processpuzzle.com/InternationalizationConfiguration" 
+	xmlns:pr="http://www.processpuzzle.com/PersistenceConfiguration" 
+	xmlns:rt="http://www.processpuzzle.com/RuntimeConfiguration" 
+	xmlns:wui="http://www.processpuzzle.com/WebUIConfiguration" 
+	targetNamespace="http://www.processpuzzle.com" >
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/ApplicationConfiguration" schemaLocation="ApplicationConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/WebUIConfiguration" schemaLocation="WebUIConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/RuntimeConfiguration" schemaLocation="RuntimeConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/FrontControllerConfiguration" schemaLocation="FrontControllerConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/PersistenceConfiguration" schemaLocation="PersistenceConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/InternationalizationConfiguration" schemaLocation="InternationalizationConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/DataLoadersConfiguration" schemaLocation="DataLoadersConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/BusinessDefinitionsConfiguration" schemaLocation="BusinessDefinitionsConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/BusinessImplementationsConfiguration" schemaLocation="BusinessImplementationsConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/EmailConfiguration" schemaLocation="EmailConfiguration.xsd"/>
+  <xs:import namespace="http://www.processpuzzle.com/BeanContainerConfiguration" schemaLocation="BeanContainerConfiguration.xsd"/>
+  
+  <xs:element name="processPuzzleConfiguration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ac:application" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="wui:webUI" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="rt:runtime" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="fc:frontController" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="pr:persistence" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="in:internationalization" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dl:dataLoaders" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="bd:businessDefinitions" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="bi:businessImplementations" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="em:emailing" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="bc:beanContainer" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+    
+</xs:schema>

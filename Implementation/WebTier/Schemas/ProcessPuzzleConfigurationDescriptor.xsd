@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:pp="http://www.processpuzzle.com"
+	targetNamespace="http://www.processpuzzle.com">
+  <xs:element name="configuration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pp:header"/>
+        <xs:element ref="pp:override"/>
+        <xs:element ref="pp:additional"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pp:result"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="result">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pp:nodeCombiner"/>
+        <xs:element ref="pp:expressionEngine"/>
+      </xs:sequence>
+      <xs:attribute name="delimiterParsingDisabled" use="required" type="xs:boolean"/>
+      <xs:attribute name="forceReloadCheck" use="required" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="nodeCombiner">
+    <xs:complexType>
+      <xs:attribute name="config-class" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="expressionEngine">
+    <xs:complexType>
+      <xs:attribute name="config-class" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="override">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="pp:xml"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="xml">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="pp:reloadingStrategy"/>
+      </xs:sequence>
+      <xs:attribute name="config-forceCreate" type="xs:boolean"/>
+      <xs:attribute name="config-name" use="required" type="xs:NCName"/>
+      <xs:attribute name="delimiterParsingDisabled" use="required" type="xs:boolean"/>
+      <xs:attribute name="fileName" use="required" type="xs:NCName"/>
+      <xs:attribute name="optional" type="xs:boolean"/>
+      <xs:attribute name="throwExceptionOnMissing" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="reloadingStrategy">
+    <xs:complexType>
+      <xs:attribute name="config-class" use="required"/>
+      <xs:attribute name="refreshDelay" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="additional">
+    <xs:complexType/>
+  </xs:element>
+</xs:schema>

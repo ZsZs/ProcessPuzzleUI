@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:em="http://www.processpuzzle.com/EmailConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/EmailConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <!-- Emailing Configuration -->
+  <xs:element name="emailing">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="em:system"/>
+        <xs:element ref="em:host"/>
+        <xs:element ref="em:smtp"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="system">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="em:activation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="activation" type="xs:NCName"/>
+  
+  <xs:element name="smtp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="em:host"/>
+        <xs:element ref="em:auth"/>
+        <xs:element ref="em:debug"/>
+        <xs:element ref="em:port"/>
+        <xs:element ref="em:socketFactory"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="auth" type="xs:boolean"/>
+  <xs:element name="debug" type="xs:boolean"/>
+  
+  <xs:element name="socketFactory">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="em:port"/>
+        <xs:element ref="ge:fullClassName"/>
+        <xs:element ref="em:fallback"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fallback" type="xs:boolean"/>
+  
+  <xs:element name="host">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="em:systemUser"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="systemUser">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ge:userName"/>
+        <xs:element ref="ge:password"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="port" type="xs:integer"/>
+  
+</xs:schema>

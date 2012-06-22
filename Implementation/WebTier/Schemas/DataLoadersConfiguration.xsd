@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:dl="http://www.processpuzzle.com/DataLoadersConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/DataLoadersConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <!-- Data Loaders Configuration -->
+  <xs:element name="dataLoaders">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dl:dataLoader" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="dataLoader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dl:dataLoaderClass"/>
+        <xs:element ref="dl:instantiationArguments" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+	  <xs:attribute name="kind" type="xs:string" use="optional" />
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="dataLoaderClass" type="xs:string"/>
+  
+  <xs:element name="instantiationArguments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dl:argument" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="argument">
+    <xs:complexType mixed="true">
+	  <xs:attribute name="name" type="xs:string" use="required" />
+	  <xs:attribute name="type" type="xs:string" use="required" />
+	</xs:complexType>
+  </xs:element>
+  
+</xs:schema>

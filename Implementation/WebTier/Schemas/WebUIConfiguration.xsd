@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:wui="http://www.processpuzzle.com/WebUIConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/WebUIConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <xs:element name="webUI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wui:desktop"/>
+        <xs:element ref="wui:logging"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="desktop">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wui:menu"/>
+		<xs:element ref="wui:availableSkins"/>
+        <xs:element ref="wui:defaultSkin" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="menu">
+    <xs:complexType>
+      <xs:attribute name="definitionURI" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="availableSkins">
+    <xs:complexType>
+      <xs:sequence>
+	    <xs:element name="skin" type="wui:skin" minOccurs="1" maxOccurs="unbounded"/>
+	  </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="skin">
+    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="relativePath" type="xs:string" />
+    <xs:attribute name="configurationURI" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="defaultSkin">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="logging">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wui:loggers"/>
+        <xs:element ref="wui:layouts"/>
+        <xs:element ref="wui:appenders"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="loggers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="wui:logger"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="logger">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wui:appenderReference"/>
+      </xs:sequence>
+      <xs:attribute name="isDefault" type="xs:boolean"/>
+      <xs:attribute name="level" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="appenderReference">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="layouts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wui:patternLayout" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="wui:xmlLayout" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="layout">
+    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="pattern" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="patternLayout" >
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="wui:layout"></xs:extension>
+	  </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="xmlLayout" >
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="wui:layout" ></xs:extension>
+	  </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="appenders">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wui:ajaxAppender" minOccurs="0" maxOccurs="1" />
+        <xs:element ref="wui:popUpAppender" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="wui:inPageAppender" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="wui:browserConsoleAppender" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="appender">
+      <xs:attribute name="layoutReference" use="required" type="xs:NCName"/>
+      <xs:attribute name="lazyInit" use="required" type="xs:boolean"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="threshold" use="required" type="xs:NCName"/>
+  </xs:complexType>
+
+  <xs:element name="ajaxAppender">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="wui:appender" >
+	      <xs:attribute name="batchSize" use="required" type="xs:integer"/>
+	      <xs:attribute name="failCallback" use="required"/>
+	      <xs:attribute name="postVariableName" use="required" type="xs:NCName"/>
+	      <xs:attribute name="requestSuccessCallback" use="required"/>
+	      <xs:attribute name="sendAllOnUnload" use="required" type="xs:NCName"/>
+	      <xs:attribute name="timedSending" use="required" type="xs:boolean"/>
+	      <xs:attribute name="timerInterval" use="required" type="xs:integer"/>
+	      <xs:attribute name="url" use="required" type="xs:anyURI"/>
+	      <xs:attribute name="waitForResponse" use="required" type="xs:boolean"/>
+		</xs:extension>
+	  </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="popUpAppender">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="wui:appender" >
+	      <xs:attribute name="commandLineObjectExpansionDepth" use="required" type="xs:integer"/>
+	      <xs:attribute name="complainAboutPopUpBlocking" use="required" type="xs:boolean"/>
+	      <xs:attribute name="focusPopUp" use="required" type="xs:boolean"/>
+	      <xs:attribute name="height" use="required" type="xs:integer"/>
+	      <xs:attribute name="initiallyMinimized" use="required" type="xs:boolean"/>
+	      <xs:attribute name="maxMessages" use="required" type="xs:integer"/>
+	      <xs:attribute name="newestMessageAtTop" use="required" type="xs:boolean"/>
+	      <xs:attribute name="reopenWhenClosed" use="required" type="xs:boolean"/>
+	      <xs:attribute name="scrollToLatestMessage" use="required" type="xs:boolean"/>
+	      <xs:attribute name="showCommandLine" use="required" type="xs:boolean"/>
+	      <xs:attribute name="useDocumentWrite" use="required" type="xs:boolean"/>
+	      <xs:attribute name="useOldPopUp" use="required" type="xs:boolean"/>
+	      <xs:attribute name="width" use="required" type="xs:integer"/>
+		</xs:extension>
+	  </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="inPageAppender">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="wui:appender" >
+	      <xs:attribute name="containerElementId" use="required" type="xs:NCName"/>
+	      <xs:attribute name="height" use="required" type="xs:integer"/>
+	      <xs:attribute name="initiallyMinimized" use="required" type="xs:boolean"/>
+	      <xs:attribute name="useDocumentWrite" use="required" type="xs:boolean"/>
+	      <xs:attribute name="width" use="required" type="xs:integer"/>
+		</xs:extension>
+	  </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="browserConsoleAppender">
+    <xs:complexType>
+      <xs:attribute name="layoutReference" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

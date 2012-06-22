@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:ac="http://www.processpuzzle.com/ApplicationConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/ApplicationConfiguration">
+
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <xs:element name="application">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ac:applicationName"/>
+        <xs:element ref="ac:version"/>
+        <xs:element ref="ac:serverWorkingFolder"/>
+        <xs:element ref="ac:clientWorkingFolder"/>
+        <xs:element ref="ac:defaultUserAccount"/>
+        <xs:element ref="ac:persistentDataInitializationStrategy"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="version" type="xs:decimal"/>
+  <xs:element name="serverWorkingFolder" type="xs:string"/>
+  <xs:element name="clientWorkingFolder" type="xs:string"/>
+  <xs:element name="defaultUserAccount">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ge:userName"/>
+        <xs:element ref="ge:password"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="applicationName" type="xs:NCName"/>
+  <xs:element name="persistentDataInitializationStrategy" type="xs:NCName"/>
+  
+</xs:schema>

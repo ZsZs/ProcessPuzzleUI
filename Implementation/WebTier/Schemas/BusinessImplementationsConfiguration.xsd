@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:bi="http://www.processpuzzle.com/BusinessImplementationsConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/BusinessImplementationsConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <xs:element name="businessImplementations">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ge:schema" minOccurs="1" maxOccurs="1" />
+        <xs:element ref="ge:mapping" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="bi:businessImplementation" minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="businessImplementation" type="xs:anyURI"/>
+  
+</xs:schema>

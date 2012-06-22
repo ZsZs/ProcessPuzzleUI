@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.processpuzzle.com/ResourceBundle" 
+	xmlns:tns="http://www.processpuzzle.com/ResourceBundle">
+
+	<element name="Resources">
+		<complexType>
+			<sequence>
+				<element name="Resource" type="tns:Resource" minOccurs="0" maxOccurs="unbounded"></element>
+				<element name="Language" type="tns:Language" minOccurs="0" maxOccurs="unbounded"></element>
+			</sequence>
+		</complexType>
+	</element>
+
+	<complexType name="Resource">
+		<simpleContent>
+			<extension base="string">
+				<attribute name="key" type="token" use="required"></attribute>
+				<attribute name="type" type="tns:ResourceType" use="required"></attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+
+	<attribute name="key" type="token"></attribute>
+
+	<attribute name="type" type="string"></attribute>
+
+	<simpleType name="ResourceType">
+		<restriction base="token">
+			<enumeration value="String"></enumeration>
+			<enumeration value="File"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<complexType name="Language">
+		<sequence>
+			<element name="Resource" type="tns:Resource" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="Country" type="tns:Country" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="name" type="tns:LanguageCode" use="required"></attribute>
+	</complexType>
+
+	<simpleType name="LanguageCode">
+		<restriction base="language">
+			<enumeration value="cz"></enumeration>
+			<enumeration value="de"></enumeration>
+			<enumeration value="dn"></enumeration>
+			<enumeration value="en"></enumeration>
+			<enumeration value="es"></enumeration>
+			<enumeration value="fr"></enumeration>
+			<enumeration value="hu"></enumeration>
+			<enumeration value="it"></enumeration>
+			<enumeration value="pl"></enumeration>
+			<enumeration value="pt"></enumeration>
+			<enumeration value="ro"></enumeration>
+			<enumeration value="sk"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="CountryCode">
+		<restriction base="token">
+			<enumeration value="HU"></enumeration>
+			<enumeration value="US"></enumeration>
+			<enumeration value="GB"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<complexType name="Country">
+		<sequence>
+			<element name="Resource" type="tns:Resource" minOccurs="1" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="name" type="tns:CountryCode" use="required"></attribute>
+	</complexType>
+
+</schema>

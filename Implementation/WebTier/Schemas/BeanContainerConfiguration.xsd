@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:bc="http://www.processpuzzle.com/BeanContainerConfiguration" 
+	targetNamespace="http://www.processpuzzle.com/BeanContainerConfiguration">
+	
+  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
+  
+  <!-- Bean Container Configuration -->
+  <xs:element name="beanContainer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="bc:containerDefinitionPath"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="containerDefinitionPath" type="xs:anyURI"/>
+</xs:schema>
