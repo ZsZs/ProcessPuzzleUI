@@ -2554,9 +2554,12 @@ AbstractDocument.Action = {
 var WebUIMessage = new Class({
    Implements: Options,
    options: {
+      activityType: null,
+      actionType: null,
       description: "Generic Browser Interface message. Normally this message should be overwritten by subclasses.",
       isDefault: false,
       messageClass: null,
+      messageResource: null,
       name: "WebUIMessage",       //Please note, that subclasses should overwrite this.
       originator: null
    },
@@ -2567,15 +2570,34 @@ var WebUIMessage = new Class({
    },
    
    //Public accessor and mutator methods
+   destroy: function(){
+      this.options.activityType = null;
+      this.options.actionType = null;
+   },
+   
+   unmarshall: function(){
+      if( this.options.messageResource ){
+         this.unmarshallProperties();
+      } 
+   },
    
    //Properties
+   getActionType: function() { return this.options.actionType; },
+   getActivityType: function() { return this.options.activityType; },
    getClass: function() { return this.options.messageClass; },
    getDescription: function() { return this.options.description; },
+   getMessageProperties: function() { return this.messageProperties },
    getName: function() { return this.options.name; },
+   getOptions: function() { return this.options; },
    getOriginator: function() { return this.options.originator; },
-   isDefault: function() { return this.options.isDefault; }
+   isDefault: function() { return this.options.isDefault; },
    
    //Private helper methods
+   unmarshallProperties: function(){
+      var messageText = XmlResource.determineNodeText( this.options.messageResource );
+      var messageProperties = messageText ? eval( "(" + messageText + ")" ) : {};
+      this.setOptions( messageProperties );
+   }.protect()
 });
 /*
 Name: 
@@ -8455,8 +8477,6 @@ You should have received a copy of the GNU General Public License along with thi
 var MenuSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
-      actionType: null,
-      activityType: null,
       description: "A message about the event that a menu or tool bar item was selected.",
       documentContentURI: null,
       documentType: AbstractDocument.Types.SMART,
@@ -8477,8 +8497,6 @@ var MenuSelectedMessage = new Class({
    //Public accessors
    
    //Properties
-   getActionType: function() { return this.options.actionType; },
-   getActivityType: function() { return this.options.activityType; },
    getContextItemId: function() { return this.options.contextItemId; },
    getDocumentContentURI: function() { return this.options.documentContentURI; },
    getDocumentType: function() { return this.options.documentType; },
@@ -15876,12 +15894,13 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TreeNode = new Class({
    Implements : [Events, Options],
-   Binds : ['createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
+   Binds : ['addNodeEvents', 'createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
    options : {
       captionSelector : '@caption',
       componentName : "TreeNode",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
       imageUriSelector : '@image',
+      messageSelector : 'messageProperties',
       nodeIDSelector : '@nodeId',
       orderNumberSelector : '@orderNumber',
       selectable : false,
@@ -15903,6 +15922,7 @@ var TreeNode = new Class({
       this.containerElement;
       this.elementFactory = elementFactory;
       this.imageUri;
+      this.message;
       this.nodeCaptionElement;
       this.nodeHandlerElement;
       this.nodeIconElement;
@@ -15914,7 +15934,6 @@ var TreeNode = new Class({
       this.orderNumber;
       this.parentNode = parentNode;
       this.previousSibling;
-      this.rootNode;
       this.selectPicElement;
       this.state;
       this.trailingImages = new ArrayList();
@@ -15923,13 +15942,8 @@ var TreeNode = new Class({
    },
 
    // public accessor and mutator methods
-   bubbleUpNames : function(list, index) {
-      if( this == this.rootNode) {
-         this.widget.setSelectedNameList( list, index );
-      }else {
-         list[index] = this.name;
-         this.parentNode.bubbleUpNames( list, index + 1 );
-      }
+   bubbleUpNames : function() {
+      return this.parentNode ? this.parentNode.bubbleUpNames() + "/" + this.caption : this.caption;
    },
 
    changeCaption : function() {
@@ -15962,14 +15976,20 @@ var TreeNode = new Class({
       
       this.state = BrowserWidget.States.INITIALIZED;
    },
+   
+   findNodeByPath : function( path ) {
+      if( path == this.caption ) return this;
+      else null;
+   },
+   
 
-   onCaptionClick : function(theEvent) {
-      this.bubbleUpNames( new Array(), 0 );
+   onCaptionClick : function() {
+      this.fireEvent( 'nodeSelected', this );
    },
 
    unmarshall : function(){
       this.unmarshallProperties();
-      //this.implementCompositeIfChildNodesExists();
+      this.unmarshallMessage();
       this.state = BrowserWidget.States.UNMARSHALLED;
    },
 
@@ -15979,6 +15999,7 @@ var TreeNode = new Class({
    getContainerElement : function() { return this.containerElement; },
    getId : function() { return this.nodeID; },
    getImageUri : function() { return this.imageUri; },
+   getMessage : function() { return this.message; },
    getNodeImageElement : function() { return this.nodeIconElement; },
    getNextSibling : function() { return this.nextSibling; },
    getNodeType : function() { return this.nodeType; },
@@ -15986,18 +16007,26 @@ var TreeNode = new Class({
    getOrderNumber : function() { return this.orderNumber; },
    getParentNode : function() { return this.parentNode; },
    getPreviousSibling : function() { return this.previousSibling; },
-   getRootNode : function() { return this.rootNode; },
    hasNext : function() { return !(this.nextSibling == null); },
    isVisible : function() { return this.visible; },
 
    // private methods
+   addNodeEvents : function(){
+      this.nodeCaptionElement.addEvents({
+         'click' : this.onCaptionClick
+      });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
    compileConstructionChain : function(){
       this.constructionChain.chain( 
          this.createNodeWrapperElement, 
          this.createNodeHandlerImage, 
          this.createNodeIcon, 
          this.createNodeCaption, 
-         this.insertTrailingImages, 
+         this.insertTrailingImages,
+         this.addNodeEvents, 
          this.finalizeConstruction
       );
    }.protect(),
@@ -16080,7 +16109,15 @@ var TreeNode = new Class({
       }
       this.constructionChain.callChain();
    }.protect(),
-
+   
+   unmarshallMessage: function(){
+      var messageResource = XmlResource.selectNode( this.options.messageSelector, this.nodeResource );
+      if( messageResource ){
+         this.message = new MenuSelectedMessage({ messageResource : messageResource });
+         this.message.unmarshall();
+      } 
+   }.protect(),
+   
    unmarshallProperties: function(){
       this.nodeID = XmlResource.selectNodeText( this.options.nodeIDSelector, this.nodeResource );
       this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.nodeResource );
@@ -16126,8 +16163,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeTreeNode = new Class( {
    Extends : TreeNode,
-   Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick'],
+   Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick', 'onNodeSelected'],
 
+   constants : {
+      NODE_PATH_SEPARATOR : "/"
+   },
+   
    options : {
       childNodesSelector : 'treeNode',
       componentName : "CompositeTreeNode",
@@ -16162,11 +16203,13 @@ var CompositeTreeNode = new Class( {
       this.parent();
    },
 
-   findChildNodeByName : function(name) {
-      for( var i = 0; i < childs.length; i++) {
-         if( this.childNodes[i].getName() == name ) return this.childNodes[i];
-      }
-      return null;
+   findChildNodeByName : function( caption ) {
+      var searchedNode = null;
+      this.childNodes.each( function( childNode, index ){
+         if( childNode.getCaption() == caption ) searchedNode = childNode;
+      }.bind( this )); 
+      
+      return searchedNode;
    },
    
    findLastVisibleChild : function(){
@@ -16178,16 +16221,15 @@ var CompositeTreeNode = new Class( {
       else return this;
    },
 
-   findNodeByPath : function(path) {
-      if (path.indexOf( this.NODE_PATH_SEPARATOR ) > 0) {
-         var nodeName = path.substring( 0, path.indexOf( this.NODE_PATH_SEPARATOR ) );
-         var childNode = this.findChildNodeByName( nodeName );
-         if (childNode != null)
-            return this.childNode.findNodeByPath( path.substring( path.indexOf( this.NODE_PATH_SEPARATOR ) + 1 ) );
-         else
-            return null;
-      } else
-         return this.findChildNodeByName( path );
+   findNodeByPath : function( path ) {
+      if( this.pathStartsWithThisNode( path )) {
+         if( this.pathRefersToSubnode( path )){
+            var nextNodeName = this.nextNodeNameInPath( path );
+            var childNode = this.findChildNodeByName( nextNodeName );
+            if( childNode != null ) return childNode.findNodeByPath( this.nextNodePathFragment( path ));
+            else return null;
+         }else return this;
+      }else return this.findChildNodeByName( path );
    },
    
    onChildNodeConstructed : function( childNode ){
@@ -16199,6 +16241,10 @@ var CompositeTreeNode = new Class( {
    onNodeHandlerClick : function() {
       if( this.isOpened ) this.close();
       else this.open();
+   },
+   
+   onNodeSelected : function( selectedNode ){
+      this.fireEvent( 'nodeSelected', selectedNode );
    },
 
    open : function() {
@@ -16255,6 +16301,10 @@ var CompositeTreeNode = new Class( {
       this.parent();
       this.nodeHandlerElement.addEvent( 'click', this.onNodeHandlerClick );
    }.protect(),
+   
+   currentNodeNameInPath : function( path ){
+      return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) >= 0 ? path.substring( 0, path.indexOf( this.constants.NODE_PATH_SEPARATOR )) : path;
+   }.protect(),
 
    destroyChildNodes : function(){
       this.childNodes.each( function( childNode, index ){
@@ -16264,6 +16314,18 @@ var CompositeTreeNode = new Class( {
       this.childNodes.clear();
       this.numberOfConstructedChildNodes = 0;
    }.protect(),
+   
+   nextNodePathFragment : function( path ){
+      return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) >= 0 ? path.substring( path.indexOf( this.constants.NODE_PATH_SEPARATOR ) +1 ) : path;
+   }.protect(),
+   
+   nextNodeNameInPath : function( path ){
+      var nextPathFragment = path.substring( this.currentNodeNameInPath( path ).length +1 ); 
+      return this.currentNodeNameInPath( nextPathFragment );
+   }.protect(),
+   
+   pathRefersToSubnode : function( path ){ return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) > 0 }.protect(),
+   pathStartsWithThisNode : function( path ){ return this.currentNodeNameInPath( path ) == this.caption; }.protect(),
    
    replaceNodeHandlerImage : function(){
       this.nodeHandlerElement.set( 'src', this.nodeType.determineNodeHandlerImage( this ));
@@ -16278,7 +16340,7 @@ var CompositeTreeNode = new Class( {
       var childNodeElements = XmlResource.selectNodes( this.options.childNodesSelector, this.nodeResource );
       if( childNodeElements ){
          childNodeElements.each( function( childNodeElement, index ){
-            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, { onConstructed : this.onChildNodeConstructed });
+            var treeNode = TreeNodeFactory.create( this, childNodeElement, this.elementFactory, { onConstructed : this.onChildNodeConstructed, onNodeSelected : this.onNodeSelected });
             if( index > 0 && index < childNodeElements.length ){
                this.childNodes.get( index -1 ).nextSibling = treeNode;
                treeNode.previousSibling = this.childNodes.get( index -1 );
@@ -16557,7 +16619,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TreeWidget = new Class( {
    Extends : BrowserWidget,
-   Binds : ['constructTreeNodes', 'destroyTreeNodes', 'onRootNodeConstructed'],
+   Binds : ['constructTreeNodes', 'destroyTreeNodes', 'onNodeSelected', 'onRootNodeConstructed'],
    constants : {
    },
    
@@ -16579,6 +16641,7 @@ var TreeWidget = new Class( {
       this.compositeTreeNodeType;
       this.rootNode;
       this.rootNodeType;
+      this.selectedNode;
       this.treeNodeType;
       
       this.instantiateNodeFactory();
@@ -16597,10 +16660,19 @@ var TreeWidget = new Class( {
    destroy : function() {
       this.parent();
    },
+   
+   findNodeByPath : function( path ){
+      return this.rootNode ? this.rootNode.findNodeByPath( path ) : null;
+   },
 
    getSelectedNode : function() {
       if (this.getSelectedNameListSize() == 0) return null;
       return this.rootNode.findNodeByPath( this.getSelectedNodeFullCaption() );
+   },
+
+   onNodeSelected : function( selectedNode ){
+      this.selectedNode = selectedNode;
+      this.messageBus.notifySubscribers( this.adjustMessage( selectedNode.getMessage() ));      
    },
 
    onRootNodeConstructed : function( rootNode ){
@@ -16619,6 +16691,10 @@ var TreeWidget = new Class( {
    getTreeNodeType : function() { return this.treeNodeType; },
 
    // Protected, private helper methods
+   adjustMessage : function( message ){
+      message.options.originator = this.options.componentName;
+      return message;
+   }.protect(),
    compileConstructionChain: function(){
       this.constructionChain.chain( this.constructTreeNodes, this.finalizeConstruction );
    }.protect(),
@@ -16650,7 +16726,7 @@ var TreeWidget = new Class( {
    unmarshallRootNode : function(){
       var rootNodeElement = this.dataXml.selectNode( this.options.rootNodeSelector );
       if( rootNodeElement ){
-         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed });
+         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed, onNodeSelected : this.onNodeSelected });
          this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
          this.rootNode.unmarshall();
       }      
