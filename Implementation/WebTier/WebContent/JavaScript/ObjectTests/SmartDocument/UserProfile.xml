@@ -19,6 +19,8 @@
       <role name="trainer">
          <activities>
             <activity name="publishTraining" />
+            <activity name="authorTraining" />
+            <activity name="facilitateTraining" />
          </activities>
       </role>
    </roles>

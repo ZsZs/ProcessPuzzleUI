@@ -187,10 +187,10 @@ var DocumentElement = new Class({
       }
    }.protect(),
    
-   definitionElementAttribute: function( selector ){
+   definitionElementAttribute: function( selector, defaultValue ){
       var attributeNode = XmlResource.selectNode( selector, this.definitionElement );
       if( attributeNode ) return attributeNode.value;
-      else return null;
+      else return defaultValue;
    }.protect(),
       
    finalizeConstruction: function(){

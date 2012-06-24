@@ -58,13 +58,10 @@ var DataElement = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallDataProperties();
-      this.loadDataSource();
-      this.determineDataElementsNumber();
-      this.instantiateSiblings();
+      this.unmarshallDataBehaviour();
       this.parent();
    },
-
+   
    //Properties
    
    //Protected, private helper methods

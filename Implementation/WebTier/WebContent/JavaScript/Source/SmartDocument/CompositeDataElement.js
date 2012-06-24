@@ -64,22 +64,18 @@ var CompositeDataElement = new Class({
       this.parent();
    },
    
-   instantiateDocumentElement: function( elementDefinition ){
-      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
-      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
-   }.protect(),
-   
-   unmarshall: function( dataElementIndex ){
-      this.unmarshallDataProperties();
-      this.loadDataSource();
-      this.determineDataElementsNumber();
-      this.instantiateSiblings();
+   unmarshall: function(){
+      this.unmarshallDataBehaviour();
       this.parent();
    },
-
+   
    //Properties
    
    //Protected, private helper methods
+   instantiateDocumentElement: function( elementDefinition ){
+      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
+   }.protect()
    
 });

@@ -31,10 +31,17 @@
    
    <documentBody tag="div" id="smartDocumentBody">
       <compositeElement tag="div" id="bodyWrapper">
-         <dataElement tag="h3" id="currentUser" elementStyle="currentUser" source="../SmartDocument/UserProfile.xml" bind="/userProfile/userName[{index}]" minOccures="1" maxOccures="1" />
+         <dataElement tag="h3" id="currentUser" elementStyle="currentUser" source="../SmartDocument/UserProfile.xml" bind="/userProfile/userName[{userNameIndex}]" indexVariable="userNameIndex" minOccures="1" maxOccures="1" />
          <compositeElement tag="ul">SmartDocument.addresses
             <dataElement tag="li" id="userAddresses" source="../SmartDocument/UserProfile.xml" bind="/userProfile/addresses/address[{index}]" minOccures="0" maxOccures="unbounded" />
          </compositeElement>
+         <element tag="h4">SmartDocument.roles</element>
+         <compositeDataElement tag="ul" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]" indexVariable="roleIndex" maxOccures="unbounded">
+            <dataElement tag="li" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/@name"/>
+	         <compositeDataElement tag="ul" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]" indexVariable="activityIndex" maxOccures="unbounded">
+	            <dataElement tag="li" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]/@name"/>
+	         </compositeDataElement>
+         </compositeDataElement>
          <dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
          <formElement id="channelProperties" method="post" bind="/rss/channel">
 	         <formField id="link" label="DynamicDocument.RSS.link" bind="/rss/channel/link"/>
