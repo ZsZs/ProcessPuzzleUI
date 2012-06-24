@@ -106,7 +106,10 @@
     <Resource key="WebUIMenu.documentExamples.htmlContent" type="String">HTML Content</Resource>
     <Resource key="WebUIMenu.documentExamples.photoAlbum" type="String">Photo Album</Resource>
     <Resource key="WebUIMenu.documentExamples.staticDocument" type="String">Static Document</Resource>
+    <Resource key="WebUIMenu.documentExamples.taskDetail" type="String">Task Detail</Resource>
+    <Resource key="WebUIMenu.documentExamples.taskList" type="String">Task List</Resource>
     <Resource key="WebUIMenu.documentExamples.videoAlbum" type="String">Video Album</Resource>
+    <Resource key="WebUIMenu.documentExamples.workflowManagement" type="String">Workflow Management</Resource>
 
     <Resource key="WebUIMenu.widgets" type="String">Widgets</Resource>
     <Resource key="WebUIMenu.widgets.eventsReader" type="String">Events Reader</Resource>

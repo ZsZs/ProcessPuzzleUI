@@ -14,9 +14,19 @@
          <treeNode nodeId="12" caption="WebUIMenu.documentExamples.dynamicDocument" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2">
             <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
          </treeNode>
-         <treeNode nodeId="13" caption="TreeWidget.Branch1-1" image="Desktops/Images/TreeWidget/folder_open.gif" orderNumber="1">
-	         <treeNode nodeId="131" caption="TreeWidget.Document3" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="1"></treeNode>
-	         <treeNode nodeId="132" caption="TreeWidget.Document4" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2"></treeNode>
+         <treeNode nodeId="13" caption="WebUIMenu.documentExamples.workflowManagement" image="Desktops/Images/TreeWidget/folder_open.gif" orderNumber="1">
+	         <treeNode nodeId="131" caption="WebUIMenu.documentExamples.taskList" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="1">
+	         </treeNode>
+	         <treeNode nodeId="132" caption="WebUIMenu.documentExamples.taskDetail" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2">
+               <messageProperties>{ 
+                  activityType : AbstractDocument.Activity.LOAD_DOCUMENT, 
+                  documentContentURI : 'Content/Workflow.xml', 
+                  documentURI : 'Content/TaskDetail.xml', 
+                  documentType : AbstractDocument.Types.SMART,
+                  documentVariables : { activityIndex:'1', workflowDetailIndex: '2' } 
+               }
+               </messageProperties>         
+	         </treeNode>
          </treeNode>
 		</treeNode>
 		<treeNode nodeId="20" caption="WebUIMenu.widgets" image="Desktops/Images/TreeWidget/folder_closed.gif" isOpened="true" orderNumber="2">

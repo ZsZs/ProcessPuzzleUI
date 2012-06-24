@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:workflow
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <name>PO-Developer Communication Course Flow</name>
+   <description>Flow of activities during the course of "PO-Developer Communication Course Flow" workshop</description>
+   <version>1.0</version>
+   <duration>1,5 óra</duration>
+   <workflowDetail id="activity_1">
+      <name>Projekt indítás</name>
+      <description></description>
+      <duration></duration>
+      <activities>
+         <activity id="activity_1-1">
+            <name>Scrum csapatok létrehozása</name>
+            <description></description>
+            <duration>2 perc</duration>
+         </activity>
+         <activity id="activity_1-2">
+            <name>Terméktulajdonos ismerteti az elképzelését</name>
+            <description></description>
+            <duration>8 perc</duration>
+         </activity>
+         <activity id="activity_1-3">
+            <name>A scrum mester beszámol a megértett elképzelésről</name>
+            <description></description>
+            <duration>4 perc</duration>
+         </activity>
+      </activities>
+   </workflowDetail>
+   
+   <workflowDetail id="activity_2">
+      <name>Specifikáció prototípussal</name>
+      <description></description>
+      <duration></duration>
+      <activities>
+         <activity id="activity_2-1">
+            <name>Felhasználói felület prototípus tervezése</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+         <activity id="activity_2-2">
+            <name>Alkalmazás használatának demonstrálása</name>
+            <description></description>
+            <duration>5 perc</duration>
+         </activity>
+         <activity id="activity_2-3">
+            <name>Kibocsájtás tervezés</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+         <activity id="activity_2-4">
+            <name>Következtetések megbeszélése</name>
+            <description></description>
+            <duration>5 perc</duration>
+         </activity>
+      </activities>
+   </workflowDetail>
+   
+   <workflowDetail id="activity_3">
+      <name>Specifikáció szakterületi modellel</name>
+      <description></description>
+      <duration></duration>
+      <activities>
+         <activity id="activity_3-1">
+            <name>Szakterületi modellezés demonstrálása</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+         <activity id="activity_3-2">
+            <name>Következtetések megbeszélése</name>
+            <description></description>
+            <duration>5 perc</duration>
+         </activity>
+         <activity id="activity_3-3">
+            <name>Szakterületi modellezés</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+         <activity id="activity_3-4">
+            <name>Kibocsájtás tervezés</name>
+            <description></description>
+            <duration>5 perc</duration>
+         </activity>
+         <activity id="activity_3-5">
+            <name>Következtetések megbeszélése</name>
+            <description></description>
+            <duration>5 perc</duration>
+         </activity>
+      </activities>
+   </workflowDetail>
+   
+   <workflowDetail id="activity_4">
+      <name>Specifikáció elfogadási tesztekkel</name>
+      <description></description>
+      <duration></duration>
+      <activities>
+         <activity id="activity_4-1">
+            <name>Elfogadási teszt tervezés demonstrálása</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+         <activity id="activity_4-2">
+            <name>Következtetések megbeszélése</name>
+            <description></description>
+            <duration>5 perc</duration>
+         </activity>
+         <activity id="activity_4-3">
+            <name>Elfogadási teszt tervezése</name>
+            <description></description>
+            <duration>2 perc</duration>
+         </activity>
+         <activity id="activity_4-4">
+            <name>Kibocsájtás tervezés</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+         <activity id="activity_4-5">
+            <name>Következtetések megbeszélése</name>
+            <description></description>
+            <duration>10 perc</duration>
+         </activity>
+      </activities>
+   </workflowDetail>
+</pp:workflow>

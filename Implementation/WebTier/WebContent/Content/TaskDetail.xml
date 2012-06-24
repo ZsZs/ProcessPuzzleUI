@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   <name>Event Detail</name>
+   <description>Presents all the details of a single event.</description>
+   <version>0.5</version>
+   <contentUri>Content/Workflow.xml</contentUri>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="eventDocumentBody">
+      <compositeDataElement tag="div" id="activityWrapper" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]" indexVariable="activityIndex" maxOccures="1">
+         <dataElement tag="h1" elementStyle="title" id="itemTitle" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/name"/>
+         <dataElement tag="p" elementStyle="description" id="itemDescription" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/description"/>
+         <formElement id="eventProperties" method="post" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]">
+            <formField id="duration" label="Workbook.PO-DeveloperCommunication.ActivityDetail.duration" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/duration"/>
+         </formElement>
+      </compositeDataElement>
+   </documentBody>
+</smartDocumentDefinition>

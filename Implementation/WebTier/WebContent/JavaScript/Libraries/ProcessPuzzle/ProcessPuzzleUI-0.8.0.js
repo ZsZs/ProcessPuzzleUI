@@ -12425,10 +12425,10 @@ var DocumentElement = new Class({
       }
    }.protect(),
    
-   definitionElementAttribute: function( selector ){
+   definitionElementAttribute: function( selector, defaultValue ){
       var attributeNode = XmlResource.selectNode( selector, this.definitionElement );
       if( attributeNode ) return attributeNode.value;
-      else return null;
+      else return defaultValue;
    }.protect(),
       
    finalizeConstruction: function(){
@@ -12663,6 +12663,8 @@ var DataElementBehaviour = new Class({
    options: {
       bindSelector : "@bind",
       hrefSelector : "/@href",
+      indexVariable : "index",
+      indexVariableSelector : "@indexVariable",
       maxOccuresSelector : "@maxOccures",
       minOccuresSelector : "@minOccures",
       overwriteElementReference : true,
@@ -12692,11 +12694,19 @@ var DataElementBehaviour = new Class({
       if( this.numberOfConstructedSiblings == this.siblings.size() ) this.constructionChain.callChain();
    },
    
+   unmarshallDataBehaviour: function(){
+      this.unmarshallDataProperties();
+      this.loadDataSource();
+      this.determineDataElementsNumber();
+      this.instantiateSiblings();
+   },
+
    //Properties
    getDataElementsIndex: function() { return this.dataElementsIndex; },
    getDataElementsNumber: function() { return this.dataElementsNumber; },
    getDataXml: function() { return this.dataXml; },
    getBind: function() { return this.bind; },
+   getIndexVariable: function() { return this.options.indexVariable; },
    getMaxOccures: function() { return this.maxOccures; },
    getMinOccures: function() { return this.minOccures; },
    getSiblings: function() { return this.siblings; },
@@ -12733,15 +12743,22 @@ var DataElementBehaviour = new Class({
       
    }.protect(),
    
+   initializeBindVariables : function(){
+      if( !this.options.variables[this.options.indexVariable] )
+         this.options.variables[this.options.indexVariable] = "'*'";
+   }.protect(),
+   
    instantiateSiblings: function() {
       for( var i = 2; i <= this.dataElementsNumber; i++ ){
-         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { onConstructed : this.onSiblingConstructed, variables : { index : i } });
+         var variables = this.options.variables;
+         variables[this.options.indexVariable] = i;
+         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { onConstructed : this.onSiblingConstructed, variables : variables });
          siblingElement.unmarshall();
          this.siblings.add( siblingElement );
       }
       
       if( this.dataElementsNumber > 1 ) {
-         this.options.variables = { index : 1 };
+         this.options.variables[this.options.indexVariable] = 1;
       }
    }.protect(),
    
@@ -12771,11 +12788,13 @@ var DataElementBehaviour = new Class({
    
    unmarshallDataProperties: function(){
       this.bind = this.definitionElementAttribute( this.options.bindSelector );
+      this.options.indexVariable = this.definitionElementAttribute( this.options.indexVariableSelector, this.options.indexVariable );
       this.maxOccures = this.definitionElementAttribute( this.options.maxOccuresSelector );
       this.minOccures = this.definitionElementAttribute( this.options.minOccuresSelector );
       this.source = this.definitionElementAttribute( this.options.sourceSelector );
       
       this.checkIfBindVariableNeeded();
+      this.initializeBindVariables();
    }
 });
 /*
@@ -12844,23 +12863,19 @@ var CompositeDataElement = new Class({
       this.parent();
    },
    
-   instantiateDocumentElement: function( elementDefinition ){
-      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
-      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
-   }.protect(),
-   
-   unmarshall: function( dataElementIndex ){
-      this.unmarshallDataProperties();
-      this.loadDataSource();
-      this.determineDataElementsNumber();
-      this.instantiateSiblings();
+   unmarshall: function(){
+      this.unmarshallDataBehaviour();
       this.parent();
    },
-
+   
    //Properties
    
    //Protected, private helper methods
+   instantiateDocumentElement: function( elementDefinition ){
+      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
+      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
+   }.protect()
    
 });
 /*
@@ -12923,13 +12938,10 @@ var DataElement = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallDataProperties();
-      this.loadDataSource();
-      this.determineDataElementsNumber();
-      this.instantiateSiblings();
+      this.unmarshallDataBehaviour();
       this.parent();
    },
-
+   
    //Properties
    
    //Protected, private helper methods

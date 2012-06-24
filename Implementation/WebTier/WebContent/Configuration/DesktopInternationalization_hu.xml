@@ -107,7 +107,10 @@
     <Resource key="WebUIMenu.documentExamples.diagram" type="String">Diagram</Resource>
     <Resource key="WebUIMenu.documentExamples.dynamicDocument" type="String">Dinamikus dokumentum</Resource>
     <Resource key="WebUIMenu.documentExamples.photoAlbum" type="String">Fotó album</Resource>
+    <Resource key="WebUIMenu.documentExamples.taskDetail" type="String">Feladat részletek</Resource>
+    <Resource key="WebUIMenu.documentExamples.taskList" type="String">Feladat lista</Resource>
     <Resource key="WebUIMenu.documentExamples.videoAlbum" type="String">Videó album</Resource>
+    <Resource key="WebUIMenu.documentExamples.workflowManagement" type="String">Munkafolyamat kezelés</Resource>
 
     <Resource key="WebUIMenu.widgets" type="String">Komponensek</Resource>
     <Resource key="WebUIMenu.widgets.eventsReader" type="String">Esemény napló</Resource>
