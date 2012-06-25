@@ -1691,7 +1691,7 @@ var XmlResource = new Class({
    
    selectNodeText : function( selector, subNode, defaultValue ) {
       var selectedElements = this.selectNodes( selector, subNode );
-      if( selectedElements.length > 0 && selectedElements[0] ) {
+      if( selectedElements && selectedElements.length > 0 && selectedElements[0] ) {
          return XmlResource.determineNodeText( selectedElements[0] );
       }else if( defaultValue ) return defaultValue;
       else return null;
