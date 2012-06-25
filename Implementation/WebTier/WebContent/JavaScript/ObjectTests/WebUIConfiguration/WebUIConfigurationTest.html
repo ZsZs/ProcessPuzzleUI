@@ -287,9 +287,13 @@
       }
       
  //Web UI, Desktop, Skin
- 	  function testGetDefaultSkin() {
- 	  	assertEquals( DEFAULT_SKIN,  webUIConfiguration.getDefaultSkin() );	
- 	  }
+      function testGetEraseStateWhenSkinChange(){
+         assertThat( webUIConfiguration.getEraseStateWhenSkinChange(), is( true ));
+      }
+      
+      function testGetDefaultSkin() {
+         assertEquals( DEFAULT_SKIN,  webUIConfiguration.getDefaultSkin() );	
+      }
  	  
  	  function testGetAvailableSkinElements() {
  	    assertEquals( 2, webUIConfiguration.getAvailableSkinElements().length );

@@ -29,7 +29,7 @@
 	</ac:application>
 	
 	<wui:webUI>
-		<wui:desktop>
+		<wui:desktop eraseStateOnSkinChange="true">
 			<wui:menu definitionURI="../HierarchicalMenuWidget/MenuDefinition.xml"></wui:menu>
 			<wui:availableSkins>
 				<wui:skin name="MochaUI" relativePath="../DesktopConfigurator/Skins/MochaUI" configurationURI="../DesktopConfigurator/Skins/MochaUI/DesktopConfiguration.xml" />

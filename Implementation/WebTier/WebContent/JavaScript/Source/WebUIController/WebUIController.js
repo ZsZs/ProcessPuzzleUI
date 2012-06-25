@@ -49,6 +49,7 @@ var WebUIController = new Class({
       componentName : "WebUIController",
       configurationUri : "Configuration.xml",
       contextRootPrefix : "../../",
+      eraseStateWhenSkinChange : false,
       errorPageUri : "Commons/FrontController/WebUiError.jsp",
       eventFireDelay : 5,
       languageSelectorElementId : "LanguageSelectorWidget",
@@ -94,6 +95,7 @@ var WebUIController = new Class({
       if( this.browserIsSupported() ){
          if( this.options.showSplashForm ) this.showSplashForm();
          this.loadWebUIConfiguration();
+         this.updateOptionsWithConfiguration();
          this.configureLogger();
          this.instantiateComponentStateManager();
          this.restoreComponentsState(),
@@ -118,6 +120,7 @@ var WebUIController = new Class({
    changeSkin : function( newSkinName ){
       this.logger.debug( this.options.componentName + ".changeSkin()." );
       if( newSkinName != this.getCurrentSkin() ){
+         if( this.options.eraseStateWhenSkinChange ) this.stateManager.reset();
          this.destroy();
          this.skin = newSkinName;
          this.configure.delay( this.options.reConfigurationDelay, this );
@@ -414,5 +417,9 @@ var WebUIController = new Class({
       this.messageBus.subscribeToMessage( SkinChangedMessage, this.webUIMessageHandler );
       //this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
       this.configurationChain.callChain();
-   }.protect()
+   }.protect(),
+   
+   updateOptionsWithConfiguration: function(){
+      this.options.eraseStateWhenSkinChange = this.webUIConfiguration.getEraseStateWhenSkinChange();
+   }
 });

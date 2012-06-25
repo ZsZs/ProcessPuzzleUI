@@ -1,21 +1,29 @@
-//WebUIConfiguration.js
-/**
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+/*
+Name: 
+    - WebUIConfiguration
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Description: 
+    - Provides an intention revealing API to the application configuration xml.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Requires:
+    - 
+Provides:
+    - WebUIConfiguration
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 //= require_directory ../FundamentalTypes
@@ -57,6 +65,7 @@ var WebUIConfiguration = new Class({
       availableSkinElementsSelector : "wui:desktop/wui:availableSkins/wui:skin",
       defaultSkinSelector : "wui:desktop/wui:defaultSkin/@name",
       desktopConfigurationURISelector : "/pp:processPuzzleConfiguration/wui:webUI/wui:desktop/@configurationURI",
+      eraseStateWhenSkinChangeSelector : "/pp:processPuzzleConfiguration/wui:webUI/wui:desktop/@eraseStateOnSkinChange",
       i18DefaultLocaleSelector : "in:defaultLocale/text()",
       i18ElementSelector : "/pp:processPuzzleConfiguration/in:internationalization",
       i18LocaleSelector : "text()",
@@ -137,6 +146,7 @@ var WebUIConfiguration = new Class({
    getAvailableSkinElements : function() {return this.xmlResource.selectNodes( this.options.availableSkinElementsSelector, this.webUIElement );},
    getConfigurationElement : function() { return this.webUIElement; },
    getDefaultSkin : function() { return this.xmlResource.selectNode( this.options.defaultSkinSelector, this.webUIElement ).nodeValue; },
+   getEraseStateWhenSkinChange : function() { return parseBoolean( this.xmlResource.selectNodeText( this.options.eraseStateWhenSkinChangeSelector, this.webUIElement, false )); },
    getI18DefaultLocale : function() { return this.xmlResource.selectNode( this.options.i18DefaultLocaleSelector, this.i18Element ).nodeValue; },
    getI18Element : function() { return this.i18Element; },
    getI18Locale : function( localeIndex ){
