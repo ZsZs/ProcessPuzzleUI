@@ -6,7 +6,7 @@ window.CompositeDataElementTest = new Class( {
       testMethods : [
           { method : 'unmarshall_determinesElementProperties', isAsynchron : false },
           { method : 'unmarshall_whenMaxOccuresIsGiven_instantiatesSiblingElements', isAsynchron : false },
-          { method : 'construct_whenMaxOccuresIsGiven_constructsSiblingElements', isAsynchron : true }, 
+          { method : 'construct_whenMaxOccuresIsGiven_constructsSiblingElements', isAsynchron : true },
           { method : 'destroy_whenConstructed_destroysHtmlElements', isAsynchron : true }]
    },
 

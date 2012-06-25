@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DataElement = new Class({
    Extends: DocumentElement,
-   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'retrieveData'],
+   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -68,12 +68,12 @@ var DataElement = new Class({
    compileConstructionChain: function(){
       this.constructionChain.chain( 
          this.retrieveData, 
-         this.constructSiblings, 
          this.createHtmlElement, 
          this.injectHtmlElement, 
          this.constructPlugin, 
          this.authorization, 
          this.associateEditor, 
+         this.constructSiblings, 
          this.finalizeConstruction 
       );
    }.protect(),

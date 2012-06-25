@@ -94,15 +94,18 @@ var CompositeDocumentElement = new Class({
    constructNestedElements: function( contextElement ){
       if( contextElement ) this.nestedElementsContext = contextElement;
       else this.nestedElementsContext = this.htmlElement;
-      this.elements.each( function( elementsEntry, index ){
-         var nestedElement = elementsEntry.getValue();
-         nestedElement.construct( this.nestedElementsContext );
-      }, this );      
+      
+      if( this.elements.size() > 0 ){
+         this.elements.each( function( elementsEntry, index ){
+            var nestedElement = elementsEntry.getValue();
+            nestedElement.construct( this.nestedElementsContext );
+         }, this );      
+      }else this.constructionChain.callChain();
    }.protect(),
    
    instantiateDocumentElement: function( elementDefinition ){
       var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
-      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
       return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    

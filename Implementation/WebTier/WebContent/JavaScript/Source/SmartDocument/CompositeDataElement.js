@@ -31,6 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDataElement = new Class({
    Extends: CompositeDocumentElement,
+   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -54,8 +55,6 @@ var CompositeDataElement = new Class({
    construct: function( contextElement, where ){
       this.contextElement = contextElement;
       this.where = where;
-      this.retrieveData();
-      this.constructSiblings();
       this.parent( contextElement, where );
    },
    
@@ -72,10 +71,18 @@ var CompositeDataElement = new Class({
    //Properties
    
    //Protected, private helper methods
-   instantiateDocumentElement: function( elementDefinition ){
-      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
-      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
+   compileConstructionChain: function(){
+      this.constructionChain.chain(
+         this.retrieveData,
+         this.createHtmlElement, 
+         this.injectHtmlElement, 
+         this.associateEditor, 
+         this.constructPlugin, 
+         this.constructNestedElements, 
+         this.authorization, 
+         this.constructSiblings,
+         this.finalizeConstruction 
+      );
    }.protect()
    
 });

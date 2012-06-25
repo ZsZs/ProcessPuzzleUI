@@ -30,6 +30,7 @@ var DataElementBehaviour = new Class({
    options: {
       bindSelector : "@bind",
       hrefSelector : "/@href",
+      eventFireDelay : 2,
       indexVariable : "index",
       indexVariableSelector : "@indexVariable",
       maxOccuresSelector : "@maxOccures",
@@ -50,7 +51,7 @@ var DataElementBehaviour = new Class({
       this.href;
       this.maxOccures;
       this.minOccures;
-      this.numberOfConstructedSiblings;
+      this.numberOfConstructedSiblings = 0;
       this.siblings;
       this.source;
    },
@@ -59,6 +60,12 @@ var DataElementBehaviour = new Class({
    onSiblingConstructed: function(){
       this.numberOfConstructedSiblings++;
       if( this.numberOfConstructedSiblings == this.siblings.size() ) this.constructionChain.callChain();
+   },
+   
+   onSiblingConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+      this.fireEvent( 'constructionError', this.error, this.options.eventFireDelay );
    },
    
    unmarshallDataBehaviour: function(){
@@ -90,6 +97,7 @@ var DataElementBehaviour = new Class({
    
    constructSiblings: function(){
       if( this.siblings.size() > 0 ){
+         this.numberOfConstructedSiblings = 0;
          this.siblings.each( function( siblingElement, index ){
             siblingElement.construct( this.contextElement, this.where );
          }, this );      
@@ -108,6 +116,7 @@ var DataElementBehaviour = new Class({
          siblingElement.destroy();
       }, this );
       
+      this.numberOfConstructedSiblings = 0;
    }.protect(),
    
    initializeBindVariables : function(){
@@ -119,7 +128,10 @@ var DataElementBehaviour = new Class({
       for( var i = 2; i <= this.dataElementsNumber; i++ ){
          var variables = this.options.variables;
          variables[this.options.indexVariable] = i;
-         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { onConstructed : this.onSiblingConstructed, variables : variables });
+         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { 
+            onConstructed : this.onSiblingConstructed, 
+            onConstructionError : this.onSiblingConstructionError, 
+            variables : variables });
          siblingElement.unmarshall();
          this.siblings.add( siblingElement );
       }
