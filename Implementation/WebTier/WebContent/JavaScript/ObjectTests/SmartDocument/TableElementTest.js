@@ -58,6 +58,7 @@ window.TableElementTest = new Class( {
       assertThat( this.tableElement.getBind(), equalTo( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_SELECTOR + "/@bind" )));
       assertThat( this.tableElement.getId(), equalTo( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_SELECTOR + "/@id" ) ));
       assertThat( this.tableElement.getMaxOccures(), equalTo( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_SELECTOR + "/@maxOccures" )));
+      assertThat( this.tableElement.isEditable(), equalTo( parseBoolean( this.documentDefinition.selectNodeText( this.constants.ELEMENT_DEFINITION_SELECTOR + "/@isEditable" ))));
    },
    
    unmarshall_determinesRowNumber : function() {
@@ -87,9 +88,9 @@ window.TableElementTest = new Class( {
       this.testCaseChain.chain(
          function(){ this.tableElement.unmarshall(); this.tableElement.construct( this.documentContainerElement, "bottom" ); }.bind( this ),
          function(){
-            assertThat( this.documentContainerElement.getChildren( 'table' ).length, equalTo( 1 ));         
-            assertThat( this.documentContainerElement.getElements( 'table thead' ).length, equalTo( 1 ));         
-            assertThat( this.documentContainerElement.getElements( 'table tbody' ).length, equalTo( 1 ));         
+            assertThat( this.documentContainerElement.getChildren( 'div table' ).length, equalTo( 1 ));         
+            assertThat( this.documentContainerElement.getElements( 'div table thead' ).length, equalTo( 1 ));         
+            assertThat( this.documentContainerElement.getElements( 'div table tbody' ).length, equalTo( 1 ));         
             this.testMethodReady();
          }.bind( this )
       ).callChain();

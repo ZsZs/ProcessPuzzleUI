@@ -37,6 +37,7 @@ var DocumentElement = new Class({
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       isEditable : false,
+      isEditableSelector : "@isEditable",
       pluginSelector : "plugin",
       referenceSelector : "@href",
       sourceSelector : "@source",
@@ -109,12 +110,7 @@ var DocumentElement = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallId();
-      this.unmarshallReference();
-      this.unmarshallSource();
-      this.unmarshallStyle();
-      this.unmarshallTag();
-      this.unmarshallText();
+      this.unmarshallProperties();
       this.unmarshallPlugin();
       this.status = DocumentElement.States.UNMARSHALLED;
    },
@@ -135,7 +131,7 @@ var DocumentElement = new Class({
    getText: function() { return this.text; },
    getResourceType: function() { return this.options.type; },
    getResourceUri: function() { return resourceUri; },
-   isEditable: function() { return this.editable; },
+   isEditable: function() { return this.editable ? this.editable : this.options.isEditable; },
    isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
@@ -226,12 +222,26 @@ var DocumentElement = new Class({
       if( this.dataElementsIndex > 0 ) this.id += "#" + this.dataElementsIndex; 
    }.protect(),
    
+   unmarshallIsEditable: function(){
+      this.options.isEditable = parseBoolean( XmlResource.selectNodeText( this.options.isEditableSelector, this.definitionElement, null, this.options.isEditable ));
+   }.protect(),
+   
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
          this.plugin = new DocumentPlugin( pluginDefinition, this.resourceBundle, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginError } );
          this.plugin.unmarshall();
       }
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.unmarshallId();
+      this.unmarshallIsEditable();
+      this.unmarshallReference();
+      this.unmarshallSource();
+      this.unmarshallStyle();
+      this.unmarshallTag();
+      this.unmarshallText();
    }.protect(),
    
    unmarshallReference: function(){

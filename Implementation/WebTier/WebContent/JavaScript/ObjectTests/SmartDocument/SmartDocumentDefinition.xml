@@ -62,7 +62,7 @@
 	         <dataElement tag="li" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
          </compositeDataElement>
          
-         <tableElement id="channelItemsContainer" bind="//rss/channel/item[{index}]" maxOccures="unbounded">
+         <tableElement id="channelItemsContainer" bind="//rss/channel/item[{index}]" maxOccures="unbounded" isEditable="true">
             <tableColumn id="itemTitle" label="DynamicDocument.RSS.itemTitle" bind="//rss/channel/item/title"/>
             <tableColumn id="itemDescription" label="DynamicDocument.RSS.itemDescription" bind="//rss/channel/item/description"/>
          </tableElement>

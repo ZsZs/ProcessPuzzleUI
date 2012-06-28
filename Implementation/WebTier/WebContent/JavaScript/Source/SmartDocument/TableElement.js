@@ -30,11 +30,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var TableElement = new Class({
    Extends: CompositeDataElement,
-   Binds: ['constructBody', 'constructHeader', 'onBodyConstructed', 'onBodyConstructionError', 'onHeaderConstructed', 'onHeaderConstructionError'],
+   Binds: ['constructBody', 'constructHeader', 'createTableElement', 'onBodyConstructed', 'onBodyConstructionError', 'onHeaderConstructed', 'onHeaderConstructionError'],
    
    options: {
-      componentName : "FormElement",
-      maxRowCountSelector : "@maxRowCount",
+      componentName : "TableElement",
+      editableClass : "editableContainer",
+      readOnlyClass : "readOnlyContainer"
    },
    
    //Constructor
@@ -42,10 +43,11 @@ var TableElement = new Class({
       this.parent( definitionElement, bundle, dataXml, options );
       
       this.body;
-      this.controlsContainerElement;
+//      this.controlsContainerElement;
       this.header;
       this.maxRowCount;
-      this.fieldsContainerElement;
+//      this.fieldsContainerElement;
+      this.tableElement;
    },
    
    //Public mutators and accessor methods
@@ -81,6 +83,7 @@ var TableElement = new Class({
 
    //Properties
    getBody: function() { return this.body; },
+   getContainerClass: function() { return this.isEditable() ? this.options.editableClass : this.options.readOnlyClass; },
    getHeader: function() { return this.header; },
    getMaxRowCount: function() { return this.maxRowCount; },
    
@@ -88,6 +91,7 @@ var TableElement = new Class({
    compileConstructionChain: function(){
       this.constructionChain.chain(
          this.createHtmlElement, 
+         this.createTableElement,
          this.injectHtmlElement, 
          this.associateEditor, 
          this.constructPlugin, 
@@ -100,19 +104,25 @@ var TableElement = new Class({
    }.protect(),
    
    constructBody : function(){
-      this.body.construct( this.htmlElement, "bottom" );
+      this.body.construct( this.tableElement, "bottom" );
    }.protect(),
    
    constructHeader : function(){
-      this.header.construct( this.htmlElement, "bottom" );
+      this.header.construct( this.tableElement, "bottom" );
    }.protect(),
    
-   constructNestedElements : function(){
-      this.parent( this.fieldsContainerElement );
-   }.protect(),
-   
+//   constructNestedElements : function(){
+//      this.parent( this.fieldsContainerElement );
+//   }.protect(),
+//   
    createHtmlElement : function(){
-      this.htmlElement = this.elementFactory.create( "table", null, this.contextElement, WidgetElementFactory.Positions.LastChild, { id : this.id });
+      this.tag = "div";
+      this.style = this.getContainerClass();
+      this.parent();
+   }.protect(),
+   
+   createTableElement : function(){
+      this.tableElement = this.elementFactory.create( "table", null, this.htmlElement, WidgetElementFactory.Positions.LastChild, { id : this.id });
       this.constructionChain.callChain();
    }.protect(),
    
