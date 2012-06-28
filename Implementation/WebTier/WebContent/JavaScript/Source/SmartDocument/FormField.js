@@ -56,7 +56,6 @@ var FormField = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallProperties();
       this.parent();
    },
 
@@ -84,5 +83,6 @@ var FormField = new Class({
    
    unmarshallProperties: function(){
       this.label = this.resourceBundle.getText( XmlResource.determineAttributeValue( this.definitionElement, this.options.labelSelector ));
+      this.parent();
    }
 });

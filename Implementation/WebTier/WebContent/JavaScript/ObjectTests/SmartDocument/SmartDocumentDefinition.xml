@@ -55,7 +55,7 @@
 	         <formField id="managingEditor" label="DynamicDocument.RSS.managingEditor" bind="/rss/channel/managingEditor"/>
 	         <formField id="webMaster" label="DynamicDocument.RSS.webMaster" bind="/rss/channel/webMaster"/>
          </formElement>
-         
+
          <element  tag="h4" id="channelItems">SmartDocument.itemsTitle</element>
          <compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
 	         <dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
@@ -66,6 +66,8 @@
             <tableColumn id="itemTitle" label="DynamicDocument.RSS.itemTitle" bind="//rss/channel/item/title"/>
             <tableColumn id="itemDescription" label="DynamicDocument.RSS.itemDescription" bind="//rss/channel/item/description"/>
          </tableElement>
+<!--          
+ -->         
          
       </compositeElement>
       

@@ -54,7 +54,6 @@ var FormElement = new Class({
    },
    
    unmarshall: function( dataElementIndex ){
-      this.unmarshallProperties();
       this.parent();
    },
 
@@ -75,5 +74,6 @@ var FormElement = new Class({
    
    unmarshallProperties: function(){
       this.method = this.resourceBundle.getText( XmlResource.determineAttributeValue( this.definitionElement, this.options.methodSelector ));
+      this.parent();
    }   
 });

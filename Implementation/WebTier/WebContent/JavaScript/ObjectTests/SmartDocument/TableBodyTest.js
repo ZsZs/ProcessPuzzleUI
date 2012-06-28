@@ -20,7 +20,7 @@ window.TableBodyTest = new Class( {
    
    initialize : function( options ) {
       this.setOptions( options );
-      
+
       this.bundle;
       this.tableBody;
       this.documentContentResource;
