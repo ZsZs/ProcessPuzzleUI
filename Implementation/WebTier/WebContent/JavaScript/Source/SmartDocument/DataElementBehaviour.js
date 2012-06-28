@@ -45,8 +45,8 @@ var DataElementBehaviour = new Class({
       
       //Private variables
       this.bind;
+      this.bindedData;
       this.dataXml = data;
-      //this.dataElementsIndex = index ? index : 0;
       this.dataElementsNumber;
       this.href;
       this.maxOccures;
@@ -76,10 +76,11 @@ var DataElementBehaviour = new Class({
    },
 
    //Properties
+   getBind: function() { return this.bind; },
+   getBindedData: function() { return this.bindedData; },
    getDataElementsIndex: function() { return this.dataElementsIndex; },
    getDataElementsNumber: function() { return this.dataElementsNumber; },
    getDataXml: function() { return this.dataXml; },
-   getBind: function() { return this.bind; },
    getIndexVariable: function() { return this.options.indexVariable; },
    getMaxOccures: function() { return this.maxOccures; },
    getMinOccures: function() { return this.minOccures; },
@@ -106,9 +107,9 @@ var DataElementBehaviour = new Class({
    
    determineDataElementsNumber: function(){
       var dataSelector = this.bind.substitute( this.options.variables );
-      var bindedData = this.dataXml.selectNodes( dataSelector );
-      if( this.maxOccures == 'unbounded' && bindedData.length > 1 ) this.dataElementsNumber = bindedData.length;
-      if( this.maxOccures > 1 && this.maxOccures < bindedData.length ) this.dataElementsNumber = this.maxOccures;
+      this.bindedData = this.dataXml.selectNodes( dataSelector );
+      if( this.maxOccures == 'unbounded' && this.bindedData.length > 1 ) this.dataElementsNumber = this.bindedData.length;
+      if( this.maxOccures > 1 && this.maxOccures < this.bindedData.length ) this.dataElementsNumber = this.maxOccures;
    }.protect(),
    
    destroySiblings: function(){
@@ -155,11 +156,18 @@ var DataElementBehaviour = new Class({
    }.protect(),
    
    retrieveData: function(){
-      if( this.bind && this.dataXml && instanceOf( this.dataXml, XmlResource ) ){
+      if( this.bind && this.dataXml ){
          var dataSelector = this.bind.substitute( this.options.variables );
-         this.text = this.dataXml.selectNodeText( dataSelector );
+         var href = null;
+         if( instanceOf( this.dataXml, XmlResource ) ){
+            this.text = this.dataXml.selectNodeText( dataSelector );
+            href = this.dataXml.selectNodeText( dataSelector + this.options.hrefSelector );
+         }else if( typeOf( this.dataXml ) == "element" ){
+            this.text = XmlResource.selectNodeText( dataSelector, this.dataXml );
+            href = XmlResource.selectNodeText( dataSelector + this.options.hrefSelector, this.dataXml );
+         }
+      
          if( this.text ) this.text.trim();
-         var href = this.dataXml.selectNodeText( dataSelector + this.options.hrefSelector );
          if( href && this.options.overwriteElementReference ) this.reference = href;
       }      
       this.constructionChain.callChain();

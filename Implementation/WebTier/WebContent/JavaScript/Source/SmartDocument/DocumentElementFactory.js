@@ -54,6 +54,10 @@ var DocumentElementFactory = new Class({
          newDocumentElement = new FormElement( definitionXmlElement, bundle, data, options ); break;
       case "FORMFIELD": 
          newDocumentElement = new FormField( definitionXmlElement, bundle, data, options ); break;
+      case "TABLEELEMENT": 
+         newDocumentElement = new TableElement( definitionXmlElement, bundle, data, options ); break;
+      case "TABLECOLUMN": 
+         newDocumentElement = new TableColumn( definitionXmlElement, bundle, data, options ); break;
       case "ELEMENT":
       default:
          newDocumentElement = new DocumentElement( definitionXmlElement, bundle, options ); break;

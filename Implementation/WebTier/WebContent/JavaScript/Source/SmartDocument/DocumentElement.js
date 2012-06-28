@@ -163,9 +163,9 @@ var DocumentElement = new Class({
    
    createAnchorIfNeeded: function(){
       if( this.reference ){
-         var anchorElement = this.elementFactory.createAnchor( this.text, this.reference, null, this.htmlElement );
+         this.elementFactory.createAnchor( this.text, this.reference, null, this.htmlElement );
       }else {
-         if( this.text ) this.htmlElement.appendText( this.text );
+         if( this.text ) this.htmlElement.appendText( this.resourceBundle.getText( this.text ));
       }
    }.protect(),
    

@@ -47,6 +47,8 @@ var DocumentElementEditorFactory = new Class({
       case "CompositeDocumentElement": 
       case "DocumentElement": 
          documentElementEditor = new DocumentElementEditor( subjectHtmlElement, options ); break;
+      case "TableCell": 
+         documentElementEditor = new DataElementEditor( subjectHtmlElement, options ); break;
       }
       
       return documentElementEditor;

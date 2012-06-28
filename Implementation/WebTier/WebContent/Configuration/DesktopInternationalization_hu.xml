@@ -131,6 +131,9 @@
     <Resource key="PhotoGaleryDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület</Resource>
     <Resource key="PhotoGaleryDocument.subTitle" type="String">Okos dokumentum példa</Resource>
     
+    <Resource key="PersonalToDoList.activityDescription" type="String">Leírás</Resource>
+    <Resource key="PersonalToDoList.activityDuration" type="String">Tartam</Resource>
+    <Resource key="PersonalToDoList.activityName" type="String">Megnevezés</Resource>
     <Resource key="PersonalToDoList.introduction" type="String">A bejelentkezett személy feladat listája.</Resource>
     <Resource key="PersonalToDoList.title" type="String">Személyes feladat lista</Resource>
     
