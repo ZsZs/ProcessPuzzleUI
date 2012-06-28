@@ -14,17 +14,23 @@
       <activities>
          <activity id="activity_1-1">
             <name>Scrum csapatok létrehozása</name>
-            <description></description>
+            <description>
+               Képezzektek 4-6 fős Scrum csapatokat, válasszatok egy-egy Termék tulajdonost és Scrum Mestert.
+            </description>
             <duration>2 perc</duration>
          </activity>
          <activity id="activity_1-2">
             <name>Terméktulajdonos ismerteti az elképzelését</name>
-            <description></description>
+            <description>
+               A Termék tulajdonos nézze át az előre elkészített Projekt víziót, majd ismertessa a csapattal a saját részletekkel, úgymint a megoldandó problémák, vázlatok megoldás és az ebből származó üzleti előnyök. 
+            </description>
             <duration>8 perc</duration>
          </activity>
          <activity id="activity_1-3">
             <name>A scrum mester beszámol a megértett elképzelésről</name>
-            <description></description>
+            <description>
+               Mindegyik csapat Scrum mester, a teljes hallgatóság előtt, összefoglalja a projekt célját 2 perben.
+            </description>
             <duration>4 perc</duration>
          </activity>
       </activities>
