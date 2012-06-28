@@ -22,9 +22,9 @@
    
    <documentBody tag="div" id="toDoListBody">
       <tableElement id="toDoTableContainer" bind="//pp:workflow/workflowDetail/activities/activity[{index}]" maxOccures="unbounded">
-         <tableColumn id="activityName" label="PersonalToDoList.activityName" bind="//pp:workflow/workflowDetail/activities/activity/name"/>
-         <tableColumn id="activityDescription" label="PersonalToDoList.activityDescription" bind="//pp:workflow/workflowDetail/activities/activity/description"/>
-         <tableColumn id="activityDuration" label="PersonalToDoList.activityDuration" bind="//pp:workflow/workflowDetail/activities/activity/duration"/>
+         <tableColumn id="activityName" label="PersonalToDoList.activityName" bind="name"/>
+         <tableColumn id="activityDescription" label="PersonalToDoList.activityDescription" bind="description"/>
+         <tableColumn id="activityDuration" label="PersonalToDoList.activityDuration" bind="duration"/>
       </tableElement>
    </documentBody>   
 </smartDocumentDefinition>

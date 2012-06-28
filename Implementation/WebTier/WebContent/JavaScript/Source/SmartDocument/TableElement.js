@@ -127,7 +127,7 @@ var TableElement = new Class({
    }.protect(),
    
    unmarshallBody: function(){
-      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.dataXml, this.header.getColumnHeaders(), { onConstructed : this.onBodyConstructed, onConstructionError : this.onBodyConstructionError });
+      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.bindedData, this.header.getColumnHeaders(), { onConstructed : this.onBodyConstructed, onConstructionError : this.onBodyConstructionError });
       this.body.unmarshall();
    }.protect(),
    

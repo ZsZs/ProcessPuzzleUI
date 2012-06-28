@@ -41,7 +41,7 @@ var TableBody = new Class({
       this.parent( definitionElement, bundle, options );
       
       this.columnHeaders = columnHeaders;
-      this.dataSet = new Array.from( dataSet );
+      this.dataSet = dataSet;
       this.rowsConstructionChain = new Chain();
       this.rows = new ArrayList();
    },
