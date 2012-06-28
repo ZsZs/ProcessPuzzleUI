@@ -2256,6 +2256,7 @@ var AbstractDocument = new Class({
       documentDefinitionUriSelector: "@documentDefinition",
       documentEditorClass : "DocumentEditor",
       documentVariables : null,
+      eventFireDelay : 5,
       handleMenuSelectedEventsDefault : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
       nameSelector : "name",
@@ -2429,7 +2430,7 @@ var AbstractDocument = new Class({
    
    finalizeConstruction: function(){
       this.state = AbstractDocument.States.CONSTRUCTED;
-      this.fireEvent('documentReady', this );
+      this.fireEvent('documentReady', this, this.options.eventFireDelay );
    }.protect(),
    
    finalizeDestruction: function(){
