@@ -11,7 +11,7 @@
          <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DocumentCommentsDefinition.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 		<tab tabId="ConsoleTab.todo" caption="ConsoleTabs.todo">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/PersonalToDoListDefinition.xml', documentContentURI : 'Content/Workflow.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
+         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/PersonalToDoListDefinition.xml', documentContentURI : 'Content/System/Workflow.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
       </tab>
 	</tabWidget>
 	

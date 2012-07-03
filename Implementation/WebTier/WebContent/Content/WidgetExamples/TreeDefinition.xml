@@ -20,8 +20,8 @@
 	         <treeNode nodeId="132" caption="WebUIMenu.documentExamples.taskDetail" image="Desktops/Images/TreeWidget/page16x16.gif" orderNumber="2">
                <messageProperties>{ 
                   activityType : AbstractDocument.Activity.LOAD_DOCUMENT, 
-                  documentContentURI : 'Content/Workflow.xml', 
-                  documentURI : 'Content/TaskDetail.xml', 
+                  documentContentURI : 'Content/System/Workflow.xml', 
+                  documentURI : 'Content/System/TaskDetail.xml', 
                   documentType : AbstractDocument.Types.SMART,
                   documentVariables : { activityIndex:'1', workflowDetailIndex: '2' } 
                }
