@@ -1,5 +1,5 @@
 // MooTools: the javascript framework.
-// Load this file's selection again by visiting: http://mootools.net/more/065f2f092ece4e3b32bb5214464cf926 
+// Load this file's selection again by visiting: http://mootools.net/more 
 // Or build this file again with packager using: packager build More/More More/Events.Pseudos More/Class.Refactor More/Class.Binds More/Class.Occlude More/Chain.Wait More/Array.Extras More/Date More/Date.Extras More/Number.Format More/Object.Extras More/String.Extras More/String.QueryString More/URI More/URI.Relative More/Hash More/Hash.Extras More/Element.Forms More/Elements.From More/Element.Event.Pseudos More/Element.Event.Pseudos.Keys More/Element.Measure More/Element.Pin More/Element.Position More/Element.Shortcuts More/Form.Request More/Form.Request.Append More/Form.Validator More/Form.Validator.Inline More/Form.Validator.Extras More/OverText More/Fx.Elements More/Fx.Accordion More/Fx.Move More/Fx.Reveal More/Fx.Scroll More/Fx.Slide More/Fx.SmoothScroll More/Fx.Sort More/Drag More/Drag.Move More/Slider More/Sortables More/Request.JSONP More/Request.Queue More/Request.Periodical More/Assets More/Color More/Group More/Hash.Cookie More/IframeShim More/Table More/HtmlTable More/HtmlTable.Zebra More/HtmlTable.Sort More/HtmlTable.Select More/Keyboard More/Keyboard.Extras More/Mask More/Scroller More/Tips More/Spinner More/Locale More/Locale.Set.From More/Locale.en-US.Date More/Locale.en-US.Form.Validator More/Locale.en-US.Number More/Locale.ar.Date More/Locale.ar.Form.Validator More/Locale.ca-CA.Date More/Locale.ca-CA.Form.Validator More/Locale.cs-CZ.Date More/Locale.cs-CZ.Form.Validator More/Locale.da-DK.Date More/Locale.da-DK.Form.Validator More/Locale.de-CH.Date More/Locale.de-CH.Form.Validator More/Locale.de-DE.Date More/Locale.de-DE.Form.Validator More/Locale.de-DE.Number More/Locale.en-GB.Date More/Locale.es-AR.Date More/Locale.es-AR.Form.Validator More/Locale.es-ES.Date More/Locale.es-ES.Form.Validator More/Locale.et-EE.Date More/Locale.et-EE.Form.Validator More/Locale.EU.Number More/Locale.fa.Date More/Locale.fa.Form.Validator More/Locale.fi-FI.Date More/Locale.fi-FI.Form.Validator More/Locale.fi-FI.Number More/Locale.fr-FR.Date More/Locale.fr-FR.Form.Validator More/Locale.fr-FR.Number More/Locale.he-IL.Date More/Locale.he-IL.Form.Validator More/Locale.he-IL.Number More/Locale.hu-HU.Date More/Locale.hu-HU.Form.Validator More/Locale.it-IT.Date More/Locale.it-IT.Form.Validator More/Locale.ja-JP.Date More/Locale.ja-JP.Form.Validator More/Locale.ja-JP.Number More/Locale.nl-NL.Date More/Locale.nl-NL.Form.Validator More/Locale.nl-NL.Number More/Locale.no-NO.Date More/Locale.no-NO.Form.Validator More/Locale.pl-PL.Date More/Locale.pl-PL.Form.Validator More/Locale.pt-BR.Date More/Locale.pt-BR.Form.Validator More/Locale.pt-PT.Date More/Locale.pt-PT.Form.Validator More/Locale.ru-RU-unicode.Date More/Locale.ru-RU-unicode.Form.Validator More/Locale.si-SI.Date More/Locale.si-SI.Form.Validator More/Locale.sv-SE.Date More/Locale.sv-SE.Form.Validator More/Locale.uk-UA.Date More/Locale.uk-UA.Form.Validator More/Locale.zh-CH.Date More/Locale.zh-CH.Form.Validator
 /*
 ---
@@ -395,7 +395,7 @@ license: MIT-style license
 
 authors:
   - Christoph Pojer
-  - Sebastian Markbåge
+  - Sebastian MarkbĂĄge
 
 requires:
   - Core/Array
@@ -1641,47 +1641,47 @@ provides: [String.Extras]
 (function(){
 
 var special = {
-	'a': /[àáâãäåăą]/g,
-	'A': /[ÀÁÂÃÄÅĂĄ]/g,
-	'c': /[ćčç]/g,
-	'C': /[ĆČÇ]/g,
-	'd': /[ďđ]/g,
-	'D': /[ĎÐ]/g,
-	'e': /[èéêëěę]/g,
-	'E': /[ÈÉÊËĚĘ]/g,
-	'g': /[ğ]/g,
-	'G': /[Ğ]/g,
-	'i': /[ìíîï]/g,
-	'I': /[ÌÍÎÏ]/g,
-	'l': /[ĺľł]/g,
-	'L': /[ĹĽŁ]/g,
-	'n': /[ñňń]/g,
-	'N': /[ÑŇŃ]/g,
-	'o': /[òóôõöøő]/g,
-	'O': /[ÒÓÔÕÖØ]/g,
-	'r': /[řŕ]/g,
-	'R': /[ŘŔ]/g,
-	's': /[ššş]/g,
-	'S': /[ŠŞŚ]/g,
-	't': /[ťţ]/g,
-	'T': /[ŤŢ]/g,
-	'ue': /[ü]/g,
-	'UE': /[Ü]/g,
-	'u': /[ùúûůµ]/g,
-	'U': /[ÙÚÛŮ]/g,
-	'y': /[ÿý]/g,
-	'Y': /[ŸÝ]/g,
-	'z': /[žźż]/g,
-	'Z': /[ŽŹŻ]/g,
-	'th': /[þ]/g,
-	'TH': /[Þ]/g,
-	'dh': /[ð]/g,
-	'DH': /[Ð]/g,
-	'ss': /[ß]/g,
-	'oe': /[œ]/g,
-	'OE': /[Œ]/g,
-	'ae': /[æ]/g,
-	'AE': /[Æ]/g
+	'a': /[Ă ĂˇĂ˘ĂŁĂ¤ĂĄÄ�Ä…]/g,
+	'A': /[Ă€Ă�Ă‚Ă�Ă„Ă…Ä‚Ä„]/g,
+	'c': /[Ä‡ÄŤĂ§]/g,
+	'C': /[Ä†ÄŚĂ‡]/g,
+	'd': /[ÄŹÄ‘]/g,
+	'D': /[ÄŽĂ�]/g,
+	'e': /[Ă¨Ă©ĂŞĂ«Ä›Ä™]/g,
+	'E': /[Ă�Ă‰ĂŠĂ‹ÄšÄ�]/g,
+	'g': /[Äź]/g,
+	'G': /[Äž]/g,
+	'i': /[Ă¬Ă­Ă®ĂŻ]/g,
+	'I': /[ĂŚĂŤĂŽĂŹ]/g,
+	'l': /[ÄşÄľĹ‚]/g,
+	'L': /[ÄąÄ˝Ĺ�]/g,
+	'n': /[Ă±Ĺ�Ĺ„]/g,
+	'N': /[Ă‘Ĺ‡Ĺ�]/g,
+	'o': /[Ă˛ĂłĂ´ĂµĂ¶Ă¸Ĺ‘]/g,
+	'O': /[Ă’Ă“Ă”Ă•Ă–Ă�]/g,
+	'r': /[Ĺ™Ĺ•]/g,
+	'R': /[Ĺ�Ĺ”]/g,
+	's': /[ĹˇĹˇĹź]/g,
+	'S': /[Ĺ ĹžĹš]/g,
+	't': /[ĹĄĹŁ]/g,
+	'T': /[Ĺ¤Ĺ˘]/g,
+	'ue': /[ĂĽ]/g,
+	'UE': /[Ăś]/g,
+	'u': /[ĂąĂşĂ»ĹŻÂµ]/g,
+	'U': /[Ă™ĂšĂ›Ĺ®]/g,
+	'y': /[ĂżĂ˝]/g,
+	'Y': /[Ĺ¸Ăť]/g,
+	'z': /[ĹľĹşĹĽ]/g,
+	'Z': /[Ĺ˝ĹąĹ»]/g,
+	'th': /[Ăľ]/g,
+	'TH': /[Ăž]/g,
+	'dh': /[Ă°]/g,
+	'DH': /[Ă�]/g,
+	'ss': /[Ăź]/g,
+	'oe': /[Ĺ“]/g,
+	'OE': /[Ĺ’]/g,
+	'ae': /[Ă¦]/g,
+	'AE': /[Ă†]/g
 },
 
 tidy = {
@@ -1745,7 +1745,7 @@ String.implement({
 
 	truncate: function(max, trail, atChar){
 		var string = this;
-		if (trail == null && arguments.length == 1) trail = '…';
+		if (trail == null && arguments.length == 1) trail = 'â€¦';
 		if (string.length > max){
 			string = string.substring(0, max);
 			if (atChar){
@@ -1774,7 +1774,7 @@ description: Methods for dealing with URI query strings.
 license: MIT-style license
 
 authors:
-  - Sebastian Markbåge
+  - Sebastian MarkbĂĄge
   - Aaron Newton
   - Lennart Pilon
   - Valerio Proietti
@@ -1844,7 +1844,7 @@ description: Provides methods useful in managing the window location and uris.
 license: MIT-style license
 
 authors:
-  - Sebastian Markbåge
+  - Sebastian MarkbĂĄge
   - Aaron Newton
 
 requires:
@@ -2015,7 +2015,7 @@ description: Extends the URI class to add methods for computing relative and abs
 license: MIT-style license
 
 authors:
-  - Sebastian Markbåge
+  - Sebastian MarkbĂĄge
 
 
 requires:
@@ -10019,22 +10019,22 @@ provides: [Locale.ar.Form.Validator]
 
 Locale.define('ar', 'FormValidator', {
 
-	required: 'هذا الحقل مطلوب.',
-	minLength: 'رجاءً إدخال {minLength} أحرف على الأقل (تم إدخال {length} أحرف).',
-	maxLength: 'الرجاء عدم إدخال أكثر من {maxLength} أحرف (تم إدخال {length} أحرف).',
-	integer: 'الرجاء إدخال عدد صحيح في هذا الحقل. أي رقم ذو كسر عشري أو مئوي (مثال 1.25 ) غير مسموح.',
-	numeric: 'الرجاء إدخال قيم رقمية في هذا الحقل (مثال "1" أو "1.1" أو "-1" أو "-1.1").',
-	digits: 'الرجاء أستخدام قيم رقمية وعلامات ترقيمية فقط في هذا الحقل (مثال, رقم هاتف مع نقطة أو شحطة)',
-	alpha: 'الرجاء أستخدام أحرف فقط (ا-ي) في هذا الحقل. أي فراغات أو علامات غير مسموحة.',
-	alphanum: 'الرجاء أستخدام أحرف فقط (ا-ي) أو أرقام (0-9) فقط في هذا الحقل. أي فراغات أو علامات غير مسموحة.',
-	dateSuchAs: 'الرجاء إدخال تاريخ صحيح كالتالي {date}',
-	dateInFormatMDY: 'الرجاء إدخال تاريخ صحيح (مثال, 31-12-1999)',
-	email: 'الرجاء إدخال بريد إلكتروني صحيح.',
-	url: 'الرجاء إدخال عنوان إلكتروني صحيح مثل http://www.example.com',
-	currencyDollar: 'الرجاء إدخال قيمة $ صحيحة. مثال, 100.00$',
-	oneRequired: 'الرجاء إدخال قيمة في أحد هذه الحقول على الأقل.',
-	errorPrefix: 'خطأ: ',
-	warningPrefix: 'تحذير: '
+	required: 'Ů‡Ř°Ř§ Ř§Ů„Ř­Ů‚Ů„ Ů…Ř·Ů„Ů�Ř¨.',
+	minLength: 'Ř±Ř¬Ř§ŘˇŮ‹ ŘĄŘŻŘ®Ř§Ů„ {minLength} ŘŁŘ­Ř±Ů� ŘąŮ„Ů‰ Ř§Ů„ŘŁŮ‚Ů„ (ŘŞŮ… ŘĄŘŻŘ®Ř§Ů„ {length} ŘŁŘ­Ř±Ů�).',
+	maxLength: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘąŘŻŮ… ŘĄŘŻŘ®Ř§Ů„ ŘŁŮ�Ř«Ř± Ů…Ů† {maxLength} ŘŁŘ­Ř±Ů� (ŘŞŮ… ŘĄŘŻŘ®Ř§Ů„ {length} ŘŁŘ­Ř±Ů�).',
+	integer: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ ŘąŘŻŘŻ ŘµŘ­ŮŠŘ­ Ů�ŮŠ Ů‡Ř°Ř§ Ř§Ů„Ř­Ů‚Ů„. ŘŁŮŠ Ř±Ů‚Ů… Ř°Ů� Ů�ŘłŘ± ŘąŘ´Ř±ŮŠ ŘŁŮ� Ů…Ř¦Ů�ŮŠ (Ů…Ř«Ř§Ů„ 1.25 ) ŘşŮŠŘ± Ů…ŘłŮ…Ů�Ř­.',
+	numeric: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ Ů‚ŮŠŮ… Ř±Ů‚Ů…ŮŠŘ© Ů�ŮŠ Ů‡Ř°Ř§ Ř§Ů„Ř­Ů‚Ů„ (Ů…Ř«Ř§Ů„ "1" ŘŁŮ� "1.1" ŘŁŮ� "-1" ŘŁŮ� "-1.1").',
+	digits: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘŁŘłŘŞŘ®ŘŻŘ§Ů… Ů‚ŮŠŮ… Ř±Ů‚Ů…ŮŠŘ© Ů�ŘąŮ„Ř§Ů…Ř§ŘŞ ŘŞŘ±Ů‚ŮŠŮ…ŮŠŘ© Ů�Ů‚Ř· Ů�ŮŠ Ů‡Ř°Ř§ Ř§Ů„Ř­Ů‚Ů„ (Ů…Ř«Ř§Ů„, Ř±Ů‚Ů… Ů‡Ř§ŘŞŮ� Ů…Řą Ů†Ů‚Ř·Ř© ŘŁŮ� Ř´Ř­Ř·Ř©)',
+	alpha: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘŁŘłŘŞŘ®ŘŻŘ§Ů… ŘŁŘ­Ř±Ů� Ů�Ů‚Ř· (Ř§-ŮŠ) Ů�ŮŠ Ů‡Ř°Ř§ Ř§Ů„Ř­Ů‚Ů„. ŘŁŮŠ Ů�Ř±Ř§ŘşŘ§ŘŞ ŘŁŮ� ŘąŮ„Ř§Ů…Ř§ŘŞ ŘşŮŠŘ± Ů…ŘłŮ…Ů�Ř­Ř©.',
+	alphanum: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘŁŘłŘŞŘ®ŘŻŘ§Ů… ŘŁŘ­Ř±Ů� Ů�Ů‚Ř· (Ř§-ŮŠ) ŘŁŮ� ŘŁŘ±Ů‚Ř§Ů… (0-9) Ů�Ů‚Ř· Ů�ŮŠ Ů‡Ř°Ř§ Ř§Ů„Ř­Ů‚Ů„. ŘŁŮŠ Ů�Ř±Ř§ŘşŘ§ŘŞ ŘŁŮ� ŘąŮ„Ř§Ů…Ř§ŘŞ ŘşŮŠŘ± Ů…ŘłŮ…Ů�Ř­Ř©.',
+	dateSuchAs: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ ŘŞŘ§Ř±ŮŠŘ® ŘµŘ­ŮŠŘ­ Ů�Ř§Ů„ŘŞŘ§Ů„ŮŠ {date}',
+	dateInFormatMDY: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ ŘŞŘ§Ř±ŮŠŘ® ŘµŘ­ŮŠŘ­ (Ů…Ř«Ř§Ů„, 31-12-1999)',
+	email: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ Ř¨Ř±ŮŠŘŻ ŘĄŮ„Ů�ŘŞŘ±Ů�Ů†ŮŠ ŘµŘ­ŮŠŘ­.',
+	url: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ ŘąŮ†Ů�Ř§Ů† ŘĄŮ„Ů�ŘŞŘ±Ů�Ů†ŮŠ ŘµŘ­ŮŠŘ­ Ů…Ř«Ů„ http://www.example.com',
+	currencyDollar: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ Ů‚ŮŠŮ…Ř© $ ŘµŘ­ŮŠŘ­Ř©. Ů…Ř«Ř§Ů„, 100.00$',
+	oneRequired: 'Ř§Ů„Ř±Ř¬Ř§Řˇ ŘĄŘŻŘ®Ř§Ů„ Ů‚ŮŠŮ…Ř© Ů�ŮŠ ŘŁŘ­ŘŻ Ů‡Ř°Ů‡ Ř§Ů„Ř­Ů‚Ů�Ů„ ŘąŮ„Ů‰ Ř§Ů„ŘŁŮ‚Ů„.',
+	errorPrefix: 'Ř®Ř·ŘŁ: ',
+	warningPrefix: 'ŘŞŘ­Ř°ŮŠŘ±: '
 
 });
 
@@ -10049,7 +10049,7 @@ description: Date messages for Catalan.
 license: MIT-style license
 
 authors:
-  - Ãlfons Sanchez
+  - Ă�lfons Sanchez
 
 requires:
   - /Locale
@@ -10061,8 +10061,8 @@ provides: [Locale.ca-CA.Date]
 
 Locale.define('ca-CA', 'Date', {
 
-	months: ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juli', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'],
-	months_abbr: ['gen.', 'febr.', 'març', 'abr.', 'maig', 'juny', 'jul.', 'ag.', 'set.', 'oct.', 'nov.', 'des.'],
+	months: ['Gener', 'Febrer', 'MarĂ§', 'Abril', 'Maig', 'Juny', 'Juli', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'],
+	months_abbr: ['gen.', 'febr.', 'marĂ§', 'abr.', 'maig', 'juny', 'jul.', 'ag.', 'set.', 'oct.', 'nov.', 'des.'],
 	days: ['Diumenge', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte'],
 	days_abbr: ['dg', 'dl', 'dt', 'dc', 'dj', 'dv', 'ds'],
 
@@ -10107,7 +10107,7 @@ license: MIT-style license
 
 authors:
   - Miquel Hudin
-  - Ãlfons Sanchez
+  - Ă�lfons Sanchez
 
 requires:
   - /Locale
@@ -10125,14 +10125,14 @@ Locale.define('ca-CA', 'FormValidator', {
 	integer: 'Per favor introdueix un nombre enter en aquest camp. Nombres amb decimals (p.e. 1,25) no estan permesos.',
 	numeric: 'Per favor introdueix sols valors numerics en aquest camp (p.e. "1" o "1,1" o "-1" o "-1,1").',
 	digits: 'Per favor usa sols numeros i puntuacio en aquest camp (per exemple, un nombre de telefon amb guions i punts no esta permes).',
-	alpha: 'Per favor utilitza lletres nomes (a-z) en aquest camp. No s´admiteixen espais ni altres caracters.',
-	alphanum: 'Per favor, utilitza nomes lletres (a-z) o numeros (0-9) en aquest camp. No s´admiteixen espais ni altres caracters.',
+	alpha: 'Per favor utilitza lletres nomes (a-z) en aquest camp. No sÂ´admiteixen espais ni altres caracters.',
+	alphanum: 'Per favor, utilitza nomes lletres (a-z) o numeros (0-9) en aquest camp. No sÂ´admiteixen espais ni altres caracters.',
 	dateSuchAs: 'Per favor introdueix una data valida com {date}',
 	dateInFormatMDY: 'Per favor introdueix una data valida com DD/MM/YYYY (p.e. "31/12/1999")',
-	email: 'Per favor, introdueix una adreça de correu electronic valida. Per exemple, "fred@domain.com".',
+	email: 'Per favor, introdueix una adreĂ§a de correu electronic valida. Per exemple, "fred@domain.com".',
 	url: 'Per favor introdueix una URL valida com http://www.example.com.',
-	currencyDollar: 'Per favor introdueix una quantitat valida de €. Per exemple €100,00 .',
-	oneRequired: 'Per favor introdueix alguna cosa per al menys una d´aquestes entrades.',
+	currencyDollar: 'Per favor introdueix una quantitat valida de â‚¬. Per exemple â‚¬100,00 .',
+	oneRequired: 'Per favor introdueix alguna cosa per al menys una dÂ´aquestes entrades.',
 	errorPrefix: 'Error: ',
 	warningPrefix: 'Avis: ',
 
@@ -10147,7 +10147,7 @@ Locale.define('ca-CA', 'FormValidator', {
 	currendDate: 'la data actual',
 	afterDate: 'La data deu ser igual o posterior a {label}.',
 	beforeDate: 'La data deu ser igual o anterior a {label}.',
-	startMonth: 'Per favor selecciona un mes d´orige',
+	startMonth: 'Per favor selecciona un mes dÂ´orige',
 	sameMonth: 'Aquestes dos dates deuen estar dins del mateix mes - deus canviar una o altra.'
 
 });
@@ -10163,7 +10163,7 @@ description: Date messages for Czech.
 license: MIT-style license
 
 authors:
-  - Jan Černý chemiX
+  - Jan ÄŚernĂ˝ chemiX
   - Christopher Zukowski
 
 requires:
@@ -10187,10 +10187,10 @@ var pluralize = function (n, one, few, other){
 
 Locale.define('cs-CZ', 'Date', {
 
-	months: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
-	months_abbr: ['ledna', 'února', 'března', 'dubna', 'května', 'června', 'července', 'srpna', 'září', 'října', 'listopadu', 'prosince'],
-	days: ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'],
-	days_abbr: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+	months: ['Leden', 'Ăšnor', 'BĹ™ezen', 'Duben', 'KvÄ›ten', 'ÄŚerven', 'ÄŚervenec', 'Srpen', 'ZĂˇĹ™Ă­', 'Ĺ�Ă­jen', 'Listopad', 'Prosinec'],
+	months_abbr: ['ledna', 'Ăşnora', 'bĹ™ezna', 'dubna', 'kvÄ›tna', 'ÄŤervna', 'ÄŤervence', 'srpna', 'zĂˇĹ™Ă­', 'Ĺ™Ă­jna', 'listopadu', 'prosince'],
+	days: ['NedÄ›le', 'PondÄ›lĂ­', 'ĂšterĂ˝', 'StĹ™eda', 'ÄŚtvrtek', 'PĂˇtek', 'Sobota'],
+	days_abbr: ['ne', 'po', 'Ăşt', 'st', 'ÄŤt', 'pĂˇ', 'so'],
 
 	// Culture's date order: DD.MM.YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -10203,31 +10203,31 @@ Locale.define('cs-CZ', 'Date', {
 	// Date.Extras
 	ordinal: '.',
 
-	lessThanMinuteAgo: 'před chvílí',
-	minuteAgo: 'přibližně před minutou',
-	minutesAgo: function(delta){ return 'před {delta} ' + pluralize(delta, 'minutou', 'minutami', 'minutami'); },
-	hourAgo: 'přibližně před hodinou',
-	hoursAgo: function(delta){ return 'před {delta} ' + pluralize(delta, 'hodinou', 'hodinami', 'hodinami'); },
-	dayAgo: 'před dnem',
-	daysAgo: function(delta){ return 'před {delta} ' + pluralize(delta, 'dnem', 'dny', 'dny'); },
-	weekAgo: 'před týdnem',
-	weeksAgo: function(delta){ return 'před {delta} ' + pluralize(delta, 'týdnem', 'týdny', 'týdny'); },
-	monthAgo: 'před měsícem',
-	monthsAgo: function(delta){ return 'před {delta} ' + pluralize(delta, 'měsícem', 'měsíci', 'měsíci'); },
-	yearAgo: 'před rokem',
-	yearsAgo: function(delta){ return 'před {delta} ' + pluralize(delta, 'rokem', 'lety', 'lety'); },
+	lessThanMinuteAgo: 'pĹ™ed chvĂ­lĂ­',
+	minuteAgo: 'pĹ™ibliĹľnÄ› pĹ™ed minutou',
+	minutesAgo: function(delta){ return 'pĹ™ed {delta} ' + pluralize(delta, 'minutou', 'minutami', 'minutami'); },
+	hourAgo: 'pĹ™ibliĹľnÄ› pĹ™ed hodinou',
+	hoursAgo: function(delta){ return 'pĹ™ed {delta} ' + pluralize(delta, 'hodinou', 'hodinami', 'hodinami'); },
+	dayAgo: 'pĹ™ed dnem',
+	daysAgo: function(delta){ return 'pĹ™ed {delta} ' + pluralize(delta, 'dnem', 'dny', 'dny'); },
+	weekAgo: 'pĹ™ed tĂ˝dnem',
+	weeksAgo: function(delta){ return 'pĹ™ed {delta} ' + pluralize(delta, 'tĂ˝dnem', 'tĂ˝dny', 'tĂ˝dny'); },
+	monthAgo: 'pĹ™ed mÄ›sĂ­cem',
+	monthsAgo: function(delta){ return 'pĹ™ed {delta} ' + pluralize(delta, 'mÄ›sĂ­cem', 'mÄ›sĂ­ci', 'mÄ›sĂ­ci'); },
+	yearAgo: 'pĹ™ed rokem',
+	yearsAgo: function(delta){ return 'pĹ™ed {delta} ' + pluralize(delta, 'rokem', 'lety', 'lety'); },
 
-	lessThanMinuteUntil: 'za chvíli',
-	minuteUntil: 'přibližně za minutu',
+	lessThanMinuteUntil: 'za chvĂ­li',
+	minuteUntil: 'pĹ™ibliĹľnÄ› za minutu',
 	minutesUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'minutu', 'minuty', 'minut'); },
-	hourUntil: 'přibližně za hodinu',
+	hourUntil: 'pĹ™ibliĹľnÄ› za hodinu',
 	hoursUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'hodinu', 'hodiny', 'hodin'); },
 	dayUntil: 'za den',
-	daysUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'den', 'dny', 'dnů'); },
-	weekUntil: 'za týden',
-	weeksUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'týden', 'týdny', 'týdnů'); },
-	monthUntil: 'za měsíc',
-	monthsUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'měsíc', 'měsíce', 'měsíců'); },
+	daysUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'den', 'dny', 'dnĹŻ'); },
+	weekUntil: 'za tĂ˝den',
+	weeksUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'tĂ˝den', 'tĂ˝dny', 'tĂ˝dnĹŻ'); },
+	monthUntil: 'za mÄ›sĂ­c',
+	monthsUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'mÄ›sĂ­c', 'mÄ›sĂ­ce', 'mÄ›sĂ­cĹŻ'); },
 	yearUntil: 'za rok',
 	yearsUntil: function(delta){ return 'za {delta} ' + pluralize(delta, 'rok', 'roky', 'let'); }
 });
@@ -10245,7 +10245,7 @@ description: Form Validator messages for Czech.
 license: MIT-style license
 
 authors:
-  - Jan Černý chemiX
+  - Jan ÄŚernĂ˝ chemiX
 
 requires:
   - /Locale
@@ -10257,37 +10257,37 @@ provides: [Locale.cs-CZ.Form.Validator]
 
 Locale.define('cs-CZ', 'FormValidator', {
 
-	required: 'Tato položka je povinná.',
-	minLength: 'Zadejte prosím alespoň {minLength} znaků (napsáno {length} znaků).',
-	maxLength: 'Zadejte prosím méně než {maxLength} znaků (nápsáno {length} znaků).',
-	integer: 'Zadejte prosím celé číslo. Desetinná čísla (např. 1.25) nejsou povolena.',
-	numeric: 'Zadejte jen číselné hodnoty (tj. "1" nebo "1.1" nebo "-1" nebo "-1.1").',
-	digits: 'Zadejte prosím pouze čísla a interpunkční znaménka(například telefonní číslo s pomlčkami nebo tečkami je povoleno).',
-	alpha: 'Zadejte prosím pouze písmena (a-z). Mezery nebo jiné znaky nejsou povoleny.',
-	alphanum: 'Zadejte prosím pouze písmena (a-z) nebo číslice (0-9). Mezery nebo jiné znaky nejsou povoleny.',
-	dateSuchAs: 'Zadejte prosím platné datum jako {date}',
-	dateInFormatMDY: 'Zadejte prosím platné datum jako MM / DD / RRRR (tj. "12/31/1999")',
-	email: 'Zadejte prosím platnou e-mailovou adresu. Například "fred@domain.com".',
-	url: 'Zadejte prosím platnou URL adresu jako http://www.example.com.',
-	currencyDollar: 'Zadejte prosím platnou částku. Například $100.00.',
-	oneRequired: 'Zadejte prosím alespoň jednu hodnotu pro tyto položky.',
+	required: 'Tato poloĹľka je povinnĂˇ.',
+	minLength: 'Zadejte prosĂ­m alespoĹ� {minLength} znakĹŻ (napsĂˇno {length} znakĹŻ).',
+	maxLength: 'Zadejte prosĂ­m mĂ©nÄ› neĹľ {maxLength} znakĹŻ (nĂˇpsĂˇno {length} znakĹŻ).',
+	integer: 'Zadejte prosĂ­m celĂ© ÄŤĂ­slo. DesetinnĂˇ ÄŤĂ­sla (napĹ™. 1.25) nejsou povolena.',
+	numeric: 'Zadejte jen ÄŤĂ­selnĂ© hodnoty (tj. "1" nebo "1.1" nebo "-1" nebo "-1.1").',
+	digits: 'Zadejte prosĂ­m pouze ÄŤĂ­sla a interpunkÄŤnĂ­ znamĂ©nka(napĹ™Ă­klad telefonnĂ­ ÄŤĂ­slo s pomlÄŤkami nebo teÄŤkami je povoleno).',
+	alpha: 'Zadejte prosĂ­m pouze pĂ­smena (a-z). Mezery nebo jinĂ© znaky nejsou povoleny.',
+	alphanum: 'Zadejte prosĂ­m pouze pĂ­smena (a-z) nebo ÄŤĂ­slice (0-9). Mezery nebo jinĂ© znaky nejsou povoleny.',
+	dateSuchAs: 'Zadejte prosĂ­m platnĂ© datum jako {date}',
+	dateInFormatMDY: 'Zadejte prosĂ­m platnĂ© datum jako MM / DD / RRRR (tj. "12/31/1999")',
+	email: 'Zadejte prosĂ­m platnou e-mailovou adresu. NapĹ™Ă­klad "fred@domain.com".',
+	url: 'Zadejte prosĂ­m platnou URL adresu jako http://www.example.com.',
+	currencyDollar: 'Zadejte prosĂ­m platnou ÄŤĂˇstku. NapĹ™Ă­klad $100.00.',
+	oneRequired: 'Zadejte prosĂ­m alespoĹ� jednu hodnotu pro tyto poloĹľky.',
 	errorPrefix: 'Chyba: ',
-	warningPrefix: 'Upozornění: ',
+	warningPrefix: 'UpozornÄ›nĂ­: ',
 
 	// Form.Validator.Extras
-	noSpace: 'V této položce nejsou povoleny mezery',
-	reqChkByNode: 'Nejsou vybrány žádné položky.',
-	requiredChk: 'Tato položka je vyžadována.',
-	reqChkByName: 'Prosím vyberte {label}.',
-	match: 'Tato položka se musí shodovat s položkou {matchName}',
-	startDate: 'datum zahájení',
-	endDate: 'datum ukončení',
-	currendDate: 'aktuální datum',
-	afterDate: 'Datum by mělo být stejné nebo větší než {label}.',
-	beforeDate: 'Datum by mělo být stejné nebo menší než {label}.',
-	startMonth: 'Vyberte počáteční měsíc.',
-	sameMonth: 'Tyto dva datumy musí být ve stejném měsíci - změňte jeden z nich.',
-	creditcard: 'Zadané číslo kreditní karty je neplatné. Prosím opravte ho. Bylo zadáno {length} čísel.'
+	noSpace: 'V tĂ©to poloĹľce nejsou povoleny mezery',
+	reqChkByNode: 'Nejsou vybrĂˇny ĹľĂˇdnĂ© poloĹľky.',
+	requiredChk: 'Tato poloĹľka je vyĹľadovĂˇna.',
+	reqChkByName: 'ProsĂ­m vyberte {label}.',
+	match: 'Tato poloĹľka se musĂ­ shodovat s poloĹľkou {matchName}',
+	startDate: 'datum zahĂˇjenĂ­',
+	endDate: 'datum ukonÄŤenĂ­',
+	currendDate: 'aktuĂˇlnĂ­ datum',
+	afterDate: 'Datum by mÄ›lo bĂ˝t stejnĂ© nebo vÄ›tĹˇĂ­ neĹľ {label}.',
+	beforeDate: 'Datum by mÄ›lo bĂ˝t stejnĂ© nebo menĹˇĂ­ neĹľ {label}.',
+	startMonth: 'Vyberte poÄŤĂˇteÄŤnĂ­ mÄ›sĂ­c.',
+	sameMonth: 'Tyto dva datumy musĂ­ bĂ˝t ve stejnĂ©m mÄ›sĂ­ci - zmÄ›Ĺ�te jeden z nich.',
+	creditcard: 'ZadanĂ© ÄŤĂ­slo kreditnĂ­ karty je neplatnĂ©. ProsĂ­m opravte ho. Bylo zadĂˇno {length} ÄŤĂ­sel.'
 
 });
 
@@ -10317,8 +10317,8 @@ Locale.define('da-DK', 'Date', {
 
 	months: ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'December'],
 	months_abbr: ['jan.', 'feb.', 'mar.', 'apr.', 'maj.', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'dec.'],
-	days: ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'],
-	days_abbr: ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'],
+	days: ['SĂ¸ndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'LĂ¸rdag'],
+	days_abbr: ['sĂ¸n', 'man', 'tir', 'ons', 'tor', 'fre', 'lĂ¸r'],
 
 	// Culture's date order: DD-MM-YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -10340,10 +10340,10 @@ Locale.define('da-DK', 'Date', {
 	daysAgo: '{delta} dage siden',
 	weekAgo: '1 uge siden',
 	weeksAgo: '{delta} uger siden',
-	monthAgo: '1 måned siden',
-	monthsAgo: '{delta} måneder siden',
-	yearAgo: '1 år siden',
-	yearsAgo: '{delta} år siden',
+	monthAgo: '1 mĂĄned siden',
+	monthsAgo: '{delta} mĂĄneder siden',
+	yearAgo: '1 ĂĄr siden',
+	yearsAgo: '{delta} ĂĄr siden',
 
 	lessThanMinuteUntil: 'mindre end et minut fra nu',
 	minuteUntil: 'omkring et minut fra nu',
@@ -10354,10 +10354,10 @@ Locale.define('da-DK', 'Date', {
 	daysUntil: '{delta} dage fra nu',
 	weekUntil: '1 uge fra nu',
 	weeksUntil: '{delta} uger fra nu',
-	monthUntil: '1 måned fra nu',
-	monthsUntil: '{delta} måneder fra nu',
-	yearUntil: '1 år fra nu',
-	yearsUntil: '{delta} år fra nu'
+	monthUntil: '1 mĂĄned fra nu',
+	monthsUntil: '{delta} mĂĄneder fra nu',
+	yearUntil: '1 ĂĄr fra nu',
+	yearsUntil: '{delta} ĂĄr fra nu'
 
 });
 
@@ -10389,31 +10389,31 @@ Locale.define('da-DK', 'FormValidator', {
 	maxLength: 'Skriv maksimalt {maxLength} tegn (du skrev {length} tegn).',
 	integer: 'Skriv et tal i dette felt. Decimal tal (f.eks. 1.25) er ikke tilladt.',
 	numeric: 'Skriv kun tal i dette felt (i.e. "1" eller "1.1" eller "-1" eller "-1.1").',
-	digits: 'Skriv kun tal og tegnsætning i dette felt (eksempel, et telefon nummer med bindestreg eller punktum er tilladt).',
+	digits: 'Skriv kun tal og tegnsĂ¦tning i dette felt (eksempel, et telefon nummer med bindestreg eller punktum er tilladt).',
 	alpha: 'Skriv kun bogstaver (a-z) i dette felt. Mellemrum og andre tegn er ikke tilladt.',
 	alphanum: 'Skriv kun bogstaver (a-z) eller tal (0-9) i dette felt. Mellemrum og andre tegn er ikke tilladt.',
 	dateSuchAs: 'Skriv en gyldig dato som {date}',
 	dateInFormatMDY: 'Skriv dato i formatet DD-MM-YYYY (f.eks. "31-12-1999")',
 	email: 'Skriv en gyldig e-mail adresse. F.eks "fred@domain.com".',
 	url: 'Skriv en gyldig URL adresse. F.eks "http://www.example.com".',
-	currencyDollar: 'Skriv et gldigt beløb. F.eks Kr.100.00 .',
+	currencyDollar: 'Skriv et gldigt belĂ¸b. F.eks Kr.100.00 .',
 	oneRequired: 'Et eller flere af felterne i denne formular skal udfyldes.',
 	errorPrefix: 'Fejl: ',
 	warningPrefix: 'Advarsel: ',
 
 	// Form.Validator.Extras
-	noSpace: 'Der må ikke benyttes mellemrum i dette felt.',
+	noSpace: 'Der mĂĄ ikke benyttes mellemrum i dette felt.',
 	reqChkByNode: 'Foretag et valg.',
 	requiredChk: 'Dette felt skal udfyldes.',
-	reqChkByName: 'Vælg en {label}.',
+	reqChkByName: 'VĂ¦lg en {label}.',
 	match: 'Dette felt skal matche {matchName} feltet',
 	startDate: 'start dato',
 	endDate: 'slut dato',
 	currendDate: 'dags dato',
-	afterDate: 'Datoen skal være større end eller lig med {label}.',
-	beforeDate: 'Datoen skal være mindre end eller lig med {label}.',
-	startMonth: 'Vælg en start måned',
-	sameMonth: 'De valgte datoer skal være i samme måned - skift en af dem.'
+	afterDate: 'Datoen skal vĂ¦re stĂ¸rre end eller lig med {label}.',
+	beforeDate: 'Datoen skal vĂ¦re mindre end eller lig med {label}.',
+	startMonth: 'VĂ¦lg en start mĂĄned',
+	sameMonth: 'De valgte datoer skal vĂ¦re i samme mĂĄned - skift en af dem.'
 
 });
 
@@ -10443,8 +10443,8 @@ provides: [Locale.de-DE.Date]
 
 Locale.define('de-DE', 'Date', {
 
-	months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-	months_abbr: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
+	months: ['Januar', 'Februar', 'MĂ¤rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+	months_abbr: ['Jan', 'Feb', 'MĂ¤r', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
 	days: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
 	days_abbr: ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'],
 
@@ -10595,7 +10595,7 @@ provides: [Locale.de-DE.Form.Validator]
 
 Locale.define('de-DE', 'FormValidator', {
 
-	required: 'Dieses Eingabefeld muss ausgefüllt werden.',
+	required: 'Dieses Eingabefeld muss ausgefĂĽllt werden.',
 	minLength: 'Geben Sie bitte mindestens {minLength} Zeichen ein (Sie haben nur {length} Zeichen eingegeben).',
 	maxLength: 'Geben Sie bitte nicht mehr als {maxLength} Zeichen ein (Sie haben {length} Zeichen eingegeben).',
 	integer: 'Geben Sie in diesem Eingabefeld bitte eine ganze Zahl ein. Dezimalzahlen (z.B. "1.25") sind nicht erlaubt.',
@@ -10603,29 +10603,29 @@ Locale.define('de-DE', 'FormValidator', {
 	digits: 'Geben Sie in diesem Eingabefeld bitte nur Zahlen und Satzzeichen ein (z.B. eine Telefonnummer mit Bindestrichen und Punkten ist erlaubt).',
 	alpha: 'Geben Sie in diesem Eingabefeld bitte nur Buchstaben (a-z) ein. Leerzeichen und andere Zeichen sind nicht erlaubt.',
 	alphanum: 'Geben Sie in diesem Eingabefeld bitte nur Buchstaben (a-z) und Zahlen (0-9) ein. Leerzeichen oder andere Zeichen sind nicht erlaubt.',
-	dateSuchAs: 'Geben Sie bitte ein gültiges Datum ein (z.B. "{date}").',
-	dateInFormatMDY: 'Geben Sie bitte ein gültiges Datum im Format TT.MM.JJJJ ein (z.B. "31.12.1999").',
-	email: 'Geben Sie bitte eine gültige E-Mail-Adresse ein (z.B. "max@mustermann.de").',
-	url: 'Geben Sie bitte eine gültige URL ein (z.B. "http://www.example.com").',
-	currencyDollar: 'Geben Sie bitte einen gültigen Betrag in EURO ein (z.B. 100.00€).',
-	oneRequired: 'Bitte füllen Sie mindestens ein Eingabefeld aus.',
+	dateSuchAs: 'Geben Sie bitte ein gĂĽltiges Datum ein (z.B. "{date}").',
+	dateInFormatMDY: 'Geben Sie bitte ein gĂĽltiges Datum im Format TT.MM.JJJJ ein (z.B. "31.12.1999").',
+	email: 'Geben Sie bitte eine gĂĽltige E-Mail-Adresse ein (z.B. "max@mustermann.de").',
+	url: 'Geben Sie bitte eine gĂĽltige URL ein (z.B. "http://www.example.com").',
+	currencyDollar: 'Geben Sie bitte einen gĂĽltigen Betrag in EURO ein (z.B. 100.00â‚¬).',
+	oneRequired: 'Bitte fĂĽllen Sie mindestens ein Eingabefeld aus.',
 	errorPrefix: 'Fehler: ',
 	warningPrefix: 'Warnung: ',
 
 	// Form.Validator.Extras
 	noSpace: 'Es darf kein Leerzeichen in diesem Eingabefeld sein.',
-	reqChkByNode: 'Es wurden keine Elemente gewählt.',
-	requiredChk: 'Dieses Feld muss ausgefüllt werden.',
-	reqChkByName: 'Bitte wählen Sie ein {label}.',
-	match: 'Dieses Eingabefeld muss mit dem {matchName} Eingabefeld übereinstimmen.',
+	reqChkByNode: 'Es wurden keine Elemente gewĂ¤hlt.',
+	requiredChk: 'Dieses Feld muss ausgefĂĽllt werden.',
+	reqChkByName: 'Bitte wĂ¤hlen Sie ein {label}.',
+	match: 'Dieses Eingabefeld muss mit dem {matchName} Eingabefeld ĂĽbereinstimmen.',
 	startDate: 'Das Anfangsdatum',
 	endDate: 'Das Enddatum',
 	currendDate: 'Das aktuelle Datum',
-	afterDate: 'Das Datum sollte zur gleichen Zeit oder später sein als {label}.',
-	beforeDate: 'Das Datum sollte zur gleichen Zeit oder früher sein als {label}.',
-	startMonth: 'Wählen Sie bitte einen Anfangsmonat',
-	sameMonth: 'Diese zwei Datumsangaben müssen im selben Monat sein - Sie müssen eines von beiden verändern.',
-	creditcard: 'Die eingegebene Kreditkartennummer ist ungültig. Bitte überprüfen Sie diese und versuchen Sie es erneut. {length} Zahlen eingegeben.'
+	afterDate: 'Das Datum sollte zur gleichen Zeit oder spĂ¤ter sein als {label}.',
+	beforeDate: 'Das Datum sollte zur gleichen Zeit oder frĂĽher sein als {label}.',
+	startMonth: 'WĂ¤hlen Sie bitte einen Anfangsmonat',
+	sameMonth: 'Diese zwei Datumsangaben mĂĽssen im selben Monat sein - Sie mĂĽssen eines von beiden verĂ¤ndern.',
+	creditcard: 'Die eingegebene Kreditkartennummer ist ungĂĽltig. Bitte ĂĽberprĂĽfen Sie diese und versuchen Sie es erneut. {length} Zahlen eingegeben.'
 
 });
 
@@ -10656,7 +10656,7 @@ Locale.define('EU', 'Number', {
 	group: '.',
 
 	currency: {
-		prefix: '€ '
+		prefix: 'â‚¬ '
 	}
 
 });
@@ -10727,7 +10727,7 @@ description: Date messages for Spanish.
 license: MIT-style license
 
 authors:
-  - Ãlfons Sanchez
+  - Ă�lfons Sanchez
 
 requires:
   - /Locale
@@ -10741,8 +10741,8 @@ Locale.define('es-ES', 'Date', {
 
 	months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
 	months_abbr: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
-	days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-	days_abbr: ['dom', 'lun', 'mar', 'mié', 'juv', 'vie', 'sáb'],
+	days: ['Domingo', 'Lunes', 'Martes', 'MiĂ©rcoles', 'Jueves', 'Viernes', 'SĂˇbado'],
+	days_abbr: ['dom', 'lun', 'mar', 'miĂ©', 'juv', 'vie', 'sĂˇb'],
 
 	// Culture's date order: DD/MM/YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -10760,28 +10760,28 @@ Locale.define('es-ES', 'Date', {
 	minutesAgo: 'hace {delta} minutos',
 	hourAgo: 'hace una hora',
 	hoursAgo: 'hace unas {delta} horas',
-	dayAgo: 'hace un día',
-	daysAgo: 'hace {delta} días',
+	dayAgo: 'hace un dĂ­a',
+	daysAgo: 'hace {delta} dĂ­as',
 	weekAgo: 'hace una semana',
 	weeksAgo: 'hace unas {delta} semanas',
 	monthAgo: 'hace un mes',
 	monthsAgo: 'hace {delta} meses',
-	yearAgo: 'hace un año',
-	yearsAgo: 'hace {delta} años',
+	yearAgo: 'hace un aĂ±o',
+	yearsAgo: 'hace {delta} aĂ±os',
 
 	lessThanMinuteUntil: 'menos de un minuto desde ahora',
 	minuteUntil: 'un minuto desde ahora',
 	minutesUntil: '{delta} minutos desde ahora',
 	hourUntil: 'una hora desde ahora',
 	hoursUntil: 'unas {delta} horas desde ahora',
-	dayUntil: 'un día desde ahora',
-	daysUntil: '{delta} días desde ahora',
+	dayUntil: 'un dĂ­a desde ahora',
+	daysUntil: '{delta} dĂ­as desde ahora',
 	weekUntil: 'una semana desde ahora',
 	weeksUntil: 'unas {delta} semanas desde ahora',
 	monthUntil: 'un mes desde ahora',
 	monthsUntil: '{delta} meses desde ahora',
-	yearUntil: 'un año desde ahora',
-	yearsUntil: '{delta} años desde ahora'
+	yearUntil: 'un aĂ±o desde ahora',
+	yearsUntil: '{delta} aĂ±os desde ahora'
 
 });
 
@@ -10796,7 +10796,7 @@ description: Date messages for Spanish (Argentina).
 license: MIT-style license
 
 authors:
-  - Ãlfons Sanchez
+  - Ă�lfons Sanchez
   - Diego Massanti
 
 requires:
@@ -10835,17 +10835,17 @@ Locale.define('es-AR', 'FormValidator', {
 
 	required: 'Este campo es obligatorio.',
 	minLength: 'Por favor ingrese al menos {minLength} caracteres (ha ingresado {length} caracteres).',
-	maxLength: 'Por favor no ingrese más de {maxLength} caracteres (ha ingresado {length} caracteres).',
-	integer: 'Por favor ingrese un número entero en este campo. Números con decimales (p.e. 1,25) no se permiten.',
-	numeric: 'Por favor ingrese solo valores numéricos en este campo (p.e. "1" o "1,1" o "-1" o "-1,1").',
-	digits: 'Por favor use sólo números y puntuación en este campo (por ejemplo, un número de teléfono con guiones y/o puntos no está permitido).',
-	alpha: 'Por favor use sólo letras (a-z) en este campo. No se permiten espacios ni otros caracteres.',
-	alphanum: 'Por favor, usa sólo letras (a-z) o números (0-9) en este campo. No se permiten espacios u otros caracteres.',
-	dateSuchAs: 'Por favor ingrese una fecha válida como {date}',
-	dateInFormatMDY: 'Por favor ingrese una fecha válida, utulizando el formato DD/MM/YYYY (p.e. "31/12/1999")',
-	email: 'Por favor, ingrese una dirección de e-mail válida. Por ejemplo, "fred@dominio.com".',
-	url: 'Por favor ingrese una URL válida como http://www.example.com.',
-	currencyDollar: 'Por favor ingrese una cantidad válida de pesos. Por ejemplo $100,00 .',
+	maxLength: 'Por favor no ingrese mĂˇs de {maxLength} caracteres (ha ingresado {length} caracteres).',
+	integer: 'Por favor ingrese un nĂşmero entero en este campo. NĂşmeros con decimales (p.e. 1,25) no se permiten.',
+	numeric: 'Por favor ingrese solo valores numĂ©ricos en este campo (p.e. "1" o "1,1" o "-1" o "-1,1").',
+	digits: 'Por favor use sĂłlo nĂşmeros y puntuaciĂłn en este campo (por ejemplo, un nĂşmero de telĂ©fono con guiones y/o puntos no estĂˇ permitido).',
+	alpha: 'Por favor use sĂłlo letras (a-z) en este campo. No se permiten espacios ni otros caracteres.',
+	alphanum: 'Por favor, usa sĂłlo letras (a-z) o nĂşmeros (0-9) en este campo. No se permiten espacios u otros caracteres.',
+	dateSuchAs: 'Por favor ingrese una fecha vĂˇlida como {date}',
+	dateInFormatMDY: 'Por favor ingrese una fecha vĂˇlida, utulizando el formato DD/MM/YYYY (p.e. "31/12/1999")',
+	email: 'Por favor, ingrese una direcciĂłn de e-mail vĂˇlida. Por ejemplo, "fred@dominio.com".',
+	url: 'Por favor ingrese una URL vĂˇlida como http://www.example.com.',
+	currencyDollar: 'Por favor ingrese una cantidad vĂˇlida de pesos. Por ejemplo $100,00 .',
 	oneRequired: 'Por favor ingrese algo para por lo menos una de estas entradas.',
 	errorPrefix: 'Error: ',
 	warningPrefix: 'Advertencia: ',
@@ -10877,7 +10877,7 @@ description: Form Validator messages for Spanish.
 license: MIT-style license
 
 authors:
-  - Ãlfons Sanchez
+  - Ă�lfons Sanchez
 
 requires:
   - /Locale
@@ -10901,7 +10901,7 @@ Locale.define('es-ES', 'FormValidator', {
 	dateInFormatMDY: 'Por favor introduce una fecha v&aacute;lida como DD/MM/YYYY (p.e. "31/12/1999")',
 	email: 'Por favor, introduce una direcci&oacute;n de email v&aacute;lida. Por ejemplo, "fred@domain.com".',
 	url: 'Por favor introduce una URL v&aacute;lida como http://www.example.com.',
-	currencyDollar: 'Por favor introduce una cantidad v&aacute;lida de €. Por ejemplo €100,00 .',
+	currencyDollar: 'Por favor introduce una cantidad v&aacute;lida de â‚¬. Por ejemplo â‚¬100,00 .',
 	oneRequired: 'Por favor introduce algo para por lo menos una de estas entradas.',
 	errorPrefix: 'Error: ',
 	warningPrefix: 'Aviso: ',
@@ -10945,10 +10945,10 @@ provides: [Locale.et-EE.Date]
 
 Locale.define('et-EE', 'Date', {
 
-	months: ['jaanuar', 'veebruar', 'märts', 'aprill', 'mai', 'juuni', 'juuli', 'august', 'september', 'oktoober', 'november', 'detsember'],
-	months_abbr: ['jaan', 'veebr', 'märts', 'apr', 'mai', 'juuni', 'juuli', 'aug', 'sept', 'okt', 'nov', 'dets'],
-	days: ['pühapäev', 'esmaspäev', 'teisipäev', 'kolmapäev', 'neljapäev', 'reede', 'laupäev'],
-	days_abbr: ['pühap', 'esmasp', 'teisip', 'kolmap', 'neljap', 'reede', 'laup'],
+	months: ['jaanuar', 'veebruar', 'mĂ¤rts', 'aprill', 'mai', 'juuni', 'juuli', 'august', 'september', 'oktoober', 'november', 'detsember'],
+	months_abbr: ['jaan', 'veebr', 'mĂ¤rts', 'apr', 'mai', 'juuni', 'juuli', 'aug', 'sept', 'okt', 'nov', 'dets'],
+	days: ['pĂĽhapĂ¤ev', 'esmaspĂ¤ev', 'teisipĂ¤ev', 'kolmapĂ¤ev', 'neljapĂ¤ev', 'reede', 'laupĂ¤ev'],
+	days_abbr: ['pĂĽhap', 'esmasp', 'teisip', 'kolmap', 'neljap', 'reede', 'laup'],
 
 	// Culture's date order: MM.DD.YYYY
 	dateOrder: ['month', 'date', 'year'],
@@ -10961,33 +10961,33 @@ Locale.define('et-EE', 'Date', {
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: 'vähem kui minut aega tagasi',
+	lessThanMinuteAgo: 'vĂ¤hem kui minut aega tagasi',
 	minuteAgo: 'umbes minut aega tagasi',
 	minutesAgo: '{delta} minutit tagasi',
 	hourAgo: 'umbes tund aega tagasi',
 	hoursAgo: 'umbes {delta} tundi tagasi',
-	dayAgo: '1 päev tagasi',
-	daysAgo: '{delta} päeva tagasi',
-	weekAgo: '1 nädal tagasi',
-	weeksAgo: '{delta} nädalat tagasi',
+	dayAgo: '1 pĂ¤ev tagasi',
+	daysAgo: '{delta} pĂ¤eva tagasi',
+	weekAgo: '1 nĂ¤dal tagasi',
+	weeksAgo: '{delta} nĂ¤dalat tagasi',
 	monthAgo: '1 kuu tagasi',
 	monthsAgo: '{delta} kuud tagasi',
 	yearAgo: '1 aasta tagasi',
 	yearsAgo: '{delta} aastat tagasi',
 
-	lessThanMinuteUntil: 'vähem kui minuti aja pärast',
-	minuteUntil: 'umbes minuti aja pärast',
-	minutesUntil: '{delta} minuti pärast',
-	hourUntil: 'umbes tunni aja pärast',
-	hoursUntil: 'umbes {delta} tunni pärast',
-	dayUntil: '1 päeva pärast',
-	daysUntil: '{delta} päeva pärast',
-	weekUntil: '1 nädala pärast',
-	weeksUntil: '{delta} nädala pärast',
-	monthUntil: '1 kuu pärast',
-	monthsUntil: '{delta} kuu pärast',
-	yearUntil: '1 aasta pärast',
-	yearsUntil: '{delta} aasta pärast'
+	lessThanMinuteUntil: 'vĂ¤hem kui minuti aja pĂ¤rast',
+	minuteUntil: 'umbes minuti aja pĂ¤rast',
+	minutesUntil: '{delta} minuti pĂ¤rast',
+	hourUntil: 'umbes tunni aja pĂ¤rast',
+	hoursUntil: 'umbes {delta} tunni pĂ¤rast',
+	dayUntil: '1 pĂ¤eva pĂ¤rast',
+	daysUntil: '{delta} pĂ¤eva pĂ¤rast',
+	weekUntil: '1 nĂ¤dala pĂ¤rast',
+	weeksUntil: '{delta} nĂ¤dala pĂ¤rast',
+	monthUntil: '1 kuu pĂ¤rast',
+	monthsUntil: '{delta} kuu pĂ¤rast',
+	yearUntil: '1 aasta pĂ¤rast',
+	yearsUntil: '{delta} aasta pĂ¤rast'
 
 });
 
@@ -11014,36 +11014,36 @@ provides: [Locale.et-EE.Form.Validator]
 
 Locale.define('et-EE', 'FormValidator', {
 
-	required: 'Väli peab olema täidetud.',
-	minLength: 'Palun sisestage vähemalt {minLength} tähte (te sisestasite {length} tähte).',
-	maxLength: 'Palun ärge sisestage rohkem kui {maxLength} tähte (te sisestasite {length} tähte).',
-	integer: 'Palun sisestage väljale täisarv. Kümnendarvud (näiteks 1.25) ei ole lubatud.',
-	numeric: 'Palun sisestage ainult numbreid väljale (näiteks "1", "1.1", "-1" või "-1.1").',
-	digits: 'Palun kasutage ainult numbreid ja kirjavahemärke (telefoninumbri sisestamisel on lubatud kasutada kriipse ja punkte).',
-	alpha: 'Palun kasutage ainult tähti (a-z). Tühikud ja teised sümbolid on keelatud.',
-	alphanum: 'Palun kasutage ainult tähti (a-z) või numbreid (0-9). Tühikud ja teised sümbolid on keelatud.',
-	dateSuchAs: 'Palun sisestage kehtiv kuupäev kujul {date}',
-	dateInFormatMDY: 'Palun sisestage kehtiv kuupäev kujul MM.DD.YYYY (näiteks: "12.31.1999").',
-	email: 'Palun sisestage kehtiv e-maili aadress (näiteks: "fred@domain.com").',
-	url: 'Palun sisestage kehtiv URL (näiteks: http://www.example.com).',
-	currencyDollar: 'Palun sisestage kehtiv $ summa (näiteks: $100.00).',
-	oneRequired: 'Palun sisestage midagi vähemalt ühele antud väljadest.',
+	required: 'VĂ¤li peab olema tĂ¤idetud.',
+	minLength: 'Palun sisestage vĂ¤hemalt {minLength} tĂ¤hte (te sisestasite {length} tĂ¤hte).',
+	maxLength: 'Palun Ă¤rge sisestage rohkem kui {maxLength} tĂ¤hte (te sisestasite {length} tĂ¤hte).',
+	integer: 'Palun sisestage vĂ¤ljale tĂ¤isarv. KĂĽmnendarvud (nĂ¤iteks 1.25) ei ole lubatud.',
+	numeric: 'Palun sisestage ainult numbreid vĂ¤ljale (nĂ¤iteks "1", "1.1", "-1" vĂµi "-1.1").',
+	digits: 'Palun kasutage ainult numbreid ja kirjavahemĂ¤rke (telefoninumbri sisestamisel on lubatud kasutada kriipse ja punkte).',
+	alpha: 'Palun kasutage ainult tĂ¤hti (a-z). TĂĽhikud ja teised sĂĽmbolid on keelatud.',
+	alphanum: 'Palun kasutage ainult tĂ¤hti (a-z) vĂµi numbreid (0-9). TĂĽhikud ja teised sĂĽmbolid on keelatud.',
+	dateSuchAs: 'Palun sisestage kehtiv kuupĂ¤ev kujul {date}',
+	dateInFormatMDY: 'Palun sisestage kehtiv kuupĂ¤ev kujul MM.DD.YYYY (nĂ¤iteks: "12.31.1999").',
+	email: 'Palun sisestage kehtiv e-maili aadress (nĂ¤iteks: "fred@domain.com").',
+	url: 'Palun sisestage kehtiv URL (nĂ¤iteks: http://www.example.com).',
+	currencyDollar: 'Palun sisestage kehtiv $ summa (nĂ¤iteks: $100.00).',
+	oneRequired: 'Palun sisestage midagi vĂ¤hemalt ĂĽhele antud vĂ¤ljadest.',
 	errorPrefix: 'Viga: ',
 	warningPrefix: 'Hoiatus: ',
 
 	// Form.Validator.Extras
-	noSpace: 'Väli ei tohi sisaldada tühikuid.',
-	reqChkByNode: 'Ükski väljadest pole valitud.',
-	requiredChk: 'Välja täitmine on vajalik.',
-	reqChkByName: 'Palun valige üks {label}.',
-	match: 'Väli peab sobima {matchName} väljaga',
-	startDate: 'algkuupäev',
-	endDate: 'lõppkuupäev',
-	currendDate: 'praegune kuupäev',
-	afterDate: 'Kuupäev peab olema võrdne või pärast {label}.',
-	beforeDate: 'Kuupäev peab olema võrdne või enne {label}.',
-	startMonth: 'Palun valige algkuupäev.',
-	sameMonth: 'Antud kaks kuupäeva peavad olema samas kuus - peate muutma ühte kuupäeva.'
+	noSpace: 'VĂ¤li ei tohi sisaldada tĂĽhikuid.',
+	reqChkByNode: 'Ăśkski vĂ¤ljadest pole valitud.',
+	requiredChk: 'VĂ¤lja tĂ¤itmine on vajalik.',
+	reqChkByName: 'Palun valige ĂĽks {label}.',
+	match: 'VĂ¤li peab sobima {matchName} vĂ¤ljaga',
+	startDate: 'algkuupĂ¤ev',
+	endDate: 'lĂµppkuupĂ¤ev',
+	currendDate: 'praegune kuupĂ¤ev',
+	afterDate: 'KuupĂ¤ev peab olema vĂµrdne vĂµi pĂ¤rast {label}.',
+	beforeDate: 'KuupĂ¤ev peab olema vĂµrdne vĂµi enne {label}.',
+	startMonth: 'Palun valige algkuupĂ¤ev.',
+	sameMonth: 'Antud kaks kuupĂ¤eva peavad olema samas kuus - peate muutma ĂĽhte kuupĂ¤eva.'
 
 });
 
@@ -11070,48 +11070,48 @@ provides: [Locale.fa.Date]
 
 Locale.define('fa', 'Date', {
 
-	months: ['ژانویه', 'فوریه', 'مارس', 'آپریل', 'مه', 'ژوئن', 'ژوئیه', 'آگوست', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'],
+	months: ['Ú�Ř§Ů†Ů�ŰŚŮ‡', 'Ů�Ů�Ř±ŰŚŮ‡', 'Ů…Ř§Ř±Řł', 'Ř˘ŮľŘ±ŰŚŮ„', 'Ů…Ů‡', 'Ú�Ů�Ř¦Ů†', 'Ú�Ů�Ř¦ŰŚŮ‡', 'Ř˘ÚŻŮ�ŘłŘŞ', 'ŘłŮľŘŞŘ§Ů…Ř¨Ř±', 'Ř§Ú©ŘŞŘ¨Ř±', 'Ů†Ů�Ř§Ů…Ř¨Ř±', 'ŘŻŘłŘ§Ů…Ř¨Ř±'],
 	months_abbr: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-	days: ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
-	days_abbr: ['ي', 'د', 'س', 'چ', 'پ', 'ج', 'ش'],
+	days: ['ŰŚÚ©Ř´Ů†Ř¨Ů‡', 'ŘŻŮ�Ř´Ů†Ř¨Ů‡', 'ŘłŮ‡ Ř´Ů†Ř¨Ů‡', 'Ú†Ů‡Ř§Ř±Ř´Ů†Ř¨Ů‡', 'ŮľŮ†Ř¬Ř´Ů†Ř¨Ů‡', 'Ř¬Ů…ŘąŮ‡', 'Ř´Ů†Ř¨Ů‡'],
+	days_abbr: ['ŮŠ', 'ŘŻ', 'Řł', 'Ú†', 'Ůľ', 'Ř¬', 'Ř´'],
 
 	// Culture's date order: MM/DD/YYYY
 	dateOrder: ['month', 'date', 'year'],
 	shortDate: '%m/%d/%Y',
 	shortTime: '%I:%M%p',
-	AM: 'ق.ظ',
-	PM: 'ب.ظ',
+	AM: 'Ů‚.Ř¸',
+	PM: 'Ř¨.Ř¸',
 
 	// Date.Extras
-	ordinal: 'ام',
+	ordinal: 'Ř§Ů…',
 
-	lessThanMinuteAgo: 'کمتر از یک دقیقه پیش',
-	minuteAgo: 'حدود یک دقیقه پیش',
-	minutesAgo: '{delta} دقیقه پیش',
-	hourAgo: 'حدود یک ساعت پیش',
-	hoursAgo: 'حدود {delta} ساعت پیش',
-	dayAgo: '1 روز پیش',
-	daysAgo: '{delta} روز پیش',
-	weekAgo: '1 هفته پیش',
-	weeksAgo: '{delta} هفته پیش',
-	monthAgo: '1 ماه پیش',
-	monthsAgo: '{delta} ماه پیش',
-	yearAgo: '1 سال پیش',
-	yearsAgo: '{delta} سال پیش',
+	lessThanMinuteAgo: 'Ú©Ů…ŘŞŘ± Ř§Ř˛ ŰŚÚ© ŘŻŮ‚ŰŚŮ‚Ů‡ ŮľŰŚŘ´',
+	minuteAgo: 'Ř­ŘŻŮ�ŘŻ ŰŚÚ© ŘŻŮ‚ŰŚŮ‚Ů‡ ŮľŰŚŘ´',
+	minutesAgo: '{delta} ŘŻŮ‚ŰŚŮ‚Ů‡ ŮľŰŚŘ´',
+	hourAgo: 'Ř­ŘŻŮ�ŘŻ ŰŚÚ© ŘłŘ§ŘąŘŞ ŮľŰŚŘ´',
+	hoursAgo: 'Ř­ŘŻŮ�ŘŻ {delta} ŘłŘ§ŘąŘŞ ŮľŰŚŘ´',
+	dayAgo: '1 Ř±Ů�Ř˛ ŮľŰŚŘ´',
+	daysAgo: '{delta} Ř±Ů�Ř˛ ŮľŰŚŘ´',
+	weekAgo: '1 Ů‡Ů�ŘŞŮ‡ ŮľŰŚŘ´',
+	weeksAgo: '{delta} Ů‡Ů�ŘŞŮ‡ ŮľŰŚŘ´',
+	monthAgo: '1 Ů…Ř§Ů‡ ŮľŰŚŘ´',
+	monthsAgo: '{delta} Ů…Ř§Ů‡ ŮľŰŚŘ´',
+	yearAgo: '1 ŘłŘ§Ů„ ŮľŰŚŘ´',
+	yearsAgo: '{delta} ŘłŘ§Ů„ ŮľŰŚŘ´',
 
-	lessThanMinuteUntil: 'کمتر از یک دقیقه از حالا',
-	minuteUntil: 'حدود یک دقیقه از حالا',
-	minutesUntil: '{delta} دقیقه از حالا',
-	hourUntil: 'حدود یک ساعت از حالا',
-	hoursUntil: 'حدود {delta} ساعت از حالا',
-	dayUntil: '1 روز از حالا',
-	daysUntil: '{delta} روز از حالا',
-	weekUntil: '1 هفته از حالا',
-	weeksUntil: '{delta} هفته از حالا',
-	monthUntil: '1 ماه از حالا',
-	monthsUntil: '{delta} ماه از حالا',
-	yearUntil: '1 سال از حالا',
-	yearsUntil: '{delta} سال از حالا'
+	lessThanMinuteUntil: 'Ú©Ů…ŘŞŘ± Ř§Ř˛ ŰŚÚ© ŘŻŮ‚ŰŚŮ‚Ů‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	minuteUntil: 'Ř­ŘŻŮ�ŘŻ ŰŚÚ© ŘŻŮ‚ŰŚŮ‚Ů‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	minutesUntil: '{delta} ŘŻŮ‚ŰŚŮ‚Ů‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	hourUntil: 'Ř­ŘŻŮ�ŘŻ ŰŚÚ© ŘłŘ§ŘąŘŞ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	hoursUntil: 'Ř­ŘŻŮ�ŘŻ {delta} ŘłŘ§ŘąŘŞ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	dayUntil: '1 Ř±Ů�Ř˛ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	daysUntil: '{delta} Ř±Ů�Ř˛ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	weekUntil: '1 Ů‡Ů�ŘŞŮ‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	weeksUntil: '{delta} Ů‡Ů�ŘŞŮ‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	monthUntil: '1 Ů…Ř§Ů‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	monthsUntil: '{delta} Ů…Ř§Ů‡ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	yearUntil: '1 ŘłŘ§Ů„ Ř§Ř˛ Ř­Ř§Ů„Ř§',
+	yearsUntil: '{delta} ŘłŘ§Ů„ Ř§Ř˛ Ř­Ř§Ů„Ř§'
 
 });
 
@@ -11138,37 +11138,37 @@ provides: [Locale.fa.Form.Validator]
 
 Locale.define('fa', 'FormValidator', {
 
-	required: 'این فیلد الزامی است.',
-	minLength: 'شما باید حداقل {minLength} حرف وارد کنید ({length} حرف وارد کرده اید).',
-	maxLength: 'لطفا حداکثر {maxLength} حرف وارد کنید (شما {length} حرف وارد کرده اید).',
-	integer: 'لطفا از عدد صحیح استفاده کنید. اعداد اعشاری (مانند 1.25) مجاز نیستند.',
-	numeric: 'لطفا فقط داده عددی وارد کنید (مانند "1" یا "1.1" یا "1-" یا "1.1-").',
-	digits: 'لطفا فقط از اعداد و علامتها در این فیلد استفاده کنید (برای مثال شماره تلفن با خط تیره و نقطه قابل قبول است).',
-	alpha: 'لطفا فقط از حروف الفباء برای این بخش استفاده کنید. کاراکترهای دیگر و فاصله مجاز نیستند.',
-	alphanum: 'لطفا فقط از حروف الفباء و اعداد در این بخش استفاده کنید. کاراکترهای دیگر و فاصله مجاز نیستند.',
-	dateSuchAs: 'لطفا یک تاریخ معتبر مانند {date} وارد کنید.',
-	dateInFormatMDY: 'لطفا یک تاریخ معتبر به شکل MM/DD/YYYY وارد کنید (مانند "12/31/1999").',
-	email: 'لطفا یک آدرس ایمیل معتبر وارد کنید. برای مثال "fred@domain.com".',
-	url: 'لطفا یک URL معتبر مانند http://www.example.com وارد کنید.',
-	currencyDollar: 'لطفا یک محدوده معتبر برای این بخش وارد کنید مانند 100.00$ .',
-	oneRequired: 'لطفا حداقل یکی از فیلدها را پر کنید.',
-	errorPrefix: 'خطا: ',
-	warningPrefix: 'هشدار: ',
+	required: 'Ř§ŰŚŮ† Ů�ŰŚŮ„ŘŻ Ř§Ů„Ř˛Ř§Ů…ŰŚ Ř§ŘłŘŞ.',
+	minLength: 'Ř´Ů…Ř§ Ř¨Ř§ŰŚŘŻ Ř­ŘŻŘ§Ů‚Ů„ {minLength} Ř­Ř±Ů� Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ ({length} Ř­Ř±Ů� Ů�Ř§Ř±ŘŻ Ú©Ř±ŘŻŮ‡ Ř§ŰŚŘŻ).',
+	maxLength: 'Ů„Ř·Ů�Ř§ Ř­ŘŻŘ§Ú©Ř«Ř± {maxLength} Ř­Ř±Ů� Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ (Ř´Ů…Ř§ {length} Ř­Ř±Ů� Ů�Ř§Ř±ŘŻ Ú©Ř±ŘŻŮ‡ Ř§ŰŚŘŻ).',
+	integer: 'Ů„Ř·Ů�Ř§ Ř§Ř˛ ŘąŘŻŘŻ ŘµŘ­ŰŚŘ­ Ř§ŘłŘŞŮ�Ř§ŘŻŮ‡ Ú©Ů†ŰŚŘŻ. Ř§ŘąŘŻŘ§ŘŻ Ř§ŘąŘ´Ř§Ř±ŰŚ (Ů…Ř§Ů†Ů†ŘŻ 1.25) Ů…Ř¬Ř§Ř˛ Ů†ŰŚŘłŘŞŮ†ŘŻ.',
+	numeric: 'Ů„Ř·Ů�Ř§ Ů�Ů‚Ř· ŘŻŘ§ŘŻŮ‡ ŘąŘŻŘŻŰŚ Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ (Ů…Ř§Ů†Ů†ŘŻ "1" ŰŚŘ§ "1.1" ŰŚŘ§ "1-" ŰŚŘ§ "1.1-").',
+	digits: 'Ů„Ř·Ů�Ř§ Ů�Ů‚Ř· Ř§Ř˛ Ř§ŘąŘŻŘ§ŘŻ Ů� ŘąŮ„Ř§Ů…ŘŞŮ‡Ř§ ŘŻŘ± Ř§ŰŚŮ† Ů�ŰŚŮ„ŘŻ Ř§ŘłŘŞŮ�Ř§ŘŻŮ‡ Ú©Ů†ŰŚŘŻ (Ř¨Ř±Ř§ŰŚ Ů…Ř«Ř§Ů„ Ř´Ů…Ř§Ř±Ů‡ ŘŞŮ„Ů�Ů† Ř¨Ř§ Ř®Ř· ŘŞŰŚŘ±Ů‡ Ů� Ů†Ů‚Ř·Ů‡ Ů‚Ř§Ř¨Ů„ Ů‚Ř¨Ů�Ů„ Ř§ŘłŘŞ).',
+	alpha: 'Ů„Ř·Ů�Ř§ Ů�Ů‚Ř· Ř§Ř˛ Ř­Ř±Ů�Ů� Ř§Ů„Ů�Ř¨Ř§Řˇ Ř¨Ř±Ř§ŰŚ Ř§ŰŚŮ† Ř¨Ř®Ř´ Ř§ŘłŘŞŮ�Ř§ŘŻŮ‡ Ú©Ů†ŰŚŘŻ. Ú©Ř§Ř±Ř§Ú©ŘŞŘ±Ů‡Ř§ŰŚ ŘŻŰŚÚŻŘ± Ů� Ů�Ř§ŘµŮ„Ů‡ Ů…Ř¬Ř§Ř˛ Ů†ŰŚŘłŘŞŮ†ŘŻ.',
+	alphanum: 'Ů„Ř·Ů�Ř§ Ů�Ů‚Ř· Ř§Ř˛ Ř­Ř±Ů�Ů� Ř§Ů„Ů�Ř¨Ř§Řˇ Ů� Ř§ŘąŘŻŘ§ŘŻ ŘŻŘ± Ř§ŰŚŮ† Ř¨Ř®Ř´ Ř§ŘłŘŞŮ�Ř§ŘŻŮ‡ Ú©Ů†ŰŚŘŻ. Ú©Ř§Ř±Ř§Ú©ŘŞŘ±Ů‡Ř§ŰŚ ŘŻŰŚÚŻŘ± Ů� Ů�Ř§ŘµŮ„Ů‡ Ů…Ř¬Ř§Ř˛ Ů†ŰŚŘłŘŞŮ†ŘŻ.',
+	dateSuchAs: 'Ů„Ř·Ů�Ř§ ŰŚÚ© ŘŞŘ§Ř±ŰŚŘ® Ů…ŘąŘŞŘ¨Ř± Ů…Ř§Ů†Ů†ŘŻ {date} Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ.',
+	dateInFormatMDY: 'Ů„Ř·Ů�Ř§ ŰŚÚ© ŘŞŘ§Ř±ŰŚŘ® Ů…ŘąŘŞŘ¨Ř± Ř¨Ů‡ Ř´Ú©Ů„ MM/DD/YYYY Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ (Ů…Ř§Ů†Ů†ŘŻ "12/31/1999").',
+	email: 'Ů„Ř·Ů�Ř§ ŰŚÚ© Ř˘ŘŻŘ±Řł Ř§ŰŚŮ…ŰŚŮ„ Ů…ŘąŘŞŘ¨Ř± Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ. Ř¨Ř±Ř§ŰŚ Ů…Ř«Ř§Ů„ "fred@domain.com".',
+	url: 'Ů„Ř·Ů�Ř§ ŰŚÚ© URL Ů…ŘąŘŞŘ¨Ř± Ů…Ř§Ů†Ů†ŘŻ http://www.example.com Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ.',
+	currencyDollar: 'Ů„Ř·Ů�Ř§ ŰŚÚ© Ů…Ř­ŘŻŮ�ŘŻŮ‡ Ů…ŘąŘŞŘ¨Ř± Ř¨Ř±Ř§ŰŚ Ř§ŰŚŮ† Ř¨Ř®Ř´ Ů�Ř§Ř±ŘŻ Ú©Ů†ŰŚŘŻ Ů…Ř§Ů†Ů†ŘŻ 100.00$ .',
+	oneRequired: 'Ů„Ř·Ů�Ř§ Ř­ŘŻŘ§Ů‚Ů„ ŰŚÚ©ŰŚ Ř§Ř˛ Ů�ŰŚŮ„ŘŻŮ‡Ř§ Ř±Ř§ ŮľŘ± Ú©Ů†ŰŚŘŻ.',
+	errorPrefix: 'Ř®Ř·Ř§: ',
+	warningPrefix: 'Ů‡Ř´ŘŻŘ§Ř±: ',
 
 	// Form.Validator.Extras
-	noSpace: 'استفاده از فاصله در این بخش مجاز نیست.',
-	reqChkByNode: 'موردی انتخاب نشده است.',
-	requiredChk: 'این فیلد الزامی است.',
-	reqChkByName: 'لطفا یک {label} را انتخاب کنید.',
-	match: 'این فیلد باید با فیلد {matchName} مطابقت داشته باشد.',
-	startDate: 'تاریخ شروع',
-	endDate: 'تاریخ پایان',
-	currendDate: 'تاریخ کنونی',
-	afterDate: 'تاریخ میبایست برابر یا بعد از {label} باشد',
-	beforeDate: 'تاریخ میبایست برابر یا قبل از {label} باشد',
-	startMonth: 'لطفا ماه شروع را انتخاب کنید',
-	sameMonth: 'این دو تاریخ باید در یک ماه باشند - شما باید یکی یا هر دو را تغییر دهید.',
-	creditcard: 'شماره کارت اعتباری که وارد کرده اید معتبر نیست. لطفا شماره را بررسی کنید و مجددا تلاش کنید. {length} رقم وارد شده است.'
+	noSpace: 'Ř§ŘłŘŞŮ�Ř§ŘŻŮ‡ Ř§Ř˛ Ů�Ř§ŘµŮ„Ů‡ ŘŻŘ± Ř§ŰŚŮ† Ř¨Ř®Ř´ Ů…Ř¬Ř§Ř˛ Ů†ŰŚŘłŘŞ.',
+	reqChkByNode: 'Ů…Ů�Ř±ŘŻŰŚ Ř§Ů†ŘŞŘ®Ř§Ř¨ Ů†Ř´ŘŻŮ‡ Ř§ŘłŘŞ.',
+	requiredChk: 'Ř§ŰŚŮ† Ů�ŰŚŮ„ŘŻ Ř§Ů„Ř˛Ř§Ů…ŰŚ Ř§ŘłŘŞ.',
+	reqChkByName: 'Ů„Ř·Ů�Ř§ ŰŚÚ© {label} Ř±Ř§ Ř§Ů†ŘŞŘ®Ř§Ř¨ Ú©Ů†ŰŚŘŻ.',
+	match: 'Ř§ŰŚŮ† Ů�ŰŚŮ„ŘŻ Ř¨Ř§ŰŚŘŻ Ř¨Ř§ Ů�ŰŚŮ„ŘŻ {matchName} Ů…Ř·Ř§Ř¨Ů‚ŘŞ ŘŻŘ§Ř´ŘŞŮ‡ Ř¨Ř§Ř´ŘŻ.',
+	startDate: 'ŘŞŘ§Ř±ŰŚŘ® Ř´Ř±Ů�Řą',
+	endDate: 'ŘŞŘ§Ř±ŰŚŘ® ŮľŘ§ŰŚŘ§Ů†',
+	currendDate: 'ŘŞŘ§Ř±ŰŚŘ® Ú©Ů†Ů�Ů†ŰŚ',
+	afterDate: 'ŘŞŘ§Ř±ŰŚŘ® Ů…ŰŚŘ¨Ř§ŰŚŘłŘŞ Ř¨Ř±Ř§Ř¨Ř± ŰŚŘ§ Ř¨ŘąŘŻ Ř§Ř˛ {label} Ř¨Ř§Ř´ŘŻ',
+	beforeDate: 'ŘŞŘ§Ř±ŰŚŘ® Ů…ŰŚŘ¨Ř§ŰŚŘłŘŞ Ř¨Ř±Ř§Ř¨Ř± ŰŚŘ§ Ů‚Ř¨Ů„ Ř§Ř˛ {label} Ř¨Ř§Ř´ŘŻ',
+	startMonth: 'Ů„Ř·Ů�Ř§ Ů…Ř§Ů‡ Ř´Ř±Ů�Řą Ř±Ř§ Ř§Ů†ŘŞŘ®Ř§Ř¨ Ú©Ů†ŰŚŘŻ',
+	sameMonth: 'Ř§ŰŚŮ† ŘŻŮ� ŘŞŘ§Ř±ŰŚŘ® Ř¨Ř§ŰŚŘŻ ŘŻŘ± ŰŚÚ© Ů…Ř§Ů‡ Ř¨Ř§Ř´Ů†ŘŻ - Ř´Ů…Ř§ Ř¨Ř§ŰŚŘŻ ŰŚÚ©ŰŚ ŰŚŘ§ Ů‡Ř± ŘŻŮ� Ř±Ř§ ŘŞŘşŰŚŰŚŘ± ŘŻŮ‡ŰŚŘŻ.',
+	creditcard: 'Ř´Ů…Ř§Ř±Ů‡ Ú©Ř§Ř±ŘŞ Ř§ŘąŘŞŘ¨Ř§Ř±ŰŚ Ú©Ů‡ Ů�Ř§Ř±ŘŻ Ú©Ř±ŘŻŮ‡ Ř§ŰŚŘŻ Ů…ŘąŘŞŘ¨Ř± Ů†ŰŚŘłŘŞ. Ů„Ř·Ů�Ř§ Ř´Ů…Ř§Ř±Ů‡ Ř±Ř§ Ř¨Ř±Ř±ŘłŰŚ Ú©Ů†ŰŚŘŻ Ů� Ů…Ř¬ŘŻŘŻŘ§ ŘŞŮ„Ř§Ř´ Ú©Ů†ŰŚŘŻ. {length} Ř±Ů‚Ů… Ů�Ř§Ř±ŘŻ Ř´ŘŻŮ‡ Ř§ŘłŘŞ.'
 
 });
 
@@ -11196,11 +11196,11 @@ provides: [Locale.fi-FI.Date]
 Locale.define('fi-FI', 'Date', {
 
 	// NOTE: months and days are not capitalized in finnish
-	months: ['tammikuu', 'helmikuu', 'maaliskuu', 'huhtikuu', 'toukokuu', 'kesäkuu', 'heinäkuu', 'elokuu', 'syyskuu', 'lokakuu', 'marraskuu', 'joulukuu'],
+	months: ['tammikuu', 'helmikuu', 'maaliskuu', 'huhtikuu', 'toukokuu', 'kesĂ¤kuu', 'heinĂ¤kuu', 'elokuu', 'syyskuu', 'lokakuu', 'marraskuu', 'joulukuu'],
 
 	// these abbreviations are really not much used in finnish because they obviously won't abbreviate very much. ;)
 	// NOTE: sometimes one can see forms such as "tammi", "helmi", etc. but that is not proper finnish.
-	months_abbr: ['tammik.', 'helmik.', 'maalisk.', 'huhtik.', 'toukok.', 'kesäk.', 'heinäk.', 'elok.', 'syysk.', 'lokak.', 'marrask.', 'jouluk.'],
+	months_abbr: ['tammik.', 'helmik.', 'maalisk.', 'huhtik.', 'toukok.', 'kesĂ¤k.', 'heinĂ¤k.', 'elok.', 'syysk.', 'lokak.', 'marrask.', 'jouluk.'],
 
 	days: ['sunnuntai', 'maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai'],
 	days_abbr: ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la'],
@@ -11221,8 +11221,8 @@ Locale.define('fi-FI', 'Date', {
 	minutesAgo: '{delta} minuuttia sitten',
 	hourAgo: 'noin tunti sitten',
 	hoursAgo: 'noin {delta} tuntia sitten',
-	dayAgo: 'päivä sitten',
-	daysAgo: '{delta} päivää sitten',
+	dayAgo: 'pĂ¤ivĂ¤ sitten',
+	daysAgo: '{delta} pĂ¤ivĂ¤Ă¤ sitten',
 	weekAgo: 'viikko sitten',
 	weeksAgo: '{delta} viikkoa sitten',
 	monthAgo: 'kuukausi sitten',
@@ -11235,8 +11235,8 @@ Locale.define('fi-FI', 'Date', {
 	minutesUntil: '{delta} minuutin kuluttua',
 	hourUntil: 'noin tunnin kuluttua',
 	hoursUntil: 'noin {delta} tunnin kuluttua',
-	dayUntil: 'päivän kuluttua',
-	daysUntil: '{delta} päivän kuluttua',
+	dayUntil: 'pĂ¤ivĂ¤n kuluttua',
+	daysUntil: '{delta} pĂ¤ivĂ¤n kuluttua',
 	weekUntil: 'viikon kuluttua',
 	weeksUntil: '{delta} viikon kuluttua',
 	monthUntil: 'kuukauden kuluttua',
@@ -11269,37 +11269,37 @@ provides: [Locale.fi-FI.Form.Validator]
 
 Locale.define('fi-FI', 'FormValidator', {
 
-	required: 'Tämä kenttä on pakollinen.',
-	minLength: 'Ole hyvä ja anna vähintään {minLength} merkkiä (annoit {length} merkkiä).',
-	maxLength: 'Älä anna enempää kuin {maxLength} merkkiä (annoit {length} merkkiä).',
-	integer: 'Ole hyvä ja anna kokonaisluku. Luvut, joissa on desimaaleja (esim. 1.25) eivät ole sallittuja.',
-	numeric: 'Anna tähän kenttään lukuarvo (kuten "1" tai "1.1" tai "-1" tai "-1.1").',
-	digits: 'Käytä pelkästään numeroita ja välimerkkejä tässä kentässä (syötteet, kuten esim. puhelinnumero, jossa on väliviivoja, pilkkuja tai pisteitä, kelpaa).',
-	alpha: 'Anna tähän kenttään vain kirjaimia (a-z). Välilyönnit tai muut merkit eivät ole sallittuja.',
-	alphanum: 'Anna tähän kenttään vain kirjaimia (a-z) tai numeroita (0-9). Välilyönnit tai muut merkit eivät ole sallittuja.',
-	dateSuchAs: 'Ole hyvä ja anna kelvollinen päivmäärä, kuten esimerkiksi {date}',
-	dateInFormatMDY: 'Ole hyvä ja anna kelvollinen päivämäärä muodossa pp/kk/vvvv (kuten "12/31/1999")',
-	email: 'Ole hyvä ja anna kelvollinen sähköpostiosoite (kuten esimerkiksi "matti@meikalainen.com").',
-	url: 'Ole hyvä ja anna kelvollinen URL, kuten esimerkiksi http://www.example.com.',
-	currencyDollar: 'Ole hyvä ja anna kelvollinen eurosumma (kuten esimerkiksi 100,00 EUR) .',
-	oneRequired: 'Ole hyvä ja syötä jotakin ainakin johonkin näistä kentistä.',
+	required: 'TĂ¤mĂ¤ kenttĂ¤ on pakollinen.',
+	minLength: 'Ole hyvĂ¤ ja anna vĂ¤hintĂ¤Ă¤n {minLength} merkkiĂ¤ (annoit {length} merkkiĂ¤).',
+	maxLength: 'Ă„lĂ¤ anna enempĂ¤Ă¤ kuin {maxLength} merkkiĂ¤ (annoit {length} merkkiĂ¤).',
+	integer: 'Ole hyvĂ¤ ja anna kokonaisluku. Luvut, joissa on desimaaleja (esim. 1.25) eivĂ¤t ole sallittuja.',
+	numeric: 'Anna tĂ¤hĂ¤n kenttĂ¤Ă¤n lukuarvo (kuten "1" tai "1.1" tai "-1" tai "-1.1").',
+	digits: 'KĂ¤ytĂ¤ pelkĂ¤stĂ¤Ă¤n numeroita ja vĂ¤limerkkejĂ¤ tĂ¤ssĂ¤ kentĂ¤ssĂ¤ (syĂ¶tteet, kuten esim. puhelinnumero, jossa on vĂ¤liviivoja, pilkkuja tai pisteitĂ¤, kelpaa).',
+	alpha: 'Anna tĂ¤hĂ¤n kenttĂ¤Ă¤n vain kirjaimia (a-z). VĂ¤lilyĂ¶nnit tai muut merkit eivĂ¤t ole sallittuja.',
+	alphanum: 'Anna tĂ¤hĂ¤n kenttĂ¤Ă¤n vain kirjaimia (a-z) tai numeroita (0-9). VĂ¤lilyĂ¶nnit tai muut merkit eivĂ¤t ole sallittuja.',
+	dateSuchAs: 'Ole hyvĂ¤ ja anna kelvollinen pĂ¤ivmĂ¤Ă¤rĂ¤, kuten esimerkiksi {date}',
+	dateInFormatMDY: 'Ole hyvĂ¤ ja anna kelvollinen pĂ¤ivĂ¤mĂ¤Ă¤rĂ¤ muodossa pp/kk/vvvv (kuten "12/31/1999")',
+	email: 'Ole hyvĂ¤ ja anna kelvollinen sĂ¤hkĂ¶postiosoite (kuten esimerkiksi "matti@meikalainen.com").',
+	url: 'Ole hyvĂ¤ ja anna kelvollinen URL, kuten esimerkiksi http://www.example.com.',
+	currencyDollar: 'Ole hyvĂ¤ ja anna kelvollinen eurosumma (kuten esimerkiksi 100,00 EUR) .',
+	oneRequired: 'Ole hyvĂ¤ ja syĂ¶tĂ¤ jotakin ainakin johonkin nĂ¤istĂ¤ kentistĂ¤.',
 	errorPrefix: 'Virhe: ',
 	warningPrefix: 'Varoitus: ',
 
 	// Form.Validator.Extras
-	noSpace: 'Tässä syötteessä ei voi olla välilyöntejä',
+	noSpace: 'TĂ¤ssĂ¤ syĂ¶tteessĂ¤ ei voi olla vĂ¤lilyĂ¶ntejĂ¤',
 	reqChkByNode: 'Ei valintoja.',
-	requiredChk: 'Tämä kenttä on pakollinen.',
-	reqChkByName: 'Ole hyvä ja valitse {label}.',
-	match: 'Tämän kentän tulee vastata kenttää {matchName}',
-	startDate: 'alkupäivämäärä',
-	endDate: 'loppupäivämäärä',
-	currendDate: 'nykyinen päivämäärä',
-	afterDate: 'Päivämäärän tulisi olla sama tai myöhäisempi ajankohta kuin {label}.',
-	beforeDate: 'Päivämäärän tulisi olla sama tai aikaisempi ajankohta kuin {label}.',
-	startMonth: 'Ole hyvä ja valitse aloituskuukausi',
-	sameMonth: 'Näiden kahden päivämäärän tulee olla saman kuun sisällä -- sinun pitää muuttaa jompaa kumpaa.',
-	creditcard: 'Annettu luottokortin numero ei kelpaa. Ole hyvä ja tarkista numero sekä yritä uudelleen. {length} numeroa syötetty.'
+	requiredChk: 'TĂ¤mĂ¤ kenttĂ¤ on pakollinen.',
+	reqChkByName: 'Ole hyvĂ¤ ja valitse {label}.',
+	match: 'TĂ¤mĂ¤n kentĂ¤n tulee vastata kenttĂ¤Ă¤ {matchName}',
+	startDate: 'alkupĂ¤ivĂ¤mĂ¤Ă¤rĂ¤',
+	endDate: 'loppupĂ¤ivĂ¤mĂ¤Ă¤rĂ¤',
+	currendDate: 'nykyinen pĂ¤ivĂ¤mĂ¤Ă¤rĂ¤',
+	afterDate: 'PĂ¤ivĂ¤mĂ¤Ă¤rĂ¤n tulisi olla sama tai myĂ¶hĂ¤isempi ajankohta kuin {label}.',
+	beforeDate: 'PĂ¤ivĂ¤mĂ¤Ă¤rĂ¤n tulisi olla sama tai aikaisempi ajankohta kuin {label}.',
+	startMonth: 'Ole hyvĂ¤ ja valitse aloituskuukausi',
+	sameMonth: 'NĂ¤iden kahden pĂ¤ivĂ¤mĂ¤Ă¤rĂ¤n tulee olla saman kuun sisĂ¤llĂ¤ -- sinun pitĂ¤Ă¤ muuttaa jompaa kumpaa.',
+	creditcard: 'Annettu luottokortin numero ei kelpaa. Ole hyvĂ¤ ja tarkista numero sekĂ¤ yritĂ¤ uudelleen. {length} numeroa syĂ¶tetty.'
 
 });
 
@@ -11355,8 +11355,8 @@ provides: [Locale.fr-FR.Date]
 
 Locale.define('fr-FR', 'Date', {
 
-	months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
-	months_abbr: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+	months: ['Janvier', 'FĂ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'AoĂ»t', 'Septembre', 'Octobre', 'Novembre', 'DĂ©cembre'],
+	months_abbr: ['janv.', 'fĂ©vr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'aoĂ»t', 'sept.', 'oct.', 'nov.', 'dĂ©c.'],
 	days: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
 	days_abbr: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
 
@@ -11514,10 +11514,10 @@ provides: [Locale.he-IL.Date]
 
 Locale.define('he-IL', 'Date', {
 
-	months: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
-	months_abbr: ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'],
-	days: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
-	days_abbr: ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'],
+	months: ['×™× ×•×�×¨', '×¤×‘×¨×•×�×¨', '×ž×¨×Ą', '×�×¤×¨×™×ś', '×ž×�×™', '×™×•× ×™', '×™×•×ś×™', '×�×•×’×•×ˇ×�', '×ˇ×¤×�×ž×‘×¨', '×�×•×§×�×•×‘×¨', '× ×•×‘×ž×‘×¨', '×“×¦×ž×‘×¨'],
+	months_abbr: ['×™× ×•×�×¨', '×¤×‘×¨×•×�×¨', '×ž×¨×Ą', '×�×¤×¨×™×ś', '×ž×�×™', '×™×•× ×™', '×™×•×ś×™', '×�×•×’×•×ˇ×�', '×ˇ×¤×�×ž×‘×¨', '×�×•×§×�×•×‘×¨', '× ×•×‘×ž×‘×¨', '×“×¦×ž×‘×¨'],
+	days: ['×¨×�×©×•×ź', '×©× ×™', '×©×ś×™×©×™', '×¨×‘×™×˘×™', '×—×ž×™×©×™', '×©×™×©×™', '×©×‘×Ş'],
+	days_abbr: ['×¨×�×©×•×ź', '×©× ×™', '×©×ś×™×©×™', '×¨×‘×™×˘×™', '×—×ž×™×©×™', '×©×™×©×™', '×©×‘×Ş'],
 
 	// Culture's date order: MM/DD/YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -11530,33 +11530,33 @@ Locale.define('he-IL', 'Date', {
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: 'לפני פחות מדקה',
-	minuteAgo: 'לפני כדקה',
-	minutesAgo: 'לפני {delta} דקות',
-	hourAgo: 'לפני כשעה',
-	hoursAgo: 'לפני {delta} שעות',
-	dayAgo: 'לפני יום',
-	daysAgo: 'לפני {delta} ימים',
-	weekAgo: 'לפני שבוע',
-	weeksAgo: 'לפני {delta} שבועות',
-	monthAgo: 'לפני חודש',
-	monthsAgo: 'לפני {delta} חודשים',
-	yearAgo: 'לפני שנה',
-	yearsAgo: 'לפני {delta} שנים',
+	lessThanMinuteAgo: '×ś×¤× ×™ ×¤×—×•×Ş ×ž×“×§×”',
+	minuteAgo: '×ś×¤× ×™ ×›×“×§×”',
+	minutesAgo: '×ś×¤× ×™ {delta} ×“×§×•×Ş',
+	hourAgo: '×ś×¤× ×™ ×›×©×˘×”',
+	hoursAgo: '×ś×¤× ×™ {delta} ×©×˘×•×Ş',
+	dayAgo: '×ś×¤× ×™ ×™×•×ť',
+	daysAgo: '×ś×¤× ×™ {delta} ×™×ž×™×ť',
+	weekAgo: '×ś×¤× ×™ ×©×‘×•×˘',
+	weeksAgo: '×ś×¤× ×™ {delta} ×©×‘×•×˘×•×Ş',
+	monthAgo: '×ś×¤× ×™ ×—×•×“×©',
+	monthsAgo: '×ś×¤× ×™ {delta} ×—×•×“×©×™×ť',
+	yearAgo: '×ś×¤× ×™ ×©× ×”',
+	yearsAgo: '×ś×¤× ×™ {delta} ×©× ×™×ť',
 
-	lessThanMinuteUntil: 'בעוד פחות מדקה',
-	minuteUntil: 'בעוד כדקה',
-	minutesUntil: 'בעוד {delta} דקות',
-	hourUntil: 'בעוד כשעה',
-	hoursUntil: 'בעוד {delta} שעות',
-	dayUntil: 'בעוד יום',
-	daysUntil: 'בעוד {delta} ימים',
-	weekUntil: 'בעוד שבוע',
-	weeksUntil: 'בעוד {delta} שבועות',
-	monthUntil: 'בעוד חודש',
-	monthsUntil: 'בעוד {delta} חודשים',
-	yearUntil: 'בעוד שנה',
-	yearsUntil: 'בעוד {delta} שנים'
+	lessThanMinuteUntil: '×‘×˘×•×“ ×¤×—×•×Ş ×ž×“×§×”',
+	minuteUntil: '×‘×˘×•×“ ×›×“×§×”',
+	minutesUntil: '×‘×˘×•×“ {delta} ×“×§×•×Ş',
+	hourUntil: '×‘×˘×•×“ ×›×©×˘×”',
+	hoursUntil: '×‘×˘×•×“ {delta} ×©×˘×•×Ş',
+	dayUntil: '×‘×˘×•×“ ×™×•×ť',
+	daysUntil: '×‘×˘×•×“ {delta} ×™×ž×™×ť',
+	weekUntil: '×‘×˘×•×“ ×©×‘×•×˘',
+	weeksUntil: '×‘×˘×•×“ {delta} ×©×‘×•×˘×•×Ş',
+	monthUntil: '×‘×˘×•×“ ×—×•×“×©',
+	monthsUntil: '×‘×˘×•×“ {delta} ×—×•×“×©×™×ť',
+	yearUntil: '×‘×˘×•×“ ×©× ×”',
+	yearsUntil: '×‘×˘×•×“ {delta} ×©× ×™×ť'
 
 });
 
@@ -11583,37 +11583,37 @@ provides: [Locale.he-IL.Form.Validator]
 
 Locale.define('he-IL', 'FormValidator', {
 
-	required: 'נא למלא שדה זה.',
-	minLength: 'נא להזין לפחות {minLength} תווים (הזנת {length} תווים).',
-	maxLength: 'נא להזין עד {maxLength} תווים (הזנת {length} תווים).',
-	integer: 'נא להזין מספר שלם לשדה זה. מספרים עשרוניים (כמו 1.25) אינם חוקיים.',
-	numeric: 'נא להזין ערך מספרי בלבד בשדה זה (כמו "1", "1.1", "-1" או "-1.1").',
-	digits: 'נא להזין רק ספרות וסימני הפרדה בשדה זה (למשל, מספר טלפון עם מקפים או נקודות הוא חוקי).',
-	alpha: 'נא להזין רק אותיות באנגלית (a-z) בשדה זה. רווחים או תווים אחרים אינם חוקיים.',
-	alphanum: 'נא להזין רק אותריות באנגלית (a-z) או ספרות (0-9) בשדה זה. אווחרים או תווים אחרים אינם חוקיים.',
-	dateSuchAs: 'נא להזין תאריך חוקי, כמו {date}',
-	dateInFormatMDY: 'נא להזין תאריך חוקי בפורמט MM/DD/YYYY (כמו "12/31/1999")',
-	email: 'נא להזין כתובת אימייל חוקית. לדוגמה: "fred@domain.com".',
-	url: 'נא להזין כתובת אתר חוקית, כמו http://www.example.com.',
-	currencyDollar: 'נא להזין סכום דולרי חוקי. לדוגמה $100.00.',
-	oneRequired: 'נא לבחור לפחות בשדה אחד.',
-	errorPrefix: 'שגיאה: ',
-	warningPrefix: 'אזהרה: ',
+	required: '× ×� ×ś×ž×ś×� ×©×“×” ×–×”.',
+	minLength: '× ×� ×ś×”×–×™×ź ×ś×¤×—×•×Ş {minLength} ×Ş×•×•×™×ť (×”×–× ×Ş {length} ×Ş×•×•×™×ť).',
+	maxLength: '× ×� ×ś×”×–×™×ź ×˘×“ {maxLength} ×Ş×•×•×™×ť (×”×–× ×Ş {length} ×Ş×•×•×™×ť).',
+	integer: '× ×� ×ś×”×–×™×ź ×ž×ˇ×¤×¨ ×©×ś×ť ×ś×©×“×” ×–×”. ×ž×ˇ×¤×¨×™×ť ×˘×©×¨×•× ×™×™×ť (×›×ž×• 1.25) ×�×™× ×ť ×—×•×§×™×™×ť.',
+	numeric: '× ×� ×ś×”×–×™×ź ×˘×¨×š ×ž×ˇ×¤×¨×™ ×‘×ś×‘×“ ×‘×©×“×” ×–×” (×›×ž×• "1", "1.1", "-1" ×�×• "-1.1").',
+	digits: '× ×� ×ś×”×–×™×ź ×¨×§ ×ˇ×¤×¨×•×Ş ×•×ˇ×™×ž× ×™ ×”×¤×¨×“×” ×‘×©×“×” ×–×” (×ś×ž×©×ś, ×ž×ˇ×¤×¨ ×�×ś×¤×•×ź ×˘×ť ×ž×§×¤×™×ť ×�×• × ×§×•×“×•×Ş ×”×•×� ×—×•×§×™).',
+	alpha: '× ×� ×ś×”×–×™×ź ×¨×§ ×�×•×Ş×™×•×Ş ×‘×�× ×’×ś×™×Ş (a-z) ×‘×©×“×” ×–×”. ×¨×•×•×—×™×ť ×�×• ×Ş×•×•×™×ť ×�×—×¨×™×ť ×�×™× ×ť ×—×•×§×™×™×ť.',
+	alphanum: '× ×� ×ś×”×–×™×ź ×¨×§ ×�×•×Ş×¨×™×•×Ş ×‘×�× ×’×ś×™×Ş (a-z) ×�×• ×ˇ×¤×¨×•×Ş (0-9) ×‘×©×“×” ×–×”. ×�×•×•×—×¨×™×ť ×�×• ×Ş×•×•×™×ť ×�×—×¨×™×ť ×�×™× ×ť ×—×•×§×™×™×ť.',
+	dateSuchAs: '× ×� ×ś×”×–×™×ź ×Ş×�×¨×™×š ×—×•×§×™, ×›×ž×• {date}',
+	dateInFormatMDY: '× ×� ×ś×”×–×™×ź ×Ş×�×¨×™×š ×—×•×§×™ ×‘×¤×•×¨×ž×� MM/DD/YYYY (×›×ž×• "12/31/1999")',
+	email: '× ×� ×ś×”×–×™×ź ×›×Ş×•×‘×Ş ×�×™×ž×™×™×ś ×—×•×§×™×Ş. ×ś×“×•×’×ž×”: "fred@domain.com".',
+	url: '× ×� ×ś×”×–×™×ź ×›×Ş×•×‘×Ş ×�×Ş×¨ ×—×•×§×™×Ş, ×›×ž×• http://www.example.com.',
+	currencyDollar: '× ×� ×ś×”×–×™×ź ×ˇ×›×•×ť ×“×•×ś×¨×™ ×—×•×§×™. ×ś×“×•×’×ž×” $100.00.',
+	oneRequired: '× ×� ×ś×‘×—×•×¨ ×ś×¤×—×•×Ş ×‘×©×“×” ×�×—×“.',
+	errorPrefix: '×©×’×™×�×”: ',
+	warningPrefix: '×�×–×”×¨×”: ',
 
 	// Form.Validator.Extras
-	noSpace: 'אין להזין רווחים בשדה זה.',
-	reqChkByNode: 'נא לבחור אחת מהאפשרויות.',
-	requiredChk: 'שדה זה נדרש.',
-	reqChkByName: 'נא לבחור {label}.',
-	match: 'שדה זה צריך להתאים לשדה {matchName}',
-	startDate: 'תאריך ההתחלה',
-	endDate: 'תאריך הסיום',
-	currendDate: 'התאריך הנוכחי',
-	afterDate: 'התאריך צריך להיות זהה או אחרי {label}.',
-	beforeDate: 'התאריך צריך להיות זהה או לפני {label}.',
-	startMonth: 'נא לבחור חודש התחלה',
-	sameMonth: 'שני תאריכים אלה צריכים להיות באותו חודש - נא לשנות אחד התאריכים.',
-	creditcard: 'מספר כרטיס האשראי שהוזן אינו חוקי. נא לבדוק שנית. הוזנו {length} ספרות.'
+	noSpace: '×�×™×ź ×ś×”×–×™×ź ×¨×•×•×—×™×ť ×‘×©×“×” ×–×”.',
+	reqChkByNode: '× ×� ×ś×‘×—×•×¨ ×�×—×Ş ×ž×”×�×¤×©×¨×•×™×•×Ş.',
+	requiredChk: '×©×“×” ×–×” × ×“×¨×©.',
+	reqChkByName: '× ×� ×ś×‘×—×•×¨ {label}.',
+	match: '×©×“×” ×–×” ×¦×¨×™×š ×ś×”×Ş×�×™×ť ×ś×©×“×” {matchName}',
+	startDate: '×Ş×�×¨×™×š ×”×”×Ş×—×ś×”',
+	endDate: '×Ş×�×¨×™×š ×”×ˇ×™×•×ť',
+	currendDate: '×”×Ş×�×¨×™×š ×”× ×•×›×—×™',
+	afterDate: '×”×Ş×�×¨×™×š ×¦×¨×™×š ×ś×”×™×•×Ş ×–×”×” ×�×• ×�×—×¨×™ {label}.',
+	beforeDate: '×”×Ş×�×¨×™×š ×¦×¨×™×š ×ś×”×™×•×Ş ×–×”×” ×�×• ×ś×¤× ×™ {label}.',
+	startMonth: '× ×� ×ś×‘×—×•×¨ ×—×•×“×© ×”×Ş×—×ś×”',
+	sameMonth: '×©× ×™ ×Ş×�×¨×™×›×™×ť ×�×ś×” ×¦×¨×™×›×™×ť ×ś×”×™×•×Ş ×‘×�×•×Ş×• ×—×•×“×© - × ×� ×ś×©× ×•×Ş ×�×—×“ ×”×Ş×�×¨×™×›×™×ť.',
+	creditcard: '×ž×ˇ×¤×¨ ×›×¨×�×™×ˇ ×”×�×©×¨×�×™ ×©×”×•×–×ź ×�×™× ×• ×—×•×§×™. × ×� ×ś×‘×“×•×§ ×©× ×™×Ş. ×”×•×–× ×• {length} ×ˇ×¤×¨×•×Ş.'
 
 });
 
@@ -11644,7 +11644,7 @@ Locale.define('he-IL', 'Number', {
 	group: ',',
 
 	currency: {
-		suffix: ' ₪'
+		suffix: ' â‚Ş'
 	}
 
 });
@@ -11660,7 +11660,7 @@ description: Date messages for Hungarian.
 license: MIT-style license
 
 authors:
-  - Zsolt Szegheő
+  - Zsolt SzegheĹ‘
 
 requires:
   - /Locale
@@ -11672,9 +11672,9 @@ provides: [Locale.hu-HU.Date]
 
 Locale.define('hu-HU', 'Date', {
 
-	months: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'],
-	months_abbr: ['jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.', 'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.'],
-	days: ['Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'],
+	months: ['JanuĂˇr', 'FebruĂˇr', 'MĂˇrcius', 'Ă�prilis', 'MĂˇjus', 'JĂşnius', 'JĂşlius', 'Augusztus', 'Szeptember', 'OktĂłber', 'November', 'December'],
+	months_abbr: ['jan.', 'febr.', 'mĂˇrc.', 'Ăˇpr.', 'mĂˇj.', 'jĂşn.', 'jĂşl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.'],
+	days: ['VasĂˇrnap', 'HĂ©tfĹ‘', 'Kedd', 'Szerda', 'CsĂĽtĂ¶rtĂ¶k', 'PĂ©ntek', 'Szombat'],
 	days_abbr: ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo'],
 
 	// Culture's date order: YYYY.MM.DD.
@@ -11691,30 +11691,30 @@ Locale.define('hu-HU', 'Date', {
 	lessThanMinuteAgo: 'alig egy perce',
 	minuteAgo: 'egy perce',
 	minutesAgo: '{delta} perce',
-	hourAgo: 'egy órája',
-	hoursAgo: '{delta} órája',
+	hourAgo: 'egy ĂłrĂˇja',
+	hoursAgo: '{delta} ĂłrĂˇja',
 	dayAgo: '1 napja',
 	daysAgo: '{delta} napja',
 	weekAgo: '1 hete',
 	weeksAgo: '{delta} hete',
-	monthAgo: '1 hónapja',
-	monthsAgo: '{delta} hónapja',
-	yearAgo: '1 éve',
-	yearsAgo: '{delta} éve',
+	monthAgo: '1 hĂłnapja',
+	monthsAgo: '{delta} hĂłnapja',
+	yearAgo: '1 Ă©ve',
+	yearsAgo: '{delta} Ă©ve',
 
-	lessThanMinuteUntil: 'alig egy perc múlva',
-	minuteUntil: 'egy perc múlva',
-	minutesUntil: '{delta} perc múlva',
-	hourUntil: 'egy óra múlva',
-	hoursUntil: '{delta} óra múlva',
-	dayUntil: '1 nap múlva',
-	daysUntil: '{delta} nap múlva',
-	weekUntil: '1 hét múlva',
-	weeksUntil: '{delta} hét múlva',
-	monthUntil: '1 hónap múlva',
-	monthsUntil: '{delta} hónap múlva',
-	yearUntil: '1 év múlva',
-	yearsUntil: '{delta} év múlva'
+	lessThanMinuteUntil: 'alig egy perc mĂşlva',
+	minuteUntil: 'egy perc mĂşlva',
+	minutesUntil: '{delta} perc mĂşlva',
+	hourUntil: 'egy Ăłra mĂşlva',
+	hoursUntil: '{delta} Ăłra mĂşlva',
+	dayUntil: '1 nap mĂşlva',
+	daysUntil: '{delta} nap mĂşlva',
+	weekUntil: '1 hĂ©t mĂşlva',
+	weeksUntil: '{delta} hĂ©t mĂşlva',
+	monthUntil: '1 hĂłnap mĂşlva',
+	monthsUntil: '{delta} hĂłnap mĂşlva',
+	yearUntil: '1 Ă©v mĂşlva',
+	yearsUntil: '{delta} Ă©v mĂşlva'
 
 });
 
@@ -11729,7 +11729,7 @@ description: Form Validator messages for Hungarian.
 license: MIT-style license
 
 authors:
-  - Zsolt Szegheő
+  - Zsolt SzegheĹ‘
 
 requires:
   - /Locale
@@ -11741,37 +11741,37 @@ provides: [Locale.hu-HU.Form.Validator]
 
 Locale.define('hu-HU', 'FormValidator', {
 
-	required: 'A mező kitöltése kötelező.',
-	minLength: 'Legalább {minLength} karakter megadása szükséges (megadva {length} karakter).',
-	maxLength: 'Legfeljebb {maxLength} karakter megadása lehetséges (megadva {length} karakter).',
-	integer: 'Egész szám megadása szükséges. A tizedesjegyek (pl. 1.25) nem engedélyezettek.',
-	numeric: 'Szám megadása szükséges (pl. "1" vagy "1.1" vagy "-1" vagy "-1.1").',
-	digits: 'Csak számok és írásjelek megadása lehetséges (pl. telefonszám kötőjelek és/vagy perjelekkel).',
-	alpha: 'Csak betűk (a-z) megadása lehetséges. Szóköz és egyéb karakterek nem engedélyezettek.',
-	alphanum: 'Csak betűk (a-z) vagy számok (0-9) megadása lehetséges. Szóköz és egyéb karakterek nem engedélyezettek.',
-	dateSuchAs: 'Valós dátum megadása szükséges (pl. {date}).',
-	dateInFormatMDY: 'Valós dátum megadása szükséges ÉÉÉÉ.HH.NN. formában. (pl. "1999.12.31.")',
-	email: 'Valós e-mail cím megadása szükséges (pl. "fred@domain.hu").',
-	url: 'Valós URL megadása szükséges (pl. http://www.example.com).',
-	currencyDollar: 'Valós pénzösszeg megadása szükséges (pl. 100.00 Ft.).',
-	oneRequired: 'Az alábbi mezők legalább egyikének kitöltése kötelező.',
+	required: 'A mezĹ‘ kitĂ¶ltĂ©se kĂ¶telezĹ‘.',
+	minLength: 'LegalĂˇbb {minLength} karakter megadĂˇsa szĂĽksĂ©ges (megadva {length} karakter).',
+	maxLength: 'Legfeljebb {maxLength} karakter megadĂˇsa lehetsĂ©ges (megadva {length} karakter).',
+	integer: 'EgĂ©sz szĂˇm megadĂˇsa szĂĽksĂ©ges. A tizedesjegyek (pl. 1.25) nem engedĂ©lyezettek.',
+	numeric: 'SzĂˇm megadĂˇsa szĂĽksĂ©ges (pl. "1" vagy "1.1" vagy "-1" vagy "-1.1").',
+	digits: 'Csak szĂˇmok Ă©s Ă­rĂˇsjelek megadĂˇsa lehetsĂ©ges (pl. telefonszĂˇm kĂ¶tĹ‘jelek Ă©s/vagy perjelekkel).',
+	alpha: 'Csak betĹ±k (a-z) megadĂˇsa lehetsĂ©ges. SzĂłkĂ¶z Ă©s egyĂ©b karakterek nem engedĂ©lyezettek.',
+	alphanum: 'Csak betĹ±k (a-z) vagy szĂˇmok (0-9) megadĂˇsa lehetsĂ©ges. SzĂłkĂ¶z Ă©s egyĂ©b karakterek nem engedĂ©lyezettek.',
+	dateSuchAs: 'ValĂłs dĂˇtum megadĂˇsa szĂĽksĂ©ges (pl. {date}).',
+	dateInFormatMDY: 'ValĂłs dĂˇtum megadĂˇsa szĂĽksĂ©ges Ă‰Ă‰Ă‰Ă‰.HH.NN. formĂˇban. (pl. "1999.12.31.")',
+	email: 'ValĂłs e-mail cĂ­m megadĂˇsa szĂĽksĂ©ges (pl. "fred@domain.hu").',
+	url: 'ValĂłs URL megadĂˇsa szĂĽksĂ©ges (pl. http://www.example.com).',
+	currencyDollar: 'ValĂłs pĂ©nzĂ¶sszeg megadĂˇsa szĂĽksĂ©ges (pl. 100.00 Ft.).',
+	oneRequired: 'Az alĂˇbbi mezĹ‘k legalĂˇbb egyikĂ©nek kitĂ¶ltĂ©se kĂ¶telezĹ‘.',
 	errorPrefix: 'Hiba: ',
 	warningPrefix: 'Figyelem: ',
 
 	// Form.Validator.Extras
-	noSpace: 'A mező nem tartalmazhat szóközöket.',
-	reqChkByNode: 'Nincs egyetlen kijelölt elem sem.',
-	requiredChk: 'A mező kitöltése kötelező.',
-	reqChkByName: 'Egy {label} kiválasztása szükséges.',
-	match: 'A mezőnek egyeznie kell a(z) {matchName} mezővel.',
-	startDate: 'a kezdet dátuma',
-	endDate: 'a vég dátuma',
-	currendDate: 'jelenlegi dátum',
-	afterDate: 'A dátum nem lehet kisebb, mint {label}.',
-	beforeDate: 'A dátum nem lehet nagyobb, mint {label}.',
-	startMonth: 'Kezdeti hónap megadása szükséges.',
-	sameMonth: 'A két dátumnak ugyanazon hónapban kell lennie.',
-	creditcard: 'A megadott bankkártyaszám nem valódi (megadva {length} számjegy).'
+	noSpace: 'A mezĹ‘ nem tartalmazhat szĂłkĂ¶zĂ¶ket.',
+	reqChkByNode: 'Nincs egyetlen kijelĂ¶lt elem sem.',
+	requiredChk: 'A mezĹ‘ kitĂ¶ltĂ©se kĂ¶telezĹ‘.',
+	reqChkByName: 'Egy {label} kivĂˇlasztĂˇsa szĂĽksĂ©ges.',
+	match: 'A mezĹ‘nek egyeznie kell a(z) {matchName} mezĹ‘vel.',
+	startDate: 'a kezdet dĂˇtuma',
+	endDate: 'a vĂ©g dĂˇtuma',
+	currendDate: 'jelenlegi dĂˇtum',
+	afterDate: 'A dĂˇtum nem lehet kisebb, mint {label}.',
+	beforeDate: 'A dĂˇtum nem lehet nagyobb, mint {label}.',
+	startMonth: 'Kezdeti hĂłnap megadĂˇsa szĂĽksĂ©ges.',
+	sameMonth: 'A kĂ©t dĂˇtumnak ugyanazon hĂłnapban kell lennie.',
+	creditcard: 'A megadott bankkĂˇrtyaszĂˇm nem valĂłdi (megadva {length} szĂˇmjegy).'
 
 });
 
@@ -11801,7 +11801,7 @@ Locale.define('it-IT', 'Date', {
 
 	months: ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'],
 	months_abbr: ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'],
-	days: ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'],
+	days: ['Domenica', 'LunedĂ¬', 'MartedĂ¬', 'MercoledĂ¬', 'GiovedĂ¬', 'VenerdĂ¬', 'Sabato'],
 	days_abbr: ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'],
 
 	// Culture's date order: DD/MM/YYYY
@@ -11813,7 +11813,7 @@ Locale.define('it-IT', 'Date', {
 	firstDayOfWeek: 1,
 
 	// Date.Extras
-	ordinal: 'º',
+	ordinal: 'Âş',
 
 	lessThanMinuteAgo: 'meno di un minuto fa',
 	minuteAgo: 'circa un minuto fa',
@@ -11925,49 +11925,49 @@ provides: [Locale.ja-JP.Date]
 
 Locale.define('ja-JP', 'Date', {
 
-	months: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-	months_abbr: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-	days: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
-	days_abbr: ['日', '月', '火', '水', '木', '金', '土'],
+	months: ['1ćś�', '2ćś�', '3ćś�', '4ćś�', '5ćś�', '6ćś�', '7ćś�', '8ćś�', '9ćś�', '10ćś�', '11ćś�', '12ćś�'],
+	months_abbr: ['1ćś�', '2ćś�', '3ćś�', '4ćś�', '5ćś�', '6ćś�', '7ćś�', '8ćś�', '9ćś�', '10ćś�', '11ćś�', '12ćś�'],
+	days: ['ć—Ąć›ść—Ą', 'ćś�ć›ść—Ą', 'ç�«ć›ść—Ą', 'ć°´ć›ść—Ą', 'ćś¨ć›ść—Ą', 'é‡‘ć›ść—Ą', 'ĺśźć›ść—Ą'],
+	days_abbr: ['ć—Ą', 'ćś�', 'ç�«', 'ć°´', 'ćś¨', 'é‡‘', 'ĺśź'],
 
 	// Culture's date order: YYYY/MM/DD
 	dateOrder: ['year', 'month', 'date'],
 	shortDate: '%Y/%m/%d',
 	shortTime: '%H:%M',
-	AM: '午前',
-	PM: '午後',
+	AM: 'ĺŤ�ĺ‰Ť',
+	PM: 'ĺŤ�ĺľŚ',
 	firstDayOfWeek: 0,
 
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: '1分以内前',
-	minuteAgo: '約1分前',
-	minutesAgo: '約{delta}分前',
-	hourAgo: '約1時間前',
-	hoursAgo: '約{delta}時間前',
-	dayAgo: '1日前',
-	daysAgo: '{delta}日前',
-	weekAgo: '1週間前',
-	weeksAgo: '{delta}週間前',
-	monthAgo: '1ヶ月前',
-	monthsAgo: '{delta}ヶ月前',
-	yearAgo: '1年前',
-	yearsAgo: '{delta}年前',
+	lessThanMinuteAgo: '1ĺ�†ä»Ąĺ†…ĺ‰Ť',
+	minuteAgo: 'ç´„1ĺ�†ĺ‰Ť',
+	minutesAgo: 'ç´„{delta}ĺ�†ĺ‰Ť',
+	hourAgo: 'ç´„1ć™‚é–“ĺ‰Ť',
+	hoursAgo: 'ç´„{delta}ć™‚é–“ĺ‰Ť',
+	dayAgo: '1ć—Ąĺ‰Ť',
+	daysAgo: '{delta}ć—Ąĺ‰Ť',
+	weekAgo: '1é€±é–“ĺ‰Ť',
+	weeksAgo: '{delta}é€±é–“ĺ‰Ť',
+	monthAgo: '1ă�¶ćś�ĺ‰Ť',
+	monthsAgo: '{delta}ă�¶ćś�ĺ‰Ť',
+	yearAgo: '1ĺą´ĺ‰Ť',
+	yearsAgo: '{delta}ĺą´ĺ‰Ť',
 
-	lessThanMinuteUntil: '今から約1分以内',
-	minuteUntil: '今から約1分',
-	minutesUntil: '今から約{delta}分',
-	hourUntil: '今から約1時間',
-	hoursUntil: '今から約{delta}時間',
-	dayUntil: '今から1日間',
-	daysUntil: '今から{delta}日間',
-	weekUntil: '今から1週間',
-	weeksUntil: '今から{delta}週間',
-	monthUntil: '今から1ヶ月',
-	monthsUntil: '今から{delta}ヶ月',
-	yearUntil: '今から1年',
-	yearsUntil: '今から{delta}年'
+	lessThanMinuteUntil: 'ä»Šă�‹ă‚‰ç´„1ĺ�†ä»Ąĺ†…',
+	minuteUntil: 'ä»Šă�‹ă‚‰ç´„1ĺ�†',
+	minutesUntil: 'ä»Šă�‹ă‚‰ç´„{delta}ĺ�†',
+	hourUntil: 'ä»Šă�‹ă‚‰ç´„1ć™‚é–“',
+	hoursUntil: 'ä»Šă�‹ă‚‰ç´„{delta}ć™‚é–“',
+	dayUntil: 'ä»Šă�‹ă‚‰1ć—Ąé–“',
+	daysUntil: 'ä»Šă�‹ă‚‰{delta}ć—Ąé–“',
+	weekUntil: 'ä»Šă�‹ă‚‰1é€±é–“',
+	weeksUntil: 'ä»Šă�‹ă‚‰{delta}é€±é–“',
+	monthUntil: 'ä»Šă�‹ă‚‰1ă�¶ćś�',
+	monthsUntil: 'ä»Šă�‹ă‚‰{delta}ă�¶ćś�',
+	yearUntil: 'ä»Šă�‹ă‚‰1ĺą´',
+	yearsUntil: 'ä»Šă�‹ă‚‰{delta}ĺą´'
 
 });
 
@@ -11994,36 +11994,36 @@ provides: [Locale.ja-JP.Form.Validator]
 
 Locale.define("ja-JP", "FormValidator", {
 
-	required: '入力は必須です。',
-	minLength: '入力文字数は{minLength}以上にしてください。({length}文字)',
-	maxLength: '入力文字数は{maxLength}以下にしてください。({length}文字)',
-	integer: '整数を入力してください。',
-	numeric: '入力できるのは数値だけです。(例: "1", "1.1", "-1", "-1.1"....)',
-	digits: '入力できるのは数値と句読記号です。 (例: -や+を含む電話番号など).',
-	alpha: '入力できるのは半角英字だけです。それ以外の文字は入力できません。',
-	alphanum: '入力できるのは半角英数字だけです。それ以外の文字は入力できません。',
-	dateSuchAs: '有効な日付を入力してください。{date}',
-	dateInFormatMDY: '日付の書式に誤りがあります。YYYY/MM/DD (i.e. "1999/12/31")',
-	email: 'メールアドレスに誤りがあります。',
-	url: 'URLアドレスに誤りがあります。',
-	currencyDollar: '金額に誤りがあります。',
-	oneRequired: 'ひとつ以上入力してください。',
-	errorPrefix: 'エラー: ',
-	warningPrefix: '警告: ',
+	required: 'ĺ…ĄĺŠ›ă�Żĺż…é �ă�§ă�™ă€‚',
+	minLength: 'ĺ…ĄĺŠ›ć–‡ĺ­—ć•°ă�Ż{minLength}ä»Ąä¸Šă�«ă�—ă�¦ă�Źă� ă�•ă�„ă€‚({length}ć–‡ĺ­—)',
+	maxLength: 'ĺ…ĄĺŠ›ć–‡ĺ­—ć•°ă�Ż{maxLength}ä»Ąä¸‹ă�«ă�—ă�¦ă�Źă� ă�•ă�„ă€‚({length}ć–‡ĺ­—)',
+	integer: 'ć•´ć•°ă‚’ĺ…ĄĺŠ›ă�—ă�¦ă�Źă� ă�•ă�„ă€‚',
+	numeric: 'ĺ…ĄĺŠ›ă�§ă�Ťă‚‹ă�®ă�Żć•°ĺ€¤ă� ă�‘ă�§ă�™ă€‚(äľ‹: "1", "1.1", "-1", "-1.1"....)',
+	digits: 'ĺ…ĄĺŠ›ă�§ă�Ťă‚‹ă�®ă�Żć•°ĺ€¤ă�¨ĺŹĄčŞ­č¨�ĺŹ·ă�§ă�™ă€‚ (äľ‹: -ă‚„+ă‚’ĺ�«ă‚€é›»č©±ç•ŞĺŹ·ă�Şă�©).',
+	alpha: 'ĺ…ĄĺŠ›ă�§ă�Ťă‚‹ă�®ă�ŻĺŤŠč§’č‹±ĺ­—ă� ă�‘ă�§ă�™ă€‚ă�ťă‚Śä»Ąĺ¤–ă�®ć–‡ĺ­—ă�Żĺ…ĄĺŠ›ă�§ă�Ťă�ľă�›ă‚“ă€‚',
+	alphanum: 'ĺ…ĄĺŠ›ă�§ă�Ťă‚‹ă�®ă�ŻĺŤŠč§’č‹±ć•°ĺ­—ă� ă�‘ă�§ă�™ă€‚ă�ťă‚Śä»Ąĺ¤–ă�®ć–‡ĺ­—ă�Żĺ…ĄĺŠ›ă�§ă�Ťă�ľă�›ă‚“ă€‚',
+	dateSuchAs: 'ćś‰ĺŠąă�Şć—Ąä»�ă‚’ĺ…ĄĺŠ›ă�—ă�¦ă�Źă� ă�•ă�„ă€‚{date}',
+	dateInFormatMDY: 'ć—Ąä»�ă�®ć›¸ĺĽŹă�«čŞ¤ă‚Šă�Śă�‚ă‚Šă�ľă�™ă€‚YYYY/MM/DD (i.e. "1999/12/31")',
+	email: 'ă�ˇă�Ľă�«ă‚˘ă�‰ă�¬ă‚ąă�«čŞ¤ă‚Šă�Śă�‚ă‚Šă�ľă�™ă€‚',
+	url: 'URLă‚˘ă�‰ă�¬ă‚ąă�«čŞ¤ă‚Šă�Śă�‚ă‚Šă�ľă�™ă€‚',
+	currencyDollar: 'é‡‘éˇŤă�«čŞ¤ă‚Šă�Śă�‚ă‚Šă�ľă�™ă€‚',
+	oneRequired: 'ă�˛ă�¨ă�¤ä»Ąä¸Šĺ…ĄĺŠ›ă�—ă�¦ă�Źă� ă�•ă�„ă€‚',
+	errorPrefix: 'ă‚¨ă�©ă�Ľ: ',
+	warningPrefix: 'č­¦ĺ‘Š: ',
 
 	// FormValidator.Extras
-	noSpace: 'スペースは入力できません。',
-	reqChkByNode: '選択されていません。',
-	requiredChk: 'この項目は必須です。',
-	reqChkByName: '{label}を選択してください。',
-	match: '{matchName}が入力されている場合必須です。',
-	startDate: '開始日',
-	endDate: '終了日',
-	currendDate: '今日',
-	afterDate: '{label}以降の日付にしてください。',
-	beforeDate: '{label}以前の日付にしてください。',
-	startMonth: '開始月を選択してください。',
-	sameMonth: '日付が同一です。どちらかを変更してください。'
+	noSpace: 'ă‚ąă�šă�Ľă‚ąă�Żĺ…ĄĺŠ›ă�§ă�Ťă�ľă�›ă‚“ă€‚',
+	reqChkByNode: 'é�¸ćŠžă�•ă‚Śă�¦ă�„ă�ľă�›ă‚“ă€‚',
+	requiredChk: 'ă�“ă�®é …ç›®ă�Żĺż…é �ă�§ă�™ă€‚',
+	reqChkByName: '{label}ă‚’é�¸ćŠžă�—ă�¦ă�Źă� ă�•ă�„ă€‚',
+	match: '{matchName}ă�Śĺ…ĄĺŠ›ă�•ă‚Śă�¦ă�„ă‚‹ĺ ´ĺ��ĺż…é �ă�§ă�™ă€‚',
+	startDate: 'é–‹ĺ§‹ć—Ą',
+	endDate: 'çµ‚äş†ć—Ą',
+	currendDate: 'ä»Šć—Ą',
+	afterDate: '{label}ä»Ąé™Ťă�®ć—Ąä»�ă�«ă�—ă�¦ă�Źă� ă�•ă�„ă€‚',
+	beforeDate: '{label}ä»Ąĺ‰Ťă�®ć—Ąä»�ă�«ă�—ă�¦ă�Źă� ă�•ă�„ă€‚',
+	startMonth: 'é–‹ĺ§‹ćś�ă‚’é�¸ćŠžă�—ă�¦ă�Źă� ă�•ă�„ă€‚',
+	sameMonth: 'ć—Ąä»�ă�Śĺ�Śä¸€ă�§ă�™ă€‚ă�©ă�ˇă‚‰ă�‹ă‚’ĺ¤‰ć›´ă�—ă�¦ă�Źă� ă�•ă�„ă€‚'
 
 });
 
@@ -12281,7 +12281,7 @@ provides: [Locale.no-NO.Form.Validator]
 
 Locale.define('no-NO', 'FormValidator', {
 
-	required: 'Dette feltet er pÃ¥krevd.',
+	required: 'Dette feltet er pĂ�ÂĄkrevd.',
 	minLength: 'Vennligst skriv inn minst {minLength} tegn (du skrev {length} tegn).',
 	maxLength: 'Vennligst skriv inn maksimalt {maxLength} tegn (du skrev {length} tegn).',
 	integer: 'Vennligst skriv inn et tall i dette feltet. Tall med desimaler (for eksempel 1,25) er ikke tillat.',
@@ -12293,7 +12293,7 @@ Locale.define('no-NO', 'FormValidator', {
 	dateInFormatMDY: 'Vennligst skriv inn en gyldig dato, i formatet MM/DD/YYYY (for eksempel "12/31/1999")',
 	email: 'Vennligst skriv inn en gyldig epost-adresse. For eksempel "espen@domene.no".',
 	url: 'Vennligst skriv inn en gyldig URL, for eksempel http://www.example.com.',
-	currencyDollar: 'Vennligst fyll ut et gyldig $ belÃ¸p. For eksempel $100.00 .',
+	currencyDollar: 'Vennligst fyll ut et gyldig $ belĂ�Â¸p. For eksempel $100.00 .',
 	oneRequired: 'Vennligst fyll ut noe i minst ett av disse feltene.',
 	errorPrefix: 'Feil: ',
 	warningPrefix: 'Advarsel: '
@@ -12323,17 +12323,17 @@ provides: [Locale.pl-PL.Date]
 
 Locale.define('pl-PL', 'Date', {
 
-	months: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
-	months_abbr: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'],
-	days: ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'],
-	days_abbr: ['niedz.', 'pon.', 'wt.', 'śr.', 'czw.', 'pt.', 'sob.'],
+	months: ['StyczeĹ„', 'Luty', 'Marzec', 'KwiecieĹ„', 'Maj', 'Czerwiec', 'Lipiec', 'SierpieĹ„', 'WrzesieĹ„', 'PaĹşdziernik', 'Listopad', 'GrudzieĹ„'],
+	months_abbr: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paĹş', 'lis', 'gru'],
+	days: ['Niedziela', 'PoniedziaĹ‚ek', 'Wtorek', 'Ĺšroda', 'Czwartek', 'PiÄ…tek', 'Sobota'],
+	days_abbr: ['niedz.', 'pon.', 'wt.', 'Ĺ›r.', 'czw.', 'pt.', 'sob.'],
 
 	// Culture's date order: YYYY-MM-DD
 	dateOrder: ['year', 'month', 'date'],
 	shortDate: '%Y-%m-%d',
 	shortTime: '%H:%M',
 	AM: 'nad ranem',
-	PM: 'po południu',
+	PM: 'po poĹ‚udniu',
 	firstDayOfWeek: 1,
 
 	// Date.Extras
@@ -12341,20 +12341,20 @@ Locale.define('pl-PL', 'Date', {
 		return (dayOfMonth > 3 && dayOfMonth < 21) ? 'ty' : ['ty', 'szy', 'gi', 'ci', 'ty'][Math.min(dayOfMonth % 10, 4)];
 	},
 
-	lessThanMinuteAgo: 'mniej niż minute temu',
-	minuteAgo: 'około minutę temu',
+	lessThanMinuteAgo: 'mniej niĹĽ minute temu',
+	minuteAgo: 'okoĹ‚o minutÄ™ temu',
 	minutesAgo: '{delta} minut temu',
-	hourAgo: 'około godzinę temu',
-	hoursAgo: 'około {delta} godzin temu',
+	hourAgo: 'okoĹ‚o godzinÄ™ temu',
+	hoursAgo: 'okoĹ‚o {delta} godzin temu',
 	dayAgo: 'Wczoraj',
 	daysAgo: '{delta} dni temu',
 
-	lessThanMinuteUntil: 'za niecałą minutę',
-	minuteUntil: 'za około minutę',
+	lessThanMinuteUntil: 'za niecaĹ‚Ä… minutÄ™',
+	minuteUntil: 'za okoĹ‚o minutÄ™',
 	minutesUntil: 'za {delta} minut',
-	hourUntil: 'za około godzinę',
-	hoursUntil: 'za około {delta} godzin',
-	dayUntil: 'za 1 dzień',
+	hourUntil: 'za okoĹ‚o godzinÄ™',
+	hoursUntil: 'za okoĹ‚o {delta} godzin',
+	dayUntil: 'za 1 dzieĹ„',
 	daysUntil: 'za {delta} dni'
 
 });
@@ -12383,35 +12383,35 @@ provides: [Locale.pl-PL.Form.Validator]
 Locale.define('pl-PL', 'FormValidator', {
 
 	required: 'To pole jest wymagane.',
-	minLength: 'Wymagane jest przynajmniej {minLength} znaków (wpisanych zostało tylko {length}).',
-	maxLength: 'Dozwolone jest nie więcej niż {maxLength} znaków (wpisanych zostało {length})',
-	integer: 'To pole wymaga liczb całych. Liczby dziesiętne (np. 1.25) są niedozwolone.',
-	numeric: 'Prosimy używać tylko numerycznych wartości w tym polu (np. "1", "1.1", "-1" lub "-1.1").',
-	digits: 'Prosimy używać liczb oraz zankow punktuacyjnych w typ polu (dla przykładu, przy numerze telefonu myślniki i kropki są dozwolone).',
-	alpha: 'Prosimy używać tylko liter (a-z) w tym polu. Spacje oraz inne znaki są niedozwolone.',
-	alphanum: 'Prosimy używać tylko liter (a-z) lub liczb (0-9) w tym polu. Spacje oraz inne znaki są niedozwolone.',
-	dateSuchAs: 'Prosimy podać prawidłową datę w formacie: {date}',
-	dateInFormatMDY: 'Prosimy podać poprawną date w formacie DD.MM.RRRR (i.e. "12.01.2009")',
-	email: 'Prosimy podać prawidłowy adres e-mail, np. "jan@domena.pl".',
-	url: 'Prosimy podać prawidłowy adres URL, np. http://www.example.com.',
-	currencyDollar: 'Prosimy podać prawidłową sumę w PLN. Dla przykładu: 100.00 PLN.',
-	oneRequired: 'Prosimy wypełnić chociaż jedno z pól.',
-	errorPrefix: 'Błąd: ',
+	minLength: 'Wymagane jest przynajmniej {minLength} znakĂłw (wpisanych zostaĹ‚o tylko {length}).',
+	maxLength: 'Dozwolone jest nie wiÄ™cej niĹĽ {maxLength} znakĂłw (wpisanych zostaĹ‚o {length})',
+	integer: 'To pole wymaga liczb caĹ‚ych. Liczby dziesiÄ™tne (np. 1.25) sÄ… niedozwolone.',
+	numeric: 'Prosimy uĹĽywaÄ‡ tylko numerycznych wartoĹ›ci w tym polu (np. "1", "1.1", "-1" lub "-1.1").',
+	digits: 'Prosimy uĹĽywaÄ‡ liczb oraz zankow punktuacyjnych w typ polu (dla przykĹ‚adu, przy numerze telefonu myĹ›lniki i kropki sÄ… dozwolone).',
+	alpha: 'Prosimy uĹĽywaÄ‡ tylko liter (a-z) w tym polu. Spacje oraz inne znaki sÄ… niedozwolone.',
+	alphanum: 'Prosimy uĹĽywaÄ‡ tylko liter (a-z) lub liczb (0-9) w tym polu. Spacje oraz inne znaki sÄ… niedozwolone.',
+	dateSuchAs: 'Prosimy podaÄ‡ prawidĹ‚owÄ… datÄ™ w formacie: {date}',
+	dateInFormatMDY: 'Prosimy podaÄ‡ poprawnÄ… date w formacie DD.MM.RRRR (i.e. "12.01.2009")',
+	email: 'Prosimy podaÄ‡ prawidĹ‚owy adres e-mail, np. "jan@domena.pl".',
+	url: 'Prosimy podaÄ‡ prawidĹ‚owy adres URL, np. http://www.example.com.',
+	currencyDollar: 'Prosimy podaÄ‡ prawidĹ‚owÄ… sumÄ™ w PLN. Dla przykĹ‚adu: 100.00 PLN.',
+	oneRequired: 'Prosimy wypeĹ‚niÄ‡ chociaĹĽ jedno z pĂłl.',
+	errorPrefix: 'BĹ‚Ä…d: ',
 	warningPrefix: 'Uwaga: ',
 
 	// Form.Validator.Extras
-	noSpace: 'W tym polu nie mogą znajdować się spacje.',
-	reqChkByNode: 'Brak zaznaczonych elementów.',
+	noSpace: 'W tym polu nie mogÄ… znajdowaÄ‡ siÄ™ spacje.',
+	reqChkByNode: 'Brak zaznaczonych elementĂłw.',
 	requiredChk: 'To pole jest wymagane.',
-	reqChkByName: 'Prosimy wybrać z {label}.',
-	match: 'To pole musi być takie samo jak {matchName}',
-	startDate: 'data początkowa',
-	endDate: 'data końcowa',
+	reqChkByName: 'Prosimy wybraÄ‡ z {label}.',
+	match: 'To pole musi byÄ‡ takie samo jak {matchName}',
+	startDate: 'data poczÄ…tkowa',
+	endDate: 'data koĹ„cowa',
 	currendDate: 'aktualna data',
-	afterDate: 'Podana data poinna być taka sama lub po {label}.',
-	beforeDate: 'Podana data poinna być taka sama lub przed {label}.',
-	startMonth: 'Prosimy wybrać początkowy miesiąc.',
-	sameMonth: 'Te dwie daty muszą być w zakresie tego samego miesiąca - wymagana jest zmiana któregoś z pól.'
+	afterDate: 'Podana data poinna byÄ‡ taka sama lub po {label}.',
+	beforeDate: 'Podana data poinna byÄ‡ taka sama lub przed {label}.',
+	startMonth: 'Prosimy wybraÄ‡ poczÄ…tkowy miesiÄ…c.',
+	sameMonth: 'Te dwie daty muszÄ… byÄ‡ w zakresie tego samego miesiÄ…ca - wymagana jest zmiana ktĂłregoĹ› z pĂłl.'
 
 });
 
@@ -12438,10 +12438,10 @@ provides: [Locale.pt-PT.Date]
 
 Locale.define('pt-PT', 'Date', {
 
-	months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+	months: ['Janeiro', 'Fevereiro', 'MarĂ§o', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
 	months_abbr: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-	days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
-	days_abbr: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+	days: ['Domingo', 'Segunda-feira', 'TerĂ§a-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'SĂˇbado'],
+	days_abbr: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'SĂˇb'],
 
 	// Culture's date order: DD-MM-YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -12452,21 +12452,21 @@ Locale.define('pt-PT', 'Date', {
 	firstDayOfWeek: 1,
 
 	// Date.Extras
-	ordinal: 'º',
+	ordinal: 'Âş',
 
-	lessThanMinuteAgo: 'há menos de um minuto',
-	minuteAgo: 'há cerca de um minuto',
-	minutesAgo: 'há {delta} minutos',
-	hourAgo: 'há cerca de uma hora',
-	hoursAgo: 'há cerca de {delta} horas',
-	dayAgo: 'há um dia',
-	daysAgo: 'há {delta} dias',
-	weekAgo: 'há uma semana',
-	weeksAgo: 'há {delta} semanas',
-	monthAgo: 'há um mês',
-	monthsAgo: 'há {delta} meses',
-	yearAgo: 'há um ano',
-	yearsAgo: 'há {delta} anos',
+	lessThanMinuteAgo: 'hĂˇ menos de um minuto',
+	minuteAgo: 'hĂˇ cerca de um minuto',
+	minutesAgo: 'hĂˇ {delta} minutos',
+	hourAgo: 'hĂˇ cerca de uma hora',
+	hoursAgo: 'hĂˇ cerca de {delta} horas',
+	dayAgo: 'hĂˇ um dia',
+	daysAgo: 'hĂˇ {delta} dias',
+	weekAgo: 'hĂˇ uma semana',
+	weeksAgo: 'hĂˇ {delta} semanas',
+	monthAgo: 'hĂˇ um mĂŞs',
+	monthsAgo: 'hĂˇ {delta} meses',
+	yearAgo: 'hĂˇ um ano',
+	yearsAgo: 'hĂˇ {delta} anos',
 
 	lessThanMinuteUntil: 'em menos de um minuto',
 	minuteUntil: 'em um minuto',
@@ -12477,7 +12477,7 @@ Locale.define('pt-PT', 'Date', {
 	daysUntil: 'em {delta} dias',
 	weekUntil: 'em uma semana',
 	weeksUntil: 'em {delta} semanas',
-	monthUntil: 'em um mês',
+	monthUntil: 'em um mĂŞs',
 	monthsUntil: 'em {delta} meses',
 	yearUntil: 'em um ano',
 	yearsUntil: 'em {delta} anos'
@@ -12524,7 +12524,7 @@ description: Form Validator messages for Portuguese (Brazil).
 license: MIT-style license
 
 authors:
-  - Fábio Miranda Costa
+  - FĂˇbio Miranda Costa
 
 requires:
   - /Locale
@@ -12536,27 +12536,27 @@ provides: [Locale.pt-BR.Form.Validator]
 
 Locale.define('pt-BR', 'FormValidator', {
 
-	required: 'Este campo é obrigatório.',
+	required: 'Este campo Ă© obrigatĂłrio.',
 	minLength: 'Digite pelo menos {minLength} caracteres (tamanho atual: {length}).',
-	maxLength: 'Não digite mais de {maxLength} caracteres (tamanho atual: {length}).',
-	integer: 'Por favor digite apenas um número inteiro neste campo. Não são permitidos números decimais (por exemplo, 1,25).',
-	numeric: 'Por favor digite apenas valores numéricos neste campo (por exemplo, "1" ou "1.1" ou "-1" ou "-1,1").',
-	digits: 'Por favor use apenas números e pontuação neste campo (por exemplo, um número de telefone com traços ou pontos é permitido).',
-	alpha: 'Por favor use somente letras (a-z). Espaço e outros caracteres não são permitidos.',
-	alphanum: 'Use somente letras (a-z) ou números (0-9) neste campo. Espaço e outros caracteres não são permitidos.',
-	dateSuchAs: 'Digite uma data válida, como {date}',
-	dateInFormatMDY: 'Digite uma data válida, como DD/MM/YYYY (por exemplo, "31/12/1999")',
-	email: 'Digite um endereço de email válido. Por exemplo "nome@dominio.com".',
-	url: 'Digite uma URL válida. Exemplo: http://www.example.com.',
-	currencyDollar: 'Digite um valor em dinheiro válido. Exemplo: R$100,00 .',
+	maxLength: 'NĂŁo digite mais de {maxLength} caracteres (tamanho atual: {length}).',
+	integer: 'Por favor digite apenas um nĂşmero inteiro neste campo. NĂŁo sĂŁo permitidos nĂşmeros decimais (por exemplo, 1,25).',
+	numeric: 'Por favor digite apenas valores numĂ©ricos neste campo (por exemplo, "1" ou "1.1" ou "-1" ou "-1,1").',
+	digits: 'Por favor use apenas nĂşmeros e pontuaĂ§ĂŁo neste campo (por exemplo, um nĂşmero de telefone com traĂ§os ou pontos Ă© permitido).',
+	alpha: 'Por favor use somente letras (a-z). EspaĂ§o e outros caracteres nĂŁo sĂŁo permitidos.',
+	alphanum: 'Use somente letras (a-z) ou nĂşmeros (0-9) neste campo. EspaĂ§o e outros caracteres nĂŁo sĂŁo permitidos.',
+	dateSuchAs: 'Digite uma data vĂˇlida, como {date}',
+	dateInFormatMDY: 'Digite uma data vĂˇlida, como DD/MM/YYYY (por exemplo, "31/12/1999")',
+	email: 'Digite um endereĂ§o de email vĂˇlido. Por exemplo "nome@dominio.com".',
+	url: 'Digite uma URL vĂˇlida. Exemplo: http://www.example.com.',
+	currencyDollar: 'Digite um valor em dinheiro vĂˇlido. Exemplo: R$100,00 .',
 	oneRequired: 'Digite algo para pelo menos um desses campos.',
 	errorPrefix: 'Erro: ',
 	warningPrefix: 'Aviso: ',
 
 	// Form.Validator.Extras
-	noSpace: 'Não é possível digitar espaços neste campo.',
-	reqChkByNode: 'Não foi selecionado nenhum item.',
-	requiredChk: 'Este campo é obrigatório.',
+	noSpace: 'NĂŁo Ă© possĂ­vel digitar espaĂ§os neste campo.',
+	reqChkByNode: 'NĂŁo foi selecionado nenhum item.',
+	requiredChk: 'Este campo Ă© obrigatĂłrio.',
 	reqChkByName: 'Por favor digite um {label}.',
 	match: 'Este campo deve ser igual ao campo {matchName}.',
 	startDate: 'a data inicial',
@@ -12565,8 +12565,8 @@ Locale.define('pt-BR', 'FormValidator', {
 	afterDate: 'A data deve ser igual ou posterior a {label}.',
 	beforeDate: 'A data deve ser igual ou anterior a {label}.',
 	startMonth: 'Por favor selecione uma data inicial.',
-	sameMonth: 'Estas duas datas devem ter o mesmo mês - você deve modificar uma das duas.',
-	creditcard: 'O número do cartão de crédito informado é inválido. Por favor verifique o valor e tente novamente. {length} números informados.'
+	sameMonth: 'Estas duas datas devem ter o mesmo mĂŞs - vocĂŞ deve modificar uma das duas.',
+	creditcard: 'O nĂşmero do cartĂŁo de crĂ©dito informado Ă© invĂˇlido. Por favor verifique o valor e tente novamente. {length} nĂşmeros informados.'
 
 });
 
@@ -12593,19 +12593,19 @@ provides: [Locale.pt-PT.Form.Validator]
 
 Locale.define('pt-PT', 'FormValidator', {
 
-	required: 'Este campo é necessário.',
+	required: 'Este campo Ă© necessĂˇrio.',
 	minLength: 'Digite pelo menos{minLength} caracteres (comprimento {length} caracteres).',
-	maxLength: 'Não insira mais de {maxLength} caracteres (comprimento {length} caracteres).',
-	integer: 'Digite um número inteiro neste domínio. Com números decimais (por exemplo, 1,25), não são permitidas.',
-	numeric: 'Digite apenas valores numéricos neste domínio (p.ex., "1" ou "1.1" ou "-1" ou "-1,1").',
-	digits: 'Por favor, use números e pontuação apenas neste campo (p.ex., um número de telefone com traços ou pontos é permitida).',
-	alpha: 'Por favor use somente letras (a-z), com nesta área. Não utilize espaços nem outros caracteres são permitidos.',
-	alphanum: 'Use somente letras (a-z) ou números (0-9) neste campo. Não utilize espaços nem outros caracteres são permitidos.',
-	dateSuchAs: 'Digite uma data válida, como {date}',
-	dateInFormatMDY: 'Digite uma data válida, como DD/MM/YYYY (p.ex. "31/12/1999")',
-	email: 'Digite um endereço de email válido. Por exemplo "fred@domain.com".',
-	url: 'Digite uma URL válida, como http://www.example.com.',
-	currencyDollar: 'Digite um valor válido $. Por exemplo $ 100,00. ',
+	maxLength: 'NĂŁo insira mais de {maxLength} caracteres (comprimento {length} caracteres).',
+	integer: 'Digite um nĂşmero inteiro neste domĂ­nio. Com nĂşmeros decimais (por exemplo, 1,25), nĂŁo sĂŁo permitidas.',
+	numeric: 'Digite apenas valores numĂ©ricos neste domĂ­nio (p.ex., "1" ou "1.1" ou "-1" ou "-1,1").',
+	digits: 'Por favor, use nĂşmeros e pontuaĂ§ĂŁo apenas neste campo (p.ex., um nĂşmero de telefone com traĂ§os ou pontos Ă© permitida).',
+	alpha: 'Por favor use somente letras (a-z), com nesta Ăˇrea. NĂŁo utilize espaĂ§os nem outros caracteres sĂŁo permitidos.',
+	alphanum: 'Use somente letras (a-z) ou nĂşmeros (0-9) neste campo. NĂŁo utilize espaĂ§os nem outros caracteres sĂŁo permitidos.',
+	dateSuchAs: 'Digite uma data vĂˇlida, como {date}',
+	dateInFormatMDY: 'Digite uma data vĂˇlida, como DD/MM/YYYY (p.ex. "31/12/1999")',
+	email: 'Digite um endereĂ§o de email vĂˇlido. Por exemplo "fred@domain.com".',
+	url: 'Digite uma URL vĂˇlida, como http://www.example.com.',
+	currencyDollar: 'Digite um valor vĂˇlido $. Por exemplo $ 100,00. ',
 	oneRequired: 'Digite algo para pelo menos um desses insumos.',
 	errorPrefix: 'Erro: ',
 	warningPrefix: 'Aviso: '
@@ -12658,10 +12658,10 @@ var pluralize = function (n, one, few, many, other){
 
 Locale.define('ru-RU', 'Date', {
 
-	months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-	months_abbr: ['янв', 'февр', 'март', 'апр', 'май','июнь','июль','авг','сент','окт','нояб','дек'],
-	days: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-	days_abbr: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+	months: ['ĐŻĐ˝Đ˛Đ°Ń€ŃŚ', 'Đ¤ĐµĐ˛Ń€Đ°Đ»ŃŚ', 'ĐśĐ°Ń€Ń‚', 'Đ�ĐżŃ€ĐµĐ»ŃŚ', 'ĐśĐ°Đą', 'Đ�ŃŽĐ˝ŃŚ', 'Đ�ŃŽĐ»ŃŚ', 'Đ�Đ˛ĐłŃ�Ń�Ń‚', 'ĐˇĐµĐ˝Ń‚ŃŹĐ±Ń€ŃŚ', 'ĐžĐşŃ‚ŃŹĐ±Ń€ŃŚ', 'ĐťĐľŃŹĐ±Ń€ŃŚ', 'Đ”ĐµĐşĐ°Đ±Ń€ŃŚ'],
+	months_abbr: ['ŃŹĐ˝Đ˛', 'Ń„ĐµĐ˛Ń€', 'ĐĽĐ°Ń€Ń‚', 'Đ°ĐżŃ€', 'ĐĽĐ°Đą','Đ¸ŃŽĐ˝ŃŚ','Đ¸ŃŽĐ»ŃŚ','Đ°Đ˛Đł','Ń�ĐµĐ˝Ń‚','ĐľĐşŃ‚','Đ˝ĐľŃŹĐ±','Đ´ĐµĐş'],
+	days: ['Đ’ĐľŃ�ĐşŃ€ĐµŃ�ĐµĐ˝ŃŚĐµ', 'ĐźĐľĐ˝ĐµĐ´ĐµĐ»ŃŚĐ˝Đ¸Đş', 'Đ’Ń‚ĐľŃ€Đ˝Đ¸Đş', 'ĐˇŃ€ĐµĐ´Đ°', 'Đ§ĐµŃ‚Đ˛ĐµŃ€Đł', 'ĐźŃŹŃ‚Đ˝Đ¸Ń†Đ°', 'ĐˇŃ�Đ±Đ±ĐľŃ‚Đ°'],
+	days_abbr: ['Đ’Ń�', 'ĐźĐ˝', 'Đ’Ń‚', 'ĐˇŃ€', 'Đ§Ń‚', 'ĐźŃ‚', 'ĐˇĐ±'],
 
 	// Culture's date order: DD.MM.YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -12674,33 +12674,33 @@ Locale.define('ru-RU', 'Date', {
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: 'меньше минуты назад',
-	minuteAgo: 'минуту назад',
-	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'минуту', 'минуты', 'минут') + ' назад'; },
-	hourAgo: 'час назад',
-	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'час', 'часа', 'часов') + ' назад'; },
-	dayAgo: 'вчера',
-	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'день', 'дня', 'дней') + ' назад'; },
-	weekAgo: 'неделю назад',
-	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'неделя', 'недели', 'недель') + ' назад'; },
-	monthAgo: 'месяц назад',
-	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'месяц', 'месяца', 'месецев') + ' назад'; },
-	yearAgo: 'год назад',
-	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'год', 'года', 'лет') + ' назад'; },
+	lessThanMinuteAgo: 'ĐĽĐµĐ˝ŃŚŃ�Đµ ĐĽĐ¸Đ˝Ń�Ń‚Ń‹ Đ˝Đ°Đ·Đ°Đ´',
+	minuteAgo: 'ĐĽĐ¸Đ˝Ń�Ń‚Ń� Đ˝Đ°Đ·Đ°Đ´',
+	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'ĐĽĐ¸Đ˝Ń�Ń‚Ń�', 'ĐĽĐ¸Đ˝Ń�Ń‚Ń‹', 'ĐĽĐ¸Đ˝Ń�Ń‚') + ' Đ˝Đ°Đ·Đ°Đ´'; },
+	hourAgo: 'Ń‡Đ°Ń� Đ˝Đ°Đ·Đ°Đ´',
+	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Ń‡Đ°Ń�', 'Ń‡Đ°Ń�Đ°', 'Ń‡Đ°Ń�ĐľĐ˛') + ' Đ˝Đ°Đ·Đ°Đ´'; },
+	dayAgo: 'Đ˛Ń‡ĐµŃ€Đ°',
+	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Đ´ĐµĐ˝ŃŚ', 'Đ´Đ˝ŃŹ', 'Đ´Đ˝ĐµĐą') + ' Đ˝Đ°Đ·Đ°Đ´'; },
+	weekAgo: 'Đ˝ĐµĐ´ĐµĐ»ŃŽ Đ˝Đ°Đ·Đ°Đ´',
+	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Đ˝ĐµĐ´ĐµĐ»ŃŹ', 'Đ˝ĐµĐ´ĐµĐ»Đ¸', 'Đ˝ĐµĐ´ĐµĐ»ŃŚ') + ' Đ˝Đ°Đ·Đ°Đ´'; },
+	monthAgo: 'ĐĽĐµŃ�ŃŹŃ† Đ˝Đ°Đ·Đ°Đ´',
+	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'ĐĽĐµŃ�ŃŹŃ†', 'ĐĽĐµŃ�ŃŹŃ†Đ°', 'ĐĽĐµŃ�ĐµŃ†ĐµĐ˛') + ' Đ˝Đ°Đ·Đ°Đ´'; },
+	yearAgo: 'ĐłĐľĐ´ Đ˝Đ°Đ·Đ°Đ´',
+	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'ĐłĐľĐ´', 'ĐłĐľĐ´Đ°', 'Đ»ĐµŃ‚') + ' Đ˝Đ°Đ·Đ°Đ´'; },
 
-	lessThanMinuteUntil: 'меньше чем через минуту',
-	minuteUntil: 'через минуту',
-	minutesUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'час', 'часа', 'часов') + ''; },
-	hourUntil: 'через час',
-	hoursUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'час', 'часа', 'часов') + ''; },
-	dayUntil: 'завтра',
-	daysUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'день', 'дня', 'дней') + ''; },
-	weekUntil: 'через неделю',
-	weeksUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'неделю', 'недели', 'недель') + ''; },
-	monthUntil: 'через месяц',
-	monthsUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'месяц', 'месяца', 'месецев') + ''; },
-	yearUntil: 'через',
-	yearsUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'год', 'года', 'лет') + ''; }
+	lessThanMinuteUntil: 'ĐĽĐµĐ˝ŃŚŃ�Đµ Ń‡ĐµĐĽ Ń‡ĐµŃ€ĐµĐ· ĐĽĐ¸Đ˝Ń�Ń‚Ń�',
+	minuteUntil: 'Ń‡ĐµŃ€ĐµĐ· ĐĽĐ¸Đ˝Ń�Ń‚Ń�',
+	minutesUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Ń‡Đ°Ń�', 'Ń‡Đ°Ń�Đ°', 'Ń‡Đ°Ń�ĐľĐ˛') + ''; },
+	hourUntil: 'Ń‡ĐµŃ€ĐµĐ· Ń‡Đ°Ń�',
+	hoursUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Ń‡Đ°Ń�', 'Ń‡Đ°Ń�Đ°', 'Ń‡Đ°Ń�ĐľĐ˛') + ''; },
+	dayUntil: 'Đ·Đ°Đ˛Ń‚Ń€Đ°',
+	daysUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Đ´ĐµĐ˝ŃŚ', 'Đ´Đ˝ŃŹ', 'Đ´Đ˝ĐµĐą') + ''; },
+	weekUntil: 'Ń‡ĐµŃ€ĐµĐ· Đ˝ĐµĐ´ĐµĐ»ŃŽ',
+	weeksUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Đ˝ĐµĐ´ĐµĐ»ŃŽ', 'Đ˝ĐµĐ´ĐµĐ»Đ¸', 'Đ˝ĐµĐ´ĐµĐ»ŃŚ') + ''; },
+	monthUntil: 'Ń‡ĐµŃ€ĐµĐ· ĐĽĐµŃ�ŃŹŃ†',
+	monthsUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'ĐĽĐµŃ�ŃŹŃ†', 'ĐĽĐµŃ�ŃŹŃ†Đ°', 'ĐĽĐµŃ�ĐµŃ†ĐµĐ˛') + ''; },
+	yearUntil: 'Ń‡ĐµŃ€ĐµĐ·',
+	yearsUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'ĐłĐľĐ´', 'ĐłĐľĐ´Đ°', 'Đ»ĐµŃ‚') + ''; }
 
 });
 
@@ -12731,22 +12731,22 @@ provides: [Locale.ru-RU.Form.Validator]
 
 Locale.define('ru-RU', 'FormValidator', {
 
-	required: 'Это поле обязательно к заполнению.',
-	minLength: 'Пожалуйста, введите хотя бы {minLength} символов (Вы ввели {length}).',
-	maxLength: 'Пожалуйста, введите не больше {maxLength} символов (Вы ввели {length}).',
-	integer: 'Пожалуйста, введите в это поле число. Дробные числа (например 1.25) тут не разрешены.',
-	numeric: 'Пожалуйста, введите в это поле число (например "1" или "1.1", или "-1", или "-1.1").',
-	digits: 'В этом поле Вы можете использовать только цифры и знаки пунктуации (например, телефонный номер со знаками дефиса или с точками).',
-	alpha: 'В этом поле можно использовать только латинские буквы (a-z). Пробелы и другие символы запрещены.',
-	alphanum: 'В этом поле можно использовать только латинские буквы (a-z) и цифры (0-9). Пробелы и другие символы запрещены.',
-	dateSuchAs: 'Пожалуйста, введите корректную дату {date}',
-	dateInFormatMDY: 'Пожалуйста, введите дату в формате ММ/ДД/ГГГГ (например "12/31/1999")',
-	email: 'Пожалуйста, введите корректный емейл-адрес. Для примера "fred@domain.com".',
-	url: 'Пожалуйста, введите правильную ссылку вида http://www.example.com.',
-	currencyDollar: 'Пожалуйста, введите сумму в долларах. Например: $100.00 .',
-	oneRequired: 'Пожалуйста, выберите хоть что-нибудь в одном из этих полей.',
-	errorPrefix: 'Ошибка: ',
-	warningPrefix: 'Внимание: '
+	required: 'Đ­Ń‚Đľ ĐżĐľĐ»Đµ ĐľĐ±ŃŹĐ·Đ°Ń‚ĐµĐ»ŃŚĐ˝Đľ Đş Đ·Đ°ĐżĐľĐ»Đ˝ĐµĐ˝Đ¸ŃŽ.',
+	minLength: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ Ń…ĐľŃ‚ŃŹ Đ±Ń‹ {minLength} Ń�Đ¸ĐĽĐ˛ĐľĐ»ĐľĐ˛ (Đ’Ń‹ Đ˛Đ˛ĐµĐ»Đ¸ {length}).',
+	maxLength: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ Đ˝Đµ Đ±ĐľĐ»ŃŚŃ�Đµ {maxLength} Ń�Đ¸ĐĽĐ˛ĐľĐ»ĐľĐ˛ (Đ’Ń‹ Đ˛Đ˛ĐµĐ»Đ¸ {length}).',
+	integer: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ Đ˛ ŃŤŃ‚Đľ ĐżĐľĐ»Đµ Ń‡Đ¸Ń�Đ»Đľ. Đ”Ń€ĐľĐ±Đ˝Ń‹Đµ Ń‡Đ¸Ń�Đ»Đ° (Đ˝Đ°ĐżŃ€Đ¸ĐĽĐµŃ€ 1.25) Ń‚Ń�Ń‚ Đ˝Đµ Ń€Đ°Đ·Ń€ĐµŃ�ĐµĐ˝Ń‹.',
+	numeric: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ Đ˛ ŃŤŃ‚Đľ ĐżĐľĐ»Đµ Ń‡Đ¸Ń�Đ»Đľ (Đ˝Đ°ĐżŃ€Đ¸ĐĽĐµŃ€ "1" Đ¸Đ»Đ¸ "1.1", Đ¸Đ»Đ¸ "-1", Đ¸Đ»Đ¸ "-1.1").',
+	digits: 'Đ’ ŃŤŃ‚ĐľĐĽ ĐżĐľĐ»Đµ Đ’Ń‹ ĐĽĐľĐ¶ĐµŃ‚Đµ Đ¸Ń�ĐżĐľĐ»ŃŚĐ·ĐľĐ˛Đ°Ń‚ŃŚ Ń‚ĐľĐ»ŃŚĐşĐľ Ń†Đ¸Ń„Ń€Ń‹ Đ¸ Đ·Đ˝Đ°ĐşĐ¸ ĐżŃ�Đ˝ĐşŃ‚Ń�Đ°Ń†Đ¸Đ¸ (Đ˝Đ°ĐżŃ€Đ¸ĐĽĐµŃ€, Ń‚ĐµĐ»ĐµŃ„ĐľĐ˝Đ˝Ń‹Đą Đ˝ĐľĐĽĐµŃ€ Ń�Đľ Đ·Đ˝Đ°ĐşĐ°ĐĽĐ¸ Đ´ĐµŃ„Đ¸Ń�Đ° Đ¸Đ»Đ¸ Ń� Ń‚ĐľŃ‡ĐşĐ°ĐĽĐ¸).',
+	alpha: 'Đ’ ŃŤŃ‚ĐľĐĽ ĐżĐľĐ»Đµ ĐĽĐľĐ¶Đ˝Đľ Đ¸Ń�ĐżĐľĐ»ŃŚĐ·ĐľĐ˛Đ°Ń‚ŃŚ Ń‚ĐľĐ»ŃŚĐşĐľ Đ»Đ°Ń‚Đ¸Đ˝Ń�ĐşĐ¸Đµ Đ±Ń�ĐşĐ˛Ń‹ (a-z). ĐźŃ€ĐľĐ±ĐµĐ»Ń‹ Đ¸ Đ´Ń€Ń�ĐłĐ¸Đµ Ń�Đ¸ĐĽĐ˛ĐľĐ»Ń‹ Đ·Đ°ĐżŃ€ĐµŃ‰ĐµĐ˝Ń‹.',
+	alphanum: 'Đ’ ŃŤŃ‚ĐľĐĽ ĐżĐľĐ»Đµ ĐĽĐľĐ¶Đ˝Đľ Đ¸Ń�ĐżĐľĐ»ŃŚĐ·ĐľĐ˛Đ°Ń‚ŃŚ Ń‚ĐľĐ»ŃŚĐşĐľ Đ»Đ°Ń‚Đ¸Đ˝Ń�ĐşĐ¸Đµ Đ±Ń�ĐşĐ˛Ń‹ (a-z) Đ¸ Ń†Đ¸Ń„Ń€Ń‹ (0-9). ĐźŃ€ĐľĐ±ĐµĐ»Ń‹ Đ¸ Đ´Ń€Ń�ĐłĐ¸Đµ Ń�Đ¸ĐĽĐ˛ĐľĐ»Ń‹ Đ·Đ°ĐżŃ€ĐµŃ‰ĐµĐ˝Ń‹.',
+	dateSuchAs: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ ĐşĐľŃ€Ń€ĐµĐşŃ‚Đ˝Ń�ŃŽ Đ´Đ°Ń‚Ń� {date}',
+	dateInFormatMDY: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ Đ´Đ°Ń‚Ń� Đ˛ Ń„ĐľŃ€ĐĽĐ°Ń‚Đµ ĐśĐś/Đ”Đ”/Đ“Đ“Đ“Đ“ (Đ˝Đ°ĐżŃ€Đ¸ĐĽĐµŃ€ "12/31/1999")',
+	email: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ ĐşĐľŃ€Ń€ĐµĐşŃ‚Đ˝Ń‹Đą ĐµĐĽĐµĐąĐ»-Đ°Đ´Ń€ĐµŃ�. Đ”Đ»ŃŹ ĐżŃ€Đ¸ĐĽĐµŃ€Đ° "fred@domain.com".',
+	url: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ ĐżŃ€Đ°Đ˛Đ¸Đ»ŃŚĐ˝Ń�ŃŽ Ń�Ń�Ń‹Đ»ĐşŃ� Đ˛Đ¸Đ´Đ° http://www.example.com.',
+	currencyDollar: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Đ˛ĐµĐ´Đ¸Ń‚Đµ Ń�Ń�ĐĽĐĽŃ� Đ˛ Đ´ĐľĐ»Đ»Đ°Ń€Đ°Ń…. ĐťĐ°ĐżŃ€Đ¸ĐĽĐµŃ€: $100.00 .',
+	oneRequired: 'ĐźĐľĐ¶Đ°Đ»Ń�ĐąŃ�Ń‚Đ°, Đ˛Ń‹Đ±ĐµŃ€Đ¸Ń‚Đµ Ń…ĐľŃ‚ŃŚ Ń‡Ń‚Đľ-Đ˝Đ¸Đ±Ń�Đ´ŃŚ Đ˛ ĐľĐ´Đ˝ĐľĐĽ Đ¸Đ· ŃŤŃ‚Đ¸Ń… ĐżĐľĐ»ĐµĐą.',
+	errorPrefix: 'ĐžŃ�Đ¸Đ±ĐşĐ°: ',
+	warningPrefix: 'Đ’Đ˝Đ¸ĐĽĐ°Đ˝Đ¸Đµ: '
 
 });
 
@@ -12783,8 +12783,8 @@ Locale.define('si-SI', 'Date', {
 
 	months: ['januar', 'februar', 'marec', 'april', 'maj', 'junij', 'julij', 'avgust', 'september', 'oktober', 'november', 'december'],
 	months_abbr: ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'avg', 'sep', 'okt', 'nov', 'dec'],
-	days: ['nedelja', 'ponedeljek', 'torek', 'sreda', 'četrtek', 'petek', 'sobota'],
-	days_abbr: ['ned', 'pon', 'tor', 'sre', 'čet', 'pet', 'sob'],
+	days: ['nedelja', 'ponedeljek', 'torek', 'sreda', 'ÄŤetrtek', 'petek', 'sobota'],
+	days_abbr: ['ned', 'pon', 'tor', 'sre', 'ÄŤet', 'pet', 'sob'],
 
 	// Culture's date order: DD.MM.YYYY
 	dateOrder: ['date', 'month', 'year'],
@@ -12811,19 +12811,19 @@ Locale.define('si-SI', 'Date', {
 	yearthAgo: 'leto nazaj',
 	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'leto', 'leti', 'leta', 'let') + ' nazaj'; },
 
-	lessThanMinuteUntil: 'še manj kot minuto',
-	minuteUntil: 'še minuta',
-	minutesUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'minuta', 'minuti', 'minute', 'minut'); },
-	hourUntil: 'še ura',
-	hoursUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'ura', 'uri', 'ure', 'ur'); },
-	dayUntil: 'še dan',
-	daysUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'dan', 'dneva', 'dnevi', 'dni'); },
-	weekUntil: 'še tedn',
-	weeksUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'teden', 'tedna', 'tedni', 'tednov'); },
-	monthUntil: 'še mesec',
-	monthsUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'mesec', 'meseca', 'meseci', 'mesecov'); },
-	yearUntil: 'še leto',
-	yearsUntil: function(delta){ return 'še {delta} ' + pluralize(delta, 'leto', 'leti', 'leta', 'let'); }
+	lessThanMinuteUntil: 'Ĺˇe manj kot minuto',
+	minuteUntil: 'Ĺˇe minuta',
+	minutesUntil: function(delta){ return 'Ĺˇe {delta} ' + pluralize(delta, 'minuta', 'minuti', 'minute', 'minut'); },
+	hourUntil: 'Ĺˇe ura',
+	hoursUntil: function(delta){ return 'Ĺˇe {delta} ' + pluralize(delta, 'ura', 'uri', 'ure', 'ur'); },
+	dayUntil: 'Ĺˇe dan',
+	daysUntil: function(delta){ return 'Ĺˇe {delta} ' + pluralize(delta, 'dan', 'dneva', 'dnevi', 'dni'); },
+	weekUntil: 'Ĺˇe tedn',
+	weeksUntil: function(delta){ return 'Ĺˇe {delta} ' + pluralize(delta, 'teden', 'tedna', 'tedni', 'tednov'); },
+	monthUntil: 'Ĺˇe mesec',
+	monthsUntil: function(delta){ return 'Ĺˇe {delta} ' + pluralize(delta, 'mesec', 'meseca', 'meseci', 'mesecov'); },
+	yearUntil: 'Ĺˇe leto',
+	yearsUntil: function(delta){ return 'Ĺˇe {delta} ' + pluralize(delta, 'leto', 'leti', 'leta', 'let'); }
 
 });
 
@@ -12854,35 +12854,35 @@ Locale.define('si-SI', 'FormValidator', {
 
 	required: 'To polje je obvezno',
 	minLength: 'Prosim, vnesite vsaj {minLength} znakov (vnesli ste {length} znakov).',
-	maxLength: 'Prosim, ne vnesite več kot {maxLength} znakov (vnesli ste {length} znakov).',
-	integer: 'Prosim, vnesite celo število. Decimalna števila (kot 1,25) niso dovoljena.',
-	numeric: 'Prosim, vnesite samo numerične vrednosti (kot "1" ali "1.1" ali "-1" ali "-1.1").',
-	digits: 'Prosim, uporabite številke in ločila le na tem polju (na primer, dovoljena je telefonska številka z pomišlaji ali pikami).',
-	alpha: 'Prosim, uporabite le črke v tem plju. Presledki in drugi znaki niso dovoljeni.',
-	alphanum: 'Prosim, uporabite samo črke ali številke v tem polju. Presledki in drugi znaki niso dovoljeni.',
+	maxLength: 'Prosim, ne vnesite veÄŤ kot {maxLength} znakov (vnesli ste {length} znakov).',
+	integer: 'Prosim, vnesite celo Ĺˇtevilo. Decimalna Ĺˇtevila (kot 1,25) niso dovoljena.',
+	numeric: 'Prosim, vnesite samo numeriÄŤne vrednosti (kot "1" ali "1.1" ali "-1" ali "-1.1").',
+	digits: 'Prosim, uporabite Ĺˇtevilke in loÄŤila le na tem polju (na primer, dovoljena je telefonska Ĺˇtevilka z pomiĹˇlaji ali pikami).',
+	alpha: 'Prosim, uporabite le ÄŤrke v tem plju. Presledki in drugi znaki niso dovoljeni.',
+	alphanum: 'Prosim, uporabite samo ÄŤrke ali Ĺˇtevilke v tem polju. Presledki in drugi znaki niso dovoljeni.',
 	dateSuchAs: 'Prosim, vnesite pravilen datum kot {date}',
 	dateInFormatMDY: 'Prosim, vnesite pravilen datum kot MM.DD.YYYY (primer "12.31.1999")',
 	email: 'Prosim, vnesite pravilen email naslov. Na primer "fred@domain.com".',
 	url: 'Prosim, vnesite pravilen URL kot http://www.example.com.',
-	currencyDollar: 'Prosim, vnesit epravilno vrednost €. Primer 100,00€ .',
+	currencyDollar: 'Prosim, vnesit epravilno vrednost â‚¬. Primer 100,00â‚¬ .',
 	oneRequired: 'Prosimo, vnesite nekaj za vsaj eno izmed teh polj.',
 	errorPrefix: 'Napaka: ',
 	warningPrefix: 'Opozorilo: ',
 
 	// Form.Validator.Extras
-	noSpace: 'To vnosno polje ne dopušča presledkov.',
-	reqChkByNode: 'Nič niste izbrali.',
+	noSpace: 'To vnosno polje ne dopuĹˇÄŤa presledkov.',
+	reqChkByNode: 'NiÄŤ niste izbrali.',
 	requiredChk: 'To polje je obvezno',
 	reqChkByName: 'Prosim, izberite {label}.',
 	match: 'To polje se mora ujemati z poljem {matchName}',
-	startDate: 'datum začetka',
+	startDate: 'datum zaÄŤetka',
 	endDate: 'datum konca',
 	currendDate: 'trenuten datum',
 	afterDate: 'Datum bi moral biti isti ali po {label}.',
 	beforeDate: 'Datum bi moral biti isti ali pred {label}.',
-	startMonth: 'Prosim, vnesite začetni datum',
+	startMonth: 'Prosim, vnesite zaÄŤetni datum',
 	sameMonth: 'Ta dva datuma morata biti v istem mesecu - premeniti morate eno ali drugo.',
-	creditcard: 'Številka kreditne kartice ni pravilna. Preverite številko ali poskusite še enkrat. Vnešenih {length} znakov.'
+	creditcard: 'Ĺ tevilka kreditne kartice ni pravilna. Preverite Ĺˇtevilko ali poskusite Ĺˇe enkrat. VneĹˇenih {length} znakov.'
 
 });
 
@@ -12911,8 +12911,8 @@ Locale.define('sv-SE', 'Date', {
 
 	months: ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'],
 	months_abbr: ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
-	days: ['söndag', 'måndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lördag'],
-	days_abbr: ['sön', 'mån', 'tis', 'ons', 'tor', 'fre', 'lör'],
+	days: ['sĂ¶ndag', 'mĂĄndag', 'tisdag', 'onsdag', 'torsdag', 'fredag', 'lĂ¶rdag'],
+	days_abbr: ['sĂ¶n', 'mĂĄn', 'tis', 'ons', 'tor', 'fre', 'lĂ¶r'],
 
 	// Culture's date order: YYYY-MM-DD
 	dateOrder: ['year', 'month', 'date'],
@@ -12925,19 +12925,19 @@ Locale.define('sv-SE', 'Date', {
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: 'mindre än en minut sedan',
-	minuteAgo: 'ungefär en minut sedan',
+	lessThanMinuteAgo: 'mindre Ă¤n en minut sedan',
+	minuteAgo: 'ungefĂ¤r en minut sedan',
 	minutesAgo: '{delta} minuter sedan',
-	hourAgo: 'ungefär en timme sedan',
-	hoursAgo: 'ungefär {delta} timmar sedan',
+	hourAgo: 'ungefĂ¤r en timme sedan',
+	hoursAgo: 'ungefĂ¤r {delta} timmar sedan',
 	dayAgo: '1 dag sedan',
 	daysAgo: '{delta} dagar sedan',
 
-	lessThanMinuteUntil: 'mindre än en minut sedan',
-	minuteUntil: 'ungefär en minut sedan',
+	lessThanMinuteUntil: 'mindre Ă¤n en minut sedan',
+	minuteUntil: 'ungefĂ¤r en minut sedan',
 	minutesUntil: '{delta} minuter sedan',
-	hourUntil: 'ungefär en timme sedan',
-	hoursUntil: 'ungefär {delta} timmar sedan',
+	hourUntil: 'ungefĂ¤r en timme sedan',
+	hoursUntil: 'ungefĂ¤r {delta} timmar sedan',
 	dayUntil: '1 dag sedan',
 	daysUntil: '{delta} dagar sedan'
 
@@ -12966,36 +12966,36 @@ provides: [Locale.sv-SE.Form.Validator]
 
 Locale.define('sv-SE', 'FormValidator', {
 
-	required: 'Fältet är obligatoriskt.',
+	required: 'FĂ¤ltet Ă¤r obligatoriskt.',
 	minLength: 'Ange minst {minLength} tecken (du angav {length} tecken).',
-	maxLength: 'Ange högst {maxLength} tecken (du angav {length} tecken). ',
-	integer: 'Ange ett heltal i fältet. Tal med decimaler (t.ex. 1,25) är inte tillåtna.',
-	numeric: 'Ange endast numeriska värden i detta fält (t.ex. "1" eller "1.1" eller "-1" eller "-1,1").',
-	digits: 'Använd endast siffror och skiljetecken i detta fält (till exempel ett telefonnummer med bindestreck tillåtet).',
-	alpha: 'Använd endast bokstäver (a-ö) i detta fält. Inga mellanslag eller andra tecken är tillåtna.',
-	alphanum: 'Använd endast bokstäver (a-ö) och siffror (0-9) i detta fält. Inga mellanslag eller andra tecken är tillåtna.',
+	maxLength: 'Ange hĂ¶gst {maxLength} tecken (du angav {length} tecken). ',
+	integer: 'Ange ett heltal i fĂ¤ltet. Tal med decimaler (t.ex. 1,25) Ă¤r inte tillĂĄtna.',
+	numeric: 'Ange endast numeriska vĂ¤rden i detta fĂ¤lt (t.ex. "1" eller "1.1" eller "-1" eller "-1,1").',
+	digits: 'AnvĂ¤nd endast siffror och skiljetecken i detta fĂ¤lt (till exempel ett telefonnummer med bindestreck tillĂĄtet).',
+	alpha: 'AnvĂ¤nd endast bokstĂ¤ver (a-Ă¶) i detta fĂ¤lt. Inga mellanslag eller andra tecken Ă¤r tillĂĄtna.',
+	alphanum: 'AnvĂ¤nd endast bokstĂ¤ver (a-Ă¶) och siffror (0-9) i detta fĂ¤lt. Inga mellanslag eller andra tecken Ă¤r tillĂĄtna.',
 	dateSuchAs: 'Ange ett giltigt datum som t.ex. {date}',
 	dateInFormatMDY: 'Ange ett giltigt datum som t.ex. YYYY-MM-DD (i.e. "1999-12-31")',
 	email: 'Ange en giltig e-postadress. Till exempel "erik@domain.com".',
 	url: 'Ange en giltig webbadress som http://www.example.com.',
 	currencyDollar: 'Ange en giltig belopp. Exempelvis 100,00.',
-	oneRequired: 'Vänligen ange minst ett av dessa alternativ.',
+	oneRequired: 'VĂ¤nligen ange minst ett av dessa alternativ.',
 	errorPrefix: 'Fel: ',
 	warningPrefix: 'Varning: ',
 
 	// Form.Validator.Extras
-	noSpace: 'Det får inte finnas några mellanslag i detta fält.',
-	reqChkByNode: 'Inga objekt är valda.',
-	requiredChk: 'Detta är ett obligatoriskt fält.',
-	reqChkByName: 'Välj en {label}.',
-	match: 'Detta fält måste matcha {matchName}',
+	noSpace: 'Det fĂĄr inte finnas nĂĄgra mellanslag i detta fĂ¤lt.',
+	reqChkByNode: 'Inga objekt Ă¤r valda.',
+	requiredChk: 'Detta Ă¤r ett obligatoriskt fĂ¤lt.',
+	reqChkByName: 'VĂ¤lj en {label}.',
+	match: 'Detta fĂ¤lt mĂĄste matcha {matchName}',
 	startDate: 'startdatumet',
 	endDate: 'slutdatum',
 	currendDate: 'dagens datum',
-	afterDate: 'Datumet bör vara samma eller senare än {label}.',
-	beforeDate: 'Datumet bör vara samma eller tidigare än {label}.',
-	startMonth: 'Välj en start månad',
-	sameMonth: 'Dessa två datum måste vara i samma månad - du måste ändra det ena eller det andra.'
+	afterDate: 'Datumet bĂ¶r vara samma eller senare Ă¤n {label}.',
+	beforeDate: 'Datumet bĂ¶r vara samma eller tidigare Ă¤n {label}.',
+	startMonth: 'VĂ¤lj en start mĂĄnad',
+	sameMonth: 'Dessa tvĂĄ datum mĂĄste vara i samma mĂĄnad - du mĂĄste Ă¤ndra det ena eller det andra.'
 
 });
 
@@ -13035,49 +13035,49 @@ var pluralize = function(n, one, few, many, other){
 
 Locale.define('uk-UA', 'Date', {
 
-	months: ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'],
-	months_abbr: ['Січ', 'Лют', 'Бер', 'Квіт', 'Трав', 'Черв', 'Лип', 'Серп', 'Вер', 'Жовт', 'Лист', 'Груд' ],
-	days: ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'],
-	days_abbr: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+	months: ['ĐˇŃ–Ń‡ĐµĐ˝ŃŚ', 'Đ›ŃŽŃ‚Đ¸Đą', 'Đ‘ĐµŃ€ĐµĐ·ĐµĐ˝ŃŚ', 'ĐšĐ˛Ń–Ń‚ĐµĐ˝ŃŚ', 'Đ˘Ń€Đ°Đ˛ĐµĐ˝ŃŚ', 'Đ§ĐµŃ€Đ˛ĐµĐ˝ŃŚ', 'Đ›Đ¸ĐżĐµĐ˝ŃŚ', 'ĐˇĐµŃ€ĐżĐµĐ˝ŃŚ', 'Đ’ĐµŃ€ĐµŃ�ĐµĐ˝ŃŚ', 'Đ–ĐľĐ˛Ń‚ĐµĐ˝ŃŚ', 'Đ›Đ¸Ń�Ń‚ĐľĐżĐ°Đ´', 'Đ“Ń€Ń�Đ´ĐµĐ˝ŃŚ'],
+	months_abbr: ['ĐˇŃ–Ń‡', 'Đ›ŃŽŃ‚', 'Đ‘ĐµŃ€', 'ĐšĐ˛Ń–Ń‚', 'Đ˘Ń€Đ°Đ˛', 'Đ§ĐµŃ€Đ˛', 'Đ›Đ¸Đż', 'ĐˇĐµŃ€Đż', 'Đ’ĐµŃ€', 'Đ–ĐľĐ˛Ń‚', 'Đ›Đ¸Ń�Ń‚', 'Đ“Ń€Ń�Đ´' ],
+	days: ['ĐťĐµĐ´Ń–Đ»ŃŹ', 'ĐźĐľĐ˝ĐµĐ´Ń–Đ»ĐľĐş', 'Đ’Ń–Đ˛Ń‚ĐľŃ€ĐľĐş', 'ĐˇĐµŃ€ĐµĐ´Đ°', 'Đ§ĐµŃ‚Đ˛ĐµŃ€', "Đź'ŃŹŃ‚Đ˝Đ¸Ń†ŃŹ", 'ĐˇŃ�Đ±ĐľŃ‚Đ°'],
+	days_abbr: ['ĐťĐ´', 'ĐźĐ˝', 'Đ’Ń‚', 'ĐˇŃ€', 'Đ§Ń‚', 'ĐźŃ‚', 'ĐˇĐ±'],
 
 	// Culture's date order: DD/MM/YYYY
 	dateOrder: ['date', 'month', 'year'],
 	shortDate: '%d/%m/%Y',
 	shortTime: '%H:%M',
-	AM: 'до полудня',
-	PM: 'по полудню',
+	AM: 'Đ´Đľ ĐżĐľĐ»Ń�Đ´Đ˝ŃŹ',
+	PM: 'ĐżĐľ ĐżĐľĐ»Ń�Đ´Đ˝ŃŽ',
 	firstDayOfWeek: 1,
 
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: 'меньше хвилини тому',
-	minuteAgo: 'хвилину тому',
-	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'хвилину', 'хвилини', 'хвилин') + ' тому'; },
-	hourAgo: 'годину тому',
-	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'годину', 'години', 'годин') + ' тому'; },
-	dayAgo: 'вчора',
-	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'день', 'дня', 'днів') + ' тому'; },
-	weekAgo: 'тиждень тому',
-	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'тиждень', 'тижні', 'тижнів') + ' тому'; },
-	monthAgo: 'місяць тому',
-	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'місяць', 'місяці', 'місяців') + ' тому'; },
-	yearAgo: 'рік тому',
-	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'рік', 'роки', 'років') + ' тому'; },
+	lessThanMinuteAgo: 'ĐĽĐµĐ˝ŃŚŃ�Đµ Ń…Đ˛Đ¸Đ»Đ¸Đ˝Đ¸ Ń‚ĐľĐĽŃ�',
+	minuteAgo: 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝Ń� Ń‚ĐľĐĽŃ�',
+	minutesAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝Ń�', 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝Đ¸', 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝') + ' Ń‚ĐľĐĽŃ�'; },
+	hourAgo: 'ĐłĐľĐ´Đ¸Đ˝Ń� Ń‚ĐľĐĽŃ�',
+	hoursAgo: function(delta){ return '{delta} ' + pluralize(delta, 'ĐłĐľĐ´Đ¸Đ˝Ń�', 'ĐłĐľĐ´Đ¸Đ˝Đ¸', 'ĐłĐľĐ´Đ¸Đ˝') + ' Ń‚ĐľĐĽŃ�'; },
+	dayAgo: 'Đ˛Ń‡ĐľŃ€Đ°',
+	daysAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Đ´ĐµĐ˝ŃŚ', 'Đ´Đ˝ŃŹ', 'Đ´Đ˝Ń–Đ˛') + ' Ń‚ĐľĐĽŃ�'; },
+	weekAgo: 'Ń‚Đ¸Đ¶Đ´ĐµĐ˝ŃŚ Ń‚ĐľĐĽŃ�',
+	weeksAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Ń‚Đ¸Đ¶Đ´ĐµĐ˝ŃŚ', 'Ń‚Đ¸Đ¶Đ˝Ń–', 'Ń‚Đ¸Đ¶Đ˝Ń–Đ˛') + ' Ń‚ĐľĐĽŃ�'; },
+	monthAgo: 'ĐĽŃ–Ń�ŃŹŃ†ŃŚ Ń‚ĐľĐĽŃ�',
+	monthsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'ĐĽŃ–Ń�ŃŹŃ†ŃŚ', 'ĐĽŃ–Ń�ŃŹŃ†Ń–', 'ĐĽŃ–Ń�ŃŹŃ†Ń–Đ˛') + ' Ń‚ĐľĐĽŃ�'; },
+	yearAgo: 'Ń€Ń–Đş Ń‚ĐľĐĽŃ�',
+	yearsAgo: function(delta){ return '{delta} ' + pluralize(delta, 'Ń€Ń–Đş', 'Ń€ĐľĐşĐ¸', 'Ń€ĐľĐşŃ–Đ˛') + ' Ń‚ĐľĐĽŃ�'; },
 
-	lessThanMinuteUntil: 'за мить',
-	minuteUntil: 'через хвилину',
-	minutesUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'хвилину', 'хвилини', 'хвилин'); },
-	hourUntil: 'через годину',
-	hoursUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'годину', 'години', 'годин'); },
-	dayUntil: 'завтра',
-	daysUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'день', 'дня', 'днів'); },
-	weekUntil: 'через тиждень',
-	weeksUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'тиждень', 'тижні', 'тижнів'); },
-	monthUntil: 'через місяць',
-	monthesUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'місяць', 'місяці', 'місяців'); },
-	yearUntil: 'через рік',
-	yearsUntil: function(delta){ return 'через {delta} ' + pluralize(delta, 'рік', 'роки', 'років'); }
+	lessThanMinuteUntil: 'Đ·Đ° ĐĽĐ¸Ń‚ŃŚ',
+	minuteUntil: 'Ń‡ĐµŃ€ĐµĐ· Ń…Đ˛Đ¸Đ»Đ¸Đ˝Ń�',
+	minutesUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝Ń�', 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝Đ¸', 'Ń…Đ˛Đ¸Đ»Đ¸Đ˝'); },
+	hourUntil: 'Ń‡ĐµŃ€ĐµĐ· ĐłĐľĐ´Đ¸Đ˝Ń�',
+	hoursUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'ĐłĐľĐ´Đ¸Đ˝Ń�', 'ĐłĐľĐ´Đ¸Đ˝Đ¸', 'ĐłĐľĐ´Đ¸Đ˝'); },
+	dayUntil: 'Đ·Đ°Đ˛Ń‚Ń€Đ°',
+	daysUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Đ´ĐµĐ˝ŃŚ', 'Đ´Đ˝ŃŹ', 'Đ´Đ˝Ń–Đ˛'); },
+	weekUntil: 'Ń‡ĐµŃ€ĐµĐ· Ń‚Đ¸Đ¶Đ´ĐµĐ˝ŃŚ',
+	weeksUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Ń‚Đ¸Đ¶Đ´ĐµĐ˝ŃŚ', 'Ń‚Đ¸Đ¶Đ˝Ń–', 'Ń‚Đ¸Đ¶Đ˝Ń–Đ˛'); },
+	monthUntil: 'Ń‡ĐµŃ€ĐµĐ· ĐĽŃ–Ń�ŃŹŃ†ŃŚ',
+	monthesUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'ĐĽŃ–Ń�ŃŹŃ†ŃŚ', 'ĐĽŃ–Ń�ŃŹŃ†Ń–', 'ĐĽŃ–Ń�ŃŹŃ†Ń–Đ˛'); },
+	yearUntil: 'Ń‡ĐµŃ€ĐµĐ· Ń€Ń–Đş',
+	yearsUntil: function(delta){ return 'Ń‡ĐµŃ€ĐµĐ· {delta} ' + pluralize(delta, 'Ń€Ń–Đş', 'Ń€ĐľĐşĐ¸', 'Ń€ĐľĐşŃ–Đ˛'); }
 
 });
 
@@ -13106,36 +13106,36 @@ provides: [Locale.uk-UA.Form.Validator]
 
 Locale.define('uk-UA', 'FormValidator', {
 
-	required: 'Це поле повинне бути заповненим.',
-	minLength: 'Введіть хоча б {minLength} символів (Ви ввели {length}).',
-	maxLength: 'Кількість символів не може бути більше {maxLength} (Ви ввели {length}).',
-	integer: 'Введіть в це поле число. Дробові числа (наприклад 1.25) не дозволені.',
-	numeric: 'Введіть в це поле число (наприклад "1" або "1.1", або "-1", або "-1.1").',
-	digits: 'В цьому полі ви можете використовувати лише цифри і знаки пунктіації (наприклад, телефонний номер з знаками дефізу або з крапками).',
-	alpha: 'В цьому полі можна використовувати лише латинські літери (a-z). Пробіли і інші символи заборонені.',
-	alphanum: 'В цьому полі можна використовувати лише латинські літери (a-z) і цифри (0-9). Пробіли і інші символи заборонені.',
-	dateSuchAs: 'Введіть коректну дату {date}.',
-	dateInFormatMDY: 'Введіть дату в форматі ММ/ДД/РРРР (наприклад "12/31/2009").',
-	email: 'Введіть коректну адресу електронної пошти (наприклад "name@domain.com").',
-	url: 'Введіть коректне інтернет-посилання (наприклад http://www.example.com).',
-	currencyDollar: 'Введіть суму в доларах (наприклад "$100.00").',
-	oneRequired: 'Заповніть одне з полів.',
-	errorPrefix: 'Помилка: ',
-	warningPrefix: 'Увага: ',
+	required: 'Đ¦Đµ ĐżĐľĐ»Đµ ĐżĐľĐ˛Đ¸Đ˝Đ˝Đµ Đ±Ń�Ń‚Đ¸ Đ·Đ°ĐżĐľĐ˛Đ˝ĐµĐ˝Đ¸ĐĽ.',
+	minLength: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ Ń…ĐľŃ‡Đ° Đ± {minLength} Ń�Đ¸ĐĽĐ˛ĐľĐ»Ń–Đ˛ (Đ’Đ¸ Đ˛Đ˛ĐµĐ»Đ¸ {length}).',
+	maxLength: 'ĐšŃ–Đ»ŃŚĐşŃ–Ń�Ń‚ŃŚ Ń�Đ¸ĐĽĐ˛ĐľĐ»Ń–Đ˛ Đ˝Đµ ĐĽĐľĐ¶Đµ Đ±Ń�Ń‚Đ¸ Đ±Ń–Đ»ŃŚŃ�Đµ {maxLength} (Đ’Đ¸ Đ˛Đ˛ĐµĐ»Đ¸ {length}).',
+	integer: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ Đ˛ Ń†Đµ ĐżĐľĐ»Đµ Ń‡Đ¸Ń�Đ»Đľ. Đ”Ń€ĐľĐ±ĐľĐ˛Ń– Ń‡Đ¸Ń�Đ»Đ° (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´ 1.25) Đ˝Đµ Đ´ĐľĐ·Đ˛ĐľĐ»ĐµĐ˝Ń–.',
+	numeric: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ Đ˛ Ń†Đµ ĐżĐľĐ»Đµ Ń‡Đ¸Ń�Đ»Đľ (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´ "1" Đ°Đ±Đľ "1.1", Đ°Đ±Đľ "-1", Đ°Đ±Đľ "-1.1").',
+	digits: 'Đ’ Ń†ŃŚĐľĐĽŃ� ĐżĐľĐ»Ń– Đ˛Đ¸ ĐĽĐľĐ¶ĐµŃ‚Đµ Đ˛Đ¸ĐşĐľŃ€Đ¸Ń�Ń‚ĐľĐ˛Ń�Đ˛Đ°Ń‚Đ¸ Đ»Đ¸Ń�Đµ Ń†Đ¸Ń„Ń€Đ¸ Ń– Đ·Đ˝Đ°ĐşĐ¸ ĐżŃ�Đ˝ĐşŃ‚Ń–Đ°Ń†Ń–Ń— (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´, Ń‚ĐµĐ»ĐµŃ„ĐľĐ˝Đ˝Đ¸Đą Đ˝ĐľĐĽĐµŃ€ Đ· Đ·Đ˝Đ°ĐşĐ°ĐĽĐ¸ Đ´ĐµŃ„Ń–Đ·Ń� Đ°Đ±Đľ Đ· ĐşŃ€Đ°ĐżĐşĐ°ĐĽĐ¸).',
+	alpha: 'Đ’ Ń†ŃŚĐľĐĽŃ� ĐżĐľĐ»Ń– ĐĽĐľĐ¶Đ˝Đ° Đ˛Đ¸ĐşĐľŃ€Đ¸Ń�Ń‚ĐľĐ˛Ń�Đ˛Đ°Ń‚Đ¸ Đ»Đ¸Ń�Đµ Đ»Đ°Ń‚Đ¸Đ˝Ń�ŃŚĐşŃ– Đ»Ń–Ń‚ĐµŃ€Đ¸ (a-z). ĐźŃ€ĐľĐ±Ń–Đ»Đ¸ Ń– Ń–Đ˝Ń�Ń– Ń�Đ¸ĐĽĐ˛ĐľĐ»Đ¸ Đ·Đ°Đ±ĐľŃ€ĐľĐ˝ĐµĐ˝Ń–.',
+	alphanum: 'Đ’ Ń†ŃŚĐľĐĽŃ� ĐżĐľĐ»Ń– ĐĽĐľĐ¶Đ˝Đ° Đ˛Đ¸ĐşĐľŃ€Đ¸Ń�Ń‚ĐľĐ˛Ń�Đ˛Đ°Ń‚Đ¸ Đ»Đ¸Ń�Đµ Đ»Đ°Ń‚Đ¸Đ˝Ń�ŃŚĐşŃ– Đ»Ń–Ń‚ĐµŃ€Đ¸ (a-z) Ń– Ń†Đ¸Ń„Ń€Đ¸ (0-9). ĐźŃ€ĐľĐ±Ń–Đ»Đ¸ Ń– Ń–Đ˝Ń�Ń– Ń�Đ¸ĐĽĐ˛ĐľĐ»Đ¸ Đ·Đ°Đ±ĐľŃ€ĐľĐ˝ĐµĐ˝Ń–.',
+	dateSuchAs: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ ĐşĐľŃ€ĐµĐşŃ‚Đ˝Ń� Đ´Đ°Ń‚Ń� {date}.',
+	dateInFormatMDY: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ Đ´Đ°Ń‚Ń� Đ˛ Ń„ĐľŃ€ĐĽĐ°Ń‚Ń– ĐśĐś/Đ”Đ”/Đ Đ Đ Đ  (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´ "12/31/2009").',
+	email: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ ĐşĐľŃ€ĐµĐşŃ‚Đ˝Ń� Đ°Đ´Ń€ĐµŃ�Ń� ĐµĐ»ĐµĐşŃ‚Ń€ĐľĐ˝Đ˝ĐľŃ— ĐżĐľŃ�Ń‚Đ¸ (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´ "name@domain.com").',
+	url: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ ĐşĐľŃ€ĐµĐşŃ‚Đ˝Đµ Ń–Đ˝Ń‚ĐµŃ€Đ˝ĐµŃ‚-ĐżĐľŃ�Đ¸Đ»Đ°Đ˝Đ˝ŃŹ (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´ http://www.example.com).',
+	currencyDollar: 'Đ’Đ˛ĐµĐ´Ń–Ń‚ŃŚ Ń�Ń�ĐĽŃ� Đ˛ Đ´ĐľĐ»Đ°Ń€Đ°Ń… (Đ˝Đ°ĐżŃ€Đ¸ĐşĐ»Đ°Đ´ "$100.00").',
+	oneRequired: 'Đ—Đ°ĐżĐľĐ˛Đ˝Ń–Ń‚ŃŚ ĐľĐ´Đ˝Đµ Đ· ĐżĐľĐ»Ń–Đ˛.',
+	errorPrefix: 'ĐźĐľĐĽĐ¸Đ»ĐşĐ°: ',
+	warningPrefix: 'ĐŁĐ˛Đ°ĐłĐ°: ',
 
-	noSpace: 'Пробіли заборонені.',
-	reqChkByNode: 'Не відмічено жодного варіанту.',
-	requiredChk: 'Це поле повинне бути віміченим.',
-	reqChkByName: 'Будь ласка, відмітьте {label}.',
-	match: 'Це поле повинно відповідати {matchName}',
-	startDate: 'початкова дата',
-	endDate: 'кінцева дата',
-	currendDate: 'сьогоднішня дата',
-	afterDate: 'Ця дата повинна бути такою ж, або пізнішою за {label}.',
-	beforeDate: 'Ця дата повинна бути такою ж, або ранішою за {label}.',
-	startMonth: 'Будь ласка, виберіть початковий місяць',
-	sameMonth: 'Ці дати повинні відноситись одного і того ж місяця. Будь ласка, змініть одну з них.',
-	creditcard: 'Номер кредитної карти введений неправильно. Будь ласка, перевірте його. Введено {length} символів.'
+	noSpace: 'ĐźŃ€ĐľĐ±Ń–Đ»Đ¸ Đ·Đ°Đ±ĐľŃ€ĐľĐ˝ĐµĐ˝Ń–.',
+	reqChkByNode: 'ĐťĐµ Đ˛Ń–Đ´ĐĽŃ–Ń‡ĐµĐ˝Đľ Đ¶ĐľĐ´Đ˝ĐľĐłĐľ Đ˛Đ°Ń€Ń–Đ°Đ˝Ń‚Ń�.',
+	requiredChk: 'Đ¦Đµ ĐżĐľĐ»Đµ ĐżĐľĐ˛Đ¸Đ˝Đ˝Đµ Đ±Ń�Ń‚Đ¸ Đ˛Ń–ĐĽŃ–Ń‡ĐµĐ˝Đ¸ĐĽ.',
+	reqChkByName: 'Đ‘Ń�Đ´ŃŚ Đ»Đ°Ń�ĐşĐ°, Đ˛Ń–Đ´ĐĽŃ–Ń‚ŃŚŃ‚Đµ {label}.',
+	match: 'Đ¦Đµ ĐżĐľĐ»Đµ ĐżĐľĐ˛Đ¸Đ˝Đ˝Đľ Đ˛Ń–Đ´ĐżĐľĐ˛Ń–Đ´Đ°Ń‚Đ¸ {matchName}',
+	startDate: 'ĐżĐľŃ‡Đ°Ń‚ĐşĐľĐ˛Đ° Đ´Đ°Ń‚Đ°',
+	endDate: 'ĐşŃ–Đ˝Ń†ĐµĐ˛Đ° Đ´Đ°Ń‚Đ°',
+	currendDate: 'Ń�ŃŚĐľĐłĐľĐ´Đ˝Ń–Ń�Đ˝ŃŹ Đ´Đ°Ń‚Đ°',
+	afterDate: 'Đ¦ŃŹ Đ´Đ°Ń‚Đ° ĐżĐľĐ˛Đ¸Đ˝Đ˝Đ° Đ±Ń�Ń‚Đ¸ Ń‚Đ°ĐşĐľŃŽ Đ¶, Đ°Đ±Đľ ĐżŃ–Đ·Đ˝Ń–Ń�ĐľŃŽ Đ·Đ° {label}.',
+	beforeDate: 'Đ¦ŃŹ Đ´Đ°Ń‚Đ° ĐżĐľĐ˛Đ¸Đ˝Đ˝Đ° Đ±Ń�Ń‚Đ¸ Ń‚Đ°ĐşĐľŃŽ Đ¶, Đ°Đ±Đľ Ń€Đ°Đ˝Ń–Ń�ĐľŃŽ Đ·Đ° {label}.',
+	startMonth: 'Đ‘Ń�Đ´ŃŚ Đ»Đ°Ń�ĐşĐ°, Đ˛Đ¸Đ±ĐµŃ€Ń–Ń‚ŃŚ ĐżĐľŃ‡Đ°Ń‚ĐşĐľĐ˛Đ¸Đą ĐĽŃ–Ń�ŃŹŃ†ŃŚ',
+	sameMonth: 'Đ¦Ń– Đ´Đ°Ń‚Đ¸ ĐżĐľĐ˛Đ¸Đ˝Đ˝Ń– Đ˛Ń–Đ´Đ˝ĐľŃ�Đ¸Ń‚Đ¸Ń�ŃŚ ĐľĐ´Đ˝ĐľĐłĐľ Ń– Ń‚ĐľĐłĐľ Đ¶ ĐĽŃ–Ń�ŃŹŃ†ŃŹ. Đ‘Ń�Đ´ŃŚ Đ»Đ°Ń�ĐşĐ°, Đ·ĐĽŃ–Đ˝Ń–Ń‚ŃŚ ĐľĐ´Đ˝Ń� Đ· Đ˝Đ¸Ń….',
+	creditcard: 'ĐťĐľĐĽĐµŃ€ ĐşŃ€ĐµĐ´Đ¸Ń‚Đ˝ĐľŃ— ĐşĐ°Ń€Ń‚Đ¸ Đ˛Đ˛ĐµĐ´ĐµĐ˝Đ¸Đą Đ˝ĐµĐżŃ€Đ°Đ˛Đ¸Đ»ŃŚĐ˝Đľ. Đ‘Ń�Đ´ŃŚ Đ»Đ°Ń�ĐşĐ°, ĐżĐµŃ€ĐµĐ˛Ń–Ń€Ń‚Đµ ĐąĐľĐłĐľ. Đ’Đ˛ĐµĐ´ĐµĐ˝Đľ {length} Ń�Đ¸ĐĽĐ˛ĐľĐ»Ń–Đ˛.'
 
 });
 
@@ -13163,10 +13163,10 @@ provides: [Locale.zh-CH.Date]
 // Simplified Chinese
 Locale.define('zh-CHS', 'Date', {
 
-	months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-	months_abbr: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
-	days: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
-	days_abbr: ['日', '一', '二', '三', '四', '五', '六'],
+	months: ['ä¸€ćś�', 'äşŚćś�', 'ä¸‰ćś�', 'ĺ››ćś�', 'äş”ćś�', 'ĺ…­ćś�', 'ä¸�ćś�', 'ĺ…«ćś�', 'äąťćś�', 'ĺŤ�ćś�', 'ĺŤ�ä¸€ćś�', 'ĺŤ�äşŚćś�'],
+	months_abbr: ['ä¸€', 'äşŚ', 'ä¸‰', 'ĺ››', 'äş”', 'ĺ…­', 'ä¸�', 'ĺ…«', 'äąť', 'ĺŤ�', 'ĺŤ�ä¸€', 'ĺŤ�äşŚ'],
+	days: ['ć�źćśźć—Ą', 'ć�źćśźä¸€', 'ć�źćśźäşŚ', 'ć�źćśźä¸‰', 'ć�źćśźĺ››', 'ć�źćśźäş”', 'ć�źćśźĺ…­'],
+	days_abbr: ['ć—Ą', 'ä¸€', 'äşŚ', 'ä¸‰', 'ĺ››', 'äş”', 'ĺ…­'],
 
 	// Culture's date order: YYYY-MM-DD
 	dateOrder: ['year', 'month', 'date'],
@@ -13179,43 +13179,43 @@ Locale.define('zh-CHS', 'Date', {
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: '不到1分钟前',
-	minuteAgo: '大约1分钟前',
-	minutesAgo: '{delta}分钟之前',
-	hourAgo: '大约1小时前',
-	hoursAgo: '大约{delta}小时前',
-	dayAgo: '1天前',
-	daysAgo: '{delta}天前',
-	weekAgo: '1星期前',
-	weeksAgo: '{delta}星期前',
-	monthAgo: '1个月前',
-	monthsAgo: '{delta}个月前',
-	yearAgo: '1年前',
-	yearsAgo: '{delta}年前',
+	lessThanMinuteAgo: 'ä¸Ťĺ�°1ĺ�†é’źĺ‰Ť',
+	minuteAgo: 'ĺ¤§çş¦1ĺ�†é’źĺ‰Ť',
+	minutesAgo: '{delta}ĺ�†é’źäą‹ĺ‰Ť',
+	hourAgo: 'ĺ¤§çş¦1ĺ°Źć—¶ĺ‰Ť',
+	hoursAgo: 'ĺ¤§çş¦{delta}ĺ°Źć—¶ĺ‰Ť',
+	dayAgo: '1ĺ¤©ĺ‰Ť',
+	daysAgo: '{delta}ĺ¤©ĺ‰Ť',
+	weekAgo: '1ć�źćśźĺ‰Ť',
+	weeksAgo: '{delta}ć�źćśźĺ‰Ť',
+	monthAgo: '1ä¸Şćś�ĺ‰Ť',
+	monthsAgo: '{delta}ä¸Şćś�ĺ‰Ť',
+	yearAgo: '1ĺą´ĺ‰Ť',
+	yearsAgo: '{delta}ĺą´ĺ‰Ť',
 
-	lessThanMinuteUntil: '从现在开始不到1分钟',
-	minuteUntil: '从现在开始約1分钟',
-	minutesUntil: '从现在开始约{delta}分钟',
-	hourUntil: '从现在开始1小时',
-	hoursUntil: '从现在开始约{delta}小时',
-	dayUntil: '从现在开始1天',
-	daysUntil: '从现在开始{delta}天',
-	weekUntil: '从现在开始1星期',
-	weeksUntil: '从现在开始{delta}星期',
-	monthUntil: '从现在开始一个月',
-	monthsUntil: '从现在开始{delta}个月',
-	yearUntil: '从现在开始1年',
-	yearsUntil: '从现在开始{delta}年'
+	lessThanMinuteUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹ä¸Ťĺ�°1ĺ�†é’ź',
+	minuteUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹ç´„1ĺ�†é’ź',
+	minutesUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹çş¦{delta}ĺ�†é’ź',
+	hourUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹1ĺ°Źć—¶',
+	hoursUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹çş¦{delta}ĺ°Źć—¶',
+	dayUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹1ĺ¤©',
+	daysUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹{delta}ĺ¤©',
+	weekUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹1ć�źćśź',
+	weeksUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹{delta}ć�źćśź',
+	monthUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹ä¸€ä¸Şćś�',
+	monthsUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹{delta}ä¸Şćś�',
+	yearUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹1ĺą´',
+	yearsUntil: 'ä»ŽçŽ°ĺś¨ĺĽ€ĺ§‹{delta}ĺą´'
 
 });
 
 // Traditional Chinese
 Locale.define('zh-CHT', 'Date', {
 
-	months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-	months_abbr: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
-	days: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
-	days_abbr: ['日', '一', '二', '三', '四', '五', '六'],
+	months: ['ä¸€ćś�', 'äşŚćś�', 'ä¸‰ćś�', 'ĺ››ćś�', 'äş”ćś�', 'ĺ…­ćś�', 'ä¸�ćś�', 'ĺ…«ćś�', 'äąťćś�', 'ĺŤ�ćś�', 'ĺŤ�ä¸€ćś�', 'ĺŤ�äşŚćś�'],
+	months_abbr: ['ä¸€', 'äşŚ', 'ä¸‰', 'ĺ››', 'äş”', 'ĺ…­', 'ä¸�', 'ĺ…«', 'äąť', 'ĺŤ�', 'ĺŤ�ä¸€', 'ĺŤ�äşŚ'],
+	days: ['ć�źćśźć—Ą', 'ć�źćśźä¸€', 'ć�źćśźäşŚ', 'ć�źćśźä¸‰', 'ć�źćśźĺ››', 'ć�źćśźäş”', 'ć�źćśźĺ…­'],
+	days_abbr: ['ć—Ą', 'ä¸€', 'äşŚ', 'ä¸‰', 'ĺ››', 'äş”', 'ĺ…­'],
 
 	// Culture's date order: YYYY-MM-DD
 	dateOrder: ['year', 'month', 'date'],
@@ -13228,33 +13228,33 @@ Locale.define('zh-CHT', 'Date', {
 	// Date.Extras
 	ordinal: '',
 
-	lessThanMinuteAgo: '不到1分鐘前',
-	minuteAgo: '大約1分鐘前',
-	minutesAgo: '{delta}分鐘之前',
-	hourAgo: '大約1小時前',
-	hoursAgo: '大約{delta}小時前',
-	dayAgo: '1天前',
-	daysAgo: '{delta}天前',
-	weekAgo: '1星期前',
-	weeksAgo: '{delta}星期前',
-	monthAgo: '1个月前',
-	monthsAgo: '{delta}个月前',
-	yearAgo: '1年前',
-	yearsAgo: '{delta}年前',
+	lessThanMinuteAgo: 'ä¸Ťĺ�°1ĺ�†é��ĺ‰Ť',
+	minuteAgo: 'ĺ¤§ç´„1ĺ�†é��ĺ‰Ť',
+	minutesAgo: '{delta}ĺ�†é��äą‹ĺ‰Ť',
+	hourAgo: 'ĺ¤§ç´„1ĺ°Źć™‚ĺ‰Ť',
+	hoursAgo: 'ĺ¤§ç´„{delta}ĺ°Źć™‚ĺ‰Ť',
+	dayAgo: '1ĺ¤©ĺ‰Ť',
+	daysAgo: '{delta}ĺ¤©ĺ‰Ť',
+	weekAgo: '1ć�źćśźĺ‰Ť',
+	weeksAgo: '{delta}ć�źćśźĺ‰Ť',
+	monthAgo: '1ä¸Şćś�ĺ‰Ť',
+	monthsAgo: '{delta}ä¸Şćś�ĺ‰Ť',
+	yearAgo: '1ĺą´ĺ‰Ť',
+	yearsAgo: '{delta}ĺą´ĺ‰Ť',
 
-	lessThanMinuteUntil: '從現在開始不到1分鐘',
-	minuteUntil: '從現在開始約1分鐘',
-	minutesUntil: '從現在開始約{delta}分鐘',
-	hourUntil: '從現在開始1小時',
-	hoursUntil: '從現在開始約{delta}小時',
-	dayUntil: '從現在開始1天',
-	daysUntil: '從現在開始{delta}天',
-	weekUntil: '從現在開始1星期',
-	weeksUntil: '從現在開始{delta}星期',
-	monthUntil: '從現在開始一個月',
-	monthsUntil: '從現在開始{delta}個月',
-	yearUntil: '從現在開始1年',
-	yearsUntil: '從現在開始{delta}年'
+	lessThanMinuteUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹ä¸Ťĺ�°1ĺ�†é��',
+	minuteUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹ç´„1ĺ�†é��',
+	minutesUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹ç´„{delta}ĺ�†é��',
+	hourUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹1ĺ°Źć™‚',
+	hoursUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹ç´„{delta}ĺ°Źć™‚',
+	dayUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹1ĺ¤©',
+	daysUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹{delta}ĺ¤©',
+	weekUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹1ć�źćśź',
+	weeksUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹{delta}ć�źćśź',
+	monthUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹ä¸€ĺ€‹ćś�',
+	monthsUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹{delta}ĺ€‹ćś�',
+	yearUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹1ĺą´',
+	yearsUntil: 'ĺľžçŹľĺś¨é–‹ĺ§‹{delta}ĺą´'
 
 });
 
@@ -13283,74 +13283,74 @@ provides: [Form.zh-CH.Form.Validator, Form.Validator.CurrencyYuanValidator]
 // Simplified Chinese
 Locale.define('zh-CHS', 'FormValidator', {
 
-	required: '此项必填。',
-	minLength: '请至少输入 {minLength} 个字符 (已输入 {length} 个)。',
-	maxLength: '最多只能输入 {maxLength} 个字符 (已输入 {length} 个)。',
-	integer: '请输入一个整数，不能包含小数点。例如："1", "200"。',
-	numeric: '请输入一个数字，例如："1", "1.1", "-1", "-1.1"。',
-	digits: '请输入由数字和标点符号组成的内容。例如电话号码。',
-	alpha: '请输入 A-Z 的 26 个字母，不能包含空格或任何其他字符。',
-	alphanum: '请输入 A-Z 的 26 个字母或 0-9 的 10 个数字，不能包含空格或任何其他字符。',
-	dateSuchAs: '请输入合法的日期格式，如：{date}。',
-	dateInFormatMDY: '请输入合法的日期格式，例如：YYYY-MM-DD ("2010-12-31")。',
-	email: '请输入合法的电子信箱地址，例如："fred@domain.com"。',
-	url: '请输入合法的 Url 地址，例如：http://www.example.com。',
-	currencyDollar: '请输入合法的货币符号，例如：￥100.0',
-	oneRequired: '请至少选择一项。',
-	errorPrefix: '错误：',
-	warningPrefix: '警告：',
+	required: 'ć­¤éˇąĺż…ĺˇ«ă€‚',
+	minLength: 'čŻ·č‡łĺ°‘čľ“ĺ…Ą {minLength} ä¸Şĺ­—ç¬¦ (ĺ·˛čľ“ĺ…Ą {length} ä¸Ş)ă€‚',
+	maxLength: 'ćś€ĺ¤šĺŹŞč�˝čľ“ĺ…Ą {maxLength} ä¸Şĺ­—ç¬¦ (ĺ·˛čľ“ĺ…Ą {length} ä¸Ş)ă€‚',
+	integer: 'čŻ·čľ“ĺ…Ąä¸€ä¸Şć•´ć•°ďĽŚä¸Ťč�˝ĺŚ…ĺ�«ĺ°Źć•°ç‚ąă€‚äľ‹ĺ¦‚ďĽš"1", "200"ă€‚',
+	numeric: 'čŻ·čľ“ĺ…Ąä¸€ä¸Şć•°ĺ­—ďĽŚäľ‹ĺ¦‚ďĽš"1", "1.1", "-1", "-1.1"ă€‚',
+	digits: 'čŻ·čľ“ĺ…Ąç”±ć•°ĺ­—ĺ’Ść ‡ç‚ąç¬¦ĺŹ·ç»„ć��çš„ĺ†…ĺ®ąă€‚äľ‹ĺ¦‚ç”µčŻťĺŹ·ç �ă€‚',
+	alpha: 'čŻ·čľ“ĺ…Ą A-Z çš„ 26 ä¸Şĺ­—ćŻŤďĽŚä¸Ťč�˝ĺŚ…ĺ�«ç©şć Ľć�–ä»»ä˝•ĺ…¶ä»–ĺ­—ç¬¦ă€‚',
+	alphanum: 'čŻ·čľ“ĺ…Ą A-Z çš„ 26 ä¸Şĺ­—ćŻŤć�– 0-9 çš„ 10 ä¸Şć•°ĺ­—ďĽŚä¸Ťč�˝ĺŚ…ĺ�«ç©şć Ľć�–ä»»ä˝•ĺ…¶ä»–ĺ­—ç¬¦ă€‚',
+	dateSuchAs: 'čŻ·čľ“ĺ…Ąĺ��ćł•çš„ć—Ąćśźć ĽĺĽŹďĽŚĺ¦‚ďĽš{date}ă€‚',
+	dateInFormatMDY: 'čŻ·čľ“ĺ…Ąĺ��ćł•çš„ć—Ąćśźć ĽĺĽŹďĽŚäľ‹ĺ¦‚ďĽšYYYY-MM-DD ("2010-12-31")ă€‚',
+	email: 'čŻ·čľ“ĺ…Ąĺ��ćł•çš„ç”µĺ­�äżˇç®±ĺś°ĺť€ďĽŚäľ‹ĺ¦‚ďĽš"fred@domain.com"ă€‚',
+	url: 'čŻ·čľ“ĺ…Ąĺ��ćł•çš„ Url ĺś°ĺť€ďĽŚäľ‹ĺ¦‚ďĽšhttp://www.example.comă€‚',
+	currencyDollar: 'čŻ·čľ“ĺ…Ąĺ��ćł•çš„č´§ĺ¸�ç¬¦ĺŹ·ďĽŚäľ‹ĺ¦‚ďĽšďżĄ100.0',
+	oneRequired: 'čŻ·č‡łĺ°‘é€‰ć‹©ä¸€éˇąă€‚',
+	errorPrefix: 'é”™čŻŻďĽš',
+	warningPrefix: 'č­¦ĺ‘ŠďĽš',
 
 	// Form.Validator.Extras
-	noSpace: '不能包含空格。',
-	reqChkByNode: '未选择任何内容。',
-	requiredChk: '此项必填。',
-	reqChkByName: '请选择 {label}.',
-	match: '必须与{matchName}相匹配',
-	startDate: '起始日期',
-	endDate: '结束日期',
-	currendDate: '当前日期',
-	afterDate: '日期必须等于或晚于 {label}.',
-	beforeDate: '日期必须早于或等于 {label}.',
-	startMonth: '请选择起始月份',
-	sameMonth: '您必须修改两个日期中的一个，以确保它们在同一月份。',
-	creditcard: '您输入的信用卡号码不正确。当前已输入{length}个字符。'
+	noSpace: 'ä¸Ťč�˝ĺŚ…ĺ�«ç©şć Ľă€‚',
+	reqChkByNode: 'ćśŞé€‰ć‹©ä»»ä˝•ĺ†…ĺ®ąă€‚',
+	requiredChk: 'ć­¤éˇąĺż…ĺˇ«ă€‚',
+	reqChkByName: 'čŻ·é€‰ć‹© {label}.',
+	match: 'ĺż…éˇ»ä¸Ž{matchName}ç›¸ĺŚąé…Ť',
+	startDate: 'čµ·ĺ§‹ć—Ąćśź',
+	endDate: 'ç»“ćťźć—Ąćśź',
+	currendDate: 'ĺ˝“ĺ‰Ťć—Ąćśź',
+	afterDate: 'ć—Ąćśźĺż…éˇ»ç­‰äşŽć�–ć™šäşŽ {label}.',
+	beforeDate: 'ć—Ąćśźĺż…éˇ»ć—©äşŽć�–ç­‰äşŽ {label}.',
+	startMonth: 'čŻ·é€‰ć‹©čµ·ĺ§‹ćś�ä»˝',
+	sameMonth: 'ć‚¨ĺż…éˇ»äż®ć”ąä¸¤ä¸Şć—Ąćśźä¸­çš„ä¸€ä¸ŞďĽŚä»Ąçˇ®äżťĺ®�ä»¬ĺś¨ĺ�Śä¸€ćś�ä»˝ă€‚',
+	creditcard: 'ć‚¨čľ“ĺ…Ąçš„äżˇç”¨ĺŤˇĺŹ·ç �ä¸Ťć­Łçˇ®ă€‚ĺ˝“ĺ‰Ťĺ·˛čľ“ĺ…Ą{length}ä¸Şĺ­—ç¬¦ă€‚'
 
 });
 
 // Traditional Chinese
 Locale.define('zh-CHT', 'FormValidator', {
 
-	required: '此項必填。 ',
-	minLength: '請至少輸入{minLength} 個字符(已輸入{length} 個)。 ',
-	maxLength: '最多只能輸入{maxLength} 個字符(已輸入{length} 個)。 ',
-	integer: '請輸入一個整數，不能包含小數點。例如："1", "200"。 ',
-	numeric: '請輸入一個數字，例如："1", "1.1", "-1", "-1.1"。 ',
-	digits: '請輸入由數字和標點符號組成的內容。例如電話號碼。 ',
-	alpha: '請輸入AZ 的26 個字母，不能包含空格或任何其他字符。 ',
-	alphanum: '請輸入AZ 的26 個字母或0-9 的10 個數字，不能包含空格或任何其他字符。 ',
-	dateSuchAs: '請輸入合法的日期格式，如：{date}。 ',
-	dateInFormatMDY: '請輸入合法的日期格式，例如：YYYY-MM-DD ("2010-12-31")。 ',
-	email: '請輸入合法的電子信箱地址，例如："fred@domain.com"。 ',
-	url: '請輸入合法的Url 地址，例如：http://www.example.com。 ',
-	currencyDollar: '請輸入合法的貨幣符號，例如：￥100.0',
-	oneRequired: '請至少選擇一項。 ',
-	errorPrefix: '錯誤：',
-	warningPrefix: '警告：',
+	required: 'ć­¤é …ĺż…ĺˇ«ă€‚ ',
+	minLength: 'č«‹č‡łĺ°‘čĽ¸ĺ…Ą{minLength} ĺ€‹ĺ­—ç¬¦(ĺ·˛čĽ¸ĺ…Ą{length} ĺ€‹)ă€‚ ',
+	maxLength: 'ćś€ĺ¤šĺŹŞč�˝čĽ¸ĺ…Ą{maxLength} ĺ€‹ĺ­—ç¬¦(ĺ·˛čĽ¸ĺ…Ą{length} ĺ€‹)ă€‚ ',
+	integer: 'č«‹čĽ¸ĺ…Ąä¸€ĺ€‹ć•´ć•¸ďĽŚä¸Ťč�˝ĺŚ…ĺ�«ĺ°Źć•¸é»žă€‚äľ‹ĺ¦‚ďĽš"1", "200"ă€‚ ',
+	numeric: 'č«‹čĽ¸ĺ…Ąä¸€ĺ€‹ć•¸ĺ­—ďĽŚäľ‹ĺ¦‚ďĽš"1", "1.1", "-1", "-1.1"ă€‚ ',
+	digits: 'č«‹čĽ¸ĺ…Ąç”±ć•¸ĺ­—ĺ’Ść¨™é»žç¬¦č™źçµ„ć��çš„ĺ…§ĺ®ąă€‚äľ‹ĺ¦‚é›»č©±č™źç˘Ľă€‚ ',
+	alpha: 'č«‹čĽ¸ĺ…ĄAZ çš„26 ĺ€‹ĺ­—ćŻŤďĽŚä¸Ťč�˝ĺŚ…ĺ�«ç©şć Ľć�–ä»»ä˝•ĺ…¶ä»–ĺ­—ç¬¦ă€‚ ',
+	alphanum: 'č«‹čĽ¸ĺ…ĄAZ çš„26 ĺ€‹ĺ­—ćŻŤć�–0-9 çš„10 ĺ€‹ć•¸ĺ­—ďĽŚä¸Ťč�˝ĺŚ…ĺ�«ç©şć Ľć�–ä»»ä˝•ĺ…¶ä»–ĺ­—ç¬¦ă€‚ ',
+	dateSuchAs: 'č«‹čĽ¸ĺ…Ąĺ��ćł•çš„ć—Ąćśźć ĽĺĽŹďĽŚĺ¦‚ďĽš{date}ă€‚ ',
+	dateInFormatMDY: 'č«‹čĽ¸ĺ…Ąĺ��ćł•çš„ć—Ąćśźć ĽĺĽŹďĽŚäľ‹ĺ¦‚ďĽšYYYY-MM-DD ("2010-12-31")ă€‚ ',
+	email: 'č«‹čĽ¸ĺ…Ąĺ��ćł•çš„é›»ĺ­�äżˇç®±ĺś°ĺť€ďĽŚäľ‹ĺ¦‚ďĽš"fred@domain.com"ă€‚ ',
+	url: 'č«‹čĽ¸ĺ…Ąĺ��ćł•çš„Url ĺś°ĺť€ďĽŚäľ‹ĺ¦‚ďĽšhttp://www.example.comă€‚ ',
+	currencyDollar: 'č«‹čĽ¸ĺ…Ąĺ��ćł•çš„č˛¨ĺąŁç¬¦č™źďĽŚäľ‹ĺ¦‚ďĽšďżĄ100.0',
+	oneRequired: 'č«‹č‡łĺ°‘é�¸ć“‡ä¸€é …ă€‚ ',
+	errorPrefix: 'éŚŻčŞ¤ďĽš',
+	warningPrefix: 'č­¦ĺ‘ŠďĽš',
 
 	// Form.Validator.Extras
-	noSpace: '不能包含空格。 ',
-	reqChkByNode: '未選擇任何內容。 ',
-	requiredChk: '此項必填。 ',
-	reqChkByName: '請選擇 {label}.',
-	match: '必須與{matchName}相匹配',
-	startDate: '起始日期',
-	endDate: '結束日期',
-	currendDate: '當前日期',
-	afterDate: '日期必須等於或晚於{label}.',
-	beforeDate: '日期必須早於或等於{label}.',
-	startMonth: '請選擇起始月份',
-	sameMonth: '您必須修改兩個日期中的一個，以確保它們在同一月份。 ',
-	creditcard: '您輸入的信用卡號碼不正確。當前已輸入{length}個字符。 '
+	noSpace: 'ä¸Ťč�˝ĺŚ…ĺ�«ç©şć Ľă€‚ ',
+	reqChkByNode: 'ćśŞé�¸ć“‡ä»»ä˝•ĺ…§ĺ®ąă€‚ ',
+	requiredChk: 'ć­¤é …ĺż…ĺˇ«ă€‚ ',
+	reqChkByName: 'č«‹é�¸ć“‡ {label}.',
+	match: 'ĺż…é �č�‡{matchName}ç›¸ĺŚąé…Ť',
+	startDate: 'čµ·ĺ§‹ć—Ąćśź',
+	endDate: 'çµ�ćťźć—Ąćśź',
+	currendDate: 'ç•¶ĺ‰Ťć—Ąćśź',
+	afterDate: 'ć—Ąćśźĺż…é �ç­‰ć–Ľć�–ć™šć–Ľ{label}.',
+	beforeDate: 'ć—Ąćśźĺż…é �ć—©ć–Ľć�–ç­‰ć–Ľ{label}.',
+	startMonth: 'č«‹é�¸ć“‡čµ·ĺ§‹ćś�ä»˝',
+	sameMonth: 'ć‚¨ĺż…é �äż®ć”ąĺ…©ĺ€‹ć—Ąćśźä¸­çš„ä¸€ĺ€‹ďĽŚä»Ąç˘şäżťĺ®�ĺ€‘ĺś¨ĺ�Śä¸€ćś�ä»˝ă€‚ ',
+	creditcard: 'ć‚¨čĽ¸ĺ…Ąçš„äżˇç”¨ĺŤˇč™źç˘Ľä¸Ťć­Łç˘şă€‚ç•¶ĺ‰Ťĺ·˛čĽ¸ĺ…Ą{length}ĺ€‹ĺ­—ç¬¦ă€‚ '
 
 });
 
@@ -13361,11 +13361,11 @@ Form.Validator.add('validate-currency-yuan', {
 	},
 
 	test: function(element){
-		// [￥]1[##][,###]+[.##]
-		// [￥]1###+[.##]
-		// [￥]0.##
-		// [￥].##
-		return Form.Validator.getValidator('IsEmpty').test(element) || (/^￥?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/).test(element.get('value'));
+		// [ďżĄ]1[##][,###]+[.##]
+		// [ďżĄ]1###+[.##]
+		// [ďżĄ]0.##
+		// [ďżĄ].##
+		return Form.Validator.getValidator('IsEmpty').test(element) || (/^ďżĄ?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/).test(element.get('value'));
 	}
 
 });

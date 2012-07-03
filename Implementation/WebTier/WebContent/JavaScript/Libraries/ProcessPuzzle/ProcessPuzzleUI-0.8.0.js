@@ -12276,6 +12276,7 @@ var DocumentElement = new Class({
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       isEditable : false,
+      isEditableSelector : "@isEditable",
       pluginSelector : "plugin",
       referenceSelector : "@href",
       sourceSelector : "@source",
@@ -12348,12 +12349,7 @@ var DocumentElement = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallId();
-      this.unmarshallReference();
-      this.unmarshallSource();
-      this.unmarshallStyle();
-      this.unmarshallTag();
-      this.unmarshallText();
+      this.unmarshallProperties();
       this.unmarshallPlugin();
       this.status = DocumentElement.States.UNMARSHALLED;
    },
@@ -12374,7 +12370,7 @@ var DocumentElement = new Class({
    getText: function() { return this.text; },
    getResourceType: function() { return this.options.type; },
    getResourceUri: function() { return resourceUri; },
-   isEditable: function() { return this.editable; },
+   isEditable: function() { return this.editable ? this.editable : this.options.isEditable; },
    isSuccess: function() { return this.error == null; },
    
    //Protected, private helper methods
@@ -12402,9 +12398,9 @@ var DocumentElement = new Class({
    
    createAnchorIfNeeded: function(){
       if( this.reference ){
-         var anchorElement = this.elementFactory.createAnchor( this.text, this.reference, null, this.htmlElement );
+         this.elementFactory.createAnchor( this.text, this.reference, null, this.htmlElement );
       }else {
-         if( this.text ) this.htmlElement.appendText( this.text );
+         if( this.text ) this.htmlElement.appendText( this.resourceBundle.getText( this.text ));
       }
    }.protect(),
    
@@ -12465,12 +12461,26 @@ var DocumentElement = new Class({
       if( this.dataElementsIndex > 0 ) this.id += "#" + this.dataElementsIndex; 
    }.protect(),
    
+   unmarshallIsEditable: function(){
+      this.options.isEditable = parseBoolean( XmlResource.selectNodeText( this.options.isEditableSelector, this.definitionElement, null, this.options.isEditable ));
+   }.protect(),
+   
    unmarshallPlugin: function(){
       var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
       if( pluginDefinition ){
          this.plugin = new DocumentPlugin( pluginDefinition, this.resourceBundle, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginError } );
          this.plugin.unmarshall();
       }
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.unmarshallId();
+      this.unmarshallIsEditable();
+      this.unmarshallReference();
+      this.unmarshallSource();
+      this.unmarshallStyle();
+      this.unmarshallTag();
+      this.unmarshallText();
    }.protect(),
    
    unmarshallReference: function(){
@@ -12535,7 +12545,7 @@ var CompositeDocumentElement = new Class({
    
    options: {
       componentName : "CompositeDocumentElement",
-      subElementsSelector : "compositeElement | element | compositeDataElement | dataElement | formElement | formField",
+      subElementsSelector : "compositeElement | element | compositeDataElement | dataElement | formElement | formField | tableElement",
       tagName : "div"
    },
    
@@ -12595,15 +12605,18 @@ var CompositeDocumentElement = new Class({
    constructNestedElements: function( contextElement ){
       if( contextElement ) this.nestedElementsContext = contextElement;
       else this.nestedElementsContext = this.htmlElement;
-      this.elements.each( function( elementsEntry, index ){
-         var nestedElement = elementsEntry.getValue();
-         nestedElement.construct( this.nestedElementsContext );
-      }, this );      
+      
+      if( this.elements.size() > 0 ){
+         this.elements.each( function( elementsEntry, index ){
+            var nestedElement = elementsEntry.getValue();
+            nestedElement.construct( this.nestedElementsContext );
+         }, this );      
+      }else this.constructionChain.callChain();
    }.protect(),
    
    instantiateDocumentElement: function( elementDefinition ){
       var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
-      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables
+      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
       return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
@@ -12664,6 +12677,7 @@ var DataElementBehaviour = new Class({
    options: {
       bindSelector : "@bind",
       hrefSelector : "/@href",
+      eventFireDelay : 2,
       indexVariable : "index",
       indexVariableSelector : "@indexVariable",
       maxOccuresSelector : "@maxOccures",
@@ -12678,13 +12692,13 @@ var DataElementBehaviour = new Class({
       
       //Private variables
       this.bind;
+      this.bindedData;
       this.dataXml = data;
-      //this.dataElementsIndex = index ? index : 0;
       this.dataElementsNumber;
       this.href;
       this.maxOccures;
       this.minOccures;
-      this.numberOfConstructedSiblings;
+      this.numberOfConstructedSiblings = 0;
       this.siblings;
       this.source;
    },
@@ -12695,6 +12709,12 @@ var DataElementBehaviour = new Class({
       if( this.numberOfConstructedSiblings == this.siblings.size() ) this.constructionChain.callChain();
    },
    
+   onSiblingConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+      this.fireEvent( 'constructionError', this.error, this.options.eventFireDelay );
+   },
+   
    unmarshallDataBehaviour: function(){
       this.unmarshallDataProperties();
       this.loadDataSource();
@@ -12703,10 +12723,11 @@ var DataElementBehaviour = new Class({
    },
 
    //Properties
+   getBind: function() { return this.bind; },
+   getBindedData: function() { return this.bindedData; },
    getDataElementsIndex: function() { return this.dataElementsIndex; },
    getDataElementsNumber: function() { return this.dataElementsNumber; },
    getDataXml: function() { return this.dataXml; },
-   getBind: function() { return this.bind; },
    getIndexVariable: function() { return this.options.indexVariable; },
    getMaxOccures: function() { return this.maxOccures; },
    getMinOccures: function() { return this.minOccures; },
@@ -12724,6 +12745,7 @@ var DataElementBehaviour = new Class({
    
    constructSiblings: function(){
       if( this.siblings.size() > 0 ){
+         this.numberOfConstructedSiblings = 0;
          this.siblings.each( function( siblingElement, index ){
             siblingElement.construct( this.contextElement, this.where );
          }, this );      
@@ -12732,9 +12754,9 @@ var DataElementBehaviour = new Class({
    
    determineDataElementsNumber: function(){
       var dataSelector = this.bind.substitute( this.options.variables );
-      var bindedData = this.dataXml.selectNodes( dataSelector );
-      if( this.maxOccures == 'unbounded' && bindedData.length > 1 ) this.dataElementsNumber = bindedData.length;
-      if( this.maxOccures > 1 && this.maxOccures < bindedData.length ) this.dataElementsNumber = this.maxOccures;
+      this.bindedData = this.dataXml.selectNodes( dataSelector );
+      if( this.maxOccures == 'unbounded' && this.bindedData.length > 1 ) this.dataElementsNumber = this.bindedData.length;
+      if( this.maxOccures > 1 && this.maxOccures < this.bindedData.length ) this.dataElementsNumber = this.maxOccures;
    }.protect(),
    
    destroySiblings: function(){
@@ -12742,6 +12764,7 @@ var DataElementBehaviour = new Class({
          siblingElement.destroy();
       }, this );
       
+      this.numberOfConstructedSiblings = 0;
    }.protect(),
    
    initializeBindVariables : function(){
@@ -12753,7 +12776,10 @@ var DataElementBehaviour = new Class({
       for( var i = 2; i <= this.dataElementsNumber; i++ ){
          var variables = this.options.variables;
          variables[this.options.indexVariable] = i;
-         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { onConstructed : this.onSiblingConstructed, variables : variables });
+         var siblingElement = DocumentElementFactory.create( this.definitionElement, this.resourceBundle, this.dataXml, { 
+            onConstructed : this.onSiblingConstructed, 
+            onConstructionError : this.onSiblingConstructionError, 
+            variables : variables });
          siblingElement.unmarshall();
          this.siblings.add( siblingElement );
       }
@@ -12777,11 +12803,22 @@ var DataElementBehaviour = new Class({
    }.protect(),
    
    retrieveData: function(){
-      if( this.bind && this.dataXml && instanceOf( this.dataXml, XmlResource ) ){
+      if( this.bind && this.dataXml ){
          var dataSelector = this.bind.substitute( this.options.variables );
-         this.text = this.dataXml.selectNodeText( dataSelector );
+         var href = null;
+         if( instanceOf( this.dataXml, XmlResource ) ){
+            this.text = this.dataXml.selectNodeText( dataSelector );
+            href = this.dataXml.selectNodeText( dataSelector + this.options.hrefSelector );
+         }else if( typeOf( this.dataXml ) == "element" ){
+            if( dataSelector.indexOf( "/" ) < 0 ){
+               this.text = XmlResource.determineNodeText( this.dataXml );
+            }else{
+               this.text = XmlResource.selectNodeText( dataSelector, this.dataXml );
+            }
+            href = XmlResource.selectNodeText( dataSelector + this.options.hrefSelector, this.dataXml );
+         }
+      
          if( this.text ) this.text.trim();
-         var href = this.dataXml.selectNodeText( dataSelector + this.options.hrefSelector );
          if( href && this.options.overwriteElementReference ) this.reference = href;
       }      
       this.constructionChain.callChain();
@@ -12831,6 +12868,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDataElement = new Class({
    Extends: CompositeDocumentElement,
+   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -12854,8 +12892,6 @@ var CompositeDataElement = new Class({
    construct: function( contextElement, where ){
       this.contextElement = contextElement;
       this.where = where;
-      this.retrieveData();
-      this.constructSiblings();
       this.parent( contextElement, where );
    },
    
@@ -12872,10 +12908,18 @@ var CompositeDataElement = new Class({
    //Properties
    
    //Protected, private helper methods
-   instantiateDocumentElement: function( elementDefinition ){
-      var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
-      if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
-      return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
+   compileConstructionChain: function(){
+      this.constructionChain.chain(
+         this.retrieveData,
+         this.createHtmlElement, 
+         this.injectHtmlElement, 
+         this.associateEditor, 
+         this.constructPlugin, 
+         this.constructNestedElements, 
+         this.authorization, 
+         this.constructSiblings,
+         this.finalizeConstruction 
+      );
    }.protect()
    
 });
@@ -12911,7 +12955,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DataElement = new Class({
    Extends: DocumentElement,
-   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'retrieveData'],
+   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -12949,12 +12993,12 @@ var DataElement = new Class({
    compileConstructionChain: function(){
       this.constructionChain.chain( 
          this.retrieveData, 
-         this.constructSiblings, 
          this.createHtmlElement, 
          this.injectHtmlElement, 
          this.constructPlugin, 
          this.authorization, 
          this.associateEditor, 
+         this.constructSiblings, 
          this.finalizeConstruction 
       );
    }.protect(),
@@ -13253,6 +13297,12 @@ var DocumentElementEditorFactory = new Class({
       case "CompositeDocumentElement": 
       case "DocumentElement": 
          documentElementEditor = new DocumentElementEditor( subjectHtmlElement, options ); break;
+      case "TableBody": 
+      case "TableCell": 
+      case "TableElement": 
+      case "TableHeader": 
+      case "TableRow": 
+         documentElementEditor = new TableElementEditor( subjectHtmlElement, options ); break;
       }
       
       return documentElementEditor;
@@ -13320,6 +13370,10 @@ var DocumentElementFactory = new Class({
          newDocumentElement = new FormElement( definitionXmlElement, bundle, data, options ); break;
       case "FORMFIELD": 
          newDocumentElement = new FormField( definitionXmlElement, bundle, data, options ); break;
+      case "TABLEELEMENT": 
+         newDocumentElement = new TableElement( definitionXmlElement, bundle, data, options ); break;
+      case "TABLECOLUMN": 
+         newDocumentElement = new TableColumn( definitionXmlElement, bundle, data, options ); break;
       case "ELEMENT":
       default:
          newDocumentElement = new DocumentElement( definitionXmlElement, bundle, options ); break;
@@ -13667,7 +13721,6 @@ var FormElement = new Class({
    },
    
    unmarshall: function( dataElementIndex ){
-      this.unmarshallProperties();
       this.parent();
    },
 
@@ -13688,6 +13741,7 @@ var FormElement = new Class({
    
    unmarshallProperties: function(){
       this.method = this.resourceBundle.getText( XmlResource.determineAttributeValue( this.definitionElement, this.options.methodSelector ));
+      this.parent();
    }   
 });
 /*
@@ -13748,7 +13802,6 @@ var FormField = new Class({
    },
    
    unmarshall: function(){
-      this.unmarshallProperties();
       this.parent();
    },
 
@@ -13776,6 +13829,7 @@ var FormField = new Class({
    
    unmarshallProperties: function(){
       this.label = this.resourceBundle.getText( XmlResource.determineAttributeValue( this.definitionElement, this.options.labelSelector ));
+      this.parent();
    }
 });
 /*
@@ -13822,6 +13876,715 @@ var MissingBindVariableException = new Class({
    }	
 });
 /*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      var documentComponentOptions = { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError };      if( this.options.documentVariables ) documentComponentOptions['variables'] = this.options.documentVariables      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, documentComponentOptions );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, documentComponentOptions );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, documentComponentOptions );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
+/*
+Name: TableBody
+
+Description: Represents the body element of a TableElement.
+
+Requires:
+    - DocumentElement
+
+Provides:
+    - TableBody
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TableBody = new Class({
+   Extends: DocumentElement,
+   Binds: ['createRowElement', 'constructRows', 'onRowConstructed', 'onRowConstructionError'],
+   
+   options: {
+      componentName : "TableBody",
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, dataSet, columnHeaders, options ){
+      this.parent( definitionElement, bundle, options );
+      
+      this.columnHeaders = columnHeaders;
+      this.dataSet = dataSet;
+      this.rowsConstructionChain = new Chain();
+      this.rows = new ArrayList();
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.tag = "TBODY";
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   onRowConstructed : function( columnHeader ){
+      this.rowsConstructionChain.callChain();
+   },
+   
+   onRowConstructionError : function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallRows();
+      this.parent();
+   },
+
+   //Properties
+   getRows: function() { return this.rows; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.createHtmlElement,
+         this.injectHtmlElement, 
+         this.constructPlugin, 
+         this.authorization, 
+         this.associateEditor, 
+         this.constructRows, 
+         this.finalizeConstruction 
+      );
+   }.protect(),
+   
+   constructRows : function(){
+      this.rows.each( function( row, index ){
+         this.rowsConstructionChain.chain(
+            function(){ 
+               row.construct( this.htmlElement ); 
+            }.bind( this )
+         );
+      }.bind( this ));
+      this.rowsConstructionChain.chain(
+         function(){
+            this.rowsConstructionChain.clearChain();
+            this.constructionChain.callChain(); 
+         }.bind( this )
+      );
+      this.rowsConstructionChain.callChain();
+   }.protect(),
+   
+   deleteHtmlElement : function(){
+      this.destroyRows();
+      this.parent();
+   }.protect(),
+   
+   destroyRows : function(){
+      this.rows.each( function( row, index ){
+         row.destroy(); 
+      }.bind( this ));
+   }.protect(),
+   
+   unmarshallRows: function(){
+      this.dataSet.each( function( columnHeaderDefinition, index ){
+         var row = new TableRow( this.definitionElement, this.resourceBundle, this.dataSet[index], this.columnHeaders, { onConstructed : this.onRowConstructed, onConstructionError : this.onRowConstructionError });
+         row.unmarshall();
+         this.rows.add( row );
+      }, this );
+   }.protect(),
+   
+});
+/*
+Name: TableCell
+
+Description: Represents a cell element of a TableElement.
+
+Requires:
+    - DataElement
+
+Provides:
+    - TableCell
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var TableCell = new Class({
+   Extends: DataElement,
+   
+   options: {
+      componentName : "TableCell",
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, data, options ){
+      this.parent( definitionElement, bundle, data, options );
+      
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.tag = "TD";
+      this.text = this.label;
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: TableColumnHeader
+
+Description: Represents the header cell element of a TableElment.
+
+Requires:
+    - DocumentElement
+
+Provides:
+    - TableColumnHeader
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TableColumnHeader = new Class({
+   Extends: DocumentElement,
+   
+   options: {
+      bindSelector : "@bind",
+      componentName : "TableColumnHeader",
+      labelSelector : "@label"
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
+      
+      this.bind;
+      this.label;
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.tag = "TH";
+      this.text = this.label;
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   selectDataDefinition: function( rowData ){
+      return XmlResource.selectNode( this.bind, rowData );
+   },
+   
+   unmarshall: function(){
+      this.unmarshallBind();
+      this.unmarshallLabel();
+      this.parent();
+   },
+
+   //Properties
+   getBind: function() { return this.bind; },
+   getLabel: function() { return this.label; },
+   
+   //Protected, private helper methods
+   unmarshallBind : function(){
+      this.bind = XmlResource.selectNodeText( this.options.bindSelector, this.definitionElement );
+   }.protect(),
+   
+   unmarshallLabel : function(){
+      this.label = XmlResource.selectNodeText( this.options.labelSelector, this.definitionElement );      
+   }
+});
+/*
+Name: TableElement
+
+Description: Represents a composite constituent element of a SmartDocument which retrieves and presents data in table form from a given data source.
+
+Requires:
+    - CompositeDocumentElement, DocumentElement
+
+Provides:
+    - TableElement
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TableElement = new Class({
+   Extends: CompositeDataElement,
+   Binds: ['constructBody', 'constructHeader', 'createTableElement', 'onBodyConstructed', 'onBodyConstructionError', 'onHeaderConstructed', 'onHeaderConstructionError'],
+   
+   options: {
+      componentName : "TableElement",
+      editableClass : "editableContainer",
+      readOnlyClass : "readOnlyContainer"
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, dataXml, options ){
+      this.parent( definitionElement, bundle, dataXml, options );
+      
+      this.body;
+//      this.controlsContainerElement;
+      this.header;
+      this.maxRowCount;
+//      this.fieldsContainerElement;
+      this.tableElement;
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   onBodyConstructed: function( body ){
+      this.constructionChain.callChain();
+   },
+   
+   onBodyConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
+   onHeaderConstructed: function( header ){
+      this.constructionChain.callChain();
+   },
+   
+   onHeaderConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+
+   //Properties
+   getBody: function() { return this.body; },
+   getContainerClass: function() { return this.isEditable() ? this.options.editableClass : this.options.readOnlyClass; },
+   getHeader: function() { return this.header; },
+   getMaxRowCount: function() { return this.maxRowCount; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain(
+         this.createHtmlElement, 
+         this.createTableElement,
+         this.injectHtmlElement, 
+         this.associateEditor, 
+         this.constructPlugin, 
+         this.constructNestedElements, 
+         this.authorization, 
+         this.constructHeader,
+         this.constructBody,
+         this.finalizeConstruction 
+      );
+   }.protect(),
+   
+   constructBody : function(){
+      this.body.construct( this.tableElement, "bottom" );
+   }.protect(),
+   
+   constructHeader : function(){
+      this.header.construct( this.tableElement, "bottom" );
+   }.protect(),
+   
+//   constructNestedElements : function(){
+//      this.parent( this.fieldsContainerElement );
+//   }.protect(),
+//   
+   createHtmlElement : function(){
+      this.tag = "div";
+      this.style = this.getContainerClass();
+      this.parent();
+   }.protect(),
+   
+   createTableElement : function(){
+      this.tableElement = this.elementFactory.create( "table", null, this.htmlElement, WidgetElementFactory.Positions.LastChild, { id : this.id });
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   unmarshallBody: function(){
+      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.bindedData, this.header.getColumnHeaders(), { onConstructed : this.onBodyConstructed, onConstructionError : this.onBodyConstructionError });
+      this.body.unmarshall();
+   }.protect(),
+   
+   unmarshallDataBehaviour: function(){
+      this.unmarshallDataProperties();
+      this.loadDataSource();
+      this.determineDataElementsNumber();
+      this.unmarshallHeader();
+      this.unmarshallBody();
+   }.protect(),
+   
+   unmarshallHeader: function(){
+      this.header = new TableHeader( this.definitionElement, this.resourceBundle, { onConstructed : this.onHeaderConstructed, onConstructionError : this.onHeaderConstructionError });
+      this.header.unmarshall();
+   }.protect()
+   
+});
+/*
+Name: TableElementEditor
+
+Description: An inline editor, associciated with SmartDocument's TableElements.
+
+Requires:
+   - DocumentElementEditor
+Provides:
+    - TableElementEditor
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TableElementEditor = new Class({
+   Extends: DocumentElementEditor,
+   options: {
+   },
+   
+   //Consturctor
+   initialize: function( subjectHtmlElement, options ){
+      this.parent( subjectHtmlElement, options );
+   }
+   
+   //Public accessors and mutators
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: TableHeader
+
+Description: Represents the header row element of a TableElement.
+
+Requires:
+    - DocumentElement
+
+Provides:
+    - TableHeader
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TableHeader = new Class({
+   Extends: DocumentElement,
+   Binds: ['createHeaderRowElement', 'constructColumnHeaders', 'onColumnHeaderConstructed', 'onColumnHeaderConstructionError'],
+   
+   options: {
+      componentName : "TableHeader",
+      tableColumnsSelector : "tableColumn"
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
+      
+      this.columnHeaderConstructionChain = new Chain();
+      this.columnHeaders = new ArrayList();
+      this.headerRowElement;
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.tag = "THEAD";
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   onColumnHeaderConstructed : function( columnHeader ){
+      this.columnHeaderConstructionChain.callChain();
+   },
+   
+   onColumnHeaderConstructionError : function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallColumnHeaders();
+      this.parent();
+   },
+
+   //Properties
+   getColumnHeaders: function() { return this.columnHeaders; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.createHtmlElement,
+         this.createHeaderRowElement,
+         this.injectHtmlElement, 
+         this.constructPlugin, 
+         this.authorization, 
+         this.associateEditor, 
+         this.constructColumnHeaders, 
+         this.finalizeConstruction 
+      );
+   }.protect(),
+   
+   constructColumnHeaders : function(){
+      this.columnHeaders.each( function( columnHeader, index ){
+         this.columnHeaderConstructionChain.chain(
+            function(){ 
+               columnHeader.construct( this.headerRowElement ); 
+            }.bind( this )
+         );
+      }.bind( this ));
+      this.columnHeaderConstructionChain.chain(
+         function(){
+            this.columnHeaderConstructionChain.clearChain();
+            this.constructionChain.callChain(); 
+         }.bind( this )
+      );
+      this.columnHeaderConstructionChain.callChain();
+   }.protect(),
+   
+   createHeaderRowElement : function(){
+      this.headerRowElement = this.elementFactory.create( "tr", null, this.htmlElement, WidgetElementFactory.Positions.LastChild );
+      this.constructionChain.callChain(); 
+   }.protect(),
+   
+   deleteHtmlElement : function(){
+      this.headerRowElement.removeEvents();
+      this.headerRowElement.destroy();
+      this.parent();
+   }.protect(),
+   
+   unmarshallColumnHeaders: function(){
+      var columnHeaderDefinitions = XmlResource.selectNodes( this.options.tableColumnsSelector, this.definitionElement );
+      for( var i = 0; i < columnHeaderDefinitions.length; i++ ){
+         var columnHeader = new TableColumnHeader( columnHeaderDefinitions[i], this.resourceBundle, { onConstructed : this.onColumnHeaderConstructed, onConstructionError : this.onColumnHeaderConstructionError });
+         columnHeader.unmarshall();
+         this.columnHeaders.add( columnHeader );
+      }
+   }.protect(),
+   
+});
+/*
+Name: TableRow
+
+Description: Represents the row element of a TableElement.
+
+Requires:
+    - DocumentElement
+
+Provides:
+    - TableRow
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var TableRow = new Class({
+   Extends: DocumentElement,
+   Binds: ['createTableRowElement', 'constructTableCells', 'onTableCellConstructed', 'onTableCellConstructionError'],
+   
+   options: {
+      componentName : "TableRow",
+      tableColumnsSelector : "tableColumn"
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, rowData, columnHeaders, options ){
+      this.parent( definitionElement, bundle, options );
+      
+      this.columnHeaders = columnHeaders;
+      this.rowData = rowData;
+      this.tableCellsConstructionChain = new Chain();
+      this.tableCells = new ArrayList();
+      this.tableRowElement;
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.tag = "TR";
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   onTableCellConstructed : function( columnHeader ){
+      this.tableCellsConstructionChain.callChain();
+   },
+   
+   onTableCellConstructionError : function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallTableCells();
+      this.parent();
+   },
+
+   //Properties
+   getTableCells : function() { return this.tableCells; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.createHtmlElement,
+         this.injectHtmlElement, 
+         this.constructPlugin, 
+         this.authorization, 
+         this.associateEditor, 
+         this.constructTableCells, 
+         this.finalizeConstruction 
+      );
+   }.protect(),
+   
+   constructTableCells : function(){
+      this.tableCells.each( function( tableCell, index ){
+         this.tableCellsConstructionChain.chain(
+            function(){ 
+               tableCell.construct( this.htmlElement ); 
+            }.bind( this )
+         );
+      }.bind( this ));
+      this.tableCellsConstructionChain.chain(
+         function(){
+            this.tableCellsConstructionChain.clearChain();
+            this.constructionChain.callChain(); 
+         }.bind( this )
+      );
+      this.tableCellsConstructionChain.callChain();
+   }.protect(),
+   
+   deleteHtmlElement : function(){
+      this.parent();
+   }.protect(),
+   
+   unmarshallTableCells: function(){
+      this.columnHeaders.each( function( columnHeader, index ){
+         var dataDefinition = columnHeader.selectDataDefinition( this.rowData );
+         var tableCell = new TableCell( columnHeader.getDefinitionElement(), this.resourceBundle, dataDefinition, { onConstructed : this.onTableCellConstructed, onConstructionError : this.onTableCellConstructionError });
+         tableCell.unmarshall();
+         this.tableCells.add( tableCell );
+      }, this );
+   }.protect(),
+   
+});
 /*
 Name: UnconfiguredDocumentElementException
 
