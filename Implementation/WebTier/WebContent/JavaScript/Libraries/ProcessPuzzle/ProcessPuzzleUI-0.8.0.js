@@ -15032,7 +15032,7 @@ var TabSelectedMessage = new Class({
 
 var TabWidget = new Class( {
    Extends : BrowserWidget,
-   Binds : ['onClose', 'onTabSelected'],
+   Binds : ['activateDefaultTab', 'constructButtons', 'constructTabs', 'createHtmlElements', 'onClose', 'onTabSelected'],
 
    options : {
       TAB_LIST_STYLE : "Tabs",
@@ -15115,13 +15115,8 @@ var TabWidget = new Class( {
    },
 
    construct : function() {
-      if( this.isVisible ) return;
-      this.createHtmlElements();
-      this.constructTabs();
-      this.constructButtons();
-      this.isVisible = true;
       this.parent();
-      this.activateDefaultTab();
+      this.isVisible = true;
    },
 
    destroy : function() {
@@ -15145,6 +15140,7 @@ var TabWidget = new Class( {
       }
 
       this.parent();
+      this.isVisible = false;
    },
 
    moveFirstToLast : function() {
@@ -15252,8 +15248,19 @@ var TabWidget = new Class( {
    activateDefaultTab : function(){
       if( this.activeTab ) this.activateTab( this.activeTab.getId() );
       else this.activateTab( this.tabs.get( this.tabs.firstKey() ).getId() );
+      this.constructionChain.callChain();
    }.protect(),
 
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.createHtmlElements,
+         this.constructTabs,
+         this.constructButtons,
+         this.activateDefaultTab,
+         this.finalizeConstruction 
+      );
+   }.protect(),
+   
    compileStateSpecification : function(){
       this.stateSpecification = { currentTabId : this.activeTab.getId() };
    }.protect(),
@@ -15264,6 +15271,7 @@ var TabWidget = new Class( {
          if( this.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
          if( this.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
       }
+      this.constructionChain.callChain();
    }.protect(),
 
    constructTabs : function() {
@@ -15271,6 +15279,7 @@ var TabWidget = new Class( {
          var tab = tabEntry.getValue();
          tab.construct( this.tabListElement );
       }, this );
+      this.constructionChain.callChain();
    }.protect(),
 
    createButton : function( caption, onClickHandler ) {
@@ -15282,6 +15291,7 @@ var TabWidget = new Class( {
    createHtmlElements : function() {
       this.tabsWrapperElement = this.elementFactory.create( 'div', null, null, null, { 'class' : this.options.TAB_WIDGET_STYLE } );
       this.tabListElement = this.elementFactory.create( 'ul', null, this.tabsWrapperElement, null, { 'class' : this.options.TAB_LIST_STYLE } );
+      this.constructionChain.callChain();
    }.protect(),
 
    hideButtons : function() {
