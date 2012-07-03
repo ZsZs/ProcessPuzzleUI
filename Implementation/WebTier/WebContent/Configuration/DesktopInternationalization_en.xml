@@ -124,9 +124,9 @@
     <Resource key="NewsWidget.link" type="String">Link:</Resource>
     <Resource key="NewsWidget.publicationDate" type="String">Publication date:</Resource>
       
-    <Resource key="PersonalToDoList.activityDescription" type="String">Leírás</Resource>
-    <Resource key="PersonalToDoList.activityDuration" type="String">Tartam</Resource>
-    <Resource key="PersonalToDoList.activityName" type="String">Megnevezés</Resource>
+    <Resource key="PersonalToDoList.activityDescription" type="String">Description</Resource>
+    <Resource key="PersonalToDoList.activityDuration" type="String">Duration</Resource>
+    <Resource key="PersonalToDoList.activityName" type="String">Title</Resource>
     <Resource key="PersonalToDoList.introduction" type="String">To Do list of the logged in user.</Resource>
     <Resource key="PersonalToDoList.title" type="String">Personal To Do List</Resource>
     
