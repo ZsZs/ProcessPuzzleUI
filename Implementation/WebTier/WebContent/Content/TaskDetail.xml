@@ -20,7 +20,7 @@
          <dataElement tag="h1" elementStyle="title" id="itemTitle" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/name"/>
          <dataElement tag="p" elementStyle="description" id="itemDescription" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/description"/>
          <formElement id="eventProperties" method="post" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]">
-            <formField id="duration" label="Workbook.PO-DeveloperCommunication.ActivityDetail.duration" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/duration"/>
+            <formField id="duration" label="Workflow.ActivityDetail.duration" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/duration"/>
          </formElement>
       </compositeDataElement>
    </documentBody>

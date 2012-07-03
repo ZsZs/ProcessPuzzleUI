@@ -146,11 +146,14 @@
     <Resource key="StaticDocument.subTitle" type="String">Smart Document Example</Resource>
     <Resource key="StaticDocument.title" type="String">Static Document</Resource>
     
-    
     <Resource key="TreeWidgetDocument.exampleDescription" type="String"></Resource>
     <Resource key="TreeWidgetDocument.footer" type="String"></Resource>
     <Resource key="TreeWidgetDocument.introduction" type="String"></Resource>
     <Resource key="TreeWidgetDocument.subTitle" type="String">Smart Document Example</Resource>
     <Resource key="TreeWidgetDocument.title" type="String">Tree Widget Example</Resource>
+
+    <!-- Workflow -->
+    <!-- Activity Detail -->
+    <Resource key="Workflow.ActivityDetail.duration" type="String">Duration:</Resource>
   </Language>
 </pp:Resources>

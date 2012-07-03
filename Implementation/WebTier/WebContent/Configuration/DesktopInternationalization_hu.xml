@@ -150,5 +150,9 @@
     <Resource key="TreeWidgetDocument.introduction" type="String"></Resource>
     <Resource key="TreeWidgetDocument.subTitle" type="String">Okos dokumentum példa</Resource>
     <Resource key="TreeWidgetDocument.title" type="String">Fa szerkezetet tartalmazó dokumentum</Resource>
+    
+    <!-- Workflow -->
+    <!-- Activity Detail -->
+    <Resource key="Workflow.ActivityDetail.duration" type="String">Tartam:</Resource>
   </Language>
 </pp:Resources>
