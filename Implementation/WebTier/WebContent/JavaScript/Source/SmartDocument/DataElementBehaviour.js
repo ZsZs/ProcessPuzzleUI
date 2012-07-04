@@ -165,10 +165,11 @@ var DataElementBehaviour = new Class({
          }else if( typeOf( this.dataXml ) == "element" ){
             if( dataSelector.indexOf( "/" ) < 0 ){
                this.text = XmlResource.determineNodeText( this.dataXml );
+               href = XmlResource.selectNodeText( "@href", this.dataXml );
             }else{
                this.text = XmlResource.selectNodeText( dataSelector, this.dataXml );
+               href = XmlResource.selectNodeText( dataSelector + this.options.hrefSelector, this.dataXml );
             }
-            href = XmlResource.selectNodeText( dataSelector + this.options.hrefSelector, this.dataXml );
          }
       
          if( this.text ) this.text.trim();

@@ -6,6 +6,7 @@ window.TableCellTest = new Class( {
       testMethods : [
          { method : 'unmarshall_determinesElementProperties', isAsynchron : false },
          { method : 'construct_createsTdElement', isAsynchron : true },
+         { method : 'construct_whenHrefIsValid_wrapsTextWithAnchor', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }]
    },
 
@@ -62,7 +63,19 @@ window.TableCellTest = new Class( {
          function(){ this.tableCell.unmarshall(); this.tableCell.construct( this.documentContainerElement, "bottom" ); }.bind( this ),
          function(){
             assertThat( this.documentContainerElement.getChildren( 'td' ).length, equalTo( 1 ));         
-            assertThat( this.documentContainerElement.getChildren( 'td' )[0].get( "text" ), equalTo( XmlResource.determineNodeText( this.cellData )));         
+            assertThat( this.documentContainerElement.getChildren( 'td a' ).length, equalTo( 1 ));         
+            assertThat( this.documentContainerElement.getChildren( 'td a' )[0].get( "text" ), equalTo( XmlResource.determineNodeText( this.cellData )));         
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenHrefIsValid_wrapsTextWithAnchor : function() {
+      this.testCaseChain.chain(
+         function(){ this.tableCell.unmarshall(); this.tableCell.construct( this.documentContainerElement, "bottom" ); }.bind( this ),
+         function(){
+            assertThat( this.documentContainerElement.getChildren( 'td a' ).length, equalTo( 1 ));         
+            assertThat( this.documentContainerElement.getChildren( 'td a' )[0].get( "text" ), equalTo( XmlResource.determineNodeText( this.cellData )));         
             this.testMethodReady();
          }.bind( this )
       ).callChain();

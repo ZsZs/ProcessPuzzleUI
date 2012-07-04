@@ -13,7 +13,7 @@
     <webMaster>peter.krima@example.com</webMaster>    
     
     <item>
-		<title>HONNIA furniture design service lunched</title>
+		<title href="http://honnia.hu/news">HONNIA furniture design service lunched</title>
 		<link>http://honnia.hu/news</link>
 		<description>Cerasus Llc. lunched a new woldwide available furniture design service based on ProcessPuzzle.</description>
 		<pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
@@ -21,7 +21,7 @@
     </item>  
     
     <item>
-		<title>ProcessPuzzle NewsReaderWidget is ready to use</title>
+		<title href="http://processpuzzle.com/news">ProcessPuzzle NewsReaderWidget is ready to use</title>
 		<link>http://processpuzzle.com/news</link>
 		<description>IT Codex Llc. released a new browser wiget for it's well known ProcessPuzzle framework.</description>
 		<pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
