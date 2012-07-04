@@ -8,28 +8,28 @@
    <version>1.0</version>
    <duration>1,5 óra</duration>
    <workflowDetail id="activity_1">
-      <name>Project Initiation</name>
+      <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={workflowDetailIndex:'1'}&amp;documentType=SMART">Project Initiation</name>
       <description>
          This project is about to implement an amator photo publication website. The initial vision is prepared though further details will be elaborated by the Product Owner and the team.
       </description>
       <duration></duration>
       <activities>
          <activity id="activity_1-1">
-            <name>Form Scrum Teams</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'1'}&amp;documentType=SMART">Form Scrum Teams</name>
             <description>
                Form 2 to 4 teams with 4-8 team member. Select a Product Owner and a Scrum Master. 
             </description>
             <duration>2 perc</duration>
          </activity>
          <activity id="activity_1-2">
-            <name>Product Owner Explains Vision</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'1'}&amp;documentType=SMART">Product Owner Explains Vision</name>
             <description>
                Product Owner and the team reads the predefined vision and extends it with details, expected usage, and business reasoning. The team can use  
             </description>
             <duration>8 perc</duration>
          </activity>
          <activity id="activity_1-3">
-            <name>Scrum Master Reflects her Understanding</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'1'}&amp;documentType=SMART">Scrum Master Reflects her Understanding</name>
             <description></description>
             <duration>2 perc</duration>
          </activity>
@@ -42,22 +42,22 @@
       <duration></duration>
       <activities>
          <activity id="activity_2-1">
-            <name>Design User Interface</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'2'}&amp;documentType=SMART">Design User Interface</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_2-2">
-            <name>Demonstrate Application Usage</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'2'}&amp;documentType=SMART">Demonstrate Application Usage</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_2-3">
-            <name>Release Planning</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'2'}&amp;documentType=SMART">Release Planning</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_2-4">
-            <name>Discuss Conclusions</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'4',workflowDetailIndex:'2'}&amp;documentType=SMART">Discuss Conclusions</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
@@ -70,27 +70,27 @@
       <duration></duration>
       <activities>
          <activity id="activity_3-1">
-            <name>Demonstrate Domain Modeling</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'3'}&amp;documentType=SMART">Demonstrate Domain Modeling</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_3-2">
-            <name>Discuss Conslutions</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'3'}&amp;documentType=SMART">Discuss Conslutions</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_3-3">
-            <name>Design Domain Model</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'3'}&amp;documentType=SMART">Design Domain Model</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_3-4">
-            <name>Release Planning</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'4',workflowDetailIndex:'3'}&amp;documentType=SMART">Release Planning</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_3-5">
-            <name>Discuss Conclusions</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'5',workflowDetailIndex:'3'}&amp;documentType=SMART">Discuss Conclusions</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
@@ -103,27 +103,27 @@
       <duration></duration>
       <activities>
          <activity id="activity_4-1">
-            <name>Demonstrate Acceptance Test Specification</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'4'}&amp;documentType=SMART">Demonstrate Acceptance Test Specification</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_4-2">
-            <name>Discuss Conclusions</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'4'}&amp;documentType=SMART">Discuss Conclusions</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_4-3">
-            <name>Design Acceptance Test</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'4'}&amp;documentType=SMART">Design Acceptance Test</name>
             <description></description>
             <duration>2 perc</duration>
          </activity>
          <activity id="activity_4-4">
-            <name>Release Planning</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'4',workflowDetailIndex:'4'}&amp;documentType=SMART">Release Planning</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_4-5">
-            <name>Discuss Conclusions</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'5',workflowDetailIndex:'4'}&amp;documentType=SMART">Discuss Conclusions</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>

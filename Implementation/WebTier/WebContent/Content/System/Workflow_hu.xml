@@ -13,21 +13,21 @@
       <duration></duration>
       <activities>
          <activity id="activity_1-1">
-            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables:{activityIndex:'1',workflowDetailIndex:'2'}&amp;documentType=SMART">Scrum csapatok létrehozása</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'1'}&amp;documentType=SMART">Scrum csapatok létrehozása</name>
             <description>
                Képezzektek 4-6 fős Scrum csapatokat, válasszatok egy-egy Termék tulajdonost és Scrum Mestert.
             </description>
             <duration>2 perc</duration>
          </activity>
          <activity id="activity_1-2">
-            <name>Terméktulajdonos ismerteti az elképzelését</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'1'}&amp;documentType=SMART">Terméktulajdonos ismerteti az elképzelését</name>
             <description>
                A Termék tulajdonos nézze át az előre elkészített Projekt víziót, majd ismertessa a csapattal a saját részletekkel, úgymint a megoldandó problémák, vázlatok megoldás és az ebből származó üzleti előnyök. 
             </description>
             <duration>8 perc</duration>
          </activity>
          <activity id="activity_1-3">
-            <name>A scrum mester beszámol a megértett elképzelésről</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'1'}&amp;documentType=SMART">A scrum mester beszámol a megértett elképzelésről</name>
             <description>
                Mindegyik csapat Scrum mester, a teljes hallgatóság előtt, összefoglalja a projekt célját 2 perben.
             </description>
@@ -42,22 +42,22 @@
       <duration></duration>
       <activities>
          <activity id="activity_2-1">
-            <name>Felhasználói felület prototípus tervezése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'2'}&amp;documentType=SMART">Felhasználói felület prototípus tervezése</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_2-2">
-            <name>Alkalmazás használatának demonstrálása</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'2'}&amp;documentType=SMART">Alkalmazás használatának demonstrálása</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_2-3">
-            <name>Kibocsájtás tervezés</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'2'}&amp;documentType=SMART">Kibocsájtás tervezés</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_2-4">
-            <name>Következtetések megbeszélése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'4',workflowDetailIndex:'2'}&amp;documentType=SMART">Következtetések megbeszélése</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
@@ -70,27 +70,27 @@
       <duration></duration>
       <activities>
          <activity id="activity_3-1">
-            <name>Szakterületi modellezés demonstrálása</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'3'}&amp;documentType=SMART">Szakterületi modellezés demonstrálása</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_3-2">
-            <name>Következtetések megbeszélése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'3'}&amp;documentType=SMART">Következtetések megbeszélése</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_3-3">
-            <name>Szakterületi modellezés</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'3'}&amp;documentType=SMART">Szakterületi modellezés</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_3-4">
-            <name>Kibocsájtás tervezés</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'4',workflowDetailIndex:'3'}&amp;documentType=SMART">Kibocsájtás tervezés</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_3-5">
-            <name>Következtetések megbeszélése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'5',workflowDetailIndex:'3'}&amp;documentType=SMART">Következtetések megbeszélése</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
@@ -103,27 +103,27 @@
       <duration></duration>
       <activities>
          <activity id="activity_4-1">
-            <name>Elfogadási teszt tervezés demonstrálása</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'1',workflowDetailIndex:'4'}&amp;documentType=SMART">Elfogadási teszt tervezés demonstrálása</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_4-2">
-            <name>Következtetések megbeszélése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'4'}&amp;documentType=SMART">Következtetések megbeszélése</name>
             <description></description>
             <duration>5 perc</duration>
          </activity>
          <activity id="activity_4-3">
-            <name>Elfogadási teszt tervezése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'4'}&amp;documentType=SMART">Elfogadási teszt tervezése</name>
             <description></description>
             <duration>2 perc</duration>
          </activity>
          <activity id="activity_4-4">
-            <name>Kibocsájtás tervezés</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'4',workflowDetailIndex:'4'}&amp;documentType=SMART">Kibocsájtás tervezés</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
          <activity id="activity_4-5">
-            <name>Következtetések megbeszélése</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'5',workflowDetailIndex:'4'}&amp;documentType=SMART">Következtetések megbeszélése</name>
             <description></description>
             <duration>10 perc</duration>
          </activity>
