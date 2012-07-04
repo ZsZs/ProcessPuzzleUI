@@ -17,6 +17,8 @@
             <description>
                Képezzektek 4-6 fős Scrum csapatokat, válasszatok egy-egy Termék tulajdonost és Scrum Mestert.
             </description>
+            <performerRole>Hallgató</performerRole>
+            <performerParty>Hallgató</performerParty>
             <duration>2 perc</duration>
          </activity>
          <activity id="activity_1-2">
@@ -25,6 +27,14 @@
                A Termék tulajdonos nézze át az előre elkészített Projekt víziót, majd ismertessa a csapattal a saját részletekkel, úgymint a megoldandó problémák, vázlatok megoldás és az ebből származó üzleti előnyök. 
             </description>
             <duration>8 perc</duration>
+            <performerRole>Termék tulajdonos</performerRole>
+            <performerParty>Adrian Lender</performerParty>
+            <inputs>
+               <input href="">Vízió</input>
+            </inputs>
+            <outputs>
+               <output href="">Vízió</output>
+            </outputs>
          </activity>
          <activity id="activity_1-3">
             <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'3',workflowDetailIndex:'1'}&amp;documentType=SMART">A scrum mester beszámol a megértett elképzelésről</name>

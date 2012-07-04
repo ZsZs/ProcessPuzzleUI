@@ -154,5 +154,9 @@
     <!-- Workflow -->
     <!-- Activity Detail -->
     <Resource key="Workflow.ActivityDetail.duration" type="String">Tartam:</Resource>
+    <Resource key="Workflow.ActivityDetail.inputs" type="String">Felhasznált dokumentumok</Resource>
+    <Resource key="Workflow.ActivityDetail.outputs" type="String">Eredmények</Resource>
+    <Resource key="Workflow.ActivityDetail.performerParty" type="String">Végrehajtó:</Resource>
+    <Resource key="Workflow.ActivityDetail.performerRole" type="String">Végreható szerep:</Resource>
   </Language>
 </pp:Resources>

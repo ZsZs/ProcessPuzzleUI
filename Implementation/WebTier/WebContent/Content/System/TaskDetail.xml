@@ -21,7 +21,15 @@
          <dataElement tag="p" elementStyle="description" id="itemDescription" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/description"/>
          <formElement id="eventProperties" method="post" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]">
             <formField id="duration" label="Workflow.ActivityDetail.duration" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/duration"/>
+            <formField id="duration" label="Workflow.ActivityDetail.performerRole" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/performerRole"/>
+            <formField id="duration" label="Workflow.ActivityDetail.performerParty" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/performerParty"/>
          </formElement>
       </compositeDataElement>
+      <element tag="h4">Workflow.ActivityDetail.inputs</element>
+      <tableElement id="inputsTableContainer" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/inputs/input[{inputIndex}]" indexVariable="inputIndex" maxOccures="unbounded">
+         <tableColumn id="activityName" label="PersonalToDoList.activityName" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/inputs/input[{inputIndex}]"/>
+      </tableElement>
+      
+      <element tag="h4">Workflow.ActivityDetail.outputs</element>
    </documentBody>
 </smartDocumentDefinition>
