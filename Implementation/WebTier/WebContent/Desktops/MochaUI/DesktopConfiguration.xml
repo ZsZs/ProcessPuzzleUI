@@ -79,7 +79,7 @@
             </plugin>
          </panelHeader>
          <document tag="div" id="consoleDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
-             <documentDefinitionUri>Content/DocumentCommentsDefinition.xml</documentDefinitionUri>
+             <documentDefinitionUri>Content/System/DocumentCommentsDefinition.xml</documentDefinitionUri>
              <documentContentUri></documentContentUri>
          </document>
       </panel>
