@@ -43,10 +43,8 @@ var TableElement = new Class({
       this.parent( definitionElement, bundle, dataXml, options );
       
       this.body;
-//      this.controlsContainerElement;
       this.header;
       this.maxRowCount;
-//      this.fieldsContainerElement;
       this.tableElement;
    },
    
@@ -127,7 +125,10 @@ var TableElement = new Class({
    }.protect(),
    
    unmarshallBody: function(){
-      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.bindedData, this.header.getColumnHeaders(), { onConstructed : this.onBodyConstructed, onConstructionError : this.onBodyConstructionError });
+      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.bindedData, this.header.getColumnHeaders(), {
+         isEditable : this.isEditable(),
+         onConstructed : this.onBodyConstructed, 
+         onConstructionError : this.onBodyConstructionError });
       this.body.unmarshall();
    }.protect(),
    

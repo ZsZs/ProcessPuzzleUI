@@ -112,7 +112,11 @@ var TableRow = new Class({
    unmarshallTableCells: function(){
       this.columnHeaders.each( function( columnHeader, index ){
          var dataDefinition = columnHeader.selectDataDefinition( this.rowData );
-         var tableCell = new TableCell( columnHeader.getDefinitionElement(), this.resourceBundle, dataDefinition, { onConstructed : this.onTableCellConstructed, onConstructionError : this.onTableCellConstructionError });
+         var tableCell = new TableCell( columnHeader.getDefinitionElement(), this.resourceBundle, dataDefinition, { 
+            isEditable : this.isEditable(),
+            onConstructed : this.onTableCellConstructed, 
+            onConstructionError : this.onTableCellConstructionError 
+         });
          tableCell.unmarshall();
          this.tableCells.add( tableCell );
       }, this );

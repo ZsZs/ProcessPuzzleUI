@@ -116,7 +116,11 @@ var TableBody = new Class({
    
    unmarshallRows: function(){
       this.dataSet.each( function( columnHeaderDefinition, index ){
-         var row = new TableRow( this.definitionElement, this.resourceBundle, this.dataSet[index], this.columnHeaders, { onConstructed : this.onRowConstructed, onConstructionError : this.onRowConstructionError });
+         var row = new TableRow( this.definitionElement, this.resourceBundle, this.dataSet[index], this.columnHeaders, { 
+            isEditable : this.isEditable(),
+            onConstructed : this.onRowConstructed, 
+            onConstructionError : this.onRowConstructionError 
+         });
          row.unmarshall();
          this.rows.add( row );
       }, this );
