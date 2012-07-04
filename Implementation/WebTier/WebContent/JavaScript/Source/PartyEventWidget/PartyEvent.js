@@ -1,15 +1,15 @@
 /*
 Name: 
-   - Event
+   - PartyEvent
 
 Description: 
-   - Represents and displays an event.
+   - Represents and displays an event associated with a party.
 
 Requires:
-   - EventWidget
+   - PartyEventWidget
 
 Provides:
-   - Event
+   - PartyEvent
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -28,9 +28,9 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 //= require_directory ../FundamentalTypes
-//= require ../EventWidget/EventWidget.js
+//= require ../PartyEventWidget/PartyEventWidget.js
 
-var Event = new Class({
+var PartyEvent = new Class({
    Implements: Options,
 
    options: {

@@ -1,4 +1,4 @@
-window.EventWidgetTest = new Class( {
+window.PartyEventWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed'],
 
@@ -12,12 +12,12 @@ window.EventWidgetTest = new Class( {
    },
 
    constants : {
-      CONFIGURATION_URI : "../EventWidget/WebUIConfiguration.xml",
+      CONFIGURATION_URI : "../PartyEventWidget/WebUIConfiguration.xml",
       LANGUAGE : "en",
-      LOCALIZED_DATA_URI : "../EventWidget/TestEvents_en.xml",
+      LOCALIZED_DATA_URI : "../PartyEventWidget/TestEvents_en.xml",
       WIDGET_CONTAINER_ID : "EventWidget",
-      WIDGET_DATA_URI : "../EventWidget/TestEvents.xml",
-      WIDGET_DEFINITION_URI : "../EventWidget/EventWidgetDefinition.xml"
+      WIDGET_DATA_URI : "../PartyEventWidget/TestEvents.xml",
+      WIDGET_DEFINITION_URI : "../PartyEventWidget/EventWidgetDefinition.xml"
    },
    
    initialize : function( options ) {
@@ -40,7 +40,7 @@ window.EventWidgetTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.eventWidget = new EventWidget({ 
+      this.eventWidget = new PartyEventWidget({ 
          widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
          onConstructed : this.onConstructed, 
          onDestroyed : this.onDestroyed,

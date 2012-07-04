@@ -13,7 +13,7 @@
       <duration></duration>
       <activities>
          <activity id="activity_1-1">
-            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentType=SMART">Scrum csapatok létrehozása</name>
+            <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables:{activityIndex:'1',workflowDetailIndex:'2'}&amp;documentType=SMART">Scrum csapatok létrehozása</name>
             <description>
                Képezzektek 4-6 fős Scrum csapatokat, válasszatok egy-egy Termék tulajdonost és Scrum Mestert.
             </description>

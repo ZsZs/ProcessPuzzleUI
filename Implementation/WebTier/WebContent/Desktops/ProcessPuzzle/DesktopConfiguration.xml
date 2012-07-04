@@ -116,7 +116,7 @@
                   <styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</styleSheet>
                </styleSheets>
             </resources>
-            <widget name="EventWidget">
+            <widget name="PartyEventWidget">
                <options>
                   <option name="widgetContainerId" value="'UpcommingEvents'"/>
                   <option name="widgetDataURI" value="'Content/WidgetExamples/UpcommingEvents.xml'"/>

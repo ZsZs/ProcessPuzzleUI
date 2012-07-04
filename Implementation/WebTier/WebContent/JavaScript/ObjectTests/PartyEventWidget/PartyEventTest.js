@@ -1,4 +1,4 @@
-window.EventTest = new Class( {
+window.PartyEventTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed'],
 
@@ -17,12 +17,12 @@ window.EventTest = new Class( {
 
    constants : {
       EVENT_SELECTOR : "//pp:eventList/events/event[1]",
-      CONFIGURATION_URI : "../EventWidget/WebUIConfiguration.xml",
+      CONFIGURATION_URI : "../PartyEventWidget/WebUIConfiguration.xml",
       LANGUAGE : "en",
-      LOCALIZED_RSS_URI : "../EventWidget/TestEvents_en.xml",
-      RSS_URI : "../EventWidget/TestNews.xml",
+      LOCALIZED_RSS_URI : "../PartyEventWidget/TestEvents_en.xml",
+      RSS_URI : "../PartyEventWidget/TestNews.xml",
       WIDGET_CONTAINER_ID : "EventWidget",
-      WIDGET_DEFINITION_URI : "../EventWidget/EventDefinition.xml"
+      WIDGET_DEFINITION_URI : "../PartyEventWidget/PartyEventDefinition.xml"
    },
    
    initialize : function( options ) {
@@ -48,7 +48,7 @@ window.EventTest = new Class( {
       this.eventDefinition = this.rssResource.selectNode( this.constants.EVENT_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
-      this.event = new Event( this.eventDefinition, this.elementFactory );
+      this.event = new PartyEvent( this.eventDefinition, this.elementFactory );
       
    },
    

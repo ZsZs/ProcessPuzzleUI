@@ -4,7 +4,6 @@
 //= require_directory ./Desktop
 //= require_directory ./DiagramWidget
 //= require_directory ./DocumentEditor
-//= require_directory ./EventWidget
 //= require_directory ./FundamentalTypes
 //= require_directory ./HierarchicalMenuWidget
 //= require_directory ./HtmlDocument
@@ -12,6 +11,7 @@
 //= require_directory ./jStorage
 //= require_directory ./LanguageSelectorWidget
 //= require_directory ./NewsReaderWidget
+//= require_directory ./PartyEventWidget
 //= require_directory ./PhotoGaleryWidget
 //= require_directory ./ResourceManager
 //= require_directory ./ScrollingBehaviour
