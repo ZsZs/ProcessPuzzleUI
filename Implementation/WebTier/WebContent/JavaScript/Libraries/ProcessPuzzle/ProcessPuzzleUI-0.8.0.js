@@ -7534,214 +7534,6 @@ var DocumentEditor = new Class({
       }
    }.protect(),
 });
-/*Name:    - EventWidgetDescription:     - Shows list of events to the user. The level details can be customized.Requires:    - BrowserWidgetProvides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar EventWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructEvents', 'destroyEvents'],      options : {      componentName : "EventWidget",      eventOptions : {},      eventsSelector : "//pp:eventList/events/event",      useLocalizedData : true,      widgetContainerId : "EventWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.events = new ArrayList();   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallEvents();      this.parent();   },      //Properties   getEvents : function() { return this.events; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructEvents, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyEvents, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructEvents : function(){      this.events.each( function( event, index ){         event.construct( this.containerElement );      }.bind( this ));            this.constructionChain.callChain();   }.protect(),      destroyEvents : function(){      this.events.each( function( event, index ){         event.destroy();      }.bind( this ));            this.destructionChain.callChain();   }.protect(),      unmarshallEvents : function(){      var eventElements = this.dataXml.selectNodes( this.options.eventsSelector );      if( eventElements ){         eventElements.each( function( eventElement, index ){            var event = new Event( eventElement, this.elementFactory, this.options.eventOptions );            event.unmarshall();            this.events.add( event );         }.bind( this ));      }         }.protect()});
-/*
-Name: 
-   - Event
-
-Description: 
-   - Represents and displays an event.
-
-Requires:
-   - EventWidget
-
-Provides:
-   - Event
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-   - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var Event = new Class({
-   Implements: Options,
-
-   options: {
-      descriptionSelector: "description",
-      descriptionStyle : "eventDescription",
-      endDateSelector : "schedule/endDate",
-      isFullDaySelector : "@isFullDay",
-      linkSelector: "link",
-      locationAddressSelector: "location/address",
-      locationLinkSelector: "location/link",
-      locationStyle : "eventLocation",
-      programDescriptionSelector : "program/description",
-      programLinkSelector : "program/link",
-      publicationDateSelector: "pubDate",
-      scheduleStyle: "eventSchedule",
-      showDescription: true,
-      showLocation: true,
-      showSchedule: true,
-      showTitle: true, 
-      startDateSelector : "schedule/startDate",
-      titleSelector: "title",
-      titleStyle : "eventTitle",
-      trancatedDescriptionEnding : "...",
-      truncatedDescriptionLength : 120,
-      truncateDescription : false
-   },
-   
-   //Constructor
-   initialize: function ( eventResource, elementFactory, options ) {
-      // parameter assertions
-      assertThat( eventResource, not( nil() ));      
-      this.setOptions( options );
-      
-      this.containerElement;
-      this.description;
-      this.elementFactory = elementFactory;
-      this.endDate;
-      this.globalUniqueId;
-      this.eventResource = eventResource;
-      this.isFullDay;
-      this.link;
-      this.locationAddress;
-      this.locationElement;
-      this.locationLink;
-      this.programDescription;
-      this.programLink;
-      this.publicationDate;
-      this.scheduleElement;
-      this.startDate;
-      this.state = BrowserWidget.States.INITIALIZED;
-      this.title;
-   },
-   
-   //Public accessor and mutator methods
-   construct: function( containerElement ){
-      if( this.state == BrowserWidget.States.UNMARSHALLED ){
-         this.containerElement = containerElement;
-         this.createTitleElement();
-         this.createDescriptionElement();
-         this.createScheduleElement();
-         this.createLocationElement();
-         this.state = BrowserWidget.States.CONSTRUCTED;
-      }
-   },
-   
-   destroy: function(){
-      if( this.state == BrowserWidget.States.CONSTRUCTED ){
-         this.destroyPropertyElements();
-         this.destroyScheduleElements();
-         this.destroyLocationElements();
-      }
-      
-      this.state = BrowserWidget.States.INITIALIZED;
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallSchedule();
-      this.unmarshallLocation();
-      this.state = BrowserWidget.States.UNMARSHALLED;
-   },
-   
-   //Properties
-   getDescription: function() { return this.description; },
-   getElementFactory: function() { return this.elementFactory; },
-   getEndDate: function() { return this.endDate; },
-   getGlobalUniqueId: function() { return this.globalUniqueId; },
-   getLink: function() { return this.link; },
-   getLocationAddress: function() { return this.locationAddress; },
-   getLocationLink: function() { return this.locationLink; },
-   getProgramDescription: function() { return this.programDescription; },
-   getProgramLink: function() { return this.programLink; },
-   getPublicationDate: function() { return this.publicationDate; },
-   getStartDate: function() { return this.startDate; },
-   getState: function() { return this.state; },
-   getTitle: function() { return this.title; },
-   
-   //Private helper methods
-   createDescriptionElement : function(){
-      if( this.options.showDescription ){
-         var elementOptions = { 'class' : this.options.descriptionStyle };
-         var descriptionText;
-         if( this.options.truncateDescription ){
-            descriptionText = this.description.substr( 0, this.options.truncatedDescriptionLength ) + this.options.trancatedDescriptionEnding;
-         }else {
-            descriptionText = this.description;
-         }
-         this.descriptionElement = this.elementFactory.create( 'div', descriptionText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
-      }
-   }.protect(),
-   
-   createLocationElement : function(){
-      if( this.options.showLocation ){
-         var elementOptions = { 'class' : this.options.locationStyle };
-         this.locationElement = this.elementFactory.create( 'div', this.locationAddress, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
-      }
-   }.protect(),
-   
-   createScheduleElement : function(){
-      if( this.options.showSchedule ){
-         var elementOptions = { 'class' : this.options.scheduleStyle };
-         var scheduleText = this.startDate + " - " + this.endDate;
-         this.scheduleElement = this.elementFactory.create( 'div', scheduleText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
-      }
-   }.protect(),
-   
-   createTitleElement : function(){
-      var elementOptions = { 'class' : this.options.titleStyle };
-      var elementText = this.link ? null : this.title;
-      this.titleElement = this.elementFactory.create( 'div', elementText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
-      
-      if( this.link ){
-         this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
-      }
-   }.protect(),
-   
-   destroyLocationElements: function(){
-      this.destroyPropertyElement( this.locationElement );
-   }.protect(),
-   
-   destroyPropertyElement: function( propertyElement ){
-      if( propertyElement.removeEvents ) propertyElement.removeEvents();
-      if( propertyElement.destroy ) propertyElement.destroy();
-   }.protect(),
-   
-   destroyPropertyElements: function(){
-      this.destroyPropertyElement( this.titleElement );
-      this.destroyPropertyElement( this.descriptionElement );
-   }.protect(),
-   
-   destroyScheduleElements: function(){
-      this.destroyPropertyElement( this.scheduleElement );
-   }.protect(),
-   
-   unmarshallLocation: function(){
-      this.locationAddress = XmlResource.selectNodeText( this.options.locationAddressSelector, this.eventResource );
-      this.locationLink = XmlResource.selectNodeText( this.options.locationLinkSelector, this.eventResource );
-   }.protect(),
-   
-   unmarshallProperties: function(){
-      this.description = XmlResource.selectNodeText( this.options.descriptionSelector, this.eventResource );
-      this.link = XmlResource.selectNodeText( this.options.linkSelector, this.eventResource );
-      this.programDescription = XmlResource.selectNodeText( this.options.programDescriptionSelector, this.eventResource );
-      this.programLink = XmlResource.selectNodeText( this.options.programLinkSelector, this.eventResource );
-      this.publicationDate = XmlResource.selectNodeText( this.options.publicationDateSelector, this.eventResource );
-      this.title = XmlResource.selectNodeText( this.options.titleSelector, this.eventResource );
-   }.protect(),
-   
-   unmarshallSchedule: function(){
-      this.isFullDay = XmlResource.selectNodeText( this.options.isFullDaySelector, this.eventResource );
-      this.startDate = XmlResource.selectNodeText( this.options.startDateSelector, this.eventResource );
-      this.endDate = XmlResource.selectNodeText( this.options.endDateSelector, this.eventResource );
-   }.protect()
-});
 /*
 Name: 
     - MenuItem
@@ -10313,6 +10105,214 @@ var RssResource = new Class({
    }.protect(),
    
 });
+/*Name:    - PartyEventWidgetDescription:     - Shows list of events to the user. The level details can be customized.Requires:    - BrowserWidgetProvides:    - PartyEventWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar PartyEventWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructEvents', 'destroyEvents'],      options : {      componentName : "EventWidget",      eventOptions : {},      eventsSelector : "//pp:eventList/events/event",      useLocalizedData : true,      widgetContainerId : "EventWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.events = new ArrayList();   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallEvents();      this.parent();   },      //Properties   getEvents : function() { return this.events; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructEvents, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyEvents, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructEvents : function(){      this.events.each( function( event, index ){         event.construct( this.containerElement );      }.bind( this ));            this.constructionChain.callChain();   }.protect(),      destroyEvents : function(){      this.events.each( function( event, index ){         event.destroy();      }.bind( this ));            this.destructionChain.callChain();   }.protect(),      unmarshallEvents : function(){      var eventElements = this.dataXml.selectNodes( this.options.eventsSelector );      if( eventElements ){         eventElements.each( function( eventElement, index ){            var event = new PartyEvent( eventElement, this.elementFactory, this.options.eventOptions );            event.unmarshall();            this.events.add( event );         }.bind( this ));      }         }.protect()});
+/*
+Name: 
+   - PartyEvent
+
+Description: 
+   - Represents and displays an event associated with a party.
+
+Requires:
+   - PartyEventWidget
+
+Provides:
+   - PartyEvent
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+   - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var PartyEvent = new Class({
+   Implements: Options,
+
+   options: {
+      descriptionSelector: "description",
+      descriptionStyle : "eventDescription",
+      endDateSelector : "schedule/endDate",
+      isFullDaySelector : "@isFullDay",
+      linkSelector: "link",
+      locationAddressSelector: "location/address",
+      locationLinkSelector: "location/link",
+      locationStyle : "eventLocation",
+      programDescriptionSelector : "program/description",
+      programLinkSelector : "program/link",
+      publicationDateSelector: "pubDate",
+      scheduleStyle: "eventSchedule",
+      showDescription: true,
+      showLocation: true,
+      showSchedule: true,
+      showTitle: true, 
+      startDateSelector : "schedule/startDate",
+      titleSelector: "title",
+      titleStyle : "eventTitle",
+      trancatedDescriptionEnding : "...",
+      truncatedDescriptionLength : 120,
+      truncateDescription : false
+   },
+   
+   //Constructor
+   initialize: function ( eventResource, elementFactory, options ) {
+      // parameter assertions
+      assertThat( eventResource, not( nil() ));      
+      this.setOptions( options );
+      
+      this.containerElement;
+      this.description;
+      this.elementFactory = elementFactory;
+      this.endDate;
+      this.globalUniqueId;
+      this.eventResource = eventResource;
+      this.isFullDay;
+      this.link;
+      this.locationAddress;
+      this.locationElement;
+      this.locationLink;
+      this.programDescription;
+      this.programLink;
+      this.publicationDate;
+      this.scheduleElement;
+      this.startDate;
+      this.state = BrowserWidget.States.INITIALIZED;
+      this.title;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function( containerElement ){
+      if( this.state == BrowserWidget.States.UNMARSHALLED ){
+         this.containerElement = containerElement;
+         this.createTitleElement();
+         this.createDescriptionElement();
+         this.createScheduleElement();
+         this.createLocationElement();
+         this.state = BrowserWidget.States.CONSTRUCTED;
+      }
+   },
+   
+   destroy: function(){
+      if( this.state == BrowserWidget.States.CONSTRUCTED ){
+         this.destroyPropertyElements();
+         this.destroyScheduleElements();
+         this.destroyLocationElements();
+      }
+      
+      this.state = BrowserWidget.States.INITIALIZED;
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.unmarshallSchedule();
+      this.unmarshallLocation();
+      this.state = BrowserWidget.States.UNMARSHALLED;
+   },
+   
+   //Properties
+   getDescription: function() { return this.description; },
+   getElementFactory: function() { return this.elementFactory; },
+   getEndDate: function() { return this.endDate; },
+   getGlobalUniqueId: function() { return this.globalUniqueId; },
+   getLink: function() { return this.link; },
+   getLocationAddress: function() { return this.locationAddress; },
+   getLocationLink: function() { return this.locationLink; },
+   getProgramDescription: function() { return this.programDescription; },
+   getProgramLink: function() { return this.programLink; },
+   getPublicationDate: function() { return this.publicationDate; },
+   getStartDate: function() { return this.startDate; },
+   getState: function() { return this.state; },
+   getTitle: function() { return this.title; },
+   
+   //Private helper methods
+   createDescriptionElement : function(){
+      if( this.options.showDescription ){
+         var elementOptions = { 'class' : this.options.descriptionStyle };
+         var descriptionText;
+         if( this.options.truncateDescription ){
+            descriptionText = this.description.substr( 0, this.options.truncatedDescriptionLength ) + this.options.trancatedDescriptionEnding;
+         }else {
+            descriptionText = this.description;
+         }
+         this.descriptionElement = this.elementFactory.create( 'div', descriptionText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      }
+   }.protect(),
+   
+   createLocationElement : function(){
+      if( this.options.showLocation ){
+         var elementOptions = { 'class' : this.options.locationStyle };
+         this.locationElement = this.elementFactory.create( 'div', this.locationAddress, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      }
+   }.protect(),
+   
+   createScheduleElement : function(){
+      if( this.options.showSchedule ){
+         var elementOptions = { 'class' : this.options.scheduleStyle };
+         var scheduleText = this.startDate + " - " + this.endDate;
+         this.scheduleElement = this.elementFactory.create( 'div', scheduleText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      }
+   }.protect(),
+   
+   createTitleElement : function(){
+      var elementOptions = { 'class' : this.options.titleStyle };
+      var elementText = this.link ? null : this.title;
+      this.titleElement = this.elementFactory.create( 'div', elementText, this.containerElement, WidgetElementFactory.Positions.LastChild, elementOptions );
+      
+      if( this.link ){
+         this.elementFactory.createAnchor( this.title, this.link, null, this.titleElement );
+      }
+   }.protect(),
+   
+   destroyLocationElements: function(){
+      this.destroyPropertyElement( this.locationElement );
+   }.protect(),
+   
+   destroyPropertyElement: function( propertyElement ){
+      if( propertyElement.removeEvents ) propertyElement.removeEvents();
+      if( propertyElement.destroy ) propertyElement.destroy();
+   }.protect(),
+   
+   destroyPropertyElements: function(){
+      this.destroyPropertyElement( this.titleElement );
+      this.destroyPropertyElement( this.descriptionElement );
+   }.protect(),
+   
+   destroyScheduleElements: function(){
+      this.destroyPropertyElement( this.scheduleElement );
+   }.protect(),
+   
+   unmarshallLocation: function(){
+      this.locationAddress = XmlResource.selectNodeText( this.options.locationAddressSelector, this.eventResource );
+      this.locationLink = XmlResource.selectNodeText( this.options.locationLinkSelector, this.eventResource );
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.description = XmlResource.selectNodeText( this.options.descriptionSelector, this.eventResource );
+      this.link = XmlResource.selectNodeText( this.options.linkSelector, this.eventResource );
+      this.programDescription = XmlResource.selectNodeText( this.options.programDescriptionSelector, this.eventResource );
+      this.programLink = XmlResource.selectNodeText( this.options.programLinkSelector, this.eventResource );
+      this.publicationDate = XmlResource.selectNodeText( this.options.publicationDateSelector, this.eventResource );
+      this.title = XmlResource.selectNodeText( this.options.titleSelector, this.eventResource );
+   }.protect(),
+   
+   unmarshallSchedule: function(){
+      this.isFullDay = XmlResource.selectNodeText( this.options.isFullDaySelector, this.eventResource );
+      this.startDate = XmlResource.selectNodeText( this.options.startDateSelector, this.eventResource );
+      this.endDate = XmlResource.selectNodeText( this.options.endDateSelector, this.eventResource );
+   }.protect()
+});
 /*
 Name: 
     - PhotoGaleryImage
@@ -12812,10 +12812,11 @@ var DataElementBehaviour = new Class({
          }else if( typeOf( this.dataXml ) == "element" ){
             if( dataSelector.indexOf( "/" ) < 0 ){
                this.text = XmlResource.determineNodeText( this.dataXml );
+               href = XmlResource.selectNodeText( "@href", this.dataXml );
             }else{
                this.text = XmlResource.selectNodeText( dataSelector, this.dataXml );
+               href = XmlResource.selectNodeText( dataSelector + this.options.hrefSelector, this.dataXml );
             }
-            href = XmlResource.selectNodeText( dataSelector + this.options.hrefSelector, this.dataXml );
          }
       
          if( this.text ) this.text.trim();
@@ -13832,73 +13833,68 @@ var FormField = new Class({
       this.parent();
    }
 });
-/*  
-    http://www.dailycoding.com/ 
+/*
+Name: ImageElement
+
+Description: Represents an image element of a SmartDocument.
+
+Requires:
+    - DocumentElement
+
+Provides:
+    - ImageElement
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-(function ($) {
-    $.fn.imageLens = function (options) {
 
-        var defaults = {
-            lensSize: 100,
-            borderSize: 4,
-            borderColor: "#888"
-        };
-        var options = $.extend(defaults, options);
-        var lensStyle = "background-position: 0px 0px;width: " + String(options.lensSize) + "px;height: " + String(options.lensSize)
-            + "px;float: left;display: none;border-radius: " + String(options.lensSize / 2 + options.borderSize)
-            + "px;border: " + String(options.borderSize) + "px solid " + options.borderColor 
-            + ";background-repeat: no-repeat;position: absolute;";
 
-        return this.each(function () {
-            obj = $(this);
 
-            var offset = $(this).offset();
 
-            // Creating lens
-            var target = $("<div style='" + lensStyle + "' class='" + options.lensCss + "'>&nbsp;</div>").appendTo($(this).parent());
-            var targetSize = target.size();
+var ImageElement = new Class({
+   Extends: DocumentElement,
+   
+   options: {
+      componentName : "ImageElement",
+   },
+   
+   //Constructor
+   initialize: function( definitionElement, bundle, options ){
+      this.parent( definitionElement, bundle, options );
+      
+   },
+   
+   //Public mutators and accessor methods
+   construct: function( contextElement, where ){
+      this.tag = "IMG";
+      this.parent( contextElement, where );
+   },
+   
+   destroy: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
 
-            // Calculating actual size of image
-            var imageSrc = options.imageSrc ? options.imageSrc : $(this).attr("src");
-            var imageTag = "<img style='display:none;' src='" + imageSrc + "' />";
-
-            var widthRatio = 0;
-            var heightRatio = 0;
-
-            $(imageTag).load(function () {
-                widthRatio = $(this).width() / obj.width();
-                heightRatio = $(this).height() / obj.height();
-            }).appendTo($(this).parent());
-
-            target.css({ backgroundImage: "url('" + imageSrc + "')" });
-
-            target.mousemove(setPosition);
-            $(this).mousemove(setPosition);
-
-            function setPosition(e) {
-
-                var leftPos = parseInt(e.pageX - offset.left);
-                var topPos = parseInt(e.pageY - offset.top);
-
-                if (leftPos < 0 || topPos < 0 || leftPos > obj.width() || topPos > obj.height()) {
-                    target.hide();
-                }
-                else {
-                    target.show();
-
-                    leftPos = String(((e.pageX - offset.left) * widthRatio - target.width() / 2) * (-1));
-                    topPos = String(((e.pageY - offset.top) * heightRatio - target.height() / 2) * (-1));
-                    target.css({ backgroundPosition: leftPos + 'px ' + topPos + 'px' });
-
-                    leftPos = String(e.pageX - target.width() / 2);
-                    topPos = String(e.pageY - target.height() / 2);
-                    target.css({ left: leftPos + 'px', top: topPos + 'px' });
-                }
-            }
-        });
-    };
-})(jQuery);
+   //Properties
+   
+   //Protected, private helper methods
+});
 /*
 Name: ImageLensBehavior
 
@@ -14172,7 +14168,11 @@ var TableBody = new Class({
    
    unmarshallRows: function(){
       this.dataSet.each( function( columnHeaderDefinition, index ){
-         var row = new TableRow( this.definitionElement, this.resourceBundle, this.dataSet[index], this.columnHeaders, { onConstructed : this.onRowConstructed, onConstructionError : this.onRowConstructionError });
+         var row = new TableRow( this.definitionElement, this.resourceBundle, this.dataSet[index], this.columnHeaders, { 
+            isEditable : this.isEditable(),
+            onConstructed : this.onRowConstructed, 
+            onConstructionError : this.onRowConstructionError 
+         });
          row.unmarshall();
          this.rows.add( row );
       }, this );
@@ -14368,10 +14368,8 @@ var TableElement = new Class({
       this.parent( definitionElement, bundle, dataXml, options );
       
       this.body;
-//      this.controlsContainerElement;
       this.header;
       this.maxRowCount;
-//      this.fieldsContainerElement;
       this.tableElement;
    },
    
@@ -14452,7 +14450,10 @@ var TableElement = new Class({
    }.protect(),
    
    unmarshallBody: function(){
-      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.bindedData, this.header.getColumnHeaders(), { onConstructed : this.onBodyConstructed, onConstructionError : this.onBodyConstructionError });
+      this.body = new TableBody( this.definitionElement, this.resourceBundle, this.bindedData, this.header.getColumnHeaders(), {
+         isEditable : this.isEditable(),
+         onConstructed : this.onBodyConstructed, 
+         onConstructionError : this.onBodyConstructionError });
       this.body.unmarshall();
    }.protect(),
    
@@ -14756,7 +14757,11 @@ var TableRow = new Class({
    unmarshallTableCells: function(){
       this.columnHeaders.each( function( columnHeader, index ){
          var dataDefinition = columnHeader.selectDataDefinition( this.rowData );
-         var tableCell = new TableCell( columnHeader.getDefinitionElement(), this.resourceBundle, dataDefinition, { onConstructed : this.onTableCellConstructed, onConstructionError : this.onTableCellConstructionError });
+         var tableCell = new TableCell( columnHeader.getDefinitionElement(), this.resourceBundle, dataDefinition, { 
+            isEditable : this.isEditable(),
+            onConstructed : this.onTableCellConstructed, 
+            onConstructionError : this.onTableCellConstructionError 
+         });
          tableCell.unmarshall();
          this.tableCells.add( tableCell );
       }, this );
