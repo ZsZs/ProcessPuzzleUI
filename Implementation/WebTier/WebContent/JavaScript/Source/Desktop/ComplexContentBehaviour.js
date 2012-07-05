@@ -418,7 +418,12 @@ var ComplexContentBehaviour = new Class({
       
    storeComponentState : function() {
       if( this.storeState ){
-         this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
+         this.stateSpecification = { 
+            documentDefinitionURI : this.documentDefinitionUri, 
+            documentContentURI : this.documentContentUri, 
+            documentType : this.documentContentType,
+            documentVariables : this.documentVariables
+         };
          this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
       }
    }.protect(),
