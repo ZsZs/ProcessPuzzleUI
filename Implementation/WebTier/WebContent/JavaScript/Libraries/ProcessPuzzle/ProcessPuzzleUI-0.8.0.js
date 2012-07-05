@@ -3524,12 +3524,27 @@ var StateTransformer = new Class({
          for ( var property in value ) {
             if( valueString != "{" ) valueString += ",";
             if( value[property] == null ) valueString += property + ":'" + this.options.unknownValue + "'";
-            else valueString += property + ":'" + value[property] + "'";
+            else valueString += property + ":" + this.transformStateValueToString( value[property] );
          }
          valueString += "}";
-      }
-      else valueString = "'" + value.toString() + "'";
+      }else valueString = "'" + value.toString() + "'";
       
+      return valueString;
+   }.protect(),
+   
+   transformStateValueToString : function( stateValue ){
+      valueString = "";
+      
+      if( typeOf( stateValue ) == "string" ) valueString = "'" + stateValue + "'";
+      else if( typeOf( stateValue ) == "object" ){
+         valueString = "{";
+         for ( var property in stateValue ) {
+            if( valueString != "{" ) valueString += ",";
+            if( stateValue[property] == null ) valueString += property + ":'" + this.options.unknownValue + "'";
+            else valueString += property + ":'" + stateValue[property] + "'";
+         }
+         valueString += "}";
+      }else valueString = stateValue.toString();
       return valueString;
    }.protect()
    
@@ -4219,7 +4234,12 @@ var ComplexContentBehaviour = new Class({
       
    storeComponentState : function() {
       if( this.storeState ){
-         this.stateSpecification = { documentDefinitionURI : this.documentDefinitionUri, documentContentURI : this.documentContentUri, documentType : this.documentContentType };
+         this.stateSpecification = { 
+            documentDefinitionURI : this.documentDefinitionUri, 
+            documentContentURI : this.documentContentUri, 
+            documentType : this.documentContentType,
+            documentVariables : this.documentVariables
+         };
          this.componentStateManager.storeComponentState( this.options.componentName, this.stateSpecification );
       }
    }.protect(),
@@ -12554,6 +12574,7 @@ var CompositeDocumentElement = new Class({
       this.parent( definitionElement, bundle, options );
       this.dataXml = dataXml;
       this.elements = new LinkedHashMap();
+      this.nestedElementsConstructionChain = new Chain();
       this.nestedElementsContext;
       this.numberOfConstructedNestedElements = 0;
    },
@@ -12572,9 +12593,9 @@ var CompositeDocumentElement = new Class({
       this.parent();
    },
    
-   onNestedElementConstructed: function( documentElement ){
+   onNestedElementConstructed: function( nestedElement ){
       this.numberOfConstructedNestedElements++;
-      if( this.numberOfConstructedNestedElements == this.elements.size() ) this.constructionChain.callChain();
+      this.nestedElementsConstructionChain.callChain();
    },
    
    onNestedElementConstructionError: function( error ){
@@ -12599,7 +12620,15 @@ var CompositeDocumentElement = new Class({
    }.protect(),
    
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.associateEditor, this.constructPlugin, this.constructNestedElements, this.authorization, this.finalizeConstruction );
+      this.constructionChain.chain( 
+         this.createHtmlElement, 
+         this.injectHtmlElement, 
+         this.associateEditor, 
+         this.constructPlugin, 
+         this.constructNestedElements, 
+         this.authorization, 
+         this.finalizeConstruction 
+      );
    }.protect(),
    
    constructNestedElements: function( contextElement ){
@@ -12609,8 +12638,20 @@ var CompositeDocumentElement = new Class({
       if( this.elements.size() > 0 ){
          this.elements.each( function( elementsEntry, index ){
             var nestedElement = elementsEntry.getValue();
-            nestedElement.construct( this.nestedElementsContext );
-         }, this );      
+            this.nestedElementsConstructionChain.chain(
+               function(){
+                  nestedElement.construct( this.nestedElementsContext );
+               }.bind( this )
+            );
+         }, this );
+         
+         this.nestedElementsConstructionChain.chain(
+            function(){
+               this.nestedElementsConstructionChain.clearChain();
+               this.constructionChain.callChain(); 
+            }.bind( this )
+         );
+         this.nestedElementsConstructionChain.callChain();
       }else this.constructionChain.callChain();
    }.protect(),
    
@@ -14703,7 +14744,7 @@ var TableRow = new Class({
       this.parent();
    },
    
-   onTableCellConstructed : function( columnHeader ){
+   onTableCellConstructed : function(){
       this.tableCellsConstructionChain.callChain();
    },
    
