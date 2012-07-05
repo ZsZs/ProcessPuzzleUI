@@ -43,6 +43,7 @@ var CompositeDocumentElement = new Class({
       this.parent( definitionElement, bundle, options );
       this.dataXml = dataXml;
       this.elements = new LinkedHashMap();
+      this.nestedElementsConstructionChain = new Chain();
       this.nestedElementsContext;
       this.numberOfConstructedNestedElements = 0;
    },
@@ -61,9 +62,9 @@ var CompositeDocumentElement = new Class({
       this.parent();
    },
    
-   onNestedElementConstructed: function( documentElement ){
+   onNestedElementConstructed: function( nestedElement ){
       this.numberOfConstructedNestedElements++;
-      if( this.numberOfConstructedNestedElements == this.elements.size() ) this.constructionChain.callChain();
+      this.nestedElementsConstructionChain.callChain();
    },
    
    onNestedElementConstructionError: function( error ){
@@ -88,7 +89,15 @@ var CompositeDocumentElement = new Class({
    }.protect(),
    
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.associateEditor, this.constructPlugin, this.constructNestedElements, this.authorization, this.finalizeConstruction );
+      this.constructionChain.chain( 
+         this.createHtmlElement, 
+         this.injectHtmlElement, 
+         this.associateEditor, 
+         this.constructPlugin, 
+         this.constructNestedElements, 
+         this.authorization, 
+         this.finalizeConstruction 
+      );
    }.protect(),
    
    constructNestedElements: function( contextElement ){
@@ -98,8 +107,20 @@ var CompositeDocumentElement = new Class({
       if( this.elements.size() > 0 ){
          this.elements.each( function( elementsEntry, index ){
             var nestedElement = elementsEntry.getValue();
-            nestedElement.construct( this.nestedElementsContext );
-         }, this );      
+            this.nestedElementsConstructionChain.chain(
+               function(){
+                  nestedElement.construct( this.nestedElementsContext );
+               }.bind( this )
+            );
+         }, this );
+         
+         this.nestedElementsConstructionChain.chain(
+            function(){
+               this.nestedElementsConstructionChain.clearChain();
+               this.constructionChain.callChain(); 
+            }.bind( this )
+         );
+         this.nestedElementsConstructionChain.callChain();
       }else this.constructionChain.callChain();
    }.protect(),
    
