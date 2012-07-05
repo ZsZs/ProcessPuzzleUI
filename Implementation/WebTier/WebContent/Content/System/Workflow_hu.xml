@@ -17,9 +17,9 @@
             <description>
                Képezzektek 4-6 fős Scrum csapatokat, válasszatok egy-egy Termék tulajdonost és Scrum Mestert.
             </description>
+            <duration>2 perc</duration>
             <performerRole>Hallgató</performerRole>
             <performerParty>Hallgató</performerParty>
-            <duration>2 perc</duration>
          </activity>
          <activity id="activity_1-2">
             <name href="Content/System/TaskDetail.xml?contentUri='Content/System/Workflow.xml'&amp;documentVariables={activityIndex:'2',workflowDetailIndex:'1'}&amp;documentType=SMART">Terméktulajdonos ismerteti az elképzelését</name>

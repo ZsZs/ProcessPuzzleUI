@@ -58,7 +58,7 @@ var TableRow = new Class({
       this.parent();
    },
    
-   onTableCellConstructed : function( columnHeader ){
+   onTableCellConstructed : function(){
       this.tableCellsConstructionChain.callChain();
    },
    

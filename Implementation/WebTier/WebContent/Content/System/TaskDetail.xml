@@ -25,11 +25,15 @@
             <formField id="duration" label="Workflow.ActivityDetail.performerParty" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/performerParty"/>
          </formElement>
       </compositeDataElement>
-      <element tag="h4">Workflow.ActivityDetail.inputs</element>
+      
+      <element tag="h3">Workflow.ActivityDetail.inputs</element>
       <tableElement id="inputsTableContainer" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/inputs/input[{inputIndex}]" indexVariable="inputIndex" maxOccures="unbounded">
-         <tableColumn id="activityName" label="PersonalToDoList.activityName" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/inputs/input[{inputIndex}]"/>
+         <tableColumn id="activityName" label="Workflow.ActivityDetail.Inputs.name" bind="."/>
       </tableElement>
       
-      <element tag="h4">Workflow.ActivityDetail.outputs</element>
+      <element tag="h3">Workflow.ActivityDetail.outputs</element>
+      <tableElement id="outputsTableContainer" bind="//pp:workflow/workflowDetail[{workflowDetailIndex}]/activities/activity[{activityIndex}]/outputs/output[{outputIndex}]" indexVariable="outputIndex" maxOccures="unbounded">
+         <tableColumn id="activityName" label="Workflow.ActivityDetail.Outputs.name" bind="."/>
+      </tableElement>
    </documentBody>
 </smartDocumentDefinition>
