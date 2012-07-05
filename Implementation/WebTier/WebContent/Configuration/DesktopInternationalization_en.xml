@@ -156,7 +156,9 @@
     <!-- Activity Detail -->
     <Resource key="Workflow.ActivityDetail.duration" type="String">Duration:</Resource>
     <Resource key="Workflow.ActivityDetail.inputs" type="String">Inputs</Resource>
+    <Resource key="Workflow.ActivityDetail.Inputs.name" type="String">Name</Resource>
     <Resource key="Workflow.ActivityDetail.outputs" type="String">Outputs</Resource>
+    <Resource key="Workflow.ActivityDetail.Outputs.name" type="String">Name</Resource>
     <Resource key="Workflow.ActivityDetail.performerParty" type="String">Performer Party:</Resource>
     <Resource key="Workflow.ActivityDetail.performerRole" type="String">Performer Role:</Resource>
   </Language>
