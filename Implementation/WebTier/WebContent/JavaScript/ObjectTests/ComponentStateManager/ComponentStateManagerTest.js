@@ -17,12 +17,12 @@ window.ComponentStateManagerTest = new Class( {
    },
 
    constants : {
-      STATE_AS_STRING : "TestComponentOne:'State-one';TestComponentTwo:{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'}",
+      STATE_AS_STRING : "TestComponentOne:'State-one';TestComponentTwo:{subStateTwo:{compositeStateOne:'CompositeStateOne',compositeStateTwo:'CompositeStateTwo'},subStateOne:'SubStateOne'}",
       STATE_ONE : "State-one",
-      STATE_TWO : { subStateOne: "SubStateOne", subStateTwo: "SubStateTwo" },
+      STATE_TWO : { subStateOne: "SubStateOne", subStateTwo: { compositeStateOne : "CompositeStateOne", compositeStateTwo : "CompositeStateTwo" }},
       TEST_COMPONENT_ONE : "TestComponentOne",
       TEST_COMPONENT_TWO : "TestComponentTwo",
-      URI_AS_STRING : "'State-one';{subStateOne:'SubStateOne',subStateTwo:'SubStateTwo'}",
+      URI_AS_STRING : "'State-one';{subStateTwo:{compositeStateOne:'CompositeStateOne',compositeStateTwo:'CompositeStateTwo'},subStateOne:'SubStateOne'}",
    },
    
    initialize : function( options ) {
@@ -56,9 +56,10 @@ window.ComponentStateManagerTest = new Class( {
       this.stateManager.parse( this.constants.STATE_AS_STRING );
       
       //VERIFY:
-      assertEquals( 'State-one', this.stateManager.retrieveComponentState( "TestComponentOne" ) );
-      assertEquals( 'SubStateOne', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateOne'] );
-      assertEquals( 'SubStateTwo', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo'] );
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentOne" ), equalTo( 'State-one' ));
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateOne'], equalTo( 'SubStateOne' ));
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo']['compositeStateOne'], equalTo( 'CompositeStateOne' ));
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo']['compositeStateTwo'], equalTo( 'CompositeStateTwo' ));
    },
    
    parseUri_transformsStringToObject : function() {
@@ -69,9 +70,10 @@ window.ComponentStateManagerTest = new Class( {
       this.stateManager.parseUri( this.constants.URI_AS_STRING );
       
       //VERIFY:
-      assertEquals( 'State-one', this.stateManager.retrieveComponentState( "TestComponentOne" ) );
-      assertEquals( 'SubStateOne', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateOne'] );
-      assertEquals( 'SubStateTwo', this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo'] );
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentOne" ), equalTo( 'State-one' ));
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateOne'], equalTo( 'SubStateOne' ));
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo']['compositeStateOne'], equalTo( 'CompositeStateOne' ));
+      assertThat( this.stateManager.retrieveComponentState( "TestComponentTwo" )['subStateTwo']['compositeStateTwo'], equalTo( 'CompositeStateTwo' ));
    },
    
    retrieveComponentState_returnsStoredStateOfComponent : function(){

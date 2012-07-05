@@ -72,12 +72,27 @@ var StateTransformer = new Class({
          for ( var property in value ) {
             if( valueString != "{" ) valueString += ",";
             if( value[property] == null ) valueString += property + ":'" + this.options.unknownValue + "'";
-            else valueString += property + ":'" + value[property] + "'";
+            else valueString += property + ":" + this.transformStateValueToString( value[property] );
          }
          valueString += "}";
-      }
-      else valueString = "'" + value.toString() + "'";
+      }else valueString = "'" + value.toString() + "'";
       
+      return valueString;
+   }.protect(),
+   
+   transformStateValueToString : function( stateValue ){
+      valueString = "";
+      
+      if( typeOf( stateValue ) == "string" ) valueString = "'" + stateValue + "'";
+      else if( typeOf( stateValue ) == "object" ){
+         valueString = "{";
+         for ( var property in stateValue ) {
+            if( valueString != "{" ) valueString += ",";
+            if( stateValue[property] == null ) valueString += property + ":'" + this.options.unknownValue + "'";
+            else valueString += property + ":'" + stateValue[property] + "'";
+         }
+         valueString += "}";
+      }else valueString = stateValue.toString();
       return valueString;
    }.protect()
    
