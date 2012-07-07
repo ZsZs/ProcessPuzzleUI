@@ -65,7 +65,7 @@ window.DiagramFigureTest = new Class({
       this.elementFactory = null;
       this.componentStateManager.reset();
    },
-   
+      
    //Event handling methods
    onConstructed : function(){
       this.testCaseChain.callChain();

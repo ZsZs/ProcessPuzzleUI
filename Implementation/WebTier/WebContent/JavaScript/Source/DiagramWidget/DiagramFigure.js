@@ -80,6 +80,7 @@ var DiagramFigure = new Class({
    //Properties
    getDraw2dObject : function() { return this.draw2dObject; },
    getId: function() { return this.draw2dObject.id; },
+   getInternationalizedName: function() { return this.internationalization.getText( this.getName()); },
    getName: function() { return this.name; },
    getPositionX: function() { return this.positionX; },
    getPositionY: function() { return this.positionY; },
@@ -98,7 +99,7 @@ var DiagramFigure = new Class({
    finalizeDraw : function(){
       this.drawChain.clearChain();
       this.state = DiagramFigure.States.CONSTRUCTED;
-      this.fireEvent( 'drawReady', this );
+      this.fireEvent( 'figureConstructed', this );
    }.protect(),
    
    lookUpDiagramFigure : function( figureName ){

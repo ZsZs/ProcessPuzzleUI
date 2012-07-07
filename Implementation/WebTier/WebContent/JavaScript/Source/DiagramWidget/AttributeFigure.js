@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../DiagramWidget/DiagramWidget.js
 
 var AttributeFigure = new Class({
-   Implements : [Events, Options],
+   Extends : DiagramFigure,
    Binds: [],
    
    options : {
@@ -53,28 +53,27 @@ var AttributeFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function( diagram ){
-      this.parent( diagram );
-   },
-   
    destroy: function(){
       this.parent();
    },
    
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
    unmarshall: function(){
-      this.unmarshallProperties();
+      this.parent();
    },
    
    //Properties
    getDefaultValue : function() { return this.defaultValue; },
-   getName : function() { return this.name; },
    getType : function() { return this.type; },
    
    //Protected, private helper methods
    unmarshallProperties : function(){
-      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
       this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
       this.defaultValue = XmlResource.selectNodeText( this.options.defaultValueSelector, this.definitionXml );
+      this.parent();
    }.protect()
 });
 

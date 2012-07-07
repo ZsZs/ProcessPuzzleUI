@@ -6,6 +6,18 @@
 	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
 
   <Language name="en">  
+    <Resource key="DiagramWidget.Annotation.text" type="String">This is an annotation. Makes possible to add notes to the diagram.</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.name" type="String">Diagram Figure</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Attributes.canvas" type="String">canvas</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Operations.construct" type="String">construct</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Operations.destroy" type="String">destroy</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Operations.draw" type="String">draw</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.name" type="String">Class Figure</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Attributes.attributes" type="String">attributes</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Attributes.operations" type="String">operations</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Operations.drawAttributes" type="String">draw attributes</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Operations.drawOperations" type="String">draw operations</Resource>
+    
     <Resource key="HierarchicalMenuWidgetDocument.exampleDescription" type="String">description</Resource>
     <Resource key="HierarchicalMenuWidgetDocument.introduction" type="String">introduction</Resource>
     <Resource key="HierarchicalMenuWidgetDocument.subTitle" type="String">Hierarhical Menu Widget</Resource>

@@ -32,7 +32,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DiagramWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['destroyCanvas', 'destroyFigures', 'drawCanvas', 'drawFigures'],
+   Binds : ['destroyCanvas', 'destroyFigures', 'drawCanvas', 'drawFigures', 'onFigureConstructed', 'onFigureConstructionError'],
    
    options : {
       authorSelector : "//pp:widgetDefinition/author",
@@ -60,6 +60,7 @@ var DiagramWidget = new Class({
       this.canvasWidth;
       this.description;
       this.figures = new ArrayList();
+      this.figuresConstructionChain = new Chain();
       this.name;
       this.title;
       this.paintArea;
@@ -74,6 +75,15 @@ var DiagramWidget = new Class({
       this.parent();
    },
       
+   onFigureConstructed: function( figure ){
+      this.figuresConstructionChain.callChain();
+   },
+   
+   onFigureConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
    unmarshall: function(){
       this.unmarshallProperties();
       this.unmarshallFigures();
@@ -127,18 +137,29 @@ var DiagramWidget = new Class({
    }.protect(),
    
    drawFigures : function(){
-      this.figures.each( function( figure, index ){
-         figure.draw( this );
-      }.bind( this ));
-      
-      this.constructionChain.callChain();
+      if( this.figures.size() > 0 ){
+         this.figures.each( function( figure, index ){
+            this.figuresConstructionChain.chain( function(){ figure.draw( this ); }.bind( this ));
+         }, this );
+            
+         this.figuresConstructionChain.chain(
+            function(){
+               this.figuresConstructionChain.clearChain();
+               this.constructionChain.callChain(); 
+            }.bind( this )
+         );
+         this.figuresConstructionChain.callChain();
+      }else this.constructionChain.callChain();
    }.protect(),
    
    unmarshallFigures: function(){
       var figuresElement = this.definitionXml.selectNodes( this.options.figuresSelector );
       if( figuresElement ){
          figuresElement.each( function( figureElement, index ){
-            var figure = DiagramFigureFactory.create( figureElement, this.i18Resource );
+            var figure = DiagramFigureFactory.create( figureElement, this.i18Resource, { 
+               onFigureConstructed : this.onFigureConstructed, 
+               onFigureConstructionError : this.onFigureConstructionError 
+            });
             figure.unmarshall();
             this.figures.add( figure );
          }, this );

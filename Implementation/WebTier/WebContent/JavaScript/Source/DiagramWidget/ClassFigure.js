@@ -71,14 +71,14 @@ var ClassFigure = new Class({
 
    drawAttributes : function(){
       this.attributes.each( function( attribute, index ){
-         this.draw2dObject.addAttribute( attribute.getName(), attribute.getType(), attribute.getDefaultValue() );
+         this.draw2dObject.addAttribute( attribute.getInternationalizedName(), attribute.getType(), attribute.getDefaultValue() );
       }.bind( this ));
       
       this.drawChain.callChain();
    }.protect(),
    
    instantiateDraw2dObject : function(){
-      this.draw2dObject = new draw2d.shape.uml.Class( this.name );
+      this.draw2dObject = new draw2d.shape.uml.Class( this.getInternationalizedName() );
       this.drawChain.callChain();
    }.protect(),
    

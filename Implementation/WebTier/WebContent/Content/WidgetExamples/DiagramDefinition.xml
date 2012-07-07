@@ -14,33 +14,33 @@
    
    <figures>
       <annotation name="DiagramAnnotation" height="60" width="250" positionX="0" positionY="0">
-         <text>DiagramWidget.annotation.text</text>
+         <text>DiagramWidget.Annotation.text</text>
       </annotation>
    
-      <class name="DiagramFigure" positionX="50" positionY="100">
+      <class name="DiagramWidget.ExampleClassOne.name" positionX="50" positionY="100">
          <attributes>
-            <attribute name="canvas" type="draw2d.workflow" defaultValue="null"/>
+            <attribute name="DiagramWidget.ExampleClassOne.Attributes.canvas" type="draw2d.workflow" defaultValue="null"/>
          </attributes>
          
          <operations>
-            <operation name="construct"></operation>
-            <operation name="destroy"></operation>
-            <operation name="draw"></operation>
+            <operation name="DiagramWidget.ExampleClassOne.Operations.construct"></operation>
+            <operation name="DiagramWidget.ExampleClassOne.Operations.destroy"></operation>
+            <operation name="DiagramWidget.ExampleClassOne.Operations.draw"></operation>
          </operations>
       </class>
       
-      <class name="ClassFigure" positionX="75" positionY="200">
+      <class name="DiagramWidget.ExampleClassTwo.name" positionX="75" positionY="200">
          <attributes>
-            <attribute name="attributes" type="ArrayList" />
-            <attribute name="operations" type="ArrayList" />
+            <attribute name="DiagramWidget.ExampleClassTwo.Attributes.attributes" type="ArrayList" />
+            <attribute name="DiagramWidget.ExampleClassTwo.Attributes.operations" type="ArrayList" />
          </attributes>
          
          <operations>
-            <operation name="drawAttributes"></operation>
-            <operation name="drawOperations"></operation>
+            <operation name="DiagramWidget.ExampleClassTwo.Operations.drawAttributes"></operation>
+            <operation name="DiagramWidget.ExampleClassTwo.Operations.drawOperations"></operation>
          </operations>
       </class>
       
-      <inheritanceConnection name="ClassIsSpecializedFigure" source="ClassFigure" target="DiagramFigure" />
+      <inheritanceConnection name="ClassIsSpecializedFigure" source="DiagramWidget.ExampleClassTwo.name" target="DiagramWidget.ExampleClassOne.name" />
    </figures>
 </pp:widgetDefinition>

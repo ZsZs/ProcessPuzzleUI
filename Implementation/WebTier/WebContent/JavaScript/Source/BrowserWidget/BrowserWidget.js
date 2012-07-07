@@ -55,6 +55,7 @@ var BrowserWidget = new Class( {
       this.description;
       this.destructionChain = new Chain();
       this.elementFactory = null;
+      this.error;
       this.givenOptions = options;
       this.i18Resource = null;
       this.lastHandledMessage = null;
@@ -276,6 +277,10 @@ var BrowserWidget = new Class( {
    
    parseStateSpecification: function(){
       //Abstract method, should be overwrite!
+   }.protect(),
+   
+   revertConstruction : function(){
+      this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
    subscribeToWebUIMessages : function() {

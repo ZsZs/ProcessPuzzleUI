@@ -6,6 +6,18 @@
 	xsi:schemaLocation="http://www.processpuzzle.com/ResourceBundle http://www.processpuzzle.com/Schemas/ResourceBundle.xsd ">
 
   <Language name="hu">
+    <Resource key="DiagramWidget.Annotation.text" type="String">Ez egy megjegyzés, magyarázó szöveg a digramhoz.</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.name" type="String">Diagram alakzat</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Attributes.canvas" type="String">vászon</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Operations.construct" type="String">felépít</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Operations.destroy" type="String">lebont</Resource>
+    <Resource key="DiagramWidget.ExampleClassOne.Operations.draw" type="String">megrajzol</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.name" type="String">Osztály alakzat</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Attributes.attributes" type="String">tulajdonságok</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Attributes.operations" type="String">műveletek</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Operations.drawAttributes" type="String">tulajdonságokat megrajzol</Resource>
+    <Resource key="DiagramWidget.ExampleClassTwo.Operations.drawOperations" type="String">műveleteket megrajzol</Resource>
+    
     <Resource key="HierarchicalMenuWidgetDocument.exampleDescription" type="String">leírás</Resource>
     <Resource key="HierarchicalMenuWidgetDocument.introduction" type="String">bevezetés</Resource>
     <Resource key="HierarchicalMenuWidgetDocument.subTitle" type="String">Hierarhikus menu</Resource>
