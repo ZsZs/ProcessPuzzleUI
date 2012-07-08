@@ -18,6 +18,7 @@
 //= require_directory ./ScrollingBehaviour
 //= require_directory ./Singleton
 //= require_directory ./SkinSelectorWidget
+//= require_directory ./SlideShow
 //= require_directory ./SmartDocument
 //= require_directory ./SplashForm
 //= require_directory ./TabWidget
