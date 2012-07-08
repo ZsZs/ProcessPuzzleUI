@@ -1,5 +1,6933 @@
-/*Name: ArrayListDescription: JavaScript implementation of Java ArrayList class.Requires:Provides:	- ArrayListPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
-var ArrayList = new Class({   initialize : function() {      this.array = new Array();   },   add : function( obj ) {      this.array[this.array.length] = obj;   },      addAll : function( array ) {      if (array instanceof Array) {         for ( var i = 0; i < array.length; i++) {            this.add( array[i] );         }      } else if (array instanceof ArrayList) {         for ( var i = 0; i < array.size(); i++) {            this.add( array.get( i ) );         }      }   },      clear : function() {      this.array = new Array();   },      clone : function() {      var clonedList = new ArrayList();      this.each( function( listElement, index ){         clonedList.add( listElement );      }, this );      return clonedList;   },   contains : function( elem ) {      for ( var i = 0; i < this.array.length; i++) {         if (this.array[i] == elem )            return true;      }      return false;   },      each : function( fn, bind ){      for( var i = 0, l = this.size(); i < l; i++ ){         fn.call( bind, this.get( i ), i, this );      }   },      equals : function( anotherList ){      if( !instanceOf( anotherList, ArrayList )) return false;      if( anotherList.size() != this.size() ) return false;      for( var i = 0; i < this.size(); i++ ) {         if( this.get( i ) != anotherList.get( i )) return false;      }      return true;   },      get : function(index) {      return this.array[index];   },      getLast : function(){      return this.get( this.size() -1 );   },      indexOf : function( obj ){      var elementIndex = null;      this.array.some( function( element, index ){         if( element.equals( obj ) ){            elementIndex = index;            return true;         }       }, this );      return elementIndex;   },      isEmpty : function() {      if( this.size() > 0 ) return false;      else return true;   },      iterator : function() {      return new ArrayListIterator( this );   },      remove : function( index ){      var elementAtIndex = this.get( index );      if( elementAtIndex ) {         this.array[index] = null;         this.array = this.array.clean();      }   },      size : function() {      return this.array.length;   }   });var ArrayListIterator = new Class({      initialize : function( arrayList ) {      this.arrayList = arrayList;      this.index = 0;   },      hasNext : function() {      return this.index < this.arrayList.size();   },      next : function() {      return this.arrayList.get( this.index++ );   }});
+/*
+---
+
+name: Core
+
+script: Core.js
+
+description: MUI - A Web Applications User Interface Framework.
+
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+
+license: MIT-style license.
+
+authors:
+  - Scott F. Frederick
+  - Joel Lindau
+
+note:
+	This documentation is taken directly from the javascript source files. It is built using Natural Docs.
+
+requires:
+  - Core:1.2.4/Array
+  - Core:1.2.4/Element
+  - Core:1.2.4/Browser
+  - Core:1.2.4/Request
+  - Core:1.2.4/Request.HTML
+  - Hash
+  - More:1.2.4/Assets
+
+provides: [MUI, MochaUI, MUI.Require]
+
+...
+*/
+
+
+var MUI = MochaUI = new Hash({
+	
+	version: '0.9.7',
+
+	options: new Hash({
+		theme: 'default',				
+		advancedEffects: false, // Effects that require fast browsers and are cpu intensive.
+		standardEffects: true   // Basic effects that tend to run smoothly.
+	}),
+
+	path: {			
+		source:  'scripts/source/', // Path to MochaUI source JavaScript
+		themes:  'themes/',         // Path to MochaUI Themes
+		plugins: 'plugins/'         // Path to Plugins
+	},
+	
+	// Returns the path to the current theme directory
+	themePath: function(){
+		return MUI.path.themes + MUI.options.theme + '/'; 
+	},
+	
+	files: new Hash()
+	
+});
+
+MUI.files[MUI.path.source + 'Core/Core.js'] = 'loaded';
+
+MUI.extend({
+	
+	Windows: {
+		instances: new Hash()
+	},
+
+	ieSupport: 'excanvas',  // Makes it easier to switch between Excanvas and Moocanvas for testing	
+	
+	/*
+	
+	Function: updateContent
+		Replace the content of a window or panel.
+		
+	Arguments:
+		updateOptions - (object)
+	
+	updateOptions:
+		element - The parent window or panel.
+		childElement - The child element of the window or panel recieving the content.
+		method - ('get', or 'post') The way data is transmitted.
+		data - (hash) Data to be transmitted
+		title - (string) Change this if you want to change the title of the window or panel.
+		content - (string or element) An html loadMethod option.
+		loadMethod - ('html', 'xhr', or 'iframe')
+		url - Used if loadMethod is set to 'xhr' or 'iframe'.
+		scrollbars - (boolean)		
+		padding - (object)
+		onContentLoaded - (function)
+
+	*/	
+	updateContent: function(options){
+
+		var options = $extend({
+			element:      null,
+			childElement: null,
+			method:       null,
+			data:         null,
+			title:        null,
+			content:      null,
+			loadMethod:   null,
+			url:          null,
+			scrollbars:   null,			
+			padding:      null,
+			require:      {},
+			onContentLoaded: $empty
+		}, options);		
+	
+		options.require = $extend({
+			css: [], images: [], js: [], onload: null
+		}, options.require);		
+		
+		var args = {};
+				
+		if (!options.element) return;
+		var element = options.element;		
+
+		if (MUI.Windows.instances.get(element.id)){
+			args.recipient = 'window';		
+		}
+		else {
+			args.recipient = 'panel';		
+		}
+
+		var instance = element.retrieve('instance');
+		
+		if( options.title ) instance.titleEl.set( 'html', options.title );			
+
+		var contentEl = instance.contentEl;
+		args.contentContainer = options.childElement != null ? options.childElement : instance.contentEl;		
+		var contentWrapperEl = instance.contentWrapperEl;
+
+		if (!options.loadMethod){
+			if (!instance.options.loadMethod){
+				if (!options.url){
+					options.loadMethod = 'html';
+				}
+				else {
+					options.loadMethod = 'xhr';
+				}
+			}
+			else {	
+				options.loadMethod = instance.options.loadMethod;
+			}
+		}	
+				
+		// Set scrollbars if loading content in main content container.
+		// Always use 'hidden' for iframe windows
+		var scrollbars = options.scrollbars || instance.options.scrollbars;
+		if (args.contentContainer == instance.contentEl) {
+			contentWrapperEl.setStyles({
+				'overflow': scrollbars != false && options.loadMethod != 'iframe' ? 'auto' : 'hidden'
+			});
+		}		
+
+		if (options.padding != null) {
+			contentEl.setStyles({
+				'padding-top': options.padding.top,
+				'padding-bottom': options.padding.bottom,
+				'padding-left': options.padding.left,
+				'padding-right': options.padding.right
+			});
+		}
+
+		// Remove old content.
+		if (args.contentContainer == contentEl) {
+			contentEl.empty().show();			
+			// Panels are not loaded into the padding div, so we remove them separately.
+			contentEl.getAllNext('.column').destroy();
+			contentEl.getAllNext('.columnHandle').destroy();
+		}
+		
+		args.onContentLoaded = function(){
+			
+			if (options.require.js.length || typeof options.require.onload == 'function'){
+				new MUI.Require({
+					js: options.require.js,
+					onload: function(){
+						if (Browser.Engine.presto){
+							options.require.onload.delay(100);
+						}
+						else {
+							options.require.onload();
+						}
+						(options.onContentLoaded && options.onContentLoaded!=$empty) ? options.onContentLoaded() : instance.fireEvent('contentLoaded', element);
+					}.bind(this)		
+				});
+			}		
+			else {
+                (options.onContentLoaded && options.onContentLoaded!=$empty) ? options.onContentLoaded() : instance.fireEvent('contentLoaded', element);
+			}			
+		
+		};
+		
+		if (options.require.css.length || options.require.images.length){
+			new MUI.Require({
+				css: options.require.css,
+				images: options.require.images,
+				onload: function(){
+					this.loadSelect(instance, options, args);
+				}.bind(this)		
+			});
+		}		
+		else {
+			this.loadSelect(instance, options, args);
+		}
+	},
+	
+	loadSelect: function(instance, options, args){					
+				
+		// Load new content.
+		switch(options.loadMethod){
+			case 'xhr':			
+				this.updateContentXHR(instance, options, args);
+				break;
+			case 'iframe':
+				this.updateContentIframe(instance, options, args);				
+				break;
+            case 'json':
+                this.updateContentJSON(instance, options, args);
+                break;
+			case 'html':
+			default:
+				this.updateContentHTML(instance, options, args);
+				break;
+		}
+
+	},
+
+    updateContentJSON: function(instance, options, args) {
+        var contentEl = instance.contentEl;
+        var contentContainer = args.contentContainer;
+
+        new Request({
+            url: options.url,
+            update: contentContainer,
+            method: options.method != null ? options.method : 'get',
+            data: options.data != null ? new Hash(options.data).toQueryString() : '',
+            evalScripts: false,
+            evalResponse: false,
+            headers: {'Content-Type':'application/json'},
+            onRequest: function() {
+                if (args.recipient == 'window' && contentContainer == contentEl) {
+                    instance.showSpinner();
+                }
+                else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) {
+                    $('spinner').show();
+                }
+            } .bind(this),
+            onFailure: function() {
+                if (contentContainer == contentEl) {
+                    contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
+                    if (recipient == 'window') {
+                        instance.hideSpinner();
+                    }
+                    else if (recipient == 'panel' && $('spinner')) {
+                        $('spinner').hide();
+                    }
+                }
+
+                if (contentContainer == contentEl) {
+                    contentContainer.set('html', '<p><strong>Error Loading XMLHttpRequest</strong></p>');
+                    if (args.recipient == 'window') {
+                        instance.hideSpinner();
+                    }
+                    else if (args.recipient == 'panel' && $('spinner')) {
+                        $('spinner').hide();
+                    }
+                }
+            } .bind(this),
+            onException: function() { } .bind(this),
+            onSuccess: function(json) {
+                if (contentContainer == contentEl) {
+                    if (contentContainer == contentEl) {
+                        if (args.recipient == 'window') instance.hideSpinner();
+                        else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();
+                    }
+                    var json = JSON.decode(json);
+                    // calls onLoaded event instead of onContentLoaded
+                    // onLoaded - event should call updateContent again with loadMethod='html'
+                    instance.fireEvent('loaded', $A([options.element, json, instance]));
+                }
+            } .bind(this),
+            onComplete: function() { } .bind(this)
+        }).get();
+    },
+    
+	updateContentXHR: function(instance, options, args){
+		var contentEl = instance.contentEl;
+		var contentContainer = args.contentContainer;
+		var onContentLoaded = args.onContentLoaded;
+		new Request.HTML({
+			url: options.url,
+			update: contentContainer,
+			method: options.method != null ? options.method : 'get',
+			data: options.data != null ? new Hash(options.data).toQueryString() : '', 
+			evalScripts: instance.options.evalScripts,
+			evalResponse: instance.options.evalResponse,				
+			onRequest: function(){
+				if (args.recipient == 'window' && contentContainer == contentEl){
+					instance.showSpinner();
+				}
+				else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')){
+					$('spinner').show();	
+				}
+			}.bind(this),
+			onFailure: function(response){
+				if (contentContainer == contentEl){
+					var getTitle = new RegExp("<title>[\n\r\s]*(.*)[\n\r\s]*</title>", "gmi");
+					var error = getTitle.exec(response.responseText);
+					if (!error) error = 'Unknown';							 
+					contentContainer.set('html', '<h3>Error: ' + error[1] + '</h3>');
+					if (args.recipient == 'window'){
+						instance.hideSpinner();
+					}							
+					else if (args.recipient == 'panel' && $('spinner')){
+						$('spinner').hide();
+					}						
+				}
+			}.bind(this),
+			onSuccess: function(){
+                contentEl.addClass("pad");
+				if (contentContainer == contentEl){
+					if (args.recipient == 'window') instance.hideSpinner();							
+					else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();							
+				}
+				Browser.Engine.trident4 ? onContentLoaded.delay(750) : onContentLoaded();
+			}.bind(this),
+			onComplete: function(){}.bind(this)
+		}).send();
+	},
+	
+	updateContentIframe: function(instance, options, args){
+		var contentEl = instance.contentEl;
+		var contentContainer = args.contentContainer;
+		var contentWrapperEl = instance.contentWrapperEl;
+		var onContentLoaded = args.onContentLoaded;			
+		if ( instance.options.contentURL == '' || contentContainer != contentEl) {
+			return;
+		}
+        contentEl.removeClass("pad");
+        contentEl.setStyle("padding","0px");
+		instance.iframeEl = new Element('iframe', {
+			'id': instance.options.id + '_iframe',
+			'name': instance.options.id + '_iframe',
+			'class': 'mochaIframe',
+			'src': options.url,
+			'marginwidth': 0,
+			'marginheight': 0,
+			'frameBorder': 0,
+			'scrolling': 'auto',
+			'styles': {
+				'height': contentWrapperEl.offsetHeight - contentWrapperEl.getStyle('border-top').toInt() - contentWrapperEl.getStyle('border-bottom').toInt(),
+				'width': instance.panelEl ? contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() : '100%'	
+			}
+		}).injectInside(contentEl);
+
+		// Add onload event to iframe so we can hide the spinner and run onContentLoaded()
+		instance.iframeEl.addEvent('load', function(e) {
+			if (args.recipient == 'window') instance.hideSpinner();					
+			else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').hide();
+			Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
+		}.bind(this));
+		if (args.recipient == 'window') instance.showSpinner();				
+		else if (args.recipient == 'panel' && contentContainer == contentEl && $('spinner')) $('spinner').show();
+	},
+	
+	updateContentHTML: function(instance, options, args){
+		var contentEl = instance.contentEl;
+		var contentContainer = args.contentContainer;
+		var onContentLoaded = args.onContentLoaded;			
+		var elementTypes = new Array('element', 'textnode', 'whitespace', 'collection');
+
+        contentEl.addClass("pad");
+		if (elementTypes.contains($type(options.content))){
+			options.content.inject(contentContainer);
+		} else {
+			contentContainer.set('html', options.content);
+		}				
+		if (contentContainer == contentEl){
+			if (args.recipient == 'window') instance.hideSpinner();					
+			else if (args.recipient == 'panel' && $('spinner')) $('spinner').hide();									
+		}
+		Browser.Engine.trident4 ? onContentLoaded.delay(50) : onContentLoaded();
+	},
+	
+	/*
+	
+	Function: reloadIframe
+		Reload an iframe. Fixes an issue in Firefox when trying to use location.reload on an iframe that has been destroyed and recreated.
+
+	Arguments:
+		iframe - This should be both the name and the id of the iframe.
+
+	Syntax:
+		(start code)
+		MUI.reloadIframe(element);
+		(end)
+
+	Example:
+		To reload an iframe from within another iframe:
+		(start code)
+		parent.MUI.reloadIframe('myIframeName');
+		(end)
+
+	*/
+	reloadIframe: function(iframe){
+		Browser.Engine.gecko ? $(iframe).src = $(iframe).src : top.frames[iframe].location.reload(true);		
+	},
+	
+	roundedRect: function(ctx, x, y, width, height, radius, rgb, a){
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.beginPath();
+		ctx.moveTo(x, y + radius);
+		ctx.lineTo(x, y + height - radius);
+		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+		ctx.lineTo(x + width - radius, y + height);
+		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+		ctx.lineTo(x + width, y + radius);
+		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+		ctx.lineTo(x + radius, y);
+		ctx.quadraticCurveTo(x, y, x, y + radius);
+		ctx.fill(); 
+	},
+	
+	triangle: function(ctx, x, y, width, height, rgb, a){
+		ctx.beginPath();
+		ctx.moveTo(x + width, y);
+		ctx.lineTo(x, y + height);
+		ctx.lineTo(x + width, y + height);
+		ctx.closePath();
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.fill();
+	},
+	
+	circle: function(ctx, x, y, diameter, rgb, a){
+		ctx.beginPath();
+		ctx.arc(x, y, diameter, 0, Math.PI*2, true);
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.fill();
+	},
+	
+	notification: function(message){
+			new MUI.Window({
+				loadMethod: 'html',
+				closeAfter: 1500,
+				type: 'notification',
+				addClass: 'notification',
+				content: message,
+				width: 220,
+				height: 40,
+				y: 53,
+				padding:  { top: 10, right: 12, bottom: 10, left: 12 },
+				shadowBlur: 5	
+			});
+	},
+	
+	/*
+	  	
+	Function: toggleEffects
+		Turn effects on and off
+
+	*/
+	toggleAdvancedEffects: function(link){
+		if (MUI.options.advancedEffects == false) {
+			MUI.options.advancedEffects = true;
+			if (link){
+				this.toggleAdvancedEffectsLink = new Element('div', {
+					'class': 'check',
+					'id': 'toggleAdvancedEffects_check'
+				}).inject(link);
+			}			
+		}
+		else {
+			MUI.options.advancedEffects = false;
+			if (this.toggleAdvancedEffectsLink) {
+				this.toggleAdvancedEffectsLink.destroy();
+			}		
+		}
+	},
+	/*
+	  	
+	Function: toggleStandardEffects
+		Turn standard effects on and off
+
+	*/
+	toggleStandardEffects: function(link){
+		if (MUI.options.standardEffects == false) {
+			MUI.options.standardEffects = true;
+			if (link){
+				this.toggleStandardEffectsLink = new Element('div', {
+					'class': 'check',
+					'id': 'toggleStandardEffects_check'
+				}).inject(link);
+			}			
+		}
+		else {
+			MUI.options.standardEffects = false;
+			if (this.toggleStandardEffectsLink) {
+				this.toggleStandardEffectsLink.destroy();
+			}		
+		}
+	},			
+	
+	/*
+	
+	The underlay is inserted directly under windows when they are being dragged or resized
+	so that the cursor is not captured by iframes or other plugins (such as Flash)
+	underneath the window.
+	
+	*/
+	underlayInitialize: function(){
+	   if( !$( 'windowUnderlay' )){
+         var windowUnderlay = new Element('div', {
+            'id': 'windowUnderlay',
+            'styles': {
+               'height': window.getCoordinates().height,
+               'opacity': .01,
+               'display': 'none'
+            }
+         }).inject(document.body);
+	   }
+	},
+	setUnderlaySize: function(){
+		$('windowUnderlay').setStyle('height', window.getCoordinates().height);
+	}
+});
+
+/* 
+
+function: fixPNG
+	Bob Osola's PngFix for IE6.
+
+example:
+	(begin code)
+	<img src="xyz.png" alt="foo" width="10" height="20" onload="fixPNG(this)">
+	(end)
+
+note:
+	You must have the image height and width attributes specified in the markup.
+
+*/
+
+function fixPNG(myImage){
+	if (Browser.Engine.trident4 && document.body.filters){
+		var imgID = (myImage.id) ? "id='" + myImage.id + "' " : "";
+		var imgClass = (myImage.className) ? "class='" + myImage.className + "' " : "";
+		var imgTitle = (myImage.title) ? "title='" + myImage.title  + "' " : "title='" + myImage.alt + "' ";
+		var imgStyle = "display:inline-block;" + myImage.style.cssText;
+		var strNewHTML = "<span " + imgID + imgClass + imgTitle
+			+ " style=\"" + "width:" + myImage.width
+			+ "px; height:" + myImage.height
+			+ "px;" + imgStyle + ";"
+			+ "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader"
+			+ "(src=\'" + myImage.src + "\', sizingMethod='scale');\"></span>";
+		myImage.outerHTML = strNewHTML;		
+	}
+}
+
+// Blur all windows if user clicks anywhere else on the page
+document.addEvent('mousedown', function(event){
+	MUI.blurAll.delay(50);
+});
+
+window.addEvent('domready', function(){
+	MUI.underlayInitialize();
+});
+
+window.addEvent('resize', function(){
+	if ($('windowUnderlay')) {
+		MUI.setUnderlaySize();
+	}
+	else {
+		MUI.underlayInitialize();
+	}
+});
+
+Element.implement({
+	hide: function(){
+		this.setStyle('display', 'none');
+		return this;
+	},
+	show: function(){
+		this.setStyle('display', 'block');
+		return this;
+	}	
+});	
+
+/*
+
+Shake effect by Uvumi Tools
+http://tools.uvumi.com/element-shake.html
+
+Function: shake
+
+Example:
+	Shake a window.
+	(start code)
+	$('parametrics').shake()
+	(end)
+  
+*/
+
+Element.implement({
+	shake: function(radius,duration){
+		radius = radius || 3;
+		duration = duration || 500;
+		duration = (duration/50).toInt() - 1;
+		var parent = this.getParent();
+		if(parent != $(document.body) && parent.getStyle('position') == 'static'){
+			parent.setStyle('position','relative');
+		}
+		var position = this.getStyle('position');
+		if(position == 'static'){
+			this.setStyle('position','relative');
+			position = 'relative';
+		}
+		if(Browser.Engine.trident){
+			parent.setStyle('height',parent.getStyle('height'));
+		}
+		var coords = this.getPosition(parent);
+		if(position == 'relative' && !Browser.Engine.presto){
+			coords.x -= parent.getStyle('paddingLeft').toInt();
+			coords.y -= parent.getStyle('paddingTop').toInt();
+		}
+		var morph = this.retrieve('morph');
+		if (morph){
+			morph.cancel();
+			var oldOptions = morph.options;
+		}
+		var morph = this.get('morph',{
+			duration:50,
+			link:'chain'
+		});
+		for(var i=0 ; i < duration ; i++){
+			morph.start({
+				top:coords.y+$random(-radius,radius),
+				left:coords.x+$random(-radius,radius)
+			});
+		}
+		morph.start({
+			top:coords.y,
+			left:coords.x
+		}).chain(function(){
+			if(oldOptions){
+				this.set('morph',oldOptions);
+			}
+		}.bind(this));
+		return this;
+	}
+});
+
+String.implement({
+ 
+	parseQueryString: function() {
+		var vars = this.split(/[&;]/);
+		var rs = {};
+		if (vars.length) vars.each(function(val) {
+			var keys = val.split('=');
+			if (keys.length && keys.length == 2) rs[decodeURIComponent(keys[0])] = decodeURIComponent(keys[1]);
+		});
+		return rs;
+	}
+ 
+});
+
+// Mootools Patch: Fixes issues in Safari, Chrome, and Internet Explorer caused by processing text as XML. 
+Request.HTML.implement({
+ 
+	processHTML: function(text){
+		var match = text.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+		text = (match) ? match[1] : text;           
+		var container = new Element('div');           
+		return container.set('html', text);
+	}
+   
+});
+
+/*
+
+	Examples:
+		(start code)	
+		getCSSRule('.myRule');
+		getCSSRule('#myRule');
+		(end)
+  
+*/
+MUI.getCSSRule = function(selector) {
+	for (var ii = 0; ii < document.styleSheets.length; ii++) {
+		var mysheet = document.styleSheets[ii];
+		var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+		for (i = 0; i < myrules.length; i++){
+			if (myrules[i].selectorText == selector){
+				return myrules[i];
+			}
+		}
+	}		  
+	return false;
+}
+
+// This makes it so Request will work to some degree locally
+if (location.protocol == "file:"){
+
+	Request.implement({
+		isSuccess : function(status){
+			return (status == 0 || (status >= 200) && (status < 300));
+		}
+	});
+
+	Browser.Request = function(){
+		return $try(function(){
+			return new ActiveXObject('MSXML2.XMLHTTP');
+		}, function(){
+			return new XMLHttpRequest();
+		});
+	};
+	
+}
+
+MUI.Require = new Class({
+
+	Implements: [Options],
+
+	options: {
+		css: [],
+		images: [],
+		js: [],		
+		onload: $empty
+	},
+	
+	initialize: function(options){
+		this.setOptions(options);
+		var options = this.options;		
+		
+		this.assetsToLoad = options.css.length + options.images.length + options.js.length;		
+		this.assetsLoaded = 0;
+		
+		var cssLoaded = 0;
+		
+		// Load CSS before images and JavaScript	
+				
+		if (options.css.length){
+			options.css.each( function(sheet){
+				
+				this.getAsset(sheet, function(){
+					if (cssLoaded == options.css.length - 1){
+						
+						if (this.assetsLoaded == this.assetsToLoad - 1){
+							this.requireOnload();
+						}
+						else {
+							// Add a little delay since we are relying on cached CSS from XHR request.
+							this.assetsLoaded++;	 					
+							this.requireContinue.delay(50, this);
+						}				
+					}
+					else {
+						cssLoaded++;
+						this.assetsLoaded++;						
+					}
+				}.bind(this));
+			}.bind(this));
+		}
+		else if (!options.js.length && !options.images.length){
+			this.options.onload();
+			return true;
+		}
+		else {
+			this.requireContinue.delay(50, this); // Delay is for Safari
+		}		
+		
+	},
+	
+	requireOnload: function(){
+		this.assetsLoaded++;
+		if (this.assetsLoaded == this.assetsToLoad){
+			this.options.onload();
+			return true;				
+		}
+
+	},	
+	
+	requireContinue: function(){
+
+		var options = this.options;
+		if (options.images.length){
+			options.images.each( function(image){
+				this.getAsset(image, this.requireOnload.bind(this));
+			}.bind(this));
+		}
+	
+		if (options.js.length){
+			options.js.each( function(script){
+				this.getAsset(script, this.requireOnload.bind(this));			
+			}.bind(this));
+		}
+	
+	},
+	
+	getAsset: function(source, onload){
+
+		// If the asset is loaded, fire the onload function.
+		if ( MUI.files[source] == 'loaded' ){
+			if (typeof onload == 'function'){
+				onload();
+			}
+			return true;	
+		}
+	
+		// If the asset is loading, wait until it is loaded and then fire the onload function.
+		// If asset doesn't load by a number of tries, fire onload anyway.
+		else if ( MUI.files[source] == 'loading' ){
+			var tries = 0;
+			var checker = (function(){
+				tries++;
+				if (MUI.files[source] == 'loading' && tries < '100') return;
+				$clear(checker);
+				if (typeof onload == 'function'){
+					onload();
+				}
+			}).periodical(50);
+		}
+	
+		// If the asset is not yet loaded or loading, start loading the asset.
+		else {
+			MUI.files[source] = 'loading';	
+	
+			properties = {
+				'onload': onload != 'undefined' ? onload : $empty	
+			};	
+	
+			// Add to the onload function
+			var oldonload = properties.onload;
+			properties.onload = function() {
+				MUI.files[source] = 'loaded';
+				if (oldonload) {
+						oldonload();
+				}	
+			}.bind(this);			
+	
+			switch ( source.match(/\.\w+$/)[0] ) {
+				case '.js': return Asset.javascript(source, properties);
+				case '.css': return Asset.css(source, properties);
+				case '.jpg':
+				case '.png':
+				case '.gif': return Asset.image(source, properties);
+			}
+	
+			alert('The required file "' + source + '" could not be loaded');
+		}
+	}			
+		
+});
+
+$extend(Asset, {
+
+	/* Fix an Opera bug in Mootools 1.2 */
+	javascript: function(source, properties){
+		properties = $extend({
+			onload: $empty,
+			document: document,
+			check: $lambda(true)
+		}, properties);
+		
+		if ($(properties.id)) {
+			properties.onload();
+			return $(properties.id);
+		}				
+		
+		var script = new Element('script', {'src': source, 'type': 'text/javascript'});
+		
+		var load = properties.onload.bind(script), check = properties.check, doc = properties.document;
+		delete properties.onload; delete properties.check; delete properties.document;
+		
+		if (!Browser.Engine.webkit419 && !Browser.Engine.presto){
+			script.addEvents({
+				load: load,
+				readystatechange: function(){
+					if (Browser.Engine.trident && ['loaded', 'complete'].contains(this.readyState)) 
+						load();
+				}
+			}).setProperties(properties);
+		}
+		else {
+			var checker = (function(){
+				if (!$try(check)) return;
+				$clear(checker);
+				// Opera has difficulty with multiple scripts being injected into the head simultaneously. We need to give it time to catch up.
+				Browser.Engine.presto ? load.delay(500) : load();
+			}).periodical(50);
+		}	
+		return script.inject(doc.head);
+	},
+	
+	// Get the CSS with XHR before appending it to document.head so that we can have an onload callback.
+	css: function(source, properties){
+		
+		properties = $extend({
+			id: null,
+			media: 'screen',
+			onload: $empty
+		}, properties);		
+		
+		new Request({
+			method: 'get',
+			url: source,
+			onComplete: function(response) { 
+				var newSheet = new Element('link', {
+					'id': properties.id,
+					'rel': 'stylesheet',
+					'media': properties.media,
+					'type': 'text/css',
+					'href': source
+				}).inject(document.head);						
+				properties.onload();										
+			}.bind(this),
+			onFailure: function(response){						
+			},					
+			onSuccess: function(){						 
+			}.bind(this)
+		}).send();		
+	}	
+	
+});
+
+/*
+
+REGISTER PLUGINS
+
+	Register Components and Plugins for Lazy Loading
+
+	How this works may take a moment to grasp. Take a look at MUI.Window below.
+	If we try to create a new Window and Window.js has not been loaded then the function
+	below will run. It will load the CSS required by the MUI.Window Class and then
+	then it will load Window.js. Here is the interesting part. When Window.js loads,
+	it will overwrite the function below, and new MUI.Window(arg) will be ran
+	again. This time it will create a new MUI.Window instance, and any future calls
+	to new MUI.Window(arg) will immediately create new windows since the assets
+	have already been loaded and our temporary function below has been overwritten.	
+	
+	Example:
+	
+	MyPlugins.extend({
+
+		MyGadget: function(arg){
+			new MUI.Require({
+				css: [MUI.path.plugins + 'myGadget/css/style.css'],
+				images: [MUI.path.plugins + 'myGadget/images/background.gif']
+				js: [MUI.path.plugins + 'myGadget/scripts/myGadget.js'],
+				onload: function(){
+					new MyPlguins.MyGadget(arg);
+				}		
+			});
+		}
+	
+	});	
+	
+-------------------------------------------------------------------- */
+
+MUI.extend({
+
+    newWindowsFromHTML: function(arg){
+        new MUI.Require({
+            js: [MUI.path.plugins + 'mochaui/Window/Windows-from-html.js'],
+            onload: function(){
+                new MUI.newWindowsFromHTML(arg);
+            }
+        });
+    },
+    
+	newWindowsFromJSON: function(arg){
+		new MUI.Require({
+			js: [MUI.path.plugins + 'mochaui/Window/Windows-from-json.js'],
+			onload: function(){
+				new MUI.newWindowsFromJSON(arg);
+			}
+		});
+	},
+
+	arrangeCascade: function(){
+		new MUI.Require({
+			js: [MUI.path.plugins + 'mochaui/Window/Arrange-cascade.js'],
+			onload: function(){
+				new MUI.arrangeCascade();
+			}		
+		});		
+	},
+	
+	arrangeTile: function(){
+		new MUI.Require({
+			js: [MUI.path.plugins + 'mochaui/Window/Arrange-tile.js'],
+			onload: function(){
+				new MUI.arrangeTile();
+			}		
+		});
+	},
+	
+	saveWorkspace: function(){
+		new MUI.Require({
+			js: [MUI.path.plugins + 'mochaui/Layout/Workspaces.js'],
+			onload: function(){
+				new MUI.saveWorkspace();
+			}		
+		});		
+	},
+	
+	loadWorkspace: function(){
+		new MUI.Require({
+			js: [MUI.path.plugins + 'mochaui/Layout/Workspaces.js'],
+			onload: function(){
+				new MUI.loadWorkspace();
+			}		
+		});			
+	},
+
+	Themes: {
+		init: function(arg){			
+			new MUI.Require({
+				js: [MUI.path.plugins + 'mochaui/Utilities/Themes.js'],
+				onload: function(){
+					MUI.Themes.init(arg);
+				}		
+			});			
+		}
+	}
+	
+});
+
+if( Browser.Engine.webkit ) {
+	 var webUIController = null;
+	 var pathPrefix = "";
+	 try{
+		 webUIController = Class.getInstanceOf( WebUIController );
+		 if( webUIController != null ) pathPrefix = webUIController.getContextRootPrefix();
+    }catch( e ){
+         if( !(typeof( contextRootPrefix ) === 'undefined' )) 
+            pathPrefix = contextRootPrefix;
+    };
+    
+    new MUI.Require({
+        js: [pathPrefix + 'JavaScript/Source/MochaUI/WebKitShadower.js']
+    });
+}
+;
+/*
+---
+
+name: Dock
+
+script: Dock.js
+
+description: Implements the dock/taskbar. Enables window minimize.
+
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+
+license: MIT-style license.
+
+todo:
+  - Make it so the dock requires no initial html markup.
+
+requires:
+  - MochaUI/MUI
+  - MochaUI/MUI.Windows
+  - MochaUI/MUI.Column
+  - MochaUI/MUI.Panel
+
+provides: [MUI.Dock]
+*/
+
+
+
+MUI.files[MUI.path.source + 'Layout/Dock.js'] = 'loaded';
+
+MUI.options.extend({
+	// Naming options:
+	// If you change the IDs of the Mocha Desktop containers in your HTML, you need to change them here as well.
+	dockWrapper: 'dockWrapper',
+    dockVisible: 'true',
+	dock:        'dock'
+});
+
+MUI.extend({
+	/*
+
+	Function: minimizeAll
+		Minimize all windows that are minimizable.
+
+	*/
+	minimizeAll: function() {
+		$$('.mocha').each(function(windowEl){
+			var instance = windowEl.retrieve('instance');
+			if (!instance.isMinimized && instance.options.minimizable == true){
+				MUI.Dock.minimizeWindow(windowEl);
+			}
+		}.bind(this));
+	}
+});
+
+MUI.Dock = {
+
+	options: {
+		useControls:          true,      // Toggles autohide and dock placement controls.
+		dockPosition:         'bottom',  // Position the dock starts in, top or bottom.
+        dockVisible:          true,      // is the dock visible
+		// Style options
+		trueButtonColor:      [70, 245, 70],     // Color for autohide on
+		enabledButtonColor:   [115, 153, 191],
+		disabledButtonColor:  [170, 170, 170]
+	},
+
+	initialize: function(options){
+		// Stops if MUI.Desktop is not implemented
+		if (!MUI.Desktop) return;
+
+		MUI.dockVisible = this.options.dockVisible;
+		this.dockWrapper   = $(MUI.options.dockWrapper);
+		this.dock          = $(MUI.options.dock);
+		this.autoHideEvent = null;
+		this.dockAutoHide  = false;  // True when dock autohide is set to on, false if set to off
+
+		if (!this.dockWrapper) return;
+
+		if (!this.options.useControls){
+			if($('dockPlacement')){
+				$('dockPlacement').setStyle('cursor', 'default');
+			}
+			if($('dockAutoHide')){
+				$('dockAutoHide').setStyle('cursor', 'default');
+			}
+		}
+
+		this.dockWrapper.setStyles({
+			'display':  'block',
+			'position': 'absolute',
+			'top':      null,
+			'bottom':   MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0,
+			'left':     0
+		});
+
+		if (this.options.useControls){
+			this.initializeDockControls();
+		}
+
+		// Add check mark to menu if link exists in menu
+		if ($('dockLinkCheck')){
+			this.sidebarCheck = new Element('div', {
+				'class': 'check',
+				'id': 'dock_check'
+			}).inject($('dockLinkCheck'));
+		}
+
+		this.dockSortables = new Sortables('#dockSort', {
+			opacity: 1,
+			constrain: true,
+			clone: false,
+			revert: false
+		});
+
+        if (!(MUI.dockVisible)) { this.dockWrapper.hide(); }
+		MUI.Desktop.setDesktopSize();
+
+		if (MUI.myChain){
+			MUI.myChain.callChain();
+		}
+
+	},
+
+	initializeDockControls: function(){
+
+		// Convert CSS colors to Canvas colors.
+		this.setDockColors();
+
+		if (this.options.useControls){
+			// Insert canvas
+			var canvas = new Element('canvas', {
+				'id':     'dockCanvas',
+				'width':  '15',
+				'height': '18'
+			}).inject(this.dock);
+
+			// Dynamically initialize canvas using excanvas. This is only required by IE
+			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+				G_vmlCanvasManager.initElement(canvas);
+			}
+		}
+
+		var dockPlacement = $('dockPlacement');
+		var dockAutoHide = $('dockAutoHide');
+
+		// Position top or bottom selector
+		dockPlacement.setProperty('title','Position Dock Top');
+
+		// Attach event
+		dockPlacement.addEvent('click', function(){
+			this.moveDock();
+		}.bind(this));
+
+		// Auto Hide toggle switch
+		dockAutoHide.setProperty('title','Turn Auto Hide On');
+
+		// Attach event Auto Hide
+		dockAutoHide.addEvent('click', function(event){
+			if ( this.dockWrapper.getProperty('dockPosition') == 'top' )
+				return false;
+
+			var ctx = $('dockCanvas').getContext('2d');
+			this.dockAutoHide = !this.dockAutoHide;	// Toggle
+			if (this.dockAutoHide){
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide Off');
+				//ctx.clearRect(0, 11, 100, 100);
+				MUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0);
+
+				// Define event
+				this.autoHideEvent = function(event) {
+					if (!this.dockAutoHide)
+						return;
+					if (!MUI.Desktop.desktopFooter) {
+						var dockHotspotHeight = this.dockWrapper.offsetHeight;
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+					}
+					else if (MUI.Desktop.desktopFooter) {
+						var dockHotspotHeight = this.dockWrapper.offsetHeight + MUI.Desktop.desktopFooter.offsetHeight;
+						if (dockHotspotHeight < 25) dockHotspotHeight = 25;
+					}
+					if (!MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
+						if (!MUI.dockVisible){
+							this.dockWrapper.show();
+							MUI.dockVisible = true;
+							MUI.Desktop.setDesktopSize();
+						}
+					}
+					else if (MUI.Desktop.desktopFooter && event.client.y > (document.getCoordinates().height - dockHotspotHeight)){
+						if (!MUI.dockVisible){
+							this.dockWrapper.show();
+							MUI.dockVisible = true;
+							MUI.Desktop.setDesktopSize();
+						}
+					}
+					else if (MUI.dockVisible){
+						this.dockWrapper.hide();
+						MUI.dockVisible = false;
+						MUI.Desktop.setDesktopSize();
+
+					}
+				}.bind(this);
+
+				// Add event
+				document.addEvent('mousemove', this.autoHideEvent);
+
+			} else {
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+				//ctx.clearRect(0, 11, 100, 100);
+				MUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
+				// Remove event
+				document.removeEvent('mousemove', this.autoHideEvent);
+			}
+
+		}.bind(this));
+
+		this.renderDockControls();
+
+		if (this.options.dockPosition == 'top'){
+			this.moveDock();
+		}
+
+	},
+
+	setDockColors: function(){
+		var dockButtonEnabled = MUI.getCSSRule('.dockButtonEnabled');
+		if (dockButtonEnabled && dockButtonEnabled.style.backgroundColor){
+			this.options.enabledButtonColor = new Color(dockButtonEnabled.style.backgroundColor);
+		}
+
+		var dockButtonDisabled = MUI.getCSSRule('.dockButtonDisabled');
+		if (dockButtonDisabled && dockButtonDisabled.style.backgroundColor){
+			this.options.disabledButtonColor = new Color(dockButtonDisabled.style.backgroundColor);
+		}
+
+		var trueButtonColor = MUI.getCSSRule('.dockButtonTrue');
+		if (trueButtonColor && trueButtonColor.style.backgroundColor){
+			this.options.trueButtonColor = new Color(trueButtonColor.style.backgroundColor);
+		}
+	},
+
+	renderDockControls: function(){
+		// Draw dock controls
+		var ctx = $('dockCanvas').getContext('2d');
+		ctx.clearRect(0, 0, 100, 100);
+		MUI.circle(ctx, 5 , 4, 3, this.options.enabledButtonColor, 1.0);
+
+		if( this.dockWrapper.getProperty('dockPosition') == 'top'){
+			MUI.circle(ctx, 5 , 14, 3, this.options.disabledButtonColor, 1.0)
+		}
+		else if (this.dockAutoHide){
+			MUI.circle(ctx, 5 , 14, 3, this.options.trueButtonColor, 1.0);
+		}
+		else {
+			MUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
+		}
+	},
+
+	moveDock: function(){
+			var ctx = $('dockCanvas').getContext('2d');
+			// Move dock to top position
+			if (this.dockWrapper.getStyle('position') != 'relative'){
+				this.dockWrapper.setStyles({
+					'position': 'relative',
+					'bottom':   null
+				});
+				this.dockWrapper.addClass('top');
+				MUI.Desktop.setDesktopSize();
+				this.dockWrapper.setProperty('dockPosition','top');
+				ctx.clearRect(0, 0, 100, 100);
+				MUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+				MUI.circle(ctx, 5, 14, 3, this.options.disabledButtonColor, 1.0);
+				$('dockPlacement').setProperty('title', 'Position Dock Bottom');
+				$('dockAutoHide').setProperty('title', 'Auto Hide Disabled in Top Dock Position');
+				this.dockAutoHide = false;
+			}
+			// Move dock to bottom position
+			else {
+				this.dockWrapper.setStyles({
+					'position':      'absolute',
+					'bottom':        MUI.Desktop.desktopFooter ? MUI.Desktop.desktopFooter.offsetHeight : 0
+				});
+				this.dockWrapper.removeClass('top');
+				MUI.Desktop.setDesktopSize();
+				this.dockWrapper.setProperty('dockPosition', 'bottom');
+				ctx.clearRect(0, 0, 100, 100);
+				MUI.circle(ctx, 5, 4, 3, this.options.enabledButtonColor, 1.0);
+				MUI.circle(ctx, 5 , 14, 3, this.options.enabledButtonColor, 1.0);
+				$('dockPlacement').setProperty('title', 'Position Dock Top');
+				$('dockAutoHide').setProperty('title', 'Turn Auto Hide On');
+			}
+	},
+
+	createDockTab: function(windowEl){
+
+		var instance = windowEl.retrieve('instance');
+
+		var dockTab = new Element('div', {
+			'id': instance.options.id + '_dockTab',
+			'class': 'dockTab',
+			'title': titleText
+		}).inject($('dockClear'), 'before');
+
+		dockTab.addEvent('mousedown', function(e){
+			new Event(e).stop();
+			this.timeDown = $time();
+		});
+
+		dockTab.addEvent('mouseup', function(e){
+			this.timeUp = $time();
+			if ((this.timeUp - this.timeDown) < 275){
+				// If the visibility of the windows on the page are toggled off, toggle visibility on.
+				if (MUI.Windows.windowsVisible == false) {
+					MUI.toggleWindowVisibility();
+					if (instance.isMinimized == true) {
+						MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
+					}
+					else {
+						MUI.focusWindow(windowEl);
+					}
+					return;
+				}
+				// If window is minimized, restore window.
+				if (instance.isMinimized == true) {
+					MUI.Dock.restoreMinimized.delay(25, MUI.Dock, windowEl);
+				}
+				else{
+					// If window is not minimized and is focused, minimize window.
+					if (instance.windowEl.hasClass('isFocused') && instance.options.minimizable == true){
+						MUI.Dock.minimizeWindow(windowEl)
+					}
+					// If window is not minimized and is not focused, focus window.
+					else{
+						MUI.focusWindow(windowEl);
+					}
+					// if the window is not minimized and is outside the viewport, center it in the viewport.
+					var coordinates = document.getCoordinates();
+					if (windowEl.getStyle('left').toInt() > coordinates.width || windowEl.getStyle('top').toInt() > coordinates.height){
+						MUI.centerWindow(windowEl);
+					}
+				}
+			}
+		});
+
+		this.dockSortables.addItems(dockTab);
+
+		var titleText = instance.titleEl.innerHTML;
+
+		var dockTabText = new Element('div', {
+			'id': instance.options.id + '_dockTabText',
+			'class': 'dockText'
+		}).set('html', titleText.substring(0,19) + (titleText.length > 19 ? '...' : '')).inject($(dockTab));
+
+		// If I implement this again, will need to also adjust the titleText truncate and the tab's
+		// left padding.
+		if (instance.options.icon != false){
+			// dockTabText.setStyle('background', 'url(' + instance.options.icon + ') 4px 4px no-repeat');
+		}
+
+		// Need to resize everything in case the dock wraps when a new tab is added
+		MUI.Desktop.setDesktopSize();
+
+	},
+
+	makeActiveTab: function(){
+
+		// getWindowWith HighestZindex is used in case the currently focused window
+		// is closed.
+		var windowEl = MUI.getWindowWithHighestZindex();
+		var instance = windowEl.retrieve('instance');
+
+		$$('.dockTab').removeClass('activeDockTab');
+		if (instance.isMinimized != true) {
+
+			instance.windowEl.addClass('isFocused');
+
+			var currentButton = $(instance.options.id + '_dockTab');
+			if (currentButton != null) {
+				currentButton.addClass('activeDockTab');
+			}
+		}
+		else {
+			instance.windowEl.removeClass('isFocused');
+		}
+	},
+
+	minimizeWindow: function(windowEl){
+		if (windowEl != $(windowEl)) return;
+
+		var instance = windowEl.retrieve('instance');
+		instance.isMinimized = true;
+
+		// Hide iframe
+		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
+		if ( instance.iframeEl ) {
+			// Some elements are still visible in IE8 in the iframe when the iframe's visibility is set to hidden.
+			if (!Browser.Engine.trident) {
+				instance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				instance.iframeEl.hide();
+			}
+		}
+
+		// Hide window and add to dock
+		instance.contentBorderEl.setStyle('visibility', 'hidden');
+		if(instance.toolbarWrapperEl){
+			instance.toolbarWrapperEl.hide();
+		}
+		windowEl.setStyle('visibility', 'hidden');
+
+		 // Fixes a scrollbar issue in Mac FF2
+		if (Browser.Platform.mac && Browser.Engine.gecko){
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {
+					instance.contentWrapperEl.setStyle('overflow', 'hidden');
+				}
+			}
+		}
+
+		MUI.Desktop.setDesktopSize();
+
+		// Have to use timeout because window gets focused when you click on the minimize button
+		setTimeout(function(){
+			windowEl.setStyle('zIndex', 1);
+			windowEl.removeClass('isFocused');
+			this.makeActiveTab();
+		}.bind(this),100);
+
+		instance.fireEvent('onMinimize', windowEl);
+	},
+
+	restoreMinimized: function(windowEl) {
+
+		var instance = windowEl.retrieve('instance');
+
+		if (instance.isMinimized == false) return;
+
+		if (MUI.Windows.windowsVisible == false){
+			MUI.toggleWindowVisibility();
+		}
+
+		MUI.Desktop.setDesktopSize();
+
+		 // Part of Mac FF2 scrollbar fix
+		if (instance.options.scrollbars == true && !instance.iframeEl){
+			instance.contentWrapperEl.setStyle('overflow', 'auto');
+		}
+
+		if (instance.isCollapsed) {
+			MUI.collapseToggle(windowEl);
+		}
+
+		windowEl.setStyle('visibility', 'visible');
+		instance.contentBorderEl.setStyle('visibility', 'visible');
+		if(instance.toolbarWrapperEl){
+			instance.toolbarWrapperEl.show();
+		}
+
+		// Show iframe
+		if (instance.iframeEl){
+			if (!Browser.Engine.trident){
+				instance.iframeEl.setStyle('visibility', 'visible');
+			}
+			else {
+				instance.iframeEl.show();
+			}
+		}
+
+		instance.isMinimized = false;
+		MUI.focusWindow(windowEl);
+		instance.fireEvent('onRestore', windowEl);
+
+	},
+
+    toggle: function(){
+		if (!MochaUI.dockVisible){
+			this.dockWrapper.show();
+			MUI.dockVisible = true;
+			MUI.Desktop.setDesktopSize();
+		}
+		else {
+			this.dockWrapper.hide();
+			MUI.dockVisible = false;
+			MUI.Desktop.setDesktopSize();
+		}
+	}
+};
+ 
+/*
+---
+
+name: Layout
+
+script: Layout.js
+
+description: Create web application layouts. Enables window maximize.
+
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+
+license: MIT-style license.
+
+requires:
+  - MochaUI/MUI
+
+provides: [MUI.Desktop, MUI.Column, MUI.Panel]
+
+...
+*/
+
+
+
+
+MUI.files[MUI.path.source + 'Layout/Layout.js'] = 'loaded';
+
+MUI.extend({
+	Columns: {
+		instances: new Hash(),
+		columnIDCount: 0 // Used for columns without an ID defined by the user
+	},
+	Panels: {
+		instances: new Hash(),
+		panelIDCount: 0 // Used for panels without an ID defined by the user
+	}
+});
+
+MUI.Desktop = {
+
+	options: {
+		// Naming options:
+		// If you change the IDs of the MochaUI Desktop containers in your HTML, you need to change them here as well.
+		desktop:             'desktop',
+		desktopHeader:       'desktopHeader',
+		desktopFooter:       'desktopFooter',
+		desktopNavBar:       'desktopNavbar',
+		pageWrapper:         'pageWrapper',
+		page:                'page',
+		desktopFooter:       'desktopFooterWrapper'
+	},
+	initialize: function( options ){
+	   this.options.desktop = options['desktop'] ? options['desktop'] : this.options.desktop;            
+      this.options.desktopHeader = options['desktopHeader'] ? options['desktopHeader'] : this.options.desktopHeader;            
+      this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
+      this.options.desktopNavBar = options['desktopNavBar'] ? options['desktopNavBar'] : this.options.desktopNavBar;            
+      this.options.pageWrapper = options['pageWrapper'] ? options['pageWrapper'] : this.options.pageWrapper;            
+      this.options.page = options['page'] ? options['page'] : this.options.page;            
+      this.options.desktopFooter = options['desktopFooter'] ? options['desktopFooter'] : this.options.desktopFooter;            
+
+		this.desktop         = $(this.options.desktop);
+		this.desktopHeader   = $(this.options.desktopHeader);
+		this.desktopNavBar   = $(this.options.desktopNavBar);
+		this.pageWrapper     = $(this.options.pageWrapper);
+		this.page            = $(this.options.page);
+		this.desktopFooter   = $(this.options.desktopFooter);
+
+      MUI.underlayInitialize();
+      
+		if (this.desktop) {
+			($$('body')).setStyles({
+				overflow: 'hidden',
+				height: '100%',
+				margin: 0
+			});
+			($$('html')).setStyles({
+				overflow: 'hidden',
+				height: '100%'
+			});
+		}
+
+		// This is run on dock initialize so no need to do it twice.
+		if (!MUI.Dock){
+			this.setDesktopSize();
+		}
+		this.menuInitialize();
+
+		// Resize desktop, page wrapper, modal overlay, and maximized windows when browser window is resized
+		window.addEvent('resize', function(e){
+			this.onBrowserResize();
+		}.bind(this));
+
+		if (MUI.myChain){
+			MUI.myChain.callChain();
+		}
+
+	},
+	menuInitialize: function(){
+		// Fix for dropdown menus in IE6
+		if (Browser.Engine.trident4 && this.desktopNavBar){
+			this.desktopNavBar.getElements('li').each(function(element) {
+				element.addEvent('mouseenter', function(){
+					this.addClass('ieHover');
+				});
+				element.addEvent('mouseleave', function(){
+					this.removeClass('ieHover');
+				});
+			});
+		};
+	},
+	onBrowserResize: function(){
+		this.setDesktopSize();
+		// Resize maximized windows to fit new browser window size
+		setTimeout( function(){
+			MUI.Windows.instances.each(function(instance){
+				if (instance.isMaximized){
+
+					// Hide iframe while resize for better performance
+					if ( instance.iframeEl ){
+						instance.iframeEl.setStyle('visibility', 'hidden');
+					}
+
+					var coordinates = document.getCoordinates();
+					var borderHeight = instance.contentBorderEl.getStyle('border-top').toInt() + instance.contentBorderEl.getStyle('border-bottom').toInt();
+					var toolbarHeight = instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
+					instance.contentWrapperEl.setStyles({
+						'height': coordinates.height - instance.options.headerHeight - instance.options.footerHeight - borderHeight - toolbarHeight,
+						'width': coordinates.width
+					});
+
+					instance.drawWindow();
+					if ( instance.iframeEl ){
+						instance.iframeEl.setStyles({
+							'height': instance.contentWrapperEl.getStyle('height')
+						});
+						instance.iframeEl.setStyle('visibility', 'visible');
+					}
+
+				}
+			}.bind(this));
+		}.bind(this), 100);
+	},
+	setDesktopSize: function(){
+		var windowDimensions = window.getCoordinates();
+
+		// var dock = $(MUI.options.dock);
+		var dockWrapper = $(MUI.options.dockWrapper);
+
+		// Setting the desktop height may only be needed by IE7
+		if (this.desktop){
+			this.desktop.setStyle('height', windowDimensions.height);
+		}
+
+		// Set pageWrapper height so the dock doesn't cover the pageWrapper scrollbars.
+		if (this.pageWrapper) {
+			var dockOffset = MUI.dockVisible ? dockWrapper.offsetHeight : 0;
+			var pageWrapperHeight = windowDimensions.height;
+			pageWrapperHeight -= this.pageWrapper.getStyle('border-top').toInt();
+			pageWrapperHeight -= this.pageWrapper.getStyle('border-bottom').toInt();
+			if (this.desktopHeader){ pageWrapperHeight -= this.desktopHeader.offsetHeight; }
+			if (this.desktopFooter){ pageWrapperHeight -= this.desktopFooter.offsetHeight; }
+			pageWrapperHeight -= dockOffset;
+
+			if (pageWrapperHeight < 0){
+				pageWrapperHeight = 0;
+			}
+			this.pageWrapper.setStyle('height', pageWrapperHeight);
+		}
+
+		if (MUI.Columns.instances.getKeys().length > 0){ // Conditional is a fix for a bug in IE6 in the no toolbars demo.
+			MUI.Desktop.resizePanels();
+		}
+	},
+	resizePanels: function(){
+		MUI.panelHeight();
+		MUI.rWidth();
+	},
+	/*
+
+	Function: maximizeWindow
+		Maximize a window.
+
+	Syntax:
+		(start code)
+		MUI.Desktop.maximizeWindow(windowEl);
+		(end)
+
+	*/
+	maximizeWindow: function(windowEl){
+
+		var instance = MUI.Windows.instances.get(windowEl.id);
+		var options = instance.options;
+		var windowDrag = instance.windowDrag;
+
+		// If window no longer exists or is maximized, stop
+		if (windowEl != $(windowEl) || instance.isMaximized ) return;
+
+		if (instance.isCollapsed){
+			MUI.collapseToggle(windowEl);
+		}
+
+		instance.isMaximized = true;
+
+		// If window is restricted to a container, it should not be draggable when maximized.
+		if (instance.options.restrict){
+			windowDrag.detach();
+			if (options.resizable) {
+				instance.detachResizable();
+			}
+			instance.titleBarEl.setStyle('cursor', 'default');
+		}
+
+		// If the window has a container that is not the desktop
+		// temporarily move the window to the desktop while it is minimized.
+		if (options.container != this.desktop){
+			this.desktop.grab(windowEl);
+			if (this.options.restrict){
+			windowDrag.container = this.desktop;
+			}
+		}
+
+		// Save original position
+		instance.oldTop = windowEl.getStyle('top');
+		instance.oldLeft = windowEl.getStyle('left');
+
+		var contentWrapperEl = instance.contentWrapperEl;
+
+		// Save original dimensions
+		contentWrapperEl.oldWidth = contentWrapperEl.getStyle('width');
+		contentWrapperEl.oldHeight = contentWrapperEl.getStyle('height');
+
+		// Hide iframe
+		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
+		if ( instance.iframeEl ) {
+			if (!Browser.Engine.trident) {
+				instance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				instance.iframeEl.hide();
+			}
+		}
+
+		var windowDimensions = document.getCoordinates();
+		var options = instance.options;
+		var shadowBlur = options.shadowBlur;
+		var shadowOffset = options.shadowOffset;
+		var newHeight = windowDimensions.height - options.headerHeight - options.footerHeight;
+		newHeight -= instance.contentBorderEl.getStyle('border-top').toInt();
+		newHeight -= instance.contentBorderEl.getStyle('border-bottom').toInt();
+		newHeight -= (instance.toolbarWrapperEl ? instance.toolbarWrapperEl.getStyle('height').toInt() + instance.toolbarWrapperEl.getStyle('border-top').toInt() : 0);
+
+		MUI.resizeWindow(windowEl, {
+			width: windowDimensions.width,
+			height: newHeight,
+			top: shadowOffset.y - shadowBlur,
+			left: shadowOffset.x - shadowBlur
+		});
+		instance.fireEvent('onMaximize', windowEl);
+
+		if (instance.maximizeButtonEl) {
+			instance.maximizeButtonEl.setProperty('title', 'Restore');
+		}
+		MUI.focusWindow(windowEl);
+
+	},
+	/*
+
+	Function: restoreWindow
+		Restore a maximized window.
+
+	Syntax:
+		(start code)
+		MUI.Desktop.restoreWindow(windowEl);
+		(end)
+
+	*/
+	restoreWindow: function(windowEl){
+
+		var instance = windowEl.retrieve('instance');
+
+		// Window exists and is maximized ?
+		if (windowEl != $(windowEl) || !instance.isMaximized) return;
+
+		var options = instance.options;
+		instance.isMaximized = false;
+
+		if (options.restrict){
+			instance.windowDrag.attach();
+			if (options.resizable){
+				instance.reattachResizable();
+			}
+			instance.titleBarEl.setStyle('cursor', 'move');
+		}
+
+		// Hide iframe
+		// Iframe should be hidden when minimizing, maximizing, and moving for performance and Flash issues
+		if ( instance.iframeEl ) {
+			if (!Browser.Engine.trident) {
+				instance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				instance.iframeEl.hide();
+			}
+		}
+
+		var contentWrapperEl = instance.contentWrapperEl;
+
+		MUI.resizeWindow(windowEl,{
+			width: contentWrapperEl.oldWidth,
+			height: contentWrapperEl.oldHeight,
+			top: instance.oldTop,
+			left: instance.oldLeft
+		});
+		instance.fireEvent('onRestore', windowEl);
+
+		if (instance.maximizeButtonEl){
+			instance.maximizeButtonEl.setProperty('title', 'Maximize');
+		}
+	}
+};
+
+/*
+
+Class: Column
+	Create a column. Columns should be created from left to right.
+
+Syntax:
+(start code)
+	MUI.Column();
+(end)
+
+Arguments:
+	options
+
+Options:
+	id - The ID of the column. This must be set when creating the column.
+	container - Defaults to MUI.Desktop.pageWrapper.
+	placement - Can be 'right', 'main', or 'left'. There must be at least one column with the 'main' option.
+	width - 'main' column is fluid and should not be given a width.
+	resizeLimit - resizelimit of a 'right' or 'left' column.
+	sortable - (boolean) Whether the panels can be reordered via drag and drop.
+	onResize - (function) Fired when the column is resized.
+	onCollapse - (function) Fired when the column is collapsed.
+	onExpand - (function) Fired when the column is expanded.
+
+*/
+MUI.Column = new Class({
+
+	Implements: [Events, Options],
+
+	options: {
+		id:            null,
+		container:     null,
+		placement:     null,
+		width:         null,
+		resizeLimit:   [],
+		sortable:      true,
+        isCollapsed:   false,
+
+		// Events
+		onResize:     $empty,
+		onCollapse:   $empty,
+		onExpand:     $empty
+
+	},
+
+	initialize: function(options){
+		this.setOptions(options);
+
+		$extend(this, {
+			timestamp: $time(),
+			isCollapsed: false,
+			oldWidth: 0
+		});
+
+		// If column has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'column' + (++MUI.Columns.columnIDCount);
+		}
+
+		// Shorten object chain
+		var options = this.options;
+		var instances = MUI.Columns.instances;
+		var instanceID = instances.get(options.id);
+
+		if (options.container == null) {
+			options.container = MUI.Desktop.pageWrapper;
+		}
+		else {
+			$(options.container).setStyle('overflow', 'hidden');
+		}
+
+		if (typeof this.options.container == 'string'){
+			this.options.container = $(this.options.container);
+		}
+
+		// Check to see if there is already a class instance for this Column
+		if (instanceID){
+			var instance = instanceID;
+		}
+
+		// Check if column already exists
+		if ( this.columnEl ){
+			return;
+		}
+		else {
+			instances.set(options.id, this);
+		}
+
+		// If loading columns into a panel, hide the regular content container.
+		if ($(options.container).getElement('.pad') != null) {
+			$(options.container).getElement('.pad').hide();
+		}
+
+		// If loading columns into a window, hide the regular content container.
+		if ($(options.container).getElement('.mochaContent') != null) {
+			$(options.container).getElement('.mochaContent').hide();
+		}
+
+		this.columnEl = new Element('div', {
+			'id': this.options.id,
+			'class': 'column expanded',
+			'styles': {
+				'width': options.placement == 'main' ? null : options.width
+			}
+		}).inject($(options.container));
+
+		this.columnEl.store('instance', this);
+
+		var parent = this.columnEl.getParent();
+		var columnHeight = parent.getStyle('height').toInt();
+		this.columnEl.setStyle('height', columnHeight);
+
+		if (this.options.sortable){
+			if (!this.options.container.retrieve('sortables')){
+				var sortables = new Sortables(this.columnEl, {
+					opacity: 1,
+					handle: '.panel-header',
+					constrain: false,
+					revert: false,
+					onSort: function(){
+						$$('.column').each(function(column){
+							column.getChildren('.panelWrapper').each(function(panelWrapper){
+								panelWrapper.getElement('.panel').removeClass('bottomPanel');
+							});
+							if (column.getChildren('.panelWrapper').getLast()){
+								column.getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+							}
+                            column.getChildren('.panelWrapper').each(function(panelWrapper){
+                                var panel = panelWrapper.getElement('.panel');
+                                var column = panelWrapper.getParent().id;
+                                instance = MUI.Panels.instances.get(panel.id);
+                                instance.options.column = column;
+                                if(instance) {
+                                    var nextpanel = panel.getParent().getNext('.expanded');
+                                    if(nextpanel) {
+                                        nextpanel=nextpanel.getElement('.panel'); }
+                                    instance.partner = nextpanel;
+                                }
+                            });
+							MUI.panelHeight();
+						}.bind(this));
+					}.bind(this)
+				});
+				this.options.container.store('sortables', sortables);
+			}
+			else {
+				this.options.container.retrieve('sortables').addLists(this.columnEl);
+			}
+		}
+
+		if (options.placement == 'main'){
+			this.columnEl.addClass('rWidth');
+		}
+
+		switch (this.options.placement) {
+			case 'left':
+				this.handleEl = new Element('div', {
+					'id': this.options.id + '_handle',
+					'class': 'columnHandle'
+				}).inject(this.columnEl, 'after');
+
+				this.handleIconEl = new Element('div', {
+					'id': options.id + '_handle_icon',
+					'class': 'handleIcon'
+				}).inject(this.handleEl);
+
+				addResizeRight(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				break;
+			case 'right':
+				this.handleEl = new Element('div', {
+					'id': this.options.id + '_handle',
+					'class': 'columnHandle'
+				}).inject(this.columnEl, 'before');
+
+				this.handleIconEl = new Element('div', {
+					'id': options.id + '_handle_icon',
+					'class': 'handleIcon'
+				}).inject(this.handleEl);
+				addResizeLeft(this.columnEl, options.resizeLimit[0], options.resizeLimit[1]);
+				break;
+		}
+
+        if (this.options.isCollapsed && this.options.placement!='main'){
+            this.columnToggle();
+        }
+
+		if (this.handleEl != null){
+			this.handleEl.addEvent('dblclick', function(){
+				this.columnToggle();
+			}.bind(this));
+		}
+
+		MUI.rWidth();
+
+	},
+	
+	close: function(){
+	   MUI.closeColumn( this.options.id );
+	},
+
+    columnCollapse: function(){
+        var column = this.columnEl;
+
+        this.oldWidth = column.getStyle('width').toInt();
+
+        this.resize.detach();
+        this.handleEl.removeEvents('dblclick');
+        this.handleEl.addEvent('click', function(){
+            this.columnExpand();
+        }.bind(this));
+        this.handleEl.setStyle('cursor', 'pointer').addClass('detached');
+
+        column.setStyle('width', 0);
+        this.isCollapsed = true;
+        column.addClass('collapsed');
+        column.removeClass('expanded');
+        MUI.rWidth();
+        this.fireEvent('onCollapse');
+
+        return true;
+    },
+
+    columnExpand : function(){
+        var column = this.columnEl;
+
+        column.setStyle('width', this.oldWidth);
+        this.isCollapsed = false;
+        column.addClass('expanded');
+        column.removeClass('collapsed');
+
+        this.handleEl.removeEvents('click');
+        this.handleEl.addEvent('dblclick', function(){
+            this.columnCollapse();
+        }.bind(this));
+        this.resize.attach();
+        this.handleEl.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize').addClass('attached');
+
+        MUI.rWidth();
+        this.fireEvent('onExpand');
+
+        return true;
+    },
+
+	columnToggle: function(){
+		if (this.isCollapsed == false)
+            this.columnCollapse();
+		else
+            this.columnExpand();
+	}
+});
+MUI.Column.implement(new Options, new Events);
+
+/*
+
+Class: Panel
+	Create a panel. Panels go one on top of another in columns. Create your columns first and then add your panels. Panels should be created from top to bottom, left to right.
+
+Syntax:
+(start code)
+	MUI.Panel();
+(end)
+
+Arguments:
+	options
+
+Options:
+	id - The ID of the panel. This must be set when creating the panel.
+	column - Where to inject the panel. This must be set when creating the panel.
+	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html' if there is no contentURL. Defaults to 'xhr' if there is a contentURL. You only really need to set this if using the 'iframe' method. May create a 'panel' loadMethod in the future.
+	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	method - ('get', or 'post') The method used to get the data. Defaults to 'get'.
+	data - (hash) Data to send with the URL. Defaults to null.
+	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.
+	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
+	content - (string or element) An html loadMethod option.
+	tabsURL - (url)
+	tabsData - (hash) Data to send with the URL. Defaults to null.
+	tabsOnload - (function)
+	header - (boolean) Display the panel header or not
+	headerToolbox: (boolean)
+	headerToolboxURL: (url)
+	headerToolboxOnload: (function)
+	height - (number) Height of content area.
+	addClass - (string) Add a class to the panel.
+	scrollbars - (boolean)
+	padding - (object)
+	collapsible - (boolean)
+	onBeforeBuild - (function) Fired before the panel is created.
+	onContentLoaded - (function) Fired after the panel's conten is loaded.
+	onResize - (function) Fired when the panel is resized.
+	onCollapse - (function) Fired when the panel is collapsed.
+	onExpand - (function) Fired when the panel is expanded.
+
+*/
+
+MUI.Panel = new Class({
+
+	Implements: [Events, Options],
+
+	options: {
+		id:                 null,
+		title:              'New Panel',
+		column:             null,
+		require:            {
+			css:            [],
+			images:         [],
+			js:             [],
+			onload:         null
+		},
+		loadMethod:         null,
+		contentURL:         null,
+
+		// xhr options
+		method:             'get',
+		data:               null,
+		evalScripts:        true,
+		evalResponse:       false,
+
+		// html options
+		content:            'Panel content',
+
+		// Tabs
+		tabsURL:            null,
+		tabsData:           null,
+		tabsOnload:         $empty,
+
+		header:             true,
+		headerToolbox:      false,
+		headerToolboxURL:   'pages/lipsum.html',
+		headerToolboxOnload: $empty,
+
+		// Style options:
+		height:             125,
+		addClass:           '',
+		scrollbars:         true,
+		padding:   		    { top: 0, right: 0, bottom: 0, left: 0 },
+
+		// Other:
+		collapsible:	    true,
+
+		// Events
+		onBeforeBuild:       $empty,
+		onContentLoaded:     $empty,
+		onResize:            $empty,
+		onCollapse:          $empty,
+		onExpand:            $empty
+
+	},
+	initialize: function(options){
+		this.setOptions(options);
+		this.isClosing = false;
+
+		$extend(this, {
+			timestamp: $time(),
+			isCollapsed: false, // This is probably redundant since we can check for the class
+			oldHeight: 0,
+			partner: null
+		});
+
+		// If panel has no ID, give it one.
+		if (this.options.id == null){
+			this.options.id = 'panel' + (++MUI.Panels.panelIDCount);
+		}
+
+		// Shorten object chain
+		var instances = MUI.Panels.instances;
+		var instanceID = instances.get(this.options.id);
+		var options = this.options;
+
+		// Check to see if there is already a class instance for this panel
+		if (instanceID){
+			var instance = instanceID;
+		}
+
+		// Check if panel already exists
+		if ( this.panelEl ){
+			return;
+		}
+		else {
+			instances.set(this.options.id, this);
+		}
+
+		this.fireEvent('onBeforeBuild');
+
+		if (options.loadMethod == 'iframe') {
+			// Iframes have their own padding.
+			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		}
+
+		this.showHandle = true;
+		if( $(options.column).getChildren().length == 0 ) {
+			this.showHandle = false;
+		}
+
+		this.panelWrapperEl = new Element('div', {
+			'id': this.options.id + '_wrapper',
+			'class': 'panelWrapper expanded'
+		}).inject($(options.column));
+
+		this.panelEl = new Element('div', {
+			'id': this.options.id,
+			'class': 'panel expanded',
+			'styles': {
+				'height': options.height
+			}
+		}).inject(this.panelWrapperEl);
+
+		this.panelEl.store('instance', this);
+		
+		this.panelEl.addClass(options.addClass);
+
+		this.contentEl = new Element('div', {
+			'id': options.id + '_pad',
+			'class': 'pad'
+		}).inject(this.panelEl);
+
+		// This is in order to use the same variable as the windows do in updateContent.
+		// May rethink this.
+		this.contentWrapperEl = this.panelEl;
+
+		this.contentEl.setStyles({
+			'padding-top': options.padding.top,
+			'padding-bottom': options.padding.bottom,
+			'padding-left': options.padding.left,
+			'padding-right': options.padding.right
+		});
+
+		this.panelHeaderEl = new Element('div', {
+			'id': this.options.id + '_header',
+			'class': 'panel-header',
+			'styles': {
+				'display': options.header ? 'block' : 'none'
+			}
+		}).inject(this.panelEl, 'before');
+
+		var columnInstances = MUI.Columns.instances;
+		var columnInstance = columnInstances.get(this.options.column);
+
+		if (this.options.collapsible) {
+			this.collapseToggleInit();
+		}
+
+		if (this.options.headerToolbox) {
+			this.panelHeaderToolboxEl = new Element('div', {
+				'id': options.id + '_headerToolbox',
+				'class': 'panel-header-toolbox'
+			}).inject(this.panelHeaderEl);
+		}
+
+		this.panelHeaderContentEl = new Element('div', {
+			'id': options.id + '_headerContent',
+			'class': 'panel-headerContent'
+		}).inject(this.panelHeaderEl);
+
+        if (columnInstance.options.sortable) {
+            this.panelHeaderEl.setStyle('cursor', 'move');
+            columnInstance.options.container.retrieve('sortables').addItems(this.panelWrapperEl);
+            if(this.panelHeaderToolboxEl) {
+                this.panelHeaderToolboxEl.addEvent('mousedown',function(e) {
+                    e=new Event(e).stop();
+                    e.target.focus();
+                });
+                this.panelHeaderToolboxEl.setStyle("cursor","default");
+            }
+        }
+
+		this.titleEl = new Element('h2', {
+			'id': options.id + '_title'
+		}).inject(this.panelHeaderContentEl);
+
+		this.handleEl = new Element('div', {
+			'id': options.id + '_handle',
+			'class': 'horizontalHandle',
+			'styles': {
+				'display': this.showHandle == true ? 'block' : 'none'
+			}
+		}).inject(this.panelEl, 'after');
+
+		this.handleIconEl = new Element('div', {
+			'id': options.id + '_handle_icon',
+			'class': 'handleIcon'
+		}).inject(this.handleEl);
+
+		addResizeBottom(options.id);
+
+		if (options.require.css.length || options.require.images.length){
+			new MUI.Require({
+				css: options.require.css,
+				images: options.require.images,
+				onload: function(){
+					this.newPanel();
+				}.bind(this)
+			});
+		}
+		else {
+			this.newPanel();
+		}
+	},
+	
+	destroy: function(){
+	   MUI.closePanel( this.panelEl );
+	},
+	
+	newPanel: function(){
+
+		options = this.options;
+
+		if (this.options.headerToolbox) {
+			MUI.updateContent({
+				'element': this.panelEl,
+				'childElement': this.panelHeaderToolboxEl,
+				'loadMethod': 'xhr',
+				'url': options.headerToolboxURL,
+				'onContentLoaded': options.headerToolboxOnload
+			});
+		}
+
+		if (options.tabsURL == null) {
+			this.titleEl.set('html', options.title);
+		} else {
+			this.panelHeaderContentEl.addClass('tabs');
+			MUI.updateContent({
+				'element': this.panelEl,
+				'childElement': this.panelHeaderContentEl,
+				'loadMethod': 'xhr',
+				'url': options.tabsURL,
+				'data': options.tabsData,
+				'onContentLoaded': options.tabsOnload
+			});
+		}
+
+		// Add content to panel.
+		MUI.updateContent({
+			'element': this.panelEl,
+			'content': options.content,
+			'method': options.method,
+			'data': options.data,
+			'url': options.contentURL,
+			'onContentLoaded': null,
+			'require': {
+				js: options.require.js,
+				onload: options.require.onload
+			}
+		});
+
+		// Do this when creating and removing panels
+		$(options.column).getChildren('.panelWrapper').each(function(panelWrapper){
+			panelWrapper.getElement('.panel').removeClass('bottomPanel');
+		});
+		$(options.column).getChildren('.panelWrapper').getLast().getElement('.panel').addClass('bottomPanel');
+
+		MUI.panelHeight(options.column, this.panelEl, 'new');
+
+	},
+	collapseToggleInit: function(options){
+
+		var options = this.options;
+
+		this.panelHeaderCollapseBoxEl = new Element('div', {
+			'id': options.id + '_headerCollapseBox',
+			'class': 'toolbox'
+		}).inject(this.panelHeaderEl);
+
+		if (options.headerToolbox) {
+			this.panelHeaderCollapseBoxEl.addClass('divider');
+		}
+
+		this.collapseToggleEl = new Element('div', {
+			'id': options.id + '_collapseToggle',
+			'class': 'panel-collapse icon16',
+			'styles': {
+				'width': 16,
+				'height': 16
+			},
+			'title': 'Collapse Panel'
+		}).inject(this.panelHeaderCollapseBoxEl);
+
+		this.collapseToggleEl.addEvent('click', function(event){
+			var panel = this.panelEl;
+			var panelWrapper = this.panelWrapperEl
+
+			// Get siblings and make sure they are not all collapsed.
+			// If they are all collapsed and the current panel is collapsing
+			// Then collapse the column.
+			var instances = MUI.Panels.instances;
+			var expandedSiblings = [];
+
+			panelWrapper.getAllPrevious('.panelWrapper').each(function(sibling){
+				var instance = instances.get(sibling.getElement('.panel').id);
+				if (instance.isCollapsed == false){
+					expandedSiblings.push(sibling.getElement('.panel').id);
+				}
+			});
+
+			panelWrapper.getAllNext('.panelWrapper').each(function(sibling){
+				var instance = instances.get(sibling.getElement('.panel').id);
+				if (instance.isCollapsed == false){
+					expandedSiblings.push(sibling.getElement('.panel').id);
+				}
+			});
+
+			// Collapse Panel
+			if (this.isCollapsed == false) {
+				var currentColumn = MUI.Columns.instances.get($(options.column).id);
+
+				if (expandedSiblings.length == 0 && currentColumn.options.placement != 'main'){
+					var currentColumn = MUI.Columns.instances.get($(options.column).id);
+					currentColumn.columnToggle();
+					return;
+				}
+				else if (expandedSiblings.length == 0 && currentColumn.options.placement == 'main'){
+					return;
+				}
+				this.oldHeight = panel.getStyle('height').toInt();
+				if (this.oldHeight < 10) this.oldHeight = 20;
+				this.contentEl.setStyle('position', 'absolute'); // This is so IE6 and IE7 will collapse the panel all the way
+				panel.setStyle('height', 0);
+				this.isCollapsed = true;
+				panelWrapper.addClass('collapsed');
+				panelWrapper.removeClass('expanded');
+				MUI.panelHeight(options.column, panel, 'collapsing');
+				MUI.panelHeight(); // Run this a second time for panels within panels
+				this.collapseToggleEl.removeClass('panel-collapsed');
+				this.collapseToggleEl.addClass('panel-expand');
+				this.collapseToggleEl.setProperty('title','Expand Panel');
+				this.fireEvent('onCollapse');
+			}
+
+			// Expand Panel
+			else {
+				this.contentEl.setStyle('position', null); // This is so IE6 and IE7 will collapse the panel all the way
+				panel.setStyle('height', this.oldHeight);
+				this.isCollapsed = false;
+				panelWrapper.addClass('expanded');
+				panelWrapper.removeClass('collapsed');
+				MUI.panelHeight(this.options.column, panel, 'expanding');
+				MUI.panelHeight(); // Run this a second time for panels within panels
+				this.collapseToggleEl.removeClass('panel-expand');
+				this.collapseToggleEl.addClass('panel-collapsed');
+				this.collapseToggleEl.setProperty('title','Collapse Panel');
+				this.fireEvent('onExpand');
+			}
+		}.bind(this));
+	}
+});
+MUI.Panel.implement(new Options, new Events);
+
+/*
+  	arguments:
+		column - The column to resize the panels in
+		changing -  The panel that is collapsing, expanding, or new
+  		action - collapsing, expanding, or new
+
+*/
+
+MUI.extend({
+	// Panel Height
+	panelHeight: function(column, changing, action){
+		if (column != null) {
+			MUI.panelHeight2($(column), changing, action);
+		}
+		else {
+			$$('.column').each(function(column){
+				MUI.panelHeight2(column);
+			}.bind(this));
+		}
+	},
+	/*
+
+	actions can be new, collapsing or expanding.
+
+	*/
+	panelHeight2: function(column, changing, action){
+
+		var instances = MUI.Panels.instances;
+
+		var parent = column.getParent();
+		var columnHeight = parent.getStyle('height').toInt();
+		if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper) {
+			columnHeight -= 1;
+		}
+		column.setStyle('height', columnHeight);
+
+		// Get column panels
+		var panels = [];
+		column.getChildren('.panelWrapper').each( function(panelWrapper){
+			panels.push(panelWrapper.getElement('.panel'));
+		}.bind(this));
+
+		// Get expanded column panels
+		var panelsExpanded = [];
+		column.getChildren('.expanded').each( function(panelWrapper){
+			panelsExpanded.push(panelWrapper.getElement('.panel'));
+		}.bind(this));
+
+		 // All the panels in the column whose height will be effected.
+		var panelsToResize = [];
+
+		// The panel with the greatest height. Remainders will be added to this panel
+		var tallestPanel;
+		var tallestPanelHeight = 0;
+
+		this.panelsTotalHeight = 0; // Height of all the panels in the column
+		this.height = 0; // Height of all the elements in the column
+
+		// Set panel resize partners
+		panels.each(function(panel){
+			instance = instances.get(panel.id);
+			if (panel.getParent().hasClass('expanded') && panel.getParent().getNext('.expanded')) {
+				instance.partner = panel.getParent().getNext('.expanded').getElement('.panel');
+				instance.resize.attach();
+				instance.handleEl.setStyles({
+					'display': 'block',
+					'cursor': Browser.Engine.webkit ? 'row-resize' : 'n-resize'
+				}).removeClass('detached');
+			} else {
+				instance.resize.detach();
+				instance.handleEl.setStyles({
+					'display': 'none',
+					'cursor': null
+				}).addClass('detached');
+			}
+			if (panel.getParent().getNext('.panelWrapper') == null) {
+				instance.handleEl.hide();
+			}
+		}.bind(this));
+
+		// Add panels to panelsToResize
+		// Get the total height of all the resizable panels
+		// Get the total height of all the column's children
+		column.getChildren().each(function(panelWrapper){
+
+		panelWrapper.getChildren().each(function(el){
+
+			if (el.hasClass('panel')){
+				var instance = instances.get(el.id);
+
+				// Are any next siblings Expanded?
+				anyNextSiblingsExpanded = function(el){
+					var test;
+					el.getParent().getAllNext('.panelWrapper').each(function(sibling){
+						var siblingInstance = instances.get(sibling.getElement('.panel').id);
+						if (siblingInstance.isCollapsed == false){
+							test = true;
+						}
+					}.bind(this));
+					return test;
+				}.bind(this);
+
+				// If a next sibling is expanding, are any of the nexts siblings of the expanding sibling Expanded?
+				anyExpandingNextSiblingsExpanded = function(el){
+					var test;
+					changing.getParent().getAllNext('.panelWrapper').each(function(sibling){
+						var siblingInstance = instances.get(sibling.getElement('.panel').id);
+						if (siblingInstance.isCollapsed == false){
+							test = true;
+						}
+					}.bind(this));
+					return test;
+				}.bind(this);
+
+				// Is the panel that is collapsing, expanding, or new located after this panel?
+				anyNextContainsChanging = function(el){
+					var allNext = [];
+					el.getParent().getAllNext('.panelWrapper').each(function(panelWrapper){
+						allNext.push(panelWrapper.getElement('.panel'));
+					}.bind(this));
+					var test = allNext.contains(changing);
+					return test;
+				}.bind(this);
+
+				nextExpandedChanging = function(el){
+					var test;
+					if (el.getParent().getNext('.expanded')){
+						if (el.getParent().getNext('.expanded').getElement('.panel') == changing) test = true;
+					}
+					return test;
+				}
+
+				// NEW PANEL
+				// Resize panels that are "new" or not collapsed
+				if (action == 'new') {
+					if (!instance.isCollapsed && el != changing) {
+						panelsToResize.push(el);
+						this.panelsTotalHeight += el.offsetHeight.toInt();
+					}
+				}
+
+				// COLLAPSING PANELS and CURRENTLY EXPANDED PANELS
+				// Resize panels that are not collapsed.
+				// If a panel is collapsing resize any expanded panels below.
+				// If there are no expanded panels below it, resize the expanded panels above it.
+				else if (action == null || action == 'collapsing' ){
+					if (!instance.isCollapsed && (!anyNextContainsChanging(el) || !anyNextSiblingsExpanded(el))){
+						panelsToResize.push(el);
+						this.panelsTotalHeight += el.offsetHeight.toInt();
+					}
+				}
+
+				// EXPANDING PANEL
+				// Resize panels that are not collapsed and are not expanding.
+				// Resize any expanded panels below the expanding panel.
+				// If there are no expanded panels below the expanding panel, resize the first expanded panel above it.
+				else if (action == 'expanding' && !instance.isCollapsed  && el != changing){
+					if (!anyNextContainsChanging(el) || (!anyExpandingNextSiblingsExpanded(el) && nextExpandedChanging(el))){
+						panelsToResize.push(el);
+						this.panelsTotalHeight += el.offsetHeight.toInt();
+					}
+				}
+
+				if (el.style.height){
+					this.height += el.getStyle('height').toInt();
+				}
+			}
+			else {
+				this.height += el.offsetHeight.toInt();
+			}
+		}.bind(this));
+
+		}.bind(this));
+
+		// Get the remaining height
+		var remainingHeight = column.offsetHeight.toInt() - this.height;
+
+		this.height = 0;
+
+		// Get height of all the column's children
+		column.getChildren().each(function(el){
+			this.height += el.offsetHeight.toInt();
+		}.bind(this));
+
+		var remainingHeight = column.offsetHeight.toInt() - this.height;
+
+		panelsToResize.each(function(panel){
+			var ratio = panel.offsetHeight.toInt() >= 1 ? this.panelsTotalHeight / panel.offsetHeight.toInt() : 1; 
+			var newPanelHeight = panel.getStyle('height').toInt() + (remainingHeight / ratio);
+			if (newPanelHeight < 1){
+				newPanelHeight = 0;
+			}
+			panel.setStyle('height', newPanelHeight);
+			if(!$defined(action)) instances[panel.id].fireEvent('onResize'); 
+		}.bind(this));
+
+		// Make sure the remaining height is 0. If not add/subtract the
+		// remaining height to the tallest panel. This makes up for browser resizing,
+		// off ratios, and users trying to give panels too much height.
+
+		// Get height of all the column's children
+		this.height = 0;
+		column.getChildren().each(function(panelWrapper){
+			panelWrapper.getChildren().each(function(el){
+				this.height += el.offsetHeight.toInt();
+				if (el.hasClass('panel') && el.getStyle('height').toInt() > tallestPanelHeight){
+					tallestPanel = el;
+					tallestPanelHeight = el.getStyle('height').toInt();
+				}
+			}.bind(this));
+		}.bind(this));
+
+		var remainingHeight = column.offsetHeight.toInt() - this.height;
+
+		if (remainingHeight != 0 && tallestPanelHeight > 0){
+			var calculatedPanelHeigh = tallestPanel.getStyle('height').toInt() + remainingHeight;
+			if( calculatedPanelHeigh < 1){
+				tallestPanel.setStyle('height', 0 );
+			}else {
+				tallestPanel.setStyle('height', calculatedPanelHeigh );
+			}
+		}
+
+		parent.getChildren('.columnHandle').each(function(handle){
+			var parent = handle.getParent();
+			if (parent.getStyle('height').toInt() < 1) return; // Keeps IE7 and 8 from throwing an error when collapsing a panel within a panel
+			var handleHeight = parent.getStyle('height').toInt() - handle.getStyle('border-top').toInt() - handle.getStyle('border-bottom').toInt();
+			if (Browser.Engine.trident4 && parent == MUI.Desktop.pageWrapper){
+				handleHeight -= 1;
+			}
+			handle.setStyle('height', handleHeight);
+		});
+
+		panelsExpanded.each(function(panel){
+			MUI.resizeChildren(panel);
+		}.bind(this));
+
+	},
+	// May rename this resizeIframeEl()
+	resizeChildren: function(panel){
+		var instances = MUI.Panels.instances;
+		var instance = instances.get(panel.id);
+		var contentWrapperEl = instance.contentWrapperEl;
+
+		if (instance.iframeEl) {
+			if (!Browser.Engine.trident) {
+				instance.iframeEl.setStyles({
+					'height': contentWrapperEl.getStyle('height'),
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				});
+			}
+			else {
+				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
+				// when only the vertical dimension is changed.
+				instance.iframeEl.setStyles({
+					'height': contentWrapperEl.getStyle('height'),
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt() - 1
+				});
+				instance.iframeEl.setStyles({
+					'width': contentWrapperEl.offsetWidth - contentWrapperEl.getStyle('border-left').toInt() - contentWrapperEl.getStyle('border-right').toInt()
+				});
+			}
+		}
+
+	},
+	// Remaining Width
+	rWidth: function(container){
+		if (container == null) {
+			var container = MUI.Desktop.desktop;
+		}
+		container.getElements('.rWidth').each(function(column){
+			var currentWidth = column.offsetWidth.toInt();
+			currentWidth -= column.getStyle('border-left').toInt();
+			currentWidth -= column.getStyle('border-right').toInt();
+
+			var parent = column.getParent();
+			this.width = 0;
+
+			// Get the total width of all the parent element's children
+			parent.getChildren().each(function(el){
+				if (el.hasClass('mocha') != true) {
+					this.width += el.offsetWidth.toInt();
+				}
+			}.bind(this));
+
+			// Add the remaining width to the current element
+			var remainingWidth = parent.offsetWidth.toInt() - this.width;
+			var newWidth = currentWidth + remainingWidth;
+			if (newWidth < 1) newWidth = 0;
+			column.setStyle('width', newWidth);
+			column.getChildren('.panel').each(function(panel){
+				panel.setStyle('width', newWidth - panel.getStyle('border-left').toInt() - panel.getStyle('border-right').toInt());
+				MUI.resizeChildren(panel);
+			}.bind(this));
+
+		});
+	}
+
+});
+
+function addResizeRight(element, min, max){
+	if (!$(element)) return;
+	element = $(element);
+
+	var instances = MUI.Columns.instances;
+	var instance = instances.get(element.id);
+
+	var handle = element.getNext('.columnHandle');
+	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
+	if (!min) min = 50;
+	if (!max) max = 250;
+	if (Browser.Engine.trident) {
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});
+	}
+	instance.resize = element.makeResizable({
+		handle: handle,
+		modifiers: {
+			x: 'width',
+			y: false
+		},
+		limit: {
+			x: [min, max]
+		},
+		onStart: function(){
+			element.getElements('iframe').setStyle('visibility', 'hidden');
+			element.getNext('.column').getElements('iframe').setStyle('visibility', 'hidden');
+		}.bind(this),
+		onDrag: function(){
+			if (Browser.Engine.gecko) {
+				$$('.panel').each(function(panel){
+					if (panel.getElements('.mochaIframe').length == 0) {
+						panel.hide(); // Fix for a rendering bug in FF
+					}
+				});
+			}
+			MUI.rWidth(element.getParent());
+			if (Browser.Engine.gecko) {
+				$$('.panel').show(); // Fix for a rendering bug in FF
+			}
+			if (Browser.Engine.trident4) {
+				element.getChildren().each(function(el){
+					var width = $(element).getStyle('width').toInt();
+					width -= el.getStyle('border-right').toInt();
+					width -= el.getStyle('border-left').toInt();
+					width -= el.getStyle('padding-right').toInt();
+					width -= el.getStyle('padding-left').toInt();
+					el.setStyle('width', width);
+				}.bind(this));
+			}
+		}.bind(this),
+		onComplete: function(){
+			MUI.rWidth(element.getParent());
+			element.getElements('iframe').setStyle('visibility', 'visible');
+			element.getNext('.column').getElements('iframe').setStyle('visibility', 'visible');
+			instance.fireEvent('onResize');
+		}.bind(this)
+	});
+}
+
+function addResizeLeft(element, min, max){
+	if (!$(element)) return;
+	element = $(element);
+
+	var instances = MUI.Columns.instances;
+	var instance = instances.get(element.id);
+
+	var handle = element.getPrevious('.columnHandle');
+	handle.setStyle('cursor', Browser.Engine.webkit ? 'col-resize' : 'e-resize');
+	var partner = element.getPrevious('.column');
+	if (!min) min = 50;
+	if (!max) max = 250;
+	if (Browser.Engine.trident){
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});
+	}
+	instance.resize = element.makeResizable({
+		handle: handle,
+		modifiers: {x: 'width' , y: false},
+		invert: true,
+		limit: { x: [min, max] },
+		onStart: function(){
+			$(element).getElements('iframe').setStyle('visibility','hidden');
+			partner.getElements('iframe').setStyle('visibility','hidden');
+		}.bind(this),
+		onDrag: function(){
+			MUI.rWidth(element.getParent());
+		}.bind(this),
+		onComplete: function(){
+			MUI.rWidth(element.getParent());
+			$(element).getElements('iframe').setStyle('visibility','visible');
+			partner.getElements('iframe').setStyle('visibility','visible');
+			instance.fireEvent('onResize');
+			instances[partner.id].fireEvent('onResize');
+		}.bind(this)
+	});
+}
+
+function addResizeBottom(element){
+	if (!$(element)) return;
+	var element = $(element);
+
+	var instances = MUI.Panels.instances;
+	var instance = instances.get(element.id);
+	var handle = instance.handleEl;
+	handle.setStyle('cursor', Browser.Engine.webkit ? 'row-resize' : 'n-resize');
+	partner = instance.partner;
+	min = 0;
+	max = function(){
+		return element.getStyle('height').toInt() + partner.getStyle('height').toInt();
+	}.bind(this);
+
+	if (Browser.Engine.trident) {
+		handle.addEvents({
+			'mousedown': function(){
+				handle.setCapture();
+			},
+			'mouseup': function(){
+				handle.releaseCapture();
+			}
+		});
+	}
+	instance.resize = element.makeResizable({
+		handle: handle,
+		modifiers: {x: false, y: 'height'},
+		limit: { y: [min, max] },
+		invert: false,
+		onBeforeStart: function(){
+			partner = instance.partner;
+			this.originalHeight = element.getStyle('height').toInt();
+			this.partnerOriginalHeight = partner.getStyle('height').toInt();
+		}.bind(this),
+		onStart: function(){
+			if (instance.iframeEl) {
+				if (!Browser.Engine.trident) {
+					instance.iframeEl.setStyle('visibility', 'hidden');
+					partner.getElements('iframe').setStyle('visibility','hidden');
+				}
+				else {
+					instance.iframeEl.hide();
+					partner.getElements('iframe').hide();
+				}
+			}
+
+		}.bind(this),
+		onDrag: function(){
+			partnerHeight = partnerOriginalHeight;
+			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
+			MUI.resizeChildren(element, element.getStyle('height').toInt());
+			MUI.resizeChildren(partner, partnerHeight);
+			element.getChildren('.column').each( function(column){
+				MUI.panelHeight(column);
+			});
+			partner.getChildren('.column').each( function(column){
+				MUI.panelHeight(column);
+			});
+		}.bind(this),
+		onComplete: function(){
+			partnerHeight = partnerOriginalHeight;
+			partnerHeight += (this.originalHeight - element.getStyle('height').toInt());
+			partner.setStyle('height', partnerHeight);
+			MUI.resizeChildren(element, element.getStyle('height').toInt());
+			MUI.resizeChildren(partner, partnerHeight);
+			element.getChildren('.column').each( function(column){
+				MUI.panelHeight(column);
+			});
+			partner.getChildren('.column').each( function(column){
+				MUI.panelHeight(column);
+			});
+			if (instance.iframeEl) {
+				if (!Browser.Engine.trident) {
+					instance.iframeEl.setStyle('visibility', 'visible');
+					partner.getElements('iframe').setStyle('visibility','visible');
+				}
+				else {
+					instance.iframeEl.show();
+					partner.getElements('iframe').show();
+					// The following hack is to get IE8 Standards Mode to properly resize an iframe
+					// when only the vertical dimension is changed.
+					var width = instance.iframeEl.getStyle('width').toInt();
+					instance.iframeEl.setStyle('width', width - 1);
+					MUI.rWidth();
+					instance.iframeEl.setStyle('width', width);
+				}
+			}
+			instance.fireEvent('onResize');
+		}.bind(this)
+	});
+}
+
+MUI.extend({
+	/*
+
+	Function: closeColumn
+		Destroys/removes a column.
+
+	Syntax:
+	(start code)
+		MUI.closeColumn();
+	(end)
+
+	Arguments:
+		columnEl - the ID of the column to be closed
+
+	Returns:
+		true - the column was closed
+		false - the column was not closed
+
+	*/
+	closeColumn: function(columnEl){
+        columnEl=$(columnEl);
+        if(columnEl==null) return;
+		var instances = MUI.Columns.instances;
+		var instance = instances.get(columnEl.id);
+		if (instance==null || instance.isClosing) return;
+
+		instance.isClosing = true;
+
+		// Destroy all the panels in the column.
+		var panels = $(columnEl).getElements('.panel');
+		panels.each(function(panel){
+			MUI.closePanel(panel.id);
+		}.bind(this));
+
+		if (Browser.Engine.trident) {
+			columnEl.dispose();
+			if (instance.handleEl != null) {
+				instance.handleEl.dispose();
+			}
+		}
+		else {
+			columnEl.destroy();
+			if (instance.handleEl != null) {
+				instance.handleEl.destroy();
+			}
+		}        
+
+		if (MUI.Desktop) {
+			MUI.Desktop.resizePanels();
+		}
+
+        var sortables=instance.options.container.retrieve('sortables');
+        if(sortables) sortables.removeLists(columnEl);
+
+		instances.erase(instance.options.id);
+		return true;
+	},
+	/*
+
+	Function: closePanel
+		Destroys/removes a panel.
+
+	Syntax:
+	(start code)
+		MUI.closePanel();
+	(end)
+
+	Arguments:
+		panelEl - the ID of the panel to be closed
+
+	Returns:
+		true - the panel was closed
+		false - the panel was not closed
+
+	*/
+	closePanel: function(panelEl){
+      panelEl=$(panelEl);
+      if( panelEl==null) return;
+		var instances = MUI.Panels.instances;
+		var instance = instances.get(panelEl.id);
+		if( panelEl != $(panelEl ) || instance.isClosing ) return;
+
+		var column = instance.options.column;
+		instance.isClosing = true;
+
+		var columnInstances = MUI.Columns.instances;
+		var columnInstance = columnInstances.get(column);
+
+		if( columnInstance.options.sortable ){
+			columnInstance.options.container.retrieve( 'sortables' ).removeItems( instance.panelWrapperEl );
+		}
+
+      instance.removeEvents();
+		instance.panelWrapperEl.destroy();
+
+		if( MUI.Desktop ) { MUI.Desktop.resizePanels(); }
+
+		// Do this when creating and removing panels
+      var panels=$(column).getElements('.panelWrapper');
+		panels.each(function(panelWrapper){
+			panelWrapper.getElement('.panel').removeClass('bottomPanel');
+		});
+		
+      if(panels.length>0) panels.getLast().getElement('.panel').addClass('bottomPanel');
+
+		instances.erase( instance.options.id );
+		return true;
+	}
+});
+/*
+---
+
+name: Tabs
+
+script: Tabs.js
+
+description: Functionality for window tabs.
+
+copyright: (c) 2007-2008 Greg Houston, <http://greghoustondesign.com/>.	
+
+license: MIT-style license.
+
+requires:
+  - MochaUI/MUI
+  - MochaUI/MUI.Windows
+  - MochaUI/MUI.Column
+  - MochaUI/MUI.Panel
+
+provides: [MUI.initializeTabs]
+
+...
+*/
+
+
+
+
+
+MUI.extend({
+	/*
+
+	Function: initializeTabs
+		Add click event to each list item that fires the selected function.
+
+	*/
+	initializeTabs: function(el, target){
+		$(el).setStyle('list-style', 'none'); // This is to fix a glitch that occurs in IE8 RC1 when dynamically switching themes
+		$(el).getElements('li').each(function(listitem){
+			var link = listitem.getFirst('a').addEvent('click', function(e){
+				e.preventDefault();
+			});
+			listitem.addEvent('click', function(e){
+				MUI.updateContent({
+					'element':  $(target),
+					'url':      link.get('href')
+				});
+				MUI.selected(this, el);
+			});
+		});
+	},
+	/*
+
+	Function: selected
+		Add "selected" class to current list item and remove it from sibling list items.
+
+	Syntax:
+		(start code)
+			selected(el, parent);
+		(end)
+
+Arguments:
+	el - the list item
+	parent - the ul
+
+	*/
+	selected: function(el, parent){
+		$(parent).getChildren().each(function(listitem){
+			listitem.removeClass('selected');
+		});
+		el.addClass('selected');
+	}
+});
+
+/*
+---
+
+name: Window
+
+script: Window.js
+
+description: Build windows.
+
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.
+
+license: MIT-style license.
+
+requires: [MochaUI/MUI]
+
+provides: [MUI.Windows]
+
+...
+*/
+
+
+
+
+
+
+MUI.files[MUI.path.source + 'Window/Window.js'] = 'loading';
+//$require(MUI.themePath() + '/css/Dock.css');
+
+/*
+Class: Window
+	Creates a single MochaUI window.
+
+Syntax:
+	(start code)
+	new MUI.Window(options);
+	(end)
+
+Arguments:
+	options
+
+Options:
+	id - The ID of the window. If not defined, it will be set to 'win' + windowIDCount.
+	title - The title of the window.
+	icon - Place an icon in the window's titlebar. This is either set to false or to the url of the icon. It is set up for icons that are 16 x 16px.
+	type - ('window', 'modal', 'modal2', or 'notification') Defaults to 'window'. Modals should be created with new MUI.Modal(options).
+	loadMethod - ('html', 'xhr', or 'iframe') Defaults to 'html' if there is no contentURL. Defaults to 'xhr' if there is a contentURL. You only really need to set this if using the 'iframe' method.
+	contentURL - Used if loadMethod is set to 'xhr' or 'iframe'.
+	closeAfter - Either false or time in milliseconds. Closes the window after a certain period of time in milliseconds. This is particularly useful for notifications.
+	evalScripts - (boolean) An xhr loadMethod option. Defaults to true.
+	evalResponse - (boolean) An xhr loadMethod option. Defaults to false.
+	content - (string or element) An html loadMethod option.
+	toolbar - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
+	toolbarPosition - ('top' or 'bottom') Defaults to top.
+	toolbarHeight - (number)
+	toolbarURL - (url) Defaults to 'pages/lipsum.html'.
+	toolbarContent - (string)
+	toolbarOnload - (function)
+	toolbar2 - (boolean) Create window toolbar. Defaults to false. This can be used for tabs, media controls, and so forth.
+	toolbar2Position - ('top' or 'bottom') Defaults to top.
+	toolbar2Height - (number)
+	toolbar2URL - (url) Defaults to 'pages/lipsum.html'.
+	toolbar2Content - (string)
+	toolbar2Onload - (function)
+	container - (element ID) Element the window is injected in. The container defaults to 'desktop'. If no desktop then to document.body. Use 'pageWrapper' if you don't want the windows to overlap the toolbars.
+	restrict - (boolean) Restrict window to container when dragging.
+	shape - ('box' or 'gauge') Shape of window. Defaults to 'box'.
+	collapsible - (boolean) Defaults to true.
+	minimizable - (boolean) Requires MUI.Desktop and MUI.Dock. Defaults to true if dependenices are met.
+	maximizable - (boolean) Requires MUI.Desktop. Defaults to true if dependenices are met.
+	closable - (boolean) Defaults to true.
+	storeOnClose - (boolean) Hides a window and it's dock tab rather than destroying them on close. If you try to create the window again it will unhide the window and dock tab.
+	modalOverlayClose - (boolean) Whether or not you can close a modal by clicking on the modal overlay. Defaults to true.
+	draggable - (boolean) Defaults to false for modals; otherwise true.
+	draggableGrid - (false or number) Distance in pixels for snap-to-grid dragging. Defaults to false.
+	draggableLimit - (false or number) An object with x and y properties used to limit the movement of the Window. Defaults to false.
+	draggableSnap - (boolean) The distance to drag before the Window starts to respond to the drag. Defaults to false.
+	resizable - (boolean) Defaults to false for modals, notifications and gauges; otherwise true.
+	resizeLimit - (object) Minimum and maximum width and height of window when resized.
+	addClass - (string) Add a class to the window for more control over styling.
+	width - (number) Width of content area.
+	height - (number) Height of content area.
+	headerHeight - (number) Height of window titlebar.
+	footerHeight - (number) Height of window footer.
+	cornerRadius - (number)
+	x - (number) If x and y are left undefined the window is centered on the page.
+	y - (number)
+	scrollbars - (boolean)
+	padding - (object)
+	shadowBlur - (number) Width of shadows.
+	shadowOffset - Should be positive and not be greater than the ShadowBlur.
+	controlsOffset - Change this if you want to reposition the window controls.
+	useCanvas - (boolean) Set this to false if you don't want a canvas body.
+	useCanvasControls - (boolean) Set this to false if you wish to use images for the buttons.
+	useSpinner - (boolean) Toggles whether or not the ajax spinners are displayed in window footers. Defaults to true.
+	headerStartColor - ([r,g,b,]) Titlebar gradient's top color
+	headerStopColor - ([r,g,b,]) Titlebar gradient's bottom color
+	bodyBgColor - ([r,g,b,]) Background color of the main canvas shape
+	minimizeBgColor - ([r,g,b,]) Minimize button background color
+	minimizeColor - ([r,g,b,]) Minimize button color
+	maximizeBgColor - ([r,g,b,]) Maximize button background color
+	maximizeColor - ([r,g,b,]) Maximize button color
+	closeBgColor - ([r,g,b,]) Close button background color
+	closeColor - ([r,g,b,]) Close button color
+	resizableColor - ([r,g,b,]) Resizable icon color
+	onBeforeBuild - (function) Fired just before the window is built.
+	onContentLoaded - (function) Fired when content is successfully loaded via XHR or Iframe.
+	onFocus - (function)  Fired when the window is focused.
+	onBlur - (function) Fired when window loses focus.
+	onResize - (function) Fired when the window is resized.
+	onMinimize - (function) Fired when the window is minimized.
+	onMaximize - (function) Fired when the window is maximized.
+	onRestore - (function) Fired when a window is restored from minimized or maximized.
+	onClose - (function) Fired just before the window is closed.
+	onCloseComplete - (function) Fired after the window is closed.
+
+Returns:
+	Window object.
+
+Example:
+	Define a window. It is suggested you name the function the same as your window ID + "Window".
+	(start code)
+	var mywindowWindow = function(){
+		new MUI.Window({
+			id: 'mywindow',
+			title: 'My Window',
+			loadMethod: 'xhr',
+			contentURL: 'pages/lipsum.html',
+			width: 340,
+			height: 150
+		});
+	}
+	(end)
+
+Example:
+	Create window onDomReady.
+	(start code)
+	window.addEvent('domready', function(){
+		mywindow();
+	});
+	(end)
+
+Example:
+	Add link events to build future windows. It is suggested you give your anchor the same ID as your window + "WindowLink" or + "WindowLinkCheck". Use the latter if it is a link in the menu toolbar.
+
+	If you wish to add links in windows that open other windows remember to add events to those links when the windows are created.
+
+	(start code)
+	// Javascript:
+	if ($('mywindowLink')){
+		$('mywindowLink').addEvent('click', function(e) {
+			new Event(e).stop();
+			mywindow();
+		});
+	}
+
+	// HTML:
+	<a id="mywindowLink" href="pages/lipsum.html">My Window</a>
+	(end)
+
+
+	Loading Content with an XMLHttpRequest(xhr):
+		For content to load via xhr all the files must be online and in the same domain. If you need to load content from another domain or wish to have it work offline, load the content in an iframe instead of using the xhr option.
+
+	Iframes:
+		If you use the iframe loadMethod your iframe will automatically be resized when the window it is in is resized. If you want this same functionality when using one of the other load options simply add class="mochaIframe" to those iframes and they will be resized for you as well.
+
+*/
+
+// Having these options outside of the Class allows us to add, change, and remove
+// individual options without rewriting all of them.
+
+//= require ../MochaUI/Core.js
+//= require ../MochaUI/Dock.js
+//= require ../MochaUI/Layout.js
+
+MUI.extend({
+	Windows: {
+		instances:      new Hash(),
+		indexLevel:     100,          // Used for window z-Index
+		windowIDCount:  0,            // Used for windows without an ID defined by the user
+		windowsVisible: true,         // Ctrl-Alt-Q to toggle window visibility
+		focusingWindow: false
+	}
+});
+
+MUI.Windows.windowOptions = {
+	id:                null,
+	title:             'New Window',
+	icon:              false,
+	type:              'window',
+	require:           {
+		css:           [],
+		images:        [],
+		js:            [],
+		onload:        null
+	},
+	loadMethod:        null,
+	method:	           'get',
+	contentURL:        null,
+	data:              null,
+
+	closeAfter:        false,
+
+	// xhr options
+	evalScripts:       true,
+	evalResponse:      false,
+
+	// html options
+	content:           'Window content',
+
+	// Toolbar
+	toolbar:           false,
+	toolbarPosition:   'top',
+	toolbarHeight:     29,
+	toolbarURL:        'pages/lipsum.html',
+	toolbarData:	   null,
+	toolbarContent:    '',
+	toolbarOnload:     $empty,
+
+	// Toolbar
+	toolbar2:           false,
+	toolbar2Position:   'bottom',
+	toolbar2Height:     29,
+	toolbar2URL:        'pages/lipsum.html',
+	toolbar2Data:	    null,
+	toolbar2Content:    '',
+	toolbar2Onload:     $empty,
+
+	// Container options
+	container:         null,
+	restrict:          true,
+	shape:             'box',
+
+	// Window Controls
+	collapsible:       true,
+	minimizable:       true,
+	maximizable:       true,
+	closable:          true,
+
+	// Close options
+	storeOnClose:       false,
+
+	// Modal options
+	modalOverlayClose: true,
+
+	// Draggable
+	draggable:         null,
+	draggableGrid:     false,
+	draggableLimit:    false,
+	draggableSnap:     false,
+
+	// Resizable
+	resizable:         null,
+	resizeLimit:       {'x': [250, 2500], 'y': [125, 2000]},
+
+	// Style options:
+	addClass:          '',
+	width:             300,
+	height:            125,
+	headerHeight:      25,
+	footerHeight:      25,
+	cornerRadius:      8,
+	x:                 null,
+	y:                 null,
+	scrollbars:        true,
+	padding:   		   { top: 10, right: 12, bottom: 10, left: 12 },
+	shadowBlur:        5,
+	shadowOffset:      {'x': 0, 'y': 1},
+	controlsOffset:    {'right': 6, 'top': 6},
+	useCanvas:         true,
+	useCanvasControls: true,
+	useSpinner:        true,
+
+	// Color options:
+	headerStartColor:  [250, 250, 250],
+	headerStopColor:   [229, 229, 229],
+	bodyBgColor:       [229, 229, 229],
+	minimizeBgColor:   [255, 255, 255],
+	minimizeColor:     [0, 0, 0],
+	maximizeBgColor:   [255, 255, 255],
+	maximizeColor:     [0, 0, 0],
+	closeBgColor:      [255, 255, 255],
+	closeColor:        [0, 0, 0],
+	resizableColor:    [254, 254, 254],
+
+	// Events
+	onBeforeBuild:     $empty,
+	onContentLoaded:   $empty,
+	onFocus:           $empty,
+	onBlur:            $empty,
+	onResize:          $empty,
+	onMinimize:        $empty,
+	onMaximize:        $empty,
+	onRestore:         $empty,
+	onClose:           $empty,
+	onCloseComplete:   $empty
+};
+
+MUI.Windows.windowOptionsOriginal = $merge(MUI.Windows.windowOptions);
+
+MUI.Window = new Class({
+
+	Implements: [Events, Options],
+
+	options: MUI.Windows.windowOptions,
+
+	initialize: function(options){
+		this.setOptions(options);
+
+		// Shorten object chain
+		var options = this.options;
+
+		$extend(this, {
+			mochaControlsWidth: 0,
+			minimizebuttonX:  0,  // Minimize button horizontal position
+			maximizebuttonX: 0,  // Maximize button horizontal position
+			closebuttonX: 0,  // Close button horizontal position
+			headerFooterShadow: options.headerHeight + options.footerHeight + (options.shadowBlur * 2),
+			oldTop: 0,
+			oldLeft: 0,
+			isMaximized: false,
+			isMinimized: false,
+			isCollapsed: false,
+			timestamp: $time()
+		});
+
+		if (options.type != 'window'){
+			options.container = document.body;
+			options.minimizable = false;
+		}
+		if (!options.container){
+			options.container = MUI.Desktop && MUI.Desktop.desktop ? MUI.Desktop.desktop : document.body;
+		}
+
+		// Set this.options.resizable to default if it was not defined
+		if (options.resizable == null){
+			if (options.type != 'window' || options.shape == 'gauge'){
+				options.resizable = false;
+			}
+			else {
+				options.resizable = true;
+			}
+		}
+
+		// Set this.options.draggable if it was not defined
+		if (options.draggable == null){
+			options.draggable = options.type != 'window' ? false : true;
+		}
+
+		// Gauges are not maximizable or resizable
+		if (options.shape == 'gauge' || options.type == 'notification'){
+			options.collapsible = false;
+			options.maximizable = false;
+			options.contentBgColor = 'transparent';
+			options.scrollbars = false;
+			options.footerHeight = 0;
+		}
+		if (options.type == 'notification'){
+			options.closable = false;
+			options.headerHeight = 0;
+		}
+
+		// Minimizable, dock is required and window cannot be modal
+		if (MUI.Dock && $(MUI.options.dock)){
+			if (MUI.Dock.dock && options.type != 'modal' && options.type != 'modal2'){
+				options.minimizable = options.minimizable;
+			}
+		}
+		else {
+			options.minimizable = false;
+		}
+
+		// Maximizable, desktop is required
+		options.maximizable = MUI.Desktop && MUI.Desktop.desktop && options.maximizable && options.type != 'modal' && options.type != 'modal2';
+
+		if (this.options.type == 'modal2') {
+			this.options.shadowBlur = 0;
+			this.options.shadowOffset = {'x': 0, 'y': 0};
+			this.options.useSpinner = false;
+			this.options.useCanvas = false;
+			this.options.footerHeight = 0;
+			this.options.headerHeight = 0;
+		}
+
+		// If window has no ID, give it one.
+		options.id = options.id || 'win' + (++MUI.Windows.windowIDCount);
+
+		this.windowEl = $(options.id);
+
+		if (options.require.css.length || options.require.images.length){
+			new MUI.Require({
+				css: options.require.css,
+				images: options.require.images,
+				onload: function(){
+					this.newWindow();
+				}.bind(this)
+			});
+		}
+		else {
+			this.newWindow();
+		}
+
+		// Return window object
+		return this;
+	},
+	saveValues: function(){
+		var coordinates = this.windowEl.getCoordinates();
+		this.options.x = coordinates.left.toInt();
+		this.options.y = coordinates.top.toInt();
+	},
+
+	/*
+
+	Internal Function: newWindow
+
+	Arguments:
+		properties
+
+	*/
+	newWindow: function(properties){ // options is not doing anything
+
+		// Shorten object chain
+		var instances = MUI.Windows.instances;
+		var instanceID = MUI.Windows.instances.get(this.options.id);
+		var options = this.options;
+
+		// Here we check to see if there is already a class instance for this window
+		if (instanceID) var instance = instanceID;
+
+		// Check if window already exists and is not in progress of closing
+		if ( this.windowEl && !this.isClosing ){
+			 // Restore if minimized
+			if (instance.isMinimized){
+				MUI.Dock.restoreMinimized(this.windowEl);
+			}
+			// Expand and focus if collapsed
+			else if (instance.isCollapsed){
+				MUI.collapseToggle(this.windowEl);
+				setTimeout(MUI.focusWindow.pass(this.windowEl, this),10);
+			}
+			else if (this.windowEl.hasClass('windowClosed')){
+
+				if (instance.check) instance.check.show();
+
+				this.windowEl.removeClass('windowClosed');
+				this.windowEl.setStyle('opacity', 0);
+				this.windowEl.addClass('mocha');
+
+				if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window') {
+					var currentButton = $(instance.options.id + '_dockTab');
+					if (currentButton != null) {
+						currentButton.show();
+					}
+					MUI.Desktop.setDesktopSize();
+				}
+
+				instance.displayNewWindow();
+
+			}
+			// Else focus
+			else {
+				var coordinates = document.getCoordinates();
+				if (this.windowEl.getStyle('left').toInt() > coordinates.width || this.windowEl.getStyle('top').toInt() > coordinates.height){
+					MUI.centerWindow(this.windowEl);
+				}
+				setTimeout(MUI.focusWindow.pass(this.windowEl, this),10);
+				if (MUI.options.standardEffects == true) {
+					this.windowEl.shake();
+				}
+			}
+			return;
+		}
+		else {
+			instances.set(options.id, this);
+		}
+
+		this.isClosing = false;
+		this.fireEvent('onBeforeBuild');
+
+		// Create window div
+		MUI.Windows.indexLevel++;
+		this.windowEl = new Element('div', {
+			'class': 'mocha',
+			'id': options.id,
+			'styles': {
+				'position': 'absolute',
+				'width': options.width,
+				'height': options.height,
+				'display': 'block',
+				'opacity': 0,
+				'zIndex': MUI.Windows.indexLevel += 2
+			}
+		});
+
+		this.windowEl.store('instance', this);
+
+		this.windowEl.addClass(options.addClass);
+
+		if (options.type == 'modal2') {
+			this.windowEl.addClass('modal2');
+		}
+
+		// Fix a mouseover issue with gauges in IE7
+		if ( Browser.Engine.trident && options.shape == 'gauge') {
+			this.windowEl.setStyle('backgroundImage', 'url(../images/spacer.gif)');
+		}
+
+		if ((this.options.type == 'modal' || options.type == 'modal2' ) && Browser.Platform.mac && Browser.Engine.gecko){
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3) {
+					this.windowEl.setStyle('position', 'fixed');
+				}
+			}
+		}
+
+		if (options.loadMethod == 'iframe') {
+			options.padding = { top: 0, right: 0, bottom: 0, left: 0 };
+		}
+
+		// Insert sub elements inside windowEl
+		this.insertWindowElements();
+
+		// Set title
+		this.titleEl.set('html', options.title);
+
+		this.contentWrapperEl.setStyle('overflow', 'hidden');
+
+		this.contentEl.setStyles({
+			'padding-top': options.padding.top,
+			'padding-bottom': options.padding.bottom,
+			'padding-left': options.padding.left,
+			'padding-right': options.padding.right
+		});
+
+		if (options.shape == 'gauge'){
+			if (options.useCanvasControls){
+				this.canvasControlsEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				this.controlsEl.setStyle('visibility', 'hidden');
+			}
+			this.windowEl.addEvent('mouseover', function(){
+				this.mouseover = true;
+				var showControls = function(){
+					if (this.mouseover != false){
+						if (options.useCanvasControls){
+							this.canvasControlsEl.setStyle('visibility', 'visible');
+						}
+						else {
+							this.controlsEl.setStyle('visibility', 'visible');
+						}
+						this.canvasHeaderEl.setStyle('visibility', 'visible');
+						this.titleEl.show();
+					}
+				};
+				showControls.delay(0, this);
+
+			}.bind(this));
+			this.windowEl.addEvent('mouseleave', function(){
+				this.mouseover = false;
+				if (this.options.useCanvasControls){
+					this.canvasControlsEl.setStyle('visibility', 'hidden');
+				}
+				else {
+					this.controlsEl.setStyle('visibility', 'hidden');
+				}
+				this.canvasHeaderEl.setStyle('visibility', 'hidden');
+				this.titleEl.hide();
+			}.bind(this));
+		}
+
+		// Inject window into DOM
+		this.windowEl.inject(options.container);
+
+		// Convert CSS colors to Canvas colors.
+		this.setColors();
+
+		if (options.type != 'notification'){
+			this.setMochaControlsWidth();
+		}
+
+		// Add content to window.
+		MUI.updateContent({
+			'element': this.windowEl,
+			'content': options.content,
+			'method': options.method,
+			'url': options.contentURL,
+			'data': options.data,
+			'onContentLoaded': null,
+			'require': {
+				js: options.require.js,
+				onload: options.require.onload
+			}
+		});
+
+		// Add content to window toolbar.
+		if (this.options.toolbar == true){
+			MUI.updateContent({
+				'element': this.windowEl,
+				'childElement': this.toolbarEl,
+				'content': options.toolbarContent,
+				'loadMethod': 'xhr',
+				'method': options.method,
+				'url': options.toolbarURL,
+				'data':	options.toolbarData,
+				'onContentLoaded': options.toolbarOnload
+			});
+		}
+
+		// Add content to window toolbar.
+		if (this.options.toolbar2 == true){
+			MUI.updateContent({
+				'element': this.windowEl,
+				'childElement': this.toolbar2El,
+				'content': options.toolbar2Content,
+				'loadMethod': 'xhr',
+				'method': options.method,
+				'url': options.toolbar2URL,
+				'data':	options.toolbar2Data,
+				'onContentLoaded': options.toolbar2Onload
+			});
+		}
+
+		this.drawWindow();
+
+		// Attach events to the window
+		this.attachDraggable();
+		this.attachResizable();
+		this.setupEvents();
+
+		if (options.resizable){
+			this.adjustHandles();
+		}
+
+		// Position window. If position not specified by user then center the window on the page.
+		if (options.container == document.body || options.container == MUI.Desktop.desktop){
+			var dimensions = window.getSize();
+		}
+		else {
+			var dimensions = $(this.options.container).getSize();
+		}
+
+        var x,y;
+		if (!options.y) {
+			if (MUI.Desktop && MUI.Desktop.desktop) {
+				y = (dimensions.y * .5) - (this.windowEl.offsetHeight * .5);
+				if (y < -options.shadowBlur) y = -options.shadowBlur;
+			}
+			else {
+				y = window.getScroll().y + (window.getSize().y * .5) - (this.windowEl.offsetHeight * .5);
+				if (y < -options.shadowBlur) y = -options.shadowBlur;
+			}
+		}
+		else {
+			y = options.y - options.shadowBlur;
+		}
+
+		if (this.options.x==null) {
+			x =	(dimensions.x * .5) - (this.windowEl.offsetWidth * .5);
+			if (x < -options.shadowBlur) x = -options.shadowBlur;
+		}
+		else {
+			x = options.x - options.shadowBlur;
+		}
+
+		this.windowEl.setStyles({
+			'top': y,
+			'left': x
+		});
+
+		// Create opacityMorph
+
+		this.opacityMorph = new Fx.Morph(this.windowEl, {
+			'duration': 350,
+			transition: Fx.Transitions.Sine.easeInOut,
+			onComplete: function(){
+				if (Browser.Engine.trident){
+					this.drawWindow();
+				}
+			}.bind(this)
+		});
+
+		this.displayNewWindow();
+
+		// This is a generic morph that can be reused later by functions like centerWindow()
+		// It returns the windowEl element rather than this Class.
+		this.morph = new Fx.Morph(this.windowEl, {
+			'duration': 200
+		});
+		this.windowEl.store('morph', this.morph);
+
+		this.resizeMorph = new Fx.Elements([this.contentWrapperEl, this.windowEl], {
+			duration: 400,
+			transition: Fx.Transitions.Sine.easeInOut,
+			onStart: function(){
+				this.resizeAnimation = this.drawWindow.periodical(20, this);
+			}.bind(this),
+			onComplete: function(){
+				$clear(this.resizeAnimation);
+				this.drawWindow();
+				// Show iframe
+				if ( this.iframeEl ) {
+					this.iframeEl.setStyle('visibility', 'visible');
+				}
+			}.bind(this)
+		});
+		this.windowEl.store('resizeMorph', this.resizeMorph);
+
+		// Add check mark to menu if link exists in menu
+		// Need to make sure the check mark is not added to links not in menu
+		if ($(this.windowEl.id + 'LinkCheck')){
+			this.check = new Element('div', {
+				'class': 'check',
+				'id': this.options.id + '_check'
+			}).inject(this.windowEl.id + 'LinkCheck');
+		}
+
+		if (this.options.closeAfter != false){
+			MUI.closeWindow.delay(this.options.closeAfter, this, this.windowEl);
+		}
+
+		if (MUI.Dock && $(MUI.options.dock) && this.options.type == 'window' ){
+			MUI.Dock.createDockTab(this.windowEl);
+		}
+
+	},
+	displayNewWindow: function(){
+
+		options = this.options;
+		if (options.type == 'modal' || options.type == 'modal2') {
+			MUI.currentModal = this.windowEl;
+			if (Browser.Engine.trident4){
+				$('modalFix').show();
+			}
+			$('modalOverlay').show();
+			if (MUI.options.advancedEffects == false){
+				$('modalOverlay').setStyle('opacity', .6);
+				this.windowEl.setStyles({
+					'zIndex': 11000,
+					'opacity': 1
+				});
+			}
+			else {
+				MUI.Modal.modalOverlayCloseMorph.cancel();
+				MUI.Modal.modalOverlayOpenMorph.start({
+					'opacity': .6
+				});
+				this.windowEl.setStyles({
+					'zIndex': 11000
+				});
+				this.opacityMorph.start({
+					'opacity': 1
+				});
+			}
+
+			$$('.dockTab').removeClass('activeDockTab');
+			$$('.mocha').removeClass('isFocused');
+			this.windowEl.addClass('isFocused');
+
+		}
+		else if (MUI.options.advancedEffects == false){
+			this.windowEl.setStyle('opacity', 1);
+			setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
+		}
+		else {
+			// IE cannot handle both element opacity and VML alpha at the same time.
+			if (Browser.Engine.trident){
+				this.drawWindow(false);
+			}
+			this.opacityMorph.start({
+				'opacity': 1
+			});
+			setTimeout(MUI.focusWindow.pass(this.windowEl, this), 10);
+		}
+
+	},
+	setupEvents: function() {
+		var windowEl = this.windowEl;
+		// Set events
+		// Note: if a button does not exist, its due to properties passed to newWindow() stating otherwice
+		if (this.closeButtonEl){
+			this.closeButtonEl.addEvent('click', function(e) {
+				new Event(e).stop();
+				MUI.closeWindow(windowEl);
+			}.bind(this));
+		}
+
+		if (this.options.type == 'window'){
+			windowEl.addEvent('mousedown', function(e) {
+				if (Browser.Engine.trident) {
+					new Event(e).stop();
+				}
+				MUI.focusWindow(windowEl);
+				if (windowEl.getStyle('top').toInt() < -this.options.shadowBlur) {
+					windowEl.setStyle('top', -this.options.shadowBlur);
+				}
+			}.bind(this));
+		}
+
+		if (this.minimizeButtonEl) {
+			this.minimizeButtonEl.addEvent('click', function(e) {
+				new Event(e).stop();
+				MUI.Dock.minimizeWindow(windowEl);
+		}.bind(this));
+		}
+
+		if (this.maximizeButtonEl) {
+			this.maximizeButtonEl.addEvent('click', function(e) {
+				new Event(e).stop();
+				if (this.isMaximized) {
+					MUI.Desktop.restoreWindow(windowEl);
+				} else {
+					MUI.Desktop.maximizeWindow(windowEl);
+				}
+			}.bind(this));
+		}
+
+		if (this.options.collapsible == true){
+			// Keep titlebar text from being selected on double click in Safari.
+			this.titleEl.addEvent('selectstart', function(e) {
+				e = new Event(e).stop();
+			}.bind(this));
+
+			if (Browser.Engine.trident) {
+				this.titleBarEl.addEvent('mousedown', function(e) {
+					this.titleEl.setCapture();
+				}.bind(this));
+				this.titleBarEl.addEvent('mouseup', function(e) {
+						this.titleEl.releaseCapture();
+				}.bind(this));
+			}
+
+			this.titleBarEl.addEvent('dblclick', function(e) {
+				e = new Event(e).stop();
+				MUI.collapseToggle(this.windowEl);
+			}.bind(this));
+		}
+
+	},
+	/*
+
+	Internal Function: attachDraggable()
+		Make window draggable.
+
+	*/
+	attachDraggable: function(){
+		var windowEl = this.windowEl;
+		if (!this.options.draggable) return;
+		this.windowDrag = new Drag.Move(windowEl, {
+			handle: this.titleBarEl,
+			container: this.options.restrict == true ? $(this.options.container) : false,
+			grid: this.options.draggableGrid,
+			limit: this.options.draggableLimit,
+			snap: this.options.draggableSnap,
+			onStart: function() {
+				if (this.options.type != 'modal' && this.options.type != 'modal2'){
+					MUI.focusWindow(windowEl);
+					$('windowUnderlay').show();
+				}
+				if (this.iframeEl) {
+					if (!Browser.Engine.trident) {
+						this.iframeEl.setStyle('visibility', 'hidden');
+					}
+					else {
+						this.iframeEl.hide();
+					}
+				}
+			}.bind(this),
+			onComplete: function() {
+				if (this.options.type != 'modal' && this.options.type != 'modal2') {
+					$('windowUnderlay').hide();
+				}
+				if ( this.iframeEl ){
+					if (!Browser.Engine.trident) {
+						this.iframeEl.setStyle('visibility', 'visible');
+					}
+					else {
+						this.iframeEl.show();
+					}
+				}
+				// Store new position in options.
+				this.saveValues();
+			}.bind(this)
+		});
+	},
+	/*
+
+	Internal Function: attachResizable
+		Make window resizable.
+
+	*/
+	attachResizable: function(){
+		var windowEl = this.windowEl;
+		if (!this.options.resizable) return;
+		this.resizable1 = this.windowEl.makeResizable({
+			handle: [this.n, this.ne, this.nw],
+			limit: {
+				y: [
+					function(){
+						return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - this.options.resizeLimit.y[1];
+					}.bind(this),
+					function(){
+						return this.windowEl.getStyle('top').toInt() + this.windowEl.getStyle('height').toInt() - this.options.resizeLimit.y[0];
+					}.bind(this)
+				]
+			},
+			modifiers: {x: false, y: 'top'},
+			onStart: function(){
+				this.resizeOnStart();
+				this.coords = this.contentWrapperEl.getCoordinates();
+				this.y2 = this.coords.top.toInt() + this.contentWrapperEl.offsetHeight;
+			}.bind(this),
+			onDrag: function(){
+				this.coords = this.contentWrapperEl.getCoordinates();
+				this.contentWrapperEl.setStyle('height', this.y2 - this.coords.top.toInt());
+				this.resizeOnDrag();
+			}.bind(this),
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
+		});
+
+		this.resizable2 = this.contentWrapperEl.makeResizable({
+			handle: [this.e, this.ne],
+			limit: {
+				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ]
+			},
+			modifiers: {x: 'width', y: false},
+			onStart: function(){
+				this.resizeOnStart();
+			}.bind(this),
+			onDrag: function(){
+				this.resizeOnDrag();
+			}.bind(this),
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
+		});
+
+		this.resizable3 = this.contentWrapperEl.makeResizable({
+			container: this.options.restrict == true ? $(this.options.container) : false,
+			handle: this.se,
+			limit: {
+				x: [this.options.resizeLimit.x[0] - (this.options.shadowBlur * 2), this.options.resizeLimit.x[1] - (this.options.shadowBlur * 2) ],
+				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
+			},
+			modifiers: {x: 'width', y: 'height'},
+			onStart: function(){
+				this.resizeOnStart();
+			}.bind(this),
+			onDrag: function(){
+				this.resizeOnDrag();
+			}.bind(this),
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
+		});
+
+		this.resizable4 = this.contentWrapperEl.makeResizable({
+			handle: [this.s, this.sw],
+			limit: {
+				y: [this.options.resizeLimit.y[0] - this.headerFooterShadow, this.options.resizeLimit.y[1] - this.headerFooterShadow]
+			},
+			modifiers: {x: false, y: 'height'},
+			onStart: function(){
+				this.resizeOnStart();
+			}.bind(this),
+			onDrag: function(){
+				this.resizeOnDrag();
+			}.bind(this),
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
+		});
+
+		this.resizable5 = this.windowEl.makeResizable({
+			handle: [this.w, this.sw, this.nw],
+			limit: {
+				x: [
+					function(){
+						return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.x[1];
+					}.bind(this),
+				   function(){
+					   return this.windowEl.getStyle('left').toInt() + this.windowEl.getStyle('width').toInt() - this.options.resizeLimit.x[0];
+					}.bind(this)
+				]
+			},
+			modifiers: {x: 'left', y: false},
+			onStart: function(){
+				this.resizeOnStart();
+				this.coords = this.contentWrapperEl.getCoordinates();
+				this.x2 = this.coords.left.toInt() + this.contentWrapperEl.offsetWidth;
+			}.bind(this),
+			onDrag: function(){
+				this.coords = this.contentWrapperEl.getCoordinates();
+				this.contentWrapperEl.setStyle('width', this.x2 - this.coords.left.toInt());
+				this.resizeOnDrag();
+			}.bind(this),
+			onComplete: function(){
+				this.resizeOnComplete();
+			}.bind(this)
+		});
+
+	},
+	resizeOnStart: function(){
+		$('windowUnderlay').show();
+		if (this.iframeEl){
+			if (!Browser.Engine.trident) {
+				this.iframeEl.setStyle('visibility', 'hidden');
+			}
+			else {
+				this.iframeEl.hide();
+			}
+		}
+	},
+	resizeOnDrag: function(){
+		// Fix for a rendering glitch in FF when resizing a window with panels in it
+		if (Browser.Engine.gecko) {
+			this.windowEl.getElements('.panel').each(function(panel){
+				panel.store('oldOverflow', panel.getStyle('overflow'));
+				panel.setStyle('overflow', 'visible');
+			});
+		}
+		this.drawWindow();
+		this.adjustHandles();
+		if (Browser.Engine.gecko) {
+			this.windowEl.getElements('.panel').each(function(panel){
+				panel.setStyle('overflow', panel.retrieve('oldOverflow')); // Fix for a rendering bug in FF
+			});
+		}
+	},
+	resizeOnComplete: function(){
+		$('windowUnderlay').hide();
+		if (this.iframeEl){
+			if (!Browser.Engine.trident) {
+				this.iframeEl.setStyle('visibility', 'visible');
+			}
+			else {
+				this.iframeEl.show();
+				// The following hack is to get IE8 RC1 IE8 Standards Mode to properly resize an iframe
+				// when only the vertical dimension is changed.
+				this.iframeEl.setStyle('width', '99%');
+				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
+				this.iframeEl.setStyle('width', '100%');
+				this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
+			}
+		}
+
+		// Resize panels if there are any
+		if (this.contentWrapperEl.getChildren('.column') != null) {
+			MUI.rWidth(this.contentWrapperEl);
+			this.contentWrapperEl.getChildren('.column').each(function(column){
+				MUI.panelHeight(column);
+			});
+		}
+
+		this.fireEvent('onResize', this.windowEl);
+	},
+	adjustHandles: function(){
+
+		var shadowBlur = this.options.shadowBlur;
+		var shadowBlur2x = shadowBlur * 2;
+		var shadowOffset = this.options.shadowOffset;
+		var top = shadowBlur - shadowOffset.y - 1;
+		var right = shadowBlur + shadowOffset.x - 1;
+		var bottom = shadowBlur + shadowOffset.y - 1;
+		var left = shadowBlur - shadowOffset.x - 1;
+
+		var coordinates = this.windowEl.getCoordinates();
+		var width = coordinates.width - shadowBlur2x + 2;
+		var height = coordinates.height - shadowBlur2x + 2;
+
+		this.n.setStyles({
+			'top': top,
+			'left': left + 10,
+			'width': width - 20
+		});
+		this.e.setStyles({
+			'top': top + 10,
+			'right': right,
+			'height': height - 30
+		});
+		this.s.setStyles({
+			'bottom': bottom,
+			'left': left + 10,
+			'width': width - 30
+		});
+		this.w.setStyles({
+			'top': top + 10,
+			'left': left,
+			'height': height - 20
+		});
+		this.ne.setStyles({
+			'top': top,
+			'right': right
+		});
+		this.se.setStyles({
+			'bottom': bottom,
+			'right': right
+		});
+		this.sw.setStyles({
+			'bottom': bottom,
+			'left': left
+		});
+		this.nw.setStyles({
+			'top': top,
+			'left': left
+		});
+	},
+	detachResizable: function(){
+			this.resizable1.detach();
+			this.resizable2.detach();
+			this.resizable3.detach();
+			this.resizable4.detach();
+			this.resizable5.detach();
+			this.windowEl.getElements('.handle').hide();
+	},
+	reattachResizable: function(){
+			this.resizable1.attach();
+			this.resizable2.attach();
+			this.resizable3.attach();
+			this.resizable4.attach();
+			this.resizable5.attach();
+			this.windowEl.getElements('.handle').show();
+	},
+	/*
+
+	Internal Function: insertWindowElements
+
+	Arguments:
+		windowEl
+
+	*/
+	insertWindowElements: function(){
+
+		var options = this.options;
+		var height = options.height;
+		var width = options.width;
+		var id = options.id;
+
+		var cache = {};
+
+		if (Browser.Engine.trident4){
+			cache.zIndexFixEl = new Element('iframe', {
+				'id': id + '_zIndexFix',
+				'class': 'zIndexFix',
+				'scrolling': 'no',
+				'marginWidth': 0,
+				'marginHeight': 0,
+				'src': '',
+				'styles': {
+					'position': 'absolute' // This is set here to make theme transitions smoother
+				}
+			}).inject(this.windowEl);
+		}
+
+		cache.overlayEl = new Element('div', {
+			'id': id + '_overlay',
+			'class': 'mochaOverlay',
+			'styles': {
+				'position': 'absolute', // This is set here to make theme transitions smoother
+				'top': 0,
+				'left': 0
+			}
+		}).inject(this.windowEl);
+
+		cache.titleBarEl = new Element('div', {
+			'id': id + '_titleBar',
+			'class': 'mochaTitlebar',
+			'styles': {
+				'cursor': options.draggable ? 'move' : 'default'
+			}
+		}).inject(cache.overlayEl, 'top');
+
+		cache.titleEl = new Element('h3', {
+			'id': id + '_title',
+			'class': 'mochaTitle'
+		}).inject(cache.titleBarEl);
+
+		if (options.icon != false){
+			cache.titleEl.setStyles({
+				'padding-left': 28,
+				'background': 'url(' + options.icon + ') 5px 4px no-repeat'
+			});
+		}
+
+		cache.contentBorderEl = new Element('div', {
+			'id': id + '_contentBorder',
+			'class': 'mochaContentBorder'
+		}).inject(cache.overlayEl);
+
+		if (options.toolbar){
+			cache.toolbarWrapperEl = new Element('div', {
+				'id': id + '_toolbarWrapper',
+				'class': 'mochaToolbarWrapper',
+				'styles': { 'height': options.toolbarHeight }
+			}).inject(cache.contentBorderEl, options.toolbarPosition == 'bottom' ? 'after' : 'before');
+
+			if (options.toolbarPosition == 'bottom') {
+				cache.toolbarWrapperEl.addClass('bottom');
+			}
+			cache.toolbarEl = new Element('div', {
+				'id': id + '_toolbar',
+				'class': 'mochaToolbar',
+				'styles': { 'height': options.toolbarHeight }
+			}).inject(cache.toolbarWrapperEl);
+		}
+
+		if (options.toolbar2){
+			cache.toolbar2WrapperEl = new Element('div', {
+				'id': id + '_toolbar2Wrapper',
+				'class': 'mochaToolbarWrapper',
+				'styles': { 'height': options.toolbar2Height }
+			}).inject(cache.contentBorderEl, options.toolbar2Position == 'bottom' ? 'after' : 'before');
+
+			if (options.toolbar2Position == 'bottom') {
+				cache.toolbar2WrapperEl.addClass('bottom');
+			}
+			cache.toolbar2El = new Element('div', {
+				'id': id + '_toolbar2',
+				'class': 'mochaToolbar',
+				'styles': { 'height': options.toolbar2Height }
+			}).inject(cache.toolbar2WrapperEl);
+		}
+
+		var elmentOptions = { 'id': id + '_contentWrapper', 'class': 'mochaContentWrapper', 'styles': { 'width': width + 'px', 'height': height + 'px' }};
+		cache.contentWrapperEl = new Element( 'div', elmentOptions );
+		cache.contentWrapperEl.inject( cache.contentBorderEl );
+
+		if (this.options.shape == 'gauge'){
+			cache.contentBorderEl.setStyle('borderWidth', 0);
+		}
+
+		cache.contentEl = new Element('div', {
+			'id': id + '_content',
+			'class': 'mochaContent'
+		}).inject(cache.contentWrapperEl);
+
+		if (this.options.useCanvas == true && Browser.Engine.trident != true) {
+			cache.canvasEl = new Element('canvas', {
+				'id': id + '_canvas',
+				'class': 'mochaCanvas',
+				'width': 10,
+				'height': 10
+			}).inject(this.windowEl);
+		}
+
+		if (this.options.useCanvas == true && Browser.Engine.trident) {
+			cache.canvasEl = new Element('canvas', {
+				'id': id + '_canvas',
+				'class': 'mochaCanvas',
+				'width': 50000, // IE8 excanvas requires these large numbers
+				'height': 20000,
+				'styles': {
+					'position': 'absolute',
+					'top': 0,
+					'left': 0
+				}
+			}).inject(this.windowEl);
+
+			if (MUI.ieSupport == 'excanvas'){
+				G_vmlCanvasManager.initElement(cache.canvasEl);
+				cache.canvasEl = this.windowEl.getElement('.mochaCanvas');
+			}
+		}
+
+		cache.controlsEl = new Element('div', {
+			'id': id + '_controls',
+			'class': 'mochaControls'
+		}).inject(cache.overlayEl, 'after');
+
+		if (options.useCanvasControls == true){
+			cache.canvasControlsEl = new Element('canvas', {
+				'id': id + '_canvasControls',
+				'class': 'mochaCanvasControls',
+				'width': 14,
+				'height': 14
+			}).inject(this.windowEl);
+
+			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+				G_vmlCanvasManager.initElement(cache.canvasControlsEl);
+				cache.canvasControlsEl = this.windowEl.getElement('.mochaCanvasControls');
+			}
+		}
+
+		if (options.closable){
+			cache.closeButtonEl = new Element('div', {
+				'id': id + '_closeButton',
+				'class': 'mochaCloseButton mochaWindowButton',
+				'title': 'Close'
+			}).inject(cache.controlsEl);
+		}
+
+		if (options.maximizable){
+			cache.maximizeButtonEl = new Element('div', {
+				'id': id + '_maximizeButton',
+				'class': 'mochaMaximizeButton mochaWindowButton',
+				'title': 'Maximize'
+			}).inject(cache.controlsEl);
+		}
+
+		if (options.minimizable){
+			cache.minimizeButtonEl = new Element('div', {
+				'id': id + '_minimizeButton',
+				'class': 'mochaMinimizeButton mochaWindowButton',
+				'title': 'Minimize'
+			}).inject(cache.controlsEl);
+		}
+
+		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
+			cache.spinnerEl = new Element('div', {
+				'id': id + '_spinner',
+				'class': 'mochaSpinner',
+				'width': 16,
+				'height': 16
+			}).inject(this.windowEl, 'bottom');
+		}
+
+		if (this.options.shape == 'gauge'){
+			cache.canvasHeaderEl = new Element('canvas', {
+				'id': id + '_canvasHeader',
+				'class': 'mochaCanvasHeader',
+				'width': this.options.width,
+				'height': 26
+			}).inject(this.windowEl, 'bottom');
+
+			if (Browser.Engine.trident && MUI.ieSupport == 'excanvas'){
+				G_vmlCanvasManager.initElement(cache.canvasHeaderEl);
+				cache.canvasHeaderEl = this.windowEl.getElement('.mochaCanvasHeader');
+			}
+		}
+
+		if ( Browser.Engine.trident ){
+			cache.overlayEl.setStyle('zIndex', 2);
+		}
+
+		// For Mac Firefox 2 to help reduce scrollbar bugs in that browser
+		if (Browser.Platform.mac && Browser.Engine.gecko){
+			if (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent)){
+				var ffversion = new Number(RegExp.$1);
+				if (ffversion < 3){
+					cache.overlayEl.setStyle('overflow', 'auto');
+				}
+			}
+		}
+
+		if (options.resizable){
+			cache.n = new Element('div', {
+				'id': id + '_resizeHandle_n',
+				'class': 'handle',
+				'styles': {
+					'top': 0,
+					'left': 10,
+					'cursor': 'n-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.ne = new Element('div', {
+				'id': id + '_resizeHandle_ne',
+				'class': 'handle corner',
+				'styles': {
+					'top': 0,
+					'right': 0,
+					'cursor': 'ne-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.e = new Element('div', {
+				'id': id + '_resizeHandle_e',
+				'class': 'handle',
+				'styles': {
+					'top': 10,
+					'right': 0,
+					'cursor': 'e-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.se = new Element('div', {
+				'id': id + '_resizeHandle_se',
+				'class': 'handle cornerSE',
+				'styles': {
+					'bottom': 0,
+					'right': 0,
+					'cursor': 'se-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.s = new Element('div', {
+				'id': id + '_resizeHandle_s',
+				'class': 'handle',
+				'styles': {
+					'bottom': 0,
+					'left': 10,
+					'cursor': 's-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.sw = new Element('div', {
+				'id': id + '_resizeHandle_sw',
+				'class': 'handle corner',
+				'styles': {
+					'bottom': 0,
+					'left': 0,
+					'cursor': 'sw-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.w = new Element('div', {
+				'id': id + '_resizeHandle_w',
+				'class': 'handle',
+				'styles': {
+					'top': 10,
+					'left': 0,
+					'cursor': 'w-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+
+			cache.nw = new Element('div', {
+				'id': id + '_resizeHandle_nw',
+				'class': 'handle corner',
+				'styles': {
+					'top': 0,
+					'left': 0,
+					'cursor': 'nw-resize'
+				}
+			}).inject(cache.overlayEl, 'after');
+		}
+		$extend(this, cache);
+
+	},
+	/*
+
+	Convert CSS colors to Canvas colors.
+
+	*/
+	setColors: function(){
+
+		if (this.options.useCanvas == true) {
+
+			// Set TitlebarColor
+			var pattern = /\?(.*?)\)/;
+			if(( this.titleBarEl.getStyle('backgroundImage') != 'none' ) && this.titleBarEl.getStyle('backgroundImage').match(pattern) ){
+				var gradient = this.titleBarEl.getStyle('backgroundImage');
+				gradient = gradient.match(pattern)[1];
+				gradient = gradient.parseQueryString();
+				var gradientFrom = gradient.from;
+				var gradientTo = gradient.to.replace(/\"/, ''); // IE7 was adding a quotation mark in. No idea why.
+
+				this.options.headerStartColor = new Color(gradientFrom);
+				this.options.headerStopColor = new Color(gradientTo);
+				this.titleBarEl.addClass('replaced');
+			}
+			else if (this.titleBarEl.getStyle('background-color') !== '' && this.titleBarEl.getStyle('background-color') !== 'transparent') {
+				this.options.headerStartColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#fff', 20);
+				this.options.headerStopColor = new Color(this.titleBarEl.getStyle('background-color')).mix('#000', 20);
+				this.titleBarEl.addClass('replaced');
+			}
+
+			// Set BodyBGColor
+			if (this.windowEl.getStyle('background-color') !== '' && this.windowEl.getStyle('background-color') !== 'transparent') {
+				this.options.bodyBgColor = new Color(this.windowEl.getStyle('background-color'));
+				this.windowEl.addClass('replaced');
+			}
+
+			// Set resizableColor, the color of the SE corner resize handle
+			if (this.options.resizable && this.se.getStyle('background-color') !== '' && this.se.getStyle('background-color') !== 'transparent') {
+				this.options.resizableColor = new Color(this.se.getStyle('background-color'));
+				this.se.addClass('replaced');
+			}
+
+		}
+
+		if (this.options.useCanvasControls == true){
+
+			if (this.minimizeButtonEl){
+
+				// Set Minimize Button Foreground Color
+				if (this.minimizeButtonEl.getStyle('color') !== '' && this.minimizeButtonEl.getStyle('color') !== 'transparent') {
+					this.options.minimizeColor = new Color(this.minimizeButtonEl.getStyle('color'));
+				}
+
+				// Set Minimize Button Background Color
+				if (this.minimizeButtonEl.getStyle('background-color') !== '' && this.minimizeButtonEl.getStyle('background-color') !== 'transparent') {
+					this.options.minimizeBgColor = new Color(this.minimizeButtonEl.getStyle('background-color'));
+					this.minimizeButtonEl.addClass('replaced');
+				}
+
+			}
+
+			if (this.maximizeButtonEl){
+
+				// Set Maximize Button Foreground Color
+				if (this.maximizeButtonEl.getStyle('color') !== '' && this.maximizeButtonEl.getStyle('color') !== 'transparent') {
+					this.options.maximizeColor = new Color(this.maximizeButtonEl.getStyle('color'));
+				}
+
+				// Set Maximize Button Background Color
+				if (this.maximizeButtonEl.getStyle('background-color') !== '' && this.maximizeButtonEl.getStyle('background-color') !== 'transparent') {
+					this.options.maximizeBgColor = new Color(this.maximizeButtonEl.getStyle('background-color'));
+					this.maximizeButtonEl.addClass('replaced');
+				}
+
+			}
+
+			if (this.closeButtonEl){
+
+				// Set Close Button Foreground Color
+				if (this.closeButtonEl.getStyle('color') !== '' && this.closeButtonEl.getStyle('color') !== 'transparent') {
+					this.options.closeColor = new Color(this.closeButtonEl.getStyle('color'));
+				}
+
+				// Set Close Button Background Color
+				if (this.closeButtonEl.getStyle('background-color') !== '' && this.closeButtonEl.getStyle('background-color') !== 'transparent') {
+					this.options.closeBgColor = new Color(this.closeButtonEl.getStyle('background-color'));
+					this.closeButtonEl.addClass('replaced');
+				}
+
+			}
+		}
+	},
+	/*
+
+	Internal function: drawWindow
+		This is where we create the canvas GUI
+
+	Arguments:
+		windowEl: the $(window)
+		shadows: (boolean) false will draw a window without shadows
+
+	*/
+	drawWindow: function(shadows) {
+
+		if (this.drawingWindow == true) return;
+		this.drawingWindow = true;
+
+		if (this.isCollapsed){
+			this.drawWindowCollapsed(shadows);
+			return;
+		}
+
+		var windowEl = this.windowEl;
+
+		var options = this.options;
+		var shadowBlur = options.shadowBlur;
+		var shadowBlur2x = shadowBlur * 2;
+		var shadowOffset = this.options.shadowOffset;
+
+		this.overlayEl.setStyles({
+			'width': this.contentWrapperEl.offsetWidth
+		});
+
+		// Resize iframe when window is resized
+		if (this.iframeEl) {
+			this.iframeEl.setStyle('height', this.contentWrapperEl.offsetHeight);
+		}
+
+		var borderHeight = this.contentBorderEl.getStyle('border-top').toInt() + this.contentBorderEl.getStyle('border-bottom').toInt();
+		var toolbarHeight = this.toolbarWrapperEl ? this.toolbarWrapperEl.getStyle('height').toInt() + this.toolbarWrapperEl.getStyle('border-top').toInt() : 0;
+		var toolbar2Height = this.toolbar2WrapperEl ? this.toolbar2WrapperEl.getStyle('height').toInt() + this.toolbar2WrapperEl.getStyle('border-top').toInt() : 0;
+
+		this.headerFooterShadow = options.headerHeight + options.footerHeight + shadowBlur2x;
+		var height = this.contentWrapperEl.getStyle('height').toInt() + this.headerFooterShadow + toolbarHeight + toolbar2Height + borderHeight;
+		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
+		this.windowEl.setStyles({
+			'height': height,
+			'width': width
+		});
+
+		this.overlayEl.setStyles({
+			'height': height,
+			'top': shadowBlur - shadowOffset.y,
+			'left': shadowBlur - shadowOffset.x
+		});
+
+		if (this.options.useCanvas == true) {
+			if (Browser.Engine.trident) {
+				this.canvasEl.height = 20000;
+				this.canvasEl.width = 50000;
+			}
+			this.canvasEl.height = height;
+			this.canvasEl.width = width;
+		}
+
+		// Part of the fix for IE6 select z-index bug
+		if (Browser.Engine.trident4){
+			this.zIndexFixEl.setStyles({
+				'width': width,
+				'height': height
+			})
+		}
+
+		this.titleBarEl.setStyles({
+			'width': width - shadowBlur2x,
+			'height': options.headerHeight
+		});
+
+		// Make sure loading icon is placed correctly.
+		if (options.useSpinner == true && options.shape != 'gauge' && options.type != 'notification'){
+			this.spinnerEl.setStyles({
+				'left': shadowBlur - shadowOffset.x + 3,
+				'bottom': shadowBlur + shadowOffset.y +  4
+			});
+		}
+
+		if (this.options.useCanvas != false) {
+
+			// Draw Window
+			var ctx = this.canvasEl.getContext('2d');
+			ctx.clearRect(0, 0, width, height);
+
+			switch (options.shape) {
+				case 'box':
+					this.drawBox(ctx, width, height, shadowBlur, shadowOffset, shadows);
+					break;
+				case 'gauge':
+					this.drawGauge(ctx, width, height, shadowBlur, shadowOffset, shadows);
+					break;
+			}
+
+			if (options.resizable){
+				MUI.triangle(
+					ctx,
+					width - (shadowBlur + shadowOffset.x + 17),
+					height - (shadowBlur + shadowOffset.y + 18),
+					11,
+					11,
+					options.resizableColor,
+					1.0
+				);
+			}
+
+			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+			}
+		}
+
+		if (options.type != 'notification' && options.useCanvasControls == true){
+			this.drawControls(width, height, shadows);
+		}
+
+		// Resize panels if there are any
+		if (MUI.Desktop && this.contentWrapperEl.getChildren('.column').length != 0) {
+			MUI.rWidth(this.contentWrapperEl);
+			this.contentWrapperEl.getChildren('.column').each(function(column){
+				MUI.panelHeight(column);
+			});
+		}
+
+		this.drawingWindow = false;
+		return this;
+
+	},
+	drawWindowCollapsed: function(shadows) {
+
+		var windowEl = this.windowEl;
+
+		var options = this.options;
+		var shadowBlur = options.shadowBlur;
+		var shadowBlur2x = shadowBlur * 2;
+		var shadowOffset = options.shadowOffset;
+
+		var headerShadow = options.headerHeight + shadowBlur2x + 2;
+		var height = headerShadow;
+		var width = this.contentWrapperEl.getStyle('width').toInt() + shadowBlur2x;
+		this.windowEl.setStyle('height', height);
+
+		this.overlayEl.setStyles({
+			'height': height,
+			'top': shadowBlur - shadowOffset.y,
+			'left': shadowBlur - shadowOffset.x
+		});
+
+		// Part of the fix for IE6 select z-index bug
+		if (Browser.Engine.trident4){
+			this.zIndexFixEl.setStyles({
+				'width': width,
+				'height': height
+			});
+		}
+
+		// Set width
+		this.windowEl.setStyle('width', width);
+		this.overlayEl.setStyle('width', width);
+		this.titleBarEl.setStyles({
+			'width': width - shadowBlur2x,
+			'height': options.headerHeight
+		});
+
+		// Draw Window
+		if (this.options.useCanvas != false) {
+			this.canvasEl.height = height;
+			this.canvasEl.width = width;
+
+			var ctx = this.canvasEl.getContext('2d');
+			ctx.clearRect(0, 0, width, height);
+
+			this.drawBoxCollapsed(ctx, width, height, shadowBlur, shadowOffset, shadows);
+			if (options.useCanvasControls == true) {
+				this.drawControls(width, height, shadows);
+			}
+
+			// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MUI.triangle(ctx, 0, 0, 10, 10, options.resizableColor, 0);
+			}
+		}
+
+		this.drawingWindow = false;
+		return this;
+
+	},
+	drawControls : function(width, height, shadows){
+		var options = this.options;
+		var shadowBlur = options.shadowBlur;
+		var shadowOffset = options.shadowOffset;
+		var controlsOffset = options.controlsOffset;
+
+		// Make sure controls are placed correctly.
+		this.controlsEl.setStyles({
+			'right': shadowBlur + shadowOffset.x + controlsOffset.right,
+			'top': shadowBlur - shadowOffset.y + controlsOffset.top
+		});
+
+		this.canvasControlsEl.setStyles({
+			'right': shadowBlur + shadowOffset.x + controlsOffset.right,
+			'top': shadowBlur - shadowOffset.y + controlsOffset.top
+		});
+
+		// Calculate X position for controlbuttons
+		//var mochaControlsWidth = 52;
+		this.closebuttonX = options.closable ? this.mochaControlsWidth - 7 : this.mochaControlsWidth + 12;
+		this.maximizebuttonX = this.closebuttonX - (options.maximizable ? 19 : 0);
+		this.minimizebuttonX = this.maximizebuttonX - (options.minimizable ? 19 : 0);
+
+		var ctx2 = this.canvasControlsEl.getContext('2d');
+		ctx2.clearRect(0, 0, 100, 100);
+
+		if (this.options.closable){
+			this.closebutton(
+				ctx2,
+				this.closebuttonX,
+				7,
+				options.closeBgColor,
+				1.0,
+				options.closeColor,
+				1.0
+			);
+		}
+		if (this.options.maximizable){
+			this.maximizebutton(
+				ctx2,
+				this.maximizebuttonX,
+				7,
+				options.maximizeBgColor,
+				1.0,
+				options.maximizeColor,
+				1.0
+			);
+		}
+		if (this.options.minimizable){
+			this.minimizebutton(
+				ctx2,
+				this.minimizebuttonX,
+				7,
+				options.minimizeBgColor,
+				1.0,
+				options.minimizeColor,
+				1.0
+			);
+		}
+					// Invisible dummy object. The last element drawn is not rendered consistently while resizing in IE6 and IE7
+			if (Browser.Engine.trident){
+				MUI.circle(ctx2, 0, 0, 3, this.options.resizableColor, 0);
+			}
+
+	},
+	drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+
+		var options = this.options;
+		var shadowBlur2x = shadowBlur * 2;
+		var cornerRadius = this.options.cornerRadius;
+
+		// This is the drop shadow. It is created onion style.
+		if ( shadows != false ) {
+			for (var x = 0; x <= shadowBlur; x++){
+				MUI.roundedRect(
+					ctx,
+					shadowOffset.x + x,
+					shadowOffset.y + x,
+					width - (x * 2) - shadowOffset.x,
+					height - (x * 2) - shadowOffset.y,
+					cornerRadius + (shadowBlur - x),
+					[0, 0, 0],
+					x == shadowBlur ? .29 : .065 + (x * .01)
+				);
+			}
+		}
+		// Window body.
+		this.bodyRoundedRect(
+			ctx,                          // context
+			shadowBlur - shadowOffset.x,  // x
+			shadowBlur - shadowOffset.y,  // y
+			width - shadowBlur2x,         // width
+			height - shadowBlur2x,        // height
+			cornerRadius,                 // corner radius
+			options.bodyBgColor      // Footer color
+		);
+
+		if (this.options.type != 'notification'){
+		// Window header.
+			this.topRoundedRect(
+				ctx,                          // context
+				shadowBlur - shadowOffset.x,  // x
+				shadowBlur - shadowOffset.y,  // y
+				width - shadowBlur2x,         // width
+				options.headerHeight,         // height
+				cornerRadius,                 // corner radius
+				options.headerStartColor,     // Header gradient's top color
+				options.headerStopColor       // Header gradient's bottom color
+			);
+		}
+	},
+	drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+
+		var options = this.options;
+		var shadowBlur2x = shadowBlur * 2;
+		var cornerRadius = options.cornerRadius;
+
+		// This is the drop shadow. It is created onion style.
+		if ( shadows != false ){
+			for (var x = 0; x <= shadowBlur; x++){
+				MUI.roundedRect(
+					ctx,
+					shadowOffset.x + x,
+					shadowOffset.y + x,
+					width - (x * 2) - shadowOffset.x,
+					height - (x * 2) - shadowOffset.y,
+					cornerRadius + (shadowBlur - x),
+					[0, 0, 0],
+					x == shadowBlur ? .3 : .06 + (x * .01)
+				);
+			}
+		}
+
+		// Window header
+		this.topRoundedRect2(
+			ctx,                          // context
+			shadowBlur - shadowOffset.x,  // x
+			shadowBlur - shadowOffset.y,  // y
+			width - shadowBlur2x,         // width
+			options.headerHeight + 2,     // height
+			cornerRadius,                 // corner radius
+			options.headerStartColor,     // Header gradient's top color
+			options.headerStopColor       // Header gradient's bottom color
+		);
+
+	},
+	drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+		var options = this.options;
+		var radius = (width * .5) - (shadowBlur) + 16;
+		if (shadows != false) {
+			for (var x = 0; x <= shadowBlur; x++){
+				MUI.circle(
+					ctx,
+					width * .5 + shadowOffset.x,
+					(height  + options.headerHeight) * .5 + shadowOffset.x,
+					(width *.5) - (x * 2) - shadowOffset.x,
+					[0, 0, 0],
+					x == shadowBlur ? .75 : .075 + (x * .04)
+				);
+			}
+		}
+		MUI.circle(
+			ctx,
+			width * .5  - shadowOffset.x,
+			(height + options.headerHeight) * .5  - shadowOffset.y,
+			(width *.5) - shadowBlur,
+			options.bodyBgColor,
+			1
+		);
+
+		// Draw gauge header
+		this.canvasHeaderEl.setStyles({
+			'top': shadowBlur - shadowOffset.y,
+			'left': shadowBlur - shadowOffset.x
+		});
+		var ctx = this.canvasHeaderEl.getContext('2d');
+		ctx.clearRect(0, 0, width, 100);
+		ctx.beginPath();
+		ctx.lineWidth = 24;
+		ctx.lineCap = 'round';
+		ctx.moveTo(13, 13);
+		ctx.lineTo(width - (shadowBlur*2) - 13, 13);
+		ctx.strokeStyle = 'rgba(0, 0, 0, .65)';
+		ctx.stroke();
+	},
+	bodyRoundedRect: function(ctx, x, y, width, height, radius, rgb){
+		ctx.fillStyle = 'rgba(' + rgb.join(',') + ', 1)';
+		ctx.beginPath();
+		ctx.moveTo(x, y + radius);
+		ctx.lineTo(x, y + height - radius);
+		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+		ctx.lineTo(x + width - radius, y + height);
+		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+		ctx.lineTo(x + width, y + radius);
+		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+		ctx.lineTo(x + radius, y);
+		ctx.quadraticCurveTo(x, y, x, y + radius);
+		ctx.fill();
+
+	},
+	topRoundedRect: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
+		var lingrad = ctx.createLinearGradient(0, 0, 0, height);
+		lingrad.addColorStop(0, 'rgb(' + headerStartColor.join(',') + ')');
+		lingrad.addColorStop(1, 'rgb(' + headerStopColor.join(',') + ')');
+		ctx.fillStyle = lingrad;
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		ctx.lineTo(x, y + height);
+		ctx.lineTo(x + width, y + height);
+		ctx.lineTo(x + width, y + radius);
+		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+		ctx.lineTo(x + radius, y);
+		ctx.quadraticCurveTo(x, y, x, y + radius);
+		ctx.fill();
+
+	},
+	topRoundedRect2: function(ctx, x, y, width, height, radius, headerStartColor, headerStopColor){
+		// Chrome is having trouble rendering the LinearGradient in this particular case
+		if (navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {
+			ctx.fillStyle = 'rgba(' + headerStopColor.join(',') + ', 1)';
+		}
+		else {
+			var lingrad = ctx.createLinearGradient(0, this.options.shadowBlur - 1, 0, height + this.options.shadowBlur + 3);
+			lingrad.addColorStop(0, 'rgb(' + headerStartColor.join(',') + ')');
+			lingrad.addColorStop(1, 'rgb(' + headerStopColor.join(',') + ')');
+			ctx.fillStyle = lingrad;
+		}
+		ctx.beginPath();
+		ctx.moveTo(x, y + radius);
+		ctx.lineTo(x, y + height - radius);
+		ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+		ctx.lineTo(x + width - radius, y + height);
+		ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+		ctx.lineTo(x + width, y + radius);
+		ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+		ctx.lineTo(x + radius, y);
+		ctx.quadraticCurveTo(x, y, x, y + radius);
+		ctx.fill();
+	},
+	maximizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
+		// Circle
+		ctx.beginPath();
+		ctx.arc(x, y, 7, 0, Math.PI*2, true);
+		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
+		ctx.fill();
+		// X sign
+		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		ctx.moveTo(x, y - 3.5);
+		ctx.lineTo(x, y + 3.5);
+		ctx.moveTo(x - 3.5, y);
+		ctx.lineTo(x + 3.5, y);
+		ctx.stroke();
+	},
+	closebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
+		// Circle
+		ctx.beginPath();
+		ctx.arc(x, y, 7, 0, Math.PI*2, true);
+		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
+		ctx.fill();
+		// Plus sign
+		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		ctx.moveTo(x - 3, y - 3);
+		ctx.lineTo(x + 3, y + 3);
+		ctx.moveTo(x + 3, y - 3);
+		ctx.lineTo(x - 3, y + 3);
+		ctx.stroke();
+	},
+	minimizebutton: function(ctx, x, y, rgbBg, aBg, rgb, a){
+		// Circle
+		ctx.beginPath();
+		ctx.arc(x,y,7,0,Math.PI*2,true);
+		ctx.fillStyle = 'rgba(' + rgbBg.join(',') + ',' + aBg + ')';
+		ctx.fill();
+		// Minus sign
+		ctx.strokeStyle = 'rgba(' + rgb.join(',') + ',' + a + ')';
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		ctx.moveTo(x - 3.5, y);
+		ctx.lineTo(x + 3.5, y);
+		ctx.stroke();
+	},
+	setMochaControlsWidth: function(){
+		this.mochaControlsWidth = 0;
+		var options = this.options;
+		if (options.minimizable){
+			this.mochaControlsWidth += (this.minimizeButtonEl.getStyle('margin-left').toInt() + this.minimizeButtonEl.getStyle('width').toInt());
+		}
+		if (options.maximizable){
+			this.mochaControlsWidth += (this.maximizeButtonEl.getStyle('margin-left').toInt() + this.maximizeButtonEl.getStyle('width').toInt());
+		}
+		if (options.closable){
+			this.mochaControlsWidth += (this.closeButtonEl.getStyle('margin-left').toInt() + this.closeButtonEl.getStyle('width').toInt());
+		}
+		this.controlsEl.setStyle('width', this.mochaControlsWidth);
+		if (options.useCanvasControls == true){
+			this.canvasControlsEl.setProperty('width', this.mochaControlsWidth);
+		}
+	},
+	/*
+
+	Function: hideSpinner
+		Hides the spinner.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').hideSpinner();
+		(end)
+
+	*/
+	hideSpinner: function() {
+		if (this.spinnerEl)	this.spinnerEl.hide();
+		return this;
+	},
+	/*
+
+	Function: showSpinner
+		Shows the spinner.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').showSpinner();
+		(end)
+
+	*/
+	showSpinner: function(){
+		if (this.spinnerEl) this.spinnerEl.show();
+		return this;
+	},
+	/*
+
+	Function: close
+		Closes the window. This is an alternative to using MUI.Core.closeWindow().
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').close();
+		(end)
+
+	 */
+	close: function( ) {
+		if (!this.isClosing) MUI.closeWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: minimize
+		Minimizes the window.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').minimize();
+		(end)
+
+	 */
+	minimize: function( ){
+		MUI.Dock.minimizeWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: maximize
+		Maximizes the window.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').maximize();
+		(end)
+
+	 */
+	maximize: function( ) {
+		if (this.isMinimized){
+			MUI.Dock.restoreMinimized(this.windowEl);
+		}
+		MUI.Desktop.maximizeWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: restore
+		Restores a minimized/maximized window to its original size.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').restore();
+		(end)
+
+	 */
+	restore: function() {
+		if ( this.isMinimized )
+			MUI.Dock.restoreMinimized(this.windowEl);
+		else if ( this.isMaximized )
+			MUI.Desktop.restoreWindow(this.windowEl);
+		return this;
+	},
+	/*
+
+	Function: resize
+		Resize a window.
+
+	Notes:
+		If Advanced Effects are on the resize is animated. If centered is set to true the window remains centered as it resizes.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').resize({width:500,height:300,centered:true});
+		(end)
+
+	 */
+	resize: function(options){
+		MUI.resizeWindow(this.windowEl, options);
+		return this;
+	},
+	/*
+
+	Function: center
+		Center a window.
+
+	Example:
+		(start code)
+		$('myWindow').retrieve('instance').center();
+		(end)
+
+	 */
+	center: function() {
+		MUI.centerWindow(this.windowEl);
+		return this;
+	},
+
+	hide: function(){
+		this.windowEl.setStyle('display', 'none');
+		return this;
+	},
+
+	show: function(){
+		this.windowEl.setStyle('display', 'block');
+		return this;
+	},
+	
+	destroy: function(){
+	   MUI.closeWindow( this.windowEl );
+	}
+
+});
+
+MUI.extend({
+	/*
+
+	Function: closeWindow
+		Closes a window.
+
+	Syntax:
+	(start code)
+		MUI.closeWindow();
+	(end)
+
+	Arguments:
+		windowEl - the ID of the window to be closed
+
+	Returns:
+		true - the window was closed
+		false - the window was not closed
+
+	*/
+	closeWindow: function(windowEl){
+
+		var instance = windowEl.retrieve('instance');
+
+		// Does window exist and is not already in process of closing ?
+		if (windowEl != $(windowEl) || instance.isClosing) return;
+
+		instance.isClosing = true;
+		instance.fireEvent('onClose', windowEl);
+
+		if (instance.options.storeOnClose){
+			this.storeOnClose(instance, windowEl);
+			return;
+		}
+		if (instance.check) instance.check.destroy();
+
+		if ((instance.options.type == 'modal' || instance.options.type == 'modal2') && Browser.Engine.trident4){
+			$('modalFix').hide();
+		}
+
+		if (MUI.options.advancedEffects == false){
+			if (instance.options.type == 'modal' || instance.options.type == 'modal2'){
+				$('modalOverlay').setStyle('opacity', 0);
+			}
+			MUI.closingJobs(windowEl);
+			return true;
+		}
+		else {
+			// Redraws IE windows without shadows since IE messes up canvas alpha when you change element opacity
+			if (Browser.Engine.trident) instance.drawWindow(false);
+			if (instance.options.type == 'modal' || instance.options.type == 'modal2'){
+				MUI.Modal.modalOverlayCloseMorph.start({
+					'opacity': 0
+				});
+			}
+			var closeMorph = new Fx.Morph(windowEl, {
+				duration: 120,
+				onComplete: function(){
+					MUI.closingJobs(windowEl);
+					return true;
+				}.bind(this)
+			});
+			closeMorph.start({
+				'opacity': .4
+			});
+		}
+
+	},
+	closingJobs: function(windowEl){
+
+		var instances = MUI.Windows.instances;
+		var instance = instances.get(windowEl.id);
+		windowEl.setStyle('visibility', 'hidden');
+		// Destroy throws an error in IE8
+		if (Browser.Engine.trident) {
+			windowEl.dispose();
+		}
+		else {
+			windowEl.destroy();
+		}
+		instance.fireEvent('onCloseComplete');
+
+		if (instance.options.type != 'notification'){
+			var newFocus = this.getWindowWithHighestZindex();
+			this.focusWindow(newFocus);
+		}
+
+		instances.erase(instance.options.id);
+		if (this.loadingWorkspace == true) {
+			this.windowUnload();
+		}
+
+		if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window') {
+			var currentButton = $(instance.options.id + '_dockTab');
+			if (currentButton != null) {
+				MUI.Dock.dockSortables.removeItems(currentButton).destroy();
+			}
+			// Need to resize everything in case the dock becomes smaller when a tab is removed
+			MUI.Desktop.setDesktopSize();
+		}
+	},
+	storeOnClose: function(instance, windowEl){
+
+		if (instance.check) instance.check.hide();
+
+		windowEl.setStyles({
+			zIndex: -1
+		});
+		windowEl.addClass('windowClosed');
+		windowEl.removeClass('mocha');
+
+		if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window') {
+			var currentButton = $(instance.options.id + '_dockTab');
+			if (currentButton != null) {
+				currentButton.hide();
+			}
+			MUI.Desktop.setDesktopSize();
+		}
+
+		instance.fireEvent('onCloseComplete');
+
+		if (instance.options.type != 'notification'){
+			var newFocus = this.getWindowWithHighestZindex();
+			this.focusWindow(newFocus);
+		}
+
+		instance.isClosing = false;
+
+	},
+	/*
+
+	Function: closeAll
+		Close all open windows.
+
+	*/
+	closeAll: function() {
+		$$('.mocha').each(function(windowEl){
+			this.closeWindow(windowEl);
+		}.bind(this));
+	},
+	/*
+
+	Function: collapseToggle
+		Collapses an expanded window. Expands a collapsed window.
+
+	*/
+	collapseToggle: function(windowEl){
+		var instance = windowEl.retrieve('instance');
+		var handles = windowEl.getElements('.handle');
+		if (instance.isMaximized == true) return;
+		if (instance.isCollapsed == false) {
+			instance.isCollapsed = true;
+			handles.hide();
+			if ( instance.iframeEl ) {
+				instance.iframeEl.setStyle('visibility', 'hidden');
+			}
+			instance.contentBorderEl.setStyles({
+				visibility: 'hidden',
+				position: 'absolute',
+				top: -10000,
+				left: -10000
+			});
+			if(instance.toolbarWrapperEl){
+				instance.toolbarWrapperEl.setStyles({
+					visibility: 'hidden',
+					position: 'absolute',
+					top: -10000,
+					left: -10000
+				});
+			}
+			instance.drawWindowCollapsed();
+		}
+		else {
+			instance.isCollapsed = false;
+			instance.drawWindow();
+			instance.contentBorderEl.setStyles({
+				visibility: 'visible',
+				position: null,
+				top: null,
+				left: null
+			});
+			if(instance.toolbarWrapperEl){
+				instance.toolbarWrapperEl.setStyles({
+					visibility: 'visible',
+					position: null,
+					top: null,
+					left: null
+				});
+			}
+			if ( instance.iframeEl ) {
+				instance.iframeEl.setStyle('visibility', 'visible');
+			}
+			handles.show();
+		}
+	},
+	/*
+
+	Function: toggleWindowVisibility
+		Toggle window visibility with Ctrl-Alt-Q.
+
+	*/
+	toggleWindowVisibility: function(){
+		MUI.Windows.instances.each(function(instance){
+			if (instance.options.type == 'modal' || instance.options.type == 'modal2' || instance.isMinimized == true) return;
+			var id = $(instance.options.id);
+			if (id.getStyle('visibility') == 'visible'){
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'hidden');
+				}
+				if (instance.toolbarEl){
+					instance.toolbarWrapperEl.setStyle('visibility', 'hidden');
+				}
+				instance.contentBorderEl.setStyle('visibility', 'hidden');
+				id.setStyle('visibility', 'hidden');
+				MUI.Windows.windowsVisible = false;
+			}
+			else {
+				id.setStyle('visibility', 'visible');
+				instance.contentBorderEl.setStyle('visibility', 'visible');
+				if (instance.iframe){
+					instance.iframeEl.setStyle('visibility', 'visible');
+				}
+				if (instance.toolbarEl){
+					instance.toolbarWrapperEl.setStyle('visibility', 'visible');
+				}
+				MUI.Windows.windowsVisible = true;
+			}
+		}.bind(this));
+
+	},
+	focusWindow: function(windowEl, fireEvent){
+
+		// This is used with blurAll
+		MUI.Windows.focusingWindow = true;
+		var windowClicked = function(){
+			MUI.Windows.focusingWindow = false;
+		};
+		windowClicked.delay(170, this);
+
+		// Only focus when needed
+		if ($$('.mocha').length == 0) return;
+		if (windowEl != $(windowEl) || windowEl.hasClass('isFocused')) return;
+
+		var instances =  MUI.Windows.instances;
+		var instance = instances.get(windowEl.id);
+
+		if (instance.options.type == 'notification'){
+			windowEl.setStyle('zIndex', 11001);
+			return;
+		};
+
+		MUI.Windows.indexLevel += 2;
+		windowEl.setStyle('zIndex', MUI.Windows.indexLevel);
+
+		// Used when dragging and resizing windows
+		$('windowUnderlay').setStyle('zIndex', MUI.Windows.indexLevel - 1).inject($(windowEl),'after');
+
+		// Fire onBlur for the window that lost focus.
+		instances.each(function(instance){
+			if (instance.windowEl.hasClass('isFocused')){
+				instance.fireEvent('onBlur', instance.windowEl);
+			}
+			instance.windowEl.removeClass('isFocused');
+		});
+
+		if (MUI.Dock && $(MUI.options.dock) && instance.options.type == 'window') {
+			MUI.Dock.makeActiveTab();
+		}
+		windowEl.addClass('isFocused');
+
+		if (fireEvent != false){
+			instance.fireEvent('onFocus', windowEl);
+		}
+
+	},
+	getWindowWithHighestZindex: function(){
+		this.highestZindex = 0;
+		$$('.mocha').each(function(element){
+			this.zIndex = element.getStyle('zIndex');
+			if (this.zIndex >= this.highestZindex) {
+				this.highestZindex = this.zIndex;
+			}
+		}.bind(this));
+		$$('.mocha').each(function(element){
+			if (element.getStyle('zIndex') == this.highestZindex) {
+				this.windowWithHighestZindex = element;
+			}
+		}.bind(this));
+		return this.windowWithHighestZindex;
+	},
+	blurAll: function(){
+		if (MUI.Windows.focusingWindow == false) {
+			$$('.mocha').each(function(windowEl){
+				var instance = windowEl.retrieve('instance');
+				if (instance.options.type != 'modal' && instance.options.type != 'modal2'){
+					windowEl.removeClass('isFocused');
+				}
+			});
+			$$('.dockTab').removeClass('activeDockTab');
+		}
+	},
+	centerWindow: function(windowEl){
+
+		if(!windowEl){
+			MUI.Windows.instances.each(function(instance){
+				if (instance.windowEl.hasClass('isFocused')){
+					windowEl = instance.windowEl;
+				}
+			});
+		}
+
+		var instance = windowEl.retrieve('instance');
+		var options = instance.options;
+		var dimensions = options.container.getCoordinates();
+
+		var windowPosTop = window.getScroll().y + (window.getSize().y * .5) - (windowEl.offsetHeight * .5);
+		if (windowPosTop < -instance.options.shadowBlur){
+			windowPosTop = -instance.options.shadowBlur;
+		}
+		var windowPosLeft =	(dimensions.width * .5) - (windowEl.offsetWidth * .5);
+		if (windowPosLeft < -instance.options.shadowBlur){
+			windowPosLeft = -instance.options.shadowBlur;
+		}
+		if (MUI.options.advancedEffects == true){
+			instance.morph.start({
+				'top': windowPosTop,
+				'left': windowPosLeft
+			});
+		}
+		else {
+			windowEl.setStyles({
+				'top': windowPosTop,
+				'left': windowPosLeft
+			});
+		}
+	},
+	resizeWindow: function(windowEl, options){
+		var instance = windowEl.retrieve('instance');
+
+		$extend({
+			width: null,
+			height: null,
+			top: null,
+			left: null,
+			centered: true
+		}, options);
+
+		var oldWidth = windowEl.getStyle('width').toInt();
+		var oldHeight = windowEl.getStyle('height').toInt();
+		var oldTop = windowEl.getStyle('top').toInt();
+		var oldLeft = windowEl.getStyle('left').toInt();
+
+		if (options.centered){
+			var top = typeof(options.top) != 'undefined' ? options.top : oldTop - ((options.height - oldHeight) * .5);
+			var left = typeof(options.left) != 'undefined' ? options.left : oldLeft - ((options.width - oldWidth) * .5);
+		}
+		else {
+            var top = typeof(options.top) != 'undefined' ? options.top : oldTop;
+            var left = typeof(options.left) != 'undefined' ? options.left : oldLeft;
+		}
+
+		if (MUI.options.advancedEffects == false){
+			windowEl.setStyles({
+				'top': top,
+				'left': left
+			});
+			instance.contentWrapperEl.setStyles({
+				'height': options.height,
+				'width':  options.width
+			});
+			instance.drawWindow();
+			// Show iframe
+			if (instance.iframeEl){
+				if (!Browser.Engine.trident) {
+					instance.iframeEl.setStyle('visibility', 'visible');
+				}
+				else {
+					instance.iframeEl.show();
+				}
+			}
+		}
+		else {
+			windowEl.retrieve('resizeMorph').start({
+				'0': {	'height': options.height,
+						'width':  options.width
+				},
+				'1': {	'top': top,
+						'left': left
+				}
+			});
+		}
+		return instance;
+	},
+	/*
+
+	Internal Function: dynamicResize
+		Use with a timer to resize a window as the window's content size changes, such as with an accordian.
+
+	*/
+	dynamicResize: function(windowEl){
+		var instance = windowEl.retrieve('instance');
+		var contentWrapperEl = instance.contentWrapperEl;
+		var contentEl = instance.contentEl;
+
+		contentWrapperEl.setStyles({
+			'height': contentEl.offsetHeight,
+			'width': contentEl.offsetWidth
+		});
+		instance.drawWindow();
+	}
+});
+
+// Toggle window visibility with Ctrl-Alt-Q
+document.addEvent('keydown', function(event){
+	if (event.key == 'q' && event.control && event.alt) {
+		MUI.toggleWindowVisibility();
+	}
+});
+
+/*
+---
+
+name: Modal
+
+script: Modal.js
+
+description: Create modal dialog windows.
+
+copyright: (c) 2007-2009 Greg Houston, <http://greghoustondesign.com/>.	
+
+license: MIT-style license.	
+
+See Also: <Window>
+
+requires:
+  - MochaUI/MUI
+  - MochaUI/MUI.Windows
+
+provides: [MUI.Modal]
+
+...
+*/
+
+
+
+
+
+
+MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';
+
+MUI.Modal = new Class({
+
+	Extends: MUI.Window,
+	
+	options: {
+		type: 'modal'
+	},	
+	
+	initialize: function(options){
+		
+		if (!$('modalOverlay')){
+			this.modalInitialize();
+		
+			window.addEvent('resize', function(){
+				this.setModalSize();
+			}.bind(this));
+		}		
+		this.parent(options);
+
+	},
+	modalInitialize: function(){
+		var modalOverlay = new Element('div', {
+			'id': 'modalOverlay',
+			'styles': {
+				'height': document.getCoordinates().height,				
+				'opacity': .6
+			}
+		}).inject(document.body);
+		
+		modalOverlay.setStyles({
+				'position': Browser.Engine.trident4 ? 'absolute' : 'fixed'
+		});
+		
+		modalOverlay.addEvent('click', function(e){
+			var instance = MUI.Windows.instances.get(MUI.currentModal.id);
+			if (instance.options.modalOverlayClose == true) {
+				MUI.closeWindow(MUI.currentModal);
+			}
+		});
+		
+		if (Browser.Engine.trident4){
+			var modalFix = new Element('iframe', {
+				'id': 'modalFix',
+				'scrolling': 'no',
+				'marginWidth': 0,
+				'marginHeight': 0,
+				'src': '',
+				'styles': {
+					'height': document.getCoordinates().height
+				}
+			}).inject(document.body);
+		}
+
+		MUI.Modal.modalOverlayOpenMorph = new Fx.Morph($('modalOverlay'), {
+			'duration': 150
+		});
+		MUI.Modal.modalOverlayCloseMorph = new Fx.Morph($('modalOverlay'), {
+			'duration': 150,
+			onComplete: function(){
+				$('modalOverlay').hide();
+				if (Browser.Engine.trident4){
+					$('modalFix').hide();
+				}
+			}.bind(this)
+		});
+	},
+	setModalSize: function(){
+		$('modalOverlay').setStyle('height', document.getCoordinates().height);
+		if (Browser.Engine.trident4){
+			$('modalFix').setStyle('height', document.getCoordinates().height);
+		}
+	}
+
+});
+if (Browser.Engine.webkit) {
+	MUI.Window.implement({
+		shadowStart: function(ctx, shadowBlur, shadowOffset) {
+			ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+			ctx.shadowOffsetX = shadowOffset.x;
+			ctx.shadowOffsetY = shadowOffset.y;
+			ctx.shadowBlur = shadowBlur;
+		},
+		shadowStop: function(ctx) {
+			ctx.shadowColor = "rgba(0,0,0,0)";
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
+			ctx.shadowBlur = 0;
+		},
+		
+		drawBox: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+
+			var shadowBlur2x = shadowBlur * 2;
+			var cornerRadius = this.options.cornerRadius;
+	
+			if ( shadows != false ) { // start the shadowing
+				this.shadowStart(ctx, shadowBlur, shadowOffset);
+			}
+			// Window body.
+			this.bodyRoundedRect(
+				ctx,                          // context
+				shadowBlur - shadowOffset.x,  // x
+				shadowBlur - shadowOffset.y,  // y
+				width - shadowBlur2x,         // width
+				height - shadowBlur2x,        // height
+				cornerRadius,                 // corner radius
+				this.options.bodyBgColor      // Footer color
+			);
+			
+			this.shadowStop(ctx); // stop the shadowing
+			
+			if (this.options.type != 'notification'){
+			// Window header.
+				this.topRoundedRect(
+					ctx,                            // context
+					shadowBlur - shadowOffset.x,    // x
+					shadowBlur - shadowOffset.y,    // y
+					width - shadowBlur2x,           // width
+					this.options.headerHeight,      // height
+					cornerRadius,                   // corner radius
+					this.options.headerStartColor,  // Header gradient's top color
+					this.options.headerStopColor    // Header gradient's bottom color
+				);
+			}	
+		},
+		
+		drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+
+			var options = this.options;
+			var shadowBlur2x = shadowBlur * 2;
+			var cornerRadius = options.cornerRadius;
+		
+			if ( shadows != false ){
+				this.shadowStart(ctx, shadowBlur, shadowOffset);
+			}
+	
+			// Window header
+			this.topRoundedRect2(
+				ctx,                          // context
+				shadowBlur - shadowOffset.x,  // x
+				shadowBlur - shadowOffset.y,  // y
+				width - shadowBlur2x,         // width
+				options.headerHeight + 2,     // height
+				cornerRadius,                 // corner radius
+				options.headerStartColor,     // Header gradient's top color
+				options.headerStopColor       // Header gradient's bottom color
+			);
+			this.shadowStop(ctx);
+	
+		},	
+		
+		drawBoxCollapsed: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+
+			var options = this.options;
+			var shadowBlur2x = shadowBlur * 2;
+			var cornerRadius = options.cornerRadius;
+		
+			if ( shadows != false ){
+				this.shadowStart(ctx, shadowBlur, shadowOffset);
+			}
+	
+			// Window header
+			this.topRoundedRect2(
+				ctx,                          // context
+				shadowBlur - shadowOffset.x,  // x
+				shadowBlur - shadowOffset.y,  // y
+				width - shadowBlur2x,         // width
+				options.headerHeight + 2,     // height
+				cornerRadius,                 // corner radius
+				options.headerStartColor,     // Header gradient's top color
+				options.headerStopColor       // Header gradient's bottom color
+			);
+			this.shadowStop(ctx);
+		},
+		
+		drawGauge: function(ctx, width, height, shadowBlur, shadowOffset, shadows){
+			var options = this.options;
+			var radius = (width * .5) - (shadowBlur) + 16;
+			if ( shadows != false ){
+				this.shadowStart(ctx, shadowBlur, shadowOffset);
+			}
+			MUI.circle(
+				ctx,
+				width * .5  - shadowOffset.x,
+				(height + options.headerHeight) * .5  - shadowOffset.y,
+				(width *.5) - shadowBlur,
+				options.bodyBgColor,
+				1
+			);
+			this.shadowStop(ctx);
+	
+			// Draw gauge header
+			this.canvasHeaderEl.setStyles({
+				'top': shadowBlur - shadowOffset.y,
+				'left': shadowBlur - shadowOffset.x
+			});		
+			var ctx = this.canvasHeaderEl.getContext('2d');
+			ctx.clearRect(0, 0, width, 100);
+			ctx.beginPath();
+			ctx.lineWidth = 24;
+			ctx.lineCap = 'round';
+			ctx.moveTo(13, 13);
+			ctx.lineTo(width - (shadowBlur*2) - 13, 13);
+			ctx.strokeStyle = 'rgba(0, 0, 0, .65)';
+			ctx.stroke();
+		}
+	});
+}
+;
+// Copyright 2006 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
+// Known Issues:
+//
+// * Patterns are not implemented.
+// * Radial gradient are not implemented. The VML version of these look very
+//   different from the canvas one.
+// * Clipping paths are not implemented.
+// * Coordsize. The width and height attribute have higher priority than the
+//   width and height style values which isn't correct.
+// * Painting mode isn't implemented.
+// * Canvas width/height should is using content-box by default. IE in
+//   Quirks mode will draw the canvas using border-box. Either change your
+//   doctype to HTML5
+//   (http://www.whatwg.org/specs/web-apps/current-work/#the-doctype)
+//   or use Box Sizing Behavior from WebFX
+//   (http://webfx.eae.net/dhtml/boxsizing/boxsizing.html)
+// * Non uniform scaling does not correctly scale strokes.
+// * Optimize. There is always room for speed improvements.
+
+// Only add this code if we do not already have a canvas implementation
+if (!document.createElement('canvas').getContext) {
+
+(function() {
+
+  // alias some functions to make (compiled) code shorter
+  var m = Math;
+  var mr = m.round;
+  var ms = m.sin;
+  var mc = m.cos;
+  var abs = m.abs;
+  var sqrt = m.sqrt;
+
+  // this is used for sub pixel precision
+  var Z = 10;
+  var Z2 = Z / 2;
+
+  /**
+   * This funtion is assigned to the <canvas> elements as element.getContext().
+   * @this {HTMLElement}
+   * @return {CanvasRenderingContext2D_}
+   */
+  function getContext() {
+    return this.context_ ||
+        (this.context_ = new CanvasRenderingContext2D_(this));
+  }
+
+  var slice = Array.prototype.slice;
+
+  /**
+   * Binds a function to an object. The returned function will always use the
+   * passed in {@code obj} as {@code this}.
+   *
+   * Example:
+   *
+   *   g = bind(f, obj, a, b)
+   *   g(c, d) // will do f.call(obj, a, b, c, d)
+   *
+   * @param {Function} f The function to bind the object to
+   * @param {Object} obj The object that should act as this when the function
+   *     is called
+   * @param {*} var_args Rest arguments that will be used as the initial
+   *     arguments when the function is called
+   * @return {Function} A new function that has bound this
+   */
+  function bind(f, obj, var_args) {
+    var a = slice.call(arguments, 2);
+    return function() {
+      return f.apply(obj, a.concat(slice.call(arguments)));
+    };
+  }
+
+  var G_vmlCanvasManager_ = {
+    init: function(opt_doc) {
+      if (/MSIE/.test(navigator.userAgent) && !window.opera) {
+        var doc = opt_doc || document;
+        // Create a dummy element so that IE will allow canvas elements to be
+        // recognized.
+        doc.createElement('canvas');
+        doc.attachEvent('onreadystatechange', bind(this.init_, this, doc));
+      }
+    },
+
+    init_: function(doc) {
+      // create xmlns
+      if (!doc.namespaces['g_vml_']) {
+        doc.namespaces.add('g_vml_', 'urn:schemas-microsoft-com:vml',
+                           '#default#VML');
+
+      }
+      if (!doc.namespaces['g_o_']) {
+        doc.namespaces.add('g_o_', 'urn:schemas-microsoft-com:office:office',
+                           '#default#VML');
+      }
+
+      // Setup default CSS.  Only add one style sheet per document
+      if (!doc.styleSheets['ex_canvas_']) {
+        var ss = doc.createStyleSheet();
+        ss.owningElement.id = 'ex_canvas_';
+        ss.cssText = 'canvas{display:inline-block;overflow:hidden;' +
+            // default size is 300x150 in Gecko and Opera
+            'text-align:left;width:300px;height:150px}' +
+            'g_vml_\\:*{behavior:url(#default#VML)}' +
+            'g_o_\\:*{behavior:url(#default#VML)}';
+
+      }
+
+      // find all canvas elements
+      var els = doc.getElementsByTagName('canvas');
+      for (var i = 0; i < els.length; i++) {
+        this.initElement(els[i]);
+      }
+    },
+
+    /**
+     * Public initializes a canvas element so that it can be used as canvas
+     * element from now on. This is called automatically before the page is
+     * loaded but if you are creating elements using createElement you need to
+     * make sure this is called on the element.
+     * @param {HTMLElement} el The canvas element to initialize.
+     * @return {HTMLElement} the element that was created.
+     */
+    initElement: function(el) {
+      if (!el.getContext) {
+
+        el.getContext = getContext;
+
+        // Remove fallback content. There is no way to hide text nodes so we
+        // just remove all childNodes. We could hide all elements and remove
+        // text nodes but who really cares about the fallback content.
+        el.innerHTML = '';
+
+        // do not use inline function because that will leak memory
+        el.attachEvent('onpropertychange', onPropertyChange);
+        el.attachEvent('onresize', onResize);
+
+        var attrs = el.attributes;
+        if (attrs.width && attrs.width.specified) {
+          // TODO: use runtimeStyle and coordsize
+          // el.getContext().setWidth_(attrs.width.nodeValue);
+          el.style.width = attrs.width.nodeValue + 'px';
+        } else {
+          el.width = el.clientWidth;
+        }
+        if (attrs.height && attrs.height.specified) {
+          // TODO: use runtimeStyle and coordsize
+          // el.getContext().setHeight_(attrs.height.nodeValue);
+          el.style.height = attrs.height.nodeValue + 'px';
+        } else {
+          el.height = el.clientHeight;
+        }
+        //el.getContext().setCoordsize_()
+      }
+      return el;
+    }
+  };
+
+  function onPropertyChange(e) {
+    var el = e.srcElement;
+
+    switch (e.propertyName) {
+      case 'width':
+        el.style.width = el.attributes.width.nodeValue + 'px';
+        el.getContext().clearRect();
+        break;
+      case 'height':
+        el.style.height = el.attributes.height.nodeValue + 'px';
+        el.getContext().clearRect();
+        break;
+    }
+  }
+
+  function onResize(e) {
+    var el = e.srcElement;
+    if (el.firstChild) {
+      el.firstChild.style.width =  el.clientWidth + 'px';
+      el.firstChild.style.height = el.clientHeight + 'px';
+    }
+  }
+
+  G_vmlCanvasManager_.init();
+
+  // precompute "00" to "FF"
+  var dec2hex = [];
+  for (var i = 0; i < 16; i++) {
+    for (var j = 0; j < 16; j++) {
+      dec2hex[i * 16 + j] = i.toString(16) + j.toString(16);
+    }
+  }
+
+  function createMatrixIdentity() {
+    return [
+      [1, 0, 0],
+      [0, 1, 0],
+      [0, 0, 1]
+    ];
+  }
+
+  function matrixMultiply(m1, m2) {
+    var result = createMatrixIdentity();
+
+    for (var x = 0; x < 3; x++) {
+      for (var y = 0; y < 3; y++) {
+        var sum = 0;
+
+        for (var z = 0; z < 3; z++) {
+          sum += m1[x][z] * m2[z][y];
+        }
+
+        result[x][y] = sum;
+      }
+    }
+    return result;
+  }
+
+  function copyState(o1, o2) {
+    o2.fillStyle     = o1.fillStyle;
+    o2.lineCap       = o1.lineCap;
+    o2.lineJoin      = o1.lineJoin;
+    o2.lineWidth     = o1.lineWidth;
+    o2.miterLimit    = o1.miterLimit;
+    o2.shadowBlur    = o1.shadowBlur;
+    o2.shadowColor   = o1.shadowColor;
+    o2.shadowOffsetX = o1.shadowOffsetX;
+    o2.shadowOffsetY = o1.shadowOffsetY;
+    o2.strokeStyle   = o1.strokeStyle;
+    o2.globalAlpha   = o1.globalAlpha;
+    o2.arcScaleX_    = o1.arcScaleX_;
+    o2.arcScaleY_    = o1.arcScaleY_;
+    o2.lineScale_    = o1.lineScale_;
+  }
+
+  function processStyle(styleString) {
+    var str, alpha = 1;
+
+    styleString = String(styleString);
+    if (styleString.substring(0, 3) == 'rgb') {
+      var start = styleString.indexOf('(', 3);
+      var end = styleString.indexOf(')', start + 1);
+      var guts = styleString.substring(start + 1, end).split(',');
+
+      str = '#';
+      for (var i = 0; i < 3; i++) {
+        str += dec2hex[Number(guts[i])];
+      }
+
+      if (guts.length == 4 && styleString.substr(3, 1) == 'a') {
+        alpha = guts[3];
+      }
+    } else {
+      str = styleString;
+    }
+
+    return {color: str, alpha: alpha};
+  }
+
+  function processLineCap(lineCap) {
+    switch (lineCap) {
+      case 'butt':
+        return 'flat';
+      case 'round':
+        return 'round';
+      case 'square':
+      default:
+        return 'square';
+    }
+  }
+
+  /**
+   * This class implements CanvasRenderingContext2D interface as described by
+   * the WHATWG.
+   * @param {HTMLElement} surfaceElement The element that the 2D context should
+   * be associated with
+   */
+  function CanvasRenderingContext2D_(surfaceElement) {
+    this.m_ = createMatrixIdentity();
+
+    this.mStack_ = [];
+    this.aStack_ = [];
+    this.currentPath_ = [];
+
+    // Canvas context properties
+    this.strokeStyle = '#000';
+    this.fillStyle = '#000';
+
+    this.lineWidth = 1;
+    this.lineJoin = 'miter';
+    this.lineCap = 'butt';
+    this.miterLimit = Z * 1;
+    this.globalAlpha = 1;
+    this.canvas = surfaceElement;
+
+    var el = surfaceElement.ownerDocument.createElement('div');
+    el.style.width =  surfaceElement.clientWidth + 'px';
+    el.style.height = surfaceElement.clientHeight + 'px';
+    el.style.overflow = 'hidden';
+    el.style.position = 'absolute';
+    surfaceElement.appendChild(el);
+
+    this.element_ = el;
+    this.arcScaleX_ = 1;
+    this.arcScaleY_ = 1;
+    this.lineScale_ = 1;
+  }
+
+  var contextPrototype = CanvasRenderingContext2D_.prototype;
+  contextPrototype.clearRect = function() {
+    this.element_.innerHTML = '';
+  };
+
+  contextPrototype.beginPath = function() {
+    // TODO: Branch current matrix so that save/restore has no effect
+    //       as per safari docs.
+    this.currentPath_ = [];
+  };
+
+  contextPrototype.moveTo = function(aX, aY) {
+    var p = this.getCoords_(aX, aY);
+    this.currentPath_.push({type: 'moveTo', x: p.x, y: p.y});
+    this.currentX_ = p.x;
+    this.currentY_ = p.y;
+  };
+
+  contextPrototype.lineTo = function(aX, aY) {
+    var p = this.getCoords_(aX, aY);
+    this.currentPath_.push({type: 'lineTo', x: p.x, y: p.y});
+
+    this.currentX_ = p.x;
+    this.currentY_ = p.y;
+  };
+
+  contextPrototype.bezierCurveTo = function(aCP1x, aCP1y,
+                                            aCP2x, aCP2y,
+                                            aX, aY) {
+    var p = this.getCoords_(aX, aY);
+    var cp1 = this.getCoords_(aCP1x, aCP1y);
+    var cp2 = this.getCoords_(aCP2x, aCP2y);
+    bezierCurveTo(this, cp1, cp2, p);
+  };
+
+  // Helper function that takes the already fixed cordinates.
+  function bezierCurveTo(self, cp1, cp2, p) {
+    self.currentPath_.push({
+      type: 'bezierCurveTo',
+      cp1x: cp1.x,
+      cp1y: cp1.y,
+      cp2x: cp2.x,
+      cp2y: cp2.y,
+      x: p.x,
+      y: p.y
+    });
+    self.currentX_ = p.x;
+    self.currentY_ = p.y;
+  }
+
+  contextPrototype.quadraticCurveTo = function(aCPx, aCPy, aX, aY) {
+    // the following is lifted almost directly from
+    // http://developer.mozilla.org/en/docs/Canvas_tutorial:Drawing_shapes
+
+    var cp = this.getCoords_(aCPx, aCPy);
+    var p = this.getCoords_(aX, aY);
+
+    var cp1 = {
+      x: this.currentX_ + 2.0 / 3.0 * (cp.x - this.currentX_),
+      y: this.currentY_ + 2.0 / 3.0 * (cp.y - this.currentY_)
+    };
+    var cp2 = {
+      x: cp1.x + (p.x - this.currentX_) / 3.0,
+      y: cp1.y + (p.y - this.currentY_) / 3.0
+    };
+
+    bezierCurveTo(this, cp1, cp2, p);
+  };
+
+  contextPrototype.arc = function(aX, aY, aRadius,
+                                  aStartAngle, aEndAngle, aClockwise) {
+    aRadius *= Z;
+    var arcType = aClockwise ? 'at' : 'wa';
+
+    var xStart = aX + mc(aStartAngle) * aRadius - Z2;
+    var yStart = aY + ms(aStartAngle) * aRadius - Z2;
+
+    var xEnd = aX + mc(aEndAngle) * aRadius - Z2;
+    var yEnd = aY + ms(aEndAngle) * aRadius - Z2;
+
+    // IE won't render arches drawn counter clockwise if xStart == xEnd.
+    if (xStart == xEnd && !aClockwise) {
+      xStart += 0.125; // Offset xStart by 1/80 of a pixel. Use something
+                       // that can be represented in binary
+    }
+
+    var p = this.getCoords_(aX, aY);
+    var pStart = this.getCoords_(xStart, yStart);
+    var pEnd = this.getCoords_(xEnd, yEnd);
+
+    this.currentPath_.push({type: arcType,
+                           x: p.x,
+                           y: p.y,
+                           radius: aRadius,
+                           xStart: pStart.x,
+                           yStart: pStart.y,
+                           xEnd: pEnd.x,
+                           yEnd: pEnd.y});
+
+  };
+
+  contextPrototype.rect = function(aX, aY, aWidth, aHeight) {
+    this.moveTo(aX, aY);
+    this.lineTo(aX + aWidth, aY);
+    this.lineTo(aX + aWidth, aY + aHeight);
+    this.lineTo(aX, aY + aHeight);
+    this.closePath();
+  };
+
+  contextPrototype.strokeRect = function(aX, aY, aWidth, aHeight) {
+    var oldPath = this.currentPath_;
+    this.beginPath();
+
+    this.moveTo(aX, aY);
+    this.lineTo(aX + aWidth, aY);
+    this.lineTo(aX + aWidth, aY + aHeight);
+    this.lineTo(aX, aY + aHeight);
+    this.closePath();
+    this.stroke();
+
+    this.currentPath_ = oldPath;
+  };
+
+  contextPrototype.fillRect = function(aX, aY, aWidth, aHeight) {
+    var oldPath = this.currentPath_;
+    this.beginPath();
+
+    this.moveTo(aX, aY);
+    this.lineTo(aX + aWidth, aY);
+    this.lineTo(aX + aWidth, aY + aHeight);
+    this.lineTo(aX, aY + aHeight);
+    this.closePath();
+    this.fill();
+
+    this.currentPath_ = oldPath;
+  };
+
+  contextPrototype.createLinearGradient = function(aX0, aY0, aX1, aY1) {
+    var gradient = new CanvasGradient_('gradient');
+    gradient.x0_ = aX0;
+    gradient.y0_ = aY0;
+    gradient.x1_ = aX1;
+    gradient.y1_ = aY1;
+    return gradient;
+  };
+
+  contextPrototype.createRadialGradient = function(aX0, aY0, aR0,
+                                                   aX1, aY1, aR1) {
+    var gradient = new CanvasGradient_('gradientradial');
+    gradient.x0_ = aX0;
+    gradient.y0_ = aY0;
+    gradient.r0_ = aR0;
+    gradient.x1_ = aX1;
+    gradient.y1_ = aY1;
+    gradient.r1_ = aR1;
+    return gradient;
+  };
+
+  contextPrototype.drawImage = function(image, var_args) {
+    var dx, dy, dw, dh, sx, sy, sw, sh;
+
+    // to find the original width we overide the width and height
+    var oldRuntimeWidth = image.runtimeStyle.width;
+    var oldRuntimeHeight = image.runtimeStyle.height;
+    image.runtimeStyle.width = 'auto';
+    image.runtimeStyle.height = 'auto';
+
+    // get the original size
+    var w = image.width;
+    var h = image.height;
+
+    // and remove overides
+    image.runtimeStyle.width = oldRuntimeWidth;
+    image.runtimeStyle.height = oldRuntimeHeight;
+
+    if (arguments.length == 3) {
+      dx = arguments[1];
+      dy = arguments[2];
+      sx = sy = 0;
+      sw = dw = w;
+      sh = dh = h;
+    } else if (arguments.length == 5) {
+      dx = arguments[1];
+      dy = arguments[2];
+      dw = arguments[3];
+      dh = arguments[4];
+      sx = sy = 0;
+      sw = w;
+      sh = h;
+    } else if (arguments.length == 9) {
+      sx = arguments[1];
+      sy = arguments[2];
+      sw = arguments[3];
+      sh = arguments[4];
+      dx = arguments[5];
+      dy = arguments[6];
+      dw = arguments[7];
+      dh = arguments[8];
+    } else {
+      throw Error('Invalid number of arguments');
+    }
+
+    var d = this.getCoords_(dx, dy);
+
+    var w2 = sw / 2;
+    var h2 = sh / 2;
+
+    var vmlStr = [];
+
+    var W = 10;
+    var H = 10;
+
+    // For some reason that I've now forgotten, using divs didn't work
+    vmlStr.push(' <g_vml_:group',
+                ' coordsize="', Z * W, ',', Z * H, '"',
+                ' coordorigin="0,0"' ,
+                ' style="width:', W, 'px;height:', H, 'px;position:absolute;');
+
+    // If filters are necessary (rotation exists), create them
+    // filters are bog-slow, so only create them if abbsolutely necessary
+    // The following check doesn't account for skews (which don't exist
+    // in the canvas spec (yet) anyway.
+
+    if (this.m_[0][0] != 1 || this.m_[0][1]) {
+      var filter = [];
+
+      // Note the 12/21 reversal
+      filter.push('M11=', this.m_[0][0], ',',
+                  'M12=', this.m_[1][0], ',',
+                  'M21=', this.m_[0][1], ',',
+                  'M22=', this.m_[1][1], ',',
+                  'Dx=', mr(d.x / Z), ',',
+                  'Dy=', mr(d.y / Z), '');
+
+      // Bounding box calculation (need to minimize displayed area so that
+      // filters don't waste time on unused pixels.
+      var max = d;
+      var c2 = this.getCoords_(dx + dw, dy);
+      var c3 = this.getCoords_(dx, dy + dh);
+      var c4 = this.getCoords_(dx + dw, dy + dh);
+
+      max.x = m.max(max.x, c2.x, c3.x, c4.x);
+      max.y = m.max(max.y, c2.y, c3.y, c4.y);
+
+      vmlStr.push('padding:0 ', mr(max.x / Z), 'px ', mr(max.y / Z),
+                  'px 0;filter:progid:DXImageTransform.Microsoft.Matrix(',
+                  filter.join(''), ", sizingmethod='clip');")
+    } else {
+      vmlStr.push('top:', mr(d.y / Z), 'px;left:', mr(d.x / Z), 'px;');
+    }
+
+    vmlStr.push(' ">' ,
+                '<g_vml_:image src="', image.src, '"',
+                ' style="width:', Z * dw, 'px;',
+                ' height:', Z * dh, 'px;"',
+                ' cropleft="', sx / w, '"',
+                ' croptop="', sy / h, '"',
+                ' cropright="', (w - sx - sw) / w, '"',
+                ' cropbottom="', (h - sy - sh) / h, '"',
+                ' />',
+                '</g_vml_:group>');
+
+    this.element_.insertAdjacentHTML('BeforeEnd',
+                                    vmlStr.join(''));
+  };
+
+  contextPrototype.stroke = function(aFill) {
+    var lineStr = [];
+    var lineOpen = false;
+    var a = processStyle(aFill ? this.fillStyle : this.strokeStyle);
+    var color = a.color;
+    var opacity = a.alpha * this.globalAlpha;
+
+    var W = 10;
+    var H = 10;
+
+    lineStr.push('<g_vml_:shape',
+                 ' filled="', !!aFill, '"',
+                 ' style="position:absolute;width:', W, 'px;height:', H, 'px;"',
+                 ' coordorigin="0 0" coordsize="', Z * W, ' ', Z * H, '"',
+                 ' stroked="', !aFill, '"',
+                 ' path="');
+
+    var newSeq = false;
+    var min = {x: null, y: null};
+    var max = {x: null, y: null};
+
+    for (var i = 0; i < this.currentPath_.length; i++) {
+      var p = this.currentPath_[i];
+      var c;
+
+      switch (p.type) {
+        case 'moveTo':
+          c = p;
+          lineStr.push(' m ', mr(p.x), ',', mr(p.y));
+          break;
+        case 'lineTo':
+          lineStr.push(' l ', mr(p.x), ',', mr(p.y));
+          break;
+        case 'close':
+          lineStr.push(' x ');
+          p = null;
+          break;
+        case 'bezierCurveTo':
+          lineStr.push(' c ',
+                       mr(p.cp1x), ',', mr(p.cp1y), ',',
+                       mr(p.cp2x), ',', mr(p.cp2y), ',',
+                       mr(p.x), ',', mr(p.y));
+          break;
+        case 'at':
+        case 'wa':
+          lineStr.push(' ', p.type, ' ',
+                       mr(p.x - this.arcScaleX_ * p.radius), ',',
+                       mr(p.y - this.arcScaleY_ * p.radius), ' ',
+                       mr(p.x + this.arcScaleX_ * p.radius), ',',
+                       mr(p.y + this.arcScaleY_ * p.radius), ' ',
+                       mr(p.xStart), ',', mr(p.yStart), ' ',
+                       mr(p.xEnd), ',', mr(p.yEnd));
+          break;
+      }
+
+
+      // TODO: Following is broken for curves due to
+      //       move to proper paths.
+
+      // Figure out dimensions so we can do gradient fills
+      // properly
+      if (p) {
+        if (min.x == null || p.x < min.x) {
+          min.x = p.x;
+        }
+        if (max.x == null || p.x > max.x) {
+          max.x = p.x;
+        }
+        if (min.y == null || p.y < min.y) {
+          min.y = p.y;
+        }
+        if (max.y == null || p.y > max.y) {
+          max.y = p.y;
+        }
+      }
+    }
+    lineStr.push(' ">');
+
+    if (!aFill) {
+      var lineWidth = this.lineScale_ * this.lineWidth;
+
+      // VML cannot correctly render a line if the width is less than 1px.
+      // In that case, we dilute the color to make the line look thinner.
+      if (lineWidth < 1) {
+        opacity *= lineWidth;
+      }
+
+      lineStr.push(
+        '<g_vml_:stroke',
+        ' opacity="', opacity, '"',
+        ' joinstyle="', this.lineJoin, '"',
+        ' miterlimit="', this.miterLimit, '"',
+        ' endcap="', processLineCap(this.lineCap), '"',
+        ' weight="', lineWidth, 'px"',
+        ' color="', color, '" />'
+      );
+    } else if (typeof this.fillStyle == 'object') {
+      var fillStyle = this.fillStyle;
+      var angle = 0;
+      var focus = {x: 0, y: 0};
+
+      // additional offset
+      var shift = 0;
+      // scale factor for offset
+      var expansion = 1;
+
+      if (fillStyle.type_ == 'gradient') {
+        var x0 = fillStyle.x0_ / this.arcScaleX_;
+        var y0 = fillStyle.y0_ / this.arcScaleY_;
+        var x1 = fillStyle.x1_ / this.arcScaleX_;
+        var y1 = fillStyle.y1_ / this.arcScaleY_;
+        var p0 = this.getCoords_(x0, y0);
+        var p1 = this.getCoords_(x1, y1);
+        var dx = p1.x - p0.x;
+        var dy = p1.y - p0.y;
+        angle = Math.atan2(dx, dy) * 180 / Math.PI;
+
+        // The angle should be a non-negative number.
+        if (angle < 0) {
+          angle += 360;
+        }
+
+        // Very small angles produce an unexpected result because they are
+        // converted to a scientific notation string.
+        if (angle < 1e-6) {
+          angle = 0;
+        }
+      } else {
+        var p0 = this.getCoords_(fillStyle.x0_, fillStyle.y0_);
+        var width  = max.x - min.x;
+        var height = max.y - min.y;
+        focus = {
+          x: (p0.x - min.x) / width,
+          y: (p0.y - min.y) / height
+        };
+
+        width  /= this.arcScaleX_ * Z;
+        height /= this.arcScaleY_ * Z;
+        var dimension = m.max(width, height);
+        shift = 2 * fillStyle.r0_ / dimension;
+        expansion = 2 * fillStyle.r1_ / dimension - shift;
+      }
+
+      // We need to sort the color stops in ascending order by offset,
+      // otherwise IE won't interpret it correctly.
+      var stops = fillStyle.colors_;
+      stops.sort(function(cs1, cs2) {
+        return cs1.offset - cs2.offset;
+      });
+
+      var length = stops.length;
+      var color1 = stops[0].color;
+      var color2 = stops[length - 1].color;
+      var opacity1 = stops[0].alpha * this.globalAlpha;
+      var opacity2 = stops[length - 1].alpha * this.globalAlpha;
+
+      var colors = [];
+      for (var i = 0; i < length; i++) {
+        var stop = stops[i];
+        colors.push(stop.offset * expansion + shift + ' ' + stop.color);
+      }
+
+      // When colors attribute is used, the meanings of opacity and o:opacity2
+      // are reversed.
+      lineStr.push('<g_vml_:fill type="', fillStyle.type_, '"',
+                   ' method="none" focus="100%"',
+                   ' color="', color1, '"',
+                   ' color2="', color2, '"',
+                   ' colors="', colors.join(','), '"',
+                   ' opacity="', opacity2, '"',
+                   ' g_o_:opacity2="', opacity1, '"',
+                   ' angle="', angle, '"',
+                   ' focusposition="', focus.x, ',', focus.y, '" />');
+    } else {
+      lineStr.push('<g_vml_:fill color="', color, '" opacity="', opacity,
+                   '" />');
+    }
+
+    lineStr.push('</g_vml_:shape>');
+
+    this.element_.insertAdjacentHTML('beforeEnd', lineStr.join(''));
+  };
+
+  contextPrototype.fill = function() {
+    this.stroke(true);
+  }
+
+  contextPrototype.closePath = function() {
+    this.currentPath_.push({type: 'close'});
+  };
+
+  /**
+   * @private
+   */
+  contextPrototype.getCoords_ = function(aX, aY) {
+    var m = this.m_;
+    return {
+      x: Z * (aX * m[0][0] + aY * m[1][0] + m[2][0]) - Z2,
+      y: Z * (aX * m[0][1] + aY * m[1][1] + m[2][1]) - Z2
+    }
+  };
+
+  contextPrototype.save = function() {
+    var o = {};
+    copyState(this, o);
+    this.aStack_.push(o);
+    this.mStack_.push(this.m_);
+    this.m_ = matrixMultiply(createMatrixIdentity(), this.m_);
+  };
+
+  contextPrototype.restore = function() {
+    copyState(this.aStack_.pop(), this);
+    this.m_ = this.mStack_.pop();
+  };
+
+  function matrixIsFinite(m) {
+    for (var j = 0; j < 3; j++) {
+      for (var k = 0; k < 2; k++) {
+        if (!isFinite(m[j][k]) || isNaN(m[j][k])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  function setM(ctx, m, updateLineScale) {
+    if (!matrixIsFinite(m)) {
+      return;
+    }
+    ctx.m_ = m;
+
+    if (updateLineScale) {
+      // Get the line scale.
+      // Determinant of this.m_ means how much the area is enlarged by the
+      // transformation. So its square root can be used as a scale factor
+      // for width.
+      var det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
+      ctx.lineScale_ = sqrt(abs(det));
+    }
+  }
+
+  contextPrototype.translate = function(aX, aY) {
+    var m1 = [
+      [1,  0,  0],
+      [0,  1,  0],
+      [aX, aY, 1]
+    ];
+
+    setM(this, matrixMultiply(m1, this.m_), false);
+  };
+
+  contextPrototype.rotate = function(aRot) {
+    var c = mc(aRot);
+    var s = ms(aRot);
+
+    var m1 = [
+      [c,  s, 0],
+      [-s, c, 0],
+      [0,  0, 1]
+    ];
+
+    setM(this, matrixMultiply(m1, this.m_), false);
+  };
+
+  contextPrototype.scale = function(aX, aY) {
+    this.arcScaleX_ *= aX;
+    this.arcScaleY_ *= aY;
+    var m1 = [
+      [aX, 0,  0],
+      [0,  aY, 0],
+      [0,  0,  1]
+    ];
+
+    setM(this, matrixMultiply(m1, this.m_), true);
+  };
+
+  contextPrototype.transform = function(m11, m12, m21, m22, dx, dy) {
+    var m1 = [
+      [m11, m12, 0],
+      [m21, m22, 0],
+      [dx,  dy,  1]
+    ];
+
+    setM(this, matrixMultiply(m1, this.m_), true);
+  };
+
+  contextPrototype.setTransform = function(m11, m12, m21, m22, dx, dy) {
+    var m = [
+      [m11, m12, 0],
+      [m21, m22, 0],
+      [dx,  dy,  1]
+    ];
+
+    setM(this, m, true);
+  };
+
+  /******** STUBS ********/
+  contextPrototype.clip = function() {
+    // TODO: Implement
+  };
+
+  contextPrototype.arcTo = function() {
+    // TODO: Implement
+  };
+
+  contextPrototype.createPattern = function() {
+    return new CanvasPattern_;
+  };
+
+  // Gradient / Pattern Stubs
+  function CanvasGradient_(aType) {
+    this.type_ = aType;
+    this.x0_ = 0;
+    this.y0_ = 0;
+    this.r0_ = 0;
+    this.x1_ = 0;
+    this.y1_ = 0;
+    this.r1_ = 0;
+    this.colors_ = [];
+  }
+
+  CanvasGradient_.prototype.addColorStop = function(aOffset, aColor) {
+    aColor = processStyle(aColor);
+    this.colors_.push({offset: aOffset,
+                       color: aColor.color,
+                       alpha: aColor.alpha});
+  };
+
+  function CanvasPattern_() {}
+
+  // set up externs
+  G_vmlCanvasManager = G_vmlCanvasManager_;
+  CanvasRenderingContext2D = CanvasRenderingContext2D_;
+  CanvasGradient = CanvasGradient_;
+  CanvasPattern = CanvasPattern_;
+
+})();
+
+} // if
+;
+/*Name: ArrayListDescription: JavaScript implementation of Java ArrayList class.Requires:Provides:	- ArrayListPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUIvar ArrayList = new Class({   initialize : function() {      this.array = new Array();   },   add : function( obj ) {      this.array[this.array.length] = obj;   },      addAll : function( array ) {      if (array instanceof Array) {         for ( var i = 0; i < array.length; i++) {            this.add( array[i] );         }      } else if (array instanceof ArrayList) {         for ( var i = 0; i < array.size(); i++) {            this.add( array.get( i ) );         }      }   },      clear : function() {      this.array = new Array();   },      clone : function() {      var clonedList = new ArrayList();      this.each( function( listElement, index ){         clonedList.add( listElement );      }, this );      return clonedList;   },   contains : function( elem ) {      for ( var i = 0; i < this.array.length; i++) {         if (this.array[i] == elem )            return true;      }      return false;   },      each : function( fn, bind ){      for( var i = 0, l = this.size(); i < l; i++ ){         fn.call( bind, this.get( i ), i, this );      }   },      equals : function( anotherList ){      if( !instanceOf( anotherList, ArrayList )) return false;      if( anotherList.size() != this.size() ) return false;      for( var i = 0; i < this.size(); i++ ) {         if( this.get( i ) != anotherList.get( i )) return false;      }      return true;   },      get : function(index) {      return this.array[index];   },      getLast : function(){      return this.get( this.size() -1 );   },      indexOf : function( obj ){      var elementIndex = null;      this.array.some( function( element, index ){         if( element.equals( obj ) ){            elementIndex = index;            return true;         }       }, this );      return elementIndex;   },      isEmpty : function() {      if( this.size() > 0 ) return false;      else return true;   },      iterator : function() {      return new ArrayListIterator( this );   },      remove : function( index ){      var elementAtIndex = this.get( index );      if( elementAtIndex ) {         this.array[index] = null;         this.array = this.array.clean();      }   },      size : function() {      return this.array.length;   }   });var ArrayListIterator = new Class({      initialize : function( arrayList ) {      this.arrayList = arrayList;      this.index = 0;   },      hasNext : function() {      return this.index < this.arrayList.size();   },      next : function() {      return this.arrayList.get( this.index++ );   }});
 /*
 Name: 
 
@@ -24,6 +6952,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 function AssertUtil(){
@@ -144,6 +7073,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 var HashMap = new Class( {
@@ -440,6 +7370,7 @@ var HashIterator = new Class({
  */
 
 
+
 var HashSet = new Class( {
 	// Constructor
 	initialize : function() {
@@ -569,6 +7500,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
+
 var WebUIException = new Class({
    Implements: Options,
    options: {
@@ -628,6 +7560,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var IllegalArgumentException = new Class({
    Extends: WebUIException,
    options: {
@@ -665,6 +7598,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 Object.extend({
@@ -942,6 +7876,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
+
 var LinkedHashMap = new Class({
 	Extends: HashMap,
 	
@@ -1073,8 +8008,7 @@ var LinkedHashIterator = new Class({
    }
 });
 
-/*Name: OptionsResourceDescription: Unmarshalls a set of options from an XML file and transforms to a JavaScript object.Requires:    - XmlResourceProvides:	- OptionsResourcePart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
-var OptionsResource = new Class({   Implements: [Options],      options : {      nameSelector : "@name",      optionSelector : "option",      valueSelector : "@value"   },   //Constructor   initialize : function( definitionElement, options ) {      assertThat( definitionElement, not( nil() ));      this.setOptions( options );            this.definitionElement = definitionElement;      this.optionsAsText = "";      this.optionsObject;   },      //Public accessors and mutators   unmarshall: function(){      this.unmarshallOptions();      this.evaluateOptions();   },      //Properties   getOptions: function() { return this.optionsObject; },      //Protected, private helper methods   evaluateOptions: function(){      this.optionsObject = eval( "({" + this.optionsAsText + "})" );   }.protect(),      unmarshallOptions: function(){      var optionElements = XmlResource.selectNodes( this.options.optionSelector, this.definitionElement );      optionElements.each( function( optionElement, index ){         if( index > 0 ) this.optionsAsText += ", ";         var name = XmlResource.selectNodeText( this.options.nameSelector, optionElement );         var value = XmlResource.selectNodeText( this.options.valueSelector, optionElement );//         var arrayExpression = new RegExp( "^[\[]" ); //^[\[]+.*+[]$//         if( value.match( arrayExpression )) //            this.optionsAsText += name + " : " + eval( value );         this.optionsAsText += name + " : " + value ;      }, this );   }.protect()});
+/*Name: OptionsResourceDescription: Unmarshalls a set of options from an XML file and transforms to a JavaScript object.Requires:    - XmlResourceProvides:	- OptionsResourcePart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUIvar OptionsResource = new Class({   Implements: [Options],      options : {      nameSelector : "@name",      optionSelector : "option",      valueSelector : "@value"   },   //Constructor   initialize : function( definitionElement, options ) {      assertThat( definitionElement, not( nil() ));      this.setOptions( options );            this.definitionElement = definitionElement;      this.optionsAsText = "";      this.optionsObject;   },      //Public accessors and mutators   unmarshall: function(){      this.unmarshallOptions();      this.evaluateOptions();   },      //Properties   getOptions: function() { return this.optionsObject; },      //Protected, private helper methods   evaluateOptions: function(){      this.optionsObject = eval( "({" + this.optionsAsText + "})" );   }.protect(),      unmarshallOptions: function(){      var optionElements = XmlResource.selectNodes( this.options.optionSelector, this.definitionElement );      optionElements.each( function( optionElement, index ){         if( index > 0 ) this.optionsAsText += ", ";         var name = XmlResource.selectNodeText( this.options.nameSelector, optionElement );         var value = XmlResource.selectNodeText( this.options.valueSelector, optionElement );//         var arrayExpression = new RegExp( "^[\[]" ); //^[\[]+.*+[]$//         if( value.match( arrayExpression )) //            this.optionsAsText += name + " : " + eval( value );         this.optionsAsText += name + " : " + value ;      }, this );   }.protect()});
 /*
 Name: RemoteResource
 
@@ -1101,6 +8035,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 var RemoteResource = new Class({
@@ -1152,6 +8087,114 @@ var RemoteResource = new Class({
   //Private helper methods
 });
    
+//Author: Year of Moo
+
+var RemoteStyleSheet = new Class( {
+   Implements : [Options, Events],
+   Binds: ['_checker'],
+
+   options : {
+      delay : 100,
+      maxAttempts : 1000,
+      idPrefix : 'css-preload-'},
+
+   initialize : function( path, options ) {
+      this.setOptions( options );
+      this.path = path;
+      this.id = this.options.idPrefix + (new Date().getTime());
+   },
+
+   getPath : function() {
+      return this.path;
+   },
+
+   getID : function() {
+      return this.id;
+   },
+
+   getElement : function() {
+      return this.link;
+   },
+
+   _onready : function() {
+      var args = [this.getPath(), this.getElement()];
+      this.fireEvent( 'ready', args );
+   },
+
+   _onerror : function() {
+      this.link.destroy();
+      this.link = null;
+      var args = [this.getPath()];
+      this.fireEvent( 'error', args );
+   },
+
+   _onstart : function() {
+      var args = [this.getPath(), this.getElement()];
+      this.fireEvent( 'start', args );
+   },
+
+   createLinkElement : function() {
+      this.link = new Element( 'link' );
+      this.link.type = 'text/css';
+      this.link.rel = 'stylesheet';
+      this.link.id = this.getID();
+      this.link.href = this.getPath();
+      return this.link;
+   },
+
+   _checker : function() {
+      if( !this.counter ){
+         this.counter = 0;
+      }
+
+      var target = $( this.getID() );
+      if( target.sheet ){
+         var stylesheets = document.styleSheets;
+         for( var i = 0; i < stylesheets.length; i++ ){
+            var file = stylesheets[i];
+            var owner = file.ownerNode ? file.ownerNode : file.owningElement;
+            if( owner && owner.id == this.getID() ){
+               this._onready();
+               return;
+            }
+
+            if( this.counter++ > this.options.maxAttempts ){
+               this._onerror();
+               return;
+            }
+         }
+      }
+
+      this._checker.delay( this.options.delay, this );
+   },
+
+   start : function() {
+      var callChecker = false;
+      this.link = this.createLinkElement();
+      if( Browser.ie || Browser.opera ){
+         this.link.onload = this._onready.bind( this );
+         this.link.onerror = this._onerror.bind( this );
+      }else{
+         callChecker = true;
+      }
+
+      try{
+         document.getElement( 'head' ).appendChild( this.link );
+         this._onstart();
+      }catch( e ){
+         this._onerror( e );
+      }
+
+      if( callChecker ){ 
+         try{
+            this._checker();
+         }catch( e ){
+            alert( e );
+         }
+      }
+   }
+
+} );
 /*
 Name: ResourceUri
 
@@ -1178,6 +8221,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 var ResourceUri = new Class({
@@ -1294,6 +8338,7 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
+
 var StringTokenizer = new Class( {
    Implements : [Options], 
    options : {
@@ -1374,8 +8419,7 @@ var StringTokenizer = new Class( {
    }
    
 });
-/*Name:    - TimeOutBehaviourDescription:    - Throws a TimeOutException when the timer isn't stopped within the the specified time interwal.Requires:Provides:	- TimeOutBehaviourPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
-var TimeOutBehaviour = new Class({   Implements: [Options],   Binds: ['checkTimeOut'],   options: {      delay: 200,      maxTries: 20   },      //Constructor   initialize : function( options ) {      this.setOptions( options );      this.checkedProcessName;      this.numberOfTries;      this.timer;   },      //Public accessors and mutators   checkTimeOut: function(){      this.numberOfTries++;      if( this.numberOfTries >= this.options.maxTries ){         clearInterval( this.timer );         throw new TimeOutException( this.options.componentName, this.checkedProcessName );      }   },      startTimeOutTimer: function( processName ){      this.checkedProcessName = processName;      this.numberOfTries = 0;      this.timer = this.checkTimeOut.periodical( this.options.delay );   },      stopTimeOutTimer: function(){      clearInterval( this.timer );   }});
+/*Name:    - TimeOutBehaviourDescription:    - Throws a TimeOutException when the timer isn't stopped within the the specified time interwal.Requires:Provides:	- TimeOutBehaviourPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUIvar TimeOutBehaviour = new Class({   Implements: [Options],   Binds: ['checkTimeOut'],   options: {      delay: 200,      maxTries: 20   },      //Constructor   initialize : function( options ) {      this.setOptions( options );      this.checkedProcessName;      this.numberOfTries;      this.timer;   },      //Public accessors and mutators   checkTimeOut: function(){      this.numberOfTries++;      if( this.numberOfTries >= this.options.maxTries ){         clearInterval( this.timer );         throw new TimeOutException( this.options.componentName, this.checkedProcessName );      }   },      startTimeOutTimer: function( processName ){      this.checkedProcessName = processName;      this.numberOfTries = 0;      this.timer = this.checkTimeOut.periodical( this.options.delay );   },      stopTimeOutTimer: function(){      clearInterval( this.timer );   }});
 /*
 Name: TimeOutException
 
@@ -1400,6 +8444,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 var TimeOutException = new Class({
@@ -1447,6 +8492,8 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
+
+
 var UndefinedXmlResourceException = new Class({
    Extends: WebUIException,
    options: {
@@ -1488,6 +8535,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 var lastUniqueIdentifier = 0;
@@ -1533,6 +8581,8 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
+
+
 var XPathSelectionException = new Class({
    Extends: WebUIException,
    options: {
@@ -1570,6 +8620,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 var XmlResource = new Class({
@@ -1830,6 +8881,7 @@ provides: Class.Singleton
 
 
 
+
 (function(){
 
 var storage = {
@@ -1901,6 +8953,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -2134,6 +9187,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var WebUIMessageBus = new Class({
    Implements: [Class.Singleton, Options],
    options: {
@@ -2216,6 +9270,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -2552,6 +9607,7 @@ AbstractDocument.Action = {
 
 
 
+
 var WebUIMessage = new Class({
    Implements: Options,
    options: {
@@ -2633,6 +9689,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DocumentSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
@@ -2685,6 +9742,7 @@ var DocumentSelectedMessage = new Class({
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 
 
@@ -2991,6 +10049,9 @@ var BrowserWidget = new Class( {
 BrowserWidget.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
 //UnconfiguredWidget.js
 
+
+
+
 var UnconfiguredWidgetException = new Class({
    Extends: WebUIException,
    options: {
@@ -3032,6 +10093,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -3091,6 +10153,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var WidgetConstructionException = new Class({
    Extends: WebUIException,
    options: {
@@ -3138,7 +10201,8 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 
-var WidgetElementFactory = new Class( {
+
+var WidgetElementFactory = new Class({
    Implements : Options,
    
    options : {
@@ -3485,6 +10549,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var StateTransformer = new Class({
    Implements: [Events, Options],
    options: {
@@ -3585,6 +10650,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DefaultStateTransformer = new Class({
    Extends: StateTransformer,
    options: {
@@ -3641,6 +10707,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+
 
 //ComponentStateManager.js
 
@@ -3765,6 +10833,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var FixedComponentOrderedTransformer = new Class({
    Extends: StateTransformer,
    options: {
@@ -3847,6 +10916,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+
 
 
 var ComplexContentBehaviour = new Class({
@@ -4321,7 +11392,35 @@ var ComplexContentBehaviour = new Class({
       if( this.storeStateInUri ) this.componentStateManager.includeComponentNameToUri( this.name );
    }.protect()
 });
-//UnconfiguredWidget.js
+/*
+Name: 
+    - ConfigurationTimeoutException
+
+Description: 
+    - Thrown when a desktop or document element's configuration takes longer than specified. 
+
+Requires:
+    - WebUIException
+
+Provides:
+    - ConfigurationTimeoutException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 
 
@@ -4340,57 +11439,33 @@ var ConfigurationTimeoutException = new Class({
    }
 });
 /*
-Distributed under the MIT License:
-
- * Copyright (c) 2010 IT Codex Llc.
- * MIT (MIT-LICENSE.txt)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
-
-/*
-name: 
+Name: 
    - Desktop
-script: 
-   - Desktop.js
-description: 
+
+Description: 
    - Constructs complete desktop from predefined UI elements, like windows, columns and panels. It's wrapper of MockaUI desktop.
     
-copyright: 
-   - (c) 2011 IT Codex Llc., <http://itkodex.hu/>.
-license: 
-   - MIT-style license.
+Requires:
 
-todo:
-  - 
+Provides:
+    - Desktop
 
-requires:
-  - MochaUI/MUI.Core
-  - MochaUI/MUI.Column
-  - MochaUI/MUI.Panel
-  - MochaUI/MUI.Windows
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
 
-provides: [ProcessPuzzle.Desktop]
+Authors: 
+    - Zsolt Zsuffa
 
-...
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -4808,7 +11883,7 @@ var Desktop = new Class({
    determineCurrentLocale : function() {
       if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
       else {
-         this.currentLocale = new Locale();
+         this.currentLocale = new ProcessPuzzleLocale();
          this.currentLocale.parse( this.webUIConfiguration.getI18DefaultLocale() );
       }
    }.protect(),
@@ -5021,6 +12096,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
    Binds: ['constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
@@ -5211,6 +12287,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopColumn = new Class({
    Extends: DesktopElement,
    Binds: ['constructMUIColumn', 'destroyMUIColumn'],
@@ -5309,6 +12386,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopContentArea = new Class({
    Extends: DesktopElement,
    
@@ -5369,6 +12447,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -5489,6 +12568,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopElementConfigurationException = new Class({
    Extends: WebUIException,
    options: {
@@ -5528,6 +12608,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -5601,6 +12682,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopFooter = new Class({
    Extends: DesktopDocument,
    
@@ -5660,6 +12742,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopHeader = new Class({
    Extends: DesktopDocument,
    
@@ -5713,6 +12796,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -5915,6 +12999,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopPanelHeader = new Class({
    Implements: [Events, Options],
    Binds: ['construct', 'onPluginConstructed', 'onPluginConstructionError'],   
@@ -6027,6 +13112,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -6213,6 +13299,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DesktopWindow = new Class({
    Extends: DesktopElement,
    Implements: [ComplexContentBehaviour],
@@ -6362,6 +13449,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var NoneExistingDesktopContainerElementException = new Class({
    Extends: WebUIException,
    options: {
@@ -6394,6 +13482,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -6447,6 +13536,7 @@ var PanelInterpreter = new Class({
 
 
 
+
 var ResourceLoadTimeoutException = new Class({
    Extends: WebUIException,
    options: {
@@ -6462,6 +13552,7 @@ var ResourceLoadTimeoutException = new Class({
    }
 });
 //UnconfiguredWidget.js
+
 
 
 
@@ -6506,6 +13597,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var UnconfiguredDesktopElementException = new Class({
    Extends: WebUIException,
    options: {
@@ -6545,6 +13637,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -6667,6 +13760,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -6853,6 +13947,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DiagramFigure = new Class({
    Implements : [Events, Options],
    Binds: ['addFigureToCanvas', 'finalizeDraw'],
@@ -6980,6 +14075,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var AnnotationFigure = new Class({
    Extends : DiagramFigure,
    Implements : [Events, Options],
@@ -7077,6 +14173,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var AttributeFigure = new Class({
    Extends : DiagramFigure,
    Binds: [],
@@ -7151,6 +14248,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -7254,6 +14352,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var ConnectionFigure = new Class({
    Extends : DiagramFigure,
    Implements : [Events, Options],
@@ -7344,6 +14443,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DiagramFigureFactory = new Class({
    Implements: Options,
    
@@ -7401,6 +14501,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -7470,6 +14571,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -7607,6 +14709,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -7791,6 +14894,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var CompositeMenu = new Class({
    Extends : MenuItem,
    Binds: ['onDefaultItem', 'onSelection'],
@@ -7971,6 +15075,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -8205,6 +15310,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var LeafMenuItem = new Class({
 	Extends : MenuItem,
 	options : {
@@ -8247,6 +15353,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -8313,6 +15420,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var MenuSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
@@ -8373,6 +15481,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -8447,6 +15556,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -8568,7 +15678,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
-var Locale = new Class({
+
+var ProcessPuzzleLocale = new Class({
    Implements: Options,
    options: {
       delimiter : ",-",
@@ -8634,10 +15745,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// LocaleUtil
 
 
-var LocaleUtil = new Class({
+
+var ProcessPuzzleLocaleUtil = new Class({
 
 	// Constructor
 	initialize: function () {
@@ -8726,6 +15837,7 @@ provides: [ProcessPuzzle.ResourceCache]
 
 
 
+
 var ResourceCache = new Class({
 
 	initialize : function(){
@@ -8774,6 +15886,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -8838,7 +15951,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// XMLBundleParser
+
 
 
 var XMLBundleParser = new Class({
@@ -8943,6 +16056,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var XMLResourceBundle = new Class( {
    Implements : Options,
 
@@ -8964,7 +16078,7 @@ var XMLResourceBundle = new Class( {
    this.currentLocale = null;
    this.isLoaded = false;
    this.logger = Class.getInstanceOf( WebUILogger );
-   this.localeUtil = new LocaleUtil();
+   this.localeUtil = new ProcessPuzzleLocaleUtil();
    this.parser = new XMLBundleParser();
    this.resourceBundleNames = new Array();
    this.webUIConfiguration = webUIConfiguration;
@@ -9618,6 +16732,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var LanguageChangedMessage = new Class({
    Extends: WebUIMessage,
    options: {
@@ -9660,6 +16775,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -9707,7 +16823,7 @@ var LanguageSelectorWidget = new Class({
    
    onSelection : function() {
       var currentLocale = this.locale;
-      var newLocale = new Locale();
+      var newLocale = new ProcessPuzzleLocale();
       newLocale.parse( this.selectElement.options[this.selectElement.selectedIndex].value );
       var message = new LanguageChangedMessage({ previousLocale : currentLocale, newLocale : newLocale, originator : this.options.widgetContainerId });
       this.messageBus.notifySubscribers( message );
@@ -9740,7 +16856,7 @@ var LanguageSelectorWidget = new Class({
    determineAvailableLocales : function(){
       for( var i = 0; i < this.webUIConfiguration.getI18LocaleElements().length; i++ ) {
          var i18LocaleText = this.webUIConfiguration.getI18Locale( i );
-         var locale = new Locale();
+         var locale = new ProcessPuzzleLocale();
          locale.parse( i18LocaleText );
          this.availableLocales.add( locale );
       }
@@ -9755,7 +16871,3718 @@ var LanguageSelectorWidget = new Class({
    }.protect()
    
 });
-/*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructChannel', 'destroyChannel'],      options : {      channelOptions : {},      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructChannel, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChannel, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructChannel : function(){      this.channel.construct( this.containerElement );      this.constructionChain.callChain();   }.protect(),      destroyChannel : function(){      this.channel.destroy();   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource, this.elementFactory, this.options.channelOptions );         this.channel.unmarshall();      }         }.protect()});
+/*
+---
+
+name: MooEditable
+
+description: Class for creating a WYSIWYG editor, for contentEditable-capable browsers.
+
+license: MIT-style license
+
+authors:
+- Lim Chee Aun
+- Radovan Lozej
+- Ryan Mitchell
+- Olivier Refalo
+- T.J. Leahy
+
+requires:
+- Core/Class.Extras
+- Core/Element.Event
+- Core/Element.Dimensions
+
+inspiration:
+- Code inspired by Stefan's work [Safari Supports Content Editing!](http://www.xs4all.nl/~hhijdra/stefan/ContentEditable.html) from [safari gets contentEditable](http://walkah.net/blog/walkah/safari-gets-contenteditable)
+- Main reference from Peter-Paul Koch's [execCommand compatibility](http://www.quirksmode.org/dom/execCommand.html)
+- Some ideas and code inspired by [TinyMCE](http://tinymce.moxiecode.com/)
+- Some functions inspired by Inviz's [Most tiny wysiwyg you ever seen](http://forum.mootools.net/viewtopic.php?id=746), [mooWyg (Most tiny WYSIWYG 2.0)](http://forum.mootools.net/viewtopic.php?id=5740)
+- Some regex from Cameron Adams's [widgEditor](http://widgeditor.googlecode.com/)
+- Some code from Juan M Martinez's [jwysiwyg](http://jwysiwyg.googlecode.com/)
+- Some reference from MoxieForge's [PunyMCE](http://punymce.googlecode.com/)
+- IE support referring Robert Bredlau's [Rich Text Editing](http://www.rbredlau.com/drupal/node/6)
+
+provides: [MooEditable, MooEditable.Selection, MooEditable.UI, MooEditable.Actions]
+
+...
+ */
+
+
+(function() {
+
+var blockEls = /^(H[1-6]|HR|P|DIV|ADDRESS|PRE|FORM|TABLE|LI|OL|UL|TD|CAPTION|BLOCKQUOTE|CENTER|DL|DT|DD|SCRIPT|NOSCRIPT|STYLE)$/i;
+var urlRegex = /^(https?|ftp|rmtp|mms):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i;
+var protectRegex = /<(script|noscript|style)[\u0000-\uFFFF]*?<\/(script|noscript|style)>/g;
+
+this.MooEditable = new Class({
+   Implements : [Events, Options],
+
+   options : {
+      actions : 'bold italic underline strikethrough | insertunorderedlist insertorderedlist indent outdent | undo redo | createlink unlink | urlimage | toggleview',
+      baseCSS : 'html{ height: 100%; cursor: text; } body{ font-family: sans-serif; }',
+      baseURL : '',
+      cleanup : true,
+      dimensions : null,
+      disabled : false,
+      elasticHeight : true,
+      estimatedRowHeight : 10,
+      extraCSS : '',
+      externalCSS : '',
+      handleDialogs : true,
+      handleLabel : true,
+      handleSubmit : true,
+      html : '<!DOCTYPE html><html><head><meta charset="UTF-8">{BASEHREF}<style>{BASECSS} {EXTRACSS}</style>{EXTERNALCSS}</head><body></body></html>',
+      paragraphise : true,
+      rootElement : 'p',
+      semantics : true,
+      toolbar : true,
+      xhtml : true,},
+
+   initialize : function( el, options ) {
+
+      // check for content editable and design mode support
+      if( !("contentEditable" in document.body) && !("designMode" in document) ){
+         return;
+      }
+
+      this.setOptions( options );
+      this.textarea = document.id( el );
+      this.textarea.store( 'MooEditable', this );
+      this.actions = this.options.actions.clean().split( ' ' );
+      this.keys = {};
+      this.dialogs = {};
+      this.protectedElements = [];
+      this.actions.each( function( action ) {
+         var act = MooEditable.Actions[action];
+         if( !act )
+            return;
+         if( act.options ){
+            var key = act.options.shortcut;
+            if( key )
+               this.keys[key] = action;
+         }
+         if( act.dialogs ){
+            Object.each( act.dialogs, function( dialog, name ) {
+               dialog = dialog.attempt( this );
+               dialog.name = action + ':' + name;
+               if( typeOf( this.dialogs[action] ) != 'object' )
+                  this.dialogs[action] = {};
+               this.dialogs[action][name] = dialog;
+            }, this );
+         }
+         if( act.events ){
+            Object.each( act.events, function( fn, event ) {
+               this.addEvent( event, fn );
+            }, this );
+         }
+      }.bind( this ) );
+      this.render();
+   },
+
+   toElement : function() {
+      return this.textarea;
+   },
+
+   render : function() {
+      var self = this;
+
+      // Dimensions
+      var dimensions = this.options.dimensions || this.textarea.getSize();
+
+      // Build the container
+      this.container = new Element( 'div', {
+         id : (this.textarea.id) ? this.textarea.id + '-mooeditable-container' : null,
+         'class' : 'mooeditable-container',
+         styles : { overflowY : 'hidden', width : dimensions.x  + "px" }
+      });
+
+      // Override all textarea styles
+      this.textarea.addClass( 'mooeditable-textarea' ).setStyle( 'height', dimensions.y + "px" );
+
+      // Build the iframe
+      this.iframe = new Element( 'IFrame', {
+         'class' : 'mooeditable-iframe',
+         frameBorder : 0,
+         scrolling : 'no',
+         src : 'javascript:""', // Workaround for HTTPs warning in IE6/7
+         styles : { height : dimensions.y + "px", width : dimensions.x  + "px" }
+      });
+      
+      this.toolbar = new MooEditable.UI.Toolbar({
+         onItemAction : function() {
+            var args = Array.from( arguments );
+            var item = args[0];
+            self.action( item.name, args );
+         }
+      });
+      
+      this.attach.delay( 1, this );
+
+      // Update the event for textarea's corresponding labels
+      if( this.options.handleLabel && this.textarea.id )
+         $$( 'label[for="' + this.textarea.id + '"]' ).addEvent( 'click', function( e ) {
+            if( self.mode != 'iframe' )
+               return;
+            e.preventDefault();
+            self.focus();
+         } );
+
+      // Update & cleanup content before submit
+      if( this.options.handleSubmit ){
+         this.form = this.textarea.getParent( 'form' );
+         if( !this.form ) return;
+         this.form.addEvent( 'submit', function() {
+            if( self.mode == 'iframe' ) self.saveContent();
+         });
+      }
+
+      this.fireEvent( 'render', this );
+   },
+
+   adjustIFrameHeight: function(){
+      var innerDoc = (this.iframe.contentDocument) ? this.iframe.contentDocument : this.iframe.contentWindow.document;
+      this.iframe.setStyle( 'height', innerDoc.body.offsetHeight +10 );
+   
+      if( !this.iframe.getStyle( 'overflowY' )) this.iframe.setStyle( 'overflowY', 'hidden' );
+   }.protect(),
+   
+   tryToDecreaseHeight: function(){
+      if( Browser.ie ) return;
+      
+      while( this.getFrameScrollTop() == 0 && this.iframe.getStyle( 'height' ).toInt() > 0 ) {
+         var currentHeight = this.iframe.getStyle( 'height' ).toInt();
+         var decreasedHeight = ( currentHeight - this.options.estimatedRowHeight ) >= 0 ? currentHeight - this.options.estimatedRowHeight : 0;
+         this.iframe.setStyle( 'height', decreasedHeight );
+      }
+      
+      if( this.iframe.contentWindow.getScroll().y > 0 )
+         this.iframe.setStyle( 'height', this.iframe.getStyle( 'height' ).toInt() + this.options.estimatedRowHeight );
+   }.protect(),
+   
+   tryToIncreaseHeight : function(){
+      var heightIncreased = false;
+      this.iframe.contentWindow.scrollTo( null, 1 );
+      
+      while( this.iframe.contentWindow.getScroll().y > 0 ) {
+         heightIncreased = true;
+         var currentHeight = this.iframe.getStyle( 'height' ).toInt();
+         this.iframe.setStyle( 'height', currentHeight + this.options.estimatedRowHeight );
+   
+         this.iframe.contentWindow.scrollTo( null, 1 );
+      }
+      
+      return heightIncreased;
+   }.protect(),
+   
+   onContainerResize: function( newSize ){
+      this.container.setStyle( 'width', newSize.x );
+      this.iframe.setStyle( 'width', newSize.x );
+      this.adjustIFrameHeight();
+   },
+   
+   attach : function() {
+      var self = this;
+
+      // Assign view mode
+      this.mode = 'iframe';
+
+      // Editor iframe state
+      this.editorDisabled = false;
+
+      // Put textarea inside container
+      this.container.wraps( this.textarea );
+
+      this.textarea.setStyle( 'display', 'none' );
+
+      this.iframe.setStyle( 'display', '' ).inject( this.textarea, 'before' );
+
+      if( this.options.handleDialogs ){
+         Object.each( this.dialogs, function( action, name ) {
+            Object.each( action, function( dialog ) {
+               document.id( dialog ).inject( self.iframe, 'before' );
+               var range =  null;
+               dialog.addEvents( {
+                  open : function() {
+                     range = self.selection.getRange();
+                     self.editorDisabled = true;
+                     self.toolbar.disable( name );
+                     self.fireEvent( 'dialogOpen', this );
+                  },
+                  close : function() {
+                     self.toolbar.enable();
+                     self.editorDisabled = false;
+                     self.focus();
+                     if( range )
+                        self.selection.setRange( range );
+                     self.fireEvent( 'dialogClose', this );
+                  }} );
+            } );
+         } );
+      }
+
+      // contentWindow and document references
+      this.win = this.iframe.contentWindow;
+      this.doc = this.win.document;
+
+      // Deal with weird quirks on Gecko
+      if( Browser.firefox )
+         this.doc.designMode = 'On';
+
+      // Build the content of iframe
+      var docHTML = this.options.html.substitute( {
+         BASECSS : this.options.baseCSS,
+         EXTRACSS : this.options.extraCSS,
+         EXTERNALCSS : (this.options.externalCSS) ? this.options.externalCSS : '',
+         BASEHREF : (this.options.baseURL) ? '<base href="' + this.options.baseURL + '" />' : ''} );
+      this.doc.open();
+      this.doc.write( docHTML );
+      this.doc.close();
+
+      // Turn on Design Mode
+      // IE fired load event twice if designMode is set
+      (Browser.ie) ? this.doc.body.contentEditable = true : this.doc.designMode = 'On';
+
+      // Mootoolize window, document and body
+      Object.append( this.win, new Window );
+      Object.append( this.doc, new Document );
+      if( Browser.Element ){
+         var winElement = this.win.Element.prototype;
+         for( var method in Element ){ // methods from Element generics
+            if( !method.test( /^[A-Z]|\$|prototype|mooEditable/ ) ){
+               winElement[method] = Element.prototype[method];
+            }
+         }
+      }else{
+         document.id( this.doc.body );
+      }
+
+      if( Browser.ie ) this.setContent( this.textarea.get( 'html' ));
+      else this.setContent( this.textarea.get( 'text' ));
+
+      // Bind all events
+      this.doc.addEvents( {
+         mouseup : this.editorMouseUp.bind( this ),
+         mousedown : this.editorMouseDown.bind( this ),
+         mouseover : this.editorMouseOver.bind( this ),
+         mouseout : this.editorMouseOut.bind( this ),
+         mouseenter : this.editorMouseEnter.bind( this ),
+         mouseleave : this.editorMouseLeave.bind( this ),
+         contextmenu : this.editorContextMenu.bind( this ),
+         click : this.editorClick.bind( this ),
+         dblclick : this.editorDoubleClick.bind( this ),
+         keypress : this.editorKeyPress.bind( this ),
+         keyup : this.editorKeyUp.bind( this ),
+         keydown : this.editorKeyDown.bind( this ),
+         focus : this.editorFocus.bind( this ),
+         blur : this.editorBlur.bind( this )} );
+      this.win.addEvents({
+         focus : this.editorFocus.bind( this ),
+         blur : this.editorBlur.bind( this )
+      });
+      ['cut', 'copy', 'paste'].each( function( event ) {
+         self.doc.body.addListener( event, self['editor' + event.capitalize()].bind( self ) );
+      });
+      this.textarea.addEvent( 'keypress', this.textarea.retrieve( 'mooeditable:textareaKeyListener', this.keyListener.bind( this ) ) );
+
+      // Fix window focus event not firing on Firefox 2
+      if( Browser.firefox2 )
+         this.doc.addEvent( 'focus', function() {
+            self.win.fireEvent( 'focus' ).focus();
+         } );
+      // IE9 is also not firing focus event
+      if( this.doc.addEventListener )
+         this.doc.addEventListener( 'focus', function() {
+            self.win.fireEvent( 'focus' );
+         }, true );
+
+      // styleWithCSS, not supported in IE and Opera
+      if( !Browser.ie && !Browser.opera ){
+         var styleCSS = function() {
+            self.execute( 'styleWithCSS', false, false );
+            self.doc.removeEvent( 'focus', styleCSS );
+         };
+         this.win.addEvent( 'focus', styleCSS );
+      }
+
+      if( this.options.toolbar ){
+         document.id( this.toolbar ).inject( this.container, 'top' );
+         this.toolbar.render( this.actions );
+      }
+
+      if( this.options.disabled )
+         this.disable();
+
+      this.selection = new MooEditable.Selection( this.win );
+
+      this.oldContent = this.getContent();
+
+      this.fireEvent( 'attach', this );
+
+      return this;
+   },
+
+   detach : function() {
+      this.saveContent();
+      this.textarea.setStyle( 'display', '' ).removeClass( 'mooeditable-textarea' ).inject( this.container, 'before' );
+      this.textarea.removeEvent( 'keypress', this.textarea.retrieve( 'mooeditable:textareaKeyListener' ) );
+      if( this.doc && this.doc.removeEvents ) this.doc.removeEvents();
+      if( this.win && this.win.removeEvents ) this.win.removeEvents();
+      this.container.dispose();
+      this.fireEvent( 'detach', this );
+      this.removeEvents();
+      return this;
+   },
+
+   enable : function() {
+      this.editorDisabled = false;
+      this.toolbar.enable();
+      return this;
+   },
+
+   disable : function() {
+      this.editorDisabled = true;
+      this.toolbar.disable();
+      return this;
+   },
+
+   editorFocus : function( e ) {
+      this.oldContent = '';
+      this.fireEvent( 'editorFocus', [e, this] );
+   },
+
+   editorBlur : function( e ) {
+      this.oldContent = this.saveContent().getContent();
+      this.fireEvent( 'editorBlur', [e, this] );
+   },
+
+   editorMouseUp : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      if( this.options.toolbar )
+         this.checkStates();
+
+      this.fireEvent( 'editorMouseUp', [e, this] );
+   },
+
+   editorMouseDown : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorMouseDown', [e, this] );
+   },
+
+   editorMouseOver : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorMouseOver', [e, this] );
+   },
+
+   editorMouseOut : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorMouseOut', [e, this] );
+   },
+
+   editorMouseEnter : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      if( this.oldContent && this.getContent() != this.oldContent ){
+         this.focus();
+         this.fireEvent( 'editorPaste', [e, this] );
+      }
+
+      this.fireEvent( 'editorMouseEnter', [e, this] );
+   },
+
+   editorMouseLeave : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorMouseLeave', [e, this] );
+   },
+
+   editorContextMenu : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorContextMenu', [e, this] );
+   },
+
+   editorClick : function( e ) {
+      // make images selectable and draggable in Safari
+      if( Browser.safari || Browser.chrome ){
+         var el = e.target;
+         if( Element.get( el, 'tag' ) == 'img' ){
+
+            // safari doesnt like dragging locally linked images
+            if( this.options.baseURL ){
+               if( el.getProperty( 'src' ).indexOf( 'http://' ) == -1 ){
+                  el.setProperty( 'src', this.options.baseURL + el.getProperty( 'src' ) );
+               }
+            }
+
+            this.selection.selectNode( el );
+            this.checkStates();
+         }
+      }
+
+      this.fireEvent( 'editorClick', [e, this] );
+   },
+
+   editorDoubleClick : function( e ) {
+      this.fireEvent( 'editorDoubleClick', [e, this] );
+   },
+
+   editorKeyPress : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.keyListener( e );
+
+      this.fireEvent( 'editorKeyPress', [e, this] );
+   },
+
+   editorKeyUp : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      var c = e.code;
+      // 33-36 = pageup, pagedown, end, home; 45 = insert
+      if( this.options.toolbar && (/^enter|left|up|right|down|delete|backspace$/i.test( e.key ) || (c >= 33 && c <= 36) || c == 45 || e.meta || e.control) ){
+         if( Browser.ie6 ){ // Delay for less cpu usage when you are typing
+            clearTimeout( this.checkStatesDelay );
+            this.checkStatesDelay = this.checkStates.delay( 500, this );
+         }else{
+            this.checkStates();
+         }
+      }
+
+      this.adjustIFrameHeight();
+      this.fireEvent( 'editorKeyUp', [e, this] );
+   },
+
+   editorKeyDown : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      if( e.key == 'enter' ){
+         if( this.options.paragraphise ){
+            if( e.shift && (Browser.safari || Browser.chrome) ){
+               var s = this.selection;
+               var r = s.getRange();
+
+               // Insert BR element
+               var br = this.doc.createElement( 'br' );
+               r.insertNode( br );
+
+               // Place caret after BR
+               r.setStartAfter( br );
+               r.setEndAfter( br );
+               s.setRange( r );
+
+               // Could not place caret after BR then insert an nbsp entity and move the caret
+               if( s.getSelection().focusNode == br.previousSibling ){
+                  var nbsp = this.doc.createTextNode( '\u00a0' );
+                  var p = br.parentNode;
+                  var ns = br.nextSibling;
+                  (ns) ? p.insertBefore( nbsp, ns ) : p.appendChild( nbsp );
+                  s.selectNode( nbsp );
+                  s.collapse( 1 );
+               }
+
+               // Scroll to new position, scrollIntoView can't be used
+               // due to bug:
+               // http://bugs.webkit.org/show_bug.cgi?id=16117
+               this.win.scrollTo( 0, Element.getOffsets( s.getRange().startContainer ).y );
+
+               e.preventDefault();
+            }else if( Browser.firefox || Browser.safari || Browser.chrome ){
+               var node = this.selection.getNode();
+               var isBlock = Element.getParents( node ).include( node ).some( function( el ) {
+                  return el.nodeName.test( blockEls );
+               } );
+               if( !isBlock )
+                  this.execute( 'insertparagraph' );
+            }
+         }else{
+            if( Browser.ie ){
+               var r = this.selection.getRange();
+               var node = this.selection.getNode();
+               if( r && node.get( 'tag' ) != 'li' ){
+                  this.selection.insertContent( '<br>' );
+                  this.selection.collapse( false );
+               }
+               e.preventDefault();
+            }
+         }
+      }
+
+      if( Browser.opera ){
+         var ctrlmeta = e.control || e.meta;
+         if( ctrlmeta && e.key == 'x' ){
+            this.fireEvent( 'editorCut', [e, this] );
+         }else if( ctrlmeta && e.key == 'c' ){
+            this.fireEvent( 'editorCopy', [e, this] );
+         }else if( (ctrlmeta && e.key == 'v') || (e.shift && e.code == 45) ){
+            this.fireEvent( 'editorPaste', [e, this] );
+         }
+      }
+
+      this.fireEvent( 'editorKeyDown', [e, this] );
+   },
+
+   editorCut : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorCut', [e, this] );
+   },
+
+   editorCopy : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorCopy', [e, this] );
+   },
+
+   editorPaste : function( e ) {
+      if( this.editorDisabled ){
+         e.stop();
+         return;
+      }
+
+      this.fireEvent( 'editorPaste', [e, this] );
+   },
+
+   keyListener : function( e ) {
+      var key = (Browser.Platform.mac) ? e.meta : e.control;
+      if( !key || !this.keys[e.key] )
+         return;
+      e.preventDefault();
+      var item = this.toolbar.getItem( this.keys[e.key] );
+      item.action( e );
+   },
+
+   focus : function() {
+      (this.mode == 'iframe' ? this.win : this.textarea).focus();
+      this.fireEvent( 'focus', this );
+      return this;
+   },
+
+   action : function( command, args ) {
+      var action = MooEditable.Actions[command];
+      if( action.command && typeOf( action.command ) == 'function' ){
+         action.command.apply( this, args );
+      }else{
+         this.focus();
+         this.execute( command, false, args );
+         if( this.mode == 'iframe' )
+            this.checkStates();
+      }
+   },
+
+   execute : function( command, param1, param2 ) {
+      if( this.busy )
+         return;
+      this.busy = true;
+      this.doc.execCommand( command, param1, param2 );
+      this.saveContent();
+      this.busy = false;
+      return false;
+   },
+
+   toggleView : function() {
+      this.fireEvent( 'beforeToggleView', this );
+      if( this.mode == 'textarea' ){
+         this.mode = 'iframe';
+         this.iframe.setStyle( 'display', '' );
+         this.setContent( this.textarea.value );
+         this.textarea.setStyle( 'display', 'none' );
+      }else{
+         this.saveContent();
+         this.mode = 'textarea';
+         this.textarea.setStyle( 'display', '' );
+         this.iframe.setStyle( 'display', 'none' );
+      }
+      this.fireEvent( 'toggleView', this );
+      this.focus.delay( 10, this );
+      return this;
+   },
+
+   getContent : function() {
+      var protect = this.protectedElements;
+      var html = this.doc.body.get( 'html' ).replace( /<!-- mooeditable:protect:([0-9]+) -->/g, function( a, b ) {
+         return protect[b.toInt()];
+      } );
+      return this.cleanup( this.ensureRootElement( html ) );
+   },
+   
+   getFrameScrollTop : function(){
+      if( Browser.ie ) return this.doc.documentElement.scrollTop; 
+      else return this.iframe.contentWindow.getScroll().y; 
+   },
+
+   setContent : function( content ) {
+      var protect = this.protectedElements;
+      content = content.replace( protectRegex, function( a ) {
+         protect.push( a );
+         return '<!-- mooeditable:protect:' + (protect.length - 1) + ' -->';
+      } );
+      this.doc.body.set( 'html', this.ensureRootElement( content ) );
+      if( this.options.elasticHeight )  this.adjustIFrameHeight();
+      return this;
+   },
+
+   saveContent : function() {
+      if( this.mode == 'iframe' ){
+         if( this.textarea.set ) this.textarea.set( 'value', this.getContent() );
+         else this.textarea.value = this.getContent();
+      }
+      return this;
+   },
+
+   ensureRootElement : function( val ) {
+      if( this.options.rootElement ){
+         var el = new Element( 'div', {
+            html : val.trim()} );
+         var start = -1;
+         var create = false;
+         var html = '';
+         var length = el.childNodes.length;
+         for( var i = 0; i < length; i++ ){
+            var childNode = el.childNodes[i];
+            var nodeName = childNode.nodeName;
+            if( !nodeName.test( blockEls ) && nodeName !== '#comment' ){
+               if( nodeName === '#text' ){
+                  if( childNode.nodeValue.trim() ){
+                     if( start < 0 )
+                        start = i;
+                     html += childNode.nodeValue;
+                  }
+               }else{
+                  if( start < 0 )
+                     start = i;
+                  html += new Element( 'div' ).adopt( $( childNode ).clone() ).get( 'html' );
+               }
+            }else{
+               create = true;
+            }
+            if( i == (length - 1) )
+               create = true;
+            if( start >= 0 && create ){
+               var newel = new Element( this.options.rootElement, {
+                  html : html} );
+               el.replaceChild( newel, el.childNodes[start] );
+               for( var k = start + 1; k < i; k++ ){
+                  el.removeChild( el.childNodes[k] );
+                  length--;
+                  i--;
+                  k--;
+               }
+               start = -1;
+               create = false;
+               html = '';
+            }
+         }
+         val = el.get( 'html' ).replace( /\n\n/g, '' );
+      }
+      return val;
+   },
+
+   checkStates : function() {
+      var element = this.selection.getNode();
+      if( !element )
+         return;
+      if( typeOf( element ) != 'element' )
+         return;
+
+      this.actions.each( function( action ) {
+         var item = this.toolbar.getItem( action );
+         if( !item )
+            return;
+         item.deactivate();
+
+         var states = MooEditable.Actions[action]['states'];
+         if( !states )
+            return;
+
+         // custom checkState
+         if( typeOf( states ) == 'function' ){
+            states.attempt( [document.id( element ), item], this );
+            return;
+         }
+
+         try{
+            if( this.doc.queryCommandState( action ) ){
+               item.activate();
+               return;
+            }
+         }catch (e){
+         }
+
+         if( states.tags ){
+            var el = element;
+            do{
+               var tag = el.tagName.toLowerCase();
+               if( states.tags.contains( tag ) ){
+                  item.activate( tag );
+                  break;
+               }
+            }while( (el = Element.getParent( el )) != null );
+         }
+
+         if( states.css ){
+            var el = element;
+            do{
+               var found = false;
+               for( var prop in states.css ){
+                  var css = states.css[prop];
+                  if( el.style[prop.camelCase()].contains( css ) ){
+                     item.activate( css );
+                     found = true;
+                  }
+               }
+               if( found || el.tagName.test( blockEls ) )
+                  break;
+            }while( (el = Element.getParent( el )) != null );
+         }
+      }.bind( this ) );
+   },
+
+   cleanup : function( source ) {
+      if( !this.options.cleanup )
+         return source.trim();
+
+      do{
+         var oSource = source;
+
+         // replace base URL references: ie localize links
+         if( this.options.baseURL ){
+            source = source.replace( '="' + this.options.baseURL, '="' );
+         }
+
+         // Webkit cleanup
+         source = source.replace( /<br class\="webkit-block-placeholder">/gi, "<br />" );
+         source = source.replace( /<span class="Apple-style-span">(.*)<\/span>/gi, '$1' );
+         source = source.replace( / class="Apple-style-span"/gi, '' );
+         source = source.replace( /<span style="">/gi, '' );
+
+         // Remove padded paragraphs
+         source = source.replace( /<p>\s*<br ?\/?>\s*<\/p>/gi, '<p>\u00a0</p>' );
+         source = source.replace( /<p>(&nbsp;|\s)*<\/p>/gi, '<p>\u00a0</p>' );
+         if( !this.options.semantics ){
+            source = source.replace( /\s*<br ?\/?>\s*<\/p>/gi, '</p>' );
+         }
+
+         // Replace improper BRs (only if XHTML : true)
+         if( this.options.xhtml ){
+            source = source.replace( /<br>/gi, "<br />" );
+         }
+
+         if( this.options.semantics ){
+            // remove divs from <li>
+            if( Browser.ie ){
+               source = source.replace( /<li>\s*<div>(.+?)<\/div><\/li>/g, '<li>$1</li>' );
+            }
+            // remove stupid apple divs
+            if( Browser.safari || Browser.chrome ){
+               source = source.replace( /^([\w\s]+.*?)<div>/i, '<p>$1</p><div>' );
+               source = source.replace( /<div>(.+?)<\/div>/ig, '<p>$1</p>' );
+            }
+
+            // <p> tags around a list will get moved to after the list
+            if( !Browser.ie ){
+               // not working properly in safari?
+               source = source.replace( /<p>[\s\n]*(<(?:ul|ol)>.*?<\/(?:ul|ol)>)(.*?)<\/p>/ig, '$1<p>$2</p>' );
+               source = source.replace( /<\/(ol|ul)>\s*(?!<(?:p|ol|ul|img).*?>)((?:<[^>]*>)?\w.*)$/g, '</$1><p>$2</p>' );
+            }
+
+            source = source.replace( /<br[^>]*><\/p>/g, '</p>' ); // remove
+                                                                  // <br>'s
+                                                                  // that
+                                                                  // end
+                                                                  // a
+                                                                  // paragraph
+                                                                  // here.
+            source = source.replace( /<p>\s*(<img[^>]+>)\s*<\/p>/ig, '$1\n' ); // if a
+                                                                                 // <p>
+                                                                                 // only
+                                                                                 // contains
+                                                                                 // <img>,
+                                                                                 // remove
+                                                                                 // the
+                                                                                 // <p>
+                                                                                 // tags
+
+            // format the source
+            source = source.replace( /<p([^>]*)>(.*?)<\/p>(?!\n)/g, '<p$1>$2</p>\n' ); // break
+                                                                                       // after
+                                                                                       // paragraphs
+            source = source.replace( /<\/(ul|ol|p)>(?!\n)/g, '</$1>\n' ); // break
+                                                                           // after
+                                                                           // </p></ol></ul>
+                                                                           // tags
+            source = source.replace( /><li>/g, '>\n\t<li>' ); // break
+                                                               // and
+                                                               // indent
+                                                               // <li>
+            source = source.replace( /([^\n])<\/(ol|ul)>/g, '$1\n</$2>' ); // break
+                                                                           // before
+                                                                           // </ol></ul>
+                                                                           // tags
+            source = source.replace( /([^\n])<img/ig, '$1\n<img' ); // move
+                                                                     // images
+                                                                     // to
+                                                                     // their
+                                                                     // own
+                                                                     // line
+            source = source.replace( /^\s*$/g, '' ); // delete empty
+                                                      // lines in the
+                                                      // source code
+                                                      // (not working
+                                                      // in opera)
+         }
+
+         // Remove leading and trailing BRs
+         source = source.replace( /<br ?\/?>$/gi, '' );
+         source = source.replace( /^<br ?\/?>/gi, '' );
+
+         // Remove useless BRs
+         if( this.options.paragraphise )
+            source = source.replace( /(h[1-6]|p|div|address|pre|li|ol|ul|blockquote|center|dl|dt|dd)><br ?\/?>/gi, '$1>' );
+
+         // Remove BRs right before the end of blocks
+         source = source.replace( /<br ?\/?>\s*<\/(h1|h2|h3|h4|h5|h6|li|p)/gi, '</$1' );
+
+         // Semantic conversion
+         source = source.replace( /<span style="font-weight: bold;">(.*)<\/span>/gi, '<strong>$1</strong>' );
+         source = source.replace( /<span style="font-style: italic;">(.*)<\/span>/gi, '<em>$1</em>' );
+         source = source.replace( /<b\b[^>]*>(.*?)<\/b[^>]*>/gi, '<strong>$1</strong>' );
+         source = source.replace( /<i\b[^>]*>(.*?)<\/i[^>]*>/gi, '<em>$1</em>' );
+         source = source.replace( /<u\b[^>]*>(.*?)<\/u[^>]*>/gi, '<span style="text-decoration: underline;">$1</span>' );
+         source = source.replace( /<strong><span style="font-weight: normal;">(.*)<\/span><\/strong>/gi, '$1' );
+         source = source.replace( /<em><span style="font-weight: normal;">(.*)<\/span><\/em>/gi, '$1' );
+         source = source.replace( /<span style="text-decoration: underline;"><span style="font-weight: normal;">(.*)<\/span><\/span>/gi, '$1' );
+         source = source.replace( /<strong style="font-weight: normal;">(.*)<\/strong>/gi, '$1' );
+         source = source.replace( /<em style="font-weight: normal;">(.*)<\/em>/gi, '$1' );
+
+         // Replace uppercase element names with lowercase
+         source = source.replace( /<[^> ]*/g, function( match ) {
+            return match.toLowerCase();
+         } );
+
+         // Replace uppercase attribute names with lowercase
+         source = source.replace( /<[^>]*>/g, function( match ) {
+            match = match.replace( / [^=]+=/g, function( match2 ) {
+               return match2.toLowerCase();
+            } );
+            return match;
+         } );
+
+         // Put quotes around unquoted attributes
+         source = source.replace( /<[^!][^>]*>/g, function( match ) {
+            match = match.replace( /( [^=]+=)([^"][^ >]*)/g, "$1\"$2\"" );
+            return match;
+         } );
+
+         // make img tags xhtml compatible <img>,<img></img> -> <img/>
+         if( this.options.xhtml ){
+            source = source.replace( /<img([^>]+)(\s*[^\/])>(<\/img>)*/gi, '<img$1$2 />' );
+         }
+
+         // remove double <p> tags and empty <p> tags
+         source = source.replace( /<p>(?:\s*)<p>/g, '<p>' );
+         source = source.replace( /<\/p>\s*<\/p>/g, '</p>' );
+
+         // Replace <br>s inside <pre> automatically added by some
+         // browsers
+         source = source.replace( /<pre[^>]*>.*?<\/pre>/gi, function( match ) {
+            return match.replace( /<br ?\/?>/gi, '\n' );
+         } );
+
+         // Final trim
+         source = source.trim();
+      }while( source != oSource );
+
+      return source;
+   }
+
+} );
+
+MooEditable.Selection = new Class( {
+
+   initialize : function( win ) {
+      this.win = win;
+   },
+
+   getSelection : function() {
+      this.win.focus();
+      return (this.win.getSelection) ? this.win.getSelection() : this.win.document.selection;
+   },
+
+   getRange : function() {
+      var s = this.getSelection();
+
+      if( !s )
+         return null;
+
+      try{
+         return s.rangeCount > 0 ? s.getRangeAt( 0 ) : (s.createRange ? s.createRange() : null);
+      }catch (e){
+         // IE bug when used in frameset
+         return this.doc.body.createTextRange();
+      }
+   },
+
+   setRange : function( range ) {
+      if( range.select ){
+         Function.attempt( function() {
+            range.select();
+         } );
+      }else{
+         var s = this.getSelection();
+         if( s.addRange ){
+            s.removeAllRanges();
+            s.addRange( range );
+         }
+      }
+   },
+
+   selectNode : function( node, collapse ) {
+      var r = this.getRange();
+      var s = this.getSelection();
+
+      if( r.moveToElementText ){
+         Function.attempt( function() {
+            r.moveToElementText( node );
+            r.select();
+         } );
+      }else if( s.addRange ){
+         collapse ? r.selectNodeContents( node ) : r.selectNode( node );
+         s.removeAllRanges();
+         s.addRange( r );
+      }else{
+         s.setBaseAndExtent( node, 0, node, 1 );
+      }
+
+      return node;
+   },
+
+   isCollapsed : function() {
+      var r = this.getRange();
+      if( r && r.item ) return false;
+      return ( r && r.boundingWidth == 0 ) || this.getSelection().isCollapsed;
+   },
+
+   collapse : function( toStart ) {
+      var r = this.getRange();
+      var s = this.getSelection();
+
+      if( r.select ){
+         r.collapse( toStart );
+         r.select();
+      }else{
+         toStart ? s.collapseToStart() : s.collapseToEnd();
+      }
+   },
+
+   getContent : function() {
+      var r = this.getRange();
+      var body = new Element( 'body' );
+
+      if( this.isCollapsed() )
+         return '';
+
+      if( r.cloneContents ){
+         body.appendChild( r.cloneContents() );
+      }else if( r.item != undefined || r.htmlText != undefined ){
+         body.set( 'html', r.item ? r.item( 0 ).outerHTML : r.htmlText );
+      }else{
+         body.set( 'html', r.toString() );
+      }
+
+      var content = body.get( 'html' );
+      return content;
+   },
+
+   getText : function() {
+      var r = this.getRange();
+      var s = this.getSelection();
+      return this.isCollapsed() ? '' : r.text || (s.toString ? s.toString() : '');
+   },
+
+   getNode : function() {
+      var r = this.getRange();
+
+      if( !Browser.ie || Browser.version >= 9 ){
+         var el = null;
+
+         if( r ){
+            el = r.commonAncestorContainer;
+
+            // Handle selection a image or other control like element such as
+            // anchors
+            if( !r.collapsed )
+               if( r.startContainer == r.endContainer )
+                  if( r.startOffset - r.endOffset < 2 )
+                     if( r.startContainer.hasChildNodes() )
+                        el = r.startContainer.childNodes[r.startOffset];
+
+            while( typeOf( el ) != 'element' )
+               el = el.parentNode;
+         }
+
+         return document.id( el );
+      }
+
+      return document.id( r.item ? r.item( 0 ) : r.parentElement() );
+   },
+
+   insertContent : function( content ) {
+      if( Browser.ie ){
+         var r = this.getRange();
+         if( r.pasteHTML ){
+            r.pasteHTML( content );
+            r.collapse( false );
+            r.select();
+         }else if( r.insertNode ){
+            r.deleteContents();
+            if( r.createContextualFragment ){
+               r.insertNode( r.createContextualFragment( content ) );
+            }else{
+               var doc = this.win.document;
+               var fragment = doc.createDocumentFragment();
+               var temp = doc.createElement( 'div' );
+               fragment.appendChild( temp );
+               temp.outerHTML = content;
+               r.insertNode( fragment );
+            }
+         }
+      }else{
+         this.win.document.execCommand( 'insertHTML', false, content );
+      }
+   }
+
+} );
+
+// Avoiding Locale dependency
+// Wrapper functions to be used internally and for plugins, defaults to en-US
+var phrases = {};
+MooEditable.Locale = {
+
+   define : function( key, value ) {
+      if( typeOf( window.Locale ) != 'null' )
+         return window.Locale.define( 'en-US', 'MooEditable', key, value );
+      if( typeOf( key ) == 'object' )
+         Object.merge( phrases, key );
+      else
+         phrases[key] = value;
+   },
+
+   get : function( key ) {
+      if( typeOf( window.Locale ) != 'null' )
+         return window.Locale.get( 'MooEditable.' + key );
+      return key ? phrases[key] : '';
+   }
+
+};
+
+MooEditable.Locale.define( {
+   ok : 'OK',
+   cancel : 'Cancel',
+   bold : 'Bold',
+   italic : 'Italic',
+   underline : 'Underline',
+   strikethrough : 'Strikethrough',
+   unorderedList : 'Unordered List',
+   orderedList : 'Ordered List',
+   indent : 'Indent',
+   outdent : 'Outdent',
+   undo : 'Undo',
+   redo : 'Redo',
+   removeHyperlink : 'Remove Hyperlink',
+   addHyperlink : 'Add Hyperlink',
+   selectTextHyperlink : 'Please select the text you wish to hyperlink.',
+   enterURL : 'Enter URL',
+   enterImageURL : 'Enter image URL',
+   addImage : 'Add Image',
+   toggleView : 'Toggle View'} );
+
+MooEditable.UI = {};
+
+MooEditable.UI.Toolbar = new Class( {
+
+   Implements : [Events, Options],
+
+   options : {
+      /*
+       * onItemAction: function(){},
+       */
+      'class' : ''},
+
+   initialize : function( options ) {
+      this.setOptions( options );
+      this.el = new Element( 'div', {
+         'class' : 'mooeditable-ui-toolbar ' + this.options['class']} );
+      this.items = {};
+      this.content = null;
+   },
+
+   toElement : function() {
+      return this.el;
+   },
+
+   render : function( actions ) {
+      if( this.content ){
+         this.el.adopt( this.content );
+      }else{
+         this.content = actions.map( function( action ) {
+            if( action == '|' ){
+               return this.addSeparator();
+            }else if( action == '/' ){
+               return this.addLineSeparator();
+            }
+            return this.addItem( action );
+         }.bind( this ) );
+      }
+      return this;
+   },
+
+   addItem : function( action ) {
+      var self = this;
+      var act = MooEditable.Actions[action];
+      if( !act )
+         return;
+      var type = act.type || 'button';
+      var options = act.options || {};
+      var item = new MooEditable.UI[type.camelCase().capitalize()]( Object.append( options, {
+         name : action,
+         'class' : action + '-item toolbar-item',
+         title : act.title,
+         onAction : self.itemAction.bind( self )} ) );
+      this.items[action] = item;
+      document.id( item ).inject( this.el );
+      return item;
+   },
+
+   getItem : function( action ) {
+      return this.items[action];
+   },
+
+   addSeparator : function() {
+      return new Element( 'span.toolbar-separator' ).inject( this.el );
+   },
+
+   addLineSeparator : function() {
+      return new Element( 'div.toolbar-line-separator' ).inject( this.el );
+   },
+
+   itemAction : function() {
+      this.fireEvent( 'itemAction', arguments );
+   },
+
+   disable : function( except ) {
+      Object.each( this.items, function( item ) {
+         (item.name == except) ? item.activate() : item.deactivate().disable();
+      } );
+      return this;
+   },
+
+   enable : function() {
+      Object.each( this.items, function( item ) {
+         item.enable();
+      } );
+      return this;
+   },
+
+   show : function() {
+      this.el.setStyle( 'display', '' );
+      return this;
+   },
+
+   hide : function() {
+      this.el.setStyle( 'display', 'none' );
+      return this;
+   }
+
+} );
+
+MooEditable.UI.Button = new Class( {
+
+   Implements : [Events, Options],
+
+   options : {
+      /*
+       * onAction: function(){},
+       */
+      title : '',
+      name : '',
+      text : 'Button',
+      'class' : '',
+      shortcut : '',
+      mode : 'icon'},
+
+   initialize : function( options ) {
+      this.setOptions( options );
+      this.name = this.options.name;
+      this.render();
+   },
+
+   toElement : function() {
+      return this.el;
+   },
+
+   render : function() {
+      var self = this;
+      var key = (Browser.Platform.mac) ? 'Cmd' : 'Ctrl';
+      var shortcut = (this.options.shortcut) ? ' ( ' + key + '+' + this.options.shortcut.toUpperCase() + ' )' : '';
+      var text = this.options.title || name;
+      var title = text + shortcut;
+      this.el = new Element( 'button', {
+         'class' : 'mooeditable-ui-button ' + self.options['class'],
+         title : title,
+         html : '<span class="button-icon"></span><span class="button-text">' + text + '</span>',
+         events : {
+            click : self.click.bind( self ),
+            mousedown : function( e ) {
+               e.preventDefault();
+            }}} );
+      if( this.options.mode != 'icon' )
+         this.el.addClass( 'mooeditable-ui-button-' + this.options.mode );
+
+      this.active = false;
+      this.disabled = false;
+
+      // add hover effect for IE
+      if( Browser.ie )
+         this.el.addEvents( {
+            mouseenter : function( e ) {
+               this.addClass( 'hover' );
+            },
+            mouseleave : function( e ) {
+               this.removeClass( 'hover' );
+            }} );
+
+      return this;
+   },
+
+   click : function( e ) {
+      e.preventDefault();
+      if( this.disabled )
+         return;
+      this.action( e );
+   },
+
+   action : function() {
+      this.fireEvent( 'action', [this].concat( Array.from( arguments ) ) );
+   },
+
+   enable : function() {
+      if( this.active )
+         this.el.removeClass( 'onActive' );
+      if( !this.disabled )
+         return;
+      this.disabled = false;
+      this.el.removeClass( 'disabled' ).set( {
+         disabled : false,
+         opacity : 1} );
+      return this;
+   },
+
+   disable : function() {
+      if( this.disabled )
+         return;
+      this.disabled = true;
+      this.el.addClass( 'disabled' ).set( {
+         disabled : true,
+         opacity : 0.4} );
+      return this;
+   },
+
+   activate : function() {
+      if( this.disabled )
+         return;
+      this.active = true;
+      this.el.addClass( 'onActive' );
+      return this;
+   },
+
+   deactivate : function() {
+      this.active = false;
+      this.el.removeClass( 'onActive' );
+      return this;
+   }
+
+} );
+
+MooEditable.UI.Dialog = new Class( {
+
+   Implements : [Events, Options],
+
+   options : {
+      /*
+       * onOpen: function(){}, onClose: function(){},
+       */
+      'class' : '',
+      contentClass : ''},
+
+   initialize : function( html, options ) {
+      this.setOptions( options );
+      this.html = html;
+
+      var self = this;
+      this.el = new Element( 'div', {
+         'class' : 'mooeditable-ui-dialog ' + self.options['class'],
+         html : '<div class="dialog-content ' + self.options.contentClass + '">' + html + '</div>',
+         styles : {
+            'display' : 'none'},
+         events : {
+            click : self.click.bind( self )}} );
+   },
+
+   toElement : function() {
+      return this.el;
+   },
+
+   click : function() {
+      this.fireEvent( 'click', arguments );
+      return this;
+   },
+
+   open : function() {
+      this.el.setStyle( 'display', '' );
+      this.fireEvent( 'open', this );
+      return this;
+   },
+
+   close : function() {
+      this.el.setStyle( 'display', 'none' );
+      this.fireEvent( 'close', this );
+      return this;
+   }
+
+} );
+
+MooEditable.UI.AlertDialog = function( alertText ) {
+   if( !alertText )
+      return;
+   var html = alertText + ' <button class="dialog-ok-button">' + MooEditable.Locale.get( 'ok' ) + '</button>';
+   return new MooEditable.UI.Dialog( html, {
+      'class' : 'mooeditable-alert-dialog',
+      onOpen : function() {
+         var button = this.el.getElement( '.dialog-ok-button' );
+         (function() {
+            button.focus();
+         }).delay( 10 );
+      },
+      onClick : function( e ) {
+         e.preventDefault();
+         if( e.target.tagName.toLowerCase() != 'button' )
+            return;
+         if( document.id( e.target ).hasClass( 'dialog-ok-button' ) )
+            this.close();
+      }} );
+};
+
+MooEditable.UI.PromptDialog = function( questionText, answerText, fn ) {
+   if( !questionText )
+      return;
+   var html = '<label class="dialog-label">' + questionText + ' <input type="text" class="text dialog-input" value="' + answerText + '">'
+         + '</label> <button class="dialog-button dialog-ok-button">' + MooEditable.Locale.get( 'ok' ) + '</button>'
+         + '<button class="dialog-button dialog-cancel-button">' + MooEditable.Locale.get( 'cancel' ) + '</button>';
+   return new MooEditable.UI.Dialog( html, {
+      'class' : 'mooeditable-prompt-dialog',
+      onOpen : function() {
+         var input = this.el.getElement( '.dialog-input' );
+         (function() {
+            input.focus();
+            input.select();
+         }).delay( 10 );
+      },
+      onClick : function( e ) {
+         e.preventDefault();
+         if( e.target.tagName.toLowerCase() != 'button' )
+            return;
+         var button = document.id( e.target );
+         var input = this.el.getElement( '.dialog-input' );
+         if( button.hasClass( 'dialog-cancel-button' ) ){
+            input.set( 'value', answerText );
+            this.close();
+         }else if( button.hasClass( 'dialog-ok-button' ) ){
+            var answer = input.get( 'value' );
+            input.set( 'value', answerText );
+            this.close();
+            if( fn )
+               fn.attempt( answer, this );
+         }
+      }} );
+};
+
+MooEditable.Actions = {
+
+   bold : {
+      title : MooEditable.Locale.get( 'bold' ),
+      options : {
+         shortcut : 'b'},
+      states : {
+         tags : ['b', 'strong'],
+         css : {
+            'font-weight' : 'bold'}},
+      events : {
+         beforeToggleView : function() {
+            if( Browser.firefox ){
+               var value = this.textarea.get( 'value' );
+               var newValue = value.replace( /<strong([^>]*)>/gi, '<b$1>' ).replace( /<\/strong>/gi, '</b>' );
+               if( value != newValue )
+                  this.textarea.set( 'value', newValue );
+            }
+         },
+         attach : function() {
+            if( Browser.firefox ){
+               var value = this.textarea.get( 'value' );
+               var newValue = value.replace( /<strong([^>]*)>/gi, '<b$1>' ).replace( /<\/strong>/gi, '</b>' );
+               if( value != newValue ){
+                  this.textarea.set( 'value', newValue );
+                  this.setContent( newValue );
+               }
+            }
+         }}},
+
+   italic : {
+      title : MooEditable.Locale.get( 'italic' ),
+      options : {
+         shortcut : 'i'},
+      states : {
+         tags : ['i', 'em'],
+         css : {
+            'font-style' : 'italic'}},
+      events : {
+         beforeToggleView : function() {
+            if( Browser.firefox ){
+               var value = this.textarea.get( 'value' );
+               var newValue = value.replace( /<embed([^>]*)>/gi, '<tmpembed$1>' ).replace( /<em([^>]*)>/gi, '<i$1>' ).replace( /<tmpembed([^>]*)>/gi,
+                     '<embed$1>' ).replace( /<\/em>/gi, '</i>' );
+               if( value != newValue )
+                  this.textarea.set( 'value', newValue );
+            }
+         },
+         attach : function() {
+            if( Browser.firefox ){
+               var value = this.textarea.get( 'value' );
+               var newValue = value.replace( /<embed([^>]*)>/gi, '<tmpembed$1>' ).replace( /<em([^>]*)>/gi, '<i$1>' ).replace( /<tmpembed([^>]*)>/gi,
+                     '<embed$1>' ).replace( /<\/em>/gi, '</i>' );
+               if( value != newValue ){
+                  this.textarea.set( 'value', newValue );
+                  this.setContent( newValue );
+               }
+            }
+         }}},
+
+   underline : {
+      title : MooEditable.Locale.get( 'underline' ),
+      options : {
+         shortcut : 'u'},
+      states : {
+         tags : ['u'],
+         css : {
+            'text-decoration' : 'underline'}},
+      events : {
+         beforeToggleView : function() {
+            if( Browser.firefox || Browser.ie ){
+               var value = this.textarea.get( 'value' );
+               var newValue = value.replace( /<span style="text-decoration: underline;"([^>]*)>/gi, '<u$1>' ).replace( /<\/span>/gi, '</u>' );
+               if( value != newValue )
+                  this.textarea.set( 'value', newValue );
+            }
+         },
+         attach : function() {
+            if( Browser.firefox || Browser.ie ){
+               var value = this.textarea.get( 'value' );
+               var newValue = value.replace( /<span style="text-decoration: underline;"([^>]*)>/gi, '<u$1>' ).replace( /<\/span>/gi, '</u>' );
+               if( value != newValue ){
+                  this.textarea.set( 'value', newValue );
+                  this.setContent( newValue );
+               }
+            }
+         }}},
+
+   strikethrough : {
+      title : MooEditable.Locale.get( 'strikethrough' ),
+      options : {
+         shortcut : 's'},
+      states : {
+         tags : ['s', 'strike'],
+         css : {
+            'text-decoration' : 'line-through'}}},
+
+   insertunorderedlist : {
+      title : MooEditable.Locale.get( 'unorderedList' ),
+      states : {
+         tags : ['ul']}},
+
+   insertorderedlist : {
+      title : MooEditable.Locale.get( 'orderedList' ),
+      states : {
+         tags : ['ol']}},
+
+   indent : {
+      title : MooEditable.Locale.get( 'indent' ),
+      states : {
+         tags : ['blockquote']}},
+
+   outdent : {
+      title : MooEditable.Locale.get( 'outdent' )},
+
+   undo : {
+      title : MooEditable.Locale.get( 'undo' ),
+      options : {
+         shortcut : 'z'}},
+
+   redo : {
+      title : MooEditable.Locale.get( 'redo' ),
+      options : {
+         shortcut : 'y'}},
+
+   unlink : {
+      title : MooEditable.Locale.get( 'removeHyperlink' )},
+
+   createlink : {
+      title : MooEditable.Locale.get( 'addHyperlink' ),
+      options : {
+         shortcut : 'l'},
+      states : {
+         tags : ['a']},
+      dialogs : {
+         alert : MooEditable.UI.AlertDialog.pass( MooEditable.Locale.get( 'selectTextHyperlink' ) ),
+         prompt : function( editor ) {
+            return MooEditable.UI.PromptDialog( MooEditable.Locale.get( 'enterURL' ), 'http://', function( url ) {
+               editor.execute( 'createlink', false, url.trim() );
+            } );
+         }},
+      command : function() {
+         var selection = this.selection;
+         var dialogs = this.dialogs.createlink;
+         if( selection.isCollapsed() ){
+            var node = selection.getNode();
+            if( node && node.get( 'tag' ) == 'a' && node.get( 'href' ) ){
+               selection.selectNode( node );
+               var prompt = dialogs.prompt;
+               prompt.el.getElement( '.dialog-input' ).set( 'value', node.get( 'href' ) );
+               prompt.open();
+            }else{
+               dialogs.alert.open();
+            }
+         }else{
+            var text = selection.getText();
+            var prompt = dialogs.prompt;
+            if( urlRegex.test( text ) )
+               prompt.el.getElement( '.dialog-input' ).set( 'value', text );
+            prompt.open();
+         }
+      }},
+
+   urlimage : {
+      title : MooEditable.Locale.get( 'addImage' ),
+      options : {
+         shortcut : 'm'},
+      dialogs : {
+         prompt : function( editor ) {
+            return MooEditable.UI.PromptDialog( MooEditable.Locale.get( 'enterImageURL' ), 'http://', function( url ) {
+               editor.execute( 'insertimage', false, url.trim() );
+            } );
+         }},
+      command : function() {
+         this.dialogs.urlimage.prompt.open();
+      }},
+
+   toggleview : {
+      title : MooEditable.Locale.get( 'toggleView' ),
+      command : function() {
+         (this.mode == 'textarea') ? this.toolbar.enable() : this.toolbar.disable( 'toggleview' );
+         this.toggleView();
+      }}
+
+};
+
+MooEditable.Actions.Settings = {};
+
+Element.Properties.mooeditable = {
+
+   get : function() {
+      return this.retrieve( 'MooEditable' );
+   }
+
+};
+
+Element.implement( {
+
+   mooEditable : function( options ) {
+      var mooeditable = this.get( 'mooeditable' );
+      if( !mooeditable )
+         mooeditable = new MooEditable( this, options );
+      return mooeditable;
+   }
+
+});
+
+})();
+/*
+---
+
+name: MooEditable.Charmap
+
+description: Extends MooEditable with a characters map
+
+license: MIT-style license
+
+authors:
+- Ryan Mitchell
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.Actions
+
+provides: [MooEditable.UI.CharacterDialog, MooEditable.Actions.charmap]
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Charmap.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.Charmap.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | charmap | toggleview',
+      externalCSS: '../../Assets/MooEditable/Editable.css'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Actions.Settings.charmap = {
+	chars: [
+		['&nbsp;', '&#160;'],
+		['&amp;', '&#38;'],
+		['&quot;', '&#34;'],
+		['&cent;', '&#162;'],
+		['&euro;', '&#8364;'],
+		['&pound;', '&#163;'],
+		['&yen;', '&#165;'],
+		['&copy;', '&#169;'],
+		['&reg;', '&#174;'],
+		['&trade;', '&#8482;'],
+		['&permil;', '&#8240;'],
+		['&micro;', '&#181;'],
+		['&middot;', '&#183;'],
+		['&bull;', '&#8226;'],
+		['&hellip;', '&#8230;'],
+		['&prime;', '&#8242;'],
+		['&Prime;', '&#8243;'],
+		['&sect;', '&#167;'],
+		['&para;', '&#182;'],
+		['&szlig;', '&#223;'],
+		['&lsaquo;', '&#8249;'],
+		['&rsaquo;', '&#8250;'],
+		['&laquo;', '&#171;'],
+		['&raquo;', '&#187;'],
+		['&lsquo;', '&#8216;'],
+		['&rsquo;', '&#8217;'],
+		['&ldquo;', '&#8220;'],
+		['&rdquo;', '&#8221;'],
+		['&sbquo;', '&#8218;'],
+		['&bdquo;', '&#8222;'],
+		['&lt;', '&#60;'],
+		['&gt;', '&#62;'],
+		['&le;', '&#8804;'],
+		['&ge;', '&#8805;'],
+		['&ndash;', '&#8211;'],
+		['&mdash;', '&#8212;'],
+		['&macr;', '&#175;'],
+		['&oline;', '&#8254;'],
+		['&curren;', '&#164;'],
+		['&brvbar;', '&#166;'],
+		['&uml;', '&#168;'],
+		['&iexcl;', '&#161;'],
+		['&iquest;', '&#191;'],
+		['&circ;', '&#710;'],
+		['&tilde;', '&#732;'],
+		['&deg;', '&#176;'],
+		['&minus;', '&#8722;'],
+		['&plusmn;', '&#177;'],
+		['&divide;', '&#247;'],
+		['&frasl;', '&#8260;'],
+		['&times;', '&#215;'],
+		['&sup1;', '&#185;'],
+		['&sup2;', '&#178;'],
+		['&sup3;', '&#179;'],
+		['&frac14;', '&#188;'],
+		['&frac12;', '&#189;'],
+		['&frac34;', '&#190;'],
+		['&fnof;', '&#402;'],
+		['&int;', '&#8747;'],
+		['&sum;', '&#8721;'],
+		['&infin;', '&#8734;'],
+		['&radic;', '&#8730;'],
+		['&sim;', '&#8764;'],
+		['&cong;', '&#8773;'],
+		['&asymp;', '&#8776;'],
+		['&ne;', '&#8800;'],
+		['&equiv;', '&#8801;'],
+		['&isin;', '&#8712;'],
+		['&notin;', '&#8713;'],
+		['&ni;', '&#8715;'],
+		['&prod;', '&#8719;'],
+		['&and;', '&#8743;'],
+		['&or;', '&#8744;'],
+		['&not;', '&#172;'],
+		['&cap;', '&#8745;'],
+		['&cup;', '&#8746;'],
+		['&part;', '&#8706;'],
+		['&forall;', '&#8704;'],
+		['&exist;', '&#8707;'],
+		['&empty;', '&#8709;'],
+		['&nabla;', '&#8711;'],
+		['&lowast;', '&#8727;'],
+		['&prop;', '&#8733;'],
+		['&ang;', '&#8736;'],
+		['&acute;', '&#180;'],
+		['&cedil;', '&#184;'],
+		['&ordf;', '&#170;'],
+		['&ordm;', '&#186;'],
+		['&dagger;', '&#8224;'],
+		['&Dagger;', '&#8225;'],
+		['&Agrave;', '&#192;'],
+		['&Aacute;', '&#193;'],
+		['&Acirc;', '&#194;'],
+		['&Atilde;', '&#195;'],
+		['&Auml;', '&#196;'],
+		['&Aring;', '&#197;'],
+		['&AElig;', '&#198;'],
+		['&Ccedil;', '&#199;'],
+		['&Egrave;', '&#200;'],
+		['&Eacute;', '&#201;'],
+		['&Ecirc;', '&#202;'],
+		['&Euml;', '&#203;'],
+		['&Igrave;', '&#204;'],
+		['&Iacute;', '&#205;'],
+		['&Icirc;', '&#206;'],
+		['&Iuml;', '&#207;'],
+		['&ETH;', '&#208;'],
+		['&Ntilde;', '&#209;'],
+		['&Ograve;', '&#210;'],
+		['&Oacute;', '&#211;'],
+		['&Ocirc;', '&#212;'],
+		['&Otilde;', '&#213;'],
+		['&Ouml;', '&#214;'],
+		['&Oslash;', '&#216;'],
+		['&OElig;', '&#338;'],
+		['&Scaron;', '&#352;'],
+		['&Ugrave;', '&#217;'],
+		['&Uacute;', '&#218;'],
+		['&Ucirc;', '&#219;'],
+		['&Uuml;', '&#220;'],
+		['&Yacute;', '&#221;'],
+		['&Yuml;', '&#376;'],
+		['&THORN;', '&#222;'],
+		['&agrave;', '&#224;'],
+		['&aacute;', '&#225;'],
+		['&acirc;', '&#226;'],
+		['&atilde;', '&#227;'],
+		['&auml;', '&#228;'],
+		['&aring;', '&#229;'],
+		['&aelig;', '&#230;'],
+		['&ccedil;', '&#231;'],
+		['&egrave;', '&#232;'],
+		['&eacute;', '&#233;'],
+		['&ecirc;', '&#234;'],
+		['&euml;', '&#235;'],
+		['&igrave;', '&#236;'],
+		['&iacute;', '&#237;'],
+		['&icirc;', '&#238;'],
+		['&iuml;', '&#239;'],
+		['&eth;', '&#240;'],
+		['&ntilde;', '&#241;'],
+		['&ograve;', '&#242;'],
+		['&oacute;', '&#243;'],
+		['&ocirc;', '&#244;'],
+		['&otilde;', '&#245;'],
+		['&ouml;', '&#246;'],
+		['&oslash;', '&#248;'],
+		['&oelig;', '&#339;'],
+		['&scaron;', '&#353;'],
+		['&ugrave;', '&#249;'],
+		['&uacute;', '&#250;'],
+		['&ucirc;', '&#251;'],
+		['&uuml;', '&#252;'],
+		['&yacute;', '&#253;'],
+		['&thorn;', '&#254;'],
+		['&yuml;', '&#255;'],
+		['&Alpha;', '&#913;'],
+		['&Beta;', '&#914;'],
+		['&Gamma;', '&#915;'],
+		['&Delta;', '&#916;'],
+		['&Epsilon;', '&#917;'],
+		['&Zeta;', '&#918;'],
+		['&Eta;', '&#919;'],
+		['&Theta;', '&#920;'],
+		['&Iota;', '&#921;'],
+		['&Kappa;', '&#922;'],
+		['&Lambda;', '&#923;'],
+		['&Mu;', '&#924;'],
+		['&Nu;', '&#925;'],
+		['&Xi;', '&#926;'],
+		['&Omicron;', '&#927;'],
+		['&Pi;', '&#928;'],
+		['&Rho;', '&#929;'],
+		['&Sigma;', '&#931;'],
+		['&Tau;', '&#932;'],
+		['&Upsilon;', '&#933;'],
+		['&Phi;', '&#934;'],
+		['&Chi;', '&#935;'],
+		['&Psi;', '&#936;'],
+		['&Omega;', '&#937;'],
+		['&alpha;', '&#945;'],
+		['&beta;', '&#946;'],
+		['&gamma;', '&#947;'],
+		['&delta;', '&#948;'],
+		['&epsilon;', '&#949;'],
+		['&zeta;', '&#950;'],
+		['&eta;', '&#951;'],
+		['&theta;', '&#952;'],
+		['&iota;', '&#953;'],
+		['&kappa;', '&#954;'],
+		['&lambda;', '&#955;'],
+		['&mu;', '&#956;'],
+		['&nu;', '&#957;'],
+		['&xi;', '&#958;'],
+		['&omicron;', '&#959;'],
+		['&pi;', '&#960;'],
+		['&rho;', '&#961;'],
+		['&sigmaf;', '&#962;'],
+		['&sigma;', '&#963;'],
+		['&tau;', '&#964;'],
+		['&upsilon;', '&#965;'],
+		['&phi;', '&#966;'],
+		['&chi;', '&#967;'],
+		['&psi;', '&#968;'],
+		['&omega;', '&#969;'],
+		['&alefsym;', '&#8501;'],
+		['&piv;', '&#982;'],
+		['&real;', '&#8476;'],
+		['&thetasym;', '&#977;'],
+		['&upsih;', '&#978;'],
+		['&weierp;', '&#8472;'],
+		['&image;', '&#8465;'],
+		['&larr;', '&#8592;'],
+		['&uarr;', '&#8593;'],
+		['&rarr;', '&#8594;'],
+		['&darr;', '&#8595;'],
+		['&harr;', '&#8596;'],
+		['&crarr;', '&#8629;'],
+		['&lArr;', '&#8656;'],
+		['&uArr;', '&#8657;'],
+		['&rArr;', '&#8658;'],
+		['&dArr;', '&#8659;'],
+		['&hArr;', '&#8660;'],
+		['&there4;', '&#8756;'],
+		['&sub;', '&#8834;'],
+		['&sup;', '&#8835;'],
+		['&nsub;', '&#8836;'],
+		['&sube;', '&#8838;'],
+		['&supe;', '&#8839;'],
+		['&oplus;', '&#8853;'],
+		['&otimes;', '&#8855;'],
+		['&perp;', '&#8869;'],
+		['&sdot;', '&#8901;'],
+		['&lceil;', '&#8968;'],
+		['&rceil;', '&#8969;'],
+		['&lfloor;', '&#8970;'],
+		['&rfloor;', '&#8971;'],
+		['&lang;', '&#9001;'],
+		['&rang;', '&#9002;'],
+		['&loz;', '&#9674;'],
+		['&spades;', '&#9824;'],
+		['&clubs;', '&#9827;'],
+		['&hearts;', '&#9829;'],
+		['&diams;', '&#9830;']
+	]
+};
+
+MooEditable.Locale.define({
+	insertCustomCharacter: 'Insert custom character',
+	insertCharacter: 'Insert character'
+});
+
+MooEditable.UI.CharacterDialog = function(editor){
+	var html = MooEditable.Locale.get('insertCharacter') + ' <select class="char">';
+	var chars = MooEditable.Actions.Settings.charmap.chars;
+	for (var i=0, len=chars.length; i<len; i++) {
+		html += '<option data-code="' + chars[i][0] + '">' + chars[i][1] + '</option>';
+	}
+	html += '</select>'
+		+ '<button class="dialog-button dialog-ok-button">' + MooEditable.Locale.get('ok') + '</button>'
+		+ '<button class="dialog-button dialog-cancel-button">' + MooEditable.Locale.get('cancel') + '</button>';
+	return new MooEditable.UI.Dialog(html, {
+		'class': 'mooeditable-charmap-dialog',
+		onClick: function(e){
+			if (e.target.tagName.toLowerCase() == 'button') e.preventDefault();
+			var button = document.id(e.target);
+			if (button.hasClass('dialog-cancel-button')){
+				this.close();
+			} else if (button.hasClass('dialog-ok-button')){
+				this.close();
+				var sel = button.getPrevious('select.char');
+				var div = new Element('div').set('html', $(sel.options[sel.selectedIndex]).getProperty('data-code').trim());
+				editor.selection.insertContent(div.get('html'));
+			}
+		}
+	});
+};
+
+MooEditable.Actions.charmap = {
+	title: MooEditable.Locale.get('insertCustomCharacter'),
+	dialogs: {
+		prompt: function(editor){
+			return MooEditable.UI.CharacterDialog(editor);
+		}
+	},
+	command: function() {
+		this.dialogs.charmap.prompt.open();
+	},
+	events: {
+		toggleView: function(){
+			if (this.mode == 'textarea'){
+				var s = this.textarea.get('value');
+				// when switching from iframe to textarea, we need to convert special symbols to html entities
+				MooEditable.Actions.Settings.charmap.chars.each(function(e){
+					if (!['&amp;', '&gt;', '&lt;', '&quot;', '&nbsp;'].contains(e[0])){
+						var r = new RegExp(String.fromCharCode(parseInt(e[1].replace('&#', '').replace(';', ''))), 'g');
+						s = s.replace(r, e[0]);
+					}
+				}, this);
+				this.textarea.set('value', s);
+			}
+		}
+	}
+};
+/*
+---
+
+name: MooEditable.CleanPaste
+
+description: Extends MooEditable to insert text copied from other editors like word without all that messy style-information.
+
+updates in previous version: Improved Internet Explorer handling to break text on to new lines. Improved handling of some styles from newer versions of MS Word to remove extra style tags that were remaining. (David)
+
+updates in this version: Fixed CleanPaste in Safari (Jo)
+
+license: MIT-style license
+
+authors:
+- André Fiedler <kontakt@visualdrugs.net>
+- David Bennett <david@fuzzylime.co.uk>
+- Jo Carter <jocarter@holler.co.uk>
+
+requires:
+- MooEditable
+- MooEditable.Selection
+- More/Class.Refactor
+
+usage:
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.CleanPaste.js"></script>
+
+  <script>
+  window.addEvent('domready', function (){
+    var mooeditable = $('textarea-1').mooEditable();
+  });
+  </script>
+
+provides: [MooEditable.CleanPaste]
+
+...
+*/
+
+
+
+(function () {
+    
+    MooEditable = Class.refactor(MooEditable, {
+      
+        // @FIXED: Removed because inferred by above and breaks MooEditable completely with MooTools 1.3.
+        // Extends: MooEditable,
+        
+        attach: function () {
+            var ret = this.previous();
+            this.doc.body.addListener('paste', this.cleanPaste.bind(this));
+            return ret;
+        },
+        
+        cleanPaste: function (e) {
+            var txtPastet = e.clipboardData && e.clipboardData.getData ?
+                e.clipboardData.getData('text/html') : // Standard
+                window.clipboardData && window.clipboardData.getData ?
+                window.clipboardData.getData('Text') : // MS
+                false;
+            
+            // @FIXED: If !MS and data is not html - try this (ie. pasting plain text)
+            if ((!txtPastet || '' === txtPastet.trim()) && e.clipboardData && e.clipboardData.getData) {
+              txtPastet = e.clipboardData.getData('Text');
+            }
+            
+            if (!!txtPastet) { // IE and Safari
+              if (window.clipboardData) {
+                this.selection.insertContent(this.cleanHtml(txtPastet, 1)); // IE
+              }
+              else {
+                this.selection.insertContent(this.cleanHtml(txtPastet)); // Safari
+              }
+              
+              new Event(e).stop();
+            }
+            else { // no clipboard data available
+                this.selection.insertContent('<span id="INSERTION_MARKER">&nbsp;</span>');
+                this.txtMarked = this.doc.body.get('html');
+                this.doc.body.set('html', '');
+                this.replaceMarkerWithPastedText.delay(5, this);
+            }
+            return this;
+        },
+        
+        replaceMarkerWithPastedText: function () {
+            var txtPastetClean = this.cleanHtml(this.doc.body.get('html'));
+            this.doc.body.set('html', this.txtMarked);
+            this.selection.selectNode(this.doc.body.getElementById('INSERTION_MARKER'));
+            this.selection.insertContent(txtPastetClean);
+            return this;
+        },
+        
+        cleanHtml: function (html, isie) {
+          if (isie) {
+            if (!this.options.paragraphise) {
+              html = html.replace(/\n/g, "<br />");
+            }
+            else {
+              html = "<p>" + html + "<\/p>";
+              html = html.replace(/\n/g, "<\/p><p>");
+              html = html.replace(/<p>\s<\/p>/gi, '');
+            }
+          }
+          else {
+            // @FIXED: Safari pastes in styles with ' not " - fixed to not be broken in safari
+            // @FIXED: Word pastes in Safari
+          
+            // remove body and html tag
+            html = html.replace(/<html[^>]*?>(.*)/gim, "$1");
+            html = html.replace(/<\/html>/gi, '');
+            html = html.replace(/<body[^>]*?>(.*)/gi, "$1");
+            html = html.replace(/<\/body>/gi, '');
+          
+            // remove style, meta and link tags
+            html = html.replace(/<style[^>]*?>[\s\S]*?<\/style[^>]*>/gi, '');
+            html = html.replace(/<(?:meta|link)[^>]*>\s*/gi, '');
+            
+            // remove XML elements and declarations
+            html = html.replace(/<\\?\?xml[^>]*>/gi, '');
+            
+            // remove w: tags with contents.
+            html = html.replace(/<w:[^>]*>[\s\S]*?<\/w:[^>]*>/gi, '');
+            
+            // remove tags with XML namespace declarations: <o:p><\/o:p>
+            html = html.replace(/<o:p>\s*<\/o:p>/g, '');
+            html = html.replace(/<o:p>[\s\S]*?<\/o:p>/g, '&nbsp;');
+            html = html.replace(/<\/?\w+:[^>]*>/gi, '');
+            
+            // remove comments [SF BUG-1481861].
+            html = html.replace(/<\!--[\s\S]*?-->/g, '');
+            html = html.replace(/<\!\[[\s\S]*?\]>/g, '');
+            
+            // remove mso-xxx styles.
+            html = html.replace(/\s*mso-[^:]+:[^;"']+;?/gi, '');
+            
+            // remove styles.
+            html = html.replace(/<(\w[^>]*) style='([^\']*)'([^>]*)/gim, "<$1$3");
+            html = html.replace(/<(\w[^>]*) style="([^\"]*)"([^>]*)/gim, "<$1$3");
+            
+            // remove margin styles.
+            html = html.replace(/\s*margin: 0cm 0cm 0pt\s*;/gi, '');
+            html = html.replace(/\s*margin: 0cm 0cm 0pt\s*"/gi, "\"");
+            
+            html = html.replace(/\s*text-indent: 0cm\s*;/gi, '');
+            html = html.replace(/\s*text-indent: 0cm\s*"/gi, "\"");
+            
+            html = html.replace(/\s*text-align: [^\s;]+;?"/gi, "\"");
+            
+            html = html.replace(/\s*page-break-before: [^\s;]+;?"/gi, "\"");
+            
+            html = html.replace(/\s*font-variant: [^\s;]+;?"/gi, "\"");
+            
+            html = html.replace(/\s*tab-stops:[^;"']*;?/gi, '');
+            html = html.replace(/\s*tab-stops:[^"']*/gi, '');
+            
+            // remove font face attributes.
+            html = html.replace(/\s*face="[^"']*"/gi, '');
+            html = html.replace(/\s*face=[^ >]*/gi, '');
+            
+            html = html.replace(/\s*font-family:[^;"']*;?/gi, '');
+            html = html.replace(/\s*font-size:[^;"']*;?/gi, '');
+            
+            // remove class attributes
+            html = html.replace(/<(\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3");
+            
+            // remove "display:none" attributes.
+            html = html.replace(/<(\w+)[^>]*\sstyle="[^"']*display\s?:\s?none[\s \S]*?<\/\1>/ig, '');
+            
+            // remove empty styles.
+            html = html.replace(/\s*style='\s*'/gi, '');
+            html = html.replace(/\s*style="\s*"/gi, '');
+            
+            html = html.replace(/<span\s*[^>]*>\s*&nbsp;\s*<\/span>/gi, '&nbsp;');
+            
+            html = html.replace(/<span\s*[^>]*><\/span>/gi, '');
+            
+            // remove align attributes
+            html = html.replace(/<(\w[^>]*) align=([^ |>]*)([^>]*)/gi, "<$1$3");
+            
+            // remove lang attributes
+            html = html.replace(/<(\w[^>]*) lang=([^ |>]*)([^>]*)/gi, "<$1$3");
+            
+            html = html.replace(/<span([^>]*)>([\s\S]*?)<\/span>/gi, '$2');
+            
+            html = html.replace(/<font\s*>([\s\S]*?)<\/font>/gi, '$1');
+            
+            html = html.replace(/<(u|i|strike)>&nbsp;<\/\1>/gi, '&nbsp;');
+            
+            html = html.replace(/<h\d>\s*<\/h\d>/gi, '');
+            
+            // remove language attributes
+            html = html.replace(/<(\w[^>]*) language=([^ |>]*)([^>]*)/gi, "<$1$3");
+            
+            // remove onmouseover and onmouseout events (from MS word comments effect)
+            html = html.replace(/<(\w[^>]*) onmouseover="([^\"']*)"([^>]*)/gi, "<$1$3");
+            html = html.replace(/<(\w[^>]*) onmouseout="([^\"']*)"([^>]*)/gi, "<$1$3");
+            
+            // the original <Hn> tag sent from word is something like this: <Hn style="margin-top:0px;margin-bottom:0px">
+            html = html.replace(/<h(\d)([^>]*)>/gi, '<h$1>');
+            
+            // word likes to insert extra <font> tags, when using IE. (Weird).
+            html = html.replace(/<(h\d)><font[^>]*>([\s\S]*?)<\/font><\/\1>/gi, '<$1>$2<\/$1>');
+            html = html.replace(/<(h\d)><em>([\s\S]*?)<\/em><\/\1>/gi, '<$1>$2<\/$1>');
+            
+            // i -> em, b -> strong - doesn't match nested tags e.g <b><i>some text</i></b> - not possible in regexp 
+            // @see - http://stackoverflow.com/questions/1721223/php-regexp-for-nested-div-tags etc.
+            html = html.replace(/<b\b[^>]*>(.*?)<\/b[^>]*>/gi, '<strong>$1</strong>');
+            html = html.replace(/<i\b[^>]*>(.*?)<\/i[^>]*>/gi, '<em>$1</em>');
+            
+            // remove "bad" tags
+            html = html.replace(/<\s+[^>]*>/gi, '');
+            
+            // remove empty <span>s (ie. no attributes, no reason for span in pasted text)
+            // done twice for nested spans
+            html = html.replace(/<span>([\s\S]*?)<\/span>/gi, '$1');
+            html = html.replace(/<span>([\s\S]*?)<\/span>/gi, '$1');
+            
+            // remove empty <div>s (see span)
+            html = html.replace(/<div>([\s\S]*?)<\/div>/gi, '$1');
+            html = html.replace(/<div>([\s\S]*?)<\/div>/gi, '$1');
+            
+            // remove empty tags (three times, just to be sure - for nested empty tags).
+            // This also removes any empty anchors
+            html = html.replace(/<([^\s>]+)(\s[^>]*)?>\s*<\/\1>/g, '');
+            html = html.replace(/<([^\s>]+)(\s[^>]*)?>\s*<\/\1>/g, '');
+            html = html.replace(/<([^\s>]+)(\s[^>]*)?>\s*<\/\1>/g, '');
+            
+            html = html.trim();
+            
+            // Convert <p> to <br />
+            if (!this.options.paragraphise) {
+                html.replace(/<p>/gi, '<br />');
+                html.replace(/<\/p>/gi, '');
+            }
+            // Check if in paragraph - this fixes FF3.6 and it's <br id=""> issue
+            else {
+              var check = html.substr(0,2);
+              if ('<p' !== check) {
+                html = '<p>' + html + '</p>';
+                // Replace breaks with paragraphs
+                html = html.replace(/\n/g, "<\/p><p>");
+                html = html.replace(/<br[^>]*>/gi, '<\/p><p>');
+              }
+            }
+            
+            // Make it valid xhtml
+            html = html.replace(/<br>/gi, '<br />');
+            
+            // remove <br>'s that end a paragraph here.
+            html = html.replace(/<br[^>]*><\/p>/gim, '</p>');
+            
+            // remove empty paragraphs - with just a &nbsp; (or whitespace) in (and tags again for good measure)
+            html = html.replace(/<p>&nbsp;<\/p>/gi,'');
+            html = html.replace(/<p>\s<\/p>/gi, '');
+            html = html.replace(/<([^\s>]+)(\s[^>]*)?>\s*<\/\1>/g, '');
+            
+            html = html.trim();
+          }
+          
+          return html;
+        }
+    });
+    
+}());
+/*
+---
+
+name: MooEditable.Extras
+
+description: Extends MooEditable to include more (simple) toolbar buttons.
+
+license: MIT-style license
+
+authors:
+- Lim Chee Aun
+- Ryan Mitchell
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.UI.MenuList
+
+provides: 
+- MooEditable.Actions.formatBlock
+- MooEditable.Actions.justifyleft
+- MooEditable.Actions.justifyright
+- MooEditable.Actions.justifycenter
+- MooEditable.Actions.justifyfull
+- MooEditable.Actions.removeformat
+- MooEditable.Actions.insertHorizontalRule
+
+...
+*/
+
+
+
+MooEditable.Locale.define({
+	blockFormatting: 'Block Formatting',
+	paragraph: 'Paragraph',
+	heading1: 'Heading 1',
+	heading2: 'Heading 2',
+	heading3: 'Heading 3',
+	alignLeft: 'Align Left',
+	alignRight: 'Align Right',
+	alignCenter: 'Align Center',
+	alignJustify: 'Align Justify',
+	removeFormatting: 'Remove Formatting',
+	insertHorizontalRule: 'Insert Horizontal Rule'
+});
+
+Object.append(MooEditable.Actions, {
+
+	formatBlock: {
+		title: MooEditable.Locale.get('blockFormatting'),
+		type: 'menu-list',
+		options: {
+			list: [
+				{text: MooEditable.Locale.get('paragraph'), value: 'p'},
+				{text: MooEditable.Locale.get('heading1'), value: 'h1', style: 'font-size:24px; font-weight:bold;'},
+				{text: MooEditable.Locale.get('heading2'), value: 'h2', style: 'font-size:18px; font-weight:bold;'},
+				{text: MooEditable.Locale.get('heading3'), value: 'h3', style: 'font-size:14px; font-weight:bold;'}
+			]
+		},
+		states: {
+			tags: ['p', 'h1', 'h2', 'h3']
+		},
+		command: function(menulist, name){
+			var argument = '<' + name + '>';
+			this.focus();
+			this.execute('formatBlock', false, argument);
+		}
+	},
+	
+	justifyleft:{
+		title: MooEditable.Locale.get('alignLeft'),
+		states: {
+			css: {'text-align': 'left'}
+		}
+	},
+	
+	justifyright:{
+		title: MooEditable.Locale.get('alignRight'),
+		states: {
+			css: {'text-align': 'right'}
+		}
+	},
+	
+	justifycenter:{
+		title: MooEditable.Locale.get('alignCenter'),
+		states: {
+			tags: ['center'],
+			css: {'text-align': 'center'}
+		}
+	},
+	
+	justifyfull:{
+		title: MooEditable.Locale.get('alignJustify'),
+		states: {
+			css: {'text-align': 'justify'}
+		}
+	},
+	
+	removeformat: {
+		title: MooEditable.Locale.get('removeFormatting')
+	},
+	
+	insertHorizontalRule: {
+		title: MooEditable.Locale.get('insertHorizontalRule'),
+		states: {
+			tags: ['hr']
+		},
+		command: function(){
+			this.selection.insertContent('<hr>');
+		}
+	}
+
+});
+/*
+---
+
+name: MooEditable.Flash
+
+description: Extends MooEditable to embed Flash.
+
+license: MIT-style license
+
+authors:
+- Radovan Lozej
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.Actions
+
+provides: [MooEditable.UI.FlashDialog, MooEditable.Actions.flash]
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Flash.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.Flash.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | flash | toggleview',
+      externalCSS: '../../Assets/MooEditable/Editable.css'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Locale.define({
+	embed: 'Enter embed code',
+	flashEmbed: 'Flash Embed'
+});
+
+MooEditable.UI.FlashDialog = function(editor){
+	var html = MooEditable.Locale.get('embed') + ' <textarea class="dialog-f" value="" rows="2" cols="40"></textarea> '
+		+ '<button class="dialog-button dialog-ok-button">' + MooEditable.Locale.get('ok') + '</button> '
+		+ '<button class="dialog-button dialog-cancel-button">' + MooEditable.Locale.get('cancel') + '</button>';
+	return new MooEditable.UI.Dialog(html, {
+		'class': 'mooeditable-flash-dialog',
+		onOpen: function(){
+			var input = this.el.getElement('.dialog-f');
+			(function(){
+				input.focus();
+				input.select();
+			}).delay(10);
+		},
+		onClick: function(e){
+			if (e.target.tagName.toLowerCase() == 'button') e.preventDefault();
+			var button = document.id(e.target);
+			if (button.hasClass('dialog-cancel-button')){
+				this.close();
+			} else if (button.hasClass('dialog-ok-button')){
+				this.close();
+				var div = new Element('div').set('html', this.el.getElement('.dialog-f').get('value').trim());
+				editor.selection.insertContent(div.get('html'));
+			}
+		}
+	});
+};
+
+MooEditable.Actions.flash = {
+	title: MooEditable.Locale.get('flashEmbed'),
+	dialogs: {
+		prompt: function(editor){
+			return MooEditable.UI.FlashDialog(editor);
+		}
+	},
+	command: function(){
+		this.dialogs.flash.prompt.open();
+	}
+};
+/*
+---
+
+name: MooEditable.Forecolor
+
+description: Extends MooEditable to change the color of the text from a list a predefined colors.
+
+license: MIT-style license
+
+authors:
+- Olivier Refalo
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.UI.ButtonOverlay
+# - MooEditable.Actions
+
+provides: [MooEditable.Actions.forecolor]
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Forecolor.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.UI.ButtonOverlay.js"></script>
+  <script src="MooEditable.Forecolor.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | forecolor | toggleview'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Actions.Settings.forecolor = {
+	colors: [
+		['000000', '993300', '333300', '003300', '003366', '000077', '333399', '333333'],
+		['770000', 'ff6600', '777700', '007700', '007777', '0000ff', '666699', '777777'],
+		['ff0000', 'ff9900', '99cc00', '339966', '33cccc', '3366f0', '770077', '999999'],
+		['ff00ff', 'ffcc00', 'ffff00', '00ff00', '00ffff', '00ccff', '993366', 'cccccc'],
+		['ff99cc', 'ffcc99', 'ffff99', 'ccffcc', 'ccffff', '99ccff', 'cc9977', 'ffffff']
+	]
+};
+
+MooEditable.Locale.define('changeColor', 'Change Color');
+
+MooEditable.Actions.forecolor = {
+	type: 'button-overlay',
+	title: MooEditable.Locale.get('changeColor'),
+	options: {
+		overlaySize: {x: 'auto'},
+		overlayHTML: (function(){
+			var html = '';
+			MooEditable.Actions.Settings.forecolor.colors.each(function(row){
+				row.each(function(c){
+					html += '<a href="#" class="forecolor-colorpicker-color" style="background-color: #' + c + '" title="#' + c.toUpperCase() + '"></a>'; 
+				});
+				html += '<span class="forecolor-colorpicker-br"></span>';
+			});
+			return html;
+		})()
+	},
+	command: function(buttonOverlay, e){
+		var el = e.target;
+		if (el.tagName.toLowerCase() != 'a') return;
+		var color = $(el).getStyle('background-color');
+		this.execute('forecolor', false, color);
+		this.focus();
+	}
+};
+/*
+---
+
+name: MooEditable.Group
+
+description: Extends MooEditable to have multiple instances on a page controlled by one toolbar.
+
+license: MIT-style license
+
+authors:
+- Ryan Mitchell
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.Actions
+
+provides: [MooEditable.Group]
+
+...
+*/
+
+
+
+MooEditable.Group = new Class({
+
+	Implements: [Options],
+	
+	options: {
+		actions: 'bold italic underline strikethrough | insertunorderedlist insertorderedlist indent outdent | undo redo | createlink unlink | urlimage | toggleview'
+	},
+    
+	initialize: function(toolbarEl, options){
+		this.setOptions(options);
+		this.actions = this.options.actions.clean().split(' ');
+		var self = this;
+		this.toolbar = new MooEditable.UI.Toolbar({
+			onItemAction: function(){
+				var args = Array.from(arguments);
+				var item = args[0];
+				if (!self.activeEditor) return;
+				self.activeEditor.focus();
+				self.activeEditor.action(item.name, args);
+				if (self.activeEditor.mode == 'iframe') self.activeEditor.checkStates();
+			}
+		}).render(this.actions);
+		document.id(toolbarEl).adopt(this.toolbar);
+	},
+
+	add: function(textarea, options){
+		return this.activeEditor = new MooEditable.Group.Item(textarea, this, Object.merge({toolbar: false}, this.options, options));
+	}
+	
+});
+
+
+MooEditable.Group.Item = new Class({
+
+	Extends: MooEditable,
+
+	initialize: function(textarea, group, options){
+		var self = this;
+		this.group = group;
+		this.parent(textarea, options);
+		this.addEvent('attach', function(){
+			var focus = function(){
+				if (this == self.win) self.group.activeEditor = self;
+			};
+			self.textarea.addEvent('focus', focus);
+			self.win.addEvent('focus', focus);
+		});
+	}
+
+});
+/*
+---
+
+name: MooEditable.Image
+
+description: Extends MooEditable to insert image with manipulation options.
+
+license: MIT-style license
+
+authors:
+- Radovan Lozej
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.Actions
+
+provides: [MooEditable.UI.ImageDialog, MooEditable.Actions.image]
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Image.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.Image.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | image | toggleview'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Locale.define({
+	imageAlt: 'alt',
+	imageClass: 'class',
+	imageAlign: 'align',
+	imageAlignNone: 'none',
+	imageAlignLeft: 'left',
+	imageAlignCenter: 'center',
+	imageAlignRight: 'right',
+	addEditImage: 'Add/Edit Image'
+});
+
+MooEditable.UI.ImageDialog = function(editor){
+	var html = MooEditable.Locale.get('enterImageURL') + ' <input type="text" class="dialog-url" value="" size="15"> '
+		+ MooEditable.Locale.get('imageAlt') + ' <input type="text" class="dialog-alt" value="" size="8"> '
+		+ MooEditable.Locale.get('imageClass') + ' <input type="text" class="dialog-class" value="" size="8"> '
+		+ MooEditable.Locale.get('imageAlign') + ' <select class="dialog-align">'
+			+ '<option>' + MooEditable.Locale.get('imageAlignNone') + '</option>'
+			+ '<option>' + MooEditable.Locale.get('imageAlignLeft') + '</option>'
+			+ '<option>' + MooEditable.Locale.get('imageAlignCenter') + '</option>'
+			+ '<option>' + MooEditable.Locale.get('imageAlignRight') + '</option>'
+		+ '</select> '
+		+ '<button class="dialog-button dialog-ok-button">' + MooEditable.Locale.get('ok') + '</button> '
+		+ '<button class="dialog-button dialog-cancel-button">' + MooEditable.Locale.get('cancel') + '</button>';
+		
+	return new MooEditable.UI.Dialog(html, {
+		'class': 'mooeditable-image-dialog',
+		onOpen: function(){
+			var input = this.el.getElement('.dialog-url');
+			var node = editor.selection.getNode();
+			if (node.get('tag') == 'img'){
+				this.el.getElement('.dialog-url').set('value', node.get('src'));
+				this.el.getElement('.dialog-alt').set('value', node.get('alt'));
+				this.el.getElement('.dialog-class').set('value', node.className);
+				this.el.getElement('.dialog-align').set('align', node.get('align'));
+			}
+			(function(){
+				input.focus();
+				input.select();
+			}).delay(10);
+		},
+		onClick: function(e){
+			if (e.target.tagName.toLowerCase() == 'button') e.preventDefault();
+			var button = document.id(e.target);
+			if (button.hasClass('dialog-cancel-button')){
+				this.close();
+			} else if (button.hasClass('dialog-ok-button')){
+				this.close();
+				var dialogAlignSelect = this.el.getElement('.dialog-align');
+				var node = editor.selection.getNode();
+				if (node.get('tag') == 'img'){
+					node.set('src', this.el.getElement('.dialog-url').get('value').trim());
+					node.set('alt', this.el.getElement('.dialog-alt').get('value').trim());
+					node.className = this.el.getElement('.dialog-class').get('value').trim();
+					node.set('align', $(dialogAlignSelect.options[dialogAlignSelect.selectedIndex]).get('value'));
+				} else {
+					var div = new Element('div');
+					new Element('img', {
+						src: this.el.getElement('.dialog-url').get('value').trim(),
+						alt: this.el.getElement('.dialog-alt').get('value').trim(),
+						'class': this.el.getElement('.dialog-class').get('value').trim(),
+						align: $(dialogAlignSelect.options[dialogAlignSelect.selectedIndex]).get('value')
+					}).inject(div);
+					editor.selection.insertContent(div.get('html'));
+				}
+			}
+		}
+	});
+};
+
+MooEditable.Actions.image = {
+	title: MooEditable.Locale.get('addEditImage'),
+	options: {
+		shortcut: 'm'
+	},
+	dialogs: {
+		prompt: function(editor){
+			return MooEditable.UI.ImageDialog(editor);
+		}
+	},
+	command: function(){
+		this.dialogs.image.prompt.open();
+	}
+};
+/*
+---
+
+name: MooEditable.Pagebreak
+
+description: Extends MooEditable with pagebreak plugin
+
+license: MIT-style license
+
+authors:
+- Ryan Mitchell
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.Actions
+
+provides: [MooEditable.Actions.pagebreak]
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Pagebreak.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.Pagebreak.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | pagebreak | toggleview',
+      externalCSS: '../../Assets/MooEditable/Editable.css'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Actions.Settings.pagebreak = {
+	imageFile: '../../Assets/MooEditable/Other/pagebreak.gif'
+};
+
+MooEditable.Locale.define('pageBreak', 'Page break');
+
+MooEditable.Actions.pagebreak = {
+	title: MooEditable.Locale.get('pageBreak'),
+	command: function(){
+		this.selection.insertContent('<img class="mooeditable-visual-aid mooeditable-pagebreak">');
+	},
+	events: {
+		attach: function(editor){
+			if (Browser.ie){
+				// addListener instead of addEvent, because controlselect is a native event in IE
+				editor.doc.addListener('controlselect', function(e){
+					var el = e.target || e.srcElement;
+					if (el.tagName.toLowerCase() != 'img') return;
+					if (!document.id(el).hasClass('mooeditable-pagebreak')) return;
+					if (e.preventDefault){
+						e.preventDefault();
+					} else {
+						e.returnValue = false;
+					}
+				});
+			}
+		},
+		editorMouseDown: function(e, editor){
+			var el = e.target;
+			var isSmiley = (el.tagName.toLowerCase() == 'img') && $(el).hasClass('mooeditable-pagebreak');
+			Function.attempt(function(){
+				editor.doc.execCommand('enableObjectResizing', false, !isSmiley);
+			});
+		},
+		beforeToggleView: function(){ // code to run when switching from iframe to textarea
+			if (this.mode == 'iframe'){
+				var s = this.getContent().replace(/<img([^>]*)class="mooeditable-visual-aid mooeditable-pagebreak"([^>]*)>/gi, '<!-- page break -->');
+				this.setContent(s);
+			} else {
+				var s = this.textarea.get('value').replace(/<!-- page break -->/gi, '<img class="mooeditable-visual-aid mooeditable-pagebreak">');
+				this.textarea.set('value', s);
+			}
+		},
+		render: function(){
+			this.options.extraCSS = 'img.mooeditable-pagebreak { display:block; width:100%; height:16px; background: url('
+				+ MooEditable.Actions.Settings.pagebreak.imageFile + ') repeat-x; }'
+				+ this.options.extraCSS;
+		}
+	}
+};
+/*
+---
+
+name: MooEditable.Smiley
+
+description: Extends MooEditable to insert smiley/emoticons.
+
+license: MIT-style license
+
+authors:
+- Olivier Refalo
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.UI.ButtonOverlay
+# - MooEditable.Actions
+
+provides: [MooEditable.Actions.smiley]
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Smiley.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.UI.ButtonOverlay.js"></script>
+  <script src="MooEditable.Smiley.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | smiley | toggleview'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Actions.Settings.smiley = {
+	imagesPath: '../../Assets/MooEditable/Smiley/',
+	smileys: ['angryface', 'blush', 'gasp', 'grin', 'halo', 'lipsaresealed', 'smile', 'undecided', 'wink'],
+	fileExt: '.png'
+};
+
+MooEditable.Locale.define('insertSmiley', 'Insert Smiley');
+
+MooEditable.Actions.smiley = {
+	type: 'button-overlay',
+	title: MooEditable.Locale.get('insertSmiley'),
+	options: {
+		overlaySize: {x: 'auto'},
+		overlayHTML: (function(){
+			var settings = MooEditable.Actions.Settings.smiley;
+			var html = '';
+			settings.smileys.each(function(s){
+				html += '<img src="'+ settings.imagesPath + s + settings.fileExt + '" alt="" class="smiley-image">'; 
+			});
+			return html;
+		})()
+	},
+	command: function(buttonOverlay, e){
+		var el = e.target;
+		if (el.tagName.toLowerCase() != 'img') return;
+		var src = $(el).get('src');
+		var content = '<img style="border:0;" class="smiley" src="' + src + '" alt="">';
+		this.focus();
+		this.selection.insertContent(content);
+	},
+	events: {
+		attach: function(editor){
+			if (Browser.ie){
+				// addListener instead of addEvent, because controlselect is a native event in IE
+				editor.doc.addListener('controlselect', function(e){
+					var el = e.target || e.srcElement;
+					if (el.tagName.toLowerCase() != 'img') return;
+					if (!document.id(el).hasClass('smiley')) return;
+					if (e.preventDefault){
+						e.preventDefault();
+					} else {
+						e.returnValue = false;
+					}
+				});
+			}
+		},
+		editorMouseDown: function(e, editor){
+			var el = e.target;
+			var isSmiley = (el.tagName.toLowerCase() == 'img') && $(el).hasClass('smiley');
+			Function.attempt(function(){
+				editor.doc.execCommand('enableObjectResizing', false, !isSmiley);
+			});
+		}
+	}
+};
+/*
+---
+
+name: MooEditable.Table
+
+description: Extends MooEditable to insert table with manipulation options.
+
+license: MIT-style license
+
+authors:
+- Radovan Lozej
+- Ryan Mitchell
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+# - MooEditable.Actions
+
+provides:
+- MooEditable.UI.TableDialog
+- MooEditable.Actions.tableadd
+- MooEditable.Actions.tableedit
+- MooEditable.Actions.tablerowadd
+- MooEditable.Actions.tablerowedit
+- MooEditable.Actions.tablerowspan
+- MooEditable.Actions.tablerowsplit
+- MooEditable.Actions.tablerowdelete
+- MooEditable.Actions.tablecoladd
+- MooEditable.Actions.tablecoledit
+- MooEditable.Actions.tablecolspan
+- MooEditable.Actions.tablecolsplit
+- MooEditable.Actions.tablecoldelete
+
+usage: |
+  Add the following tags in your html
+  <link rel="stylesheet" href="MooEditable.css">
+  <link rel="stylesheet" href="MooEditable.Table.css">
+  <script src="mootools.js"></script>
+  <script src="MooEditable.js"></script>
+  <script src="MooEditable.Table.js"></script>
+
+  <script>
+  window.addEvent('domready', function(){
+    var mooeditable = $('textarea-1').mooEditable({
+      actions: 'bold italic underline strikethrough | table | toggleview'
+    });
+  });
+  </script>
+
+...
+*/
+
+
+
+MooEditable.Locale.define({
+	tableColumns: 'columns',
+	tableRows: 'rows',
+	tableWidth: 'width',
+	tableClass: 'class',
+	tableType: 'type',
+	tableHeader: 'Header',
+	tableCell: 'Cell',
+	tableAlign: 'align',
+	tableAlignNone: 'none',
+	tableAlignCenter: 'center',
+	tableAlignRight: 'right',
+	tableValign: 'vertical align',
+	tableValignNone: 'none',
+	tableValignTop: 'top',
+	tableValignMiddle: 'middle',
+	tableValignBottom: 'bottom',
+	addTable: 'Add Table',
+	editTable: 'Edit Table',
+	addTableRow: 'Add Table Row',
+	editTableRow: 'Edit Table Row',
+	mergeTableRow: 'Merge Table Row',
+	splitTableRow: 'Split Table Row',
+	deleteTableRow: 'Delete Table Row',
+	addTableCol: 'Add Table Column',
+	editTableCol: 'Edit Table Column',
+	mergeTableCell: 'Merge Table Cell',
+	splitTableCell: 'Split Table Cell',
+	deleteTableCol: 'Delete Table Column'
+});
+
+MooEditable.UI.TableDialog = function(editor, dialog){
+	var html = {
+		tableadd: MooEditable.Locale.get('tableColumns') + ' <input type="text" class="table-c" value="" size="4"> '
+			+ MooEditable.Locale.get('tableRows') + ' <input type="text" class="table-r" value="" size="4"> ',
+		tableedit: MooEditable.Locale.get('tableWidth') + ' <input type="text" class="table-w" value="" size="4"> '
+			+ MooEditable.Locale.get('tableClass') + ' <input type="text" class="table-c" value="" size="15"> ',
+		tablerowedit: MooEditable.Locale.get('tableClass') + ' <input type="text" class="table-c" value="" size="15"> '
+			+ MooEditable.Locale.get('tableType') + ' <select class="table-c-type">'
+				+ '<option value="th">' + MooEditable.Locale.get('tableHeader') + '</option>'
+				+ '<option value="td">' + MooEditable.Locale.get('tableCell') + '</option>'
+			+ '</select> ',
+		tablecoledit: MooEditable.Locale.get('tableWidth') + ' <input type="text" class="table-w" value="" size="4"> '
+			+ MooEditable.Locale.get('tableClass') + ' <input type="text" class="table-c" value="" size="15"> '
+			+ MooEditable.Locale.get('tableAlign') + ' <select class="table-a">'
+				+ '<option>' + MooEditable.Locale.get('tableAlignNone') + '</option>'
+				+ '<option>' + MooEditable.Locale.get('tableAlignLeft') + '</option>'
+				+ '<option>' + MooEditable.Locale.get('tableAlignCenter') + '</option>'
+				+ '<option>' + MooEditable.Locale.get('tableAlignRight') + '</option>'
+			+ '</select> '
+			+ MooEditable.Locale.get('tableValign') + ' <select class="table-va">'
+				+ '<option>' + MooEditable.Locale.get('tableValignNone') + '</option>'
+				+ '<option>' + MooEditable.Locale.get('tableValignTop') + '</option>'
+				+ '<option>' + MooEditable.Locale.get('tableValignMiddle') + '</option>'
+				+ '<option>' + MooEditable.Locale.get('tableValignBottom') + '</option>'
+			+ '</select> '
+	};
+	html[dialog] += '<button class="dialog-button dialog-ok-button">' + MooEditable.Locale.get('ok') + '</button>'
+		+ '<button class="dialog-button dialog-cancel-button">' + MooEditable.Locale.get('cancel') + '</button>';
+		
+	var action = {
+		tableadd: {
+			click: function(e){
+				var col = this.el.getElement('.table-c').value.toInt();
+				var row = this.el.getElement('.table-r').value.toInt();
+				if (!(row>0 && col>0)) return;
+				var div, table, tbody, ro = [];
+				div = new Element('tdiv');
+				table = new Element('table').set('border', 0).set('width', '100%').inject(div);
+				tbody = new Element('tbody').inject(table);
+				for (var r = 0; r<row; r++){
+					ro[r] = new Element('tr').inject(tbody, 'bottom');
+					for (var c=0; c<col; c++) new Element('td').set('html', '&nbsp;').inject(ro[r], 'bottom');
+				}
+				editor.selection.insertContent(div.get('html'));
+			}
+		},
+		tableedit: {
+			load: function(e){
+				var node = editor.selection.getNode().getParent('table');
+				this.el.getElement('.table-w').set('value', node.get('width'));
+				this.el.getElement('.table-c').set('value', node.className);
+			},
+			click: function(e){
+				var node = editor.selection.getNode().getParent('table');
+				node.set('width', this.el.getElement('.table-w').value);
+				node.className = this.el.getElement('.table-c').value;
+			}
+		},
+		tablerowedit: {
+			load: function(e){
+				var node = editor.selection.getNode().getParent('tr');
+				this.el.getElement('.table-c').set('value', node.className);
+				this.el.getElement('.table-c-type').set('value', editor.selection.getNode().get('tag'));
+			},
+			click: function(e){
+				var node = editor.selection.getNode().getParent('tr');
+				node.className = this.el.getElement('.table-c').value;
+				node.getElements('td, th').each(function(c){
+					if (this.el.getElement('.table-c-type') != c.get('tag')){
+						var n = editor.doc.createElement(this.el.getElement('.table-c-type').get('value'));
+						$(n).set('html', c.get('html')).replaces(c);
+					}
+				}, this);
+			}
+		},
+		tablecoledit: {
+			load : function(e){
+				var node = editor.selection.getNode();
+				if (node.get('tag') != 'td') node = node.getParent('td');
+				this.el.getElement('.table-w').set('value', node.get('width'));
+				this.el.getElement('.table-c').set('value', node.className);
+				this.el.getElement('.table-a').set('value', node.get('align'));
+				this.el.getElement('.table-va').set('value', node.get('valign'));
+			},
+			click: function(e){
+				var node = editor.selection.getNode();
+				if (node.get('tag') != 'td') node = node.getParent('td');
+				node.set('width', this.el.getElement('.table-w').value);
+				node.className = this.el.getElement('.table-c').value;
+				node.set('align', this.el.getElement('.table-a').value);
+				node.set('valign', this.el.getElement('.table-va').value);
+			}
+		}
+	};
+	
+	return new MooEditable.UI.Dialog(html[dialog], {
+		'class': 'mooeditable-table-dialog',
+		onOpen: function(){
+			if (action[dialog].load) action[dialog].load.apply(this);
+			var input = this.el.getElement('input');
+			(function(){ input.focus(); }).delay(10);
+		},
+		onClick: function(e){
+			if (e.target.tagName.toLowerCase() == 'button') e.preventDefault();
+			var button = document.id(e.target);
+			if (button.hasClass('dialog-cancel-button')){
+				this.close();
+			} else if (button.hasClass('dialog-ok-button')){
+				this.close();
+				action[dialog].click.apply(this);
+			}
+		}
+	});
+};
+
+Object.append(MooEditable.Actions, {
+
+	tableadd:{
+		title: MooEditable.Locale.get('addTable'),
+		dialogs: {
+			prompt: function(editor){
+				return MooEditable.UI.TableDialog(editor, 'tableadd');
+			}
+		},
+		command: function(){
+			this.dialogs.tableadd.prompt.open();
+		}
+	},
+	
+	tableedit:{
+		title: MooEditable.Locale.get('editTable'),
+		dialogs: {
+			prompt: function(editor){
+				return MooEditable.UI.TableDialog(editor, 'tableedit');
+			}
+		},
+		command: function(){
+			if (this.selection.getNode().getParent('table')) this.dialogs.tableedit.prompt.open();
+		}
+	},
+	
+	tablerowadd:{
+		title: 'Add Row',
+		command: function(){
+			var node = this.selection.getNode().getParent('tr');
+			if (node) node.clone().inject(node, 'after');
+		}
+	},
+	
+	tablerowedit:{
+		title: MooEditable.Locale.get('editTableRow'),
+		dialogs: {
+			prompt: function(editor){
+				return MooEditable.UI.TableDialog(editor, 'tablerowedit');
+			}
+		},
+		command: function(){
+			if (this.selection.getNode().getParent('table')) this.dialogs.tablerowedit.prompt.open();
+		}
+	},
+	
+	tablerowspan:{
+		title: MooEditable.Locale.get('mergeTableRow'),
+		command: function(){
+			var node = this.selection.getNode();
+			if (node.get('tag') != 'td') node = node.getParent('td');
+			if (node){
+				var index = node.cellIndex;
+				var row = node.getParent().rowIndex;
+				if (node.getParent().getParent().childNodes[row+node.rowSpan]){
+					node.getParent().getParent().childNodes[row+node.rowSpan].deleteCell(index);
+					node.rowSpan++;
+				}
+			}
+		}
+	},
+	
+	tablerowsplit:{
+		title: MooEditable.Locale.get('splitTableRow'),
+		command: function(){
+			var node = this.selection.getNode();
+			if (node.get('tag') != 'td') node = node.getParent('td');
+			if (node){
+				var index = node.cellIndex;
+				var row = node.getParent().rowIndex;
+				if (node.getProperty('rowspan')){
+					var rows = parseInt(node.getProperty('rowspan'));
+					for (i=1; i<rows; i++){
+						node.getParent().getParent().childNodes[row+i].insertCell(index);
+					}
+					node.removeProperty('rowspan');
+				}
+			}
+		},
+		states: function(node){
+			if (node.get('tag') != 'td') return;
+			if (node){
+				if (node.getProperty('rowspan') && parseInt(node.getProperty('rowspan')) > 1){
+					this.el.addClass('onActive');
+				}
+			}
+		}
+	},
+	
+	tablerowdelete:{
+		title: MooEditable.Locale.get('deleteTableRow'),
+		command: function(){
+			var node = this.selection.getNode().getParent('tr');
+			if (node) node.getParent().deleteRow(node.rowIndex);
+		}
+	},
+	
+	tablecoladd:{
+		title: MooEditable.Locale.get('addTableCol'),
+		command: function(){
+			var node = this.selection.getNode();
+			if (node.get('tag') != 'td') node = node.getParent('td');
+			if (node){
+				var index = node.cellIndex;
+				var len = node.getParent().getParent().childNodes.length;
+				for (var i=0; i<len; i++){
+					var ref = $(node.getParent().getParent().childNodes[i].childNodes[index]);
+					ref.clone().inject(ref, 'after');
+				}
+			}
+		}
+	},
+	
+	tablecoledit:{
+		title: MooEditable.Locale.get('editTableCol'),
+		dialogs: {
+			prompt: function(editor){
+				return MooEditable.UI.TableDialog(editor, 'tablecoledit');
+			}
+		},
+		command: function(){
+			if (this.selection.getNode().getParent('table')) this.dialogs.tablecoledit.prompt.open();
+		}
+	},
+	
+	tablecolspan:{
+		title: MooEditable.Locale.get('mergeTableCell'),
+		command: function(){
+			var node = this.selection.getNode();
+			if (node.get('tag')!='td') node = node.getParent('td');
+			if (node){
+				var index = node.cellIndex + 1;
+				if (node.getParent().childNodes[index]){
+					node.getParent().deleteCell(index);
+					node.colSpan++;
+				}
+			}
+		}
+	},
+		
+	tablecolsplit:{
+		title: MooEditable.Locale.get('splitTableCell'),
+		command: function(){
+			var node = this.selection.getNode();
+			if (node.get('tag')!='td') node = node.getParent('td');
+			if (node){
+				var index = node.cellIndex + 1;
+				if(node.getProperty('colspan')){
+					var cols = parseInt(node.getProperty('colspan'));
+					for (i=1;i<cols;i++){
+						node.getParent().insertCell(index+i);
+					}
+					node.removeProperty('colspan');
+				}
+			}
+		},
+		states: function(node){
+			if (node.get('tag')!='td') return;
+			if (node){
+				if (node.getProperty('colspan') && parseInt(node.getProperty('colspan')) > 1){
+					this.el.addClass('onActive');
+				}
+			}
+		}
+	},
+	
+	tablecoldelete:{
+		title: MooEditable.Locale.get('deleteTableCol'),
+		command: function(){
+			var node = this.selection.getNode();
+			if (node.get('tag') != 'td') node = node.getParent('td');
+			if (node){
+				var len = node.getParent().getParent().childNodes.length;
+				var index = node.cellIndex;
+				var tt = node.getParent().getParent();
+				for (var i=0; i<len; i++) tt.childNodes[i].deleteCell(index);
+			}
+		}
+	}
+	
+});
+/*
+---
+
+name: MooEditable.UI.ButtonOverlay
+
+description: UI Class to create a button element with a popup overlay.
+
+license: MIT-style license
+
+authors:
+- Lim Chee Aun
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+
+provides: [MooEditable.UI.ButtonOverlay]
+
+...
+*/
+
+
+
+MooEditable.UI.ButtonOverlay = new Class({
+
+	Extends: MooEditable.UI.Button,
+
+	options: {
+		/*
+		onOpenOverlay: function(){},
+		onCloseOverlay: function(){},
+		*/
+		overlayHTML: '',
+		overlayClass: '',
+		overlaySize: {x: 150, y: 'auto'},
+		overlayContentClass: ''
+	},
+
+	initialize: function(options){
+		this.parent(options);
+		this.render();
+		this.el.addClass('mooeditable-ui-buttonOverlay');
+		this.renderOverlay(this.options.overlayHTML);
+	},
+	
+	renderOverlay: function(html){
+		var self = this;
+		this.overlay = new Element('div', {
+			'class': 'mooeditable-ui-button-overlay ' + self.name + '-overlay ' + self.options.overlayClass,
+			html: '<div class="overlay-content ' + self.options.overlayContentClass + '">' + html + '</div>',
+			tabindex: 0,
+			styles: {
+				left: '-999em',
+				position: 'absolute',
+				width: self.options.overlaySize.x,
+				height: self.options.overlaySize.y
+			},
+			events: {
+				mousedown: self.clickOverlay.bind(self),
+				focus: self.openOverlay.bind(self),
+				blur: self.closeOverlay.bind(self)
+			}
+		}).inject(document.body).store('MooEditable.UI.ButtonOverlay', this);
+		this.overlayVisible = false;
+		
+		window.addEvent('resize', function(){
+			if (self.overlayVisible) self.positionOverlay();
+		});
+	},
+	
+	openOverlay: function(){
+		if (this.overlayVisible) return;
+		this.overlayVisible = true;
+		this.activate();
+		this.fireEvent('openOverlay', this);
+		return this;
+	},
+	
+	closeOverlay: function(){
+		if (!this.overlayVisible) return;
+		this.overlay.setStyle('left', '-999em');
+		this.overlayVisible = false;
+		this.deactivate();
+		this.fireEvent('closeOverlay', this);
+		return this;
+	},
+	
+	clickOverlay: function(e){
+		if (e.target == this.overlay || e.target.parentNode == this.overlay) return;
+		this.overlay.blur();
+		e.preventDefault();
+		this.action(e);
+	},
+	
+	click: function(e){
+		e.preventDefault();
+		if (this.disabled) return;
+		if (this.overlayVisible){
+			this.overlay.blur();
+			return;
+		} else {
+			this.positionOverlay();
+			this.overlay.focus();
+		}
+	},
+	
+	positionOverlay: function(){
+		var coords = this.el.getCoordinates();
+		this.overlay.setStyles({
+			top: coords.bottom,
+			left: coords.left
+		});
+		return this;
+	}
+	
+});
+/*
+---
+
+name: MooEditable.UI.ExtendedLinksDialog
+
+description: Extends MooEditable, adds better link support.
+
+license: MIT-style license
+
+authors:
+- Andr√© Fiedler <kontakt@visualdrugs.net>
+
+requires:
+- MooEditable.UI.Dialog
+- MooEditable.Actions
+- MooEditable.UI.AlertDialog
+- More/URI
+
+provides: [MooEditable.UI.ExtendedLinksDialog]
+
+...
+*/
+
+
+
+(function(){
+    
+MooEditable.Locale.define({
+    protocol: 'protocol',
+    link: 'link',
+    email: 'e-Mail',
+    urlWithoutHttp: 'URL (without http://)',
+    window: 'window',
+    sameWindow: 'same window',
+    newWindow: 'new window'
+});
+
+String.implement({
+    camelCaseFirst: function(){
+    	return this.replace(/\s*(\D)/, function(match){
+    		return match.toUpperCase();
+    	});
+    }
+});
+
+var urlRegex = /^(https?|ftp|rmtp|mms):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i;
+
+MooEditable.UI.ExtendedLinksDialog = function(editor){
+    var html = '<div class="dialog-column"><label class="dialog-label">' 
+        + MooEditable.Locale.get('protocol').camelCaseFirst()+ '<br/><select class="dialog-input-protocol">'
+        + '<option value="http">' + MooEditable.Locale.get('link') + '</option>'
+        + '<option value="mailto">' + MooEditable.Locale.get('email') + '</option>'
+        + '</select></label></div>'
+		+ '<div class="dialog-column"><label class="dialog-label">'
+        + MooEditable.Locale.get('urlWithoutHttp').camelCaseFirst()
+        + '<br/><input type="text" class="dialog-input-url" value=""></label></div> '
+		+ '<div class="dialog-column"><label class="dialog-label">'
+        + MooEditable.Locale.get('window').camelCaseFirst() + '<br/><select class="dialog-input-target">'
+        + '<option value="_self">' + MooEditable.Locale.get('sameWindow') + '</option>'
+        + '<option value="_blank">' + MooEditable.Locale.get('newWindow') + '</option>'
+        + '</select></label></div><br/>'
+		+ '<button class="dialog-button dialog-ok-button">' + MooEditable.Locale.get('ok').camelCaseFirst() + '</button>'
+		+ '<button class="dialog-button dialog-cancel-button">' + MooEditable.Locale.get('cancel').camelCaseFirst() + '</button>';
+	return new MooEditable.UI.Dialog(html, {
+		'class': 'mooeditable-prompt-dialog',
+		onOpen: function(){
+			var protocol_input = this.el.getElement('.dialog-input-protocol');
+			var url_input = this.el.getElement('.dialog-input-url');
+			var target_input = this.el.getElement('.dialog-input-target');
+			var text = editor.selection.getText();
+			var node = editor.selection.getNode();
+			if(node.get('tag') == 'a'){
+				var uri = new URI(node.href);
+				protocol_input.set('value', uri.get('scheme'));
+				if(uri.get('scheme') == 'mailto'){
+					url_input.set('value', node.href.replace('mailto:', ''));
+				}
+                else {
+					url_input.set('value', uri.get('host'));
+				}
+				target_input.set('value', node.target || '_self');
+			}
+			else if(urlRegex.test(text)) {
+				var uri = new URI(text);
+				protocol_input.set('value', uri.get('scheme'));
+				url_input.set('value', uri.get('host'));
+			}
+			(function(){
+				url_input.focus();
+				url_input.select();
+			}).delay(10);
+		},
+		onClick: function(e){
+			e.preventDefault();
+			if (e.target.tagName.toLowerCase() != 'button') return;
+			var button = document.id(e.target);
+			var protocol_input = this.el.getElement('.dialog-input-protocol');
+			var url_input = this.el.getElement('.dialog-input-url');
+			var target_input = this.el.getElement('.dialog-input-target');
+			if (button.hasClass('dialog-cancel-button')){
+				this.close();
+			}
+            else if (button.hasClass('dialog-ok-button')){
+				if(protocol_input.get('value') == 'mailto'){
+					editor.selection.insertContent('<a href="mailto:' + url_input.get('value') + '" target="' + target_input.get('value') + '">' + editor.selection.getText() + '</a>');
+				}
+                else {
+					editor.selection.insertContent('<a href="' + protocol_input.get('value') + '://' + url_input.get('value') + '" target="' + target_input.get('value') + '">' + editor.selection.getText() + '</a>');
+				}
+				this.close();
+			}
+		}
+	});
+};
+
+MooEditable.Actions.createlink.dialogs.prompt = function(editor){
+	return MooEditable.UI.ExtendedLinksDialog(editor);
+}
+MooEditable.Actions.createlink.command = function(){
+    var selection = this.selection;
+    var dialogs = this.dialogs.createlink;
+    if (selection.isCollapsed()){
+    	var node = selection.getNode();
+    	if (node.get('tag') == 'a' && node.get('href')){
+    		selection.selectNode(node);
+    		dialogs.prompt.open();
+    	} else {
+    		dialogs.alert.open();
+    	}
+    } else {
+    	dialogs.prompt.open();
+    }
+}
+
+})();
+/*
+---
+
+name: MooEditable.UI.MenuList
+
+description: UI Class to create a menu list (select) element.
+
+license: MIT-style license
+
+authors:
+- Lim Chee Aun
+
+requires:
+# - MooEditable
+# - MooEditable.UI
+
+provides: [MooEditable.UI.MenuList]
+
+...
+*/
+
+
+
+MooEditable.UI.MenuList = new Class({
+
+	Implements: [Events, Options],
+
+	options: {
+		/*
+		onAction: function(){},
+		*/
+		title: '',
+		name: '',
+		'class': '',
+		list: []
+	},
+
+	initialize: function(options){
+		this.setOptions(options);
+		this.name = this.options.name;
+		this.render();
+	},
+	
+	toElement: function(){
+		return this.el;
+	},
+	
+	render: function(){
+		var self = this;
+		var html = '';
+		this.options.list.each(function(item){
+			html += '<option value="{value}" style="{style}">{text}</option>'.substitute(item);
+		});
+		this.el = new Element('select', {
+			'class': self.options['class'],
+			title: self.options.title,
+			html: html,
+			styles: { 'height' : '21px' },
+			events: {
+				change: self.change.bind(self)
+			}
+		});
+		
+		this.disabled = false;
+
+		// add hover effect for IE
+		if (Browser.ie) this.el.addEvents({
+			mouseenter: function(e){ this.addClass('hover'); },
+			mouseleave: function(e){ this.removeClass('hover'); }
+		});
+		
+		return this;
+	},
+	
+	change: function(e){
+		e.preventDefault();
+		if (this.disabled) return;
+		var name = e.target.value;
+		this.action(name);
+	},
+	
+	action: function(){
+		this.fireEvent('action', [this].concat(Array.from(arguments)));
+	},
+	
+	enable: function(){
+		if (!this.disabled) return;
+		this.disabled = false;
+		this.el.set('disabled', false).removeClass('disabled').set({
+			disabled: false,
+			opacity: 1
+		});
+		return this;
+	},
+	
+	disable: function(){
+		if (this.disabled) return;
+		this.disabled = true;
+		this.el.set('disabled', true).addClass('disabled').set({
+			disabled: true,
+			opacity: 0.4
+		});
+		return this;
+	},
+	
+	activate: function(value){
+		if (this.disabled) return;
+		var index = 0;
+		if (value) this.options.list.each(function(item, i){
+			if (item.value == value) index = i;
+		});
+		this.el.selectedIndex = index;
+		return this;
+	},
+	
+	deactivate: function(){
+		this.el.selectedIndex = 0;
+		this.el.removeClass('onActive');
+		return this;
+	}
+	
+});
+/*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUI//= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructChannel', 'destroyChannel'],      options : {      channelOptions : {},      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructChannel, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChannel, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructChannel : function(){      this.channel.construct( this.containerElement );      this.constructionChain.callChain();   }.protect(),      destroyChannel : function(){      this.channel.destroy();   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource, this.elementFactory, this.options.channelOptions );         this.channel.unmarshall();      }         }.protect()});
 /*
 Name: RssChannel
 
@@ -9780,6 +20607,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -9983,6 +20811,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var RssItem = new Class({
    Implements: Options,
 
@@ -10115,6 +20944,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var RssResource = new Class({
    Extends: XmlResource,
 
@@ -10151,7 +20981,7 @@ var RssResource = new Class({
    }.protect(),
    
 });
-/*Name:    - PartyEventWidgetDescription:     - Shows list of events to the user. The level details can be customized.Requires:    - BrowserWidgetProvides:    - PartyEventWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar PartyEventWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructEvents', 'destroyEvents'],      options : {      componentName : "EventWidget",      eventOptions : {},      eventsSelector : "//pp:eventList/events/event",      useLocalizedData : true,      widgetContainerId : "EventWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.events = new ArrayList();   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallEvents();      this.parent();   },      //Properties   getEvents : function() { return this.events; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructEvents, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyEvents, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructEvents : function(){      this.events.each( function( event, index ){         event.construct( this.containerElement );      }.bind( this ));            this.constructionChain.callChain();   }.protect(),      destroyEvents : function(){      this.events.each( function( event, index ){         event.destroy();      }.bind( this ));            this.destructionChain.callChain();   }.protect(),      unmarshallEvents : function(){      var eventElements = this.dataXml.selectNodes( this.options.eventsSelector );      if( eventElements ){         eventElements.each( function( eventElement, index ){            var event = new PartyEvent( eventElement, this.elementFactory, this.options.eventOptions );            event.unmarshall();            this.events.add( event );         }.bind( this ));      }         }.protect()});
+/*Name:    - PartyEventWidgetDescription:     - Shows list of events to the user. The level details can be customized.Requires:    - BrowserWidgetProvides:    - PartyEventWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUI//= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar PartyEventWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructEvents', 'destroyEvents'],      options : {      componentName : "EventWidget",      eventOptions : {},      eventsSelector : "//pp:eventList/events/event",      useLocalizedData : true,      widgetContainerId : "EventWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.events = new ArrayList();   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallEvents();      this.parent();   },      //Properties   getEvents : function() { return this.events; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructEvents, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyEvents, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructEvents : function(){      this.events.each( function( event, index ){         event.construct( this.containerElement );      }.bind( this ));            this.constructionChain.callChain();   }.protect(),      destroyEvents : function(){      this.events.each( function( event, index ){         event.destroy();      }.bind( this ));            this.destructionChain.callChain();   }.protect(),      unmarshallEvents : function(){      var eventElements = this.dataXml.selectNodes( this.options.eventsSelector );      if( eventElements ){         eventElements.each( function( eventElement, index ){            var event = new PartyEvent( eventElement, this.elementFactory, this.options.eventOptions );            event.unmarshall();            this.events.add( event );         }.bind( this ));      }         }.protect()});
 /*
 Name: 
    - PartyEvent
@@ -10180,6 +21010,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -10389,6 +21220,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var PhotoGaleryImage = new Class({
    Implements : Options,
    
@@ -10499,6 +21331,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -10821,6 +21654,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DocumentResource = new Class({
    Implements: [Events, Options],
    Binds: ['checkResourceAvailability', 'onResourceLoaded'],   
@@ -10953,6 +21787,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DocumentImage = new Class({
    Extends: DocumentResource,
    Binds: ['loadResource'],   
@@ -11039,6 +21874,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DocumentScript = new Class({
    Extends: DocumentResource,
    Binds: ['loadResource'],   
@@ -11097,6 +21933,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -11174,6 +22011,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -11299,9 +22137,6 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
-
-
-
 var UndefinedDocumentResourceException = new Class({
    Extends: WebUIException,
    options: {
@@ -11340,6 +22175,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -11384,6 +22220,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -11623,6 +22460,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -11965,6 +22803,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var ScrollingBehaviour = new Class({
    Implements : Options,
    options : {
@@ -12071,6 +22910,7 @@ var ScrollingBehaviour = new Class({
 
 
 
+
 var SmoothScroll = new Class({
    Extends: Fx.Scroll,
    initialize: function(options, context, windowFxScroll){
@@ -12151,6 +22991,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var SkinChangedMessage = new Class({
    Extends: WebUIMessage,
    options: {
@@ -12192,6 +23033,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -12283,6 +23125,1323 @@ var SkinSelectorWidget = new Class({
    }.protect()
    
 });
+/**
+ * Script: Slideshow.js Slideshow - A javascript class for Mootools to stream
+ * and animate the presentation of images on your website.
+ * 
+ * License: MIT-style license.
+ * 
+ * Copyright: Copyright (c) 2011 [Aeron
+ * Glemann](http://www.electricprism.com/aeron/).
+ * 
+ * Dependencies: Mootools 1.3.1 Core: Fx.Morph, Fx.Tween, Selectors,
+ * Element.Dimensions. Mootools 1.3.1.1 More: Assets.
+ */
+
+
+
+
+(function() {
+   WhenPaused = 1 << 0;
+   WhenPlaying = 1 << 1;
+   OnStart = 1 << 2;
+
+   Slideshow = new Class({
+            Implements : [Chain, Events, Options],
+
+            options : {/*
+                         * onComplete: $empty, onEnd: $empty, onStart: $empty,
+                         */
+               accesskeys : {
+                  'first' : {
+                     'key' : 'shift left',
+                     'label' : 'Shift + Leftwards Arrow'},
+                  'prev' : {
+                     'key' : 'left',
+                     'label' : 'Leftwards Arrow'},
+                  'pause' : {
+                     'key' : 'p',
+                     'label' : 'P'},
+                  'next' : {
+                     'key' : 'right',
+                     'label' : 'Rightwards Arrow'},
+                  'last' : {
+                     'key' : 'shift right',
+                     'label' : 'Shift + Rightwards Arrow'}},
+               captions : true,
+               center : true,
+               classes : [/*
+                            * 'slideshow', 'first', 'prev', 'play', 'pause',
+                            * 'next', 'last', 'images', 'captions',
+                            * 'controller', 'thumbnails', 'hidden', 'visible',
+                            * 'inactive', 'active', 'loader'
+                            */],
+               controller : true,
+               data : null,
+               delay : 2000,
+               duration : 1000,
+               fast : false,
+               height : false,
+               href : '',
+               hu : '',
+               linked : false,
+               loader : true,
+               loop : true,
+               match : /\?slide=(\d+)$/,
+               overlap : true,
+               paused : false,
+               random : false,
+               replace : [/(\.[^\.]+)$/, 't$1'],
+               resize : 'fill',
+               slide : 0,
+               thumbnails : true,
+               titles : false,
+               transition : 'sine:in:out',
+               width : false},
+
+            /**
+             * Constructor: initialize Creates an instance of the Slideshow
+             * class.
+             * 
+             * Arguments: element - (element) The wrapper element. data - (array
+             * or object) The images and optional thumbnails, captions and links
+             * for the show. options - (object) The options below.
+             * 
+             * Syntax: var myShow = new Slideshow(element, data, options);
+             */
+
+            initialize : function( el, data, options ) {
+               this.setOptions( options );
+               this.el = document.id( el );
+               if( !this.el ) return;
+               
+               var match = window.location.href.match( this.options.match );
+               this.slide = this._slide = this.options.match && match ? match[1].toInt() : this.options.slide;
+               this.counter = this.timeToNextTransition = this.timeToTransitionComplete = 0;
+               this.direction = 'left';
+               this.cache = {};
+               this.paused = false;
+               if( !this.options.overlap ) this.options.duration *= 2;
+               var anchor = this.el.getElement( 'a' ) || new Element( 'a' );
+               if( !this.options.href ) this.options.href = anchor.get( 'href' ) || '';
+               if( this.options.hu.length && !this.options.hu.test( /\/$/ ) ) this.options.hu += '/';
+               if( this.options.fast === true ) this.options.fast = WhenPaused | WhenPlaying;
+
+               // styles
+               var keys = 'slideshow first prev play pause next last images captions controller thumbnails hidden visible inactive active loader'.split( ' ' );
+               var values = keys.map( function( key, i ) {
+                  return this.options.classes[i] || key;
+               }, this );
+               this.classes = values.associate( keys );
+               this.classes.get = function() {
+                  var str = '.' + this.slideshow;
+                  for( var i = 0, l = arguments.length; i < l; i++ )
+                     str += '-' + this[arguments[i]];
+                  return str;
+               }.bind( this.classes );
+
+               // data
+               if( !data ){
+                  this.options.hu = '';
+                  data = {};
+                  var thumbnails = this.el.getElements( this.classes.get( 'thumbnails' ) + ' img' );
+                  this.el.getElements( this.classes.get( 'images' ) + ' img' ).each( function( img, i ) {
+                     var src = img.src, caption = img.alt || img.title, href = img.getParent().href, thumbnail = thumbnails[i] ? thumbnails[i].src : '';
+                     data[src] = {
+                        'caption' : caption,
+                        'href' : href,
+                        'thumbnail' : thumbnail};
+                  } );
+               }
+               var loaded = this.load( data );
+               if( !loaded )
+                  return;
+
+               // events
+               this.events = {};
+               this.events.push = function( type, fn ) {
+                  if( !this[type] )
+                     this[type] = [];
+                  this[type].push( fn );
+                  document.addEvent( type, fn );
+                  return this;
+               }.bind( this.events );
+
+               this.accesskeys = {};
+               for( action in this.options.accesskeys ){
+                  var obj = this.options.accesskeys[action];
+                  this.accesskeys[action] = accesskey = { 'label' : obj.label };
+                  ['shift', 'control', 'alt'].each( function( modifier ) {
+                     var re = new RegExp( modifier, 'i' );
+                     accesskey[modifier] = obj.key.test( re );
+                     obj.key = obj.key.replace( re, '' );
+                  });
+                  accesskey.key = obj.key.trim();
+               }
+
+               this.events.push( 'keyup', function( e ) {
+                  Object.each( this.accesskeys, function( accesskey, action ) {
+                     if( e.key == accesskey.key && e.shift == accesskey.shift && e.control == accesskey.control && e.alt == accesskey.alt )
+                        this[action]();
+                  }, this );
+               }.bind( this ) );
+
+               // required elements
+               var el = this.el.getElement( this.classes.get( 'images' ) );
+               var img = this.el.getElement( 'img' ) || new Element( 'img' );
+               var images = el ? el.empty() : new Element( 'div', { 'class' : this.classes.get( 'images' ).substr( 1 ) }).inject( this.el );
+               var div = images.getSize();
+               this.height = this.options.height || div.y;
+               this.width = this.options.width || div.x;
+               images.set( { 'styles' : { 'height' : this.height, 'width' : this.width}} );
+               this.el.store( 'images', images );
+               this.a = this.image = img;
+               if( Browser.ie && Browser.version >= 7 ) this.a.style.msInterpolationMode = 'bicubic';
+               this.a.set( 'styles', { 'display' : 'none' });
+               this.b = this.a.clone();
+               [this.a, this.b].each( function( img ) {
+                  anchor.clone().cloneEvents( anchor ).grab( img ).inject( images );
+               });
+
+               // optional elements
+               this.options.captions && new Caption( this );
+               this.options.controller && new Controller( this );
+               this.options.loader && new Loader( this );
+               this.options.thumbnails && new Thumbnails( this );
+
+               // begin show
+               this._preload( this.options.fast & OnStart );
+            },
+
+            /**
+             * Public method: go Jump directly to a slide in the show.
+             * 
+             * Arguments: n - (integer) The index number of the image to jump
+             * to, 0 being the first image in the show.
+             * 
+             * Syntax: myShow.go(n);
+             */
+
+            go : function( n, direction ) {
+               var nextSlide = (this.slide + this.data.images.length) % this.data.images.length;
+               if( n == nextSlide || Date.now() < this.timeToTransitionComplete )
+                  return;
+               clearTimeout( this.timer );
+               this.timeToNextTransition = 0;
+               this.direction = direction ? direction : n < this._slide ? 'right' : 'left';
+               this.slide = this._slide = n;
+               if( this.preloader )
+                  this.preloader = this.preloader.destroy();
+               this._preload( (this.options.fast & WhenPlaying) || (this.paused && this.options.fast & WhenPaused) );
+            },
+
+            /**
+             * Public method: first Goes to the first image in the show.
+             * 
+             * Syntax: myShow.first();
+             */
+
+            first : function() {
+               this.prev( true );
+            },
+
+            /**
+             * Public method: prev Goes to the previous image in the show.
+             * 
+             * Syntax: myShow.prev();
+             */
+
+            prev : function( first ) {
+               var n = 0;
+               if( !first ){
+                  if( this.options.random ){
+                     if( this.showed.i < 2 )
+                        return;
+                     this.showed.i -= 2;
+                     n = this.showed.array[this.showed.i];
+                  }else
+                     n = (this.slide - 1 + this.data.images.length) % this.data.images.length;
+               }
+               this.go( n, 'right' );
+            },
+
+            /**
+             * Public method: pause Toggles play / pause state of the show.
+             * 
+             * Arguments: p - (undefined, 1 or 0) Call pause with no arguments
+             * to toggle the pause state. Call pause(1) to force pause, or
+             * pause(0) to force play.
+             * 
+             * Syntax: myShow.pause(p);
+             */
+
+            pause : function( p ) {
+               if( p != undefined )
+                  this.paused = p ? false : true;
+               if( this.paused ){ // play
+                  this.paused = false;
+                  this.timeToTransitionComplete = Date.now() + this.timeToTransitionComplete;
+                  this.timer = this._preload.delay( 50, this );
+                  [this.a, this.b].each( function( img ) {
+                     ['morph', 'tween'].each( function( p ) {
+                        if( this.retrieve && this.retrieve( p ))
+                           this.get( p ).resume();
+                     }, img );
+                  } );
+                  
+                  this.controller && this.el.retrieve( 'pause' ).getParent().removeClass( this.classes.play );
+               }else{ // pause
+                  this.paused = true;
+                  this.timeToTransitionComplete = this.timeToTransitionComplete - Date.now();
+                  clearTimeout( this.timer );
+                  [this.a, this.b].each( function( img ) {
+                     ['morph', 'tween'].each( function( p ) {
+                        if( this.retrieve && this.retrieve( p ) )
+                           this.get( p ).pause();
+                     }, img );
+                  });
+                  
+                  if( this.controller && this.el.retrieve && this.el.retrieve( 'pause' )){
+                     var pauseValue = this.el.retrieve( 'pause' );
+                     if( pauseValue.getParent() ) pauseValue.getParent().addClass( this.classes.play );
+                  };
+               }
+            },
+
+            /**
+             * Public method: next Goes to the next image in the show.
+             * 
+             * Syntax: myShow.next();
+             */
+
+            next : function( last ) {
+               var n = last ? this.data.images.length - 1 : this._slide;
+               this.go( n, 'left' );
+            },
+
+            /**
+             * Public method: last Goes to the last image in the show.
+             * 
+             * Syntax: myShow.last();
+             */
+
+            last : function() {
+               this.next( true );
+            },
+
+            /**
+             * Public method: load Loads a new data set into the show: will stop
+             * the current show, rewind and rebuild thumbnails if applicable.
+             * 
+             * Arguments: data - (array or object) The images and optional
+             * thumbnails, captions and links for the show.
+             * 
+             * Syntax: myShow.load(data);
+             */
+
+            load : function( data ) {
+               this.firstrun = true;
+               this.showed = { 'array' : [], 'i' : 0 };
+               if( typeOf( data ) == 'array' ){
+                  this.options.captions = false;
+                  data = new Array( data.length ).associate( data.map( function( image, i ) {
+                     return image + '?' + i
+                  }));
+               }
+               this.data = {
+                  'images' : [],
+                  'captions' : [],
+                  'hrefs' : [],
+                  'thumbnails' : [],
+                  'targets' : [],
+                  'titles' : []};
+               for( var image in data ){
+                  var obj = data[image] || {}, image = this.options.hu + image, caption = obj.caption ? obj.caption.trim() : '', href = obj.href ? obj.href
+                        .trim() : this.options.linked ? image : this.options.href, target = obj.target ? obj.target.trim() : '_self', thumbnail = obj.thumbnail ? this.options.hu
+                        + obj.thumbnail.trim()
+                        : image.replace( this.options.replace[0], this.options.replace[1] ), title = caption.replace( /<.+?>/gm, '' ).replace( /</g, '&lt;' )
+                        .replace( />/g, '&gt;' ).replace( /"/g, "'" );
+                  this.data.images.push( image );
+                  this.data.captions.push( caption );
+                  this.data.hrefs.push( href );
+                  this.data.targets.push( target );
+                  this.data.thumbnails.push( thumbnail );
+                  this.data.titles.push( title );
+               }
+               if( this.options.random )
+                  this.slide = this._slide = Number.random( 0, this.data.images.length - 1 );
+
+               // only run when data is loaded dynamically into an existing
+               // slideshow instance
+
+               if( this.options.thumbnails && this.el.retrieve( 'thumbnails' ) )
+                  this._thumbnails();
+               if( this.el.retrieve( 'images' ) ){
+                  [this.a, this.b].each( function( img ) {
+                     ['morph', 'tween'].each( function( p ) {
+                        if( this.retrieve( p ) )
+                           this.get( p ).cancel();
+                     }, img );
+                  } );
+                  this.slide = this._slide = this.timeToTransitionComplete = 0;
+                  this.go( 0 );
+               }
+               return this.data.images.length;
+            },
+
+            /**
+             * Public method: destroy Destroys a Slideshow instance.
+             * 
+             * Arguments: p - (string) The images and optional thumbnails,
+             * captions and links for the show.
+             * 
+             * Syntax: myShow.destroy(p);
+             */
+
+            destroy : function( p ) {
+               Object.each( this.events, function( array, e ) {
+                  if( 'each' in array )
+                     array.each( function( fn ) {
+                        document.removeEvent( e, fn );
+                     } );
+               } );
+               this.pause( 1 );
+               'caption loader thumbnails'.split( ' ' ).each( function( i, timer ) {
+                  this.options[i] && this[i].retrieve && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
+               }, this );
+               typeOf( this.el[p] ) == 'function' && this.el[p]();
+               if( this.el.eliminate ) this.el.eliminate( 'uid' );
+               if( this.preloader && this.preloader.removeEvents ) this.preloader.removeEvents();
+               if( this.preloader && this.preloader.destroy ) this.preloader.destroy();
+            },
+
+            /**
+             * Private method: preload Preloads the next slide in the show, once
+             * loaded triggers the show, updates captions, thumbnails, etc.
+             */
+            _preload : function( fast ) {
+               var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' );
+               var cached = loaded = !!this.cache[src];
+               if( !cached ){
+                  if( !this.preloader )
+                     this.preloader = new Asset.image( src, {
+                        'onerror' : function() {
+                           // do something
+                        },
+                        'onload' : function() {
+                           this.store( 'loaded', true );
+                        }} );
+                  loaded = this.preloader.retrieve( 'loaded' ) && this.preloader.get( 'width' );
+               }
+               
+               if( loaded && Date.now() > this.timeToNextTransition && Date.now() > this.timeToTransitionComplete ){
+                  var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' );
+                  if( this.preloader ){
+                     this.cache[src] = {
+                        'height' : this.preloader.get( 'height' ),
+                        'src' : src,
+                        'width' : this.preloader.get( 'width' )}
+                  }
+                  if( this.stopped ){
+                     if( this.options.captions )
+                        this.caption.get( 'morph' ).cancel().start( this.classes.get( 'captions', 'hidden' ) );
+                     this.pause( 1 );
+                     if( this.end )
+                        this.fireEvent( 'end' );
+                     this.stopped = this.end = false;
+                     return;
+                  }
+                  this.image = this.counter % 2 ? this.b : this.a;
+                  this.image.set( 'styles', {
+                     'display' : 'block',
+                     'height' : null,
+                     'visibility' : 'hidden',
+                     'width' : null,
+                     'zIndex' : this.counter} );
+                  this.image.set( this.cache[src] );
+                  this.image.width = this.cache[src].width;
+                  this.image.height = this.cache[src].height;
+                  this.options.resize && this._resize( this.image );
+                  this.options.center && this._center( this.image );
+                  var anchor = this.image.getParent();
+                  if( this.data.hrefs[this._slide] ){
+                     anchor.set( 'href', this.data.hrefs[this._slide] );
+                     anchor.set( 'target', this.data.targets[this._slide] );
+                  }else{
+                     anchor.erase( 'href' );
+                     anchor.erase( 'target' );
+                  }
+                  var title = this.data.titles[this._slide];
+                  this.image.set( 'alt', title );
+                  this.options.titles && anchor.set( 'title', title );
+                  this.options.loader && this.loader.fireEvent( 'hide' );
+                  this.options.captions && this.caption.fireEvent( 'update', fast );
+                  this.options.thumbnails && this.thumbnails.fireEvent( 'update', fast );
+                  this._show( fast );
+                  this._loaded( fast );
+               }else{
+                  if( Date.now() > this.timeToNextTransition && this.options.loader ){
+                     this.loader.fireEvent( 'show' );
+                  }
+                  this.timer = this._preload.delay( 50, this, fast );
+               }
+            },
+
+            /**
+             * Private method: show Does the slideshow effect.
+             */
+            _show : function( fast ) {
+               if( !this.image.retrieve( 'morph' ) ){
+                  var options = this.options.overlap ? {
+                     'link' : 'cancel'} : {
+                     'link' : 'chain'};
+                  $$( this.a, this.b ).set( 'morph', Object.merge( options, {
+                     'duration' : this.options.duration,
+                     'onStart' : this._start.bind( this ),
+                     'onComplete' : this._complete.bind( this ),
+                     'transition' : this.options.transition} ) );
+               }
+               var hidden = this.classes.get( 'images', (this.direction == 'left' ? 'next' : 'prev') ), visible = this.classes.get( 'images', 'visible' ), img = this.counter % 2 ? this.a
+                     : this.b;
+               if( fast ){
+                  img.get( 'morph' ).cancel().set( hidden );
+                  this.image.get( 'morph' ).cancel().set( visible );
+               }else{
+                  if( this.options.overlap ){
+                     img.get( 'morph' ).set( visible );
+                     this.image.get( 'morph' ).set( hidden ).start( visible );
+                  }else{
+                     var fn = function( visible ) {
+                        this.image.get( 'morph' ).start( visible );
+                     }.pass( visible, this );
+                     if( this.firstrun )
+                        return fn();
+                     hidden = this.classes.get( 'images', (this.direction == 'left' ? 'prev' : 'next') );
+                     this.image.get( 'morph' ).set( hidden );
+                     img.get( 'morph' ).set( visible ).start( hidden ).chain( fn );
+                  }
+               }
+               
+               this.fireEvent( 'show' );
+            },
+
+            /**
+             * Private method: loaded Run after the current image has been
+             * loaded, sets up the next image to be shown.
+             */
+
+            _loaded : function( fast ) {
+               this.counter++;
+               this.timeToNextTransition = Date.now() + this.options.duration + this.options.delay;
+               this.direction = 'left';
+               this.timeToTransitionComplete = fast ? 0 : Date.now() + this.options.duration;
+               if( this._slide == (this.data.images.length - 1) && !this.options.loop && !this.options.random )
+                  this.stopped = this.end = true;
+               if( this.options.random ){
+                  this.showed.i++;
+                  if( this.showed.i >= this.showed.array.length ){
+                     var n = this._slide;
+                     if( this.showed.array.getLast() != n )
+                        this.showed.array.push( n );
+                     while( this._slide == n )
+                        this.slide = this._slide = Number.random( 0, this.data.images.length - 1 );
+                  }else
+                     this.slide = this._slide = this.showed.array[this.showed.i];
+               }else{
+                  this.slide = this._slide;
+                  this._slide = (this.slide + 1) % this.data.images.length;
+               }
+               if( this.image.getStyle( 'visibility' ) != 'visible' )
+                  (function() {
+                     this.image.setStyle( 'visibility', 'visible' );
+                  }).delay( 1, this );
+               if( this.preloader )
+                  this.preloader = this.preloader.destroy();
+               this.paused || this._preload();
+            },
+
+            /**
+             * Private method: center Center an image.
+             */
+
+            _center : function( img ) {
+               var size = img.getSize(), h = size.y, w = size.x;
+               img.set( 'styles', {
+                  'left' : (w - this.width) / -2,
+                  'top' : (h - this.height) / -2} );
+            },
+
+            /**
+             * Private method: resize Resizes an image.
+             */
+
+            _resize : function( img ) {
+               var h = img.get( 'height' ).toFloat(), w = img.get( 'width' ).toFloat(), dh = this.height / h, dw = this.width / w;
+               if( this.options.resize == 'fit' )
+                  dh = dw = dh > dw ? dw : dh;
+               if( this.options.resize == 'fill' )
+                  dh = dw = dh > dw ? dh : dw;
+               img.set( 'styles', {
+                  'height' : Math.ceil( h * dh ),
+                  'width' : Math.ceil( w * dw )} );
+            },
+
+            /**
+             * Private method: start Callback on start of slide change.
+             */
+
+            _start : function() {
+               this.fireEvent( 'start' );
+            },
+
+            /**
+             * Private method: complete Callback on start of slide change.
+             */
+
+            _complete : function() {
+               if( this.firstrun && this.options.paused ) this.pause( 1 );
+               this.firstrun = false;
+               this.fireEvent( 'complete', [], 10 );
+            }} );
+
+   /**
+    * Private method: captions Builds the optional caption element, adds
+    * interactivity. This method can safely be removed if the captions option is
+    * not enabled.
+    */
+
+   var Caption = new Class( {
+      Implements : [Chain, Events, Options],
+
+      options : {/*
+                   * duration: 500, fps: 50, transition: 'sine:in:out', unit:
+                   * false,
+                   */
+         delay : 0,
+         link : 'cancel'},
+
+      initialize : function( slideshow ) {
+         if( !slideshow )
+            return;
+         var options = slideshow.options.captions;
+         if( options === true )
+            options = {};
+         this.setOptions( options );
+         var el = slideshow.el.getElement( slideshow.classes.get( 'captions' ) ), caption = el ? el.dispose().empty() : new Element( 'div', {
+            'class' : slideshow.classes.get( 'captions' ).substr( 1 )} );
+         slideshow.caption = caption;
+         caption.set( {
+            'aria-busy' : false,
+            'aria-hidden' : false,
+            'events' : {
+               'update' : this.update.bind( slideshow )},
+            'morph' : this.options,
+            'role' : 'description'} ).store( 'delay', this.options.delay );
+         if( !caption.get( 'id' ) )
+            caption.set( 'id', 'Slideshow-' + Date.now() );
+         slideshow.el.retrieve( 'images' ).set( 'aria-labelledby', caption.get( 'id' ) );
+         caption.inject( slideshow.el );
+      },
+
+      update : function( fast ) {
+         var empty = !this.data.captions[this._slide].length, timer;
+         if( timer = this.caption.retrieve( 'timer' ) )
+            clearTimeout( timer );
+         if( fast ){
+            var p = empty ? 'hidden' : 'visible';
+            this.caption.set( {
+               'aria-hidden' : empty,
+               'html' : this.data.captions[this._slide]} ).get( 'morph' ).cancel().set( this.classes.get( 'captions', p ) );
+         }else{
+            var fn1 = empty ? function() {
+            } : function( caption ) {
+               this.caption.store( 'timer', setTimeout( function( caption ) {
+                  this.caption.set( 'html', caption ).morph( this.classes.get( 'captions', 'visible' ) );
+               }.pass( caption, this ), this.caption.retrieve( 'delay' ) ) );
+            }.pass( this.data.captions[this._slide], this );
+            var fn2 = function() {
+               this.caption.set( 'aria-busy', false );
+            }.bind( this );
+            this.caption.set( 'aria-busy', true ).get( 'morph' ).cancel().start( this.classes.get( 'captions', 'hidden' ) ).chain( fn1, fn2 );
+         }
+      }} );
+
+   /**
+    * Private method: controller Builds the optional controller element, adds
+    * interactivity. This method can safely be removed if the controller option
+    * is not enabled.
+    */
+
+   var Controller = new Class(
+         {
+            Implements : [Chain, Events, Options],
+
+            options : {/*
+                         * duration: 500, fps: 50, transition: 'sine:in:out',
+                         * unit: false,
+                         */
+               link : 'cancel'},
+
+            initialize : function( slideshow ) {
+               if( !slideshow )
+                  return;
+               var options = slideshow.options.captions;
+               if( options === true )
+                  options = {};
+               this.setOptions( options );
+               var el = slideshow.el.getElement( slideshow.classes.get( 'controller' ) ), controller = el ? el.dispose().empty() : new Element( 'div', {
+                  'class' : slideshow.classes.get( 'controller' ).substr( 1 )} );
+               slideshow.controller = controller;
+               controller.set( {
+                  'aria-hidden' : false,
+                  'role' : 'menubar'} );
+               var ul = new Element( 'ul', {
+                  'role' : 'menu'} ).inject( controller ), i = 0;
+               Object.each( slideshow.accesskeys, function( accesskey, action ) {
+                  var li = new Element( 'li', {
+                     'class' : (action == 'pause' && this.options.paused) ? this.classes.play + ' ' + this.classes[action] : this.classes[action]} )
+                        .inject( ul );
+                  var a = this.el.retrieve( action, new Element( 'a', {
+                     'role' : 'menuitem',
+                     'tabindex' : i++,
+                     'title' : accesskey.label} ).inject( li ) );
+                  a.set( 'events', {
+                     'click' : function( action ) {
+                        this[action]()
+                     }.pass( action, this ),
+                     'mouseenter' : function( active ) {
+                        this.addClass( active )
+                     }.pass( this.classes.active, a ),
+                     'mouseleave' : function( active ) {
+                        this.removeClass( active )
+                     }.pass( this.classes.active, a )} );
+               }, slideshow );
+               controller.set( {
+                  'events' : {
+                     'hide' : this.hide.pass( slideshow.classes.get( 'controller', 'hidden' ), controller ),
+                     'show' : this.show.pass( slideshow.classes.get( 'controller', 'visible' ), controller )},
+                  'morph' : this.options} ).store( 'hidden', false );
+               slideshow.events.push( 'keydown', this.keydown.bind( slideshow ) ).push( 'keyup', this.keyup.bind( slideshow ) ).push( 'mousemove',
+                     this.mousemove.bind( slideshow ) );
+               controller.inject( slideshow.el ).fireEvent( 'hide' );
+            },
+
+            hide : function( hidden ) {
+               if( this.get( 'aria-hidden' ) == 'false' )
+                  this.set( 'aria-hidden', true ).morph( hidden );
+            },
+
+            keydown : function( e ) {
+               Object.each( this.accesskeys, function( accesskey, action ) {
+                  if( e.key == accesskey.key && e.shift == accesskey.shift && e.control == accesskey.control && e.alt == accesskey.alt ){
+                     if( this.controller.get( 'aria-hidden' ) == 'true' )
+                        this.controller.get( 'morph' ).set( this.classes.get( 'controller', 'visible' ) );
+                     this.el.retrieve( action ).fireEvent( 'mouseenter' );
+                  }
+               }, this );
+            },
+
+            keyup : function( e ) {
+               Object.each( this.accesskeys, function( accesskey, action ) {
+                  if( e.key == accesskey.key && e.shift == accesskey.shift && e.control == accesskey.control && e.alt == accesskey.alt ){
+                     if( this.controller.get( 'aria-hidden' ) == 'true' )
+                        this.controller.set( 'aria-hidden', false ).fireEvent( 'hide' );
+                     this.el.retrieve( action ).fireEvent( 'mouseleave' );
+                  }
+               }, this );
+            },
+
+            mousemove : function( e ) {
+               var images = this.el.retrieve( 'images' ).getCoordinates(), action = (e.page.x > images.left && e.page.x < images.right && e.page.y > images.top && e.page.y < images.bottom) ? 'show'
+                     : 'hide';
+               this.controller.fireEvent( action );
+            },
+
+            show : function( visible ) {
+               if( this.get( 'aria-hidden' ) == 'true' )
+                  this.set( 'aria-hidden', false ).morph( visible );
+            }} );
+
+   /**
+    * Private method: loader Builds the optional loader element, adds
+    * interactivity. This method can safely be removed if the loader option is
+    * not enabled.
+    */
+
+   var Loader = new Class( {
+      Implements : [Chain, Events, Options],
+
+      options : {/*
+                   * duration: 500, transition: 'sine:in:out', unit: false,
+                   */
+         fps : 20,
+         link : 'cancel'},
+
+      initialize : function( slideshow ) {
+         if( !slideshow )
+            return;
+         var options = slideshow.options.loader;
+         if( options === true )
+            options = {};
+         this.setOptions( options );
+         var loader = new Element( 'div', {
+            'aria-hidden' : false,
+            'class' : slideshow.classes.get( 'loader' ).substr( 1 ),
+            'morph' : this.options,
+            'role' : 'progressbar'} ).store( 'animate', false ).store( 'i', 0 ).store( 'delay', 1000 / this.options.fps ).inject( slideshow.el );
+         slideshow.loader = loader;
+         var url = loader.getStyle( 'backgroundImage' ).replace( /url\(['"]?(.*?)['"]?\)/, '$1' ).trim();
+         if( url ){
+            if( url.test( /\.png$/ ) && Browser.ie && Browser.version < 7 )
+               loader.setStyles( {
+                  'backgroundImage' : 'none',
+                  'filter' : 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src="' + url + '", sizingMethod="crop")'} );
+            new Asset.image( url, {
+               'onload' : function() {
+                  var size = loader.getSize(), width = this.get( 'width' ), height = this.get( 'height' );
+                  if( width > size.x )
+                     loader.store( 'x', size.x ).store( 'animate', 'x' ).store( 'frames', (width / size.x).toInt() );
+                  if( height > size.y )
+                     loader.store( 'y', size.y ).store( 'animate', 'y' ).store( 'frames', (height / size.y).toInt() );
+               }} );
+         }
+         loader.set( 'events', {
+            'animate' : this.animate.bind( loader ),
+            'hide' : this.hide.pass( slideshow.classes.get( 'loader', 'hidden' ), loader ),
+            'show' : this.show.pass( slideshow.classes.get( 'loader', 'visible' ), loader )} );
+         loader.fireEvent( 'hide' );
+      },
+
+      animate : function() {
+         var animate = this.retrieve( 'animate' );
+         if( !animate )
+            return;
+         var i = (this.retrieve( 'i' ).toInt() + 1) % this.retrieve( 'frames' );
+         this.store( 'i', i );
+         var n = (i * this.retrieve( animate )) + 'px';
+         if( animate == 'x' )
+            this.setStyle( 'backgroundPosition', n + ' 0px' );
+         if( animate == 'y' )
+            this.setStyle( 'backgroundPosition', '0px ' + n );
+      },
+
+      hide : function( hidden ) {
+         if( this.get( 'aria-hidden' ) == 'false' ){
+            this.set( 'aria-hidden', true ).morph( hidden );
+            if( this.retrieve( 'animate' ) )
+               clearTimeout( this.retrieve( 'timer' ) );
+         }
+      },
+
+      show : function( visible ) {
+         if( this.get( 'aria-hidden' ) == 'true' ){
+            this.set( 'aria-hidden', false ).morph( visible );
+            if( this.retrieve( 'animate' ) ){
+               this.store( 'timer', function() {
+                  this.fireEvent( 'animate' )
+               }.periodical( this.retrieve( 'delay' ), this ) );
+            }
+         }
+      }} );
+
+   /**
+    * Private method: thumbnails Builds the optional thumbnails element, adds
+    * interactivity. This method can safely be removed if the thumbnails option
+    * is not enabled.
+    */
+
+   var Thumbnails = new Class({
+      Implements : [Chain, Events, Options],
+      options : { /* duration: 500, transition: 'sine:in:out', unit: false, */
+         columns : null,
+         fps : 50,
+         link : 'cancel',
+         position : null,
+         rows : null,
+         scroll : null
+      },
+
+      initialize : function( slideshow ) {
+         var options = (slideshow.options.thumbnails === true) ? {} : slideshow.options.thumbnails;
+         this.setOptions( options );
+         var el = slideshow.el.getElement( slideshow.classes.get( 'thumbnails' ) );
+         var thumbnails = el ? el.empty() : new Element( 'div', { 'class' : slideshow.classes.get( 'thumbnails' ).substr( 1 )} );
+         slideshow.thumbnails = thumbnails;
+         thumbnails.set({ 'role' : 'menubar', 'styles' : { 'overflow' : 'hidden' } });
+         var uid = thumbnails.retrieve( 'uid', 'Slideshow-' + Date.now() );
+         var ul = new Element( 'ul', {
+            'role' : 'menu',
+            'styles' : {
+               'left' : 0,
+               'position' : 'absolute',
+               'top' : 0 
+            },
+            'tween' : { 'link' : 'cancel' }
+         }).inject( thumbnails );
+         
+         slideshow.data.thumbnails.each( function( thumbnail, i ) {
+            var li = new Element( 'li', { 'id' : uid + i } ).inject( ul );
+            var a = new Element( 'a', {
+               'class' : slideshow.classes.get( 'thumbnails', 'hidden' ).substr( 1 ),
+               'events' : { 'click' : this.click.pass( i, slideshow ) },
+               'href' : slideshow.data.images[i],
+               'morph' : this.options,
+               'role' : 'menuitem',
+               'tabindex' : i
+            }).store( 'uid', i ).inject( li );
+                  
+            if( slideshow.options.titles )
+               a.set( 'title', slideshow.data.titles[i] );
+            new Asset.image( thumbnail, { 'onload' : this.onload.pass( i, slideshow ) } ).inject( a );
+         }, this );
+         
+         thumbnails.set( 'events', {
+            'scroll' : this.scroll.bind( thumbnails ),
+            'update' : this.update.bind( slideshow )
+         });
+
+         var coords = thumbnails.getCoordinates();
+         if( !options.scroll ) options.scroll = (coords.height > coords.width) ? 'y' : 'x';
+         var props = (options.scroll == 'y') ? 'top bottom height y width'.split( ' ' ) : 'left right width x height'.split( ' ' );
+         thumbnails.store( 'props', props );
+         thumbnails.store( 'delay', 1000 / this.options.fps );
+         slideshow.events.push( 'mousemove', this.mousemove.bind( thumbnails ) );
+         thumbnails.inject( slideshow.el );
+      },
+
+      click : function( i ) {
+         this.go( i );
+         return false;
+      },
+
+      mousemove : function( e ) {
+         var coords = this.getCoordinates();
+         if( e.page.x > coords.left && e.page.x < coords.right && e.page.y > coords.top && e.page.y < coords.bottom ){
+            this.store( 'page', e.page );
+            if( !this.retrieve( 'mouseover' ) ){
+               this.store( 'mouseover', true );
+               this.store( 'timer', function() {
+                  this.fireEvent( 'scroll' );
+               }.periodical( this.retrieve( 'delay' ), this ) );
+            }
+            }else{
+               if( this.retrieve( 'mouseover' ) ){
+                  this.store( 'mouseover', false );
+                  clearTimeout( this.retrieve( 'timer' ) );
+               }
+            }
+         },
+
+      onload : function( i ) {
+         var thumbnails = this.thumbnails;
+         var a = thumbnails.getElements( 'a' )[i];
+         if( a ){
+            (function( a ) {
+               var visible = i == this.slide ? 'active' : 'inactive';
+               if( a.store ){
+                  a.store( 'loaded', true );
+                  var morphProperty = a.get( 'morph' );
+                  morphProperty.set( this.classes.get( 'thumbnails', 'hidden' ));
+                  morphProperty.start( this.classes.get( 'thumbnails', visible ));
+                  
+               }
+            }).delay( Math.max( 1000 / this.data.thumbnails.length, 100 ), this, a );
+         }
+
+         if( thumbnails.retrieve( 'limit' ) ) return;
+               
+         var props = thumbnails.retrieve( 'props' );    //left right width x height
+         var options = this.options.thumbnails;
+         var pos = props ? props[1] : 'right';
+         var length = props[2];
+         var width = props[4];
+         var li = thumbnails.getElement( 'li:nth-child(' + (i + 1) + ')' ).getCoordinates();
+
+         if( options.columns || options.rows ){
+            thumbnails.setStyles( {
+               'height' : this.height,
+               'width' : this.width
+            });
+            if( options.columns.toInt() ) thumbnails.setStyle( 'width', li.width * options.columns.toInt() );
+            if( options.rows.toInt() ) thumbnails.setStyle( 'height', li.height * options.rows.toInt() );
+         }
+         var div = thumbnails.getCoordinates();
+         if( options.position ){
+            if( options.position.test( /bottom|top/ ) ){
+               thumbnails.setStyles({
+                  'bottom' : 'auto',
+                  'top' : 'auto' 
+               }).setStyle( options.position, -div.height );
+            }
+            if( options.position.test( /left|right/ ) ){
+               thumbnails.setStyles({
+                  'left' : 'auto',
+                  'right' : 'auto'
+               }).setStyle( options.position, -div.width );
+            }
+         }
+         
+         var units = div[width] >= li[width] ? Math.floor( div[width] / li[width] ) : 1;
+         var x = Math.ceil( this.data.images.length / units );
+         var r = this.data.images.length % units;
+         var len = x * li[length], ul = thumbnails.getElement( 'ul' ).setStyle( length, len );
+         ul.getElements( 'li' ).setStyles({
+            'height' : li.height,
+            'width' : li.width
+         });
+         thumbnails.store( 'limit', div[length] - len );
+      },
+
+      scroll : function( n, fast ) {
+         var div = this.getCoordinates();
+         var ul = this.getElement( 'ul' ).getPosition();
+         var props = this.retrieve( 'props' );
+         var axis = props[3];
+         var delta;
+         var pos = props[0];
+         var size = props[2];
+         var value;
+         var tween = this.getElement( 'ul' ).set( 'tween', { 'property' : pos } ).get( 'tween' );
+         if( n != undefined ){
+            var uid = this.retrieve( 'uid' ), li = document.id( uid + n ).getCoordinates();
+            delta = div[pos] + (div[size] / 2) - (li[size] / 2) - li[pos];
+            value = (ul[axis] - div[pos] + delta).limit( this.retrieve( 'limit' ), 0 );
+            tween[fast ? 'set' : 'start']( value );
+         } else{
+            var area = div[props[2]] / 3, page = this.retrieve( 'page' ), velocity = -(this.retrieve( 'delay' ) * 0.01);
+            if( page[axis] < (div[pos] + area) ) delta = (page[axis] - div[pos] - area) * velocity;
+            else if( page[axis] > (div[pos] + div[size] - area) ) delta = (page[axis] - div[pos] - div[size] + area) * velocity;
+            if( delta ){
+               value = (ul[axis] - div[pos] + delta).limit( this.retrieve( 'limit' ), 0 );
+               tween.set( value );
+            }
+         }
+      },
+
+      update : function( fast ) {
+         var thumbnails = this.thumbnails;
+         var uid = thumbnails.retrieve( 'uid' );
+         thumbnails.getElements( 'a' ).each( function( a, i ) {
+            if( a.retrieve( 'loaded' ) ){
+               if( a.retrieve( 'uid' ) == this._slide ){
+                  if( !a.retrieve( 'active', false ) ){
+                     a.store( 'active', true );
+                     var active = this.classes.get( 'thumbnails', 'active' );
+                     if( fast ) a.get( 'morph' ).set( active );
+                     else a.morph( active );
+                  }
+               }else{
+                  if( a.retrieve( 'active', true ) ){
+                     a.store( 'active', false );
+                     var inactive = this.classes.get( 'thumbnails', 'inactive' );
+                     if( fast ) a.get( 'morph' ).set( inactive );
+                     else a.morph( inactive );
+                  }
+               }
+            }
+         }, this );
+         
+         if( !thumbnails.retrieve( 'mouseover' ) ) thumbnails.fireEvent( 'scroll', [this._slide, fast] );
+      }
+   });
+})();
+/**
+Script: Slideshow.Flash.js
+	Slideshow.Flash - Flash extension for Slideshow.
+
+License:
+	MIT-style license.
+
+Copyright:
+	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
+
+Dependencies:
+	Slideshow.
+*/
+
+
+
+
+
+(function(){
+	Slideshow.Flash = new Class({
+		Extends: Slideshow,
+	
+		options: {
+			color: ['#FFF']
+		},
+	
+	/**
+	Constructor: initialize
+		Creates an instance of the Slideshow class.
+
+	Arguments:
+		element - (element) The wrapper element.
+		data - (array or object) The images and optional thumbnails, captions and links for the show.
+		options - (object) The options below.
+
+	Syntax:
+		var myShow = new Slideshow.Flash(element, data, options);
+*/
+
+		initialize: function(el, data, options){
+			options = options || {};
+			options.overlap = true;
+			if (options.color)
+				options.color = Array.from(options.color);
+			this.parent(el, data, options);
+		},
+
+	/**
+	Private method: show
+		Does the slideshow effect.
+*/
+
+		_show: function(fast){
+			if (!this.image.retrieve('tween'))
+			  $$(this.a, this.b).set('tween', {'duration': this.options.duration, 'link': 'cancel', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'property': 'opacity'});
+			if (fast)
+				this.image.get('tween').cancel().set(1);
+			else {
+				this.el.retrieve('images').setStyle('background', this.options.color[this.slide % this.options.color.length]);
+				var img = (this.counter % 2) ? this.a : this.b;
+				img.get('tween').cancel().set(0);
+				this.image.get('tween').set(0).start(1);
+			}
+		}
+	});
+})();
+/**
+Script: Slideshow.Fold.js
+	Slideshow.Fold - Flash extension for Slideshow.
+
+License:
+	MIT-style license.
+
+Copyright:
+	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
+
+Dependencies:
+	Slideshow.
+*/
+
+
+
+
+
+Slideshow.Fold = new Class({
+	Extends: Slideshow,
+	
+/**
+Private method: show
+	Does the slideshow effect.
+*/
+
+	_show: function(fast){
+		if (!this.image.retrieve('tween')){
+			var options = (this.options.overlap) ? {'duration': this.options.duration} : {'duration': this.options.duration / 2};
+			$$(this.a, this.b).set('tween', Object.merge(options, {'link': 'chain', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'property': 'clip', 'transition': this.options.transition}));
+		}
+		var img = (this.counter % 2) ? this.a : this.b,
+			rect = this._rect(this.image),
+			half = Math.ceil(rect.top + (rect.bottom - rect.top) / 2);
+			
+		if (fast){			
+			img.get('tween').cancel().set('rect(0, 0, 0, 0)');
+			this.image.get('tween').cancel().set('rect(auto, auto, auto, auto)'); 			
+		} 
+		else {
+			if (this.options.overlap){	
+				img.get('tween').set('rect(auto, auto, auto, auto)');
+				this.image.get('tween')
+					.set(rect.top + ' ' + rect.left + ' ' + half + ' ' + rect.left)
+					.start(rect.top + ' ' + rect.right + ' ' + half + ' ' + rect.left)
+					.start(rect.top + ' ' + rect.right + ' ' + rect.bottom + ' ' + rect.left);
+			} 
+			else	{
+				var fn = function(rect){
+					this.image.get('tween')
+						.set(rect.top + ' ' + rect.left + ' ' + half + ' ' + rect.left)
+						.start(rect.top + ' ' + rect.right + ' ' + half + ' ' + rect.left)
+						.start(rect.top + ' ' + rect.right + ' ' + rect.bottom + ' ' + rect.left);
+				}.pass(rect, this);
+				if (this.firstrun)
+					return fn();
+				rect = this._rect(img);
+				img.get('tween')
+					.set(rect.top + ' ' + rect.right + ' ' + rect.bottom + ' ' + rect.left)
+					.start(rect.top + ' ' + rect.right + ' ' + half + ' ' + rect.left)
+					.start(rect.top + ' ' + rect.left + ' ' + half + ' ' + rect.left).chain(fn);
+			}
+		}
+	},
+	
+	/**
+	Private method: rect
+		Calculates the clipping rect
+	*/
+
+	_rect: function(img){
+		var rect = img.getCoordinates(this.el.retrieve('images'));
+		rect.left = (rect.left < 0) ? Math.abs(rect.left) : 0;
+		rect.top = (rect.top < 0) ? Math.abs(rect.top) : 0;
+		rect.right = (rect.right > this.width) ? rect.left + this.width : rect.width;
+		rect.bottom = (rect.bottom > this.height) ? rect.top + this.height : rect.height;
+		return rect;		
+	}
+});
+/**
+Script: Slideshow.KenBurns.js
+	Slideshow.KenBurns - KenBurns extension for Slideshow, includes zooming and panning effects.
+
+License:
+	MIT-style license.
+
+Copyright:
+	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
+	
+Dependencies:
+	Slideshow.
+*/
+
+
+
+
+
+(function(){
+	Slideshow.KenBurns = new Class({
+		Extends: Slideshow,
+
+		options: {
+			pan: [100, 100],
+			zoom: [50, 50]
+		},
+
+	/**
+	Constructor: initialize
+		Creates an instance of the Slideshow class.
+
+	Arguments:
+		element - (element) The wrapper element.
+		data - (array or object) The images and optional thumbnails, captions and links for the show.
+		options - (object) The options below.
+
+	Syntax:
+		var myShow = new Slideshow.KenBurns(element, data, options);
+	*/
+
+		initialize: function(el, data, options){
+			options = options || {};
+			options.overlap = true;
+			options.resize = 'fill';
+			['pan', 'zoom'].each(function(p){
+				if (this[p] != undefined){
+					if (typeOf(this[p]) != 'array') this[p] = [this[p], this[p]];
+					this[p].map(function(n){return (n.toInt() || 0).limit(0, 100);});					
+				}
+			}, options);
+			this.parent(el, data, options);
+		},
+
+	/**
+	Private method: show
+		Does the slideshow effect.
+	*/
+
+		_show: function(fast){
+			if (!this.image.retrieve('morph')){
+				$$(this.a, this.b).set({
+					'tween': {'duration': this.options.duration, 'link': 'cancel', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'property': 'opacity'},
+					'morph': {'duration': (this.options.delay + this.options.duration * 2), 'link': 'cancel', 'transition': 'linear'}
+				});
+			}
+			this.image.set('styles', {'bottom': 'auto', 'left': 'auto', 'right': 'auto', 'top': 'auto'});
+			var props = ['top left', 'top right', 'bottom left', 'bottom right'][this.counter % 4].split(' ');
+			this.image.setStyles([0, 0].associate(props));
+			var src = this.data.images[this._slide].replace(/([^?]+).*/, '$1'),
+				cache = this.cache[src];
+			dh = this.height / cache.height;
+			dw = this.width / cache.width;
+			delta = (dw > dh) ? dw : dh;
+			var values = {},
+				zoom = (Number.random.apply(Number, this.options.zoom) / 100.0) + 1,
+				pan = Math.abs((Number.random.apply(Number, this.options.pan) / 100.0) - 1);
+			['height', 'width'].each(function(prop, i){
+				var e = Math.ceil(cache[prop] * delta),
+					s = (e * zoom).toInt();		
+				values[prop] = [s, e];
+				if (dw > dh || i){
+					e = (this[prop] - this.image[prop]);
+					s = (e * pan).toInt();			
+					values[props[i]] = [s, e];
+				}
+			}, this);
+			var paused = ((this.firstrun && this.options.paused) || this.paused);
+			if (fast || paused){
+				this._center(this.image);
+				this.image.get('morph').cancel();
+				if (paused)
+					this.image.get('tween').cancel().set(0).start(1);
+				else
+					this.image.get('tween').cancel().set(1);
+			} 
+			else{
+				this.image.get('morph').start(values);
+				this.image.get('tween').set(0).start(1);
+			}
+		}
+	});
+})();
+/*
+Script: Slideshow.Push.js
+	Slideshow.Push - Push extension for Slideshow.
+
+License:
+	MIT-style license.
+
+Copyright:
+	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
+	
+Dependencies:
+	Slideshow.
+	Mootools 1.3.1 More: Fx.Elements.
+*/
+
+
+
+
+
+Slideshow.Push = new Class({
+	Extends: Slideshow,
+	
+	initialize: function(el, data, options){
+		options = options || {};
+		options.overlap = true;		
+		this.parent(el, data, options);
+	},
+
+	_show: function(fast){
+		var images = [this.image, ((this.counter % 2) ? this.a : this.b)];
+		if (!this.image.retrieve('fx'))
+			this.image.store('fx', new Fx.Elements(images, {'duration': this.options.duration, 'link': 'cancel', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'transition': this.options.transition }));
+		this.image.set('styles', {'left': 'auto', 'right': 'auto' }).setStyle(this.direction, this.width);
+		var values = {'0': {}, '1': {} };
+		values['0'][this.direction] = [this.width, 0];
+		values['1'][this.direction] = [0, -this.width];
+		if (images[1].getStyle(this.direction) == 'auto'){
+			var width = this.width - images[1].width;	
+			images[1].set('styles', {'left': 'auto', 'right': 'auto' }).setStyle(this.direction, width);		 
+			values['1'][this.direction] = [width, -this.width];
+		}
+		if (fast){
+		 	for (var prop in values)
+		 		values[prop][this.direction] = values[prop][this.direction][1];			
+			this.image.retrieve('fx').cancel().set(values);
+		} 
+		else
+			this.image.retrieve('fx').start(values);
+	}
+});
 /*
 Name: DocumentElement
 
@@ -12308,6 +24467,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -12362,7 +24522,8 @@ var DocumentElement = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      if( this.status != DocumentElement.States.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
+      if( this.status != DocumentElement.States.UNMARSHALLED ) 
+         throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
       assertThat( contextElement, not( nil() ));
       this.contextElement = contextElement;
@@ -12585,6 +24746,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var CompositeDocumentElement = new Class({
    Extends: DocumentElement,
    Binds: ['constructNestedElements', 'onNestedElementConstructed', 'onNestedElementConstructionError'],
@@ -12737,6 +24899,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -12934,6 +25097,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var CompositeDataElement = new Class({
    Extends: CompositeDocumentElement,
    Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
@@ -13016,6 +25180,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13109,6 +25274,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13244,6 +25410,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DataElementEditor = new Class({
    Extends: DocumentElementEditor,
    options: {
@@ -13285,6 +25452,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13341,6 +25509,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13407,6 +25576,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13485,6 +25655,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DocumentFooter = new Class({
    Extends: CompositeDocumentElement,
    
@@ -13533,6 +25704,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13587,6 +25759,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13763,6 +25936,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var FormElement = new Class({
    Extends: CompositeDataElement,
    
@@ -13837,6 +26011,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -13931,6 +26106,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var ImageElement = new Class({
    Extends: DocumentElement,
    
@@ -13988,6 +26164,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -14102,6 +26279,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var MissingBindVariableException = new Class({
    Extends: WebUIException,
    options: {
@@ -14116,7 +26294,7 @@ var MissingBindVariableException = new Class({
       this.parameters = { dataElementId : dataElementId };
    }	
 });
-/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      var documentComponentOptions = { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError };      if( this.options.documentVariables ) documentComponentOptions['variables'] = this.options.documentVariables      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, documentComponentOptions );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, documentComponentOptions );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, documentComponentOptions );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
+/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUI//= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      var documentComponentOptions = { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError };      if( this.options.documentVariables ) documentComponentOptions['variables'] = this.options.documentVariables      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, documentComponentOptions );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, documentComponentOptions );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, documentComponentOptions );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
 /*
 Name: TableBody
 
@@ -14143,6 +26321,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -14277,6 +26456,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var TableCell = new Class({
    Extends: DataElement,
    
@@ -14335,6 +26515,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -14416,6 +26597,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -14567,6 +26749,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var TableElementEditor = new Class({
    Extends: DocumentElementEditor,
    options: {
@@ -14609,6 +26792,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -14740,6 +26924,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var TableRow = new Class({
    Extends: DocumentElement,
    Binds: ['createTableRowElement', 'constructTableCells', 'onTableCellConstructed', 'onTableCellConstructionError'],
@@ -14862,6 +27047,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var UnconfiguredDocumentElementException = new Class({
    Extends: WebUIException,
    options: {
@@ -14903,6 +27089,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -15020,6 +27207,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var DuplicatedTabException = new Class({
    Extends: WebUIException,
    options: {
@@ -15054,6 +27242,7 @@ var DuplicatedTabException = new Class({
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 
 
@@ -15225,6 +27414,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var TabSelectedMessage = new Class({
    Extends: WebUIMessage,
    options: {
@@ -15276,6 +27466,7 @@ var TabSelectedMessage = new Class({
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 
 
@@ -15651,6 +27842,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var MooEditableDialog = new Class({
    Implements: [Options],
    Binds: ['open'],
@@ -15716,6 +27908,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -16122,7 +28315,7 @@ var WebUIConfiguration = new Class({
    determineAvailableLocales : function(){
       for( var i = 0; i < this.getI18LocaleElements().length; i++ ) {
          var i18LocaleText = this.getI18Locale( i );
-         var locale = new Locale();
+         var locale = new ProcessPuzzleLocale();
          locale.parse( i18LocaleText );
          this.availableLocales.add( locale );
       }
@@ -16167,6 +28360,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+
 
 
 
@@ -16318,6 +28513,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var ToolBarButton = new Class({
    Implements : [Events, Options],
    Binds: ['onSelection'],
@@ -16431,6 +28627,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var ToolBarButtonFactory = new Class({
    Implements: Options,
    
@@ -16486,6 +28683,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -16582,6 +28780,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 
 
@@ -16729,6 +28928,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var TreeNodeType = new Class({
 
 	//node images
@@ -16826,6 +29026,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -16934,6 +29135,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -17207,6 +29409,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var CompositeTreeNode = new Class( {
    Extends : TreeNode,
    Binds : ['constructChildNodes', 'onChildNodeConstructed', 'onNodeHandlerClick', 'onNodeSelected'],
@@ -17404,6 +29607,40 @@ var CompositeTreeNode = new Class( {
 });
 
 CompositeTreeNode.States = { CLOSED : 'closed', OPENED : 'opened' };
+/*
+Name:
+    - LeafTreeNode
+
+Description: 
+    - Represents a leaf in a tree hierachy.
+
+Requires:
+    - TreeNode
+    - TreeNodeType
+
+Provides:
+    - LeafTreeNode
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
 var LeafTreeNode = new Class({
 	Extends : TreeNode,
 	options : {
@@ -17452,6 +29689,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -17546,6 +29784,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var RootTreeNodeType = new Class ({
 	Extends : CompositeTreeNodeType,
 	
@@ -17591,6 +29830,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 
 
 
@@ -17659,6 +29899,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
 You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
+
 
 
 
@@ -17810,6 +30051,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var VideoPlayerWidget = new Class({
    Extends : ToolBarWidget,
    options : {
@@ -17844,6 +30086,7 @@ var VideoPlayerWidget = new Class({
    //Protected and private helper methods
 });
 // LoadUtility.js
+
 
 
 
@@ -17903,6 +30146,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var UnconfiguredWebUIControllerException = new Class({
    Extends: WebUIException,
    options: {
@@ -17939,7 +30183,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ROOT_LOGGER_NAME = "WebUI";
 FRONT_CONTROLLER = "CommandControllerServlet";
 
-// Main control class, responsible for managing and syncronizing the widgets.
+
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 //= require ../Singleton/Singleton.js
 
@@ -18204,7 +30449,7 @@ var WebUIController = new Class({
 	
    determineCurrentUserLocale : function() {
       this.logger.debug( this.options.componentName + ".determineCurrentUserLocale() started." );
-      var browserLanguage = new Locale();
+      var browserLanguage = new ProcessPuzzleLocale();
       browserLanguage.parse( navigator.language || navigator.userLanguage );
       browserLanguage.options.country = null;
       browserLanguage.options.variant = null;
@@ -18212,12 +30457,12 @@ var WebUIController = new Class({
          var storedState = this.stateManager.retrieveComponentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
-            this.locale = new Locale();
+            this.locale = new ProcessPuzzleLocale();
             this.locale.parse( localeString );
          }else if( this.webUIConfiguration.isSupportedLocale( browserLanguage )){
             this.locale = browserLanguage;
          }else {
-            this.locale = new Locale();
+            this.locale = new ProcessPuzzleLocale();
             this.locale.parse( this.webUIConfiguration.getI18DefaultLocale() );
          }
       }
@@ -18286,7 +30531,7 @@ var WebUIController = new Class({
       this.logger.debug( this.options.componentName + ".setLanguage() started." );
       prefferedLanguage = newLanguage;
       if(newLanguage != null) {
-         var locale = new Locale(newLanguage);
+         var locale = new ProcessPuzzleLocale(newLanguage);
          if( applicationConfiguration != null) {
             applicationConfiguration.setLocale(locale);
             this.loadInternationalizations(applicationConfiguration.getBundlePath(),locale);
@@ -18364,6 +30609,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+
 var WebUIStateRestoredMessage = new Class({
    Extends: WebUIMessage,
    options: {
@@ -18378,6 +30624,7 @@ var WebUIStateRestoredMessage = new Class({
 });
 
 //TestMessageOne.js
+
 
 
 
@@ -18398,6 +30645,7 @@ var TestMessageOne = new Class({
 
 
 
+
 var TestMessageTwo = new Class({
    Extends: WebUIMessage,
    options: {
@@ -18410,6 +30658,9 @@ var TestMessageTwo = new Class({
       this.options.messageClass = TestMessageTwo;
    }
 });
+
+
+
 
 
 
