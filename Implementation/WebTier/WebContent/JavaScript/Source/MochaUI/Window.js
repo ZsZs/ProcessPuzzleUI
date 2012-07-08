@@ -18,10 +18,10 @@ provides: [MUI.Windows]
 ...
 */
 
-//= require_directory ../MochaUI/Core.js
-//= require_directory ../MochaUI/Dock.js
-//= require_directory ../MochaUI/Layout.js
-//= require_directory ../MochaUI/Tabs.js
+//= require ../MochaUI/Core.js
+//= require ../MochaUI/Dock.js
+//= require ../MochaUI/Layout.js
+//= require ../MochaUI/Tabs.js
 
 MUI.files[MUI.path.source + 'Window/Window.js'] = 'loading';
 //$require(MUI.themePath() + '/css/Dock.css');
