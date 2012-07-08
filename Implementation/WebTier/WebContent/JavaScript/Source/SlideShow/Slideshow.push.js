@@ -15,7 +15,7 @@ Dependencies:
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
-//= require ../SlideShow/SlideShow.js
+//= require ../SlideShow/Slideshow.js
 
 Slideshow.Push = new Class({
 	Extends: Slideshow,
