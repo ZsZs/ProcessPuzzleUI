@@ -10,6 +10,10 @@
  * Dependencies: Mootools 1.3.1 Core: Fx.Morph, Fx.Tween, Selectors,
  * Element.Dimensions. Mootools 1.3.1.1 More: Assets.
  */
+
+//= require_directory ../MochaUI
+//= require_directory ../FundamentalTypes
+
 (function() {
    WhenPaused = 1 << 0;
    WhenPlaying = 1 << 1;

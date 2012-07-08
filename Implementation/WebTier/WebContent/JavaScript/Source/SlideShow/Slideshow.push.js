@@ -1,4 +1,4 @@
-/**
+/*
 Script: Slideshow.Push.js
 	Slideshow.Push - Push extension for Slideshow.
 
@@ -13,32 +13,18 @@ Dependencies:
 	Mootools 1.3.1 More: Fx.Elements.
 */
 
+//= require_directory ../MochaUI
+//= require_directory ../FundamentalTypes
+//= require ../SlideShow/SlideShow.js
+
 Slideshow.Push = new Class({
 	Extends: Slideshow,
-	
-/**
-Constructor: initialize
-	Creates an instance of the Slideshow class.
-
-Arguments:
-	element - (element) The wrapper element.
-	data - (array or object) The images and optional thumbnails, captions and links for the show.
-	options - (object) The options below.
-
-Syntax:
-	var myShow = new Slideshow.Push(element, data, options);
-*/
 	
 	initialize: function(el, data, options){
 		options = options || {};
 		options.overlap = true;		
 		this.parent(el, data, options);
 	},
-
-/**
-Private method: show
-	Does the slideshow effect.
-*/
 
 	_show: function(fast){
 		var images = [this.image, ((this.counter % 2) ? this.a : this.b)];

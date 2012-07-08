@@ -12,6 +12,10 @@ Dependencies:
 	Slideshow.
 */
 
+//= require_directory ../MochaUI
+//= require_directory ../FundamentalTypes
+//= require ../SlideShow/SlideShow.js
+
 Slideshow.Fold = new Class({
 	Extends: Slideshow,
 	

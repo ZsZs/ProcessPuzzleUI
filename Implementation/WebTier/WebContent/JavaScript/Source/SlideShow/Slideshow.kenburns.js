@@ -11,6 +11,11 @@ Copyright:
 Dependencies:
 	Slideshow.
 */
+
+//= require_directory ../MochaUI
+//= require_directory ../FundamentalTypes
+//= require ../SlideShow/SlideShow.js
+
 (function(){
 	Slideshow.KenBurns = new Class({
 		Extends: Slideshow,
