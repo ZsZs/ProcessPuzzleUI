@@ -1,5 +1,6 @@
 // LoadUtility.js
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 function getWebUIController() {

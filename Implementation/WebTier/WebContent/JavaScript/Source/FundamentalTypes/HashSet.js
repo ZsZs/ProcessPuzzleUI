@@ -27,6 +27,8 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//= require_directory ../MochaUI
+
 var HashSet = new Class( {
 	// Constructor
 	initialize : function() {

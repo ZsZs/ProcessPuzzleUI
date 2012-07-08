@@ -1,5 +1,8 @@
 //UnconfiguredWidget.js
 
+//= require_directory ../MochaUI
+//= require ../FundamentalTypes/WebUIException.js
+
 var UnconfiguredWidgetException = new Class({
    Extends: WebUIException,
    options: {

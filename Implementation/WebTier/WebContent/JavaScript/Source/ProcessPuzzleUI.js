@@ -10,6 +10,7 @@
 //= require_directory ./Internationalization
 //= require_directory ./jStorage
 //= require_directory ./LanguageSelectorWidget
+//= require_directory ./MochaUI
 //= require_directory ./NewsReaderWidget
 //= require_directory ./PartyEventWidget
 //= require_directory ./PhotoGaleryWidget

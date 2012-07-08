@@ -19,6 +19,9 @@ provides: [MUI.Desktop, MUI.Column, MUI.Panel]
 ...
 */
 
+//= require ../MochaUI/Core.js
+//= require ../MochaUI/Dock.js
+
 MUI.files[MUI.path.source + 'Layout/Layout.js'] = 'loaded';
 
 MUI.extend({

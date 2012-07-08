@@ -21,9 +21,9 @@ requires:
   - MochaUI/MUI.Panel
 
 provides: [MUI.Dock]
-
-...
 */
+
+//= require ../MochaUI/Core.js
 
 MUI.files[MUI.path.source + 'Layout/Dock.js'] = 'loaded';
 

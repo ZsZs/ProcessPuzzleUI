@@ -25,6 +25,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 */
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 //= require ../BrowserWidget/BrowserWidget.js
 

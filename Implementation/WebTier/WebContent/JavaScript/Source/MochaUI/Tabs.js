@@ -22,6 +22,10 @@ provides: [MUI.initializeTabs]
 ...
 */
 
+//= require ../MochaUI/Core.js
+//= require ../MochaUI/Dock.js
+//= require ../MochaUI/Layout.js
+
 MUI.extend({
 	/*
 

@@ -16,6 +16,7 @@ provides: Class.Singleton
 ...
 */
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 (function(){

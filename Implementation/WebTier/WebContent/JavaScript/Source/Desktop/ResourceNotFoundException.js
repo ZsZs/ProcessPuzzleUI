@@ -1,5 +1,6 @@
 //UnconfiguredWidget.js
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 var ResourceNotFoundException = new Class({

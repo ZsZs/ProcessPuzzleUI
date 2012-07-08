@@ -22,6 +22,11 @@ provides: [MUI.Modal]
 ...
 */
 
+//= require ../MochaUI/Core.js
+//= require ../MochaUI/Dock.js
+//= require ../MochaUI/Layout.js
+//= require ../MochaUI/Window.js
+
 MUI.files[MUI.path.source + 'Window/Modal.js'] = 'loaded';
 
 MUI.Modal = new Class({

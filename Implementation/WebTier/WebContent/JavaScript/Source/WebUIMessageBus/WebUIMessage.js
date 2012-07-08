@@ -1,5 +1,6 @@
 //WebUIMessage.js
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 var WebUIMessage = new Class({

@@ -12,6 +12,14 @@
    
    <canvas height="200" width="300" ></canvas>
    
+   <figurePalettes>
+      <figurePalette />
+   </figurePalettes>
+   
+   <figurePropertyWindows>
+      <figurePropertyWindow />
+   </figurePropertyWindows>
+   
    <figures>
       <annotation name="DiagramAnnotation" height="40" width="100" positionX="50" positionY="50">
          <text>DiagramWidget.annotation.text</text>

@@ -18,6 +18,11 @@ provides: [MUI.Windows]
 ...
 */
 
+//= require_directory ../MochaUI/Core.js
+//= require_directory ../MochaUI/Dock.js
+//= require_directory ../MochaUI/Layout.js
+//= require_directory ../MochaUI/Tabs.js
+
 MUI.files[MUI.path.source + 'Window/Window.js'] = 'loading';
 //$require(MUI.themePath() + '/css/Dock.css');
 
@@ -163,6 +168,10 @@ Example:
 
 // Having these options outside of the Class allows us to add, change, and remove
 // individual options without rewriting all of them.
+
+//= require ../MochaUI/Core.js
+//= require ../MochaUI/Dock.js
+//= require ../MochaUI/Layout.js
 
 MUI.extend({
 	Windows: {

@@ -22,6 +22,7 @@
  *       THE SOFTWARE.
  */
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 var SmoothScroll = new Class({

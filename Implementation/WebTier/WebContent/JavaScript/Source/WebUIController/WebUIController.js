@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ROOT_LOGGER_NAME = "WebUI";
 FRONT_CONTROLLER = "CommandControllerServlet";
 
-// Main control class, responsible for managing and syncronizing the widgets.
+
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 //= require ../Singleton/Singleton.js
 

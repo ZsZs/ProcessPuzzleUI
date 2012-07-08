@@ -1,5 +1,6 @@
 //TestMessageTwo.js
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 var TestMessageTwo = new Class({

@@ -2723,6 +2723,7 @@ var BrowserWidget = new Class( {
       this.description;
       this.destructionChain = new Chain();
       this.elementFactory = null;
+      this.error;
       this.givenOptions = options;
       this.i18Resource = null;
       this.lastHandledMessage = null;
@@ -2944,6 +2945,10 @@ var BrowserWidget = new Class( {
    
    parseStateSpecification: function(){
       //Abstract method, should be overwrite!
+   }.protect(),
+   
+   revertConstruction : function(){
+      this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
    subscribeToWebUIMessages : function() {
@@ -6668,7 +6673,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DiagramWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['destroyCanvas', 'destroyFigures', 'drawCanvas', 'drawFigures'],
+   Binds : ['destroyCanvas', 'destroyFigures', 'drawCanvas', 'drawFigures', 'onFigureConstructed', 'onFigureConstructionError'],
    
    options : {
       authorSelector : "//pp:widgetDefinition/author",
@@ -6696,6 +6701,7 @@ var DiagramWidget = new Class({
       this.canvasWidth;
       this.description;
       this.figures = new ArrayList();
+      this.figuresConstructionChain = new Chain();
       this.name;
       this.title;
       this.paintArea;
@@ -6710,6 +6716,15 @@ var DiagramWidget = new Class({
       this.parent();
    },
       
+   onFigureConstructed: function( figure ){
+      this.figuresConstructionChain.callChain();
+   },
+   
+   onFigureConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
    unmarshall: function(){
       this.unmarshallProperties();
       this.unmarshallFigures();
@@ -6763,18 +6778,29 @@ var DiagramWidget = new Class({
    }.protect(),
    
    drawFigures : function(){
-      this.figures.each( function( figure, index ){
-         figure.draw( this );
-      }.bind( this ));
-      
-      this.constructionChain.callChain();
+      if( this.figures.size() > 0 ){
+         this.figures.each( function( figure, index ){
+            this.figuresConstructionChain.chain( function(){ figure.draw( this ); }.bind( this ));
+         }, this );
+            
+         this.figuresConstructionChain.chain(
+            function(){
+               this.figuresConstructionChain.clearChain();
+               this.constructionChain.callChain(); 
+            }.bind( this )
+         );
+         this.figuresConstructionChain.callChain();
+      }else this.constructionChain.callChain();
    }.protect(),
    
    unmarshallFigures: function(){
       var figuresElement = this.definitionXml.selectNodes( this.options.figuresSelector );
       if( figuresElement ){
          figuresElement.each( function( figureElement, index ){
-            var figure = DiagramFigureFactory.create( figureElement, this.i18Resource );
+            var figure = DiagramFigureFactory.create( figureElement, this.i18Resource, { 
+               onFigureConstructed : this.onFigureConstructed, 
+               onFigureConstructionError : this.onFigureConstructionError 
+            });
             figure.unmarshall();
             this.figures.add( figure );
          }, this );
@@ -6878,6 +6904,7 @@ var DiagramFigure = new Class({
    //Properties
    getDraw2dObject : function() { return this.draw2dObject; },
    getId: function() { return this.draw2dObject.id; },
+   getInternationalizedName: function() { return this.internationalization.getText( this.getName()); },
    getName: function() { return this.name; },
    getPositionX: function() { return this.positionX; },
    getPositionY: function() { return this.positionY; },
@@ -6896,7 +6923,7 @@ var DiagramFigure = new Class({
    finalizeDraw : function(){
       this.drawChain.clearChain();
       this.state = DiagramFigure.States.CONSTRUCTED;
-      this.fireEvent( 'drawReady', this );
+      this.fireEvent( 'figureConstructed', this );
    }.protect(),
    
    lookUpDiagramFigure : function( figureName ){
@@ -7051,7 +7078,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var AttributeFigure = new Class({
-   Implements : [Events, Options],
+   Extends : DiagramFigure,
    Binds: [],
    
    options : {
@@ -7073,28 +7100,27 @@ var AttributeFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function( diagram ){
-      this.parent( diagram );
-   },
-   
    destroy: function(){
       this.parent();
    },
    
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
    unmarshall: function(){
-      this.unmarshallProperties();
+      this.parent();
    },
    
    //Properties
    getDefaultValue : function() { return this.defaultValue; },
-   getName : function() { return this.name; },
    getType : function() { return this.type; },
    
    //Protected, private helper methods
    unmarshallProperties : function(){
-      this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionXml );
       this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
       this.defaultValue = XmlResource.selectNodeText( this.options.defaultValueSelector, this.definitionXml );
+      this.parent();
    }.protect()
 });
 
@@ -7171,14 +7197,14 @@ var ClassFigure = new Class({
 
    drawAttributes : function(){
       this.attributes.each( function( attribute, index ){
-         this.draw2dObject.addAttribute( attribute.getName(), attribute.getType(), attribute.getDefaultValue() );
+         this.draw2dObject.addAttribute( attribute.getInternationalizedName(), attribute.getType(), attribute.getDefaultValue() );
       }.bind( this ));
       
       this.drawChain.callChain();
    }.protect(),
    
    instantiateDraw2dObject : function(){
-      this.draw2dObject = new draw2d.shape.uml.Class( this.name );
+      this.draw2dObject = new draw2d.shape.uml.Class( this.getInternationalizedName() );
       this.drawChain.callChain();
    }.protect(),
    

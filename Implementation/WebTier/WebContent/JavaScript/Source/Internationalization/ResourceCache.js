@@ -16,6 +16,7 @@ requires:
 provides: [ProcessPuzzle.ResourceCache]
 */
 
+//= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
 var ResourceCache = new Class({
