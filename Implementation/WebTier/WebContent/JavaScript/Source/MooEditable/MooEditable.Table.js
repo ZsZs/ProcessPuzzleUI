@@ -50,6 +50,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Locale.define({
 	tableColumns: 'columns',
 	tableRows: 'rows',

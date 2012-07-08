@@ -46,7 +46,7 @@ window.BrowserWidgetTest = new Class( {
       this.componentStateManager;
       this.constructedMessageReceived = false;
       this.domDocument;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.resourceBundle;
       this.webUIConfiguration;

@@ -38,6 +38,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Actions.Settings.forecolor = {
 	colors: [
 		['000000', '993300', '333300', '003300', '003366', '000077', '333399', '333333'],

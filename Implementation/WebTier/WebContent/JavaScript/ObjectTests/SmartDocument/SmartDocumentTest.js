@@ -35,7 +35,7 @@ window.SmartDocumentTest = new Class( {
       this.doumentContainerElement;
       this.documentDefinition;
       this.error;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.smartDocument;
       this.webUIConfiguration;

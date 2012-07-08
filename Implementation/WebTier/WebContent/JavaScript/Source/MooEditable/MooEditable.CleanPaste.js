@@ -39,6 +39,8 @@ provides: [MooEditable.CleanPaste]
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 (function () {
     
     MooEditable = Class.refactor(MooEditable, {

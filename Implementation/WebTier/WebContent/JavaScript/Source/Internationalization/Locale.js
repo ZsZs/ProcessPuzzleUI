@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
-var Locale = new Class({
+var ProcessPuzzleLocale = new Class({
    Implements: Options,
    options: {
       delimiter : ",-",

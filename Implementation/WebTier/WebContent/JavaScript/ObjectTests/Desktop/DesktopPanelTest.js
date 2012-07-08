@@ -66,7 +66,7 @@ window.DesktopPanelTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
       this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
-      this.resourceBundle.load( new Locale({ language : "hu" }) );
+      this.resourceBundle.load( new ProcessPuzzleLocale({ language : "hu" }) );
       this.componentStateManager = new ComponentStateManager();
 
       this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'"} );

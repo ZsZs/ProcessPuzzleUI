@@ -36,6 +36,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Locale.define({
 	imageAlt: 'alt',
 	imageClass: 'class',

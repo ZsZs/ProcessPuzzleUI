@@ -35,7 +35,7 @@ window.TabWidgetTest = new Class( {
       this.componentStateManager;
       this.containerElement;
       this.definitionXml;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.resourceBundle;
       this.tabWidget;
       this.webUIConfiguration;

@@ -78,14 +78,14 @@
       }
 
 		function test_Load_RetrievesAllResourcesWithoutLanguageSpecification(){
-			var locale = new Locale({ language : "en" });
+			var locale = new ProcessPuzzleLocale({ language : "en" });
 			bundle.load( locale );
 			
 			assertEquals("We got the English version text for the 'res_1' key.", "Resource one", bundle.getText("res_1"));
 		}
 		
 		function test_Load_CollectsResourcesFromAllResourceBundles(){
-			var locale = new Locale({ language : "en" });
+			var locale = new ProcessPuzzleLocale({ language : "en" });
 			bundle.load( locale );
 			
 			assertEquals("'TestResourcesTwo.res_21' is defined in the second resourceBundle.", "Resource twenty one", bundle.getText("TestResourcesTwo.res_21"));
@@ -94,7 +94,7 @@
 		function test_Load_ForRetrievingBaseFile(){ 
 			//There is no specific 'TestResources_hu.xml' file, therefore resource should be retrieved from the base file.
 
-			var locale = new Locale({ language : "hu" });		
+			var locale = new ProcessPuzzleLocale({ language : "hu" });		
 			bundle.load( locale );
 			assertEquals("We got the Hungarian version text for the 'res_3' key.", "Erőforrás három", bundle.getText("res_3"));
 		}
@@ -103,7 +103,7 @@
 			//There is specific 'TestResources_en.xml' file, therefore resource should be retrieved
 			//from this more specific file.
 
-			var locale = new Locale({ language : "en" });
+			var locale = new ProcessPuzzleLocale({ language : "en" });
 			bundle.load(locale);
 			assertEquals("We got the English version text for the 'res_2' key.", "Resource 2", bundle.getText("res_2"));
 		}
@@ -113,14 +113,14 @@
 			//There is a even more specific 'TestResources_en_GB.xml' file, therefore resource should be retrieved
 			//from this more specific file.
 
-			var locale = new Locale( { language : "en", country : "GB" });
+			var locale = new ProcessPuzzleLocale( { language : "en", country : "GB" });
 			bundle.load(locale);
 			assertEquals("We got the English version text for the 'res_2' key.", "Resource_two", bundle.getText("res_2"));
 		}
 		
 		function test_Release(){
 			//SETUP:
-			var locale = new Locale({ language : "en" });
+			var locale = new ProcessPuzzleLocale({ language : "en" });
 			bundle.load(locale);
 			
 			//EXCERCISE:

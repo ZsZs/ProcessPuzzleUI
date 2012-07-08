@@ -31,7 +31,7 @@ window.PartyEventTest = new Class( {
       this.elementFactory;
       this.event;
       this.eventDefinition;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.resourceBundle;
       this.rssResource;
       this.webUILogger;

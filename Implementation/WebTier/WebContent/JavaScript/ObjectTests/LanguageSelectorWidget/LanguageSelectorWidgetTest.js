@@ -25,7 +25,7 @@ window.LanguageSelectorWidgetTest = new Class( {
       this.callBackWasCalled = false;
       this.componentStateManager;
       this.languageSelector;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.webUIConfiguration;
       this.webUIController;

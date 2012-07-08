@@ -23,7 +23,7 @@ window.DiagramWidgetTest = new Class( {
    
    initialize : function( options ) {
       this.setOptions( options );
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.componentStateManager;
       this.diagram;
       this.diagramContainerElement;

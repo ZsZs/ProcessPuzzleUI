@@ -28,6 +28,8 @@ provides:
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Locale.define({
 	blockFormatting: 'Block Formatting',
 	paragraph: 'Paragraph',

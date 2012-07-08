@@ -27,7 +27,7 @@ window.SkinSelectorWidgetTest = new Class( {
       this.callBackWasCalled = false;
       this.componentStateManager;
       this.skinSelector;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.webUIConfiguration;
       this.webUIController;

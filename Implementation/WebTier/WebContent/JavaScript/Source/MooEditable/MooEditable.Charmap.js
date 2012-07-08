@@ -37,6 +37,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Actions.Settings.charmap = {
 	chars: [
 		['&nbsp;', '&#160;'],

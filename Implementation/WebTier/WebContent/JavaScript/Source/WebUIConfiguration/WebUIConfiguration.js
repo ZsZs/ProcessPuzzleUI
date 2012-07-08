@@ -432,7 +432,7 @@ var WebUIConfiguration = new Class({
    determineAvailableLocales : function(){
       for( var i = 0; i < this.getI18LocaleElements().length; i++ ) {
          var i18LocaleText = this.getI18Locale( i );
-         var locale = new Locale();
+         var locale = new ProcessPuzzleLocale();
          locale.parse( i18LocaleText );
          this.availableLocales.add( locale );
       }

@@ -42,7 +42,7 @@ window.RemoteResourceTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.desktopInternationalization = new XMLResourceBundle( this.webUIConfiguration );
-      this.desktopInternationalization.load( new Locale({ language : "en" }) );
+      this.desktopInternationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
         
       this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'" } );
       var elementDefinition = this.desktopDefinition.selectNode( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT );

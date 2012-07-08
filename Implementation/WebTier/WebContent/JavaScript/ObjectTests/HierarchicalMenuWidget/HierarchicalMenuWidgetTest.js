@@ -33,7 +33,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
       this.callBackMessage;
       this.callBackWasCalled = false;
       this.componentStateManager;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.menuWidget;
       this.messageBus;
       this.resourceBundle;

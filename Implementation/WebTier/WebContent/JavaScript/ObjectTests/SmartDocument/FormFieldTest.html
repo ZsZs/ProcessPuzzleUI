@@ -93,7 +93,7 @@
          webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
          webUILogger = new WebUILogger( webUIConfiguration );
          bundle = new XMLResourceBundle( webUIConfiguration );
-         bundle.load( new Locale({ language : "en" }) );
+         bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
 		   
          documentContentResource = new XmlResource(  DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
          documentDefinition = new XmlResource( DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );

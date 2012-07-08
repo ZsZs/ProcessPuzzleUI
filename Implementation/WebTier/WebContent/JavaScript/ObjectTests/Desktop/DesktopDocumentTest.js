@@ -38,7 +38,7 @@ window.DesktopDocumentTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
       this.desktopInternationalization = new XMLResourceBundle( this.webUIConfiguration );
-      this.desktopInternationalization.load( new Locale({ language : "en" }) );
+      this.desktopInternationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
         
       this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI );
       this.headerDefinition = this.desktopDefinition.selectNode( this.constants.HEADER_DEFINITION_SELECTOR );

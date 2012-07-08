@@ -1,11 +1,11 @@
 window.FormElementTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onFailure', 'onSuccess'],
+   Binds : ['onConstructed', 'onConstructionError'],
 
    options : {
       testMethods : [
           { method : 'unmarshall_determinesElementProperties', isAsynchron : false },
-          { method : 'construct_createsFormElement', isAsynchron : false }]
+          { method : 'construct_createsFormElement', isAsynchron : true }]
    },
 
    constants : {
@@ -21,6 +21,7 @@ window.FormElementTest = new Class( {
       
       this.bundle;
       this.formElement;
+      this.definitionElement;
       this.documentContentResource;
       this.documentDefinition;
       this.webUIConfiguration;
@@ -31,11 +32,15 @@ window.FormElementTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.bundle = new XMLResourceBundle( this.webUIConfiguration );
-      this.bundle.load( new Locale({ language : "en" }) );
+      this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-      this.formElement = new FormElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_SELECTOR ), this.bundle, this.documentContentResource );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
+      this.definitionElement = this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_SELECTOR );
+      this.formElement = new FormElement( this.definitionElement, this.bundle, this.documentContentResource, {  
+         onConstructed : this.onConstructed, 
+         onConstructionError : this.onConstructionError
+      });
       this.documentContainerElement = $( this.constants.DOCUMENT_CONTAINER_ID );
    },
    
@@ -55,17 +60,23 @@ window.FormElementTest = new Class( {
    },
    
    construct_createsFormElement : function() {
-      this.formElement.unmarshall();
-      this.formElement.construct( this.documentContainerElement, "bottom" );
-      
-      assertThat( this.documentContainerElement.getChildren( 'form' ).length, equalTo( 1 ));         
+      this.testCaseChain.chain(
+         function(){
+            this.formElement.unmarshall();
+            this.formElement.construct( this.documentContainerElement, "bottom" );
+         }.bind( this ),
+         function(){
+            assertThat( this.documentContainerElement.getChildren( 'form' ).length, equalTo( 1 ));         
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
-   onSuccess : function(){
+   onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
-   onFailure : function( error ){
+   onConstructionError : function( error ){
       this.testCaseChain.callChain();
    }
 

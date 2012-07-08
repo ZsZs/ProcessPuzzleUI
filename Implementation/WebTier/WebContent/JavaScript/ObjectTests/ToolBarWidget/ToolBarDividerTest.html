@@ -90,7 +90,7 @@
       var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
 
       var componentStateManager;
-      var locale = new Locale({ language : LANGUAGE });
+      var locale = new ProcessPuzzleLocale({ language : LANGUAGE });
       var toolBar;
       var toolBarDivider;
       var toolBarContainerEelement;
@@ -112,7 +112,7 @@
          toolBarDefinition = new XmlResource( TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
          toolBarDividerDefinition = toolBarDefinition.selectNode( TOOLBAR_BUTTON_SELECTOR );
          
-         toolBar = new ToolBarWidget( { widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
+         toolBar = new ToolBarWidget({ widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
          
          toolBarDivider = new ToolBarDivider( toolBarDividerDefinition, toolBar.getElementFactory() );
          toolBarContainerElement = $( TOOLBAR_CONTAINER_ID );

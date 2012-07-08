@@ -1126,7 +1126,7 @@ MooEditable.Locale = {
 
    define : function( key, value ) {
       if( typeOf( window.Locale ) != 'null' )
-         return Locale.define( 'en-US', 'MooEditable', key, value );
+         return window.Locale.define( 'en-US', 'MooEditable', key, value );
       if( typeOf( key ) == 'object' )
          Object.merge( phrases, key );
       else
@@ -1135,7 +1135,7 @@ MooEditable.Locale = {
 
    get : function( key ) {
       if( typeOf( window.Locale ) != 'null' )
-         return Locale.get( 'MooEditable.' + key );
+         return window.Locale.get( 'MooEditable.' + key );
       return key ? phrases[key] : '';
    }
 

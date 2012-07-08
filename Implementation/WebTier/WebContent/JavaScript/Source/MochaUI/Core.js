@@ -1038,6 +1038,6 @@ if( Browser.Engine.webkit ) {
     };
     
     new MUI.Require({
-        js: [pathPrefix + 'JavaScript/Libraries/MochaUI/WebKitShadower.js']
+        js: [pathPrefix + 'JavaScript/Source/MochaUI/WebKitShadower.js']
     });
 }

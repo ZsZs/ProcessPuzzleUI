@@ -22,7 +22,7 @@ window.TextAreaEditorTest = new Class( {
       this.clickEvent;
       this.internationalization;
       this.lastMessage;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.textAreaEditor;
       this.textAreaElement;
       this.webUIConfiguration;

@@ -443,7 +443,7 @@ var Desktop = new Class({
    determineCurrentLocale : function() {
       if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
       else {
-         this.currentLocale = new Locale();
+         this.currentLocale = new ProcessPuzzleLocale();
          this.currentLocale.parse( this.webUIConfiguration.getI18DefaultLocale() );
       }
    }.protect(),

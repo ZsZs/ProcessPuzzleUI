@@ -20,7 +20,7 @@ window.DiagramFigureTest = new Class({
       this.setOptions( options );
       this.canvas;
       this.elementFactory;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.figure;
       this.figureDefinition;
       this.componentStateManager;

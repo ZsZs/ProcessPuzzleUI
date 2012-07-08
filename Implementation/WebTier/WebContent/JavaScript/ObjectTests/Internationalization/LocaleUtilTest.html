@@ -38,9 +38,9 @@
 		function tearDown(){}
 
 		function testGetFileName_ForLanguageOnly(){
-			var locale = new Locale( { language : "en" } );
+			var locale = new ProcessPuzzleLocale( { language : "en" } );
 			var fileName = "TestResources";
-			var util = new LocaleUtil();
+			var util = new ProcessPuzzleLocaleUtil();
 			var fileNames = new Array();
 			fileNames = util.getFileNameList(locale, fileName, ".xml");
 			assertEquals("2 files should be found.", 2, fileNames.length);
@@ -50,9 +50,9 @@
 		}
 
 		function testGetFileName_ForCountry(){
-			var locale = new Locale( { language : "en", country : "GB" } );
+			var locale = new ProcessPuzzleLocale( { language : "en", country : "GB" } );
 			var fileName = "TestResources";
-			var util = new LocaleUtil();
+			var util = new ProcessPuzzleLocaleUtil();
 			var fileNames = new Array();
 			fileNames = util.getFileNameList(locale, fileName, ".xml");
 			assertEquals("3 files should be found.", 3, fileNames.length);
@@ -64,7 +64,7 @@
 
 
 		function testSplitName(){
-			var util = new LocaleUtil();
+			var util = new ProcessPuzzleLocaleUtil();
 			var nameTokens = util.splitName( "WebUiInternalization_hu_HU.xml" );
 			assertEquals( "The name is combined from 3 parts.", 3, nameTokens.length );
 		}

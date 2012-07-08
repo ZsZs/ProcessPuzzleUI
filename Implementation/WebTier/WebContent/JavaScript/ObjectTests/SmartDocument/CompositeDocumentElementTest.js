@@ -51,7 +51,7 @@ window.CompositeDocumentElementTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
       this.internationalization = new XMLResourceBundle( this.webUIConfiguration );
-      this.internationalization.load( new Locale({ language : "en" }) );
+      this.internationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
       this.elementDefinition = this.documentDefinition.selectNode( this.constants.ELEMENT_SELECTOR );

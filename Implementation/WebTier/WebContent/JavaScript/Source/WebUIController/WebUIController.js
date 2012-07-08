@@ -286,7 +286,7 @@ var WebUIController = new Class({
 	
    determineCurrentUserLocale : function() {
       this.logger.debug( this.options.componentName + ".determineCurrentUserLocale() started." );
-      var browserLanguage = new Locale();
+      var browserLanguage = new ProcessPuzzleLocale();
       browserLanguage.parse( navigator.language || navigator.userLanguage );
       browserLanguage.options.country = null;
       browserLanguage.options.variant = null;
@@ -294,12 +294,12 @@ var WebUIController = new Class({
          var storedState = this.stateManager.retrieveComponentState( this.options.componentName ); 
          if( storedState ) {
             var localeString = storedState['locale'];
-            this.locale = new Locale();
+            this.locale = new ProcessPuzzleLocale();
             this.locale.parse( localeString );
          }else if( this.webUIConfiguration.isSupportedLocale( browserLanguage )){
             this.locale = browserLanguage;
          }else {
-            this.locale = new Locale();
+            this.locale = new ProcessPuzzleLocale();
             this.locale.parse( this.webUIConfiguration.getI18DefaultLocale() );
          }
       }
@@ -368,7 +368,7 @@ var WebUIController = new Class({
       this.logger.debug( this.options.componentName + ".setLanguage() started." );
       prefferedLanguage = newLanguage;
       if(newLanguage != null) {
-         var locale = new Locale(newLanguage);
+         var locale = new ProcessPuzzleLocale(newLanguage);
          if( applicationConfiguration != null) {
             applicationConfiguration.setLocale(locale);
             this.loadInternationalizations(applicationConfiguration.getBundlePath(),locale);

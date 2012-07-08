@@ -20,6 +20,8 @@ provides: [MooEditable.Group]
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Group = new Class({
 
 	Implements: [Options],

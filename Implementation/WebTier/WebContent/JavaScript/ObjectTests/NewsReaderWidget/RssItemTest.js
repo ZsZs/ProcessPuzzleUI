@@ -27,7 +27,7 @@ window.RssItemTest = new Class( {
       this.elementFactory;
       this.item;
       this.itemDefinition;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.resourceBundle;
       this.rssResource;
       this.webUILogger;

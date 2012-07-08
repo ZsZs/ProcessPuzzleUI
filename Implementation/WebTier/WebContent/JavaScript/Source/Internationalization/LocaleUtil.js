@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
-var LocaleUtil = new Class({
+var ProcessPuzzleLocaleUtil = new Class({
 
 	// Constructor
 	initialize: function () {

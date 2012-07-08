@@ -34,7 +34,7 @@ window.HtmlDocumentTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
       this.bundle = new XMLResourceBundle( this.webUIConfiguration );
-      this.bundle.load( new Locale({ language : "en" }) );
+      this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
         
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );

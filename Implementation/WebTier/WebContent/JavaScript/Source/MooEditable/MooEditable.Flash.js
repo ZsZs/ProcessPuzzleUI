@@ -37,6 +37,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Locale.define({
 	embed: 'Enter embed code',
 	flashEmbed: 'Flash Embed'

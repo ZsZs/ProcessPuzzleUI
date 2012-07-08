@@ -37,6 +37,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Actions.Settings.pagebreak = {
 	imageFile: '../../Assets/MooEditable/Other/pagebreak.gif'
 };

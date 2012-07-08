@@ -19,6 +19,8 @@ provides: [MooEditable.UI.ButtonOverlay]
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.UI.ButtonOverlay = new Class({
 
 	Extends: MooEditable.UI.Button,

@@ -33,7 +33,7 @@ window.CompositeTreeNodeTest = new Class({
       this.compositeTreeNodeDefinition;
       this.compositeTreeNodeType;
       this.elementFactory;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.parentNode;
       this.resourceBundle;
       this.rootNode;

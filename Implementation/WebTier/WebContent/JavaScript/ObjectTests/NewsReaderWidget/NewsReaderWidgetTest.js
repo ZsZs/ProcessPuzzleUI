@@ -24,7 +24,7 @@ window.NewsReaderWidgetTest = new Class( {
       this.setOptions( options );
       
       this.componentStateManager;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.messageBus;
       this.newsReaderWidget;
       this.resourceBundle;

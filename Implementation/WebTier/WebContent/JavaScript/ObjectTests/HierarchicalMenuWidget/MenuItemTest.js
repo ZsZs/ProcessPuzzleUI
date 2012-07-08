@@ -25,7 +25,7 @@ window.MenuItemTest = new Class( {
       this.menuItem;
       this.menuItemDefinition;
       this.elementFactory;
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.menuDefinition;
       this.messageBus;
       this.resourceBundle;

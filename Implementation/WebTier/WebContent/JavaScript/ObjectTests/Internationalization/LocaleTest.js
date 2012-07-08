@@ -1,4 +1,4 @@
-window.LocaleTest = new Class( {
+window.ProcessPuzzleLocaleTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onFailure', 'onSuccess'],
 
@@ -24,7 +24,7 @@ window.LocaleTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.locale = new Locale({ language: this.constants.LANGUAGE, country: this.constants.COUNTRY });
+      this.locale = new ProcessPuzzleLocale({ language: this.constants.LANGUAGE, country: this.constants.COUNTRY });
    },
    
    afterEachTest : function (){
@@ -37,24 +37,24 @@ window.LocaleTest = new Class( {
    },
 
    instantiate_whenNoArgumentIsGiven_usesDefaults : function() {
-      locale = new Locale();
+      locale = new ProcessPuzzleLocale();
       assertEquals( "Language default is:", "en", locale.getLanguage() );
       assertNull( "Country default is null.",locale.getCountry() );
       assertNull( "Variant default is null", locale.getVariant() );
    },
 
    equals_whenAllOptionsIsGiven_comparesAllOfThem : function(){
-      var sameLocale = new Locale({ language: this.constants.LANGUAGE, country: this.constants.COUNTRY });
-      var differentInLanguageAndCountry = new Locale({ language: "en", country: "EN" });
+      var sameLocale = new ProcessPuzzleLocale({ language: this.constants.LANGUAGE, country: this.constants.COUNTRY });
+      var differentInLanguageAndCountry = new ProcessPuzzleLocale({ language: "en", country: "EN" });
       
       assertThat( sameLocale.equals( this.locale ), is( true ));
       assertThat( differentInLanguageAndCountry.equals( this.locale ), is( false ));
    },
    
    equals_whenOnlyLanguageIsGiven_comparesOnlyLanguage : function(){
-      var subjectLocale = new Locale({ language: "hu" });
-      var sameLocale = new Locale({ language: "hu" });
-      var differentInLanguage = new Locale({ language: "en" });
+      var subjectLocale = new ProcessPuzzleLocale({ language: "hu" });
+      var sameLocale = new ProcessPuzzleLocale({ language: "hu" });
+      var differentInLanguage = new ProcessPuzzleLocale({ language: "en" });
       
       assertThat( sameLocale.equals( subjectLocale ), is( true ));
       assertThat( sameLocale.equals( this.locale ), is( false ));
@@ -62,7 +62,7 @@ window.LocaleTest = new Class( {
    },
    
    parse_whenDelimiterIsComma_determinesLanguageCountryAndVariant : function() {
-      var locale = new Locale();
+      var locale = new ProcessPuzzleLocale();
       locale.parse( "en, GB, EURO" );
       assertEquals( "en", locale.getLanguage() );
       assertEquals( "GB",locale.getCountry() );
@@ -70,7 +70,7 @@ window.LocaleTest = new Class( {
    },
 
    parse_whenDelimiterIsHyphen_determinesLanguageCountryAndVariant : function() {
-      var locale = new Locale();
+      var locale = new ProcessPuzzleLocale();
       locale.parse( "en-GB-EURO" );
       assertEquals( "en", locale.getLanguage() );
       assertEquals( "GB",locale.getCountry() );

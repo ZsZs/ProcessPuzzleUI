@@ -65,7 +65,7 @@ var LanguageSelectorWidget = new Class({
    
    onSelection : function() {
       var currentLocale = this.locale;
-      var newLocale = new Locale();
+      var newLocale = new ProcessPuzzleLocale();
       newLocale.parse( this.selectElement.options[this.selectElement.selectedIndex].value );
       var message = new LanguageChangedMessage({ previousLocale : currentLocale, newLocale : newLocale, originator : this.options.widgetContainerId });
       this.messageBus.notifySubscribers( message );
@@ -98,7 +98,7 @@ var LanguageSelectorWidget = new Class({
    determineAvailableLocales : function(){
       for( var i = 0; i < this.webUIConfiguration.getI18LocaleElements().length; i++ ) {
          var i18LocaleText = this.webUIConfiguration.getI18Locale( i );
-         var locale = new Locale();
+         var locale = new ProcessPuzzleLocale();
          locale.parse( i18LocaleText );
          this.availableLocales.add( locale );
       }

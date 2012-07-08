@@ -18,7 +18,7 @@ window.PhotoGaleryImageTest = new Class( {
    
    initialize : function( options ) {
       this.setOptions( options );
-      this.locale = new Locale({ language : this.constants.LANGUAGE });
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.photoGaleryDefinition;
       this.photoGaleryImage;
       this.imageDefinition;

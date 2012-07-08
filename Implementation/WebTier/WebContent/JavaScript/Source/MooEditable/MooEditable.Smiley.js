@@ -38,6 +38,8 @@ usage: |
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.Actions.Settings.smiley = {
 	imagesPath: '../../Assets/MooEditable/Smiley/',
 	smileys: ['angryface', 'blush', 'gasp', 'grin', 'halo', 'lipsaresealed', 'smile', 'undecided', 'wink'],

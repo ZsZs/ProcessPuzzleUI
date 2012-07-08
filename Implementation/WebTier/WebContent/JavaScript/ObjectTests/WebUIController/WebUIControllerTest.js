@@ -89,7 +89,7 @@ window.WebUIControllerTest = new Class( {
          function(){
             assertThat( this.controller.getCurrentLocale().getLanguage(), equalTo( 'hu' ));
 
-            var noneDefaultLanguage = new Locale({ language : 'en' });
+            var noneDefaultLanguage = new ProcessPuzzleLocale({ language : 'en' });
             this.controller.changeLanguage( noneDefaultLanguage );
          }.bind( this ),
          function(){
@@ -183,7 +183,7 @@ window.WebUIControllerTest = new Class( {
             
             //EXCERCISE:
             var previousLocale = this.controller.getCurrentLocale();
-            var newLocale = new Locale({ language : 'en' });
+            var newLocale = new ProcessPuzzleLocale({ language : 'en' });
             var message = new LanguageChangedMessage({newLocale : newLocale, previousLocale : previousLocale, originator : 'WebUIControllerTest' });
             this.messageBus.notifySubscribers( message );
       

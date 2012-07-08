@@ -21,6 +21,8 @@ provides: [MooEditable.UI.ExtendedLinksDialog]
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 (function(){
     
 MooEditable.Locale.define({

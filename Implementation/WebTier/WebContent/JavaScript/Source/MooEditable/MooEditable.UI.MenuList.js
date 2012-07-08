@@ -19,6 +19,8 @@ provides: [MooEditable.UI.MenuList]
 ...
 */
 
+//= require ../MooEditable/MooEditable.js
+
 MooEditable.UI.MenuList = new Class({
 
 	Implements: [Events, Options],

@@ -78,7 +78,8 @@ var DocumentElement = new Class({
    
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
-      if( this.status != DocumentElement.States.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
+      if( this.status != DocumentElement.States.UNMARSHALLED ) 
+         throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
       assertThat( contextElement, not( nil() ));
       this.contextElement = contextElement;
