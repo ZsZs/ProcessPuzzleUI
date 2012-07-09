@@ -1556,7 +1556,7 @@ MUI.extend({
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(column);
 
-		if( columnInstance.options.sortable ){
+		if( columnInstance.options.sortable && columnInstance.options.container.retrieve( 'sortables' ) ){
 			columnInstance.options.container.retrieve( 'sortables' ).removeItems( instance.panelWrapperEl );
 		}
 
