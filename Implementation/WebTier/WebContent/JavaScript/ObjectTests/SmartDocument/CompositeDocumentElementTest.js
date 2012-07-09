@@ -127,7 +127,7 @@ window.CompositeDocumentElementTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.compositeElement.isSuccess(), is( false ));
-            assertThat( this.compositeElement.getState(), equalTo( DocumentElement.States.UNMARSHALLED ));
+            assertThat( this.compositeElement.getState(), equalTo( DocumentElement.States.INITIALIZED ));
             assertThat( this.documentContainerElement.getChildren().length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
@@ -160,7 +160,8 @@ window.CompositeDocumentElementTest = new Class( {
       this.testCaseChain.callChain();
    },
 
-   onConstructionError : function(){
+   onConstructionError : function( error ){
+      this.error = error;
       this.testCaseChain.callChain();
    }
 });

@@ -31,7 +31,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 var Desktop = new Class({
    Implements : [Events, Options, TimeOutBehaviour], 
-   Binds : ['constructColumns', 
+   Binds : ['checkTimeOut',
+            'constructColumns', 
             'constructContentArea', 
             'constructFooter', 
             'constructHeader', 
@@ -320,10 +321,7 @@ var Desktop = new Class({
    //Private methods
    callNextConfigurationStep: function(){
       if( this.isSuccess() ) this.constructionChain.callChain();
-      else{
-         this.revertConstruction();
-         this.fireEvent( 'error', this.error );
-      }
+      else{ this.revertConstruction(); }
    }.protect(),
    
    configureLogger : function() {
@@ -538,6 +536,7 @@ var Desktop = new Class({
       this.destroyColumns();
       this.removeDesktopEvents();
       this.state = DesktopElement.States.INITIALIZED;      
+      this.fireEvent( 'error', this.error );
    }.protect(),
    
    showDesktop: function(){
@@ -549,6 +548,11 @@ var Desktop = new Class({
       this.logger.debug( this.options.componentName + ".subscribeToWebUIMessages() started." );
       this.messageBus.subscribeToMessage( MenuSelectedMessage, this.webUIMessageHandler );
       this.callNextConfigurationStep();
+   }.protect(),
+   
+   timeOut : function( exception ){
+      this.error = exception;
+      this.revertConstruction();
    }.protect(),
    
    unmarshallColumns: function(){

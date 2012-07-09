@@ -32,7 +32,7 @@
 // * Optimize. There is always room for speed improvements.
 
 // Only add this code if we do not already have a canvas implementation
-if (!document.createElement('canvas').getContext) {
+if( !document.createElement('canvas').getContext ) {
 
 (function() {
 

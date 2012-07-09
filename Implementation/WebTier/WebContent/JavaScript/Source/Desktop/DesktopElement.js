@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DesktopElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
+   Binds: ['checkTimeOut', 'constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
    
    options: {
       componentContainerId: "desktop",
@@ -82,7 +82,6 @@ var DesktopElement = new Class({
    onConstructionError: function( error ){
       this.error = error;
       this.revertConstruction();
-      this.fireEvent( 'error', this.error );
    },
    
    unmarshall: function(){
@@ -163,6 +162,7 @@ var DesktopElement = new Class({
    
    revertConstruction: function(){
       this.state = DesktopElement.States.INITIALIZED;
+      this.fireEvent( 'error', this.error );
    }.protect(),
    
    setUp: function(){
@@ -173,6 +173,11 @@ var DesktopElement = new Class({
          throw new IllegalArgumentException( "Parameter 'componetContainerId' in invalid." );
       this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.state = DesktopElement.States.INITIALIZED;
+   }.protect(),
+   
+   timeOut : function( exception ){
+      this.error = exception;
+      this.revertConstruction();
    }.protect(),
    
    unmarshallElementProperties: function(){

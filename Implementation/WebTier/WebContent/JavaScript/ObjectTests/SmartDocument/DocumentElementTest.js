@@ -214,7 +214,7 @@ window.DocumentElementTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.documentElementWithPlugin.isSuccess(), is( false ));
-            assertThat( this.documentElementWithPlugin.getState(), equalTo( DocumentElement.States.UNMARSHALLED ));
+            assertThat( this.documentElementWithPlugin.getState(), equalTo( DocumentElement.States.INITIALIZED ));
             assertThat( this.documentContainerElement.getChildren().length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )

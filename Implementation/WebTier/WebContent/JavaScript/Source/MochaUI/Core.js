@@ -1025,19 +1025,3 @@ MUI.extend({
 	}
 	
 });
-
-if( Browser.Engine.webkit ) {
-	 var webUIController = null;
-	 var pathPrefix = "";
-	 try{
-		 webUIController = Class.getInstanceOf( WebUIController );
-		 if( webUIController != null ) pathPrefix = webUIController.getContextRootPrefix();
-    }catch( e ){
-         if( !(typeof( contextRootPrefix ) === 'undefined' )) 
-            pathPrefix = contextRootPrefix;
-    };
-    
-    new MUI.Require({
-        js: [pathPrefix + 'JavaScript/Source/MochaUI/WebKitShadower.js']
-    });
-}

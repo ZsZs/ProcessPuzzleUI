@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DocumentElement = new Class({
    Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['associateEditor', 'authorization', 'createHtmlElement', 'constructPlugin', 'finalizeConstruction', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
+   Binds: ['associateEditor', 'authorization', 'checkTimeOut', 'createHtmlElement', 'constructPlugin', 'finalizeConstruction', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
    
    options: {
       componentName : "DocumentElement",
@@ -108,7 +108,6 @@ var DocumentElement = new Class({
    onPluginError: function( exception ){
       this.error = exception;
       this.revertConstruction();
-      this.fireEvent( 'constructionError', this.error );
    },
    
    unmarshall: function(){
@@ -216,8 +215,15 @@ var DocumentElement = new Class({
       this.constructionChain.clearChain();
       if( this.plugin ) this.plugin.destroy();
       this.deleteHtmlElement();
+      this.status = DocumentElement.States.INITIALIZED;
+      this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
+   timeOut : function( exception ){
+      this.error = exception;
+      this.revertConstruction();
+   }.protect(),
+   
    unmarshallId: function(){
       this.id = this.definitionElementAttribute( this.options.idSelector );
       if( !this.id ) this.id = this.options.idPrefix + (new Date().getTime());
