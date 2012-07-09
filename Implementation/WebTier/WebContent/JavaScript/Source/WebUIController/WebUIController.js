@@ -114,6 +114,7 @@ var WebUIController = new Class({
    changeLanguage : function( locale ){
       this.logger.debug( this.options.componentName + ".changeLanguage()." );
       this.destroy();
+      if( this.options.showSplashForm ) this.showSplashForm();
       this.locale = locale;
       this.configure.delay( this.options.reConfigurationDelay, this );
    },
@@ -123,6 +124,7 @@ var WebUIController = new Class({
       if( newSkinName != this.getCurrentSkin() ){
          if( this.options.eraseStateWhenSkinChange ) this.stateManager.reset();
          this.destroy();
+         if( this.options.showSplashForm ) this.showSplashForm();
          this.skin = newSkinName;
          this.configure.delay( this.options.reConfigurationDelay, this );
       }
