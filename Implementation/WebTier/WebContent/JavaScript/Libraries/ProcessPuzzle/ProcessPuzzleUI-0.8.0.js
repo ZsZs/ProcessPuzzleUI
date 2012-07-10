@@ -3998,7 +3998,7 @@ MUI.extend({
 		var columnInstances = MUI.Columns.instances;
 		var columnInstance = columnInstances.get(column);
 
-		if( columnInstance.options.sortable ){
+		if( columnInstance.options.sortable && columnInstance.options.container.retrieve( 'sortables' ) ){
 			columnInstance.options.container.retrieve( 'sortables' ).removeItems( instance.panelWrapperEl );
 		}
 
@@ -10989,6 +10989,7 @@ var ComplexContentBehaviour = new Class({
       documentWrapperStyleSelector : "document/@elementStyle",
       documentWrapperTag : "div",
       documentWrapperTagSelector : "document/@tag",
+      errorDocumentUri : "Content/System/ErrorDocument.xml",
       eventSourcesSelector : "eventOriginators",
       handleMenuSelectedEvents : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
@@ -11061,16 +11062,16 @@ var ComplexContentBehaviour = new Class({
    
    onDocumentError: function( error ){
       this.error = error;
-      this.revertConstruction();
+      this.loadErrorDocument();
       this.fireEvent( 'panelError', error );
-      this.fireEvent('panelConstructed', this ); 
+      this.constructionChain.callChain();
    },
    
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
       this.onContainerResize();
       this.storeComponentState();
-      this.fireEvent( 'documentLoaded', this.documentDefinitionUri );
+      this.fireEvent( 'documentLoaded', this.documentDefinitionUri, this.options.eventFireDelay );
       this.constructionChain.callChain();
    },
    
@@ -11082,8 +11083,8 @@ var ComplexContentBehaviour = new Class({
    onHeaderConstructionError: function( error ){
       this.error = error;
       this.revertConstruction();
-      this.fireEvent( 'panelError', this.error );
-      this.fireEvent('panelConstructed', this ); 
+      this.fireEvent( 'panelError', this.error, this.options.eventFireDelay );
+      this.fireEvent('panelConstructed', this, this.options.eventFireDelay ); 
    },
    
    onPluginConstructed: function(){
@@ -11094,9 +11095,9 @@ var ComplexContentBehaviour = new Class({
    
    onPluginError: function( error ){
       this.error = error;
-      this.revertConstruction();
+      this.instantiateErrorDocument();
       this.fireEvent( 'panelError', this.error );
-      this.fireEvent('panelConstructed', this ); 
+      this.constructionChain.callChain();
    },
    
    webUIMessageHandler: function( webUIMessage ){
@@ -11189,7 +11190,7 @@ var ComplexContentBehaviour = new Class({
             this.plugin.construct();
          }catch( e ){
             this.logger.error( "Constructing plugin of panel: '" + this.name + "' caused error." );
-            throw new DesktopElementConfigurationException( this.name );
+            //throw new DesktopElementConfigurationException( this.name );
          }
       } else this.constructionChain.callChain();
    }.protect(),
@@ -11285,6 +11286,20 @@ var ComplexContentBehaviour = new Class({
       return newDocument;
    }.protect(),
    
+   instantiateErrorDocument: function(){
+      this.documentDefinitionUri = this.options.errorDocumentUri;
+      this.documentContentUri = null;
+      this.documentVariables = null;
+      
+      this.document = this.instantiateDocument( AbstractDocument.Types.SMART, { 
+         documentContainerId : this.documentWrapperId, 
+         documentDefinitionUri : this.options.errorDocumentUri, 
+         onDocumentReady : this.onDocumentReady,
+         onDocumentError : this.onDocumentError
+      });
+      this.document.unmarshall();
+   }.protect(),
+   
    internationalizeContentUri: function(){
       this.contentUrl = this.contentUrl.substring( 0, this.contentUrl.lastIndexOf( ".html" )) + "_" + this.internationalization.getLocale().getLanguage() + ".html";
    }.protect(),
@@ -11300,6 +11315,13 @@ var ComplexContentBehaviour = new Class({
       });
       this.document.unmarshall();
       this.constructDocument();
+   }.protect(),
+   
+   loadErrorDocument: function(){
+      this.documentDefinitionUri = this.options.errorDocumentUri;
+      this.documentContentUri = null;
+      this.documentVariables = null;
+      this.loadDocument( AbstractDocument.Types.SMART );
    }.protect(),
    
    parseStateSpecification: function(){
@@ -11353,7 +11375,7 @@ var ComplexContentBehaviour = new Class({
       this.constructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertComplexContentBehaviour: function(){
       this.destroyComponents();
       this.resetProperties();
    }.protect(),
@@ -11571,6 +11593,7 @@ var Desktop = new Class({
       contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
       descriptionSelector : "/desktopConfiguration/description",
+      errorDocumentUri : "Content/System/ErrorDocument.xml",
       eventFireDelay : 5,
       footerSelector : "/desktopConfiguration/footer",
       headerSelector : "/desktopConfiguration/header",
@@ -12091,7 +12114,12 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onPanelConstructed, onDestructed: this.onPanelDestructed, onError : this.onError });
+         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { 
+            componentContainerId: this.containerId,
+            errorDocumentUri : this.options.errorDocumentUri,
+            onConstructed: this.onPanelConstructed, 
+            onDestructed: this.onPanelDestructed, 
+            onError : this.onError });
          desktopPanel.unmarshall();
          this.panels.put( desktopPanel.getName(), desktopPanel );
       }, this );
@@ -12116,7 +12144,12 @@ var Desktop = new Class({
    unmarshallWindows: function(){
       var windowDefinitionElements = this.configurationXml.selectNodes( this.options.windowSelector );
       windowDefinitionElements.each( function( windowDefinition, index ){
-         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onWindowConstructed, onDestructed: this.onWindowDestructed, onError : this.onError });
+         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { 
+            componentContainerId: this.containerId, 
+            errorDocumentUri : this.options.errorDocumentUri,
+            onConstructed: this.onWindowConstructed, 
+            onDestructed: this.onWindowDestructed, 
+            onError : this.onError });
          desktopWindow.unmarshall();
          this.windows.put( desktopWindow.getName(), desktopWindow );
       }, this );
@@ -12285,6 +12318,7 @@ var DesktopElement = new Class({
    }.protect(),
    
    revertConstruction: function(){
+      this.stopTimeOutTimer();
       this.state = DesktopElement.States.INITIALIZED;
       this.fireEvent( 'error', this.error );
    }.protect(),
@@ -13007,7 +13041,7 @@ var DesktopPanel = new Class({
          var logMessage = exception.name + ": " + exception.message;
          logMessage += exception.stack ? "\n" + exception.stack : "";
          this.logger.error( logMessage );
-         this.fireEvent('constructed', this, this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
+         this.fireEvent( 'constructed', this, 3* this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
          this.onConstructionError( exception );
       }
    }.protect(),
@@ -13026,6 +13060,11 @@ var DesktopPanel = new Class({
       });
    }.protect(),
    
+   revertConstruction: function(){
+      this.revertComplexContentBehaviour();
+      this.parent();
+   }.protect(),
+      
    unmarshallPanelProperties: function(){
       this.columnReference = XmlResource.determineAttributeValue( this.definitionElement, this.options.columnReferenceSelector );
    }.protect(),  
@@ -13476,6 +13515,11 @@ var DesktopWindow = new Class({
       if( !this.contentUrl ) this.constructionChain.callChain();
    }.protect(),
    
+   revertConstruction: function(){
+      this.revertComplexContentBehaviour();
+      this.parent();
+   }.protect(),
+      
    unmarshallWindowProperties: function(){
    }.protect(),
 });
@@ -24715,6 +24759,7 @@ var DocumentElement = new Class({
    }.protect(),
    
    revertConstruction: function(){
+      this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       if( this.plugin ) this.plugin.destroy();
       this.deleteHtmlElement();
