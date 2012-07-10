@@ -3,7 +3,7 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
+   xsi:noNamespaceSchemaLocation="http://processpuzzle.com/Schemas/SmartDocument.xsd">
    <name>Test Smart Document</name>
    <description>This configuration supports testing Smart Document.</description>
    <version>0.5</version>

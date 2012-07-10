@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="http://processpuzzle.com/Schemas/SmartDocument.xsd">
+   <name>Error Page</name>
+   <description>Displayed when and error occurred in the front-end.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="errorDocumentBody">
+      <element tag="h1" id="errorTitle">ErrorDocument.title</element>
+      <element tag="p" id="errorTitle">ErrorDocument.introduction</element>
+   </documentBody>
+   
+</smartDocumentDefinition>

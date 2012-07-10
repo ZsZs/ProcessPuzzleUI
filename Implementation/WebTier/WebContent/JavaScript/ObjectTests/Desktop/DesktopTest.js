@@ -6,7 +6,7 @@ window.DesktopTest = new Class( {
       testMethods : [
           { method : 'initialize_loadsDesktopConfiguration', isAsynchron : false },
           { method : 'unmarshall_unmarshallsDesktopComponents', isAsynchron : false },
-          { method : 'construct_constructsWholeDekstop', isAsynchron : true }, 
+          { method : 'construct_constructsWholeDekstop', isAsynchron : true },
           { method : 'construct_subscribesForMenuSelectedMessage', isAsynchron : true }, 
           { method : 'showNotification_delegatesToMUI', isAsynchron : true }, 
           { method : 'showWindow_constructsDesktopWindow', isAsynchron : true },
@@ -66,7 +66,13 @@ window.DesktopTest = new Class( {
       this.webUILogger = this.webUIController.getLogger();
       this.webUIMessageBus = new WebUIMessageBus();
       this.resourceBundle = this.webUIController.getResourceBundle();
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : this.constants.DESKTOP_CONFIGURATION_URI, onConstructed : this.onConstructed, onDestructed : this.onDestructed, onError : this.onError });
+      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
+         configurationURI : this.constants.DESKTOP_CONFIGURATION_URI, 
+         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         onConstructed : this.onConstructed, 
+         onDestructed : this.onDestructed, 
+         onError : this.onError 
+      });
       this.desktopConfiguration = this.desktop.getConfigurationXml();
       this.desktopElement = $( this.constants.DESKTOP_ELEMENT_ID );
    },

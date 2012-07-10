@@ -89,6 +89,9 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">főszerkesztő: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmester: </Resource>
 
+    <Resource key="ErrorDocument.title" type="String">Működési probléma</Resource>
+    <Resource key="ErrorDocument.introduction" type="String">Sajnáljuk, az adott tartalom megjelenítése során működési hiba lépett fel.</Resource>
+
     <Resource key="EventWidget.location" type="String">Hely:</Resource>
     <Resource key="EventWidget.program" type="String">Program:</Resource>
     <Resource key="EventWidget.registration" type="String">Jelentkezés:</Resource>

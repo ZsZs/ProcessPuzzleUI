@@ -148,6 +148,11 @@ var DesktopWindow = new Class({
       if( !this.contentUrl ) this.constructionChain.callChain();
    }.protect(),
    
+   revertConstruction: function(){
+      this.revertComplexContentBehaviour();
+      this.parent();
+   }.protect(),
+      
    unmarshallWindowProperties: function(){
    }.protect(),
 });

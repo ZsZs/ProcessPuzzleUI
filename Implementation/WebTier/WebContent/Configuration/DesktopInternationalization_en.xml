@@ -88,6 +88,9 @@
     <Resource key="DynamicDocument.RSS.managingEditor" type="String">managing editor: </Resource>
     <Resource key="DynamicDocument.RSS.webMaster" type="String">webmaster: </Resource>
     
+    <Resource key="ErrorDocument.title" type="String">Operational Fault</Resource>
+    <Resource key="ErrorDocument.introduction" type="String">We appologize, some problem occured while loading the given content.</Resource>
+
     <Resource key="EventWidget.location" type="String">Location:</Resource>
     <Resource key="EventWidget.program" type="String">Program:</Resource>
     <Resource key="EventWidget.registration" type="String">Registration:</Resource>

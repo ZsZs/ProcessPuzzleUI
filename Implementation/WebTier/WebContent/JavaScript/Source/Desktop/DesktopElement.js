@@ -161,6 +161,7 @@ var DesktopElement = new Class({
    }.protect(),
    
    revertConstruction: function(){
+      this.stopTimeOutTimer();
       this.state = DesktopElement.States.INITIALIZED;
       this.fireEvent( 'error', this.error );
    }.protect(),

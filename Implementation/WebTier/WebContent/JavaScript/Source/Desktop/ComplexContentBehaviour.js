@@ -49,6 +49,7 @@ var ComplexContentBehaviour = new Class({
       documentWrapperStyleSelector : "document/@elementStyle",
       documentWrapperTag : "div",
       documentWrapperTagSelector : "document/@tag",
+      errorDocumentUri : "Content/System/ErrorDocument.xml",
       eventSourcesSelector : "eventOriginators",
       handleMenuSelectedEvents : false,
       handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
@@ -121,16 +122,16 @@ var ComplexContentBehaviour = new Class({
    
    onDocumentError: function( error ){
       this.error = error;
-      this.revertConstruction();
+      this.loadErrorDocument();
       this.fireEvent( 'panelError', error );
-      this.fireEvent('panelConstructed', this ); 
+      this.constructionChain.callChain();
    },
    
    onDocumentReady: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' finished." );
       this.onContainerResize();
       this.storeComponentState();
-      this.fireEvent( 'documentLoaded', this.documentDefinitionUri );
+      this.fireEvent( 'documentLoaded', this.documentDefinitionUri, this.options.eventFireDelay );
       this.constructionChain.callChain();
    },
    
@@ -142,8 +143,8 @@ var ComplexContentBehaviour = new Class({
    onHeaderConstructionError: function( error ){
       this.error = error;
       this.revertConstruction();
-      this.fireEvent( 'panelError', this.error );
-      this.fireEvent('panelConstructed', this ); 
+      this.fireEvent( 'panelError', this.error, this.options.eventFireDelay );
+      this.fireEvent('panelConstructed', this, this.options.eventFireDelay ); 
    },
    
    onPluginConstructed: function(){
@@ -154,9 +155,9 @@ var ComplexContentBehaviour = new Class({
    
    onPluginError: function( error ){
       this.error = error;
-      this.revertConstruction();
+      this.instantiateErrorDocument();
       this.fireEvent( 'panelError', this.error );
-      this.fireEvent('panelConstructed', this ); 
+      this.constructionChain.callChain();
    },
    
    webUIMessageHandler: function( webUIMessage ){
@@ -249,7 +250,7 @@ var ComplexContentBehaviour = new Class({
             this.plugin.construct();
          }catch( e ){
             this.logger.error( "Constructing plugin of panel: '" + this.name + "' caused error." );
-            throw new DesktopElementConfigurationException( this.name );
+            //throw new DesktopElementConfigurationException( this.name );
          }
       } else this.constructionChain.callChain();
    }.protect(),
@@ -345,6 +346,20 @@ var ComplexContentBehaviour = new Class({
       return newDocument;
    }.protect(),
    
+   instantiateErrorDocument: function(){
+      this.documentDefinitionUri = this.options.errorDocumentUri;
+      this.documentContentUri = null;
+      this.documentVariables = null;
+      
+      this.document = this.instantiateDocument( AbstractDocument.Types.SMART, { 
+         documentContainerId : this.documentWrapperId, 
+         documentDefinitionUri : this.options.errorDocumentUri, 
+         onDocumentReady : this.onDocumentReady,
+         onDocumentError : this.onDocumentError
+      });
+      this.document.unmarshall();
+   }.protect(),
+   
    internationalizeContentUri: function(){
       this.contentUrl = this.contentUrl.substring( 0, this.contentUrl.lastIndexOf( ".html" )) + "_" + this.internationalization.getLocale().getLanguage() + ".html";
    }.protect(),
@@ -360,6 +375,13 @@ var ComplexContentBehaviour = new Class({
       });
       this.document.unmarshall();
       this.constructDocument();
+   }.protect(),
+   
+   loadErrorDocument: function(){
+      this.documentDefinitionUri = this.options.errorDocumentUri;
+      this.documentContentUri = null;
+      this.documentVariables = null;
+      this.loadDocument( AbstractDocument.Types.SMART );
    }.protect(),
    
    parseStateSpecification: function(){
@@ -413,7 +435,7 @@ var ComplexContentBehaviour = new Class({
       this.constructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertComplexContentBehaviour: function(){
       this.destroyComponents();
       this.resetProperties();
    }.protect(),

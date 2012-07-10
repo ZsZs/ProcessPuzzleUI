@@ -81,6 +81,7 @@ var Desktop = new Class({
       contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
       descriptionSelector : "/desktopConfiguration/description",
+      errorDocumentUri : "Content/System/ErrorDocument.xml",
       eventFireDelay : 5,
       footerSelector : "/desktopConfiguration/footer",
       headerSelector : "/desktopConfiguration/header",
@@ -601,7 +602,12 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onPanelConstructed, onDestructed: this.onPanelDestructed, onError : this.onError });
+         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { 
+            componentContainerId: this.containerId,
+            errorDocumentUri : this.options.errorDocumentUri,
+            onConstructed: this.onPanelConstructed, 
+            onDestructed: this.onPanelDestructed, 
+            onError : this.onError });
          desktopPanel.unmarshall();
          this.panels.put( desktopPanel.getName(), desktopPanel );
       }, this );
@@ -626,7 +632,12 @@ var Desktop = new Class({
    unmarshallWindows: function(){
       var windowDefinitionElements = this.configurationXml.selectNodes( this.options.windowSelector );
       windowDefinitionElements.each( function( windowDefinition, index ){
-         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { componentContainerId: this.containerId, onConstructed: this.onWindowConstructed, onDestructed: this.onWindowDestructed, onError : this.onError });
+         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { 
+            componentContainerId: this.containerId, 
+            errorDocumentUri : this.options.errorDocumentUri,
+            onConstructed: this.onWindowConstructed, 
+            onDestructed: this.onWindowDestructed, 
+            onError : this.onError });
          desktopWindow.unmarshall();
          this.windows.put( desktopWindow.getName(), desktopWindow );
       }, this );

@@ -177,7 +177,7 @@ var DesktopPanel = new Class({
          var logMessage = exception.name + ": " + exception.message;
          logMessage += exception.stack ? "\n" + exception.stack : "";
          this.logger.error( logMessage );
-         this.fireEvent('constructed', this, this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
+         this.fireEvent( 'constructed', this, 3* this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
          this.onConstructionError( exception );
       }
    }.protect(),
@@ -196,6 +196,11 @@ var DesktopPanel = new Class({
       });
    }.protect(),
    
+   revertConstruction: function(){
+      this.revertComplexContentBehaviour();
+      this.parent();
+   }.protect(),
+      
    unmarshallPanelProperties: function(){
       this.columnReference = XmlResource.determineAttributeValue( this.definitionElement, this.options.columnReferenceSelector );
    }.protect(),  

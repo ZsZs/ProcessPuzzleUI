@@ -212,6 +212,7 @@ var DocumentElement = new Class({
    }.protect(),
    
    revertConstruction: function(){
+      this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       if( this.plugin ) this.plugin.destroy();
       this.deleteHtmlElement();

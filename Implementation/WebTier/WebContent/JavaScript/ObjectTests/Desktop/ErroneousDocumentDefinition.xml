@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
+   xsi:noNamespaceSchemaLocation="http://processpuzzle.com/Schemas/SmartDocument.xsd">
+   <name>Test Smart Document</name>
+   <description>This configuration supports testing Smart Document.</description>
+   <version>0.5</version>
+   
+   <resources>
+      <styleSheets>
+         <styleSheet>../SmartDocument/NoneExisting.css</styleSheet>
+      </styleSheets>
+
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="smartDocumentBody">
+      <element tag="h4" id="sayHello">Hello World!</element>
+   </documentBody>
+</smartDocumentDefinition>

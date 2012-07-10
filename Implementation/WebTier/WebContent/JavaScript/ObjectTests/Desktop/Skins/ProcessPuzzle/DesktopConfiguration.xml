@@ -95,8 +95,15 @@
          </panelHeader>
 		</panel>
 		
-		<panel name="menu-panel" columnReference="rightColumn" showHeader="true">
-			<title>DesktopConfigurator.Panel.menusTitle</title>
+		<panel name="eventsPanel" columnReference="mainColumn" showHeader="true">
+         <title>DesktopConfigurator.Panel.eventsTitle</title>
+         <plugin>
+            <widget name="PartyEventWidget">
+               <options>
+                  <option name="widgetContainerId" value="'UpcommingEvents'"/>
+               </options>
+            </widget>
+         </plugin>
 		</panel>
 		
       <panel name='newsPanel' columnReference='mainColumn' height='350' showHeader='true'>
@@ -120,8 +127,11 @@
          </plugin>
       </panel>
       
-		<panel name="tips-panel" columnReference="rightColumn" height="150" showHeader="true">
+		<panel name="tips-panel" columnReference="mainColumn" height="150" showHeader="true">
 			<title>DesktopConfigurator.Panel.tipsTitle</title>
+         <document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
+             <documentDefinitionUri>../Desktop/ErroneousDocumentDefinition.xml</documentDefinitionUri>
+         </document>
 		</panel>
 	</panels>
 	

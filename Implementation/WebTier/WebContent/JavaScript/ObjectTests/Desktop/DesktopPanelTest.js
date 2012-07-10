@@ -1,6 +1,6 @@
 window.DesktopPanelTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onDocumentLoaded', 'onPanelConstructed', 'onPanelDestructed'],
+   Binds : ['onDocumentLoaded', 'onPanelConstructed', 'onPanelDestructed', 'onPanelError'],
 
    options : {
       testMethods : [
@@ -16,12 +16,15 @@ window.DesktopPanelTest = new Class( {
          { method : 'construct_whenNotDisabled_createsScrollBars', isAsynchron : true }, 
          { method : 'construct_whenEnabled_restoresComponentState', isAsynchron : true }, 
          { method : 'construct_whenSpecified_constructsPlugin', isAsynchron : true }, 
+         { method : 'construct_whenPluginIsErroneous_loadsErrorDocument', isAsynchron : true },
          { method : 'construct_whenSpecified_constructsSmartDocument', isAsynchron : true }, 
          { method : 'construct_whenSpecified_subscribesForMenuSelectedMessage', isAsynchron : true },
+         { method : 'construct_whenDocumentIsErroneous_loadsErrorDocument', isAsynchron : true },
          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsHtmlDocument', isAsynchron : true },
          { method : 'webUIMessageHandler_whenLoadDocumentReceived_loadsSmartDocument', isAsynchron : true },
          { method : 'webUIMessageHandler_whenEventOriginatorIsNotListed_bypassesDocument', isAsynchron : true },
          { method : 'loadDocument_whenEnabled_storesComponentState', isAsynchron : true },
+         { method : 'loadDocument_whenDocumentIsErroneous_loadsErrorDocument', isAsynchron : true },
          { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
    },
 
@@ -29,11 +32,15 @@ window.DesktopPanelTest = new Class( {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
       COLUMN_DEFINITION : "/desktopConfiguration/columns/column[@name='mainColumn']",
+      ERRONEOUS_DOCUMENT_URI : "../Desktop/ErroneousDocumentDefinition.xml",
+      ERROR_DOCUMENT_URI : "../../../Content/System/ErrorDocument.xml",
       HTML_DOCUMENT_URI : "../Desktop/HtmlDocument.xml",
       SMART_DOCUMENT_URI : "../Desktop/StaticDocument.xml",
       PANEL_DOCUMENT_WRAPPER_ID : "panelDocumentWrapper",
       PANEL_NAME : "documents-panel",
       PANEL_WITH_DOCUMENT_DEFINITION : "/desktopConfiguration/panels/panel[@name='documents-panel']",
+      PANEL_WITH_ERRONEOUS_DOCUMENT_DEFINITION : "/desktopConfiguration/panels/panel[@name='tips-panel']",
+      PANEL_WITH_ERRONEOUS_PLUGIN_DEFINITION : "/desktopConfiguration/panels/panel[@name='eventsPanel']",
       PANEL_WITH_PLUGIN_DEFINITION : "/desktopConfiguration/panels/panel[@name='newsPanel']",
       PAGE_WRAPPER_ID : "pageWrapper",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml"
@@ -51,6 +58,10 @@ window.DesktopPanelTest = new Class( {
       this.pageWrapperElement;
       this.panelWithDocument;
       this.panelWithDocumentDefinition;
+      this.panelWithErroneousDocument;
+      this.panelWithErroneousDocumentDefinition;
+      this.panelWithErroneousPlugin;
+      this.panelWithErroneousPluginDefinition;
       this.panelWithPlugin;
       this.panelWithPluginDefinition;
       this.resourceBundle;
@@ -75,11 +86,33 @@ window.DesktopPanelTest = new Class( {
       
       this.panelWithDocumentDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION );
       this.panelWithDocument = new DesktopPanel( this.panelWithDocumentDefinition, this.resourceBundle, { 
-         componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDestructed : this.onPanelDestructed, onDocumentLoaded : this.onDocumentLoaded } );
+         componentContainerId : this.constants.PAGE_WRAPPER_ID, 
+         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         onConstructed : this.onPanelConstructed, 
+         onDestructed : this.onPanelDestructed, 
+         onDocumentLoaded : this.onDocumentLoaded, 
+         onError : this.onPanelError } );
+      
+      this.panelWithErroneousDocumentDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_ERRONEOUS_DOCUMENT_DEFINITION );
+      this.panelWithErroneousDocument = new DesktopPanel( this.panelWithErroneousDocumentDefinition, this.resourceBundle, { 
+         componentContainerId : this.constants.PAGE_WRAPPER_ID, 
+         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         onConstructed : this.onPanelConstructed, 
+         onDestructed : this.onPanelDestructed, 
+         onDocumentLoaded : this.onDocumentLoaded, 
+         onError : this.onPanelError } );
       
       this.panelWithPluginDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_PLUGIN_DEFINITION );
       this.panelWithPlugin = new DesktopPanel( this.panelWithPluginDefinition, this.resourceBundle, { 
-         componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDestructed : this.onPanelDestructed, onDocumentLoaded : this.onDocumentLoaded } );
+         componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onPanelConstructed, onDestructed : this.onPanelDestructed, onDocumentLoaded : this.onDocumentLoaded, onError : this.onPanelError } );
+      
+      this.panelWithErroneousPluginDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_ERRONEOUS_PLUGIN_DEFINITION );
+      this.panelWithErroneousPlugin = new DesktopPanel( this.panelWithErroneousPluginDefinition, this.resourceBundle, { 
+         componentContainerId : this.constants.PAGE_WRAPPER_ID, 
+         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         onConstructed : this.onPanelConstructed, 
+         onDestructed : this.onPanelDestructed, 
+         onDocumentLoaded : this.onDocumentLoaded, onError : this.onPanelError } );
       
       this.desktopContainerElement = $( this.constants.DESKTOP_CONTAINER_ID );
       this.pageWrapperElement = $( this.constants.PAGE_WRAPPER_ID );
@@ -222,12 +255,25 @@ window.DesktopPanelTest = new Class( {
       
    construct_whenSpecified_constructsPlugin : function() {
       this.testCaseChain.chain(
-         function(){ 
-            this.constructPanel( this.panelWithPlugin ); 
-         }.bind( this ),
+         function(){ this.constructPanel( this.panelWithPlugin ); }.bind( this ),
          function(){
             assertThat( this.panelWithPlugin.getPlugin(), not( nil() ) );
             assertThat( this.panelWithPlugin.getPlugin().getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenPluginIsErroneous_loadsErrorDocument : function() {
+      this.testCaseChain.chain(
+         function(){ 
+            this.constructPanel( this.panelWithErroneousPlugin ); 
+         }.bind( this ),
+         function(){
+            //documentLoaded event was fired
+         }.bind( this ),
+         function(){
+            assertThat( this.panelWithErroneousPlugin.getDocumentDefinitionUri(), equalTo( this.constants.ERROR_DOCUMENT_URI ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -259,6 +305,21 @@ window.DesktopPanelTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.webUIMessageBus.getSubscribersToMessage( MenuSelectedMessage ).contains( this.panelWithDocument.webUIMessageHandler ), is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenDocumentIsErroneous_loadsErrorDocument : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.constructPanel( this.panelWithErroneousDocument );
+         }.bind( this ),
+         function(){
+            //documentLoaded event was fired
+         }.bind( this ),
+         function(){
+            assertThat( this.panelWithErroneousDocument.getDocumentDefinitionUri(), equalTo( this.constants.ERROR_DOCUMENT_URI ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -343,6 +404,26 @@ window.DesktopPanelTest = new Class( {
       ).callChain();
    },
    
+   loadDocument_whenDocumentIsErroneous_loadsErrorDocument : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.panelWithDocument.options.handleDocumentLoadEvents = true;
+            this.constructPanel( this.panelWithDocument );
+         }.bind( this ),
+         function(){
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+         }.bind( this ),
+         function(){
+            var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.ERRONEOUS_DOCUMENT_URI, originator : "verticalMenuColumn" });
+            this.webUIMessageBus.notifySubscribers( message );
+         }.bind( this ),
+         function(){
+            assertThat( this.panelWithDocument.getDocumentDefinitionUri(), equalTo( this.constants.ERROR_DOCUMENT_URI ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    destroy_destroysAllCreatedElements : function() {
       this.testCaseChain.chain(
          function(){
@@ -376,10 +457,18 @@ window.DesktopPanelTest = new Class( {
       this.testCaseChain.callChain();
    },
    
+   onPanelError : function( error ) {
+      this.error = error;
+      this.testCaseChain.callChain();
+   },
+   
    //Private helper methods
-   constructPanel : function( panelToConstruct ) {
+   constructPanel : function( panelToConstruct, panelPropertyOverwrites, panelOptionsOverwrites ) {
       this.column.unmarshall();
       panelToConstruct.unmarshall();
+      
+      this.overwritePanelOptions( panelToConstruct, panelOptionsOverwrites );
+      this.overwritePanelProperties( panelToConstruct, panelPropertyOverwrites );
       
       MUI.myChain = new Chain();
       MUI.myChain.chain( function() {
@@ -392,6 +481,18 @@ window.DesktopPanelTest = new Class( {
       this.column.construct();
       
       panelToConstruct.construct();
+   }.protect(),
+   
+   overwritePanelOptions: function( panel, panelOptionsOverwrites ){
+      for( var option in panelOptionsOverwrites ){
+         panel.options[option] = panelOptionsOverwrites[option];
+      };
+   }.protect(),
+   
+   overwritePanelProperties: function( panel, panelPropertyOverwrites ){
+      for( var property in panelPropertyOverwrites ){
+         panel[property] = panelPropertyOverwrites[property];
+      };
    }.protect(),
 
    transformToResourceUriToAbsolute: function( resourceUri ){
