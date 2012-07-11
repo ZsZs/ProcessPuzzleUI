@@ -31,7 +31,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 var SplashForm = new Class({
    Implements: [Events, Options],
-   Binds: ['constructForm', 'constructStatusDisplay', 'determineBrowserLanguage', 'determineStatusText', 'finalizeConstruction', 'onImageLoaded', 'onImageLoadError', 'preloadImage'],
+   Binds: ['constructForm', 
+           'constructImageWrapper', 
+           'constructStatusDisplay', 
+           'determineBrowserLanguage', 
+           'determineStatusText', 
+           'finalizeConstruction', 
+           'onImageLoaded', 
+           'onImageLoadError', 
+           'positionForm',
+           'preloadImage'],
    options : {
       componentName : "SplashForm",
       containerClass : "splashForm",
@@ -40,7 +49,7 @@ var SplashForm = new Class({
       imageTitle : "Splashform Image",
       imageUri : "Desktops/Images/SplashForm.png",
       statusDisplayClass : "statusDisplay",
-      statusDisplayStyles : { height : '30px', width : '100%', position: 'absolute', bottom : '0px', left : '0px' }
+      statusDisplayStyles : { color: 'black', height : '30px', width : '100%', paddingLeft: '10px' }
    },
 
    // Constructor
@@ -51,6 +60,7 @@ var SplashForm = new Class({
       this.constructionChain = new Chain();
       this.containerElement = $( this.options.containerElementId );
       this.imageElement;
+      this.imageWrapperElement;
       this.splashFormElement;
       this.statusDisplayElement;
       this.statusText;
@@ -62,8 +72,10 @@ var SplashForm = new Class({
          this.preloadImage, 
          this.determineBrowserLanguage, 
          this.determineStatusText, 
-         this.constructForm, 
-         this.constructStatusDisplay, 
+         this.constructForm,
+         this.constructImageWrapper,
+         this.constructStatusDisplay,
+         this.positionForm,
          this.finalizeConstruction 
       );
       this.constructionChain.callChain();
@@ -110,11 +122,14 @@ var SplashForm = new Class({
       });
       
       this.containerElement.grab( this.splashFormElement, 'top' );
-      this.splashFormElement.grab( this.imageElement );
 
-      this.splashFormElement.setStyle( 'margin-left', -(this.splashFormElement.getStyle( 'width' ).toInt() / 2) );
-      this.splashFormElement.setStyle( 'margin-top', -(this.splashFormElement.getStyle( 'height' ).toInt() / 2) );
-      this.splashFormElement.setStyle( 'visibility', 'visible' );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   constructImageWrapper : function(){
+      this.imageWrapperElement = new Element( 'div' );
+      this.imageWrapperElement.grab( this.imageElement );
+      this.splashFormElement.grab( this.imageWrapperElement, 'bottom' );
       
       this.constructionChain.callChain();
    }.protect(),
@@ -123,7 +138,7 @@ var SplashForm = new Class({
       this.statusDisplayElement = new Element( 'div', { 'class' : this.options.statusDisplayClass });
       this.statusDisplayElement.setStyles( this.options.statusDisplayStyles );
       this.statusDisplayElement.set( 'text', this.statusText );
-      this.splashFormElement.grab( this.statusDisplayElement );
+      this.splashFormElement.grab( this.statusDisplayElement, 'bottom' );
       
       this.constructionChain.callChain();
    }.protect(),
@@ -151,6 +166,14 @@ var SplashForm = new Class({
    finalizeConstruction : function(){
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this );
+   }.protect(),
+   
+   positionForm : function(){
+      this.splashFormElement.setStyle( 'margin-left', -(this.splashFormElement.getStyle( 'width' ).toInt() / 2) );
+      this.splashFormElement.setStyle( 'margin-top', -(this.splashFormElement.getStyle( 'height' ).toInt() / 2) );
+      this.splashFormElement.setStyle( 'visibility', 'visible' );
+            
+      this.constructionChain.callChain();
    }.protect(),
 
    preloadImage : function() {

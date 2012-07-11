@@ -56,7 +56,7 @@ window.SplashFormTest = new Class( {
             var splashFormElement = this.splashForm.getSplashFormElement(); 
             assertThat( splashFormElement.get( 'tag' ).toUpperCase(), equalTo( 'DIV' ));
             assertThat( splashFormElement.hasClass( this.splashForm.options.containerClass ), is( true ));
-            assertThat( splashFormElement.getChildren('img').get('src').toString(), equalTo( this.splashForm.options.imageUri ));
+            assertThat( splashFormElement.getChildren('div img').get('src').toString(), equalTo( this.splashForm.options.imageUri ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -70,9 +70,6 @@ window.SplashFormTest = new Class( {
             assertThat( statusDisplayElement, not( nil() ));
             assertThat( statusDisplayElement.getStyle( 'height' ), equalTo( this.splashForm.options.statusDisplayStyles['height'] ));
             assertThat( statusDisplayElement.getStyle( 'width' ), equalTo( this.splashForm.options.statusDisplayStyles['width'] ));
-            assertThat( statusDisplayElement.getStyle( 'position' ), equalTo( this.splashForm.options.statusDisplayStyles['position'] ));
-            assertThat( statusDisplayElement.getStyle( 'bottom' ), equalTo( this.splashForm.options.statusDisplayStyles['bottom'] ));
-            assertThat( statusDisplayElement.getStyle( 'left' ), equalTo( this.splashForm.options.statusDisplayStyles['left'] ));
             
             assertThat( statusDisplayElement.get( 'text' ), equalTo( SplashForm.StatusText[this.splashForm.getBrowserLanguage()] ));
             
