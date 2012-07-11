@@ -180,6 +180,7 @@ var Desktop = new Class({
    
    onColumnConstructed: function( column ){
       this.numberOfConstructedColumns++;
+      this.fireEvent( "desktopComponentConstructed", column.name );
       if( this.numberOfConstructedColumns == this.columns.size() ){
          this.logger.debug( this.options.componentName + ", loading desktop column is finished." );
          this.callNextConfigurationStep();
@@ -197,6 +198,7 @@ var Desktop = new Class({
    
    onContentAreaConstructed: function(){
       this.logger.debug( this.options.componentName + ", constructing desktop content area is finished." );
+      this.fireEvent( "desktopComponentConstructed", "DesktopContentArea" );
       this.callNextConfigurationStep();
    },
    
@@ -206,16 +208,19 @@ var Desktop = new Class({
    
    onFooterConstructed: function(){
       this.logger.debug( this.options.componentName + ", loading desktop footer is finished." );
+      this.fireEvent( "desktopComponentConstructed", "DesktopFooter" );
       this.callNextConfigurationStep();
    },
    
    onHeaderConstructed: function(){
       this.logger.debug( this.options.componentName + ", loading desktop header is finished." );
+      this.fireEvent( "desktopComponentConstructed", "DesktopHeader" );
       this.callNextConfigurationStep();
    },
    
    onPanelConstructed: function( panel ){
       this.numberOfConstructedPanels++;
+      this.fireEvent( "desktopComponentConstructed", panel.name );
       if( this.numberOfConstructedPanels == this.panels.size() ){
          this.logger.debug( this.options.componentName + ", loading desktop panels is finished." );
          this.callNextConfigurationStep();
@@ -242,6 +247,7 @@ var Desktop = new Class({
    
    onWindowConstructed: function( window ){
       this.logger.debug( this.options.componentName + ", constructing desktop window " + window.getName() + " is finished." );
+      this.fireEvent( "desktopComponentConstructed", window.name );
       if( window.getOnReadyCallback() && typeOf( window.getOnReadyCallback() ) == 'function' ) window.getOnReadyCallback()();
    },
    

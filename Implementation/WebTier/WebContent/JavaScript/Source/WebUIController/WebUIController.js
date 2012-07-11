@@ -36,6 +36,7 @@ var WebUIController = new Class({
             'loadDocument', 
             'loadInternationalizations',
             'loadWebUIConfiguration',
+            'onDesktopComponentConstructed',
             'onDesktopConstructed', 
             'onError', 
             'restoreComponentsState',
@@ -179,6 +180,10 @@ var WebUIController = new Class({
       this.loadDocument( documentUri, contentUri, documentVariables, AbstractDocument.Types.SMART );
    },
    
+   onDesktopComponentConstructed : function( componentName ){
+      if( this.splashForm ) this.splashForm.updateStatus( componentName );
+   },
+   
    onDesktopConstructed : function(){
       this.logger.debug( this.options.componentName + ", constructing desktop is finished." );
       this.configurationChain.callChain();
@@ -266,7 +271,12 @@ var WebUIController = new Class({
    constructDesktop : function() {
       this.logger.debug( this.options.componentName + ".constructDesktop() started." );
       var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri, onConstructed : this.onDesktopConstructed, onError : this.onError } );
+      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
+         configurationURI : desktopConfigurationUri,
+         onDesktopComponentConstructed : this.onDesktopComponentConstructed,
+         onConstructed : this.onDesktopConstructed, 
+         onError : this.onError 
+      });
       this.desktop.unmarshall();
       try{
          this.desktop.construct();
