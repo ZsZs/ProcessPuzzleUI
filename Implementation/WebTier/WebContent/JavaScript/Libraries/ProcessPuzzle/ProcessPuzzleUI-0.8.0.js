@@ -11692,6 +11692,7 @@ var Desktop = new Class({
    
    onColumnConstructed: function( column ){
       this.numberOfConstructedColumns++;
+      this.fireEvent( "desktopComponentConstructed", column.name );
       if( this.numberOfConstructedColumns == this.columns.size() ){
          this.logger.debug( this.options.componentName + ", loading desktop column is finished." );
          this.callNextConfigurationStep();
@@ -11709,6 +11710,7 @@ var Desktop = new Class({
    
    onContentAreaConstructed: function(){
       this.logger.debug( this.options.componentName + ", constructing desktop content area is finished." );
+      this.fireEvent( "desktopComponentConstructed", "DesktopContentArea" );
       this.callNextConfigurationStep();
    },
    
@@ -11718,16 +11720,19 @@ var Desktop = new Class({
    
    onFooterConstructed: function(){
       this.logger.debug( this.options.componentName + ", loading desktop footer is finished." );
+      this.fireEvent( "desktopComponentConstructed", "DesktopFooter" );
       this.callNextConfigurationStep();
    },
    
    onHeaderConstructed: function(){
       this.logger.debug( this.options.componentName + ", loading desktop header is finished." );
+      this.fireEvent( "desktopComponentConstructed", "DesktopHeader" );
       this.callNextConfigurationStep();
    },
    
    onPanelConstructed: function( panel ){
       this.numberOfConstructedPanels++;
+      this.fireEvent( "desktopComponentConstructed", panel.name );
       if( this.numberOfConstructedPanels == this.panels.size() ){
          this.logger.debug( this.options.componentName + ", loading desktop panels is finished." );
          this.callNextConfigurationStep();
@@ -11754,6 +11759,7 @@ var Desktop = new Class({
    
    onWindowConstructed: function( window ){
       this.logger.debug( this.options.componentName + ", constructing desktop window " + window.getName() + " is finished." );
+      this.fireEvent( "desktopComponentConstructed", window.name );
       if( window.getOnReadyCallback() && typeOf( window.getOnReadyCallback() ) == 'function' ) window.getOnReadyCallback()();
    },
    
@@ -27205,28 +27211,53 @@ You should have received a copy of the GNU General Public License along with thi
 
 var SplashForm = new Class({
    Implements: [Events, Options],
-   Binds: ['constructForm', 'finalizeConstruction', 'onImageLoaded', 'onImageLoadError', 'preloadImage'],
+   Binds: ['constructForm', 
+           'constructImageWrapper', 
+           'constructStatusDisplay', 
+           'determineBrowserLanguage', 
+           'determineStatusText', 
+           'finalizeConstruction', 
+           'onImageLoaded', 
+           'onImageLoadError', 
+           'positionForm',
+           'preloadImage'],
    options : {
       componentName : "SplashForm",
+      containerClass : "splashForm",
       containerElementId : "splashForm",
       imageId : "splashFormImage",
       imageTitle : "Splashform Image",
-      imageUri : "Desktops/Images/SplashForm.png"
+      imageUri : "Desktops/Images/SplashForm.png",
+      statusDisplayClass : "statusDisplay",
+      statusDisplayStyles : { color: 'black', height : '30px', width : '100%', paddingLeft: '10px' }
    },
 
    // Constructor
    initialize : function( options ) {
       this.setOptions( options );
 
+      this.browserLanguage;
       this.constructionChain = new Chain();
       this.containerElement = $( this.options.containerElementId );
       this.imageElement;
+      this.imageWrapperElement;
       this.splashFormElement;
+      this.statusDisplayElement;
+      this.statusText;
    },
 
    // public accessor and mutator methods
    construct : function() {
-      this.constructionChain.chain( this.preloadImage, this.constructForm, this.finalizeConstruction );
+      this.constructionChain.chain( 
+         this.preloadImage, 
+         this.determineBrowserLanguage, 
+         this.determineStatusText, 
+         this.constructForm,
+         this.constructImageWrapper,
+         this.constructStatusDisplay,
+         this.positionForm,
+         this.finalizeConstruction 
+      );
       this.constructionChain.callChain();
    },
 
@@ -27244,17 +27275,23 @@ var SplashForm = new Class({
       this.fireEvent( 'error', error );
       this.destroy();
    },
+   
+   updateStatus : function( componentName ){
+      this.statusDisplayElement.set( 'text', this.statusText + componentName );
+   },
 
    // Properties
+   getBrowserLanguage : function(){ return this.browserLanguage.getLanguage(); },
    getContainerElement : function() { return this.containerElement; },
    getImageElement : function() { return this.imageElement; },
    getSplashFormElement : function() { return this.splashFormElement; },
+   getStatusText : function() { return this.statusText; },
    
    // private methods
    constructForm : function() {
-      
       this.splashFormElement = new Element( 'div', {
          id : 'splashForm',
+         'class' : this.options.containerClass,
          styles : {
             left : '50%',
             position : 'absolute',
@@ -27265,11 +27302,23 @@ var SplashForm = new Class({
       });
       
       this.containerElement.grab( this.splashFormElement, 'top' );
-      this.splashFormElement.grab( this.imageElement );
 
-      this.splashFormElement.setStyle( 'margin-left', -(this.splashFormElement.getStyle( 'width' ).toInt() / 2) );
-      this.splashFormElement.setStyle( 'margin-top', -(this.splashFormElement.getStyle( 'height' ).toInt() / 2) );
-      this.splashFormElement.setStyle( 'visibility', 'visible' );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   constructImageWrapper : function(){
+      this.imageWrapperElement = new Element( 'div' );
+      this.imageWrapperElement.grab( this.imageElement );
+      this.splashFormElement.grab( this.imageWrapperElement, 'bottom' );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   constructStatusDisplay : function(){
+      this.statusDisplayElement = new Element( 'div', { 'class' : this.options.statusDisplayClass });
+      this.statusDisplayElement.setStyles( this.options.statusDisplayStyles );
+      this.statusDisplayElement.set( 'text', this.statusText );
+      this.splashFormElement.grab( this.statusDisplayElement, 'bottom' );
       
       this.constructionChain.callChain();
    }.protect(),
@@ -27281,9 +27330,30 @@ var SplashForm = new Class({
       }
    }.protect(),
    
+   determineBrowserLanguage : function(){
+      this.browserLanguage = new ProcessPuzzleLocale();
+      this.browserLanguage.parse( navigator.language || navigator.userLanguage );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   determineStatusText : function(){
+      this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
    finalizeConstruction : function(){
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this );
+   }.protect(),
+   
+   positionForm : function(){
+      this.splashFormElement.setStyle( 'margin-left', -(this.splashFormElement.getStyle( 'width' ).toInt() / 2) );
+      this.splashFormElement.setStyle( 'margin-top', -(this.splashFormElement.getStyle( 'height' ).toInt() / 2) );
+      this.splashFormElement.setStyle( 'visibility', 'visible' );
+            
+      this.constructionChain.callChain();
    }.protect(),
 
    preloadImage : function() {
@@ -27296,6 +27366,13 @@ var SplashForm = new Class({
       });
    }.protect()
 });
+
+SplashForm.StatusText = {
+   en: "Constructing desktop: ",
+   ge: "Aufbau der Benutzeroberflache: ",
+   hu: "Felhasználói felület építése: ",
+   sp: "La construcción de la interfaz de usuario: "
+};
 /*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
@@ -30309,6 +30386,7 @@ var WebUIController = new Class({
             'loadDocument', 
             'loadInternationalizations',
             'loadWebUIConfiguration',
+            'onDesktopComponentConstructed',
             'onDesktopConstructed', 
             'onError', 
             'restoreComponentsState',
@@ -30452,6 +30530,10 @@ var WebUIController = new Class({
       this.loadDocument( documentUri, contentUri, documentVariables, AbstractDocument.Types.SMART );
    },
    
+   onDesktopComponentConstructed : function( componentName ){
+      if( this.splashForm ) this.splashForm.updateStatus( componentName );
+   },
+   
    onDesktopConstructed : function(){
       this.logger.debug( this.options.componentName + ", constructing desktop is finished." );
       this.configurationChain.callChain();
@@ -30539,7 +30621,12 @@ var WebUIController = new Class({
    constructDesktop : function() {
       this.logger.debug( this.options.componentName + ".constructDesktop() started." );
       var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { configurationURI : desktopConfigurationUri, onConstructed : this.onDesktopConstructed, onError : this.onError } );
+      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
+         configurationURI : desktopConfigurationUri,
+         onDesktopComponentConstructed : this.onDesktopComponentConstructed,
+         onConstructed : this.onDesktopConstructed, 
+         onError : this.onError 
+      });
       this.desktop.unmarshall();
       try{
          this.desktop.construct();
