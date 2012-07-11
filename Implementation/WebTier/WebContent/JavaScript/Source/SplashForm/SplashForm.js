@@ -153,12 +153,17 @@ var SplashForm = new Class({
    determineBrowserLanguage : function(){
       this.browserLanguage = new ProcessPuzzleLocale();
       this.browserLanguage.parse( navigator.language || navigator.userLanguage );
-      
+
       this.constructionChain.callChain();
    }.protect(),
    
    determineStatusText : function(){
-      this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      if( SplashForm.StatusText[this.getBrowserLanguage()] )
+         this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      else{
+         this.browserLanguage = new ProcessPuzzleLocale({ language : 'en' });
+         this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      }
       
       this.constructionChain.callChain();
    }.protect(),
