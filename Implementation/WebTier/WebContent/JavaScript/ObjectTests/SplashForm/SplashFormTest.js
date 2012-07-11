@@ -6,10 +6,13 @@ window.SplashFormTest = new Class( {
       testMethods : [
          { method : 'instantiate_identifiesContainerElement', isAsynchron : false },
          { method : 'construct_loadsImage', isAsynchron : true },
-         { method : 'construct_createsDivAndImageElement', isAsynchron : true }]
+         { method : 'construct_createsDivAndImageElement', isAsynchron : true },
+         { method : 'construct_createsStatusDisplayElements', isAsynchron : true },
+         { method : 'updateStatus_updatesStatusText', isAsynchron : true }]
    },
 
    constants : {
+      COMPONENT_NAME : "leftColumn",
       CONTAINER_ELEMENT_ID : "splashForm",
       IMAGE_URI : "../SplashForm/SplashForm.png"
    },
@@ -51,8 +54,41 @@ window.SplashFormTest = new Class( {
          function(){ this.splashForm.construct(); }.bind( this ),
          function(){
             var splashFormElement = this.splashForm.getSplashFormElement(); 
-            assertThat( splashFormElement.get('tag').toUpperCase(), equalTo( 'DIV' ));
+            assertThat( splashFormElement.get( 'tag' ).toUpperCase(), equalTo( 'DIV' ));
+            assertThat( splashFormElement.hasClass( this.splashForm.options.containerClass ), is( true ));
             assertThat( splashFormElement.getChildren('img').get('src').toString(), equalTo( this.splashForm.options.imageUri ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_createsStatusDisplayElements : function() {
+      this.testCaseChain.chain(
+         function(){ this.splashForm.construct(); }.bind( this ),
+         function(){
+            var statusDisplayElement = this.splashForm.getSplashFormElement().getElements( 'div.statusDisplay' )[0]; 
+            assertThat( statusDisplayElement, not( nil() ));
+            assertThat( statusDisplayElement.getStyle( 'height' ), equalTo( this.splashForm.options.statusDisplayStyles['height'] ));
+            assertThat( statusDisplayElement.getStyle( 'width' ), equalTo( this.splashForm.options.statusDisplayStyles['width'] ));
+            assertThat( statusDisplayElement.getStyle( 'position' ), equalTo( this.splashForm.options.statusDisplayStyles['position'] ));
+            assertThat( statusDisplayElement.getStyle( 'bottom' ), equalTo( this.splashForm.options.statusDisplayStyles['bottom'] ));
+            assertThat( statusDisplayElement.getStyle( 'left' ), equalTo( this.splashForm.options.statusDisplayStyles['left'] ));
+            
+            assertThat( statusDisplayElement.get( 'text' ), equalTo( SplashForm.StatusText[this.splashForm.getBrowserLanguage()] ));
+            
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   updateStatus_updatesStatusText : function() {
+      this.testCaseChain.chain(
+         function(){ this.splashForm.construct(); }.bind( this ),
+         function(){
+            this.splashForm.updateStatus( this.constants.COMPONENT_NAME );
+            
+            var statusDisplayElement = this.splashForm.getSplashFormElement().getElements( 'div.statusDisplay' )[0]; 
+            assertThat( statusDisplayElement.get( 'text' ), containsString( this.constants.COMPONENT_NAME ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

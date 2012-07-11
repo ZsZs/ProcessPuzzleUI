@@ -31,28 +31,41 @@ You should have received a copy of the GNU General Public License along with thi
 
 var SplashForm = new Class({
    Implements: [Events, Options],
-   Binds: ['constructForm', 'finalizeConstruction', 'onImageLoaded', 'onImageLoadError', 'preloadImage'],
+   Binds: ['constructForm', 'constructStatusDisplay', 'determineBrowserLanguage', 'determineStatusText', 'finalizeConstruction', 'onImageLoaded', 'onImageLoadError', 'preloadImage'],
    options : {
       componentName : "SplashForm",
+      containerClass : "splashForm",
       containerElementId : "splashForm",
       imageId : "splashFormImage",
       imageTitle : "Splashform Image",
-      imageUri : "Desktops/Images/SplashForm.png"
+      imageUri : "Desktops/Images/SplashForm.png",
+      statusDisplayClass : "statusDisplay",
+      statusDisplayStyles : { height : '30px', width : '100%', position: 'absolute', bottom : '0px', left : '0px' }
    },
 
    // Constructor
    initialize : function( options ) {
       this.setOptions( options );
 
+      this.browserLanguage;
       this.constructionChain = new Chain();
       this.containerElement = $( this.options.containerElementId );
       this.imageElement;
       this.splashFormElement;
+      this.statusDisplayElement;
+      this.statusText;
    },
 
    // public accessor and mutator methods
    construct : function() {
-      this.constructionChain.chain( this.preloadImage, this.constructForm, this.finalizeConstruction );
+      this.constructionChain.chain( 
+         this.preloadImage, 
+         this.determineBrowserLanguage, 
+         this.determineStatusText, 
+         this.constructForm, 
+         this.constructStatusDisplay, 
+         this.finalizeConstruction 
+      );
       this.constructionChain.callChain();
    },
 
@@ -70,17 +83,23 @@ var SplashForm = new Class({
       this.fireEvent( 'error', error );
       this.destroy();
    },
+   
+   updateStatus : function( componentName ){
+      this.statusDisplayElement.set( 'text', this.statusText + componentName );
+   },
 
    // Properties
+   getBrowserLanguage : function(){ return this.browserLanguage.getLanguage(); },
    getContainerElement : function() { return this.containerElement; },
    getImageElement : function() { return this.imageElement; },
    getSplashFormElement : function() { return this.splashFormElement; },
+   getStatusText : function() { return this.statusText; },
    
    // private methods
    constructForm : function() {
-      
       this.splashFormElement = new Element( 'div', {
          id : 'splashForm',
+         'class' : this.options.containerClass,
          styles : {
             left : '50%',
             position : 'absolute',
@@ -100,11 +119,33 @@ var SplashForm = new Class({
       this.constructionChain.callChain();
    }.protect(),
    
+   constructStatusDisplay : function(){
+      this.statusDisplayElement = new Element( 'div', { 'class' : this.options.statusDisplayClass });
+      this.statusDisplayElement.setStyles( this.options.statusDisplayStyles );
+      this.statusDisplayElement.set( 'text', this.statusText );
+      this.splashFormElement.grab( this.statusDisplayElement );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
    destroyElement : function( element ){
       if( element ){
          if( element.removeEvents ) element.removeEvents();
          if( element.destroy ) element.destroy();
       }
+   }.protect(),
+   
+   determineBrowserLanguage : function(){
+      this.browserLanguage = new ProcessPuzzleLocale();
+      this.browserLanguage.parse( navigator.language || navigator.userLanguage );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   determineStatusText : function(){
+      this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    finalizeConstruction : function(){
@@ -122,3 +163,10 @@ var SplashForm = new Class({
       });
    }.protect()
 });
+
+SplashForm.StatusText = {
+   en: "Constructing desktop: ",
+   ge: "Aufbau der Benutzeroberflache: ",
+   hu: "Felhasználói felület építése: ",
+   sp: "La construcción de la interfaz de usuario: "
+};
