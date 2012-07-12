@@ -41,6 +41,7 @@
 //
 //		In memory of STS-107
 
+//= require_directory ../Sarissa
 
 var _xmlIOProxyGetLastLoadStatus = "";
 var _xmlIOLoadLocalDataCallbackFunction = "";

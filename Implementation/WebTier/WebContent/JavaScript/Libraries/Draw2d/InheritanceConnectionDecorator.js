@@ -31,6 +31,12 @@ or see http://www.gnu.org/copyleft/lesser.html
  * @author Andreas Herz
  * @constructor
  */
+
+//= require_directory ../MooTools
+//= require ../Draw2d/draw2d.js
+//= require ../Draw2d/moocanvas.js
+//= require ../Draw2d/package.js
+
 draw2d.shape.uml.InheritanceConnectionDecorator=function()
 {
   this.setBackgroundColor(new draw2d.Color(255,255,255));

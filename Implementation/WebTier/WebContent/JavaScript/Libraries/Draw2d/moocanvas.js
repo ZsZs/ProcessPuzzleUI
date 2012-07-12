@@ -33,6 +33,10 @@ Example:
 	> 
 	> $(document.body).adopt(cv);
 */
+
+//= require_directory ../MooTools
+//= require ../Draw2d/draw2d.js
+
 var MooCanvas = new Class({
 	
 	initialize: function(id, props) {

@@ -4,6 +4,8 @@
 	MIT-style license.
 */
 
+//= require_directory ../MooTools
+
 var Slimbox = (function() {
 
 	// Global variables, accessible to Slimbox only

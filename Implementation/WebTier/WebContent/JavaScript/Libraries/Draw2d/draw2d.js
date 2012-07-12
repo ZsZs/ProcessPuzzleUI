@@ -6,6 +6,9 @@ Copyright: 2006 Andreas Herz. All rights reserved.
 Created: 5.11.2006 by Andreas Herz (Web: http://www.freegroup.de )
 LICENSE: LGPL
 **/
+
+//= require_directory ../MooTools
+
 var draw2d=new Object();
 var _errorStack_=[];
 function pushErrorStack(e,_56b2){

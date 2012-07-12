@@ -41,6 +41,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA,
 or see http://www.gnu.org/copyleft/lesser.html
 */
 
+//= require_directory ../MooTools
+//= require ../Draw2d/draw2d.js
+//= require ../Draw2d/moocanvas.js
 
 var jg_ok, jg_ie, jg_fast, jg_dom, jg_moz;
 

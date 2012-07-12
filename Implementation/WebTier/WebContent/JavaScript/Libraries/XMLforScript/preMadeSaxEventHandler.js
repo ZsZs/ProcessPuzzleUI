@@ -25,6 +25,7 @@
 // visit the XML for <SCRIPT> home page at xmljs.sourceforge.net
 //
 
+//= require_directory ../Sarissa
 
 /*****************************************************************************
                     SAXEventHandler Object
