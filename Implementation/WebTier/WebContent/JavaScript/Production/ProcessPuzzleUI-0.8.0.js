@@ -27333,12 +27333,17 @@ var SplashForm = new Class({
    determineBrowserLanguage : function(){
       this.browserLanguage = new ProcessPuzzleLocale();
       this.browserLanguage.parse( navigator.language || navigator.userLanguage );
-      
+
       this.constructionChain.callChain();
    }.protect(),
    
    determineStatusText : function(){
-      this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      if( SplashForm.StatusText[this.getBrowserLanguage()] )
+         this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      else{
+         this.browserLanguage = new ProcessPuzzleLocale({ language : 'en' });
+         this.statusText = SplashForm.StatusText[this.getBrowserLanguage()];
+      }
       
       this.constructionChain.callChain();
    }.protect(),
@@ -30411,7 +30416,7 @@ var WebUIController = new Class({
       showSplashForm : false,
       splashFormUri : "Desktops/Images/SplashForm.png",
       unsupportedBrowserMessage: "We appologize. This site utilizes more modern browsers, namely: Internet Explorer 8+, FireFox 4+, Chrome 10+, Safari 4+",
-      urlRefreshPeriod : 3000
+      urlRefreshPeriod : 1000
    },
    
    //Constructors
