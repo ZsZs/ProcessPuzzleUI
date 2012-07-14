@@ -35,6 +35,7 @@
 	 <xs:simpleContent>
 	  <xs:extension base="xs:anyURI">
        <xs:attribute name="localeSpecificVersionsExists" type="xs:boolean" />
+       <xs:attribute name="baseNameOnlyVersionExists" type="xs:boolean" />
 	  </xs:extension>
 	 </xs:simpleContent>
     </xs:complexType>
