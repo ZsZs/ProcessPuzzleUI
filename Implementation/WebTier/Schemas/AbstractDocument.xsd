@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.processpuzzle.com/SmartDocument"
+  targetNamespace="http://www.processpuzzle.com/SmartDocument"
+  elementFormDefault="qualified">
+
+  <xs:element name="abstractDocumentDefinition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="description"/>
+        <xs:element ref="version"/>
+        <xs:element ref="contentUri"/>
+        <xs:element ref="handleMenuSelectedEvents"/>
+        <xs:element ref="resources"/>
+      </xs:sequence>
+    </xs:complexType>
+
+  </xs:element>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="version" type="xs:decimal"/>
+  <xs:element name="contentUri" type="xs:string"/>
+  <xs:element name="handleMenuSelectedEvents" type="xs:boolean"/>
+  <xs:element name="resources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="styleSheets"/>
+        <xs:element ref="images"/>
+        <xs:element ref="javaScripts"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="styleSheets">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="styleSheet"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="styleSheet" type="xs:string"/>
+  <xs:element name="images">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="javaScripts">
+    <xs:complexType/>
+  </xs:element>
+</xs:schema>

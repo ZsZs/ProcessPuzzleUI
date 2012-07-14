@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.processpuzzle.com/SmartDocument"
+  targetNamespace="http://www.processpuzzle.com/SmartDocument"
   elementFormDefault="qualified">
+
+  <xs:include schemaLocation="AbstractDocument.xsd"/>
+
   <xs:element name="smartDocumentDefinition">
     <xs:complexType>
       <xs:sequence>
@@ -17,56 +23,6 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
-  <xs:element name="name" type="xs:string"/>
-  <xs:element name="description" type="xs:string"/>
-  <xs:element name="version" type="xs:decimal"/>
-  <xs:element name="contentUri" type="xs:string" />
-  <xs:element name="handleMenuSelectedEvents" type="xs:boolean"/>
-
-  <xs:element name="resources">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="styleSheets" minOccurs="0" maxOccurs="unbounded"/>
-        <xs:element ref="images" minOccurs="0" maxOccurs="unbounded"/>
-        <xs:element ref="javaScripts" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="styleSheets">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="styleSheet" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="styleSheet" type="xs:string"/>
-
-  <xs:element name="images">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="image" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="image">
-    <xs:complexType mixed="true">
-      <xs:attribute name="id" use="optional" type="xs:NCName"/>
-      <xs:attribute name="title" use="optional" type="xs:NCName"/>
-	</xs:complexType>
-  </xs:element>
-
-  <xs:element name="javaScripts">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="javaScript" minOccurs="0" maxOccurs="unbounded"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="javaScript" type="xs:string"/>
 
   <xs:element name="documentHeader">
     <xs:complexType>
