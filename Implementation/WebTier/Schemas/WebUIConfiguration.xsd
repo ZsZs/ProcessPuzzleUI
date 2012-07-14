@@ -25,6 +25,7 @@
 		<xs:element ref="wui:availableSkins"/>
         <xs:element ref="wui:defaultSkin" />
       </xs:sequence>
+	  <xs:attribute name="eraseStateOnSkinChange" use="optional" type="xs:boolean" />
     </xs:complexType>
   </xs:element>
 
