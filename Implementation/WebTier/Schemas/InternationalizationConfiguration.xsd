@@ -30,7 +30,15 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="resourceBundle" type="xs:anyURI"/>
+  <xs:element name="resourceBundle">
+    <xs:complexType>
+	 <xs:simpleContent>
+	  <xs:extension base="xs:anyURI">
+       <xs:attribute name="localeSpecificVersionsExists" type="xs:boolean" />
+	  </xs:extension>
+	 </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="availableLocales">
     <xs:complexType>
