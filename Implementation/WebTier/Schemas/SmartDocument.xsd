@@ -62,6 +62,7 @@
           <xs:element name="compositeElement" type="CompositeElement" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="compositeDataElement" type="CompositeDataElement" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="formElement" type="FormElement" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="tableElement" type="TableElement" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
       </xs:extension>
 	</xs:complexContent>
@@ -86,6 +87,7 @@
             </xs:union>
           </xs:simpleType>
 		</xs:attribute>
+	    <xs:attribute name="indexVariable" type="xs:string" use="optional"/>
       </xs:extension>
 	</xs:complexContent>
   </xs:complexType>
@@ -119,6 +121,38 @@
   </xs:complexType>
 
   <xs:complexType name="FormField">
+    <xs:complexContent>
+      <xs:extension base="DataElement">
+        <xs:attribute name="label" use="required" type="xs:NCName"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="TableElement" mixed="true">
+    <xs:sequence>
+	  <xs:element name="tableColumn" type="TableColumn" minOccurs="0" maxOccurs="unbounded"/>
+	  <xs:element name="plugin" type="Plugin" minOccurs="0" maxOccurs="1" />
+    </xs:sequence>
+    <xs:attribute name="id" use="optional" type="xs:NCName"/>
+    <xs:attribute name="bind" use="optional" type="xs:string"/>
+    <xs:attribute name="isEditable" use="optional" type="xs:boolean"/>
+    <xs:attribute name="maxOccures" use="optional" default="1">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base='xs:nonNegativeInteger'/>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base='xs:string'>
+              <xs:enumeration value='unbounded'/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="TableColumn">
     <xs:complexContent>
       <xs:extension base="DataElement">
         <xs:attribute name="label" use="required" type="xs:NCName"/>
@@ -171,6 +205,7 @@
           </xs:simpleType>
 		</xs:attribute>
 	    <xs:attribute name="minOccures" type="xs:nonNegativeInteger" use="optional" default="1"/>
+	    <xs:attribute name="indexVariable" type="xs:string" use="optional"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
