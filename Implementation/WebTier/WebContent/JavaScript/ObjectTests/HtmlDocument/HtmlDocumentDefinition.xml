@@ -2,8 +2,9 @@
 <htmlDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
-   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/HtmlDocument.xsd">
+   xmlns="http://www.processpuzzle.com/SmartDocument" 
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://www.processpuzzle.com/Schemas/HtmlDocument.xsd">
+   
    <name>Test Html Document</name>
    <description>This configuration supports testing plain Html document.</description>
    <version>0.5</version>
