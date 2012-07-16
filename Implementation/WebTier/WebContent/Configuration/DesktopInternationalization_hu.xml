@@ -92,10 +92,16 @@
     <Resource key="ErrorDocument.title" type="String">Működési probléma</Resource>
     <Resource key="ErrorDocument.introduction" type="String">Sajnáljuk, az adott tartalom megjelenítése során működési hiba lépett fel.</Resource>
 
+    <Resource key="EventWidget.endDate" type="String">Befejeződik:</Resource>
+    <Resource key="EventWidget.isFullDay" type="String">Egésznapos:</Resource>
+    <Resource key="EventWidget.isMultipleDay" type="String">Többnapos:</Resource>
+    <Resource key="EventWidget.language" type="String">Nyelv:</Resource>
     <Resource key="EventWidget.location" type="String">Hely:</Resource>
     <Resource key="EventWidget.program" type="String">Program:</Resource>
+    <Resource key="EventWidget.recurrence" type="String">Ismétlődés:</Resource>
     <Resource key="EventWidget.registration" type="String">Jelentkezés:</Resource>
     <Resource key="EventWidget.schedule" type="String">Időpont:</Resource>
+    <Resource key="EventWidget.startDate" type="String">Kezdődik:</Resource>
     <Resource key="EventWidget.title" type="String">Események</Resource>
 
     <Resource key="WebUIMenu.administration" type="String">Adminisztráció</Resource>

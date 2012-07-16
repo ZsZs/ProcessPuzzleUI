@@ -91,10 +91,16 @@
     <Resource key="ErrorDocument.title" type="String">Operational Fault</Resource>
     <Resource key="ErrorDocument.introduction" type="String">We appologize, some problem occured while loading the given content.</Resource>
 
+    <Resource key="EventWidget.endDate" type="String">Ends:</Resource>
+    <Resource key="EventWidget.isFullDay" type="String">Is full day:</Resource>
+    <Resource key="EventWidget.isMultipleDay" type="String">Is multiple day:</Resource>
+    <Resource key="EventWidget.language" type="String">Language:</Resource>
     <Resource key="EventWidget.location" type="String">Location:</Resource>
     <Resource key="EventWidget.program" type="String">Program:</Resource>
+    <Resource key="EventWidget.recurrence" type="String">Recurrence:</Resource>
     <Resource key="EventWidget.registration" type="String">Registration:</Resource>
     <Resource key="EventWidget.schedule" type="String">Date:</Resource>
+    <Resource key="EventWidget.startDate" type="String">Begins:</Resource>
     <Resource key="EventWidget.title" type="String">Events</Resource>
       
     <Resource key="WebUIMenu.administration" type="String">Administration</Resource>
