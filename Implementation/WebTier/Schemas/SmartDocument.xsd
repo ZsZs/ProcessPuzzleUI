@@ -70,9 +70,22 @@
   <xs:complexType name="CompositeDataElement" mixed="true">
     <xs:complexContent>
       <xs:extension base="CompositeElement">
-         <xs:attribute name="bind" use="required" type="xs:string"/>
-         <xs:attribute name="maxOccures" use="optional" type="xs:NCName"/>
+        <xs:attribute name="bind" use="required" type="xs:string"/>
 	    <xs:attribute name="minOccures" use="optional" type="xs:NCName"/>
+        <xs:attribute name="maxOccures" use="optional" default="1">
+          <xs:simpleType>
+            <xs:union>
+              <xs:simpleType>
+                <xs:restriction base='xs:nonNegativeInteger'/>
+              </xs:simpleType>
+              <xs:simpleType>
+                <xs:restriction base='xs:string'>
+                  <xs:enumeration value='unbounded'/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:union>
+          </xs:simpleType>
+		</xs:attribute>
       </xs:extension>
 	</xs:complexContent>
   </xs:complexType>
