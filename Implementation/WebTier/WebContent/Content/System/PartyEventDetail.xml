@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartDocumentDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns="http://www.processpuzzle.com/SmartDocument" 
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://www.processpuzzle.com/Schemas/SmartDocument.xsd">
+   <name>Event Detail</name>
+   <description>Presents all the details of a single event.</description>
+   <version>0.5</version>
+   <contentUri>Content/Company/Events.xml</contentUri>
+   
+   <resources>
+      <styleSheets></styleSheets>
+      <images></images>
+      <javaScripts></javaScripts>
+   </resources>
+
+   <documentBody tag="div" id="eventDocumentBody">
+      <compositeDataElement tag="div" id="eventWrapper" bind="/pp:eventList/events/event[{index}]" maxOccures="1">
+         <dataElement tag="h1" elementStyle="title" id="itemTitle" bind="/pp:eventList/events/event[{index}]/title"/>
+         <dataElement tag="div" elementStyle="description" id="itemDescription" bind="/pp:eventList/events/event[{index}]/description"/>
+         <formElement id="eventProperties" method="post" bind="/pp:eventList/events/event[{index}]">
+            <formField id="program" label="EventWidget.program" bind="/pp:eventList/events/event[{index}]/program/description"/>
+            <formField id="startDate" label="EventWidget.startDate" bind="/pp:eventList/events/event[{index}]/schedule/startDate"/>
+            <formField id="endDate" label="EventWidget.endDate" bind="/pp:eventList/events/event[{index}]/schedule/endDate"/>
+            <formField id="isFullDay" label="EventWidget.isFullDay" bind="/pp:eventList/events/event[{index}]/schedule/@isFullDay"/>
+            <formField id="isMultipleDay" label="EventWidget.isMultipleDay" bind="//pp:eventList/events/event[{index}]/schedule/@isMultipleDay"/>
+            <formField id="recurrence" label="EventWidget.recurrence" bind="/pp:eventList/events/event[{index}]/schedule/recurrence"/>
+            <formField id="language" label="EventWidget.language" bind="/pp:eventList/events/event[{index}]/language"/>
+            <formField id="location" label="EventWidget.location" bind="/pp:eventList/events/event[{index}]/location/address"/>
+            <formField id="registration" label="EventWidget.registration" bind="//pp:eventList/events/event[{index}]/registration/link"/>
+         </formElement>
+      </compositeDataElement>
+   </documentBody>
+</smartDocumentDefinition>
