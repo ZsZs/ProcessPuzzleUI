@@ -24,12 +24,13 @@
   <xs:element name="version" type="xs:decimal"/>
   <xs:element name="contentUri" type="xs:string"/>
   <xs:element name="handleMenuSelectedEvents" type="xs:boolean"/>
+
   <xs:element name="resources">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="styleSheets"/>
-        <xs:element ref="images"/>
-        <xs:element ref="javaScripts"/>
+        <xs:element ref="styleSheets" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="images" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="javaScripts" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
