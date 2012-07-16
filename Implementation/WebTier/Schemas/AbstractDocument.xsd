@@ -33,18 +33,34 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
   <xs:element name="styleSheets">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="styleSheet"/>
+        <xs:element ref="styleSheet" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="styleSheet" type="xs:string"/>
+
+  <xs:element name="styleSheet" type="xs:anyURI"/>
+
   <xs:element name="images">
-    <xs:complexType/>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="image" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
   </xs:element>
+
+  <xs:element name="image" type="xs:anyURI"/>
+
   <xs:element name="javaScripts">
-    <xs:complexType/>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="javaScript" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
   </xs:element>
+
+  <xs:element name="javaScript" type="xs:anyURI"/>
 </xs:schema>
