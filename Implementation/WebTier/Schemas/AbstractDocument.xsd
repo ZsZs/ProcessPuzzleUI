@@ -52,7 +52,16 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="image" type="xs:anyURI"/>
+  <xs:element name="image">
+    <xs:complexType>
+	 <xs:simpleContent>
+	  <xs:extension base="xs:anyURI">
+       <xs:attribute name="id" type="xs:NCName" />
+       <xs:attribute name="title" type="xs:NCName" />
+	  </xs:extension>
+	 </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="javaScripts">
     <xs:complexType>
