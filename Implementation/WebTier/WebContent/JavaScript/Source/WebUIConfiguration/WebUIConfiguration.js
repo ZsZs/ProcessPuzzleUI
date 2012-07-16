@@ -204,7 +204,7 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
    
    getLoggingAppenderCommandLineObjectExpansionDepth : function( appenderName ) {
       var selectorExp = this.options.appenderCommandLineObjectExpansionDepthSelector.substitute( {appenderName : appenderName} );
@@ -230,7 +230,7 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
    
    getLoggingAppenderFocusPopUp : function( appenderName ) {
       var selectorExp = this.options.appenderFocusPopUpSelector.substitute( {appenderName : appenderName} );
@@ -284,7 +284,7 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
 
    getLoggingAppenderReopenWhenClosed : function( appenderName ) {
       var selectorExp = this.options.appenderReopenWhenClosedSelector.substitute( {appenderName : appenderName} );
@@ -298,8 +298,8 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
-	
+   },
+   
    getLoggingAppenderScrollToLatestMessage : function( appenderName ) {
       var selectorExp = this.options.appenderScrollToLatestMessageSelector.substitute( {appenderName : appenderName} );
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
@@ -330,14 +330,14 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
 
    getLoggingAppenderTimerInterval : function( appenderName ) {
       var selectorExp = this.options.appenderTimerIntervalSelector.substitute( {appenderName : appenderName} );
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
 
    getLoggingAppenderType : function( appenderName ) {
       var selectorExp = this.options.appenderTypeSelector.substitute( {appenderName : appenderName} );
@@ -346,7 +346,7 @@ var WebUIConfiguration = new Class({
       else return null;
    },
    
-	getLoggingAppenderURL : function( appenderName ) {
+   getLoggingAppenderURL : function( appenderName ) {
       var selectorExp = this.options.appenderURLSelector.substitute( {appenderName : appenderName} );
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
@@ -369,13 +369,13 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
    
    getLoggingAppenderWidth : function( appenderName ) {
       return parseInt( this.determineLoggingElementValue( this.options.appenderWidthSelector.substitute( {appenderName : appenderName} )));
    },
 
-	getLoggingLayoutName : function( layoutIndex ) {
+   getLoggingLayoutName : function( layoutIndex ) {
       var layoutElements = this.getLoggingLayoutElements();
       return this.xmlResource.selectNode( this.options.layoutNameSelector, layoutElements[layoutIndex] ).value;
    },
