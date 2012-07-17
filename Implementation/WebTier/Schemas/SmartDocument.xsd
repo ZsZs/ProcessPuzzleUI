@@ -169,21 +169,9 @@
 
   <xs:complexType name="Widget">
     <xs:sequence>
-	  <xs:element name="options" type="Options" minOccurs="0" maxOccurs="1" />
+	  <xs:element ref="options" minOccurs="0" maxOccurs="1" />
 	</xs:sequence>
 	<xs:attribute name="name" type="xs:NCName" />
-  </xs:complexType>
-
-  <xs:complexType name="Options">
-    <xs:sequence>
-	  <xs:element name="option" type="Option" minOccurs="0" maxOccurs="unbounded" />
-	</xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="Option">
-    <xs:sequence></xs:sequence>
-	<xs:attribute name="name" type="xs:string" />
-	<xs:attribute name="value" type="xs:string" />
   </xs:complexType>
 
   <xs:complexType name="DataElement">

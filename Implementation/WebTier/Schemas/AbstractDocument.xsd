@@ -21,7 +21,7 @@
   </xs:element>
   <xs:element name="name" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
-  <xs:element name="version" type="xs:decimal"/>
+  <xs:element name="version" type="xs:string"/>
   <xs:element name="contentUri" type="xs:string"/>
   <xs:element name="handleMenuSelectedEvents" type="xs:boolean"/>
 
@@ -73,4 +73,19 @@
   </xs:element>
 
   <xs:element name="javaScript" type="xs:anyURI"/>
+
+  <xs:element name="options">
+    <xs:complexType>
+      <xs:sequence>
+	    <xs:element name="option" type="Option" minOccurs="0" maxOccurs="unbounded" />
+	  </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="Option">
+    <xs:sequence></xs:sequence>
+	<xs:attribute name="name" type="xs:string" />
+	<xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+
 </xs:schema>
