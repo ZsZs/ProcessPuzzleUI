@@ -12,9 +12,9 @@
         <xs:element ref="name"/>
         <xs:element ref="description"/>
         <xs:element ref="version"/>
-        <xs:element ref="contentUri"/>
-        <xs:element ref="handleMenuSelectedEvents"/>
-        <xs:element ref="resources"/>
+        <xs:element ref="contentUri" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="handleMenuSelectedEvents" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="resources" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
 
