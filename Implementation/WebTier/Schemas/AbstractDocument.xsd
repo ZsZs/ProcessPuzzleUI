@@ -17,8 +17,8 @@
         <xs:element ref="resources" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
-
   </xs:element>
+
   <xs:element name="name" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="version" type="xs:string"/>
