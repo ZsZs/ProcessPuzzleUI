@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://www.processpuzzle.com/PartyEvent"
+  targetNamespace="http://www.processpuzzle.com/PartyEvent"
+  elementFormDefault="qualified">
+
+  <xs:element name="eventList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="events" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="events">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="event"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="event">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="title"/>
+        <xs:element ref="link"/>
+        <xs:element ref="description"/>
+        <xs:element ref="program"/>
+        <xs:element ref="schedule"/>
+        <xs:element ref="location"/>
+        <xs:element ref="language"/>
+        <xs:element ref="registration"/>
+        <xs:element ref="publicationDate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="title">
+    <xs:complexType mixed="true">
+      <xs:attribute name="href" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="program">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description"/>
+        <xs:element ref="link"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="schedule">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="startDate"/>
+        <xs:element ref="endDate"/>
+        <xs:element ref="recurrence"/>
+      </xs:sequence>
+      <xs:attribute name="isFullDay" use="required" type="xs:NCName"/>
+      <xs:attribute name="isMultipleDay" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="startDate" type="xs:string"/>
+  <xs:element name="endDate" type="xs:string"/>
+  <xs:element name="recurrence" type="xs:string"/>
+
+  <xs:element name="location">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="address"/>
+        <xs:element ref="link"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="address">
+    <xs:complexType mixed="true">
+      <xs:attribute name="href" use="required" type="xs:anyURI"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="language" type="xs:NCName"/>
+
+  <xs:element name="registration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="link"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="publicationDate" type="xs:string"/>
+
+  <xs:element name="link">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:anyURI">
+          <xs:attribute name="href" type="xs:anyURI"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="description">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="http://www.w3.org/1999/xhtml" processContents="lax" />
+      </xs:choice>
+      <xs:attribute name="href"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
