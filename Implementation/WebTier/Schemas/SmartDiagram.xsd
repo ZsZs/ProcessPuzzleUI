@@ -12,6 +12,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="dd:title"/>
+        <xs:element ref="dd:description"/>
         <xs:element ref="dd:author"/>
         <xs:element ref="dd:canvas"/>
         <xs:element ref="dd:figurePalettes"/>
@@ -22,7 +23,7 @@
   </xs:element>
 
   <xs:element name="title" type="xs:NCName"/>
-
+  <xs:element name="description" type="xs:string"/>
   <xs:element name="author" type="xs:string"/>
 
   <xs:element name="canvas">
