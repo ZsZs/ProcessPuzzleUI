@@ -38,7 +38,7 @@ window.AbstractDocumentTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
-      this.bundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
@@ -48,9 +48,10 @@ window.AbstractDocumentTest = new Class( {
          documentContentUri : this.constants.DOCUMENT_CONTENT_URI, 
          documentContainerId : this.constants.DOCUMENT_CONTAINER_ID,
          documentDefinitionUri : this.constants.DOCUMENT_DEFINITION_URI, 
-         rootElementName : "/htmlDocumentDefinition",
          onDocumentError : this.onDocumentError,
-         onDocumentReady : this.onDocumentReady });
+         onDocumentReady : this.onDocumentReady,
+         rootElementName : "/sd:htmlDocumentDefinition",
+      });
    },
    
    afterEachTest : function (){
@@ -77,11 +78,11 @@ window.AbstractDocumentTest = new Class( {
       this.abstractDocument.unmarshall();
       
       assertThat( this.abstractDocument.getState(), equalTo( AbstractDocument.States.UNMARSHALLED ));
-      assertThat( this.abstractDocument.getDescription(), equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/description" )));
-      assertThat( this.abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/handleMenuSelectedEvents" ))));
-      assertThat( this.abstractDocument.getName(), equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/name" )));
-      assertThat( this.abstractDocument.getVersion(), equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/version" )));
-      assertThat( this.abstractDocument.contentUri, equalTo( this.documentDefinition.selectNodeText( "/htmlDocumentDefinition/contentUri" )));
+      assertThat( this.abstractDocument.getDescription(), equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:description" )));
+      assertThat( this.abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:handleMenuSelectedEvents" ))));
+      assertThat( this.abstractDocument.getName(), equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:name" )));
+      assertThat( this.abstractDocument.getVersion(), equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:version" )));
+      assertThat( this.abstractDocument.contentUri, equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:contentUri" )));
    },
    
    unmarshall_whenSpecified_instantiatesAndUnmarshallsResources : function() {

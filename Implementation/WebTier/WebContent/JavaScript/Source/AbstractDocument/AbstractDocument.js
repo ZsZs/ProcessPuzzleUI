@@ -55,12 +55,12 @@ var AbstractDocument = new Class({
    
    options: {
       componentName : "AbstractDocument",
-      contentUriSelector : "contentUri",
-      descriptionSelector : "description",
+      contentUriSelector : "sd:contentUri",
+      descriptionSelector : "sd:description",
       documentContainerId : "DocumentContainer",
       documentContentExtension : ".xml",
       documentContentUri : null,
-      documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com/'",
       documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       documentDefinitionUri : null,
       documentDefinitionUriSelector: "@documentDefinition",
@@ -68,11 +68,11 @@ var AbstractDocument = new Class({
       documentVariables : null,
       eventFireDelay : 5,
       handleMenuSelectedEventsDefault : false,
-      handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
-      nameSelector : "name",
-      resourcesSelector : "resources",
-      rootElementName : "/smartDocumentDefinition",
-      versionSelector : "version"
+      handleMenuSelectedEventsSelector : "sd:handleMenuSelectedEvents",
+      nameSelector : "sd:name",
+      resourcesSelector : "sd:resources",
+      rootElementName : "/sd:smartDocumentDefinition",
+      versionSelector : "sd:version"
    },
    
    //Constructor
@@ -279,7 +279,7 @@ var AbstractDocument = new Class({
    }.protect(),
    
    loadDocumentDefinition: function() {
-      if( this.options.documentDefinitionUri ) this.documentDefinition = new XmlResource( this.options.documentDefinitionUri );
+      if( this.options.documentDefinitionUri ) this.documentDefinition = new XmlResource( this.options.documentDefinitionUri, { nameSpaces : this.options.documentDefinitionNameSpace });
       else throw new IllegalArgumentException( 'SmartDocument.options.documentDefinitionUri', this.options.documentDefinitionUri );
    }.protect(),
    

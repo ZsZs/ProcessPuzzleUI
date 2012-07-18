@@ -37,9 +37,8 @@ var HtmlDocument = new Class({
    options: {
       componentName : "HtmlDocument",
       documentContentExtension : ".html",
-      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'",
       documentEditorClass : "TextAreaEditor",
-      rootElementName : "/htmlDocumentDefinition",
+      rootElementName : "/sd:htmlDocumentDefinition",
    },
    
    //Constructor
