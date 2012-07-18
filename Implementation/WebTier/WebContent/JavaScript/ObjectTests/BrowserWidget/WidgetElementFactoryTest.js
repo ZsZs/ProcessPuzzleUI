@@ -65,7 +65,7 @@ window.WidgetElementFactoryTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.i18Resource = new XMLResourceBundle( this.webUIConfiguration );
+      this.i18Resource = new LocalizationResourceManager( this.webUIConfiguration );
       this.i18Resource.load( this.locale );
       this.contextElement = $( this.constants.CONTEXT_ELEMENT_ID );
       this.elementFactory = new WidgetElementFactory( this.contextElement, this.i18Resource );

@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<widgetDefinition></widgetDefinition>
+<sd:widgetDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
+   
+   <sd:name>TestWidget</sd:name>
+   <sd:description>Widget definition for testing purposes.</sd:description>
+   <sd:version>1.0</sd:version>
+   <sd:contentUri></sd:contentUri>
+   <sd:resources></sd:resources>
+</sd:widgetDefinition>

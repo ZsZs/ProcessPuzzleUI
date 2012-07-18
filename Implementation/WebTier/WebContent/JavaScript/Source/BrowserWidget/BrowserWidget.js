@@ -29,18 +29,18 @@ var BrowserWidget = new Class( {
    options : {
       componentName : "BrowserWidget",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      descriptionSelector : "//pp:widgetDefinition/description",
+      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      descriptionSelector : "/sd:widgetDefinition/sd:description",
       domDocument : this.document,
       eventDeliveryDelay : 5,
-      nameSelector : "//pp:widgetDefinition/name",
-      optionsSelector : "//pp:widgetDefinition/options",
+      nameSelector : "/sd:widgetDefinition/sd:name",
+      optionsSelector : "/sd:widgetDefinition/sd:options",
       subscribeToWebUIMessages : false,
       useLocalizedData : false,
       widgetContainerId : "widgetContainer",
       widgetDataURI : null,
       widgetDefinitionURI : null,
-      widgetVersionSelector : "//pp:widgetDefinition/version"
+      widgetVersionSelector : "/sd:widgetDefinition/sd:version"
    },
 
    // constructor
@@ -136,6 +136,7 @@ var BrowserWidget = new Class( {
    unmarshall : function(){
       this.unmarshallProperties();
       this.unmarshallOptions();
+      this.unmarshallComponents();
       this.state = BrowserWidget.States.UNMARSHALLED;
       return this;
    },
@@ -257,8 +258,7 @@ var BrowserWidget = new Class( {
       if( this.options.widgetDataURI ){
          try{
             var dataUri = this.options.useLocalizedData ? new ResourceUri( this.options.widgetDataURI, this.locale ).determineLocalizedUri() : this.options.widgetDataURI;
-            this.dataXml = new XmlResource( dataUri, {
-               nameSpaces : this.options.dataXmlNameSpace} );
+            this.dataXml = new XmlResource( dataUri, { nameSpaces : this.options.dataXmlNameSpace});
          }catch (e){
             this.logger.debug( "Widget data: '" + this.options.widgetDataURI + "' not found." );
          }
@@ -290,6 +290,10 @@ var BrowserWidget = new Class( {
             this.messageBus.subscribeToMessage( messageClass, this.webUIMessageHandler );
          }, this );
       }
+   }.protect(),
+   
+   unmarshallComponents: function(){
+      //Abstract method, should be overwrite!
    }.protect(),
    
    unmarshallOptions: function(){

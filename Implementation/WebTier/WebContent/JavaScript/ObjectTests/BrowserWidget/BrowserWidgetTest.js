@@ -60,7 +60,7 @@ window.BrowserWidgetTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.componentStateManager = new ComponentStateManager();
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.browserWidget = new BrowserWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID, onConstructed : this.onConstructed, onDestroyed : this.onDestroyed }, this.resourceBundle );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
@@ -140,7 +140,7 @@ window.BrowserWidgetTest = new Class( {
    
    initialize_whenResourceBundleIsNotLoaded_throwsException : function() {
       try{
-         new BrowserWidget( { widgetContainerId : this.constants.WIDGET_CONTAINER_ID }, new XMLResourceBundle( this.webUIConfiguration ) );
+         new BrowserWidget( { widgetContainerId : this.constants.WIDGET_CONTAINER_ID }, new LocalizationResourceManager( this.webUIConfiguration ) );
           fail( "Exception was expected. 'resourceBundle' parameter can't be null or empty." );
        }catch( e ) {
           assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
