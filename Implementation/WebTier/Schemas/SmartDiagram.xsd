@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:dd="http://www.processpuzzle.com/Diagram" 
+  xmlns:uml="http://www.processpuzzle.com/Diagram/UML"
+  targetNamespace="http://www.processpuzzle.com/Diagram" 
+  elementFormDefault="qualified">
+
+  <xs:import namespace="http://www.processpuzzle.com/Diagram/UML" schemaLocation="UmlDiagram.xsd"/>
+
+  <xs:element name="diagramDefinition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:title"/>
+        <xs:element ref="dd:author"/>
+        <xs:element ref="dd:canvas"/>
+        <xs:element ref="dd:figurePalettes"/>
+        <xs:element ref="dd:figurePropertyWindows"/>
+        <xs:element ref="dd:figures"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="title" type="xs:NCName"/>
+
+  <xs:element name="author" type="xs:string"/>
+
+  <xs:element name="canvas">
+    <xs:complexType>
+      <xs:attribute name="height" use="required" type="xs:integer"/>
+      <xs:attribute name="width" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="figurePalettes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:figurePalette"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="figurePalette">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="figurePropertyWindows">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:figurePropertyWindow"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="figurePropertyWindow">
+    <xs:complexType/>
+  </xs:element>
+
+  <xs:element name="figures">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:annotation"/>
+        <xs:element maxOccurs="unbounded" ref="uml:class"/>
+        <xs:element ref="uml:inheritanceConnection"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="annotation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:text"/>
+      </xs:sequence>
+      <xs:attribute name="height" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="positionX" use="required" type="xs:integer"/>
+      <xs:attribute name="positionY" use="required" type="xs:integer"/>
+      <xs:attribute name="width" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="text" type="xs:NCName"/>
+</xs:schema>
