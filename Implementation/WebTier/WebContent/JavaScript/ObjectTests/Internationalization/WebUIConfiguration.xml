@@ -14,7 +14,7 @@
 	xmlns:pr="http://www.processpuzzle.com/PersistenceConfiguration" 
 	xmlns:rt="http://www.processpuzzle.com/RuntimeConfiguration" 
 	xmlns:wui="http://www.processpuzzle.com/WebUIConfiguration" 
-	xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/ProcessPuzzleConfiguration.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/ProcessPuzzleConfiguration.xsd">
 
 	<ac:application>
 		<ac:applicationName>ProcessPuzzle</ac:applicationName>
@@ -106,10 +106,10 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-			<in:resourceBundle>../Desktop/DesktopInternationalization</in:resourceBundle>
-			<in:resourceBundle>../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
-			<in:resourceBundle>../Internationalization/TestResources</in:resourceBundle>
-			<in:resourceBundle>../Internationalization/TestResourcesTwo</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../Desktop/DesktopInternationalization</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
+			<in:resourceBundle baseNameOnlyVersionExists="true">../Internationalization/TestResources</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../Internationalization/TestResourcesTwo</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>
