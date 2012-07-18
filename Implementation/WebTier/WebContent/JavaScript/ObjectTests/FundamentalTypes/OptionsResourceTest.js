@@ -8,7 +8,7 @@ window.OptionsResourceTest = new Class( {
    },
 
    constants : {
-      OPTIONS_ELEMENT_SELECTOR : "/sampleOptions/options",
+      OPTIONS_ELEMENT_SELECTOR : "/sd:widgetDefinition/sd:options",
       OPTIONS_XML_URI : "../FundamentalTypes/Options.xml"
    },
    

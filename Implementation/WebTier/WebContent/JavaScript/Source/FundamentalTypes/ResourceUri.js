@@ -110,7 +110,7 @@ var ResourceUri = new Class({
    
    determineStrippedUri : function(){
       if( this.fullUri.indexOf( '?' ) > 0 )
-         this.uri = this.fullUri.substring( 0, this.fullUri.indexOf( '?' ))
+         this.uri = this.fullUri.substring( 0, this.fullUri.indexOf( '?' ));
       else this.uri = this.fullUri;
    }
 });

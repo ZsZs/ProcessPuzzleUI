@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sampleOptions>
-   <options>
-      <option name="widgetContainerId" value="'HorizontalMenuBar'"/>
-      <option name="widgetDefinitionURI" value="'../HierarchicalMenuWidget/MenuDefinition.xml'" />
-      <option name="arrayOfValues" value="['TestMessageOne', 'TestMessageOne']" />
-      <option name="booleanValue" value="true" />
-      <option name="objectValue" value="{ stringProperty : 'hello', booleanProperty : true, integerProperty : 10 }" />
-   </options>
-</sampleOptions>
+<sd:widgetDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
+   
+   <sd:name></sd:name>
+   <sd:description></sd:description>
+   <sd:version></sd:version>
+   
+   <sd:options>
+      <sd:option name="widgetContainerId" value="'HorizontalMenuBar'"/>
+      <sd:option name="widgetDefinitionURI" value="'../HierarchicalMenuWidget/MenuDefinition.xml'" />
+      <sd:option name="arrayOfValues" value="['TestMessageOne', 'TestMessageOne']" />
+      <sd:option name="booleanValue" value="true" />
+      <sd:option name="objectValue" value="{ stringProperty : 'hello', booleanProperty : true, integerProperty : 10 }" />
+   </sd:options>
+</sd:widgetDefinition>
