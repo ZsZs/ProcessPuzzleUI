@@ -33,7 +33,7 @@ var ResourceCache = new Class({
 	  this.resources.clear(); 
 	},
 
-	//public accessors methods
+	//Public accessor and mutator methods
 	get : function( name, type ) {
 	    var resourceKey = new ResourceKey( name, type );
 	    if( !this.resources.containsKey( resourceKey ) ) {
@@ -42,10 +42,12 @@ var ResourceCache = new Class({
 	    return this.resources.get( resourceKey );
 	},
 	
-	//public mutators methods
 	put : function( resourceKey, resourceValue ){
 		this.resources.put( resourceKey, resourceValue );
-	}
+	},
+	
+	//Properties
+	getResources : function() { return this.resources; }
 
 	//private methods
 });
