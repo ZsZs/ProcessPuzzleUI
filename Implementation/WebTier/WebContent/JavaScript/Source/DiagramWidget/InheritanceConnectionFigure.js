@@ -46,12 +46,12 @@ var InheritanceConnectionFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
-      this.parent();
-   },
-   
    draw: function( diagram ){
       this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
    },
    
    unmarshall: function(){

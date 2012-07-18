@@ -58,7 +58,7 @@ var DiagramFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
+   erase: function(){
       if( this.state == DiagramFigure.States.CONSTRUCTED ){
          this.removeFigureFromCanvas();
          this.state = DiagramFigure.States.INITIALIZED;

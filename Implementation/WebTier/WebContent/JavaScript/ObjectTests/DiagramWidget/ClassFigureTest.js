@@ -12,7 +12,7 @@ window.ClassFigureTest = new Class({
 
    constants : {
       ATTRIBUTE_SELECTOR : "/attributes/attribute",
-      FIGURE_SELECTOR : "//pp:widgetDefinition/figures/class[@name='ClassFigure']"
+      FIGURE_SELECTOR : "/dd:diagramDefinition/dd:figures/uml:class[@name='ClassFigure']"
    },
    
    initialize : function( options ) {

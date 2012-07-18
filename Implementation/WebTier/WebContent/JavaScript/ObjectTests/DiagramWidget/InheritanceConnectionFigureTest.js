@@ -10,7 +10,7 @@ window.InheritanceConnectionFigureTest = new Class({
    },
 
    constants : {
-      FIGURE_SELECTOR : "//pp:widgetDefinition/figures/inheritanceConnection[@name='ClassIsSpecializedFigure']",
+      FIGURE_SELECTOR : "/dd:diagramDefinition/dd:figures/uml:inheritanceConnection[@name='ClassIsSpecializedFigure']",
    },
    
    initialize : function( options ) {
@@ -58,12 +58,12 @@ window.InheritanceConnectionFigureTest = new Class({
    }.protect(),
    
    instantiateSourceAndTarget : function(){
-      this.sourceFigure = new ClassFigure( this.diagramDefinition.selectNode( "//pp:widgetDefinition/figures/class[@name='ClassFigure']" ), this.diagramInternationalization );
+      this.sourceFigure = new ClassFigure( this.diagramDefinition.selectNode( "/dd:diagramDefinition/dd:figures/uml:class[@name='ClassFigure']" ), this.diagramInternationalization );
       this.sourceFigure.unmarshall();
       this.sourceFigure.draw( this.diagram );
       this.diagram.getFigures().add( this.sourceFigure );
       
-      this.targetFigure = new ClassFigure( this.diagramDefinition.selectNode( "//pp:widgetDefinition/figures/class[@name='DiagramFigure']" ), this.diagramInternationalization );
+      this.targetFigure = new ClassFigure( this.diagramDefinition.selectNode( "/dd:diagramDefinition/dd:figures/uml:class[@name='DiagramFigure']" ), this.diagramInternationalization );
       this.targetFigure.unmarshall();
       this.targetFigure.draw( this.diagram );
       this.diagram.getFigures().add( this.targetFigure );

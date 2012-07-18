@@ -5,31 +5,30 @@ window.DiagramWidgetTest = new Class( {
    options : {
       testMethods : [
          { method : 'unmarshall_determinesProperties', isAsynchron : false },
-         { method : 'unmarshall_determinesCanvasProperties', isAsynchron : false },
-         { method : 'unmarshall_unmarshallsFigures', isAsynchron : false },
-         { method : 'construct_drawsDefinedDiagram', isAsynchron : true },
-         { method : 'construct_drawsFigures', isAsynchron : true },
+         { method : 'unmarshall_instantiatesAndUnmarshallsDiagram', isAsynchron : false },
+         { method : 'construct_drawsDiagram', isAsynchron : true },
          { method : 'destroy_removesFiguresAndDestroyHtmlElements', isAsynchron : true }]
    },
 
    constants : {
       LANGUAGE : "hu",
-      DIAGRAM_DATA_URI : "../DiagramWidget/DiagramData.xml",
-      DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramDefinition.xml",
       DIAGRAM_CONTAINER_ID : "DiagramContainer",
-      FIGURES_SELECTOR : "//pp:widgetDefinition/figures/annotation | //pp:widgetDefinition/figures/class | //pp:widgetDefinition/figures/inheritanceConnection",
+      DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramDefinition.xml",
+      DIAGRAM_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com', xmlns:dd='http://www.processpuzzle.com/Diagram', xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
+      FIGURES_SELECTOR : "/dd:diagramDefinition/dd:figures/dd:annotation | //dd:diagramDefinition/dd:figures/uml:class | //dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
       WEBUI_CONFIGURATION_URI : "../DiagramWidget/WebUIConfiguration.xml",
+      WIDGET_DEFINITION_URI : "../DiagramWidget/DiagramWidgetDefinition.xml"
    },
    
    initialize : function( options ) {
       this.setOptions( options );
       this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.componentStateManager;
-      this.diagram;
+      this.diagramWidget;
       this.diagramContainerElement;
-      this.diagramData;
       this.diagramDefinition;
-      this.diagramInternationalization;
+      this.diagramLocalization;
+      this.diagramWidgetDefinition;
       this.messageBus;
       this.webUIConfiguration;
       this.webUIController;
@@ -41,79 +40,49 @@ window.DiagramWidgetTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.componentStateManager = new ComponentStateManager();
-      this.diagramInternationalization = new XMLResourceBundle( this.webUIConfiguration );
-      this.diagramInternationalization.load( this.locale );
-      this.diagramData = new XmlResource( this.constants.DIAGRAM_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
-      this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
+      this.diagramLocalization = new LocalizationResourceManager( this.webUIConfiguration );
+      this.diagramLocalization.load( this.locale );
+      this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : this.constants.DIAGRAM_NAMESPACES } );
+      this.diagramWidgetDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
       
-      this.diagram = new DiagramWidget( {
+      this.diagramWidget = new DiagramWidget( {
          onConstructed : this.onConstructed,
          onDestroyed : this.onDestroyed,
          widgetContainerId : this.constants.DIAGRAM_CONTAINER_ID, 
-         widgetDefinitionURI : this.constants.DIAGRAM_DEFINITION_URI, 
-         widgetDataURI : this.constants.DIAGRAM_DATA_URI 
-      }, this.diagramInternationalization );
+         widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI, 
+         widgetDataURI : this.constants.DIAGRAM_DEFINITION_URI 
+      }, this.diagramLocalization );
       this.diagramContainerElement = $( this.constants.DIAGRAM_CONTAINER_ID );
    },
    
    afterEachTest : function (){
-      this.diagram.destroy();
-      this.diagramData.release();
+      this.diagramWidget.destroy();
       this.diagramDefinition.release();
+      this.diagramWidgetDefinition.release();
       this.messageBus.tearDown();
       this.componentStateManager.reset();
    },
    
    unmarshall_determinesProperties : function() {
-      this.diagram.unmarshall();
+      this.diagramWidget.unmarshall();
       
-      assertThat( this.diagram.getName(), equalTo( this.diagramDefinition.selectNodeText( 'pp:widgetDefinition/name' )));
-      assertThat( this.diagram.getDescription(), equalTo( this.diagramInternationalization.getText( this.diagramDefinition.selectNodeText( 'pp:widgetDefinition/description' ))));
-      assertThat( this.diagram.getTitle(), equalTo( this.diagramInternationalization.getText( this.diagramDefinition.selectNodeText( 'pp:widgetDefinition/title' ))));
+      assertThat( this.diagramWidget.getName(), equalTo( this.diagramWidgetDefinition.selectNodeText( '/sd:widgetDefinition/sd:name' )));
+      assertThat( this.diagramWidget.getDescription(), equalTo( this.diagramWidgetDefinition.selectNodeText( '/sd:widgetDefinition/sd:description' )));
    },
    
-   unmarshall_determinesCanvasProperties : function() {
-      this.diagram.unmarshall();
+   unmarshall_instantiatesAndUnmarshallsDiagram : function() {
+      this.diagramWidget.unmarshall();
       
-      assertThat( this.diagram.getCanvasHeight(), equalTo( parseInt( this.diagramDefinition.selectNodeText( 'pp:widgetDefinition/canvas/@height' ))));
-      assertThat( this.diagram.getCanvasWidth(), equalTo( parseInt( this.diagramDefinition.selectNodeText( 'pp:widgetDefinition/canvas/@width' ))));
+      assertThat( this.diagramWidget.getDiagram(), JsHamcrest.Matchers.instanceOf( Diagram ));
+      assertThat( this.diagramWidget.getDiagram().getState(), equalTo( DiagramFigure.States.UNMARSHALLED ));
    },
    
-   unmarshall_unmarshallsFigures : function(){
-      this.diagram.unmarshall();
-      
-      assertThat( this.diagram.getFigures().size(), equalTo( this.diagramDefinition.selectNodes( this.constants.FIGURES_SELECTOR ).length ));
-      var figures = this.diagramDefinition.selectNodes( this.constants.FIGURES_SELECTOR );
-      this.diagram.getFigures().each( function( figure, index ){
-         var figureElement = figures[index];
-         assertThat( figure.getName(), equalTo(  XmlResource.selectNodeText( "@name", figureElement )));
-         assertThat( figure.getPositionX(), equalTo( XmlResource.selectNodeText( "@positionX", figureElement )));
-         assertThat( figure.getPositionY(), equalTo( XmlResource.selectNodeText( "@positionY", figureElement )));
-      }.bind( this ));
-   },
-   
-   construct_drawsDefinedDiagram : function() {
+   construct_drawsDiagram : function() {
       this.testCaseChain.chain(
-         function(){ this.diagram.unmarshall(); this.diagram.construct(); }.bind( this ),
+         function(){ this.diagramWidget.unmarshall(); this.diagramWidget.construct(); }.bind( this ),
          function(){
-            assertThat( this.diagram.getPaintArea().get( 'tag' ).toUpperCase(), equalTo( 'DIV' ));
-            assertThat( this.diagram.getPaintArea().get( 'id' ), equalTo( this.diagram.options.paintAreaId ));
-            assertThat( this.diagram.getPaintArea().getStyle('height'), equalTo( this.diagram.getCanvasHeight() + "px" ));
-            assertThat( this.diagram.getPaintArea().getStyle('width'), equalTo( this.diagram.getCanvasWidth() + "px" ));
-            assertThat( this.diagram.getCanvas(), not( nil() ));
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
-   construct_drawsFigures : function(){
-      this.testCaseChain.chain(
-         function(){ this.diagram.unmarshall(); this.diagram.construct(); }.bind( this ),
-         function(){
-            this.diagram.getFigures().each( function( figure, index ){
-               assertThat( figure.getState(), equalTo( DiagramFigure.States.CONSTRUCTED ));
-               assertThat( figure.getId(), equalTo( figure.draw2dObject.id ));
-            }.bind( this ));
+            assertThat( this.diagramWidget.getDiagram().getState(), equalTo( DiagramFigure.States.CONSTRUCTED ));
+            assertThat( this.diagramWidget.getDiagram().getFigures().size(), greaterThan( 0 ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -121,12 +90,14 @@ window.DiagramWidgetTest = new Class( {
    
    destroy_removesFiguresAndDestroyHtmlElements : function(){
       this.testCaseChain.chain(
-         function(){ this.diagram.unmarshall(); this.diagram.construct(); }.bind( this ),
+         function(){ this.diagramWidget.unmarshall(); this.diagramWidget.construct(); }.bind( this ),
          function(){
-            this.diagram.destroy();
+            this.diagramWidget.destroy();
          }.bind( this ),
          function(){
-            assertThat( this.diagram.getFigures().size(), equalTo( 0 ));
+            assertThat( this.diagramWidget.getDiagram().getState(), equalTo( DiagramFigure.States.INITIALIZED ));
+            assertThat( this.diagramWidget.getDiagram().getFigures().size(), equalTo( 0 ));
+
             assertThat( this.diagramContainerElement.getChildren( '*' ).length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )

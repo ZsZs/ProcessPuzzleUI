@@ -40,13 +40,14 @@ var DiagramFigureFactory = new Class({
    create: function( definitionXmlElement, internationalization, options ){
       var newFigure;
       switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "ANNOTATION": 
+      case "DD:ANNOTATION": 
          newFigure = new AnnotationFigure( definitionXmlElement, internationalization, options ); break;
-      case "CLASS": 
+      case "UML:CLASS": 
          newFigure = new ClassFigure( definitionXmlElement, internationalization, options ); break;
-      case "INHERITANCECONNECTION":
-      default:
+      case "UML:INHERITANCECONNECTION":
          newFigure = new InheritanceConnectionFigure( definitionXmlElement, internationalization, options ); break;
+      default:
+         throw new UnknownDiagramElementException( definitionXmlElement.tagName );
       }
       
       return newFigure;

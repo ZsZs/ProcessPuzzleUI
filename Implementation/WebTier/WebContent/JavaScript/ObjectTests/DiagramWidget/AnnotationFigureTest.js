@@ -10,7 +10,7 @@ window.AnnotationFigureTest = new Class({
    },
 
    constants : {
-      FIGURE_SELECTOR : "//pp:widgetDefinition/figures/annotation[@name='DiagramAnnotation']",
+      FIGURE_SELECTOR : "//dd:diagramDefinition/dd:figures/dd:annotation[@name='DiagramAnnotation']",
    },
    
    initialize : function( options ) {
