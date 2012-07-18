@@ -25,10 +25,10 @@ window.DocumentElementTest = new Class( {
    constants : {
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
       DOCUMENT_CONTAINER_ID : "smartDocument",
-      ELEMENT_DEFINITION_WITH_LINK : "/smartDocumentDefinition/documentHeader/compositeElement/element[@id='smartDocumentTitle']",
-      ELEMENT_DEFINITION_WITH_SOURCE : "/smartDocumentDefinition/documentHeader/compositeElement/element[@id='processPuzzleLogo']",
-      ELEMENT_DEFINITION_WITH_PLUGIN : "/smartDocumentDefinition/documentBody/compositeElement/element[@id='languageSelector']",
-      ELEMENT_DEFINITION_WITHOUT_ID : "/smartDocumentDefinition/documentFooter/compositeElement/element[@elementStyle='footerText']",
+      ELEMENT_DEFINITION_WITH_LINK : "/sd:smartDocumentDefinition/sd:documentHeader/sd:compositeElement/sd:element[@id='smartDocumentTitle']",
+      ELEMENT_DEFINITION_WITH_SOURCE : "/sd:smartDocumentDefinition/sd:documentHeader/sd:compositeElement/sd:element[@id='processPuzzleLogo']",
+      ELEMENT_DEFINITION_WITH_PLUGIN : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:element[@id='languageSelector']",
+      ELEMENT_DEFINITION_WITHOUT_ID : "/sd:smartDocumentDefinition/sd:documentFooter/sd:compositeElement/sd:element[@elementStyle='footerText']",
       ERRONEOUS_DOCUMENT_DEFINITION_URI : "../SmartDocument/ErroneousDocumentDefinition.xml",
       WEBUI_CONFIGURATION_URI : "../SmartDocument/WebUIConfiguration.xml"
    },
@@ -55,7 +55,7 @@ window.DocumentElementTest = new Class( {
       this.webUIController = new WebUIController({ contextRootPrefix : "../../../", configurationUri : this.constants.WEBUI_CONFIGURATION_URI } );
       this.webUIConfiguration = this.webUIController.getWebUIConfiguration();
       this.webUILogger = this.webUIController.getLogger();
-      this.desktopInternationalization = new XMLResourceBundle( this.webUIConfiguration );
+      this.desktopInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.desktopInternationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );

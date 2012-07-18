@@ -39,7 +39,7 @@ var DocumentElement = new Class({
       idSelector : "@id",
       isEditable : false,
       isEditableSelector : "@isEditable",
-      pluginSelector : "plugin",
+      pluginSelector : "sd:plugin",
       referenceSelector : "@href",
       sourceSelector : "@source",
       styleSelector : "@elementStyle",

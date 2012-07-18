@@ -1,106 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Test Smart Document</name>
-   <description>This configuration supports testing Smart Document.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
+   <sd:name>Test Smart Document</sd:name>
+   <sd:description>This configuration supports testing Smart Document.</sd:description>
+   <sd:version>0.5</sd:version>
    
-   <resources>
-      <styleSheets>
-         <styleSheet>../SmartDocument/SmartDocument.css</styleSheet>
-      </styleSheets>
+   <sd:resources>
+      <sd:styleSheets>
+         <sd:styleSheet>../SmartDocument/SmartDocument.css</sd:styleSheet>
+      </sd:styleSheets>
 
-      <images>
-         <image id="logoImage" title="ProcessPuzzle">../SmartDocument/Images/ProcessPuzzleLogo.jpg</image>
-      </images>
+      <sd:images>
+         <sd:image id="logoImage" title="ProcessPuzzle">../SmartDocument/Images/ProcessPuzzleLogo.jpg</sd:image>
+      </sd:images>
       
-      <javaScripts>
-         <javaScript>../ResourceManager/DummyScript.js</javaScript>
-      </javaScripts>
-   </resources>
+      <sd:javaScripts>
+         <sd:javaScript>../ResourceManager/DummyScript.js</sd:javaScript>
+      </sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="smartDocumentHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h1" elementStyle="headerText" id="smartDocumentTitle" href="http://opensource.processpuzzle.com">SmartDocument.headerText</element>
-         <element tag="img" id="processPuzzleLogo" source="../SmartDocument/Images/ProcessPuzzleLogo.jpg" />
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="smartDocumentHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h1" elementStyle="headerText" id="smartDocumentTitle" href="http://opensource.processpuzzle.com">SmartDocument.headerText</sd:element>
+         <sd:element tag="img" id="processPuzzleLogo" source="../SmartDocument/Images/ProcessPuzzleLogo.jpg" />
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="smartDocumentBody">
-      <compositeElement tag="div" id="bodyWrapper">
-         <dataElement tag="h3" id="currentUser" elementStyle="currentUser" source="../SmartDocument/UserProfile.xml" bind="/userProfile/userName[{userNameIndex}]" indexVariable="userNameIndex" minOccures="1" maxOccures="1" />
-         <compositeElement tag="ul">SmartDocument.addresses
-            <dataElement tag="li" id="userAddresses" source="../SmartDocument/UserProfile.xml" bind="/userProfile/addresses/address[{index}]" minOccures="0" maxOccures="unbounded" />
-         </compositeElement>
-         <element tag="h4">SmartDocument.roles</element>
-         <compositeDataElement tag="ul" id="roleList" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]" indexVariable="roleIndex" maxOccures="unbounded">
-            <dataElement tag="li" id="roleName" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/@name"/>
-	         <compositeDataElement tag="ul" id="activityList" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]" indexVariable="activityIndex" maxOccures="unbounded">
-	            <dataElement tag="li" id="activityName" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]/@name"/>
-	         </compositeDataElement>
-         </compositeDataElement>
-         <dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
+   <sd:documentBody tag="div" id="smartDocumentBody">
+      <sd:compositeElement tag="div" id="bodyWrapper">
+         <sd:dataElement tag="h3" id="currentUser" elementStyle="currentUser" source="../SmartDocument/UserProfile.xml" bind="/userProfile/userName[{userNameIndex}]" indexVariable="userNameIndex" minOccures="1" maxOccures="1" />
+         <sd:compositeElement tag="ul">SmartDocument.addresses
+            <sd:dataElement tag="li" id="userAddresses" source="../SmartDocument/UserProfile.xml" bind="/userProfile/addresses/address[{index}]" minOccures="0" maxOccures="unbounded" />
+         </sd:compositeElement>
+         <sd:element tag="h4">SmartDocument.roles</sd:element>
+         <sd:compositeDataElement tag="ul" id="roleList" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]" indexVariable="roleIndex" maxOccures="unbounded">
+            <sd:dataElement tag="li" id="roleName" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/@name"/>
+	         <sd:compositeDataElement tag="ul" id="activityList" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]" indexVariable="activityIndex" maxOccures="unbounded">
+	            <sd:dataElement tag="li" id="activityName" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]/@name"/>
+	         </sd:compositeDataElement>
+         </sd:compositeDataElement>
+         <sd:dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
          
-         <formElement id="channelProperties" method="post" bind="/rss/channel">
-	         <formField id="link" label="DynamicDocument.RSS.link" bind="/rss/channel/link"/>
-	         <formField id="description" label="DynamicDocument.RSS.description" bind="/rss/channel/description"/>
-	         <formField id="language" label="DynamicDocument.RSS.language" bind="/rss/channel/language"/>
-	         <formField id="pubDate" label="DynamicDocument.RSS.pubDate" bind="/rss/channel/pubDate"/>
-	         <formField id="lastBuildDate" label="DynamicDocument.RSS.lastBuildDate" bind="/rss/channel/lastBuildDate"/>
-	         <formField id="docs" label="DynamicDocument.RSS.docs" bind="/rss/channel/docs"/>
-	         <formField id="generator" label="DynamicDocument.RSS.generator" bind="/rss/channel/generator"/>
-	         <formField id="managingEditor" label="DynamicDocument.RSS.managingEditor" bind="/rss/channel/managingEditor"/>
-	         <formField id="webMaster" label="DynamicDocument.RSS.webMaster" bind="/rss/channel/webMaster"/>
-         </formElement>
+         <sd:formElement id="channelProperties" method="post" bind="/rss/channel">
+	         <sd:formField id="link" label="DynamicDocument.RSS.link" bind="/rss/channel/link"/>
+	         <sd:formField id="description" label="DynamicDocument.RSS.description" bind="/rss/channel/description"/>
+	         <sd:formField id="language" label="DynamicDocument.RSS.language" bind="/rss/channel/language"/>
+	         <sd:formField id="pubDate" label="DynamicDocument.RSS.pubDate" bind="/rss/channel/pubDate"/>
+	         <sd:formField id="lastBuildDate" label="DynamicDocument.RSS.lastBuildDate" bind="/rss/channel/lastBuildDate"/>
+	         <sd:formField id="docs" label="DynamicDocument.RSS.docs" bind="/rss/channel/docs"/>
+	         <sd:formField id="generator" label="DynamicDocument.RSS.generator" bind="/rss/channel/generator"/>
+	         <sd:formField id="managingEditor" label="DynamicDocument.RSS.managingEditor" bind="/rss/channel/managingEditor"/>
+	         <sd:formField id="webMaster" label="DynamicDocument.RSS.webMaster" bind="/rss/channel/webMaster"/>
+         </sd:formElement>
 
-         <element  tag="h4" id="channelItems">SmartDocument.itemsTitle</element>
-         <compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
-	         <dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
-	         <dataElement tag="li" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
-         </compositeDataElement>
+         <sd:element  tag="h4" id="channelItems">SmartDocument.itemsTitle</sd:element>
+         <sd:compositeDataElement tag="ul" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
+	         <sd:dataElement tag="li" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
+	         <sd:dataElement tag="li" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+         </sd:compositeDataElement>
          
-         <tableElement id="channelItemsContainer" bind="//rss/channel/item[{index}]" maxOccures="unbounded" isEditable="true">
-            <tableColumn id="itemTitle" label="DynamicDocument.RSS.itemTitle" bind="//rss/channel/item/title"/>
-            <tableColumn id="itemDescription" label="DynamicDocument.RSS.itemDescription" bind="//rss/channel/item/description"/>
-         </tableElement>
-<!--          
- -->         
+         <sd:tableElement id="channelItemsContainer" bind="//rss/channel/item[{index}]" maxOccures="unbounded" isEditable="true">
+            <sd:tableColumn id="itemTitle" label="DynamicDocument.RSS.itemTitle" bind="//rss/channel/item/title"/>
+            <sd:tableColumn id="itemDescription" label="DynamicDocument.RSS.itemDescription" bind="//rss/channel/item/description"/>
+         </sd:tableElement>
          
-      </compositeElement>
+      </sd:compositeElement>
       
-      <compositeElement tag="div" id="languageSelectorWrapper">
-        <element tag="div" id="languageSelector">
-           <plugin>
-              <resources>
-                 <styleSheets>
-                    <styleSheet>../LanguageSelectorWidget/LanguageSelectorWidget.css</styleSheet>
-                 </styleSheets>
-                 <images>
-                    <image>../LanguageSelectorWidget/Images/SelectorBackground-Left.gif</image>
-                    <image>../LanguageSelectorWidget/Images/SelectorBackground-Right.jpg</image>
-                 </images>
-                 <javaScripts>
-                    <javaScript>../../Source/LanguageSelectorWidget/LanguageChangedMessage.js</javaScript>
-                    <javaScript>../../Source/LanguageSelectorWidget/LanguageSelectorWidget.js</javaScript>
-                 </javaScripts>
-              </resources>
-              <widget name="LanguageSelectorWidget">
-                 <options>
-                    <option name="widgetContainerId" value="'languageSelector'"/>
-                 </options>
-              </widget>
-           </plugin>
-        </element>
-        <element tag="p" id="copyright" href="http://www.processpuzzle.com">SmartDocument.copyright</element>
-      </compositeElement>
-   </documentBody>
+      <sd:compositeElement tag="div" id="languageSelectorWrapper">
+        <sd:element tag="div" id="languageSelector">
+           <sd:plugin>
+              <sd:resources>
+                 <sd:styleSheets>
+                    <sd:styleSheet>../LanguageSelectorWidget/LanguageSelectorWidget.css</sd:styleSheet>
+                 </sd:styleSheets>
+                 <sd:images>
+                    <sd:image>../LanguageSelectorWidget/Images/SelectorBackground-Left.gif</sd:image>
+                    <sd:image>../LanguageSelectorWidget/Images/SelectorBackground-Right.jpg</sd:image>
+                 </sd:images>
+                 <sd:javaScripts>
+                    <sd:javaScript>../../Source/LanguageSelectorWidget/LanguageChangedMessage.js</sd:javaScript>
+                    <sd:javaScript>../../Source/LanguageSelectorWidget/LanguageSelectorWidget.js</sd:javaScript>
+                 </sd:javaScripts>
+              </sd:resources>
+              <sd:widget name="LanguageSelectorWidget">
+                 <sd:options>
+                    <sd:option name="widgetContainerId" value="'languageSelector'"/>
+                 </sd:options>
+              </sd:widget>
+           </sd:plugin>
+        </sd:element>
+        <sd:element tag="p" id="copyright" href="http://www.processpuzzle.com">SmartDocument.copyright</sd:element>
+      </sd:compositeElement>
+   </sd:documentBody>
    
-   <documentFooter tag="div" id="newsReaderFooter">
-      <compositeElement tag="div" id="footerWrapper">
-         <element tag="h1" elementStyle="footerText" href="http://opensource.processpuzzle.com">Visit Open Source ProcessPuzzle</element>
-      </compositeElement>
-   </documentFooter>
-</smartDocumentDefinition>
+   <sd:documentFooter tag="div" id="newsReaderFooter">
+      <sd:compositeElement tag="div" id="footerWrapper">
+         <sd:element tag="h1" elementStyle="footerText" href="http://opensource.processpuzzle.com">Visit Open Source ProcessPuzzle</sd:element>
+      </sd:compositeElement>
+   </sd:documentFooter>
+</sd:smartDocumentDefinition>

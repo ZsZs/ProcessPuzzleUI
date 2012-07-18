@@ -12,7 +12,7 @@ window.ImageElementTest = new Class( {
       DOCUMENT_CONTAINER_ID : "SmartDocument",
       DOCUMENT_CONTENT_URI : "../SmartDocument/SampleDocumentContent.xml",
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
-      ELEMENT_DEFINITION_SELECTOR : "/smartDocumentDefinition/documentBody/compositeElement/tableElement/tableColumn[1]"
+      ELEMENT_DEFINITION_SELECTOR : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:tableElement/sd:tableColumn[1]"
    },
    
    initialize : function( options ) {

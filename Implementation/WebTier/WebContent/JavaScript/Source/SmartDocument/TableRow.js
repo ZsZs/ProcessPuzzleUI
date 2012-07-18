@@ -35,7 +35,7 @@ var TableRow = new Class({
    
    options: {
       componentName : "TableRow",
-      tableColumnsSelector : "tableColumn"
+      tableColumnsSelector : "sd:tableColumn"
    },
    
    //Constructor

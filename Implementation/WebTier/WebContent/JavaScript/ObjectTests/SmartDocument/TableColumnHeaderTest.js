@@ -15,7 +15,7 @@ window.TableColumnHeaderTest = new Class( {
       DOCUMENT_CONTAINER_ID : "SmartDocument",
       DOCUMENT_CONTENT_URI : "../SmartDocument/SampleDocumentContent.xml",
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
-      ELEMENT_DEFINITION_SELECTOR : "/smartDocumentDefinition/documentBody/compositeElement/tableElement/tableColumn[1]"
+      ELEMENT_DEFINITION_SELECTOR : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:tableElement/sd:tableColumn[1]"
    },
    
    initialize : function( options ) {
@@ -33,7 +33,7 @@ window.TableColumnHeaderTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.bundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );

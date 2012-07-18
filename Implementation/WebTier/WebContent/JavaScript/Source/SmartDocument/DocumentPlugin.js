@@ -36,9 +36,9 @@ var DocumentPlugin = new Class({
    options: {
       componentName : "DocumentPlugin",
       nameSelector : "@name",
-      optionsSelector : "widget/options",
-      resourcesSelector : "resources",
-      widgetNameSelector : "widget/@name"
+      optionsSelector : "sd:widget/sd:options",
+      resourcesSelector : "sd:resources",
+      widgetNameSelector : "sd:widget/@name"
    },
    
    //Constructor

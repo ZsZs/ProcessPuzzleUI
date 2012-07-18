@@ -22,9 +22,9 @@ window.SmartDocumentTest = new Class( {
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
       ERRONEOUS_DOCUMENT_DEFINITION_URI : "../SmartDocument/ErroneousDocumentDefinition.xml",
       LANGUAGE : "hu",
-      RESOURCE_ITEMS_SELECTOR : "/smartDocumentDefinition/resources/styleSheets/styleSheet | " + 
-                                "/smartDocumentDefinition/resources/images/image | " +
-                                "/smartDocumentDefinition/resources/javaScripts/javaScript"
+      RESOURCE_ITEMS_SELECTOR : "/sd:smartDocumentDefinition/sd:resources/sd:styleSheets/sd:styleSheet | " + 
+                                "/sd:smartDocumentDefinition/sd:resources/sd:images/sd:image | " +
+                                "/sd:smartDocumentDefinition/sd:resources/sd:javaScripts/sd:javaScript"
    },
    
    initialize : function( options ) {
@@ -48,7 +48,7 @@ window.SmartDocumentTest = new Class( {
       this.messageBus = new WebUIMessageBus();
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI );
       this.smartDocument = new SmartDocument( 

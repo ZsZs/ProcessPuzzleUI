@@ -24,10 +24,10 @@ window.DataElementTest = new Class( {
       DOCUMENT_CONTAINER_ID : "SmartDocument",
       DOCUMENT_CONTENT_URI : "../SmartDocument/UserProfile.xml",
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
-      ELEMENT_WITH_MAXOCCURES : "/smartDocumentDefinition/documentBody/compositeElement/compositeElement/dataElement[@id='userAddresses']",
-      ELEMENT_WITH_SINGLE_DATA : "/smartDocumentDefinition/documentBody/compositeElement/dataElement[@id='currentUser']",
-      ELEMENT_WITH_VARIABLES : "/smartDocumentDefinition/documentBody/compositeElement/compositeDataElement/compositeDataElement/dataElement",
-      ELEMENT_WITH_VARIABLES_AND_MAXOCCURES : "/smartDocumentDefinition/documentBody/compositeElement/compositeDataElement/compositeDataElement"
+      ELEMENT_WITH_MAXOCCURES : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:compositeElement/sd:dataElement[@id='userAddresses']",
+      ELEMENT_WITH_SINGLE_DATA : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:dataElement[@id='currentUser']",
+      ELEMENT_WITH_VARIABLES : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:compositeDataElement/sd:compositeDataElement/sd:dataElement",
+      ELEMENT_WITH_VARIABLES_AND_MAXOCCURES : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:compositeDataElement/sd:compositeDataElement"
    },
    
    initialize : function( options ) {
@@ -46,7 +46,7 @@ window.DataElementTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.bundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );

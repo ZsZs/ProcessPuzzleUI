@@ -39,27 +39,27 @@ var DocumentElementFactory = new Class({
    create: function( definitionXmlElement, bundle, data, options ){
       var newDocumentElement;
       switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "COMPOSITEDATAELEMENT": 
+      case "SD:COMPOSITEDATAELEMENT": 
          newDocumentElement = new CompositeDataElement( definitionXmlElement, bundle, data, options ); break;
-      case "COMPOSITEELEMENT": 
+      case "SD:COMPOSITEELEMENT": 
          newDocumentElement = new CompositeDocumentElement( definitionXmlElement, bundle, data, options ); break;
-      case "DATAELEMENT": 
+      case "SD:DATAELEMENT": 
          newDocumentElement = new DataElement( definitionXmlElement, bundle, data, options ); break;
-      case "DOCUMENTBODY": 
+      case "SD:DOCUMENTBODY": 
          newDocumentElement = new DocumentBody( definitionXmlElement, bundle, data, options ); break;
-      case "DOCUMENTFOOTER": 
+      case "SD:DOCUMENTFOOTER": 
          newDocumentElement = new DocumentFooter( definitionXmlElement, bundle, data, options ); break;
-      case "DOCUMENTHEADER": 
+      case "SD:DOCUMENTHEADER": 
          newDocumentElement = new DocumentHeader( definitionXmlElement, bundle, data, options ); break;
-      case "FORMELEMENT": 
+      case "SD:FORMELEMENT": 
          newDocumentElement = new FormElement( definitionXmlElement, bundle, data, options ); break;
-      case "FORMFIELD": 
+      case "SD:FORMFIELD": 
          newDocumentElement = new FormField( definitionXmlElement, bundle, data, options ); break;
-      case "TABLEELEMENT": 
+      case "SD:TABLEELEMENT": 
          newDocumentElement = new TableElement( definitionXmlElement, bundle, data, options ); break;
-      case "TABLECOLUMN": 
+      case "SD:TABLECOLUMN": 
          newDocumentElement = new TableColumn( definitionXmlElement, bundle, data, options ); break;
-      case "ELEMENT":
+      case "SD:ELEMENT":
       default:
          newDocumentElement = new DocumentElement( definitionXmlElement, bundle, options ); break;
       }

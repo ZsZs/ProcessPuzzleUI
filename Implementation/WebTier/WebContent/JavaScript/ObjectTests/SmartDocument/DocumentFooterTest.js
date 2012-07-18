@@ -32,11 +32,11 @@ window.DocumentFooterTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.bundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
         
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI );
-      this.footerDefinition = this.documentDefinition.selectNode( "/smartDocumentDefinition/documentFooter" );
+      this.footerDefinition = this.documentDefinition.selectNode( "/sd:smartDocumentDefinition/sd:documentFooter" );
       this.documentFooter = new DocumentFooter( this.footerDefinition, this.bundle, null, { onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });
       
       this.documentContainerElement = $( this.constants.DOCUMENT_CONTAINER_ID );

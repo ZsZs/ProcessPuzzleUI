@@ -84,9 +84,6 @@ var ImageLensBehaviour = new Class({
       var imageSrc = options.imageSrc ? options.imageSrc : $(this).attr("src");
       var imageTag = "<img style='display:none;' src='" + imageSrc + "' />";
 
-      var widthRatio = 0;
-      var heightRatio = 0;
-
       $(imageTag).load(function () {
           widthRatio = $(this).width() / obj.width();
           heightRatio = $(this).height() / obj.height();

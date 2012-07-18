@@ -35,7 +35,7 @@ var CompositeDocumentElement = new Class({
    
    options: {
       componentName : "CompositeDocumentElement",
-      subElementsSelector : "compositeElement | element | compositeDataElement | dataElement | formElement | formField | tableElement",
+      subElementsSelector : "sd:compositeElement | sd:element | sd:compositeDataElement | sd:dataElement | sd:formElement | sd:formField | sd:tableElement",
       tagName : "div"
    },
    

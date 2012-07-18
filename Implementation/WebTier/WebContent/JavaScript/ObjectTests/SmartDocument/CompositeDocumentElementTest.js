@@ -18,8 +18,8 @@ window.CompositeDocumentElementTest = new Class( {
       CALL_CHAIN_DELAY : 500,
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
       DOCUMENT_CONTAINER_ID : "documentContainer",
-      ELEMENT_DEFINITION_WITH_PLUGIN : "/smartDocumentDefinition/documentBody/compositeElement[@id='languageSelectorWrapper']",
-      ELEMENT_SELECTOR : "/smartDocumentDefinition/documentHeader/compositeElement",
+      ELEMENT_DEFINITION_WITH_PLUGIN : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement[@id='languageSelectorWrapper']",
+      ELEMENT_SELECTOR : "/sd:smartDocumentDefinition/sd:documentHeader/sd:compositeElement",
       ELEMENT_NAME : "SmartDocumentTitle",
       ELEMENT_STYLE : "headerText",
       ELEMENT_TAG : "h1",
@@ -50,7 +50,7 @@ window.CompositeDocumentElementTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
-      this.internationalization = new XMLResourceBundle( this.webUIConfiguration );
+      this.internationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.internationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
@@ -81,7 +81,7 @@ window.CompositeDocumentElementTest = new Class( {
    
    unmarshall_unmarshallsNestedElements : function() {
       this.compositeElement.unmarshall();
-      assertThat( this.compositeElement.getElements().size(), equalTo( XmlResource.selectNodes( "compositeElement | element", this.elementDefinition ).length ));
+      assertThat( this.compositeElement.getElements().size(), equalTo( XmlResource.selectNodes( "sd:compositeElement | sd:element", this.elementDefinition ).length ));
    },
    
    construct_setsStatusToConstructed : function() {

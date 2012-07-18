@@ -18,8 +18,8 @@ window.DocumentPluginTest = new Class( {
       DOCUMENT_URI : "../SmartDocument/SmartDocumentDefinition.xml",
       DOCUMENT_CONTAINER_ID : "SmartDocument",
       ERRONEOUS_DOCUMENT_URI : "../SmartDocument/ErroneousDocumentDefinition.xml",
-      ERRONEOUS_PLUGIN_DEFINITION_ELEMENT : "/smartDocumentDefinition/documentBody/compositeElement/element[@id='skinSelector']/plugin",
-      PLUGIN_DEFINITION_ELEMENT : "/smartDocumentDefinition/documentBody/compositeElement/element[@id='languageSelector']/plugin",
+      ERRONEOUS_PLUGIN_DEFINITION_ELEMENT : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:element[@id='skinSelector']/sd:plugin",
+      PLUGIN_DEFINITION_ELEMENT : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:element[@id='languageSelector']/sd:plugin",
       PLUGIN_STYLE_SHEET : "../HierarchicalMenuWidget/HorizontalLayout.css",
       WEBUI_CONFIGURATION_URI : "../SmartDocument/WebUIConfiguration.xml"
    },
@@ -27,9 +27,9 @@ window.DocumentPluginTest = new Class( {
    initialize : function( options ) {
       this.setOptions( options );
       
-      this.constants.RESOURCE_ITEMS_SELECTOR = this.constants.PLUGIN_DEFINITION_ELEMENT + "/resources/styleSheets/styleSheet | " + 
-                                               this.constants.PLUGIN_DEFINITION_ELEMENT + "/resources/images/image | " +
-                                               this.constants.PLUGIN_DEFINITION_ELEMENT + "/resources/javaScripts/javaScript",
+      this.constants.RESOURCE_ITEMS_SELECTOR = this.constants.PLUGIN_DEFINITION_ELEMENT + "/sd:resources/sd:styleSheets/sd:styleSheet | " + 
+                                               this.constants.PLUGIN_DEFINITION_ELEMENT + "/sd:resources/sd:images/sd:image | " +
+                                               this.constants.PLUGIN_DEFINITION_ELEMENT + "/sd:resources/sd:javaScripts/sd:javaScript",
       this.loadCallbackWasCalled = false;
       this.desktopContainerElement;
       this.documentDefinition;
@@ -77,8 +77,8 @@ window.DocumentPluginTest = new Class( {
    unmarshall_determinesWidgetProperties : function() {
       this.plugin.unmarshall();
       
-      assertThat( this.plugin.getWidgetName(), equalTo( this.documentDefinition.selectNodeText( this.constants.PLUGIN_DEFINITION_ELEMENT + "/widget/@name" ) ));
-      assertThat( "'" + this.plugin.getWidgetOptions()['widgetContainerId'] + "'", equalTo( this.documentDefinition.selectNodeText( this.constants.PLUGIN_DEFINITION_ELEMENT + "/widget/options/option[@name='widgetContainerId']/@value" )) );
+      assertThat( this.plugin.getWidgetName(), equalTo( this.documentDefinition.selectNodeText( this.constants.PLUGIN_DEFINITION_ELEMENT + "/sd:widget/@name" ) ));
+      assertThat( "'" + this.plugin.getWidgetOptions()['widgetContainerId'] + "'", equalTo( this.documentDefinition.selectNodeText( this.constants.PLUGIN_DEFINITION_ELEMENT + "/sd:widget/sd:options/sd:option[@name='widgetContainerId']/@value" )) );
    },
    
    construct_loadsResources : function() {

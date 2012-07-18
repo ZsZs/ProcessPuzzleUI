@@ -19,7 +19,7 @@ window.TableElementTest = new Class( {
       DOCUMENT_CONTAINER_ID : "SmartDocument",
       DOCUMENT_CONTENT_URI : "../SmartDocument/SampleDocumentContent.xml",
       DOCUMENT_DEFINITION_URI : "../SmartDocument/SmartDocumentDefinition.xml",
-      ELEMENT_DEFINITION_SELECTOR : "/smartDocumentDefinition/documentBody/compositeElement/tableElement"
+      ELEMENT_DEFINITION_SELECTOR : "/sd:smartDocumentDefinition/sd:documentBody/sd:compositeElement/sd:tableElement"
    },
    
    initialize : function( options ) {
@@ -36,7 +36,7 @@ window.TableElementTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.bundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
@@ -65,7 +65,7 @@ window.TableElementTest = new Class( {
       this.tableElement.unmarshall();
       
       //VERIFY:
-      assertThat( this.tableElement.getDataElementsNumber(), equalTo( this.documentContentResource.selectNodes( "//rss/channel/item" ).length ));
+      assertThat( this.tableElement.getDataElementsNumber(), equalTo( this.documentContentResource.selectNodes( "/rss/channel/item" ).length ));
    },
    
    unmarshall_instantiatesAndUnmarshallsTableHeader : function() {
