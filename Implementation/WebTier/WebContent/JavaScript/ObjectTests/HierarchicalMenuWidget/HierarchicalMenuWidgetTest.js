@@ -47,7 +47,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
       this.componentStateManager = new ComponentStateManager();
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
       this.menuWidget = new HierarchicalMenuWidget({ 
@@ -90,8 +90,8 @@ window.HierarchicalMenuWidgetTest = new Class( {
       this.menuWidget.unmarshall();
       
       assertThat( this.menuWidget.getState(), equalTo( BrowserWidget.States.UNMARSHALLED ));
-      assertThat( this.menuWidget.getSelectedItemClass(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "//pp:widgetDefinition/options/option[@name='selectedItemStyle']/@value" ))));
-      assertThat( this.menuWidget.getAccordionBehaviour(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "//pp:widgetDefinition/options/option[@name='accordionBehaviour']/@value" ))));
+      assertThat( this.menuWidget.getSelectedItemClass(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "/sd:widgetDefinition/sd:options/sd:option[@name='selectedItemStyle']/@value" ))));
+      assertThat( this.menuWidget.getAccordionBehaviour(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "/sd:widgetDefinition/sd:options/sd:option[@name='accordionBehaviour']/@value" ))));
    },
    
    unmarshall_instantiatesAndUnmarshallsRootMenu : function(){
@@ -118,7 +118,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.widgetContainerElement.getChildren( "UL" ).length, equalTo( 1 ));
-            assertThat( this.widgetContainerElement.getChildren( "UL LI" ).length, equalTo( this.menuWidget.getDataXml().selectNodes( "//pp:menuWidgetDefinition/menuItem/menuItem" ).length ));
+            assertThat( this.widgetContainerElement.getChildren( "UL LI" ).length, equalTo( this.menuWidget.getDataXml().selectNodes( "/md:menuDefinition/md:menuItem/md:menuItem" ).length ));
             assertThat( this.menuWidget.getCurrentItemId(), equalTo( "/MenuWidget/mainItemOne" ));
             this.testMethodReady();
          }.bind( this )
@@ -134,7 +134,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.widgetContainerElement.getChildren( "UL" ).length, equalTo( 1 ));
-            assertThat( this.widgetContainerElement.getChildren( "UL LI" ).length, equalTo( this.menuWidget.getDataXml().selectNodes( "//menuItem" ).length -1 ));
+            assertThat( this.widgetContainerElement.getChildren( "UL LI" ).length, equalTo( this.menuWidget.getDataXml().selectNodes( "//md:menuItem" ).length -1 ));
             assertThat( this.menuWidget.getCurrentItemId(), equalTo( "/MenuWidget/mainItemOne/itemOneOfOne" ));
             this.testMethodReady();
          }.bind( this )
@@ -150,7 +150,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.widgetContainerElement.getChildren( "UL" ).length, equalTo( 1 ));
-            assertThat( this.widgetContainerElement.getChildren( "UL > LI" ).length, equalTo( this.menuWidget.getDataXml().selectNodes( "//pp:menuWidgetDefinition/menuItem/menuItem" ).length ));
+            assertThat( this.widgetContainerElement.getChildren( "UL > LI" ).length, equalTo( this.menuWidget.getDataXml().selectNodes( "/md:menuDefinition/md:menuItem/md:menuItem" ).length ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

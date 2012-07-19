@@ -38,7 +38,7 @@ var CompositeMenu = new Class({
    options : {
       componentName : 'CompositeMenu',
       menuStyle : 'menuWidget',
-      subItemsSelector : 'menuItem'
+      subItemsSelector : 'md:menuItem'
    },
 
    //Constructor

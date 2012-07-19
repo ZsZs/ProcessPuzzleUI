@@ -41,7 +41,7 @@ var MenuItemFactory = new Class({
 
    //Public mutators and accessors
    create: function( menuItemDefinition, elementFactory, options ){
-      var hasChildNodes = XmlResource.selectNodes( "menuItem", menuItemDefinition ).length > 0 ? true : false;
+      var hasChildNodes = XmlResource.selectNodes( "md:menuItem", menuItemDefinition ).length > 0 ? true : false;
       var treeNode;
       
       if( hasChildNodes ) treeNode = new CompositeMenu( menuItemDefinition, elementFactory, options );

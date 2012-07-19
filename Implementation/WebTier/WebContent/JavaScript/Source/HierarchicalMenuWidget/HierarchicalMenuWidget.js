@@ -43,7 +43,7 @@ var HierarchicalMenuWidget = new Class({
       fireDefaultItem : true,
       menuItemOptions : {},
       menuStyle : "menuWidget",
-      rootMenuSelector : "//pp:menuWidgetDefinition/menuItem[1]",
+      rootMenuSelector : "/md:menuDefinition/md:menuItem[1]",
       selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
       widgetContainerId : "HierarchicalMenuWidget"
@@ -63,14 +63,6 @@ var HierarchicalMenuWidget = new Class({
    },
    
    //Public accessor and mutator methods
-   construct : function() {
-      this.parent();
-   },
-   
-   destroy : function() {      
-      this.parent();
-   },
-   
    findItemById: function( itemFullId ){
       if(( itemFullId == null ) || ( this.state != BrowserWidget.States.UNMARSHALLED && this.state != BrowserWidget.States.CONSTRUCTED )) return null;
       return this.rootMenu.findItemById( itemFullId );
@@ -89,11 +81,6 @@ var HierarchicalMenuWidget = new Class({
       
       this.storeComponentState();
       this.messageBus.notifySubscribers( this.createMessage( menuItem ));      
-   },
-   
-   unmarshall: function(){
-      this.parent();
-      this.unmarshallMenu();
    },
    
    webUIMessageHandler: function( webUIMessage ){
@@ -208,7 +195,7 @@ var HierarchicalMenuWidget = new Class({
       }
    }.protect(),
    
-   unmarshallMenu: function(){
+   unmarshallComponents: function(){
       var rootMenuElement = this.dataXml.selectNode( this.options.rootMenuSelector );
       this.standardizeContextItemId();
       if( rootMenuElement ){

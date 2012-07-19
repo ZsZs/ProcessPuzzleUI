@@ -15,7 +15,7 @@ window.MenuItemTest = new Class( {
       CONFIGURATION_URI : "../HierarchicalMenuWidget/WebUIConfiguration.xml",
       LANGUAGE : "hu",
       MENU_DEFINITION_URI : "../HierarchicalMenuWidget/MenuDefinition.xml",
-      MENU_SELECTOR : "//pp:menuWidgetDefinition/menuItem[1]/menuItem[1]",
+      MENU_SELECTOR : "/md:menuDefinition/md:menuItem[1]/md:menuItem[1]",
       MENU_WIDGET_ID : "HierarchicalMenuWidget"
    },
    
@@ -37,12 +37,12 @@ window.MenuItemTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
       
-      this.menuDefinition = new XmlResource( this.constants.MENU_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
+      this.menuDefinition = new XmlResource( this.constants.MENU_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:md='http://www.processpuzzle.com/MenuDefinition" });
       this.menuItemDefinition = this.menuDefinition.selectNode( this.constants.MENU_SELECTOR );
       this.menuItem = new MenuItem( this.menuItemDefinition, this.elementFactory, {} );
    },

@@ -17,7 +17,7 @@ window.CompositeMenuTest = new Class( {
       CONFIGURATION_URI : "../HierarchicalMenuWidget/WebUIConfiguration.xml",
       LANGUAGE : "hu",
       MENU_DEFINITION_URI : "../HierarchicalMenuWidget/MenuDefinition.xml",
-      MENU_SELECTOR : "//pp:menuWidgetDefinition/menuItem[1]",
+      MENU_SELECTOR : "/md:menuDefinition/md:menuItem[1]",
       MENU_WIDGET_ID : "HierarchicalMenuWidget"
    },
    
@@ -39,12 +39,12 @@ window.CompositeMenuTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
       
-      this.menuDefinition = new XmlResource( this.constants.MENU_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
+      this.menuDefinition = new XmlResource( this.constants.MENU_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:md='http://www.processpuzzle.com/MenuDefinition" });
       this.compositeMenuDefinition = this.menuDefinition.selectNode( this.constants.MENU_SELECTOR );
       this.compositeMenu = new RootMenu( this.compositeMenuDefinition, this.elementFactory, {} );
    },
@@ -65,7 +65,7 @@ window.CompositeMenuTest = new Class( {
       this.compositeMenu.options.showSubItems = true;
       this.compositeMenu.unmarshall();
       
-      assertThat( this.compositeMenu.getSubItems().size(), equalTo( XmlResource.selectNodes( "menuItem", this.compositeMenuDefinition ).length ));
+      assertThat( this.compositeMenu.getSubItems().size(), equalTo( XmlResource.selectNodes( "md:menuItem", this.compositeMenuDefinition ).length ));
    },
    
    construct_constructsListElement : function(){
@@ -81,7 +81,7 @@ window.CompositeMenuTest = new Class( {
       this.compositeMenu.unmarshall();
       this.compositeMenu.construct( this.widgetContainerElement );
       
-      assertThat( $( "MenuWidget" ).getElements( 'li' ).length, equalTo( XmlResource.selectNodes( "//menuItem", this.compositeMenuDefinition ).length -1 ));
+      assertThat( $( "MenuWidget" ).getElements( 'li' ).length, equalTo( XmlResource.selectNodes( "//md:menuItem", this.compositeMenuDefinition ).length -1 ));
    },
 
    onClick_whenAccordionBehaviourEnabled_constructsSubItems : function(){
