@@ -46,8 +46,8 @@
   <xs:element name="program">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="description"/>
-        <xs:element ref="link"/>
+        <xs:element ref="description" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="link" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -59,8 +59,8 @@
         <xs:element ref="endDate"/>
         <xs:element ref="recurrence"/>
       </xs:sequence>
-      <xs:attribute name="isFullDay" use="optional" type="xs:NCName"/>
-      <xs:attribute name="isMultipleDay" use="optional" type="xs:NCName"/>
+      <xs:attribute name="isFullDay" use="optional" type="xs:boolean"/>
+      <xs:attribute name="isMultipleDay" use="optional" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
 
