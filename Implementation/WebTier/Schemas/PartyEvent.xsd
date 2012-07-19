@@ -57,7 +57,7 @@
       <xs:sequence>
         <xs:element ref="startDate"/>
         <xs:element ref="endDate"/>
-        <xs:element ref="recurrence"/>
+        <xs:element ref="recurrence" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="isFullDay" use="optional" type="xs:boolean"/>
       <xs:attribute name="isMultipleDay" use="optional" type="xs:boolean"/>
