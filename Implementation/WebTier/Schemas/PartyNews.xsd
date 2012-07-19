@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://www.processpuzzle.com/PartyNews"
+  targetNamespace="http://www.processpuzzle.com/PartyNews"
+  elementFormDefault="qualified">
+
+  <xs:element name="rss">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="channel"/>
+      </xs:sequence>
+      <xs:attribute name="version" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="channel">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="title"/>
+        <xs:element ref="link"/>
+        <xs:element ref="description"/>
+        <xs:element ref="language"/>
+        <xs:element ref="pubDate"/>
+        <xs:element ref="lastBuildDate"/>
+        <xs:element ref="docs"/>
+        <xs:element ref="generator"/>
+        <xs:element ref="managingEditor"/>
+        <xs:element ref="webMaster"/>
+        <xs:element maxOccurs="unbounded" ref="item"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="language" type="xs:NCName"/>
+  <xs:element name="lastBuildDate" type="xs:string"/>
+  <xs:element name="docs" type="xs:anyURI"/>
+  <xs:element name="generator" type="xs:string"/>
+  <xs:element name="managingEditor" type="xs:string"/>
+  <xs:element name="webMaster" type="xs:string"/>
+
+  <xs:element name="item">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="title"/>
+        <xs:element ref="link"/>
+        <xs:element ref="description"/>
+        <xs:element ref="pubDate"/>
+        <xs:element ref="guid"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="guid" type="xs:anyURI"/>
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="link" type="xs:anyURI"/>
+  <xs:element name="pubDate" type="xs:string"/>
+
+  <xs:element name="description">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="http://www.w3.org/1999/xhtml" processContents="lax" />
+      </xs:choice>
+      <xs:attribute name="href"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
