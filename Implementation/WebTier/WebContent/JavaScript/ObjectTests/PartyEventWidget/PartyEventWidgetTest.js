@@ -38,7 +38,7 @@ window.PartyEventWidgetTest = new Class( {
       this.messageBus = new WebUIMessageBus();
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.eventWidget = new PartyEventWidget({ 
          widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
@@ -66,7 +66,7 @@ window.PartyEventWidgetTest = new Class( {
    unmarshall_instantiatesEvents : function(){
       this.eventWidget.unmarshall();
       
-      assertThat( this.eventWidget.getEvents().size(), equalTo( this.eventWidget.getDataXml().selectNodes( "//pp:eventList/events/event" ).length ));
+      assertThat( this.eventWidget.getEvents().size(), equalTo( this.eventWidget.getDataXml().selectNodes( "/pe:eventList/pe:events/pe:event" ).length ));
    },
    
    unmarshall_passesElementFactoryToChannel : function(){

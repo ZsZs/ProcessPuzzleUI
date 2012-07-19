@@ -3,51 +3,51 @@
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    
-   <events>
-      <event>
-         <title>Unit Test Driven JavaScript Development - Training</title>
-         <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</link>
-         <description>Introduction to Test Driven Development for JavaScript developers.</description>
-         <program>
-            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Detailed agenda</description>
-            <link>http://processpuzzle.com/#!WebUIController: {locale: 'en'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
-         </program>
-         <schedule isFullDay="false">
-            <startDate>Tue, 10 Jun 2003 04:00:00 GMT</startDate>
-            <endDate>Tue, 10 Jun 2003 08:00:00 GMT</endDate>
-         </schedule>
-         <location>
-            <address>Prof. Agile - virtual classroom</address>
-            <link>http://agilerenovation.com</link>
-         </location>
-         <language>English</language>
-         <registration>
-            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</link>
-         </registration>
-         <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
-      </event>  
+   <pe:events>
+      <pe:event>
+         <pe:title>Unit Test Driven JavaScript Development - Training</pe:title>
+         <pe:link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</pe:link>
+         <pe:description>Introduction to Test Driven Development for JavaScript developers.</pe:description>
+         <pe:program>
+            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Detailed agenda</pe:description>
+            <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'en'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
+         </pe:program>
+         <pe:schedule isFullDay="false">
+            <pe:startDate>Tue, 10 Jun 2003 04:00:00 GMT</pe:startDate>
+            <pe:endDate>Tue, 10 Jun 2003 08:00:00 GMT</pe:endDate>
+         </pe:schedule>
+         <pe:location>
+            <pe:address>Prof. Agile - virtual classroom</pe:address>
+            <pe:link>http://agilerenovation.com</pe:link>
+         </pe:location>
+         <pe:language>English</pe:language>
+         <pe:registration>
+            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
+         </pe:registration>
+         <pe:publicationDate>Tue, 10 Jun 2003 04:00:00 GMT</pe:publicationDate>
+      </pe:event>  
        
-      <event>
-         <title>Acceptance Test Driven Java Development - Training</title>
-         <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</link>
-         <description>Introduction to Acceptance Test Driven Development for Java developers.</description>
-         <program>
-            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Detailed agenda</description>
-            <link>http://processpuzzle.com/#!WebUIController: {locale: 'en'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
-         </program>
-         <schedule isFullDay="false">
-            <startDate></startDate>
-            <endDate></endDate>
-         </schedule>
-         <location>
-            <address>Prof. Agile - virtual classroom</address>
-            <link>http://agilerenovation.com</link>
-         </location>
-         <language>English</language>
-         <registration>
-            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</link>
-         </registration>
-         <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
-      </event>  
-   </events> 
+      <pe:event>
+         <pe:title>Acceptance Test Driven Java Development - Training</pe:title>
+         <pe:link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</pe:link>
+         <pe:description>Introduction to Acceptance Test Driven Development for Java developers.</pe:description>
+         <pe:program>
+            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Detailed agenda</pe:description>
+            <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'en'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
+         </pe:program>
+         <pe:schedule isFullDay="false">
+            <pe:startDate></pe:startDate>
+            <pe:endDate></pe:endDate>
+         </pe:schedule>
+         <pe:location>
+            <pe:address>Prof. Agile - virtual classroom</pe:address>
+            <pe:link>http://agilerenovation.com</pe:link>
+         </pe:location>
+         <pe:language>English</pe:language>
+         <pe:registration>
+            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
+         </pe:registration>
+         <pe:publicationDate>Tue, 03 Jun 2003 09:39:21 GMT</pe:publicationDate>
+      </pe:event>  
+   </pe:events> 
 </pp:eventList>

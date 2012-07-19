@@ -3,7 +3,7 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopConfiguration.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com/DesktopConfiguration http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
 	<name>ProcessPuzzle</name>
 	<version>1.0</version>

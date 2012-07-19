@@ -31,7 +31,7 @@ window.PhotoGaleryImageTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.photoGaleryInternationalization = new XMLResourceBundle( this.webUIConfiguration );
+      this.photoGaleryInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.photoGaleryInternationalization.load( this.locale );
       this.photoGaleryDefinition = new XmlResource( this.constants.IMAGE_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
       this.imageDefinition = this.photoGaleryDefinition.selectNode( this.constants.IMAGE_SELECTOR );

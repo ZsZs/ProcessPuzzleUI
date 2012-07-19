@@ -37,7 +37,8 @@ var WebUIController = new Class({
             'loadInternationalizations',
             'loadWebUIConfiguration',
             'onDesktopComponentConstructed',
-            'onDesktopConstructed', 
+            'onDesktopConstructed',
+            'onLocalizationResourcesLoaded',
             'onError', 
             'restoreComponentsState',
             'storeComponentsState',
@@ -81,7 +82,7 @@ var WebUIController = new Class({
       this.locale;
       this.logger;
       this.messageBus = new WebUIMessageBus();
-      this.resourceBundle;
+      this.localizationResourceManager;
       this.prefferedLanguage;
       this.recentHash = this.determineCurrentHash();
       this.refreshUrlTimer;
@@ -153,7 +154,7 @@ var WebUIController = new Class({
          if( this.languageSelector ) this.languageSelector.destroy();
          this.desktop.destroy();
          this.webUIConfiguration.release();
-         this.resourceBundle.release();
+         this.localizationResourceManager.release();
          window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
@@ -186,6 +187,10 @@ var WebUIController = new Class({
    
    onDesktopConstructed : function(){
       this.logger.debug( this.options.componentName + ", constructing desktop is finished." );
+      this.configurationChain.callChain();
+   },
+   
+   onLocalizationResourcesLoaded : function(){
       this.configurationChain.callChain();
    },
    
@@ -245,7 +250,7 @@ var WebUIController = new Class({
    getLogger : function() { return this.logger; },
    getMessageBus : function() { return this.messageBus; },
    getPrefferedLanguage : function() { return this.prefferedLanguage; },
-   getResourceBundle : function() { return this.resourceBundle; },
+   getResourceBundle : function() { return this.localizationResourceManager; },
    getStateManager : function() { return this.stateManager; },
    getText : function( key, defaultValue ) { return this.getTextInternal( key, defaultValue  ); },
    getUserLocation : function() { return this.userLocation; },
@@ -271,7 +276,7 @@ var WebUIController = new Class({
    constructDesktop : function() {
       this.logger.debug( this.options.componentName + ".constructDesktop() started." );
       var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
+      this.desktop = new Desktop( this.webUIConfiguration, this.localizationResourceManager, { 
          configurationURI : desktopConfigurationUri,
          onDesktopComponentConstructed : this.onDesktopComponentConstructed,
          onConstructed : this.onDesktopConstructed, 
@@ -329,12 +334,12 @@ var WebUIController = new Class({
    }.protect(),
 
    getTextInternal : function ( key, defaultValue ) {
-      if( this.resourceBundle == null)
+      if( this.localizationResourceManager == null)
          if( defaultValue != null ) return defaultValue;
          else return key;
       var returnValue;
       try {
-         returnValue = this.resourceBundle.getText(key);
+         returnValue = this.localizationResourceManager.getText(key);
       } catch (e) {
          if( e instanceof IllegalArgumentException ) {
             if(defaultValue != null) return defaultValue;
@@ -357,9 +362,9 @@ var WebUIController = new Class({
    loadInternationalizations : function () {
       this.logger.debug( this.options.componentName + ".loadInternationalizations() started." );
       try{
-         this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
-         this.resourceBundle.load( this.locale );
-         this.logger.debug( "Resource bundles: " + this.options.contextRootPrefix + this.resourceBundle.getResourceBundleNames() + " was loaded." );
+         this.localizationResourceManager = new LocalizationResourceManager( this.webUIConfiguration, { onFailure : this.onError, onSuccess : this.onLocalizationResourcesLoaded } );
+         this.localizationResourceManager.load( this.locale );
+         this.logger.debug( "Resource bundles: " + this.options.contextRootPrefix + this.localizationResourceManager.getResourceBundleNames() + " was loaded." );
       }catch( e ) {
          this.onError( e );
       }

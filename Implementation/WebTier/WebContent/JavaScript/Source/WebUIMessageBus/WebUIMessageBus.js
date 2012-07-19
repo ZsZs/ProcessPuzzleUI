@@ -42,7 +42,7 @@ var WebUIMessageBus = new Class({
       var messageClass = message.getClass();
       var subscribersToMessage = this.getSubscribersToMessage( messageClass );
       if( subscribersToMessage && subscribersToMessage.size() > 0 ){
-         var largestIndex;
+         var largestIndex = 0;
          subscribersToMessage.each( function( callBack, index ){
             callBack( message );
             largestIndex = index;

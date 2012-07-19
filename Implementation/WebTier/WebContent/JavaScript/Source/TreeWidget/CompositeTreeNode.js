@@ -198,7 +198,7 @@ var CompositeTreeNode = new Class( {
       return this.currentNodeNameInPath( nextPathFragment );
    }.protect(),
    
-   pathRefersToSubnode : function( path ){ return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) > 0 }.protect(),
+   pathRefersToSubnode : function( path ){ return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) > 0; }.protect(),
    pathStartsWithThisNode : function( path ){ return this.currentNodeNameInPath( path ) == this.caption; }.protect(),
    
    replaceNodeHandlerImage : function(){

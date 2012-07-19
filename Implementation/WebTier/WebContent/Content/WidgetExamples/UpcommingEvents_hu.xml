@@ -3,51 +3,51 @@
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    
-   <events>
-      <event>
-         <title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</title>
-         <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</link>
-         <description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</description>
-         <program>
-            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</description>
-            <link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
-         </program>
-         <schedule isFullDay="false">
-            <startDate>2012 április 2. 8:00 GMT+1</startDate>
-            <endDate>2012 április 2. 14:00 GMT+1</endDate>
-         </schedule>
-         <location>
-            <address>Prof. Agile - virtuális osztályterem</address>
-            <link>http://agilerenovation.com</link>
-	      </location>
-         <language>angol</language>
-         <registration>
-            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</link>
-         </registration>
-         <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
-      </event>  
+   <pe:events>
+      <pe:event>
+         <pe:title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</pe:title>
+         <pe:link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</pe:link>
+         <pe:description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</pe:description>
+         <pe:program>
+            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</pe:description>
+            <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
+         </pe:program>
+         <pe:schedule isFullDay="false">
+            <pe:startDate>2012 április 2. 8:00 GMT+1</pe:startDate>
+            <pe:endDate>2012 április 2. 14:00 GMT+1</pe:endDate>
+         </pe:schedule>
+         <pe:location>
+            <pe:address>Prof. Agile - virtuális osztályterem</pe:address>
+            <pe:link>http://agilerenovation.com</pe:link>
+	      </pe:location>
+         <pe:language>angol</pe:language>
+         <pe:registration>
+            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
+         </pe:registration>
+         <pe:publicationDate>Tue, 10 Jun 2003 04:00:00 GMT</pe:publicationDate>
+      </pe:event>  
 	    
-      <event>
-         <title>Elfogadási teszt központú Java fejlesztés - Tanfolyam</title>
-         <link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</link>
-         <description>Bevezetés az elfogadási teszt alapú fejlesztésbe Java fejlesztők számára.</description>
-         <program>
-            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</description>
-            <link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
-         </program>
-         <schedule isFullDay="false">
-            <startDate>2012 április 9. 8:00 GMT+1</startDate>
-            <endDate>2012 április 9. 14:00 GMT+1</endDate>
-         </schedule>
-         <location>
-            <address>Prof. Agile - virtuális osztályterem</address>
-            <link>http://agilerenovation.com</link>
-         </location>
-         <language>angol</language>
-         <registration>
-            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</link>
-         </registration>
-         <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
-	   </event>  
-   </events> 
+      <pe:event>
+         <pe:title>Elfogadási teszt központú Java fejlesztés - Tanfolyam</pe:title>
+         <pe:link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</pe:link>
+         <pe:description>Bevezetés az elfogadási teszt alapú fejlesztésbe Java fejlesztők számára.</pe:description>
+         <pe:program>
+            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</pe:description>
+            <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
+         </pe:program>
+         <pe:schedule isFullDay="false">
+            <pe:startDate>2012 április 9. 8:00 GMT+1</pe:startDate>
+            <pe:endDate>2012 április 9. 14:00 GMT+1</pe:endDate>
+         </pe:schedule>
+         <pe:location>
+            <pe:address>Prof. Agile - virtuális osztályterem</pe:address>
+            <pe:link>http://agilerenovation.com</pe:link>
+         </pe:location>
+         <pe:language>angol</pe:language>
+         <pe:registration>
+            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
+         </pe:registration>
+         <pe:publicationDate>Tue, 03 Jun 2003 09:39:21 GMT</pe:publicationDate>
+	   </pe:event>  
+   </pe:events> 
 </pp:eventList>

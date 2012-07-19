@@ -16,7 +16,7 @@ window.PartyEventTest = new Class( {
    },
 
    constants : {
-      EVENT_SELECTOR : "//pp:eventList/events/event[1]",
+      EVENT_SELECTOR : "/pe:eventList/pe:events/pe:event[1]",
       CONFIGURATION_URI : "../PartyEventWidget/WebUIConfiguration.xml",
       LANGUAGE : "en",
       LOCALIZED_RSS_URI : "../PartyEventWidget/TestEvents_en.xml",
@@ -42,9 +42,9 @@ window.PartyEventTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
+      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:pe='http://www.processpuzzle.com/PartyEvent" });
       this.eventDefinition = this.rssResource.selectNode( this.constants.EVENT_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
@@ -63,27 +63,27 @@ window.PartyEventTest = new Class( {
    unmarshall_determinesEventProperties : function(){
       this.event.unmarshall();
       
-      assertThat( this.event.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/title" )));
-      assertThat( this.event.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/link" )));
-      assertThat( this.event.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/description" )));
-      assertThat( this.event.getProgramDescription(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/program/description" )));
-      assertThat( this.event.getProgramLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/program/link" )));
-      assertThat( this.event.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pubDate" )));
+      assertThat( this.event.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:title" )));
+      assertThat( this.event.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:link" )));
+      assertThat( this.event.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:description" )));
+      assertThat( this.event.getProgramDescription(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:program/pe:description" )));
+      assertThat( this.event.getProgramLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:program/pe:link" )));
+      assertThat( this.event.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:publicationDate" )));
    },
    
    unmarshall_determinesScheduleProperties : function(){
       this.event.unmarshall();
       
       assertThat( this.event.isFullDay, equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/@isFullDay" )));
-      assertThat( this.event.getStartDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/schedule/startDate" )));
-      assertThat( this.event.getEndDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/schedule/endDate" )));
+      assertThat( this.event.getStartDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:schedule/pe:startDate" )));
+      assertThat( this.event.getEndDate(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:schedule/pe:endDate" )));
    },
    
    unmarshall_determinesLocationProperties : function(){
       this.event.unmarshall();
       
-      assertThat( this.event.getLocationAddress(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/location/address" )));
-      assertThat( this.event.getLocationLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/location/link" )));
+      assertThat( this.event.getLocationAddress(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:location/pe:address" )));
+      assertThat( this.event.getLocationLink(), equalTo( this.rssResource.selectNodeText( this.constants.EVENT_SELECTOR + "/pe:location/pe:link" )));
    },
    
    construct_displaysTitle : function() {

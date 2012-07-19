@@ -81,7 +81,7 @@ var RootTreeNode = new Class({
    }.protect(),
    
    finalizeConstruction : function(){
-      if( this.options.isVisible ) this.parent()
+      if( this.options.isVisible ) this.parent();
       else {
          this.state = BrowserWidget.States.UNMARSHALLED;
          this.constructionChain.clearChain();

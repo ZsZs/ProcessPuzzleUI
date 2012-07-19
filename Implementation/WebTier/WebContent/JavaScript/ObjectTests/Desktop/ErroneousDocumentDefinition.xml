@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="http://processpuzzle.com/Schemas/SmartDocument.xsd">
-   <name>Test Smart Document</name>
-   <description>This configuration supports testing Smart Document.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
+   <sd:name>Test Smart Document</sd:name>
+   <sd:description>This configuration supports testing Smart Document.</sd:description>
+   <sd:version>0.5</sd:version>
    
-   <resources>
-      <styleSheets>
-         <styleSheet>../SmartDocument/NoneExisting.css</styleSheet>
-      </styleSheets>
+   <sd:resources>
+      <sd:styleSheets>
+         <sd:styleSheet>../SmartDocument/NoneExisting.css</sd:styleSheet>
+      </sd:styleSheets>
 
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentBody tag="div" id="smartDocumentBody">
-      <element tag="h4" id="sayHello">Hello World!</element>
-   </documentBody>
-</smartDocumentDefinition>
+   <sd:documentBody tag="div" id="smartDocumentBody">
+      <sd:element tag="h4" id="sayHello">Hello World!</sd:element>
+   </sd:documentBody>
+</sd:smartDocumentDefinition>

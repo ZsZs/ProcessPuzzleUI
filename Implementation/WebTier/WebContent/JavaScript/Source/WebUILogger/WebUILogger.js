@@ -42,19 +42,19 @@ var WebUILogger = new Class({
    
    //Public accessors and mutators
    configure : function( webUIConfiguration ) {
-      for( i = 0; i < webUIConfiguration.getLoggingLayoutElements().length; i++ ) {
+      for( var i = 0; i < webUIConfiguration.getLoggingLayoutElements().length; i++ ) {
          var layoutName = webUIConfiguration.getLoggingLayoutName( i );
          var layout = this.configureLayout( layoutName, webUIConfiguration );
          this.layouts.put( layoutName, layout );
       }
       
-      for( i = 0; i < webUIConfiguration.getLoggingAppenderElements().length; i++ ) {
+      for( var i = 0; i < webUIConfiguration.getLoggingAppenderElements().length; i++ ) {
          var appenderName = webUIConfiguration.getLoggingAppenderName( i );
          var appender = this.configureAppender( appenderName, webUIConfiguration );
          this.appenders.put( appenderName, appender );
       }
       
-      for( i = 0; i < webUIConfiguration.getLoggerElements().length; i++ ) {
+      for( var i = 0; i < webUIConfiguration.getLoggerElements().length; i++ ) {
          var loggerName = webUIConfiguration.getLoggerName( i );
          var logger = this.configureLogger( loggerName, webUIConfiguration );
          this.loggers.put( loggerName, logger );

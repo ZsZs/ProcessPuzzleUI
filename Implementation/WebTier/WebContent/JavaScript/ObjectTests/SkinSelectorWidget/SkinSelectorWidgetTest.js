@@ -40,7 +40,7 @@ window.SkinSelectorWidgetTest = new Class( {
    	this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
    	this.webUILogger = new WebUILogger( this.webUIConfiguration );
    	this.componentStateManager = new ComponentStateManager();
-   	this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+   	this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
    	this.resourceBundle.load( this.locale );
    	this.skinSelector = new SkinSelectorWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID }, this.resourceBundle, this.webUIConfiguration );
    	this.widgetContainerElement = this.skinSelector.getContainerElement();

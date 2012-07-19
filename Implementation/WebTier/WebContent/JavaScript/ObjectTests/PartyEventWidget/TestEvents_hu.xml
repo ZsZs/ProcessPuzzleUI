@@ -1,53 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:eventList
+<pe:eventList 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://www.w3.org/1999/xhtml" 
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   xmlns:pe="http://www.processpuzzle.com/PartyEvent"
+   xsi:schemaLocation="http://www.processpuzzle.com/PartyEvent http://processpuzzle.com/Schemas/PartyEvent.xsd">
    
-   <events>
-	   <event>
-	      <title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</title>
-	      <link>http://honnia.hu/news</link>
-	      <description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</description>
-         <program>
-            <description>Részletes program.</description>
-            <link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
-         </program>
-	      <schedule isFullDay="false">
-	         <startDate></startDate>
-	         <endDate></endDate>
-	      </schedule>
-	      <location>
-	         <address>Prof. Agile - virtuális osztályterem</address>
-	         <link>http://agilerenovation.com</link>
-	      </location>
-         <language>magyar</language>
-         <registration>
-            <link>http://agilerenovation.eventbrite.com/</link>
-         </registration>
-	      <pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
-	   </event>  
+   <pe:events>
+	   <pe:event>
+	      <pe:title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</pe:title>
+	      <pe:link>http://honnia.hu/news</pe:link>
+	      <pe:description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</pe:description>
+         <pe:program>
+            <pe:description>Részletes program.</pe:description>
+            <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
+         </pe:program>
+	      <pe:schedule isFullDay="false">
+	         <pe:startDate></pe:startDate>
+	         <pe:endDate></pe:endDate>
+	      </pe:schedule>
+	      <pe:location>
+	         <pe:address>Prof. Agile - virtuális osztályterem</pe:address>
+	         <pe:link>http://agilerenovation.com</pe:link>
+	      </pe:location>
+         <pe:language>magyar</pe:language>
+         <pe:registration>
+            <pe:link>http://agilerenovation.eventbrite.com/</pe:link>
+         </pe:registration>
+	      <pe:publicationDate>Tue, 10 Jun 2003 04:00:00 GMT</pe:publicationDate>
+	   </pe:event>  
 	    
-	   <event>
-	      <title>Egység teszt központú Java fejlesztés - Tanfolyam</title>
-	      <link>Content/WidgetExamples/UpcommingEvents.xml</link>
-	      <description>Bevezetés az egység teszt alapú fejlesztésbe Java fejlesztők számára.</description>
-         <program>
-            <description>Részletes program.</description>
-            <link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</link>
-         </program>
-	      <schedule isFullDay="false">
-	         <startDate></startDate>
-	         <endDate></endDate>
-	      </schedule>
-	      <location>
-	         <address>Prof. Agile - virtuális osztályterem</address>
-	         <link>http://agilerenovation.com</link>
-	      </location>
-         <language>angol</language>
-         <registration>
-            <link>http://agilerenovation.eventbrite.com/</link>
-         </registration>
-	      <pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pubDate>
-	   </event>  
-   </events> 
-</pp:eventList>
+	   <pe:event>
+	      <pe:title>Egység teszt központú Java fejlesztés - Tanfolyam</pe:title>
+	      <pe:link>Content/WidgetExamples/UpcommingEvents.xml</pe:link>
+	      <pe:description>Bevezetés az egység teszt alapú fejlesztésbe Java fejlesztők számára.</pe:description>
+         <pe:program>
+            <pe:description>Részletes program.</pe:description>
+            <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
+         </pe:program>
+	      <pe:schedule isFullDay="false">
+	         <pe:startDate></pe:startDate>
+	         <pe:endDate></pe:endDate>
+	      </pe:schedule>
+	      <pe:location>
+	         <pe:address>Prof. Agile - virtuális osztályterem</pe:address>
+	         <pe:link>http://agilerenovation.com</pe:link>
+	      </pe:location>
+         <pe:language>angol</pe:language>
+         <pe:registration>
+            <pe:link>http://agilerenovation.eventbrite.com/</pe:link>
+         </pe:registration>
+	      <pe:publicationDate>Tue, 03 Jun 2003 09:39:21 GMT</pe:publicationDate>
+	   </pe:event>  
+   </pe:events> 
+</pe:eventList>

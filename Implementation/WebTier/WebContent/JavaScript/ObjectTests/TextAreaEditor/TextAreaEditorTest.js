@@ -36,7 +36,7 @@ window.TextAreaEditorTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.webUIMessageBus = new WebUIMessageBus();
       this.webUIMessageBus.subscribeToMessage( MenuSelectedMessage, this.messageSubscriber );
-      this.internationalization = new XMLResourceBundle( this.webUIConfiguration );
+      this.internationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.internationalization.load( this.locale );
       
       this.textAreaEditor = new TextAreaEditor( this.internationalization, { onEditorAttached : this.onEditorAttached, subscribeToWebUIMessages : [DocumentSelectedMessage] });

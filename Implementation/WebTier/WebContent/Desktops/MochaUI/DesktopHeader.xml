@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Desktop Header Document</name>
-   <description>Header part of MochaUI desktop.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
+   <sd:name>Desktop Header Document</sd:name>
+   <sd:description>Header part of MochaUI desktop.</sd:description>
+   <sd:version>0.5</sd:version>
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentBody tag="div" id="desktopHeader">
-      <compositeElement tag="div" id="desktopTitleBar">
-         <compositeElement id="desktopTitlebarWrapper" tag="div">
-            <element tag="h1" elementStyle="applicationTitle">DesktopConfigurator.desktopTitle</element>
-            <element tag="h2" elementStyle="tagline">DesktopConfigurator.desktopSubTitle</element>
-         </compositeElement>
-      </compositeElement>
+   <sd:documentBody tag="div" id="desktopHeader">
+      <sd:compositeElement tag="div" id="desktopTitleBar">
+         <sd:compositeElement id="desktopTitlebarWrapper" tag="div">
+            <sd:element tag="h1" elementStyle="applicationTitle">DesktopConfigurator.desktopTitle</sd:element>
+            <sd:element tag="h2" elementStyle="tagline">DesktopConfigurator.desktopSubTitle</sd:element>
+         </sd:compositeElement>
+      </sd:compositeElement>
       
-      <compositeElement tag="div" id="desktopNavigationBar">
-         <compositeElement>
-            <element tag="div" id="HorizontalMenuBar">
-               <plugin>
-                  <resources>
-                     <styleSheets><styleSheet>Desktops/MochaUI/Styles/HorizontalMenuLayout.css</styleSheet></styleSheets>
-                  </resources>
-                  <widget name="HierarchicalMenuWidget">
-                     <options>
-                        <option name="componentName" value="'horizontalMenuBar'" />
-                        <option name="showSubItems" value="true" />
-                        <option name="widgetContainerId" value="'HorizontalMenuBar'" />
-                        <option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'" />
-                        <option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/MenuWidgetDefinition.xml'" />
-                     </options>
-                  </widget>
-               </plugin>
-            </element>
-            <element tag="div" id="LanguageSelectorWidget">
-               <plugin>
-                  <resources>
-                     <styleSheets><styleSheet>Desktops/MochaUI/Styles/LanguageSelectorWidget.css</styleSheet></styleSheets>
-                  </resources>
-                  <widget name="LanguageSelectorWidget">
-                     <options>
-                        <option name="widgetContainerId" value="'LanguageSelectorWidget'" />
-                     </options>
-                  </widget>
-               </plugin>
-            </element>
-         </compositeElement>
-      </compositeElement>
-   </documentBody>
-</smartDocumentDefinition>
+      <sd:compositeElement tag="div" id="desktopNavigationBar">
+         <sd:compositeElement>
+            <sd:element tag="div" id="HorizontalMenuBar">
+               <sd:plugin>
+                  <sd:resources>
+                     <sd:styleSheets><sd:styleSheet>Desktops/MochaUI/Styles/HorizontalMenuLayout.css</sd:styleSheet></sd:styleSheets>
+                  </sd:resources>
+                  <sd:widget name="HierarchicalMenuWidget">
+                     <sd:options>
+                        <sd:option name="componentName" value="'horizontalMenuBar'" />
+                        <sd:option name="showSubItems" value="true" />
+                        <sd:option name="widgetContainerId" value="'HorizontalMenuBar'" />
+                        <sd:option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'" />
+                        <sd:option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/MenuWidgetDefinition.xml'" />
+                     </sd:options>
+                  </sd:widget>
+               </sd:plugin>
+            </sd:element>
+            <sd:element tag="div" id="LanguageSelectorWidget">
+               <sd:plugin>
+                  <sd:resources>
+                     <sd:styleSheets><sd:styleSheet>Desktops/MochaUI/Styles/LanguageSelectorWidget.css</sd:styleSheet></sd:styleSheets>
+                  </sd:resources>
+                  <sd:widget name="LanguageSelectorWidget">
+                     <sd:options>
+                        <sd:option name="widgetContainerId" value="'LanguageSelectorWidget'" />
+                     </sd:options>
+                  </sd:widget>
+               </sd:plugin>
+            </sd:element>
+         </sd:compositeElement>
+      </sd:compositeElement>
+   </sd:documentBody>
+</sd:smartDocumentDefinition>

@@ -32,9 +32,9 @@ var ResourceManager = new Class({
    Binds: ['onResourceError', 'onResourceLoaded'],   
 
    options: {
-      documentImagesSelector: "images/image",
-      documentScriptsSelector: "javaScripts/javaScript",
-      documentStyleSheetsSelector: "styleSheets/styleSheet",
+      documentImagesSelector: "sd:images/sd:image",
+      documentScriptsSelector: "sd:javaScripts/sd:javaScript",
+      documentStyleSheetsSelector: "sd:styleSheets/sd:styleSheet",
       eventFireDelay : 5,
       type : null
    },

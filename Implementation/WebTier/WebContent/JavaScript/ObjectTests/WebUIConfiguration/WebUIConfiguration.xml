@@ -14,7 +14,7 @@
 	xmlns:pr="http://www.processpuzzle.com/PersistenceConfiguration" 
 	xmlns:rt="http://www.processpuzzle.com/RuntimeConfiguration" 
 	xmlns:wui="http://www.processpuzzle.com/WebUIConfiguration" 
-	xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/ProcessPuzzleConfiguration.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/ProcessPuzzleConfiguration.xsd">
 
 	<ac:application>
 		<ac:applicationName>ProcessPuzzle</ac:applicationName>
@@ -55,7 +55,7 @@
                               batchSize="5"
                               failCallback="function() {alert('Logging error occured.')}"
                               layoutReference="xmlLayout"
-							  lazyInit="true"
+							         lazyInit="true"
                               postVariableName="logData"
                               requestSuccessCallback="function() { alert('Log was successfully sent') };"
                               sendAllOnUnload="no"

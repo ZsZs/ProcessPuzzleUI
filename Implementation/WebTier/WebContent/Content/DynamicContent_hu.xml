@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rss-2_0.xsd">
-  <channel>
-    <title>ProcessPuzzle</title>
-    <link>http://processpuzzle.com</link>
-    <description>ProcessPuzzle céges hírek</description>
-    <language>hu-HU</language>
-    <pubDate>2003. június 10 kedd, 04:00:00 GMT+1</pubDate>
-    <lastBuildDate>2011. június 10 kedd, 04:00:00 GMT+1</lastBuildDate>
-    <docs>http://processpuzzle.com/rss</docs>
-    <generator>ProcessPuzzle RSS Generator 2.0</generator>
-    <managingEditor>Zsuffa Zsolt, zsolt.zsuffa@example.com</managingEditor>
-    <webMaster>Krima Péter, peter.krima@example.com</webMaster>    
+<pn:rss version="2.0" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pn="http://www.processpuzzle.com/PartyNews"
+   xsi:schemaLocation="http://www.processpuzzle.com/PartyNews http://processpuzzle.com/Schemas/PartyNews.xsd">
+  <pn:channel>
+    <pn:title>ProcessPuzzle</pn:title>
+    <pn:link>http://processpuzzle.com</pn:link>
+    <pn:description>ProcessPuzzle céges hírek</pn:description>
+    <pn:language>hu-HU</pn:language>
+    <pn:pubDate>2003. június 10 kedd, 04:00:00 GMT+1</pn:pubDate>
+    <pn:lastBuildDate>2011. június 10 kedd, 04:00:00 GMT+1</pn:lastBuildDate>
+    <pn:docs>http://processpuzzle.com/rss</pn:docs>
+    <pn:generator>ProcessPuzzle RSS Generator 2.0</pn:generator>
+    <pn:managingEditor>Zsuffa Zsolt, zsolt.zsuffa@example.com</pn:managingEditor>
+    <pn:webMaster>Krima Péter, peter.krima@example.com</pn:webMaster>    
     
-    <item>
-		<title>HONNIA bútor tervező szolgáltatás</title>
-		<link>http://honnia.hu/news</link>
-		<description>A Cerasus Kft. világszerte elérhető bútor tervező szolgáltatás indított el. Az Internetes szolgáltatás a ProcessPuzzle üzleti platformra épül.</description>
-		<pubDate>2011. június 9. hétfő, 04:00:00 GMT+1</pubDate>
-		<guid>http://processpuzzle.com#item573</guid>
-    </item>  
+    <pn:item>
+		<pn:title>HONNIA bútor tervező szolgáltatás</pn:title>
+		<pn:link>http://honnia.hu/news</pn:link>
+		<pn:description>A Cerasus Kft. világszerte elérhető bútor tervező szolgáltatás indított el. Az Internetes szolgáltatás a ProcessPuzzle üzleti platformra épül.</pn:description>
+		<pn:pubDate>2011. június 9. hétfő, 04:00:00 GMT+1</pn:pubDate>
+		<pn:guid>http://processpuzzle.com#item573</pn:guid>
+    </pn:item>  
     
-    <item>
-		<title>A ProcessPuzzle hírolvasó modulja a felhasználók és fejlesztők rendelkezésére áll.</title>
-		<link>http://processpuzzle.com/news</link>
-		<description>Az IT Kódex Kft. hírforrások megjelenítését és szerkesztését biztosító módult fejlesztett ki, amely a ProcessPuzzle üzleti platformba épül be.</description>
-		<pubDate>2011. június 6. péntek, 04:00:00 GMT+1</pubDate>
-		<guid>http://processpuzzle.com#item575</guid>
-    </item>  
-  </channel>  
-</rss>
+    <pn:item>
+		<pn:title>A ProcessPuzzle hírolvasó modulja a felhasználók és fejlesztők rendelkezésére áll.</pn:title>
+		<pn:link>http://processpuzzle.com/news</pn:link>
+		<pn:description>Az IT Kódex Kft. hírforrások megjelenítését és szerkesztését biztosító módult fejlesztett ki, amely a ProcessPuzzle üzleti platformba épül be.</pn:description>
+		<pn:pubDate>2011. június 6. péntek, 04:00:00 GMT+1</pn:pubDate>
+		<pn:guid>http://processpuzzle.com#item575</pn:guid>
+    </pn:item>  
+  </pn:channel>  
+</pn:rss>
 

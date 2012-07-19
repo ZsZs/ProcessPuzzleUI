@@ -318,7 +318,7 @@
                if( typeOf( data ) == 'array' ){
                   this.options.captions = false;
                   data = new Array( data.length ).associate( data.map( function( image, i ) {
-                     return image + '?' + i
+                     return image + '?' + i;
                   }));
                }
                this.data = {

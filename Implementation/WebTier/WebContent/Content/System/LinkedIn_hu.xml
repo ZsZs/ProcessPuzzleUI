@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rss-2_0.xsd">
-   <channel>
-      <title>LinkedIn Üzenőfal</title>
-      <link>https://www.facebook.com/groups/processpuzzle/</link>
-      <description>ProcessPuzzle - Facebook group</description>
-      <language>hu-HU</language>
-      <pubDate>Mon, 13 March 2012, 04:00:00 GMT</pubDate>
-      <lastBuildDate>Mon, 13 March 2012, 04:00:00 GMT</lastBuildDate>
-      <docs>https://www.facebook.com/groups/processpuzzle/rss</docs>
-      <generator>Weblog Editor 2.0</generator>
-      <managingEditor>zsolt.zsuffa@itkodex.hu</managingEditor>
-      <webMaster>peter.krima@itkodex.hu</webMaster>    
+<pn:rss version="2.0" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pn="http://www.processpuzzle.com/PartyNews"
+   xsi:schemaLocation="http://www.processpuzzle.com/PartyNews http://processpuzzle.com/Schemas/PartyNews.xsd">
+   <pn:channel>
+      <pn:title>LinkedIn Üzenőfal</pn:title>
+      <pn:link>https://www.facebook.com/groups/processpuzzle/</pn:link>
+      <pn:description>ProcessPuzzle - Facebook group</pn:description>
+      <pn:language>hu-HU</pn:language>
+      <pn:pubDate>Mon, 13 March 2012, 04:00:00 GMT</pn:pubDate>
+      <pn:lastBuildDate>Mon, 13 March 2012, 04:00:00 GMT</pn:lastBuildDate>
+      <pn:docs>https://www.facebook.com/groups/processpuzzle/rss</pn:docs>
+      <pn:generator>Weblog Editor 2.0</pn:generator>
+      <pn:managingEditor>zsolt.zsuffa@itkodex.hu</pn:managingEditor>
+      <pn:webMaster>peter.krima@itkodex.hu</pn:webMaster>    
     
-      <item>
-         <title>New features in Sprint - April 2012</title>
-         <link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</link>
-         <description>
+      <pn:item>
+         <pn:title>New features in Sprint - April 2012</pn:title>
+         <pn:link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</pn:link>
+         <pn:description>
             ProcessPuzzle users voted on the following features build into April 2012 release: Calendar Widget, Google Calendar synchronization and Sortable Data Table.
             For more details please visit the <a http="http://processpuzzle.com">ProcessPuzzle Development page</a>.
-         </description>
-         <pubDate>Mon, 05 March 2012, 09:39:21 GMT</pubDate>
-         <guid>http://processpuzzle.com#item575</guid>
-      </item>  
+         </pn:description>
+         <pn:pubDate>Mon, 05 March 2012, 09:39:21 GMT</pn:pubDate>
+         <pn:guid>http://processpuzzle.com#item575</pn:guid>
+      </pn:item>  
       
-      <item>
-         <title>Tree Widget is ready to use</title>
-         <link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</link>
-         <description>
+      <pn:item>
+         <pn:title>Tree Widget is ready to use</pn:title>
+         <pn:link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</pn:link>
+         <pn:description>
             Tree Widget presents hierarchical data in tree like form. It can be used as a menu system or display complex, aggregated data structures like project plan or product catalog.
             For more details please visit the <a http="http://processpuzzle.com">ProcessPuzzle Features page</a>.
-         </description>
-         <pubDate>Mon, 05 March 2012, 09:39:21 GMT</pubDate>
-         <guid>http://processpuzzle.com#item575</guid>
-      </item>  
+         </pn:description>
+         <pn:pubDate>Mon, 05 March 2012, 09:39:21 GMT</pn:pubDate>
+         <pn:guid>http://processpuzzle.com#item575</pn:guid>
+      </pn:item>  
       
-  </channel>  
-</rss>
+  </pn:channel>  
+</pn:rss>

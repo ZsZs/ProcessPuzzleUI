@@ -38,7 +38,7 @@ var WebUIMessage = new Class({
    getActivityType: function() { return this.options.activityType; },
    getClass: function() { return this.options.messageClass; },
    getDescription: function() { return this.options.description; },
-   getMessageProperties: function() { return this.messageProperties },
+   getMessageProperties: function() { return this.messageProperties; },
    getName: function() { return this.options.name; },
    getOptions: function() { return this.options; },
    getOriginator: function() { return this.options.originator; },
