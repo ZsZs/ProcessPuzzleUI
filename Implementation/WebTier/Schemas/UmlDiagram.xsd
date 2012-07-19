@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.processpuzzle.com/Diagram/UML" xmlns:dd="http://www.processpuzzle.com/Diagram" xmlns:uml="http://www.processpuzzle.com/Diagram/UML">
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:dd="http://www.processpuzzle.com/Diagram" 
+  xmlns:uml="http://www.processpuzzle.com/Diagram/UML"
+  targetNamespace="http://www.processpuzzle.com/Diagram/UML" 
+  elementFormDefault="qualified">
+
   <xs:import namespace="http://www.processpuzzle.com/Diagram" schemaLocation="SmartDiagram.xsd"/>
+
   <xs:element name="class">
     <xs:complexType>
       <xs:sequence>
