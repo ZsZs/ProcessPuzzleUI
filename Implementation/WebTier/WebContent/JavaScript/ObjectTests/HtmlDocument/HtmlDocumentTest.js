@@ -44,8 +44,8 @@ window.HtmlDocumentTest = new Class( {
          documentContainerId : this.constants.DOCUMENT_CONTAINER_ID,
          documentDefinitionUri : this.constants.DOCUMENT_DEFINITION_URI,
          onDocumentError : this.onDocumentError,
-         onDocumentReady : this.onDocumentReady,
-         rootElementName : "/htmlDocumentDefinition" });
+         onDocumentReady : this.onDocumentReady
+      });
       this.htmlDocument.unmarshall();
    },
    

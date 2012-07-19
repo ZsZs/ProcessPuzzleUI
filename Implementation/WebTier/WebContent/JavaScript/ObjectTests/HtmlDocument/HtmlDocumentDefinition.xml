@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<htmlDocumentDefinition 
+<sd:htmlDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
-   xmlns="http://www.processpuzzle.com/SmartDocument" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
    xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://www.processpuzzle.com/Schemas/HtmlDocument.xsd">
    
-   <name>Test Html Document</name>
-   <description>This configuration supports testing plain Html document.</description>
-   <version>0.5</version>
-   <contentUri>../HtmlDocument/HtmlDocument</contentUri>
-   <handleMenuSelectedEvents>true</handleMenuSelectedEvents>
+   <sd:name>Test Html Document</sd:name>
+   <sd:description>This configuration supports testing plain Html document.</sd:description>
+   <sd:version>0.5</sd:version>
+   <sd:contentUri>../HtmlDocument/HtmlDocument</sd:contentUri>
+   <sd:handleMenuSelectedEvents>true</sd:handleMenuSelectedEvents>
    
-   <resources>
-      <styleSheets>
-         <styleSheet>../HtmlDocument/HtmlDocument.css</styleSheet>
-      </styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:resources>
+      <sd:styleSheets>
+         <sd:styleSheet>../HtmlDocument/HtmlDocument.css</sd:styleSheet>
+      </sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-</htmlDocumentDefinition>
+</sd:htmlDocumentDefinition>
