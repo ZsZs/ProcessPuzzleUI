@@ -38,7 +38,7 @@ window.NewsReaderWidgetTest = new Class( {
       this.messageBus = new WebUIMessageBus();
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.newsReaderWidget = new NewsReaderWidget({ 
          widgetContainerId : this.constants.WIDGET_CONTAINER_ID,

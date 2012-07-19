@@ -16,7 +16,7 @@ window.RssChannelTest = new Class( {
    },
 
    constants : {
-      CHANNEL_SELECTOR : "//rss/channel",
+      CHANNEL_SELECTOR : "/pn:rss/pn:channel",
       CONFIGURATION_URI : "../NewsReaderWidget/WebUIConfiguration.xml",
       LANGUAGE : "en",
       LOCALIZED_RSS_URI : "../NewsReaderWidget/TestNews_en.xml",
@@ -41,9 +41,9 @@ window.RssChannelTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns='rss-2_0.xsd'" });
+      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pn='http://www.processpuzzle.com/PartyNews'" });
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
       
@@ -62,29 +62,29 @@ window.RssChannelTest = new Class( {
    unmarshall_determinesChannelProperties : function(){
       this.channel.unmarshall();
       
-      assertThat( this.channel.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/title" )));
-      assertThat( this.channel.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/link" )));
-      assertThat( this.channel.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/description" )));
-      assertThat( this.channel.getLanguage(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/language" )));
-      assertThat( this.channel.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pubDate" )));
-      assertThat( this.channel.getBuildDate(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/lastBuildDate" )));
-      assertThat( this.channel.getDocuments(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/docs" )));
-      assertThat( this.channel.getGenerator(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/generator" )));
-      assertThat( this.channel.getManagingEditor(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/managingEditor" )));
-      assertThat( this.channel.getWebMaster(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/webMaster" )));
+      assertThat( this.channel.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:title" )));
+      assertThat( this.channel.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:link" )));
+      assertThat( this.channel.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:description" )));
+      assertThat( this.channel.getLanguage(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:language" )));
+      assertThat( this.channel.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:pubDate" )));
+      assertThat( this.channel.getBuildDate(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:lastBuildDate" )));
+      assertThat( this.channel.getDocuments(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:docs" )));
+      assertThat( this.channel.getGenerator(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:generator" )));
+      assertThat( this.channel.getManagingEditor(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:managingEditor" )));
+      assertThat( this.channel.getWebMaster(), equalTo( this.rssResource.selectNodeText( this.constants.CHANNEL_SELECTOR + "/pn:webMaster" )));
    },
    
    unmarshall_unmarshalsItems : function(){
       this.channel.unmarshall();
    
-      assertThat( this.channel.getItems().size(), equalTo( this.rssResource.selectNodes( this.constants.CHANNEL_SELECTOR + "/item" ).length ));
+      assertThat( this.channel.getItems().size(), equalTo( this.rssResource.selectNodes( this.constants.CHANNEL_SELECTOR + "/pn:item" ).length ));
    },
          
    unmarshall_passesItemOptions : function(){
       this.channel.options.itemOptions = { showDescription : false, showTitle : false };
       this.channel.unmarshall();
    
-      assertThat( this.channel.getItems().size(), equalTo( this.rssResource.selectNodes( this.constants.CHANNEL_SELECTOR + "/item" ).length ));
+      assertThat( this.channel.getItems().size(), equalTo( this.rssResource.selectNodes( this.constants.CHANNEL_SELECTOR + "/pn:item" ).length ));
       this.channel.getItems().each( function( rssItem, index ){
          assertThat( rssItem.options.showDescription, is( false ));
          assertThat( rssItem.options.showTitle, is( false ));

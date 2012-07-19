@@ -12,7 +12,7 @@ window.RssItemTest = new Class( {
    },
 
    constants : {
-      ITEM_SELECTOR : "//rss/channel/item[1]",
+      ITEM_SELECTOR : "/pn:rss/pn:channel/pn:item[1]",
       CONFIGURATION_URI : "../NewsReaderWidget/WebUIConfiguration.xml",
       LANGUAGE : "en",
       LOCALIZED_RSS_URI : "../NewsReaderWidget/TestNews_en.xml",
@@ -38,7 +38,7 @@ window.RssItemTest = new Class( {
    beforeEachTest : function(){
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns='rss-2_0.xsd'" });
       this.itemDefinition = this.rssResource.selectNode( this.constants.ITEM_SELECTOR );
@@ -59,11 +59,11 @@ window.RssItemTest = new Class( {
    unmarshall_determinesItemProperties : function(){
       this.item.unmarshall();
       
-      assertThat( this.item.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/title" )));
-      assertThat( this.item.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/link" )));
-      assertThat( this.item.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/description" )));
-      assertThat( this.item.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/pubDate" )));
-      assertThat( this.item.getGlobalUniqueId(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/guid" )));
+      assertThat( this.item.getTitle(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/pn:title" )));
+      assertThat( this.item.getLink(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/pn:link" )));
+      assertThat( this.item.getDescription(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/pn:description" )));
+      assertThat( this.item.getPublicationDate(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/pn:pubDate" )));
+      assertThat( this.item.getGlobalUniqueId(), equalTo( this.rssResource.selectNodeText( this.constants.ITEM_SELECTOR + "/pn:guid" )));
    },
    
    construct_displaysTitle : function() {
