@@ -8,17 +8,17 @@
 
   <xs:include schemaLocation="AbstractDocument.xsd"/>
 
-  <xs:element name="widgetDefinition">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="name"/>
-        <xs:element ref="description"/>
-        <xs:element ref="version"/>
-        <xs:element ref="contentUri" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="handleMenuSelectedEvents" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="resources" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="options" minOccurs="0" maxOccurs="1"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="widgetDefinition" type="WidgetDefinition"/>
+
+  <xs:complexType name="WidgetDefinition">
+    <xs:sequence>
+      <xs:element ref="name"/>
+      <xs:element ref="description"/>
+      <xs:element ref="version"/>
+      <xs:element ref="contentUri" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="handleMenuSelectedEvents" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="resources" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="options" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>
