@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:pp="http://www.processpuzzle.com"
   xmlns="http://www.processpuzzle.com/MenuDefinition"
   targetNamespace="http://www.processpuzzle.com/MenuDefinition"
   elementFormDefault="qualified">
   
+  <xs:import namespace="http://www.processpuzzle.com" schemaLocation="WebUIMessage.xsd"/>
+
   <xs:element name="menuDefinition">
     <xs:complexType>
       <xs:sequence>
@@ -17,13 +20,11 @@
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="menuItem"/>
-        <xs:element ref="messageProperties"/>
+        <xs:element ref="pp:messageProperties"/>
       </xs:choice>
       <xs:attribute name="caption" type="xs:NCName"/>
       <xs:attribute name="isDefault" type="xs:boolean"/>
       <xs:attribute name="menuItemId" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
-
-  <xs:element name="messageProperties" type="xs:string"/>
 </xs:schema>

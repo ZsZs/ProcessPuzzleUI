@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:pp="http://www.processpuzzle.com"
+  xmlns="http://www.processpuzzle.com/TabsDefinition"
+  targetNamespace="http://www.processpuzzle.com/TabsDefinition" 
+  elementFormDefault="qualified">
+
+  <xs:import namespace="http://www.processpuzzle.com" schemaLocation="WebUIMessage.xsd"/>
+
+  <xs:element name="tabsDefinition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tabs"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="tabs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="tab"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="tab">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pp:messageProperties"/>
+      </xs:sequence>
+      <xs:attribute name="caption" use="required" type="xs:NCName"/>
+      <xs:attribute name="isDefault" type="xs:boolean"/>
+      <xs:attribute name="tabId" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

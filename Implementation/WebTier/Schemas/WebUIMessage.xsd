@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.processpuzzle.com"
+  targetNamespace="http://www.processpuzzle.com"
+  elementFormDefault="qualified">
+
+  <xs:element name="messageProperties" type="xs:string"/>
+
+</xs:schema>
