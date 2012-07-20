@@ -100,12 +100,14 @@
 
  <xs:element name="title" type="xs:string" />
  <xs:element name="contentURL" type="xs:string" />
+
  <xs:element name="panelHeader">
   <xs:complexType>
    <xs:sequence>
     <xs:element ref="plugin" />
    </xs:sequence>
-   <xs:attribute name="toolBoxUrl" use="optional" />
+   <xs:attribute name="toolBoxUrl" type="xs:anyURI" use="optional" />
+   <xs:attribute name="contentStyle" type="xs:string" use="optional" />
   </xs:complexType>
  </xs:element>
 
