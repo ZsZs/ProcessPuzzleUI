@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:tabWidgetDefinition
-	xmlns:pp="http://www.processpuzzle.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<td:tabsDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:td="http://www.processpuzzle.com/TabsDefinition" 
+   xsi:schemaLocation="http://www.processpuzzle.com/TabsDefinition http://processpuzzle.com/Schemas/TabsDefinition.xsd">
 	
-	<tabWidget tabWidgetId="TabWidget" selectedTabClass="selectedTab" showCloseButton="true" showPrintButton="true">
-		<tab tabId="tabOne" caption="TabWidget.tabOne">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-      </tab>
-		<tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-      </tab>
-		<tab tabId="tabThree" caption="TabWidget.tabThree">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-      </tab>
-	</tabWidget>
-	
-</pp:tabWidgetDefinition>
+   <td:tabs>
+      <td:tab tabId="tabOne" caption="TabWidget.tabOne">
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</pp:messageProperties>         
+      </td:tab>
+		<td:tab tabId="tabTwo" caption="TabWidget.tabTwo" isDefault="true">
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</pp:messageProperties>         
+      </td:tab>
+		<td:tab tabId="tabThree" caption="TabWidget.tabThree">
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</pp:messageProperties>         
+      </td:tab>
+	</td:tabs>
+</td:tabsDefinition>
