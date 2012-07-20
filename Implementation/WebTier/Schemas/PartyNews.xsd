@@ -51,8 +51,13 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="title">
+    <xs:complexType mixed="true">
+      <xs:attribute name="href" type="xs:string" use="optional" />
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="guid" type="xs:anyURI"/>
-  <xs:element name="title" type="xs:string"/>
   <xs:element name="link" type="xs:anyURI"/>
   <xs:element name="pubDate" type="xs:string"/>
 
