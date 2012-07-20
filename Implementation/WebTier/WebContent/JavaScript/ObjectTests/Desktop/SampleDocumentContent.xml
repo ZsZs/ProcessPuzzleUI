@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rss-2_0.xsd">
+<pn:rss version="2.0" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pn="http://www.processpuzzle.com/PartyNews"
+   xsi:schemaLocation="http://www.processpuzzle.com/PartyNews http://processpuzzle.com/Schemas/PartyNews.xsd">
   <pn:channel>
-    <pn:title>ProcessPuzzle</pn:title>
+   <pn:title>ProcessPuzzle</pn:title>
 	<pn:link>http://processpuzzle.com</pn:link>
-	<description>ProcessPuzzle company news</description>
+	<pn:description>ProcessPuzzle company news</pn:description>
 	<pn:language>en-us</pn:language>
 	<pn:pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pn:pubDate>
 	<pn:lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</pn:lastBuildDate>
@@ -15,7 +18,7 @@
 	<pn:item>
 		<pn:title>HONNIA furniture design service lunched</pn:title>
 		<pn:link>http://honnia.hu/news</pn:link>
-		<description>Cerasus Llc. lunched a new woldwide available furniture design service based on ProcessPuzzle.</description>
+		<pn:description>Cerasus Llc. lunched a new woldwide available furniture design service based on ProcessPuzzle.</pn:description>
 		<pn:pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pn:pubDate>
 		<pn:guid>http://processpuzzle.com#item573</pn:guid>
     </pn:item>  
@@ -23,10 +26,10 @@
 	<pn:item>
 		<pn:title>ProcessPuzzle NewsReaderWidget is ready to use</pn:title>
 		<pn:link>http://processpuzzle.com/news</pn:link>
-		<description>IT Codex Llc. released a new browser wiget for it's well known ProcessPuzzle framework.</description>
+		<pn:description>IT Codex Llc. released a new browser wiget for it's well known ProcessPuzzle framework.</pn:description>
 		<pn:pubDate>Tue, 03 Jun 2003 09:39:21 GMT</pn:pubDate>
 		<pn:guid>http://processpuzzle.com#item575</pn:guid>
     </pn:item>  
   </pn:channel>  
-</rss>
+</pn:rss>
 

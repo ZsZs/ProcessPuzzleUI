@@ -21,15 +21,15 @@ window.ResourceManagerTest = new Class( {
       RESOURCES_DEFINITION_URI : "../ResourceManager/TestResourcesDefinition.xml",
       IMAGE_ID : "logoImage",
       IMAGE_URI : "../SmartDocument/Images/ProcessPuzzleLogo.jpg",
-      IMAGES_SELECTOR : "/testResources/resources" + "/images",
-      RESOURCES_SELECTOR : "/testResources/resources",
-      RESOURCE_ITEMS_SELECTOR : "/testResources/resources" + "/styleSheets/styleSheet | " + 
-                                "/testResources/resources" + "/images/image | " +
-                                "/testResources/resources" + "/javaScripts/javaScript",
+      IMAGES_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources" + "/sd:images",
+      RESOURCES_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources",
+      RESOURCE_ITEMS_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources" + "/sd:styleSheets/sd:styleSheet | " + 
+                                "/sd:abstractDocumentDefinition/sd:resources" + "/sd:images/sd:image | " +
+                                "/sd:abstractDocumentDefinition/sd:resources" + "/sd:javaScripts/sd:javaScript",
       SCRIPT_URI : "../ResourceManager/DummyScript.js",
-      SCRIPTS_SELECTOR : "/testResources/resources" + "/javaScripts",
+      SCRIPTS_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources" + "/sd:javaScripts",
       STYLE_SHEET_URI : "../ResourceManager/DummyCSS.css",
-      STYLESHEETS_SELECTOR : "/testResources/resources" + "/styleSheets"
+      STYLESHEETS_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources" + "/sd:styleSheets"
    },
    
    initialize : function( options ) {
@@ -143,8 +143,7 @@ window.ResourceManagerTest = new Class( {
    load_whenStyleSheetIsUnAvailable_FiresError : function() {
       this.testCaseChain.chain(
          function(){
-            var unavailableResource = this.resourcesDefinition.createElement( 'styleSheet', { text : "UnAvailableStyleSheet.css" } );
-            //var styleSheetsElement = this.resourcesDefinition.selectNode( this.constants.STYLESHEETS_SELECTOR );
+            var unavailableResource = this.resourcesDefinition.createElement( 'sd:styleSheet', { text : "UnAvailableStyleSheet.css" } );
             this.resourcesDefinition.injectElement( unavailableResource, this.constants.STYLESHEETS_SELECTOR );
             this.resourceManager.unmarshall(); 
             this.resourceManager.load(); 
@@ -160,13 +159,14 @@ window.ResourceManagerTest = new Class( {
    load_whenImageIsUnAvailable_FiresError : function() {
       this.testCaseChain.chain(
          function(){
-            var unavailableResource = this.resourcesDefinition.createElement( 'image', { text : "UnAvailableImage.jpg" } );
+            var unavailableResource = this.resourcesDefinition.createElement( 'sd:image', { text : "UnAvailableImage.jpg" } );
             this.resourcesDefinition.injectElement( unavailableResource, this.constants.IMAGES_SELECTOR );
             this.resourceManager.unmarshall(); 
             this.resourceManager.load(); 
          }.bind( this ),
          function(){
             assertThat( this.onResourceErrorWasCalled, is( true ));
+            assertThat( this.onResourceLoadedWasCalled, is( true ));
             assertThat( this.resourceManager.isSuccess(), is( false ));
             this.testMethodReady();
          }.bind( this )
@@ -176,7 +176,7 @@ window.ResourceManagerTest = new Class( {
    load_whenScriptIsUnAvailable_FiresError : function() {
       this.testCaseChain.chain(
          function(){
-            var unavailableResource = this.resourcesDefinition.createElement( 'javaScript', { text : "UnAvailableScript.js" } );
+            var unavailableResource = this.resourcesDefinition.createElement( 'sd:javaScript', { text : "UnAvailableScript.js" } );
             this.resourcesDefinition.injectElement( unavailableResource, this.constants.SCRIPTS_SELECTOR );
             this.resourceManager.unmarshall(); 
             this.resourceManager.load(); 
