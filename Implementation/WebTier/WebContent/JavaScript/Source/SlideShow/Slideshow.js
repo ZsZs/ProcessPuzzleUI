@@ -376,8 +376,8 @@
                   if( 'each' in array )
                      array.each( function( fn ) {
                         document.removeEvent( e, fn );
-                     } );
-               } );
+                     });
+               });
                this.pause( 1 );
                'caption loader thumbnails'.split( ' ' ).each( function( i, timer ) {
                   this.options[i] && this[i].retrieve && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
@@ -386,6 +386,8 @@
                if( this.el.eliminate ) this.el.eliminate( 'uid' );
                if( this.preloader && this.preloader.removeEvents ) this.preloader.removeEvents();
                if( this.preloader && this.preloader.destroy ) this.preloader.destroy();
+               
+               this.fireEvent( 'destroy', this );
             },
 
             /**

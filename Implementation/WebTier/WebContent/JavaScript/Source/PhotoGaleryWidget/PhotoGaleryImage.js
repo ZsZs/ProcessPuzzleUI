@@ -33,10 +33,10 @@ var PhotoGaleryImage = new Class({
    Implements : Options,
    
    options : {
-      captionSelector : "caption",
-      linkSelector : "link",
-      thumbnailSelector : "thumbnailUri",
-      uriSelector : "uri"
+      captionSelector : "pg:caption",
+      linkSelector : "pg:link",
+      thumbnailSelector : "pg:thumbnailUri",
+      uriSelector : "pg:uri"
    },
 
    //Constructor

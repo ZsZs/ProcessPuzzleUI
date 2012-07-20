@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:widgetData
-   xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<pg:photoGalery 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:pg="http://www.processpuzzle.com/PhotoGalery" 
+   xsi:schemaLocation="http://www.processpuzzle.com/PhotoGalery http://processpuzzle.com/Schemas/PhotoGalery.xsd">
    
-   <name>Pura Vida Costa Rica</name>
-   <description>Photos from Costa Rica.</description>
-   <images>
-      <image>
-         <uri>IMAG0337.jpg</uri>
-         <caption>PhotoGalery.tabacon</caption>
-         <link>http://www.tabacon.com/</link>
-         <thumbnailUri>IMAG0337_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>IMAG0339.jpg</uri>
-         <caption>PhotoGalery.baldi</caption>
-         <link>http://www.arenal.net/hotel/baldi-hotel/index.html</link>
-         <thumbnailUri>IMAG0339_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>SANY0008.JPG</uri>
-         <thumbnailUri>SANY0008_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>SANY0012.JPG</uri>
-         <thumbnailUri>SANY0012_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>SANY0022.JPG</uri>
-         <thumbnailUri>SANY0022_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>SANY0042.JPG</uri>
-         <thumbnailUri>SANY0042_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>SANY0058.JPG</uri>
-         <thumbnailUri>SANY0058_thumb.jpg</thumbnailUri>
-      </image>
-      <image>
-         <uri>SANY0071.JPG</uri>
-         <thumbnailUri>SANY0071_thumb.jpg</thumbnailUri>
-      </image>
-   </images>
-</pp:widgetData>
+   <pg:name>Pura Vida Costa Rica</pg:name>
+   <pg:description>Photos from Costa Rica.</pg:description>
+   <pg:images>
+      <pg:image>
+         <pg:uri>IMAG0337.jpg</pg:uri>
+         <pg:caption>PhotoGalery.tabacon</pg:caption>
+         <pg:link>http://www.tabacon.com/</pg:link>
+         <pg:thumbnailUri>IMAG0337_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>IMAG0339.jpg</pg:uri>
+         <pg:caption>PhotoGalery.baldi</pg:caption>
+         <pg:link>http://www.arenal.net/hotel/baldi-hotel/index.html</pg:link>
+         <pg:thumbnailUri>IMAG0339_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>SANY0008.JPG</pg:uri>
+         <pg:thumbnailUri>SANY0008_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>SANY0012.JPG</pg:uri>
+         <pg:thumbnailUri>SANY0012_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>SANY0022.JPG</pg:uri>
+         <pg:thumbnailUri>SANY0022_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>SANY0042.JPG</pg:uri>
+         <pg:thumbnailUri>SANY0042_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>SANY0058.JPG</pg:uri>
+         <pg:thumbnailUri>SANY0058_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+      <pg:image>
+         <pg:uri>SANY0071.JPG</pg:uri>
+         <pg:thumbnailUri>SANY0071_thumb.jpg</pg:thumbnailUri>
+      </pg:image>
+   </pg:images>
+</pg:photoGalery>

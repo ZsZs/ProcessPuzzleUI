@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sd:photoGaleryWidgetDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/PhotoGaleryWidgetDefinition.xsd">
+   
+   <sd:name>PhotoGalery</sd:name>
+   <sd:description>Photo Galery presents a set of images, and their thumb nails.</sd:description>
+   <sd:version>1.0</sd:version>
+   <sd:options></sd:options>
+   
+   <sd:properties>
+      <sd:accessKeys>shift+h</sd:accessKeys>
+      <sd:automaticallyLinkSlideToFullSizedImage>true</sd:automaticallyLinkSlideToFullSizedImage>
+      <sd:centerImages>true</sd:centerImages>
+      <sd:effectDuration>1500</sd:effectDuration>
+      <sd:firstSlide>7</sd:firstSlide>
+      <sd:galeryLink>http://www.tourism-costarica.com</sd:galeryLink>
+      <sd:height>300</sd:height>
+      <sd:imageFolderUri>../PhotoGaleryWidget/Album</sd:imageFolderUri>
+      <sd:loopShow>true</sd:loopShow>
+      <sd:overlapImages>true</sd:overlapImages>
+      <sd:resizeImages>true</sd:resizeImages>
+      <sd:showController>true</sd:showController>
+      <sd:showImageCaptions>true</sd:showImageCaptions>
+      <sd:showSlidesRandom>true</sd:showSlidesRandom>
+      <sd:showThumbnails>true</sd:showThumbnails>
+      <sd:skipTransition>WhenPaused | OnStart</sd:skipTransition>
+      <sd:slideChangeDelay>3000</sd:slideChangeDelay>
+      <sd:slideTransition>elastic:in:out</sd:slideTransition>
+      <sd:startPaused>true</sd:startPaused>
+      <sd:thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</sd:thumbnailFileNameRule>
+      <sd:width>450</sd:width>
+   </sd:properties>
+</sd:photoGaleryWidgetDefinition>

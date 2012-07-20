@@ -33,55 +33,55 @@ You should have received a copy of the GNU General Public License along with thi
 
 var PhotoGaleryWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['compileDataObject', 'instantiateSlideShow', 'onComplete', 'onEnd', 'onShow', 'onStart'],
+   Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'onComplete', 'onDestroy', 'onEnd', 'onShow', 'onStart', 'resetFields'],
    options : {
       accessKeysDefault : null,
-      accessKeysSelector : "pp:widgetDefinition/properties/accessKeys",
+      accessKeysSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:accessKeys",
       automaticallyLinkSlideDefault : false,
-      automaticallyLinkSlideSelector : "pp:widgetDefinition/properties/automaticallyLinkSlideToFullSizedImage",
+      automaticallyLinkSlideSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:automaticallyLinkSlideToFullSizedImage",
       centerImagesDefault : true,
-      centerImagesSelector : "pp:widgetDefinition/properties/centerImages",
+      centerImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages",
       componentName : "PhotoGaleryWidget",
-      descriptionSelector : "/pp:widgetDefinition/description", 
+      descriptionSelector : "//sd:photoGaleryWidgetDefinition/sd:description", 
       effectDurationDefault : 750,
-      effectDurationSelector : "pp:widgetDefinition/properties/effectDuration",
+      effectDurationSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:effectDuration",
       eventDeliveryDelay : 50,
       firstSlideDefault: 0,
-      firstSlideSelector: "pp:widgetDefinition/properties/firstSlide",
+      firstSlideSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:firstSlide",
       galeryLinkDefault: null,
-      galeryLinkSelector: "pp:widgetDefinition/properties/galeryLink",
+      galeryLinkSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:galeryLink",
       heightDefault: 300,
-      heightSelector: "pp:widgetDefinition/properties/height",
+      heightSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:height",
       imageFolderUriDefault: "",
-      imageFolderUriSelector: "pp:widgetDefinition/properties/imageFolderUri",
-      imagesSelector: "/pp:widgetData/images/image",
+      imageFolderUriSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:imageFolderUri",
+      imagesSelector: "/pg:photoGalery/pg:images/pg:image",
       loopShowDefault: true,
-      loopShowSelector: "pp:widgetDefinition/properties/loopShow",
-      nameSelector : "/pp:widgetDefinition/name",
+      loopShowSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:loopShow",
+      nameSelector : "//sd:photoGaleryWidgetDefinition/sd:name",
       overlapImagesDefault : true,
-      overlapImagesSelector : "pp:widgetDefinition/properties/overlapImages",
+      overlapImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:overlapImages",
       resizeImagesDefault : true,
-      resizeImagesSelector : "pp:widgetDefinition/properties/resizeImages",
+      resizeImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:resizeImages",
       showControllerDefault : true,
-      showControllerSelector : "pp:widgetDefinition/properties/showController",
+      showControllerSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showController",
       showImageCaptionsDefault : true,
-      showImageCaptionsSelector : "pp:widgetDefinition/properties/showImageCaptions",
+      showImageCaptionsSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showImageCaptions",
       showSlidesRandomDefault : false,
-      showSlidesRandomSelector : "pp:widgetDefinition/properties/showSlidesRandom",
+      showSlidesRandomSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showSlidesRandom",
       showThumbnailsDefault : true,
-      showThumbnailsSelector : "pp:widgetDefinition/properties/showThumbnails",
+      showThumbnailsSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showThumbnails",
       skipTransitionDefault : null,
-      skipTransitionSelector : "pp:widgetDefinition/properties/skipTransition",
+      skipTransitionSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:skipTransition",
       slideChangeDelayDefault : 2000,
-      slideChangeDelaySelector : "pp:widgetDefinition/properties/slideChangeDelay",
+      slideChangeDelaySelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideChangeDelay",
       slideTransitionDefault : "Sine",
-      slideTransitionSelector : "pp:widgetDefinition/properties/slideTransition",
+      slideTransitionSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideTransition",
       startPausedDefault : true,
-      startPausedSelector : "pp:widgetDefinition/properties/startPaused",
+      startPausedSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:startPaused",
       thumbnailFileNameRuleDefault : null,
-      thumbnailFileNameRuleSelector : "pp:widgetDefinition/properties/thumbnailFileNameRule",
+      thumbnailFileNameRuleSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:thumbnailFileNameRule",
       widthDefault : 450,
-      widthSelector : "pp:widgetDefinition/properties/width"
+      widthSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:width"
    },
 
    //Constructor
@@ -119,22 +119,15 @@ var PhotoGaleryWidget = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function(){
-      this.parent();
-   },
-   
-   destroy: function(){
-      this.destroyComponents();
-      this.destroyChildElements( this.containerElement );
-      this.resetFields();
-      this.parent();
-   },
-   
    onComplete: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onComplete() completed to load Slideshow 2." );
          this.constructionChain.callChain();
       }
+   },
+   
+   onDestroy: function(){
+      this.destructionChain.callChain();
    },
    
    onEnd: function(){
@@ -153,12 +146,6 @@ var PhotoGaleryWidget = new Class({
          this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
          this.constructionChain.callChain();
       }
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallImages();
-      return this.parent();
    },
    
    //Properties
@@ -206,21 +193,24 @@ var PhotoGaleryWidget = new Class({
          this.instantiateSlideShow,
          this.finalizeConstruction
       );
-      
    }.protect(),
    
-   destroyChildElements: function( parentElement ){
-      var childElements = parentElement.getChildren ? parentElement.getChildren( '*' ) : new Array();
-      childElements.each( function( childElement, index ){
-         if( childElement.getChildren( '*' ).length > 0 ) this.destroyChildElements( childElement );
-         
-         if( childElement.removeEvents ) childElement.removeEvents();
-         if( childElement.destroy ) childElement.destroy();
-      }.bind( this ));
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyImages, this.destroySlideShow, this.destroyChildHtmlElements, this.resetFields, this.finalizeDestruction );
    }.protect(),
    
-   destroyComponents: function(){
+   destroySlideShow: function(){
       if( this.slideShow ) this.slideShow.destroy();
+      else this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyImages: function(){
+      this.images.each( function( imageEntry, index ){
+         var image = imageEntry.getValue();
+         image.destroy();
+      }.bind( this ));
+      this.images.clear();
+      this.destructionChain.callChain();
    }.protect(),
    
    instantiateSlideShow: function(){
@@ -237,6 +227,7 @@ var PhotoGaleryWidget = new Class({
          linked : this.automaticallyLinkSlide,
          loop : this.loopShow,
          onComplete : this.onComplete,
+         onDestroy : this.onDestroy,
          onEnd : this.onEnd,
          onShow : this.onShow,
          onStart : this.onStart,
@@ -277,10 +268,10 @@ var PhotoGaleryWidget = new Class({
       this.startPaused = null;
       this.thumbnailFileNameRule = null;
       this.width = null;
-      this.images.clear();
+      this.destructionChain.callChain();
    }.protect(),
    
-   unmarshallImages: function(){
+   unmarshallComponents: function(){
       var imagesElement = this.dataXml.selectNodes( this.options.imagesSelector );
       if( imagesElement ){
          imagesElement.each( function( imageElement, index ){
@@ -313,6 +304,7 @@ var PhotoGaleryWidget = new Class({
       this.startPaused = parseBoolean( this.unmarshallProperty( this.options.startPausedDefault, this.options.startPausedSelector ));
       this.thumbnailFileNameRule = this.unmarshallProperty( this.options.thumbnailFileNameRuleDefault, this.options.thumbnailFileNameRuleSelector );
       this.width = parseInt( this.unmarshallProperty( this.options.widthDefault, this.options.widthSelector ));
+      this.parent();
    }.protect(),
    
    unmarshallProperty: function( defaultValue, selector ){

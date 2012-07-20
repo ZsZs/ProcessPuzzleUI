@@ -8,13 +8,14 @@ window.PhotoGaleryWidgetTest = new Class( {
           { method : 'unmarshall_determinesProperties', isAsynchron : false },
           { method : 'unmarshall_determinesImagesData', isAsynchron : false },
           { method : 'construct_compilesDataObject', isAsynchron : true }, 
-          { method : 'construct_instantiatesSlideShow', isAsynchron : true }]
+          { method : 'construct_instantiatesSlideShow', isAsynchron : true },
+          { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
    },
 
    constants : {
       LANGUAGE : "hu",
       PHOTO_GALERY_DATA_URI : "../PhotoGaleryWidget/PhotoGaleryData.xml",
-      PHOTO_GALERY_DEFINITION_URI : "../PhotoGaleryWidget/PhotoGaleryDefinition.xml",
+      PHOTO_GALERY_DEFINITION_URI : "../PhotoGaleryWidget/PhotoGaleryWidgetDefinition.xml",
       PHOTO_GALERY_CONTAINER_ID : "PhotoGaleryContainer",
       WEBUI_CONFIGURATION_URI : "../PhotoGaleryWidget/WebUIConfiguration.xml",
    },
@@ -41,8 +42,8 @@ window.PhotoGaleryWidgetTest = new Class( {
       this.componentStateManager = new ComponentStateManager();
       this.photoGaleryInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.photoGaleryInternationalization.load( this.locale );
-      this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
-      this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
+      this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" } );
+      this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
       
       this.photoGalery = new PhotoGaleryWidget( {
          onConstructed : this.onConstructed,
@@ -69,33 +70,33 @@ window.PhotoGaleryWidgetTest = new Class( {
    unmarshall_determinesProperties : function() {
       this.photoGalery.unmarshall();
       
-      assertThat( this.photoGalery.getAccessKeys(), equalTo( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/accessKeys' )));
-      assertThat( this.photoGalery.getAutomaticallyLinkSlide(), equalTo( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/automaticallyLinkSlideToFullSizedImage' )));
-      assertThat( this.photoGalery.getCenterImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/centerImages' ))));
-      assertThat( this.photoGalery.getEffectDuration(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/effectDuration' ))));
-      assertThat( this.photoGalery.getFirstSlide(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/firstSlide' ))));
-      assertThat( this.photoGalery.getGaleryLink(), equalTo( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/galeryLink' )));
-      assertThat( this.photoGalery.getHeight(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/height' ))));
-      assertThat( this.photoGalery.getImageFolderUri(), equalTo( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/imageFolderUri' )));
-      assertThat( this.photoGalery.getLoopShow(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/loopShow' ))));
-      assertThat( this.photoGalery.getOverlapImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/overlapImages' ))));
-      assertThat( this.photoGalery.getResizeImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/resizeImages' ))));
-      assertThat( this.photoGalery.getShowController(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/showController' ))));
-      assertThat( this.photoGalery.getShowImageCaptions(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/showImageCaptions' ))));
-      assertThat( this.photoGalery.getShowSlidesRandom(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/showSlidesRandom' ))));
-      assertThat( this.photoGalery.getShowThumbnails(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/showThumbnails' ))));
-      assertThat( this.photoGalery.getSkipTransition(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/skipTransition' ))));
-      assertThat( this.photoGalery.getSlideChangeDelay(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/slideChangeDelay' ))));
-      assertThat( this.photoGalery.getSlideTransition(), equalTo( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/slideTransition' )));
-      assertThat( this.photoGalery.getStartPaused(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/startPaused' ))));
-      assertThat( this.photoGalery.getThumbnailFileNameRule(), equalTo( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/thumbnailFileNameRule' )));
-      assertThat( this.photoGalery.getWidth(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( 'pp:widgetDefinition/properties/width' ))));
+      assertThat( this.photoGalery.getAccessKeys(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:accessKeys' )));
+      assertThat( this.photoGalery.getAutomaticallyLinkSlide(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:automaticallyLinkSlideToFullSizedImage' )));
+      assertThat( this.photoGalery.getCenterImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages' ))));
+      assertThat( this.photoGalery.getEffectDuration(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:effectDuration' ))));
+      assertThat( this.photoGalery.getFirstSlide(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:firstSlide' ))));
+      assertThat( this.photoGalery.getGaleryLink(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:galeryLink' )));
+      assertThat( this.photoGalery.getHeight(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:height' ))));
+      assertThat( this.photoGalery.getImageFolderUri(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:imageFolderUri' )));
+      assertThat( this.photoGalery.getLoopShow(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:loopShow' ))));
+      assertThat( this.photoGalery.getOverlapImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:overlapImages' ))));
+      assertThat( this.photoGalery.getResizeImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:resizeImages' ))));
+      assertThat( this.photoGalery.getShowController(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showController' ))));
+      assertThat( this.photoGalery.getShowImageCaptions(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showImageCaptions' ))));
+      assertThat( this.photoGalery.getShowSlidesRandom(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showSlidesRandom' ))));
+      assertThat( this.photoGalery.getShowThumbnails(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showThumbnails' ))));
+      assertThat( this.photoGalery.getSkipTransition(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:skipTransition' ))));
+      assertThat( this.photoGalery.getSlideChangeDelay(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideChangeDelay' ))));
+      assertThat( this.photoGalery.getSlideTransition(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideTransition' )));
+      assertThat( this.photoGalery.getStartPaused(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:startPaused' ))));
+      assertThat( this.photoGalery.getThumbnailFileNameRule(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:thumbnailFileNameRule' )));
+      assertThat( this.photoGalery.getWidth(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:width' ))));
    },
    
    unmarshall_determinesImagesData : function() {
       this.photoGalery.unmarshall();
       
-      assertThat( this.photoGalery.getImages().size(), equalTo( this.photoGaleryData.selectNodes( 'pp:widgetData/images/image' ).length ));
+      assertThat( this.photoGalery.getImages().size(), equalTo( this.photoGaleryData.selectNodes( 'pg:photoGalery/pg:images/pg:image' ).length ));
    },
    
    construct_compilesDataObject : function() {
@@ -122,6 +123,22 @@ window.PhotoGaleryWidgetTest = new Class( {
          function(){
             assertThat( this.photoGalery.getSlideShow(), not( nil() ));
             assertThat( $( this.constants.PHOTO_GALERY_CONTAINER_ID ).getElements( 'div' ).length, greaterThan( 0 ) );
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   destroy_destroysAllCreatedElements : function() {
+      this.testCaseChain.chain(
+         function(){ this.photoGalery.unmarshall(); this.photoGalery.construct(); }.bind( this ),
+         function(){
+            assumeThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            
+            this.photoGalery.destroy();
+         }.bind( this ),
+         function(){
+            assertThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+            assertThat( this.photoGaleryContainerElement.getElements( '*' ).length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
