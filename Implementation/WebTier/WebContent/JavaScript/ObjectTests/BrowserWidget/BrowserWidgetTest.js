@@ -1,6 +1,6 @@
 window.BrowserWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed'],
 
    options : {
       testMethods : [
@@ -62,7 +62,12 @@ window.BrowserWidgetTest = new Class( {
       this.componentStateManager = new ComponentStateManager();
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.browserWidget = new BrowserWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID, onConstructed : this.onConstructed, onDestroyed : this.onDestroyed }, this.resourceBundle );
+      this.browserWidget = new BrowserWidget({ 
+         onConstructed : this.onConstructed, 
+         onConstructionError : this.onConstructionError, 
+         onDestroyed : this.onDestroyed,
+         widgetContainerId : this.constants.WIDGET_CONTAINER_ID 
+      }, this.resourceBundle );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
    },
    
@@ -231,6 +236,11 @@ window.BrowserWidgetTest = new Class( {
    },
    
    onConstructed : function(){
+      this.testCaseChain.callChain();
+   },
+   
+   onConstructionError : function( error ){
+      this.error = error;
       this.testCaseChain.callChain();
    },
    

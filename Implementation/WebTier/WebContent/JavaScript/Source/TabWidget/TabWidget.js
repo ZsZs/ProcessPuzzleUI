@@ -34,16 +34,12 @@ var TabWidget = new Class( {
       closeButtonCaptionKey : "TabWidget.Close",
       componentName : "TabWidget",
       idDefault : "TabWidget",
-      idSelector : "/pp:tabWidgetDefinition/tabWidget/@tabWidgetId",
       printButtonCaptionKey : "TabWidget.Print",
-      selectedTabClassDefault : "selectedTab",
-      selectedTabClassSelector : "/pp:tabWidgetDefinition/tabWidget/@selectedTabClass",
-      showCloseButtonDefault : false,
-      showCloseButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showCloseButton",
-      showPrintButtonDefault : false,
-      showPrintButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showPrintButton",
+      selectedTabClass : "selectedTab",
+      showCloseButton : false,
+      showPrintButton : false,
       tabCaptionSelector : "@caption",
-      tabDefinitionSelector : "/pp:tabWidgetDefinition/tabWidget/tab",
+      tabDefinitionSelector : "/td:tabsDefinition/td:tabs/td:tab",
       tabIdSelector : "@tabId",
       tabIsDefaultSelector : "@isDefault",
       tabLeftImage : "Images/DocumentTab-Left.gif",
@@ -52,8 +48,8 @@ var TabWidget = new Class( {
       tabRightOnImage : "Images/DocumentTab-Right-Selected.gif",
       tabsSelector : "tab",
       widgetContainerId : "TabWidget",
-      widgetDefinitionSelector : "/pp:tabWidgetDefinition/tabWidget",
-      widgetDefinitionURI : "TabsDefinition.xml"},
+      widgetDefinitionURI : "TabsDefinition.xml"
+   },
 
    // Constructor
    initialize : function( options, resourceBundle ) {
@@ -65,8 +61,6 @@ var TabWidget = new Class( {
       this.buttonsListElement;
       this.id;
       this.isVisible = false;
-      this.selectedTabClass;
-      this.showCloseButton;
       this.showPrintButton;
       this.tabListElement;
       this.tabs = new LinkedHashMap();
@@ -103,11 +97,6 @@ var TabWidget = new Class( {
          if( aTab.changeCaption != null )
             aTab.changeCaption( controller );
       }
-   },
-
-   construct : function() {
-      this.parent();
-      this.isVisible = true;
    },
 
    destroy : function() {
@@ -206,27 +195,21 @@ var TabWidget = new Class( {
       if( this.tabs.size() == 0 ) this.activeTab = null;
    },
 
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallTabs();
-      this.parent();
-   },
-
    // Properties
    activeTabId : function() { return(tabs.getCountOfObjects() > 0 ? activeTab.getId() : "undefined"); },
    getActiveTab : function() { return this.activeTab; },
    getCloseButtonId : function() { return this.options.buttonPrefix + this.options.closeButtonCaptionKey; },
    getId : function() { return this.id; },
    getPrintButtonId : function() { return this.options.buttonPrefix + this.options.printButtonCaptionKey; },
-   getSelectedTabClass : function() { return this.selectedTabClass; },
-   getShowCloseButton : function() { return this.showCloseButton; },
-   getShowPrintButton : function() { return this.showPrintButton; },
+   getSelectedTabClass : function() { return this.options.selectedTabClass; },
+   getShowCloseButton : function() { return this.options.showCloseButton; },
+   getShowPrintButton : function() { return this.options.showPrintButton; },
    getTabById : function( tabId ) { return this.tabs.get( tabId ); },
    getTabCount : function() { return this.tabs.size(); },
    getTabExist : function( tabId ) { return tabs.exists( tabId ); },
    getTabs : function() { return this.tabs; },
-   isCloseButtonVisible : function() { return this.showCloseButton; },
-   isPrintButtonVisible : function() { return this.showPrintButton; },
+   isCloseButtonVisible : function() { return this.options.showCloseButton; },
+   isPrintButtonVisible : function() { return this.options.showPrintButton; },
    setCloseButtonVisibility : function( value ) { this.options.showCloseButton = value; },
    setPrintButtonVisibility : function( value ) { this.options.showPrintButton = value; },
    setBackgroundImage : function( image ) { backgroundImage = (image == null ? backgroundImage : image); },
@@ -257,10 +240,10 @@ var TabWidget = new Class( {
    }.protect(),
    
    constructButtons : function() {
-      if( this.showCloseButton || this.showPrintButton ){
+      if( this.options.showCloseButton || this.options.showPrintButton ){
          this.buttonsListElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
-         if( this.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
-         if( this.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
+         if( this.options.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
+         if( this.options.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
       }
       this.constructionChain.callChain();
    }.protect(),
@@ -285,6 +268,11 @@ var TabWidget = new Class( {
       this.constructionChain.callChain();
    }.protect(),
 
+   finalizeConstruction : function(){
+      this.isVisible = true;
+      this.parent();
+   }.protect(),
+   
    hideButtons : function() {
       if( htmlDivElement != null ){
          var tabLists = htmlDivElement.getElementsByTagName( "ul" );
@@ -343,15 +331,8 @@ var TabWidget = new Class( {
       return save;
    }.protect(),
    
-   unmarshallProperties: function(){
-      this.id = this.definitionXml.selectNodeText( this.options.idSelector, null, this.options.idDefault );
-      this.selectedTabClass = this.definitionXml.selectNodeText( this.options.selectedTabClassSelector, null, this.options.selectedTabClassDefault );
-      this.showCloseButton = parseBoolean( this.definitionXml.selectNodeText( this.options.showCloseButtonSelector, null, this.options.showCloseButtonDefault ));
-      this.showPrintButton = parseBoolean( this.definitionXml.selectNodeText( this.options.showCloseButtonSelector, null, this.options.showCloseButtonDefault ));
-   }.protect(),
-
-   unmarshallTabs : function() {
-      var tabDefinitions = this.definitionXml.selectNodes( this.options.tabDefinitionSelector );
+   unmarshallComponents : function() {
+      var tabDefinitions = this.dataXml.selectNodes( this.options.tabDefinitionSelector );
       tabDefinitions.each( function( tabDefinition, index ){
          var newTab = new Tab( tabDefinition, this.i18Resource, { onTabSelected : this.onTabSelected });
          newTab.unmarshall();

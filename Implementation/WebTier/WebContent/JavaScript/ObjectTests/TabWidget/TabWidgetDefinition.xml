@@ -10,7 +10,7 @@
    <sd:version>0.5.0</sd:version>
    
    <sd:options>
-      <sd:option name="selectedTabClass" value="selectedTab" />
+      <sd:option name="selectedTabClass" value="'selectedTab'" />
       <sd:option name="showCloseButton" value="true" />
       <sd:option name="showPrintButton" value="true" />
    </sd:options>

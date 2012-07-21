@@ -32,7 +32,7 @@ var Tab = new Class( {
       idPrefix : "tab_",
       idSelector : "@tabId",
       isDefaultSelector : "@isDefault",
-      messagePropertiesSelector : "messageProperties",
+      messagePropertiesSelector : "pp:messageProperties",
       tabsStyle : "Tabs"},
 
    // Constructor

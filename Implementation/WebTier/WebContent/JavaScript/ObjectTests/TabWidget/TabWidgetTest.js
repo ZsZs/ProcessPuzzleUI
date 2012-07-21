@@ -1,30 +1,31 @@
 window.TabWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onTabSelectedMessage'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onTabSelectedMessage'],
 
    options : {
       testMethods : [
           { method : 'unmarshall_determinesProperties', isAsynchron : false },
           { method : 'unmarshall_instantiatesTabs', isAsynchron : false },
-          { method : 'construct_createsUnorderedListsAndConstructsTabs', isAsynchron : false },
-          { method : 'construct_activatesDefaultTab', isAsynchron : false },
-          { method : 'construct_whenEnabled_createsCloseAndPrintButton', isAsynchron : false },
-          { method : 'addTab_whenWidgetIsConstructed_instantiatesNewTabAndConstructs', isAsynchron : false },
+          { method : 'construct_createsUnorderedListsAndConstructsTabs', isAsynchron : true },
+          { method : 'construct_activatesDefaultTab', isAsynchron : true },
+          { method : 'construct_whenEnabled_createsCloseAndPrintButton', isAsynchron : true },
+          { method : 'addTab_whenWidgetIsConstructed_instantiatesNewTabAndConstructs', isAsynchron : true },
           { method : 'addTab_whenOnlyInitialized_throwsException', isAsynchron : false },
-          { method : 'removeTab_destroysHtmlElements', isAsynchron : false },
-          { method : 'removeTab_whenActiveTabHasNext_activatesNext', isAsynchron : false },
-          { method : 'removeTab_whenActiveTabIsLast_activatesPrevious', isAsynchron : false },
+          { method : 'removeTab_destroysHtmlElements', isAsynchron : true },
+          { method : 'removeTab_whenActiveTabHasNext_activatesNext', isAsynchron : true },
+          { method : 'removeTab_whenActiveTabIsLast_activatesPrevious', isAsynchron : true },
           { method : 'removeTab_whenOnlyInitialized_throwsException', isAsynchron : false },
-          { method : 'activateTab_deactivatesPreviousAndActivatesTheGiven', isAsynchron : false },
-          { method : 'activateTab_storesState', isAsynchron : false },
-          { method : 'onTabSelected_activatesTabAndNotifiesSubscribers', isAsynchron : false }]
+          { method : 'activateTab_deactivatesPreviousAndActivatesTheGiven', isAsynchron : true },
+          { method : 'activateTab_storesState', isAsynchron : true },
+          { method : 'onTabSelected_activatesTabAndNotifiesSubscribers', isAsynchron : true }]
    },
 
    constants : {
       LANGUAGE : "hu",
-      TAB_WIDGET_ID : "TabWidget",
+      TABS_DEFINITION_URI : "../TabWidget/TabsDefinition.xml",
       WEBUI_CONFIGURATION_URI : "../TabWidget/WebUIConfiguration.xml",
-      WIDGET_DEFINITION_URI : "TabsDefinition.xml"
+      WIDGET_CONTAINER_ID : "TabWidget",
+      WIDGET_DEFINITION_URI : "../TabWidget/TabWidgetDefinition.xml"
    },
    
    initialize : function( options ) {
@@ -34,9 +35,10 @@ window.TabWidgetTest = new Class( {
       this.callBackWasCalled = false;
       this.componentStateManager;
       this.containerElement;
-      this.definitionXml;
+      this.widgetDefinitionXml;
       this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.resourceBundle;
+      this.tabsDefinitionXml;
       this.tabWidget;
       this.webUIConfiguration;
       this.webUILogger;
@@ -51,9 +53,18 @@ window.TabWidgetTest = new Class( {
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       
-      this.containerElement = $( this.constants.TAB_WIDGET_ID );
-      this.tabWidget = new TabWidget( { widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI }, this.resourceBundle  );
-      this.definitionXml = this.tabWidget.getDefinitionXml();
+      this.containerElement = $( this.constants.WIDGET_CONTAINER_ID );
+      this.tabWidget = new TabWidget({ 
+         onConstructed : this.onConstructed, 
+         onConstructionError : this.onConstructionError, 
+         onDestroyed : this.onDestroyed,
+         widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
+         widgetDataURI : this.constants.TABS_DEFINITION_URI,
+         widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI
+      }, this.resourceBundle  );
+      
+      this.widgetDefinitionXml = this.tabWidget.getDefinitionXml();
+      this.tabsDefinitionXml = this.tabWidget.getDataXml();
    },
    
    afterEachTest : function (){
@@ -70,50 +81,64 @@ window.TabWidgetTest = new Class( {
    unmarshall_determinesProperties : function() {
       this.tabWidget.unmarshall();
       
-      assertThat( this.tabWidget.getId(), equalTo( this.definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@tabWidgetId' )));
-      assertThat( this.tabWidget.getSelectedTabClass(), equalTo( this.definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@selectedTabClass' )));
-      assertThat( this.tabWidget.getShowCloseButton(), equalTo( parseBoolean( this.definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@showCloseButton' ))));
-      assertThat( this.tabWidget.getShowPrintButton(), equalTo( parseBoolean( this.definitionXml.selectNodeText( '/pp:tabWidgetDefinition/tabWidget/@showPrintButton' ))));
+      assertThat( this.tabWidget.getSelectedTabClass(), equalTo( eval( this.widgetDefinitionXml.selectNodeText( "/sd:widgetDefinition/sd:options/sd:option[@name='selectedTabClass']/@value" ))));
+      assertThat( this.tabWidget.getShowCloseButton(), equalTo( parseBoolean( this.widgetDefinitionXml.selectNodeText( "/sd:widgetDefinition/sd:options/sd:option[@name='showCloseButton']/@value" ))));
+      assertThat( this.tabWidget.getShowPrintButton(), equalTo( parseBoolean( this.widgetDefinitionXml.selectNodeText( "/sd:widgetDefinition/sd:options/sd:option[@name='showPrintButton']/@value" ))));
    },
    
    unmarshall_instantiatesTabs : function() {
       this.tabWidget.unmarshall();
       
-      assertThat( this.tabWidget.getTabs().size(), equalTo( this.definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length ));
+      assertThat( this.tabWidget.getTabs().size(), equalTo( this.tabsDefinitionXml.selectNodes( '/td:tabsDefinition/td:tabs/td:tab' ).length ));
    },
    
    construct_createsUnorderedListsAndConstructsTabs : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-
-      assertThat( this.containerElement.getElements( 'UL' ).length, equalTo( 2 ));
-      assertThat( this.containerElement.getElements( 'UL' )[0].hasClass( this.tabWidget.options.TAB_LIST_STYLE ), is( true ));
-      assertThat( this.containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( this.definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length ));
-      assertThat( this.containerElement.getElements( 'UL' )[1].hasClass( this.tabWidget.options.BUTTONCLASSNAME ), is( true ));
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            assertThat( this.containerElement.getElements( 'UL' ).length, equalTo( 2 ));
+            assertThat( this.containerElement.getElements( 'UL' )[0].hasClass( this.tabWidget.options.TAB_LIST_STYLE ), is( true ));
+            assertThat( this.containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( this.tabsDefinitionXml.selectNodes( '/td:tabsDefinition/td:tabs/td:tab' ).length ));
+            assertThat( this.containerElement.getElements( 'UL' )[1].hasClass( this.tabWidget.options.BUTTONCLASSNAME ), is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    construct_activatesDefaultTab : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-      assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    construct_whenEnabled_createsCloseAndPrintButton : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-      assertThat( this.tabWidget.isCloseButtonVisible(), is( true ));
-      assertThat( this.tabWidget.isPrintButtonVisible(), is( true ));
-      assertThat( this.containerElement.getElements( 'UL' )[1].getChildren( 'li' ).length, equalTo( 2 ));
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            assertThat( this.tabWidget.isCloseButtonVisible(), is( true ));
+            assertThat( this.tabWidget.isPrintButtonVisible(), is( true ));
+            assertThat( this.containerElement.getElements( 'UL' )[1].getChildren( 'li' ).length, equalTo( 2 ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    addTab_whenWidgetIsConstructed_instantiatesNewTabAndConstructs : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-      this.tabWidget.addTab( "newTab", "TabWidget.addedTab" );
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            this.tabWidget.addTab( "newTab", "TabWidget.addedTab" );
       
-      assertThat( this.tabWidget.getTabs().size(), equalTo( this.definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length + 1 ));
-      assertThat( this.containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( this.definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length +1 ));
-      assertThat( this.tabWidget.getTabById( "newTab" ).isActive(), is( true ));
+            assertThat( this.tabWidget.getTabs().size(), equalTo( this.tabsDefinitionXml.selectNodes( '/td:tabsDefinition/td:tabs/td:tab' ).length + 1 ));
+            assertThat( this.containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( this.tabsDefinitionXml.selectNodes( '/td:tabsDefinition/td:tabs/td:tab' ).length +1 ));
+            assertThat( this.tabWidget.getTabById( "newTab" ).isActive(), is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    addTab_whenOnlyInitialized_throwsException : function() {
@@ -126,29 +151,40 @@ window.TabWidgetTest = new Class( {
    },
    
    removeTab_destroysHtmlElements : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            this.tabWidget.removeTab( "tab_tabTwo" );
       
-      this.tabWidget.removeTab( "tab_tabTwo" );
-      
-      assertThat( this.containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( this.definitionXml.selectNodes( '/pp:tabWidgetDefinition/tabWidget/tab' ).length -1 ));
+            assertThat( this.containerElement.getElements( 'UL' )[0].getChildren( '*' ).length, equalTo( this.tabsDefinitionXml.selectNodes( '/td:tabsDefinition/td:tabs/td:tab' ).length -1 ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    removeTab_whenActiveTabHasNext_activatesNext : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-      this.tabWidget.removeTab( "tab_tabTwo" );
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            this.tabWidget.removeTab( "tab_tabTwo" );
          
-      assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabThree" ));
+            assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabThree" ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    removeTab_whenActiveTabIsLast_activatesPrevious : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-      this.tabWidget.activateTab( "tab_tabThree" );
-      this.tabWidget.removeTab( "tab_tabThree" );
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            this.tabWidget.activateTab( "tab_tabThree" );
+            this.tabWidget.removeTab( "tab_tabThree" );
             
-      assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+            assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    removeTab_whenOnlyInitialized_throwsException : function() {
@@ -161,40 +197,63 @@ window.TabWidgetTest = new Class( {
    },
    
    activateTab_deactivatesPreviousAndActivatesTheGiven : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
-      assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            assumeThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabTwo" ));
       
-      this.tabWidget.activateTab( "tab_tabOne" );
+            this.tabWidget.activateTab( "tab_tabOne" );
       
-      assertThat( this.tabWidget.getTabById( "tab_tabTwo" ).isActive(), is( false ));
-      assertThat( this.tabWidget.getTabById( "tab_tabOne" ).isActive(), is( true ));
-      assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+            assertThat( this.tabWidget.getTabById( "tab_tabTwo" ).isActive(), is( false ));
+            assertThat( this.tabWidget.getTabById( "tab_tabOne" ).isActive(), is( true ));
+            assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    activateTab_storesState : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            this.tabWidget.activateTab( "tab_tabOne" );
       
-      this.tabWidget.activateTab( "tab_tabOne" );
-      
-      assertThat( this.componentStateManager.retrieveComponentState( this.tabWidget.options.componentName ).currentTabId, equalTo( "tab_tabOne" ));
+            assertThat( this.componentStateManager.retrieveComponentState( this.tabWidget.options.componentName ).currentTabId, equalTo( "tab_tabOne" ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    onTabSelected_activatesTabAndNotifiesSubscribers : function() {
-      this.tabWidget.unmarshall();
-      this.tabWidget.construct();
+      this.testCaseChain.chain(
+         function(){ this.tabWidget.unmarshall(); this.tabWidget.construct(); }.bind( this ),
+         function(){
+            this.messageBus.subscribeToMessage( TabSelectedMessage, this.onTabSelectedMessage );
+            this.tabWidget.onTabSelected( this.tabWidget.getTabById( "tab_tabOne" ));
       
-      this.messageBus.subscribeToMessage( TabSelectedMessage, this.onTabSelectedMessage );
-      this.tabWidget.onTabSelected( this.tabWidget.getTabById( "tab_tabOne" ));
-      
-      assertThat( this.callBackWasCalled, is( true ));
-      assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+            assertThat( this.callBackWasCalled, is( true ));
+            assertThat( this.tabWidget.getActiveTab().getId(), equalTo( "tab_tabOne" ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
+   onConstructed : function(){
+      this.testCaseChain.callChain();
+   },
+   
+   onConstructionError : function( error ){
+      this.error = error;
+      this.testCaseChain.callChain();
+   },
+   
+   onDestroyed : function( error ){
+      this.testCaseChain.callChain();
+   },
+
    onTabSelectedMessage : function( message ){
       this.callBackWasCalled = true;
       assertThat( message.getId(), equalTo( "tab_tabOne" ));
    }
-
+   
 });

@@ -43,7 +43,7 @@ var MenuItem = new Class({
       idPathSeparator : "/",
       isDefaultSelector : "@isDefault",
       menuItemIdSelector : "@menuItemId",
-      messagePropertiesSelector : "md:messageProperties",
+      messagePropertiesSelector : "pp:messageProperties",
       parentItemId : "",
       selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
