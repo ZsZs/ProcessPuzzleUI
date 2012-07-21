@@ -136,6 +136,7 @@
     <xs:attribute name="id" use="optional" type="xs:NCName"/>
     <xs:attribute name="bind" use="optional" type="xs:string"/>
     <xs:attribute name="isEditable" use="optional" type="xs:boolean"/>
+    <xs:attribute name="indexVariable" use="optional" type="xs:string"/>
     <xs:attribute name="maxOccures" use="optional" default="1">
       <xs:simpleType>
         <xs:union>
