@@ -18,7 +18,7 @@ window.CompositeTreeNodeTest = new Class({
    },
 
    constants : {
-      NODE_SELECTOR : "//pp:treeDefinition/rootNode/treeNode[1]",
+      NODE_SELECTOR : "/tr:treeDefinition/tr:rootNode/tr:treeNode[1]",
       CONFIGURATION_URI : "../TreeWidget/WebUIConfiguration.xml",
       LANGUAGE : "en",
       WIDGET_DATA_URI : "../TreeWidget/TreeDefinition.xml",
@@ -48,7 +48,7 @@ window.CompositeTreeNodeTest = new Class({
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.treeDefinition = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
+      this.treeDefinition = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:tr='http://www.processpuzzle.com/TreeDefinition" });
       this.compositeTreeNodeDefinition = this.treeDefinition.selectNode( this.constants.NODE_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
@@ -70,7 +70,7 @@ window.CompositeTreeNodeTest = new Class({
    unmarshall_instantiatesChildNodes : function(){
       this.compositeTreeNode.unmarshall();
 
-      assertThat( this.compositeTreeNode.getChildNodes().size(), equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length ));
+      assertThat( this.compositeTreeNode.getChildNodes().size(), equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode" ).length ));
    },
       
    unmarshall_determinesChildNodeClass : function(){
@@ -78,7 +78,7 @@ window.CompositeTreeNodeTest = new Class({
 
       this.compositeTreeNode.getChildNodes().each( function( childNode, index ){
          var nodeIndex = index + 1;
-         var grandChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[" + nodeIndex + "]/treeNode" );
+         var grandChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode[" + nodeIndex + "]/tr:treeNode" );
          if( grandChildDefinition.length > 0 )
             assertThat( instanceOf( childNode, CompositeTreeNode ), is( true ));
          else
@@ -98,8 +98,8 @@ window.CompositeTreeNodeTest = new Class({
 
       this.compositeTreeNode.getChildNodes().each( function( childNode, index ){
          var nextNodeIndex = index + 2;
-         var previousChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[" + index + "]" );
-         var nextChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[" + nextNodeIndex + "]" );
+         var previousChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode[" + index + "]" );
+         var nextChildDefinition = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode[" + nextNodeIndex + "]" );
          
          if( previousChildDefinition.length > 0 ) assertThat( childNode.getPreviousSibling(), not( nil() ));
          if( nextChildDefinition.length > 0 ) assertThat( childNode.getNextSibling(), not( nil() ));
@@ -110,7 +110,7 @@ window.CompositeTreeNodeTest = new Class({
       this.constructCompositeTreeNode();
 
       var nodeElements = this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() );
-      assertThat( nodeElements.length, equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1 ));
+      assertThat( nodeElements.length, equalTo( this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode" ).length +1 ));
    },
    
    construct_whenNodeIsClosed_createsPlusSign : function(){
@@ -145,7 +145,7 @@ window.CompositeTreeNodeTest = new Class({
       compositeNode.open();
       
       assertThat( compositeNode.isOpened, is( true ));
-      var expectedNumberOfNodes = previousNumberOfConstructedNodes + this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode[@nodeId='13']/treeNode" ).length;
+      var expectedNumberOfNodes = previousNumberOfConstructedNodes + this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode[@nodeId='13']/tr:treeNode" ).length;
       assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( expectedNumberOfNodes ));
    },
    
@@ -157,7 +157,7 @@ window.CompositeTreeNodeTest = new Class({
       this.compositeTreeNode.open();
       
       assertThat( this.compositeTreeNode.isOpened, is( true ));
-      var expectedNumberOfNodes = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/treeNode" ).length +1;
+      var expectedNumberOfNodes = this.treeDefinition.selectNodes( this.constants.NODE_SELECTOR + "/tr:treeNode" ).length +1;
       assertThat( this.widgetContainerElement.getChildren( 'div.' + this.compositeTreeNodeType.getNodeWrapperClass() ).length, equalTo( expectedNumberOfNodes ));
    },
    

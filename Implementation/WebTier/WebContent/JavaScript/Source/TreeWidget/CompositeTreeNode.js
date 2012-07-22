@@ -44,7 +44,7 @@ var CompositeTreeNode = new Class( {
    },
    
    options : {
-      childNodesSelector : 'treeNode',
+      childNodesSelector : 'tr:treeNode',
       componentName : "CompositeTreeNode",
       initialyOpened : false,
       isOpenedSelector : "@isOpened"
@@ -108,8 +108,8 @@ var CompositeTreeNode = new Class( {
    
    onChildNodeConstructed : function( childNode ){
       this.numberOfConstructedChildNodes++;
-      if( this.numberOfConstructedChildNodes == this.childNodes.size() ) this.constructionChain.callChain();
-
+      if( this.numberOfConstructedChildNodes == this.childNodes.size() ) 
+         this.constructionChain.callChain();
    },
 
    onNodeHandlerClick : function() {

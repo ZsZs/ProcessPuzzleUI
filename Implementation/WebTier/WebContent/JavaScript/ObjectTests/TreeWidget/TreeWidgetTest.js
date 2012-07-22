@@ -7,6 +7,7 @@ window.TreeWidgetTest = new Class( {
          { method : 'initialize_loadsTreeDefinition', isAsynchron : false },
          { method : 'initialize_instantiatesNodeTypes', isAsynchron : false },
          { method : 'initialize_instantiatesNodeFactory', isAsynchron : false },
+         { method : 'initialize_passesNodeTypeOptionsToTypes', isAsynchron : false },
          { method : 'unmarshall_instantiatesRootNode', isAsynchron : false },
          { method : 'unmarshall_instantiatesChildNodes', isAsynchron : false },
          { method : 'construct_constructsChildNodes', isAsynchron : true },
@@ -18,6 +19,7 @@ window.TreeWidgetTest = new Class( {
       CONFIGURATION_URI : "../TreeWidget/WebUIConfiguration.xml",
       IMAGE_FOLDER : "../TreeWidget/Images/",
       LANGUAGE : "en",
+      NODE_TYPE_OPTIONS : { imagesFolder : "../TreeWidget/Images/", nodeIconImages : { closedFolder: "book_closed.gif", openedFolder: "book_open.gif" }},
       WIDGET_CONTAINER_ID : "TreeWidget",
       WIDGET_DATA_URI : "../TreeWidget/TreeDefinition.xml",
       WIDGET_DEFINITION_URI : "../TreeWidget/TreeWidgetDefinition.xml"
@@ -45,7 +47,7 @@ window.TreeWidgetTest = new Class( {
       this.resourceBundle.load( this.locale );
       this.treeWidget = new TreeWidget({ 
          widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
-         nodeTypeOptions : { imagesFolder : this.constants.IMAGE_FOLDER },
+         nodeTypeOptions : this.constants.NODE_TYPE_OPTIONS,
          onConstructed : this.onConstructed, 
          onDestroyed : this.onDestroyed,
          widgetDataURI : this.constants.WIDGET_DATA_URI,
@@ -75,12 +77,16 @@ window.TreeWidgetTest = new Class( {
       
       assertThat( this.treeWidget.getCompositeTreeNodeType(), not( nil() ));
       assertThat( instanceOf( this.treeWidget.getCompositeTreeNodeType(), CompositeTreeNodeType ), is( true ));
-      assertThat( this.treeWidget.getCompositeTreeNodeType().getImagesFolder(), equalTo( this.constants.IMAGE_FOLDER ));
    },
    
    initialize_instantiatesNodeFactory : function(){
       assertThat( TreeNodeFactory.singleInstance, not( nil() ));
       assertThat( instanceOf( TreeNodeFactory.singleInstance, TreeNodeFactory ), is( true ));
+   },
+   
+   initialize_passesNodeTypeOptionsToTypes : function(){
+      assertThat( this.treeWidget.getCompositeTreeNodeType().getImagesFolder(), equalTo( this.constants.IMAGE_FOLDER ));
+      assertThat( this.treeWidget.getTreeNodeType().options['nodeIconImages']['openedFolder'], equalTo( this.constants.NODE_TYPE_OPTIONS['nodeIconImages']['openedFolder'] ));
    },
    
    unmarshall_instantiatesRootNode : function(){
@@ -92,7 +98,7 @@ window.TreeWidgetTest = new Class( {
    unmarshall_instantiatesChildNodes : function(){
       this.treeWidget.unmarshall();
       
-      assertThat( this.treeWidget.getRootNode().getChildNodes().size(), equalTo( this.treeWidget.getDataXml().selectNodes( "//pp:treeDefinition/rootNode/treeNode" ).length ));
+      assertThat( this.treeWidget.getRootNode().getChildNodes().size(), equalTo( this.treeWidget.getDataXml().selectNodes( "/tr:treeDefinition/tr:rootNode/tr:treeNode" ).length ));
    },
    
    construct_constructsChildNodes : function() {

@@ -37,11 +37,12 @@ var TreeWidget = new Class( {
    
    options : {
       componentName : "TreeWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:tr='http://www.processpuzzle.com/TreeDefinition",
       imagesFolder : "",
       nodeOptions : {},
       nodeTypeOptions : {},
       pathSeparator : ".",
-      rootNodeSelector : "//pp:treeDefinition/rootNode",
+      rootNodeSelector : "/tr:treeDefinition/tr:rootNode",
       showRootNode : false,
       widgetContainerId : "TreeWidget"
    },
@@ -65,14 +66,6 @@ var TreeWidget = new Class( {
       if( this.rootNode != null ) this.rootNode.changeCaption( this.controller );
    },
 
-   construct : function() {
-      this.parent();
-   },
-
-   destroy : function() {
-      this.parent();
-   },
-   
    findNodeByPath : function( path ){
       return this.rootNode ? this.rootNode.findNodeByPath( path ) : null;
    },
@@ -91,10 +84,6 @@ var TreeWidget = new Class( {
       this.constructionChain.callChain();
    },
    
-   unmarshall : function() {
-      this.unmarshallRootNode();
-   },
-
    // Properties
    getCompositeTreeNodeType : function() { return this.compositeTreeNodeType; },
    getRootNode : function() { return this.rootNode; },
@@ -135,11 +124,15 @@ var TreeWidget = new Class( {
       this.rootNodeType = TreeNodeFactory.singleInstance.getRootTreeNodeType();
    }.protect(),
    
+   unmarshallComponents : function(){
+      this.unmarshallRootNode();
+   }.protect(),
+   
    unmarshallRootNode : function(){
       var rootNodeElement = this.dataXml.selectNode( this.options.rootNodeSelector );
       if( rootNodeElement ){
-         //var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed, onNodeSelected : this.onNodeSelected });
-         this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
+         var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed, onNodeSelected : this.onNodeSelected });
+         this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, nodeOptions );
          this.rootNode.unmarshall();
       }      
    }.protect()   

@@ -23,7 +23,7 @@ window.TreeNodeTest = new Class( {
       ELEMENT_AFTER_ID : "nodeAfter",
       ELEMENT_BEFORE_ID : "nodeBefore",
       LANGUAGE : "en",
-      NODE_SELECTOR : "//pp:treeDefinition/rootNode/treeNode[1]",
+      NODE_SELECTOR : "/tr:treeDefinition/tr:rootNode/tr:treeNode[1]",
       WIDGET_DATA_URI : "../TreeWidget/TreeDefinition.xml",
       WIDGET_CONTAINER_ID : "TreeWidget",
       WIDGET_DEFINITION_URI : "../TreeWidget/TreeWidgetDefinition.xml"
@@ -53,7 +53,7 @@ window.TreeNodeTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.treeDefinition = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" });
+      this.treeDefinition = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:tr='http://www.processpuzzle.com/TreeDefinition" });
       this.treeNodeDefinition = this.treeDefinition.selectNode( this.constants.NODE_SELECTOR );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
       this.elementAfter = $( this.constants.ELEMENT_AFTER_ID );

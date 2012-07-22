@@ -45,7 +45,7 @@ var TreeNodeFactory = new Class({
 
    //Public mutators and accessors
    create: function( parentNode, nodeResource, elementFactory, options ){
-      var hasChildNodes = XmlResource.selectNodes( "treeNode", nodeResource ).length > 0 ? true : false;
+      var hasChildNodes = XmlResource.selectNodes( "tr:treeNode", nodeResource ).length > 0 ? true : false;
       var treeNode;
       
       if( hasChildNodes ) treeNode = new CompositeTreeNode( parentNode, this.compositeTreeNodeType, nodeResource, elementFactory, options );

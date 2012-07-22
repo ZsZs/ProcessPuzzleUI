@@ -37,9 +37,9 @@ var TreeNode = new Class({
    options : {
       captionSelector : '@caption',
       componentName : "TreeNode",
-      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:tr='http://www.processpuzzle.com/TreeDefinition",
       imageUriSelector : '@image',
-      messageSelector : 'messageProperties',
+      messageSelector : 'pp:messageProperties',
       nodeIDSelector : '@nodeId',
       orderNumberSelector : '@orderNumber',
       selectable : false,
