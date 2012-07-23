@@ -24,6 +24,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Source/MochaUI/Core.js"></script>
@@ -55,6 +56,7 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/OptionsResource.js"></script>  
    <script type="text/javascript" src="../../Source/FundamentalTypes/RemoteStyleSheet.js"></script>  
    <script type="text/javascript" src="../../Source/FundamentalTypes/ResourceUri.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
@@ -74,79 +76,15 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
+   <script type="text/javascript" src="../../ObjectTests/ToolBarWidget/ToolBarButtonTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         runTestCase();
       });
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
 
-      var LANGUAGE = "hu";
-      var TOOLBAR_DEFINITION_URI = "../ToolBarWidget/ToolBarDefinition.xml";
-      var TOOLBAR_CONTAINER_ID = "TestToolbar";
-      var TOOLBAR_BUTTON_SELECTOR = "/toolBarDefinition/buttons/button[@name='alignLeft']";
-      var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
-
-      var componentStateManager;
-      var locale = new ProcessPuzzleLocale({ language : LANGUAGE });
-      var toolBar;
-      var toolBarButton;
-      var toolBarContainerEelement;
-      var toolBarButtonDefinition;
-      var toolBarDefinition;
-      var testCaseChain = new Chain();
-      var webUIConfiguration;
-      var webUIController;
-      var webUILogger;
-      var webUIMessageBus;
-
-      function setUp(){
-         componentStateManger = new ComponentStateManager();
-         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         webUIMessageBus = new WebUIMessageBus();
-         toolBarInternationalization = new XMLResourceBundle( webUIConfiguration );
-         toolBarInternationalization.load( locale );
-         toolBarDefinition = new XmlResource( TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com'" } );
-         toolBarButtonDefinition = toolBarDefinition.selectNode( TOOLBAR_BUTTON_SELECTOR );
-         
-         toolBar = new ToolBarWidget( { widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
-         
-         toolBarButton = new ToolBarButton( toolBarButtonDefinition, toolBar.getElementFactory() );
-         toolBarContainerElement = $( TOOLBAR_CONTAINER_ID );
-      }
-
-      function tearDown(){
-         toolBarDefinition.release();
-         toolBarButton.destroy();
-         toolBar.destroy();
-      }
-
-      function test_initialization_setsState(){
-         assertThat( toolBarButton.getState(), equalTo( ToolBarButton.States.INITIALIZED ));
-      }
-      
-      function test_unmarshall_determinesProperties(){
-         toolBarButton.unmarshall();
-         assertThat( toolBarButton.getCaption(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/caption" )));
-         assertThat( toolBarButton.getIconImage(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/iconImage" )));
-         assertThat( toolBarButton.getMessageProperties(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/messageProperties" )));
-         assertThat( toolBarButton.getName(), equalTo( toolBarDefinition.selectNodeText( TOOLBAR_BUTTON_SELECTOR + "/@name" )));
-      }
-
-      function test_construct_instantiatesLiAndSpanElements(){
-         toolBarButton.unmarshall();
-         toolBarButton.construct( toolBarContainerElement.getElement('ul'));
-         assertThat( toolBarContainerElement.getElementById( toolBarButton.getName() ).get( 'tag' ), equalTo( 'li' ));
-      }
-
-      //runs a test function during debugging
-      function runTestCase(){
-         setUp();
-         test_construct_instantiatesLiAndSpanElements();
-         tearDown();
-      }
    </script>
 </head>
 
@@ -154,7 +92,6 @@
    <h1>ToolBarButton.js test page</H1>
    <p>This page contains tests for ToolBarButton.js JavaScript class.</P>
    <div id="TestToolbar">
-      <ul></ul>
    </div>
 </body>
 </html>

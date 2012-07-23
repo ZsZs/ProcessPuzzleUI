@@ -23,6 +23,7 @@
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
 
    <script type="text/javascript" src="../../Source/MochaUI/Core.js"></script>
@@ -56,6 +57,7 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/OptionsResource.js"></script>  
    <script type="text/javascript" src="../../Source/FundamentalTypes/RemoteStyleSheet.js"></script>  
    <script type="text/javascript" src="../../Source/FundamentalTypes/ResourceUri.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
@@ -80,115 +82,15 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
+   <script type="text/javascript" src="../../ObjectTests/ToolBarWidget/ToolBarWidgetTest.js"></script>
+   
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         runTestCase();
       });
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
 
-      var LANGUAGE = "hu";
-      var TOOLBAR_DEFINITION_URI = "../ToolBarWidget/ToolBarDefinition.xml";
-      var TOOLBAR_CONTAINER_ID = "ToolBarContainer";
-      var WEBUI_CONFIGURATION_URI = "../ToolBarWidget/WebUIConfiguration.xml";
-
-      var componentStateManager;
-      var locale = new ProcessPuzzleLocale({ language : LANGUAGE });
-      var receivedMessage;
-      var toolBar;
-      var toolBarContainerEelement;
-      var toolBarDefinition;
-      var testCaseChain = new Chain();
-      var webUIConfiguration;
-      var webUIController;
-      var webUILogger;
-      var webUIMessageBus;
-
-      function setUp(){
-         componentStateManger = new ComponentStateManager();
-         webUIMessageBus = new WebUIMessageBus();
-         webUIConfiguration = new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
-         webUILogger = new WebUILogger( webUIConfiguration );
-         toolBarInternationalization = new XMLResourceBundle( webUIConfiguration );
-         toolBarInternationalization.load( locale );
-         toolBarDefinition = new XmlResource( TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
-         
-         toolBar = new ToolBarWidget( { widgetContainerId : TOOLBAR_CONTAINER_ID, widgetDefinitionURI : TOOLBAR_DEFINITION_URI }, toolBarInternationalization );
-         toolBarContainerEelement = $( TOOLBAR_CONTAINER_ID );
-      }
-      
-      function onButtonSelected( message ){
-         receivedMessage = message;
-      }
-
-      function tearDown(){
-         webUIMessageBus.tearDown();
-         toolBarDefinition.release();
-         toolBar.destroy();
-         receivedMessage = null;
-      }
-
-      function test_initialization_setsState(){
-         assertThat( toolBar.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
-      }
-      
-      function test_unmarshall_determinesProperties(){
-         toolBar.unmarshall();
-         assertThat( toolBar.getName(), equalTo( toolBarDefinition.selectNodeText( "/toolBarDefinition/name" )));
-         assertThat( toolBar.getDescription(), equalTo( toolBarDefinition.selectNodeText( "/toolBarDefinition/description" )));
-         assertThat( toolBar.getListStyle(), equalTo( toolBarDefinition.selectNodeText( "/toolBarDefinition/buttons/@elementStyle" )));
-      }
-
-      function test_unmarshall_unmarshallsButtonsAndDividers(){
-         toolBar.unmarshall();
-         
-         var numberOfButtons = toolBarDefinition.selectNodes( "/toolBarDefinition/buttons/button" ).length;
-         var numberOfDividers = toolBarDefinition.selectNodes( "/toolBarDefinition/buttons/divider" ).length;
-         
-         assertThat( toolBar.getButtons().size(), equalTo( numberOfButtons + numberOfDividers ));
-         toolBar.getButtons().each( function( buttonEntry, index ){
-            var toolBarButton = buttonEntry.getValue();
-            assertThat( toolBarButton.getState(), equalTo( ToolBarButton.States.UNMARSHALLED ));
-         }, this );
-      }
-      
-      function test_construct_instantiatesWrapperDIVWithId(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
-      }
-
-      function test_construct_instantiatesWrapperDIVWithId(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ), not( nil() ));
-      }
-
-      function test_construct_instantiatesWrapperULVWithStyle(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ), not( nil() ));
-         assertThat( toolBarContainerEelement.getElementById( toolBar.getName() ).getElement( 'ul' ).hasClass( toolBar.getListStyle() ), is( true ));
-      }
-      
-      function test_onButtonSelection_instantiatesAndSendsMenuSelectedMessage(){
-         toolBar.unmarshall();
-         toolBar.construct();
-         webUIMessageBus.subscribeToMessage( MenuSelectedMessage, onButtonSelected );
-         toolBar.onButtonSelection( toolBar.getButtons().get( toolBarDefinition.selectNodeText( "/toolBarDefinition/buttons/button[@name='alignLeft']/@name" )));
-         
-         assertThat( instanceOf( receivedMessage, MenuSelectedMessage ), is( true ));
-         assertThat( receivedMessage.getOriginator(), equalTo( toolBar.getName() ));
-      }
-
-      //runs a test function during debugging
-      function runTestCase(){
-         setUp();
-         test_onButtonSelection_instantiatesAndSendsMenuSelectedMessage();
-         tearDown();
-      }
    </script>
 </head>
 

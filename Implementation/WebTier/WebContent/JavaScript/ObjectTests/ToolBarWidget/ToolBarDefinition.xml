@@ -1,135 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<toolBarDefinition 
-	xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopToolBar.xsd">
+<tb:toolBarDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:tb="http://www.processpuzzle.com/ToolBar"
+   xsi:schemaLocation="http://www.processpuzzle.com/ToolBar http://processpuzzle.com/Schemas/DesktopToolBar.xsd">
    
-   <name>TestToolbar</name>
-   <description>Toolbar for testing purposes</description>
-   <showCaptions>false</showCaptions>
-   <buttons elementStyle="testToolBar">
-      <button name="bold">
-         <caption>ToolBarWidget.bold</caption>
-         <iconImage>../ToolBarWidget/Images/bold.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.BOLD }</messageProperties>         
-      </button>
+   <tb:name>TestToolbar</tb:name>
+   <tb:description>Toolbar for testing purposes</tb:description>
+   
+   <tb:buttons elementStyle="testToolBar">
+      <tb:button name="bold">
+         <tb:caption>ToolBarWidget.bold</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/bold.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.BOLD }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="italic">
-         <caption>ToolBarWidget.italic</caption>
-         <iconImage>../ToolBarWidget/Images/italic.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ITALIC }</messageProperties>         
-      </button>
+      <tb:button name="italic">
+         <tb:caption>ToolBarWidget.italic</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/italic.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ITALIC }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="underline">
-         <caption>ToolBarWidget.underline</caption>
-         <iconImage>../ToolBarWidget/Images/underline.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDERLINE }</messageProperties>         
-      </button>
+      <tb:button name="underline">
+         <tb:caption>ToolBarWidget.underline</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/underline.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDERLINE }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="strikethrough">
-         <caption>ToolBarWidget.strikethrough</caption>
-         <iconImage>../ToolBarWidget/Images/strikethrough.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.STRIKETHROUGH }</messageProperties>         
-      </button>
+      <tb:button name="strikethrough">
+         <tb:caption>ToolBarWidget.strikethrough</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/strikethrough.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.STRIKETHROUGH }</pp:messageProperties>         
+      </tb:button>
       
-      <divider>
-         <iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</iconImage>
-      </divider>
+      <tb:divider>
+         <tb:iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</tb:iconImage>
+      </tb:divider>
       
-      <button name="unorderedList">
-         <caption>ToolBarWidget.unorderedList</caption>
-         <iconImage>../ToolBarWidget/Images/insertunorderedlist.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNORDERED_LIST }</messageProperties>         
-      </button>
+      <tb:button name="unorderedList">
+         <tb:caption>ToolBarWidget.unorderedList</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/insertunorderedlist.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNORDERED_LIST }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="orderedList">
-         <caption>ToolBarWidget.orderedList</caption>
-         <iconImage>../ToolBarWidget/Images/insertorderedlist.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ORDERED_LIST }</messageProperties>         
-      </button>
+      <tb:button name="orderedList">
+         <tb:caption>ToolBarWidget.orderedList</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/insertorderedlist.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ORDERED_LIST }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="indent">
-         <caption>ToolBarWidget.indent</caption>
-         <iconImage>../ToolBarWidget/Images/indent.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.INDENT }</messageProperties>         
-      </button>
+      <tb:button name="indent">
+         <tb:caption>ToolBarWidget.indent</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/indent.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.INDENT }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="outdent">
-         <caption>ToolBarWidget.outdent</caption>
-         <iconImage>../ToolBarWidget/Images/outdent.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.OUTDENT }</messageProperties>         
-      </button>
+      <tb:button name="outdent">
+         <tb:caption>ToolBarWidget.outdent</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/outdent.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.OUTDENT }</pp:messageProperties>         
+      </tb:button>
       
-      <divider>
-         <iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</iconImage>
-      </divider>
+      <tb:divider>
+         <tb:iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</tb:iconImage>
+      </tb:divider>
       
-      <button name="alignLeft">
-         <caption>ToolBarWidget.alignLeft</caption>
-         <iconImage>../ToolBarWidget/Images/justifyleft.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_LEFT }</messageProperties>         
-      </button>
+      <tb:button name="alignLeft">
+         <tb:caption>ToolBarWidget.alignLeft</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/justifyleft.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_LEFT }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="alignCenter">
-         <caption>ToolBarWidget.alignCenter</caption>
-         <iconImage>../ToolBarWidget/Images/justifycenter.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_CENTER }</messageProperties>         
-      </button>
+      <tb:button name="alignCenter">
+         <tb:caption>ToolBarWidget.alignCenter</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/justifycenter.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_CENTER }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="alignRight">
-         <caption>ToolBarWidget.alignRight</caption>
-         <iconImage>../ToolBarWidget/Images/justifyright.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_RIGHT }</messageProperties>         
-      </button>
+      <tb:button name="alignRight">
+         <tb:caption>ToolBarWidget.alignRight</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/justifyright.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_RIGHT }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="alignJustify">
-         <caption>ToolBarWidget.alignJustify</caption>
-         <iconImage>../ToolBarWidget/Images/justifyfull.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_JUSTIFY }</messageProperties>         
-      </button>
+      <tb:button name="alignJustify">
+         <tb:caption>ToolBarWidget.alignJustify</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/justifyfull.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_JUSTIFY }</pp:messageProperties>         
+      </tb:button>
       
-      <divider>
-         <iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</iconImage>
-      </divider>
+      <tb:divider>
+         <tb:iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</tb:iconImage>
+      </tb:divider>
       
-      <button name="undo">
-         <caption>ToolBarWidget.undo</caption>
-         <iconImage>../ToolBarWidget/Images/undo.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDO }</messageProperties>         
-      </button>
+      <tb:button name="undo">
+         <tb:caption>ToolBarWidget.undo</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/undo.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDO }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="redo">
-         <caption>ToolBarWidget.redo</caption>
-         <iconImage>../ToolBarWidget/Images/redo.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REDO }</messageProperties>         
-      </button>
+      <tb:button name="redo">
+         <tb:caption>ToolBarWidget.redo</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/redo.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REDO }</pp:messageProperties>         
+      </tb:button>
       
-      <divider>
-         <iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</iconImage>
-      </divider>
+      <tb:divider>
+         <tb:iconImage>../ToolBarWidget/Images/ToolboxDivider.jpg</tb:iconImage>
+      </tb:divider>
       
-      <button name="addLink">
-         <caption>ToolBarWidget.addLink</caption>
-         <iconImage>../ToolBarWidget/Images/createlink.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_LINK }</messageProperties>         
-      </button>
+      <tb:button name="addLink">
+         <tb:caption>ToolBarWidget.addLink</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/createlink.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_LINK }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="removeLink">
-         <caption>ToolBarWidget.removeLink</caption>
-         <iconImage>../ToolBarWidget/Images/unlink.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REMOVE_LINK }</messageProperties>         
-      </button>
+      <tb:button name="removeLink">
+         <tb:caption>ToolBarWidget.removeLink</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/unlink.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REMOVE_LINK }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="addImage">
-         <caption>ToolBarWidget.addImage</caption>
-         <iconImage>../ToolBarWidget/Images/urlimage.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_IMAGE }</messageProperties>         
-      </button>
+      <tb:button name="addImage">
+         <tb:caption>ToolBarWidget.addImage</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/urlimage.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_IMAGE }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="toggleView">
-         <caption>ToolBarWidget.toggleView</caption>
-         <iconImage>../ToolBarWidget/Images/toggleview.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.TOGGLE_VIEW }</messageProperties>         
-      </button>
-   </buttons>
-</toolBarDefinition>
+      <tb:button name="toggleView">
+         <tb:caption>ToolBarWidget.toggleView</tb:caption>
+         <tb:iconImage>../ToolBarWidget/Images/toggleview.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.TOGGLE_VIEW }</pp:messageProperties>         
+      </tb:button>
+   </tb:buttons>
+</tb:toolBarDefinition>
