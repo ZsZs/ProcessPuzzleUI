@@ -17,7 +17,9 @@ window.BrowserWidgetTest = new Class( {
           { method : 'initialize_whenResourceBundleIsNotLoaded_throwsException', isAsynchron : false },
           { method : 'getText_usesI18Resource', isAsynchron : false },
           { method : 'removeChild_destroysNestedChildElements', isAsynchron : false },
+          { method : 'unmarshall_determinesProperties', isAsynchron : false },
           { method : 'construct_broadcastsWidgetConstructedMessage', isAsynchron : true }, 
+          { method : 'construct_whenConstructionTimesOut_revertsConstruction', isAsynchron : true }, 
           { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }, 
           { method : 'webUIMessageHandler_whenConfigured_handlesMessages', isAsynchron : true }, 
           { method : 'webUIMessageHandler_whenNotConfigured_throwsException', isAsynchron : false }]
@@ -62,11 +64,14 @@ window.BrowserWidgetTest = new Class( {
       this.componentStateManager = new ComponentStateManager();
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.browserWidget = new BrowserWidget({ 
+      this.browserWidget = new BrowserWidget({
+         maxTries : 2,
          onConstructed : this.onConstructed, 
          onConstructionError : this.onConstructionError, 
          onDestroyed : this.onDestroyed,
-         widgetContainerId : this.constants.WIDGET_CONTAINER_ID 
+         widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
+         widgetDataURI : this.constants.WIDGET_DATA_URI,
+         widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI
       }, this.resourceBundle );
       this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
    },
@@ -168,6 +173,14 @@ window.BrowserWidgetTest = new Class( {
       assertNull( this.widgetContainerElement.getElementById( this.constants.ROW_VALUE_ID ) );
    },
    
+   unmarshall_determinesProperties : function() {
+      this.browserWidget.unmarshall();
+      
+      var definitionXml = this.browserWidget.getDefinitionXml();
+      assertThat( this.browserWidget.getName(), equalTo( definitionXml.selectNodeText( "/sd:widgetDefinition/sd:name" )));
+      assertThat( this.browserWidget.getDescription(), equalTo( definitionXml.selectNodeText( "/sd:widgetDefinition/sd:description" )));
+   },
+   
    construct_broadcastsWidgetConstructedMessage : function() {
       this.testCaseChain.chain(
          function(){
@@ -179,6 +192,24 @@ window.BrowserWidgetTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.constructedMessageReceived, is( true ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenConstructionTimesOut_revertsConstruction : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.browserWidget.compileConstructionChain = function(){
+               this.browserWidget.constructionChain.chain( this.longTakingMethod );
+            }.bind( this );
+            this.browserWidget.unmarshall();
+            this.browserWidget.construct();
+         }.bind( this ),
+         function(){
+            assertThat( this.browserWidget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+            assertThat( this.error, JsHamcrest.Matchers.instanceOf( TimeOutException ));
+            assertThat( this.browserWidget.getError(), JsHamcrest.Matchers.instanceOf( TimeOutException ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -233,6 +264,10 @@ window.BrowserWidgetTest = new Class( {
       }catch( e ) {
          assertTrue( instanceOf( e, UnconfiguredWidgetException ) );
       }
+   },
+   
+   longTakingMethod : function(){
+      //No operation
    },
    
    onConstructed : function(){

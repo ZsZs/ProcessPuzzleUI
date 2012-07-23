@@ -23,8 +23,8 @@
 //= require ../WebUIMessageBus/WebUIMessage.js
 
 var BrowserWidget = new Class( {
-   Implements : [Events, Options],
-   Binds : ['broadcastConstructedMessage', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
+   Implements : [Events, Options, TimeOutBehaviour],
+   Binds : ['broadcastConstructedMessage', 'checkTimeOut', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -92,6 +92,7 @@ var BrowserWidget = new Class( {
    // public accessor and mutator methods
    construct : function() {
       if( this.state < BrowserWidget.States.CONSTRUCTED ) {
+         this.startTimeOutTimer( 'construct' );
          this.compileConstructionChain();
          this.constructionChain.callChain();
       }
@@ -159,6 +160,7 @@ var BrowserWidget = new Class( {
    getDefinitionXml : function() { return this.definitionXml; },
    getDescription: function() { return this.description; },
    getElementFactory : function() { return this.elementFactory; },
+   getError : function() { return this.error; },
    getHtmlDOMDocument : function() { return this.options.domDocument; },
    getLastMessage : function() { return this.lastHandledMessage; },
    getLocale : function() { return this.locale; },
@@ -234,6 +236,7 @@ var BrowserWidget = new Class( {
       this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
       this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
+      this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       this.broadcastConstructedMessage();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
@@ -281,6 +284,8 @@ var BrowserWidget = new Class( {
    }.protect(),
    
    revertConstruction : function(){
+      this.stopTimeOutTimer();
+      this.state = BrowserWidget.States.INITIALIZED;
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
@@ -290,6 +295,11 @@ var BrowserWidget = new Class( {
             this.messageBus.subscribeToMessage( messageClass, this.webUIMessageHandler );
          }, this );
       }
+   }.protect(),
+   
+   timeOut : function( exception ){
+      this.error = exception;
+      this.revertConstruction();
    }.protect(),
    
    unmarshallComponents: function(){
