@@ -23,7 +23,7 @@
 //= require ../WebUIMessageBus/WebUIMessage.js
 
 var BrowserWidget = new Class( {
-   Implements : [Events, Options, TimeOutBehaviour],
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds : ['broadcastConstructedMessage', 'checkTimeOut', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
 
    options : {
@@ -215,6 +215,7 @@ var BrowserWidget = new Class( {
          this.locale = resourceBundle.getLocale();
       }else{
          this.webUIController = Class.getInstanceOf( WebUIController );
+         if( !this.webUIController ) throw new IllegalArgumentException( "localizationResource' and 'webUIController", "undefined" );
          this.i18Resource = this.webUIController.getResourceBundle();
          this.locale = this.webUIController.getCurrentLocale();
       }
@@ -298,8 +299,7 @@ var BrowserWidget = new Class( {
    }.protect(),
    
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallComponents: function(){
