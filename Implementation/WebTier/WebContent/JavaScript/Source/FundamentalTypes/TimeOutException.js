@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 var TimeOutException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Executing the '{componentName}' element's '{processName}' timed out. See the stack trace for the root cause.",
+      description: "Executing the '{componentName}' element's '{processName}' method timed out. See the stack trace for the root cause.",
       name: "TimeoutException"
    },
    
