@@ -34,7 +34,7 @@ var ToolBarDivider = new Class({
    
    options : {
       dividerStyle : "toolBarDivider",
-      iconImageSelector : "iconImage",
+      iconImageSelector : "tb:iconImage",
       dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
       namePrefix : "divider_"
    },
@@ -69,7 +69,6 @@ var ToolBarDivider = new Class({
    },
    
    onSelection: function(){
-      
    },
    
    unmarshall: function(){

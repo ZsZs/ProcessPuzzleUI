@@ -35,9 +35,9 @@ var ToolBarButton = new Class({
    
    options : {
       buttonStyle : "toolBarButton",
-      captionSelector : "caption",
-      iconImageSelector : "iconImage",
-      messagePropertiesSelector : "messageProperties",
+      captionSelector : "tb:caption",
+      iconImageSelector : "tb:iconImage",
+      messagePropertiesSelector : "pp:messageProperties",
       nameSelector : "@name",
       showCaption : false,
       toolTipStyle : "toolBarToolTip"

@@ -39,9 +39,9 @@ var ToolBarButtonFactory = new Class({
    create: function( definitionXmlElement, htmlElementFactory, options ){
       var newButton;
       switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "DIVIDER": 
+      case "TB:DIVIDER": 
          newButton = new ToolBarDivider( definitionXmlElement, htmlElementFactory, options ); break;
-      case "BUTTON":
+      case "TB:BUTTON":
       default:
          newButton = new ToolBarButton( definitionXmlElement, htmlElementFactory, options ); break;
       }

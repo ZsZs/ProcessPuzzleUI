@@ -33,15 +33,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 var ToolBarWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['onButtonSelection'],
+   Binds : ['constructButtons', 'constructHtmlElements', 'destroyButtons', 'destroyHtmlElements', 'onButtonSelection'],
    options : {
-      buttonsSelector : "/toolBarDefinition/buttons/button | /toolBarDefinition/buttons/divider",
+      buttonsSelector : "/tb:toolBarDefinition/tb:buttons/tb:button | /tb:toolBarDefinition/tb:buttons/tb:divider",
       componentName : "ToolBarWidget",
-      descriptionSelector : "/toolBarDefinition/description", 
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:tb='http://www.processpuzzle.com/ToolBar",
+      descriptionSelector : "/tb:toolBarDefinition/tb:description", 
       dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
-      listStyleSelector : "/toolBarDefinition/buttons/@elementStyle",
-      nameSelector : "/toolBarDefinition/name",
-      showCaptionsSelector : "/toolBarDefinition/showCaptions"
+      listStyleSelector : "/tb:toolBarDefinition/tb:buttons/@elementStyle",
+      nameSelector : "/tb:toolBarDefinition/tb:name",
+      showCaptions : false
    },
 
    //Constructor
@@ -56,24 +57,10 @@ var ToolBarWidget = new Class({
       this.name;
       this.listElement;
       this.listStyle;
-      this.showCaptions = false;
       this.wrapperElement;
    },
    
    //Public accessor and mutator methods
-   construct: function(){
-      this.constructHtmlElements();
-      this.constructButtons();
-      return this.parent();
-   },
-   
-   destroy: function(){
-      this.destroyButtons();
-      this.destroyDividers();
-      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
-      if( this.wrapperElement && this.wrapperElement.destroy ) this.wrapperElement.destroy();
-      this.parent();
-   },
    
    onButtonSelection: function( button ){
       var argumentText = button.getMessageProperties();
@@ -83,12 +70,6 @@ var ToolBarWidget = new Class({
       this.messageBus.notifySubscribers( new MenuSelectedMessage( arguments ));
    },
    
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallButtons();
-      return this.parent();
-   },
-   
    //Properties
    getButtons: function() { return this.buttons; },
    getDescription: function() { return this.description; },
@@ -96,16 +77,26 @@ var ToolBarWidget = new Class({
    getName: function() { return this.name; },
    
    //Protected and private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructHtmlElements, this.constructButtons, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyButtons, this.destroyHtmlElements, this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+      
    constructButtons: function(){
       this.buttons.each( function( buttonEntry, index ){
          var toolBarButton = buttonEntry.getValue();
          toolBarButton.construct( this.listElement );
       }, this );
+      this.constructionChain.callChain();
    }.protect(),
    
    constructHtmlElements: function(){
       this.wrapperElement = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { id : this.name });
       this.listElement = this.elementFactory.create( 'ul', null, this.wrapperElement, WidgetElementFactory.Positions.LastChild, { 'class' : this.listStyle } );
+      this.constructionChain.callChain();
    }.protect(),
    
    destroyButtons: function(){
@@ -115,30 +106,33 @@ var ToolBarWidget = new Class({
       }, this );
       
       this.buttons.clear();
+      this.destructionChain.callChain();
    }.protect(),
    
-   destroyDividers: function(){
-      this.buttons.each( function( divider, index ) {
-         divider.destroy();
-      }, this );
-      
-      this.buttons.clear();
+   destroyHtmlElements: function(){
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      if( this.wrapperElement && this.wrapperElement.destroy ) this.wrapperElement.destroy();
+      this.destructionChain.callChain();
    }.protect(),
    
    unmarshallButtons: function(){
-      var buttonDefinitions = this.definitionXml.selectNodes( this.options.buttonsSelector );
+      var buttonDefinitions = this.dataXml.selectNodes( this.options.buttonsSelector );
       buttonDefinitions.each( function( buttonDefinition, index ){
-         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
+         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.options.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
          toolBarButton.unmarshall();
          this.buttons.put( toolBarButton.getName(), toolBarButton );
       }, this );
    }.protect(),
    
+   unmarshallComponents: function(){
+      this.unmarshallButtons();
+   }.protect(),
+   
    unmarshallProperties: function(){
-      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
-      this.listStyle = this.definitionXml.selectNodeText( this.options.listStyleSelector );
-      this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
-      this.showCaptions = parseBoolean( this.definitionXml.selectNodeText( this.options.showCaptionsSelector, null, false ));
+      this.parent();
+      this.description = this.dataXml.selectNodeText( this.options.descriptionSelector );
+      this.listStyle = this.dataXml.selectNodeText( this.options.listStyleSelector );
+      this.name = this.dataXml.selectNodeText( this.options.nameSelector );
    }.protect()
 
 });
