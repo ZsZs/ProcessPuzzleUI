@@ -40,9 +40,9 @@
 		
 		<wui:logging>
 			<wui:loggers>
-				<wui:logger name="WebUI" level="trace" isDefault="true"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="WebUI" level="trace"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
 				<wui:logger name="ProcessPuzzle" level="info"><wui:appenderReference name="xmlAjaxAppender"/></wui:logger>
-				<wui:logger name="LoggerForUnitTest" level="info"><wui:appenderReference name="formattedConsoleAppender"/></wui:logger>
+				<wui:logger name="LoggerForUnitTest" level="info" isDefault="true"><wui:appenderReference name="formattedConsoleAppender"/></wui:logger>
 			</wui:loggers>
 			
 			<wui:layouts>
@@ -78,7 +78,7 @@
                                reopenWhenClosed="true"
                                scrollToLatestMessage="true"
                                showCommandLine="true"
-                               threshold="trace"
+                               threshold="debug"
                                useDocumentWrite="false"
                                useOldPopUp="true"
                                width="800"/>
@@ -91,8 +91,7 @@
                                 threshold="trace"
                                 useDocumentWrite="true"
                                 width="800"/>
-				<wui:browserConsoleAppender name="formattedConsoleAppender"
-                                            layoutReference="formattedLayout"/>
+				<wui:browserConsoleAppender name="formattedConsoleAppender" layoutReference="formattedLayout"/>
 			</wui:appenders>			
 		</wui:logging>
 	</wui:webUI>

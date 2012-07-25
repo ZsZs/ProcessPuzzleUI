@@ -3,25 +3,27 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopConfiguration.xsd">
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
 	<name>ProcessPuzzle</name>
 	<version>1.0</version>
 	<description>This is full flagged desktop configuration.</description>
 	<containerId>desktopContainer</containerId>
-	<resources>
-		<styleSheets>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Content.css</styleSheet>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Core.css</styleSheet>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Dock.css</styleSheet>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Layout.css</styleSheet>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Panels.css</styleSheet>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Tabs.css</styleSheet>
-			<styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Window.css</styleSheet>
-		</styleSheets>
-		<images></images>
-		<javaScripts></javaScripts>
-	</resources>
+
+	<sd:resources>
+		<sd:styleSheets>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Content.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Core.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Dock.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Layout.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Panels.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Tabs.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/Window.css</sd:styleSheet>
+		</sd:styleSheets>
+		<sd:images></sd:images>
+		<sd:javaScripts></sd:javaScripts>
+	</sd:resources>
 	
 	<header documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopHeader.xml"/>
 	
@@ -55,18 +57,19 @@
 			<contentURL>../Desktop/Content/HelloWorldContent.html</contentURL>
          <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
             <plugin>
-               <resources>
-                  <styleSheets>
-                     <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentToolBar.css</styleSheet>
-                  </styleSheets>
-                  <javaScripts></javaScripts>
-               </resources>
-               <widget name="ToolBarWidget">
-                  <options>
-                     <option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
-                     <option name="widgetDefinitionURI" value="'../ToolBarWidget/ToolBarDefinition.xml'"/>
-                  </options>
-               </widget>
+               <sd:resources>
+                  <sd:styleSheets>
+                     <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentToolBar.css</sd:styleSheet>
+                  </sd:styleSheets>
+                  <sd:javaScripts></sd:javaScripts>
+               </sd:resources>
+               <sd:widget name="ToolBarWidget">
+                  <sd:options>
+                     <sd:option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
+                     <sd:option name="widgetDataURI" value="'../ToolBarWidget/ToolBarDefinition.xml'"/>
+                     <sd:option name="widgetDefinitionURI" value="'../ToolBarWidget/ToolBarWidgetDefinition.xml'"/>
+                  </sd:options>
+               </sd:widget>
             </plugin>
          </panelHeader>
 			<document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
@@ -79,18 +82,18 @@
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html" contentStyle="DocumentTabs">
             <plugin>
-               <resources>
-                  <styleSheets>
-                     <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentSelector.css</styleSheet>
-                  </styleSheets>
-                  <javaScripts></javaScripts>
-               </resources>
-               <widget name="TabWidget">
-                  <options>
-                     <option name="widgetContainerId" value="'console_headerToolbox'"/>
-                     <option name="widgetDefinitionURI" value="'../TabWidget/TabsDefinition.xml'"/>
-                  </options>
-               </widget>
+               <sd:resources>
+                  <sd:styleSheets>
+                     <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentSelector.css</sd:styleSheet>
+                  </sd:styleSheets>
+               </sd:resources>
+               <sd:widget name="TabWidget">
+                  <sd:options>
+                     <sd:option name="widgetContainerId" value="'console_headerToolbox'"/>
+                     <sd:option name="widgetDataURI" value="'../TabWidget/TabsDefinition.xml'"/>
+                     <sd:option name="widgetDefinitionURI" value="'../TabWidget/TabWidgetDefinition.xml'"/>
+                  </sd:options>
+               </sd:widget>
             </plugin>
          </panelHeader>
 		</panel>
@@ -98,11 +101,11 @@
 		<panel name="eventsPanel" columnReference="mainColumn" showHeader="true">
          <title>DesktopConfigurator.Panel.eventsTitle</title>
          <plugin>
-            <widget name="PartyEventWidget">
-               <options>
-                  <option name="widgetContainerId" value="'UpcommingEvents'"/>
-               </options>
-            </widget>
+            <sd:widget name="PartyEventWidget">
+               <sd:options>
+                  <sd:option name="widgetContainerId" value="'UpcommingEvents'"/>
+               </sd:options>
+            </sd:widget>
          </plugin>
 		</panel>
 		
@@ -110,20 +113,20 @@
          <title>DesktopConfigurator.Panel.newsTitle</title>
          <contentURL>../Desktop/NewsPanel.html</contentURL>
          <plugin>
-            <resources>
-               <styleSheets>
-                  <styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/NewsPanel.css</styleSheet>
-               </styleSheets>
-            </resources>
-            <widget name="NewsReaderWidget">
-               <options>
-                  <option name="widgetContainerId" value="'TopNews'"/>
-                  <option name="widgetDataURI" value="'../NewsReaderWidget/TestNews.xml'"/>
-                  <option name="widgetDefinitionURI" value="'../NewsReaderWidget/NewsReaderDefinition.xml'"/>
-                  <option name="componentName" value="'NewsReaderWidget'"/>
-                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
-               </options>
-            </widget>
+            <sd:resources>
+               <sd:styleSheets>
+                  <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/NewsPanel.css</sd:styleSheet>
+               </sd:styleSheets>
+            </sd:resources>
+            <sd:widget name="NewsReaderWidget">
+               <sd:options>
+                  <sd:option name="widgetContainerId" value="'TopNews'"/>
+                  <sd:option name="widgetDataURI" value="'../NewsReaderWidget/TestNews.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'../NewsReaderWidget/NewsReaderDefinition.xml'"/>
+                  <sd:option name="componentName" value="'NewsReaderWidget'"/>
+                  <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+               </sd:options>
+            </sd:widget>
          </plugin>
       </panel>
       

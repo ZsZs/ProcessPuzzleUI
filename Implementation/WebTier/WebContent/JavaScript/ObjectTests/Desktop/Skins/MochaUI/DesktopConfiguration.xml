@@ -2,7 +2,8 @@
 <desktopConfiguration 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns="http://www.processpuzzle.com/DesktopConfiguration"
+   xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
    xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
 	<name>MochaUI Desktop</name>
@@ -10,19 +11,19 @@
 	<description>This is full flagged desktop configuration.</description>
    <containerId>desktopContainer</containerId>
 
-	<resources>
-		<styleSheets>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Core.css</styleSheet>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Content.css</styleSheet>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Dock.css</styleSheet>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Layout.css</styleSheet>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Panels.css</styleSheet>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Tabs.css</styleSheet>
-			<styleSheet>../Desktop/Skins/MochaUI/Styles/Window.css</styleSheet>
-		</styleSheets>
-		<images></images>
-		<javaScripts></javaScripts>
-	</resources>
+	<sd:resources>
+		<sd:styleSheets>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Core.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Content.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Dock.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Layout.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Panels.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Tabs.css</sd:styleSheet>
+			<sd:styleSheet>../Desktop/Skins/MochaUI/Styles/Window.css</sd:styleSheet>
+		</sd:styleSheets>
+		<sd:images></sd:images>
+		<sd:javaScripts></sd:javaScripts>
+	</sd:resources>
 	
    <header documentDefinition="../Desktop/Skins/MochaUI/DesktopHeader.xml"/>
 	

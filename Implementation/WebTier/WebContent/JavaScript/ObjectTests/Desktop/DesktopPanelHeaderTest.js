@@ -1,6 +1,6 @@
 window.DesktopPanelHeaderTest = new Class({
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onHeaderConstructed', 'onHeaderConstructionError'],
+   Binds : ['onHeaderConstructed', 'onHeaderConstructionError', 'onHeaderDestructed'],
 
    options : {
       testMethods : [
@@ -35,11 +35,16 @@ window.DesktopPanelHeaderTest = new Class({
       this.messageBus = new WebUIMessageBus();
       this.desktopConfiguration = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI );
       this.panelHeaderDefinition = this.desktopConfiguration.selectNode( this.constants.PANEL_HEADER_SELECTOR );
-      this.panelHeader = new DesktopPanelHeader( this.panelHeaderDefinition, this.bundle, { onHeaderConstructed : this.onHeaderConstructed, onHeaderConstructionError : this.onHeaderConstructionError } );
+      this.panelHeader = new DesktopPanelHeader( this.panelHeaderDefinition, this.bundle, {
+         componentContainerId : "console_header",
+         onConstructed : this.onHeaderConstructed, 
+         onDestructed : this.onHeaderDestructed, 
+         onError : this.onHeaderConstructionError
+      });
    },
    
    afterEachTest : function (){
-      if( this.panelHeader.getState() > DesktopPanelHeader.States.INITIALIZED ) this.panelHeader.destroy();
+      if( this.panelHeader.getState() > DesktopElement.States.INITIALIZED ) this.panelHeader.destroy();
       this.componentStateManager.reset();
       this.messageBus.tearDown();
       this.panelHeader = null;
@@ -48,12 +53,12 @@ window.DesktopPanelHeaderTest = new Class({
    initialize_setsState : function() {
       assertThat( this.panelHeader, not( nil() ));
       assertThat( this.panelHeader.getDefinitionElement(), not( nil() ));
-      assertThat( this.panelHeader.getState(), equalTo( DesktopPanelHeader.States.INITIALIZED ));
+      assertThat( this.panelHeader.getState(), equalTo( DesktopElement.States.INITIALIZED ));
    },
    
    unmarshall_determinesHeaderProperties : function() {
       this.panelHeader.unmarshall();
-      assertThat( this.panelHeader.getState(), equalTo( DesktopPanelHeader.States.UNMARSHALLED ));
+      assertThat( this.panelHeader.getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       assertThat( this.panelHeader.getPlugin(), not( nil() ));
       assertThat( this.panelHeader.getContentStyle(), equalTo( this.desktopConfiguration.selectNodeText( this.constants.PANEL_HEADER_SELECTOR + "/@contentStyle" )));
       assertThat( this.panelHeader.getToolBoxUrl(), equalTo( this.desktopConfiguration.selectNodeText( this.constants.PANEL_HEADER_SELECTOR + "/@toolBoxUrl" )));
@@ -63,11 +68,11 @@ window.DesktopPanelHeaderTest = new Class({
       this.testCaseChain.chain(
          function(){
             this.panelHeader.unmarshall();
-            this.panelHeader.construct($( "console_header" ));
+            this.panelHeader.construct();
          }.bind( this ),
          function(){
-            assertThat( this.panelHeader.getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ));
-            assertThat( this.panelHeader.getPlugin().getState(), equalTo( DocumentPlugin.States.CONSTRUCTED ));
+            assertThat( this.panelHeader.getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
+            assertThat( this.panelHeader.getPlugin().getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -77,7 +82,7 @@ window.DesktopPanelHeaderTest = new Class({
       this.testCaseChain.chain(
          function(){
             this.panelHeader.unmarshall();
-            this.panelHeader.construct($( "console_header" ));
+            this.panelHeader.construct();
          }.bind( this ),
          function(){
             assertThat( $( "console_headerContent" ).hasClass( this.panelHeader.getContentStyle() ), is( true ));
@@ -92,6 +97,10 @@ window.DesktopPanelHeaderTest = new Class({
    
    onHeaderConstructionError : function( error ){
       this.testCaseChain.callChain();
-   }
+   },
 
+   onHeaderDestructed : function(){
+      this.testCaseChain.callChain();
+   }
+   
 });
