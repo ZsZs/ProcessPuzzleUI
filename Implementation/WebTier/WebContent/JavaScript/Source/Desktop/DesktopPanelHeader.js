@@ -28,8 +28,8 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var DesktopPanelHeader = new Class({
-   Implements: [Events, Options],
-   Binds: ['construct', 'onPluginConstructed', 'onPluginConstructionError'],   
+   Extends: DesktopElement,
+   Binds: ['addContentStyle', 'constructPlugin', 'destroyPlugin', 'onPluginConstructed', 'onPluginConstructionError'],   
    
    options: {
       componentName : "DesktopPanelHeader",
@@ -45,79 +45,73 @@ var DesktopPanelHeader = new Class({
    
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
-      this.setOptions( options );
+      this.parent( definitionElement, internationalization, options );
       
       this.contentStyle;
-      this.contextElement;
-      this.definitionElement = definitionElement;
-      this.error = false;
-      this.internationalization = internationalization;
-      this.logger = Class.getInstanceOf( WebUILogger );
       this.plugin;
-      this.state = DesktopPanelHeader.States.INITIALIZED;
       this.toolBox = null;
       this.toolBoxOnLoad = null;
       this.toolBoxUrl = this.options.toolboxContent;
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.contextElement = contextElement;
-      this.constructPlugin();
-      this.addContentStyle();
-   },
-   
-   destroy: function(){
-      if( this.plugin ) this.plugin.destroy();
-   },
-   
    onPluginConstructed : function(){
-      this.state = DesktopPanelHeader.States.CONSTRUCTED;      
-      this.fireEvent( 'headerConstructed', this );
+      this.constructionChain.callChain();
    },
    
-   onPluginConstructionError: function(){
-      this.error = true;
-      this.revertConstruction();
-      this.state = DesktopPanelHeader.States.INITIALIZED;
-      this.fireEvent( 'headerConstructionError', this );
+   onPluginConstructionError: function( error ){
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
-      this.contentStyle = XmlResource.selectNodeText( this.options.contentStyleSelector, this.definitionElement );
-      this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
-      if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
-      var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
-      if( pluginDefinition ){
-         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginConstructionError });
-         this.plugin.unmarshall();
-      }
-      this.state = DesktopPanelHeader.States.UNMARSHALLED;      
+      this.unmarshallProperties();
+      this.unmarshallPlugin();
+      this.parent();
    },
 
    //Properties
    getContentStyle: function() { return this.contentStyle; },
-   getDefinitionElement: function() { return this.definitionElement; },
    getHeaderToolBox: function() { return this.plugin != null; },
    getPlugin: function() { return this.plugin; },
-   getState: function() { return this.state; },
    getToolBoxUrl: function() { return this.toolBoxUrl; },
    
    //Protected, private helper methods
    addContentStyle: function(){
       if( this.contentStyle ){
-         this.contextElement.getElementById( this.contextElement.get( 'id' ) + "Content" ).addClass( this.contentStyle );
+         this.containerElement.getElementById( this.containerElement.get( 'id' ) + "Content" ).addClass( this.contentStyle );
       }
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructPlugin, this.addContentStyle, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyPlugin, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
    }.protect(),
    
    constructPlugin: function(){
-      if( this.plugin ) this.plugin.construct();
+      if( this.plugin ) this.plugin.construct( this.containerElement );
       else this.onPluginConstructed();
    }.protect(),
    
-   revertConstruction: function(){
+   destroyPlugin: function(){
       if( this.plugin ) this.plugin.destroy();
-   }
-});
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   unmarshallPlugin: function(){
+      var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
+      if( pluginDefinition ){
+         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginConstructionError });
+         this.plugin.unmarshall();
+      }
+   }.protect(),
 
-DesktopPanelHeader.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
+   unmarshallProperties: function(){
+      this.contentStyle = XmlResource.selectNodeText( this.options.contentStyleSelector, this.definitionElement );
+      this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
+      if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
+   }.protect(),
+});

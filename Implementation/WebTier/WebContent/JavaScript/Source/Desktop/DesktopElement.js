@@ -28,14 +28,14 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var DesktopElement = new Class({
-   Implements: [Events, Options, TimeOutBehaviour],
+   Implements: [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds: ['checkTimeOut', 'constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
    
    options: {
       componentContainerId: "desktop",
       componentName: "DesktopElement",
       defaultTag : "div",
-      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration', xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       eventFireDelay : 2,
       idSelector : "@id",
       tagSelector : "@tag",
@@ -81,6 +81,7 @@ var DesktopElement = new Class({
    
    onConstructionError: function( error ){
       this.error = error;
+      this.logger.error( this.error.getMessage() );
       this.revertConstruction();
    },
    
@@ -160,9 +161,12 @@ var DesktopElement = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( exception ){
+      this.error = exception;
       this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
       this.state = DesktopElement.States.INITIALIZED;
+      this.logger.error( this.error.getMessage() );
       this.fireEvent( 'error', this.error );
    }.protect(),
    
@@ -177,8 +181,7 @@ var DesktopElement = new Class({
    }.protect(),
    
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallElementProperties: function(){
