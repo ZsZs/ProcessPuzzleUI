@@ -28,10 +28,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
+//= require ../SmartDocument/DocumentElement.js
 
 var DocumentPlugin = new Class({
-   Implements: [Events, Options],
-   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed', 'onWidgetError'],   
+   Extends: DocumentElement,
+   Binds: ['destroyWidget', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed', 'onWidgetError', 'releaseResources'],   
    
    options: {
       componentName : "DocumentPlugin",
@@ -43,91 +44,63 @@ var DocumentPlugin = new Class({
    
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
-      this.setOptions( options );
+      this.parent( definitionElement, internationalization, options );
 
       //Protected, private variables
-      this.constructChain = new Chain();
-      this.definitionElement = definitionElement;
-      this.error = null;
-      this.internationalization = internationalization;
-      this.logger = Class.getInstanceOf( WebUILogger );
       this.name;
-      this.onLoad;
       this.resources;
-      this.state = DocumentPlugin.States.INITIALIZED;
       this.widget;
       this.widgetName;
       this.widgetOptions;
-      
-      this.constructChain.chain( this.loadResources, this.instantiateWidget, this.finalizeConstruction );
    },
    
    //Public mutators and accessor methods
-   construct: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
-      this.constructChain.callChain();
-   },
-   
-   destroy: function(){
-      if( this.resources ) this.resources.release();
-      if( this.widget && this.widget.destroy && typeOf( this.widget.destroy ) == 'function' ) this.widget.destroy();
-      this.state = DocumentPlugin.States.INITIALIZED;
-   },
-   
-   loadResources: function(){
-      if( this.resources ) this.resources.load();
-      else this.constructChain.callChain();
-   },
-   
    onResourceError: function( error ){
-      this.error = error;
+      this.revertConstruction( error );
    },
    
    onResourcesLoaded: function(){
       if( this.resources.isSuccess() ){
-         this.state = DocumentPlugin.States.LOADED;
          this.fireEvent( 'resourcesLoaded', this );
-         this.constructChain.callChain();
+         this.constructionChain.callChain();
       }else {
-         this.constructChain.clearChain();
-         this.resources.release();
-         this.fireEvent( 'constructionError', this.error );
+         this.error = new WebUIException({ description : "Loading plugin resources failed." });
+         this.revertConstruction( this.error );
       }
    },
    
    onWidgetConstructed: function(){
-      this.constructChain.callChain();
+      this.constructionChain.callChain();
    },
    
    onWidgetError: function( error ){
-      this.error = error;
-      this.constructChain.clearChain();
-      this.fireEvent( 'constructionError', this.error );
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
-      this.unmarshallProperties();
       this.unmarshallResources();
       this.unmarshallWidget();
-      this.state = DocumentPlugin.States.UNMARSHALLED;
+      this.parent();
    },
 
    //Properties
-   getDefinitionElement: function() { return this.definitionElement; },
-   getError: function() { return this.error; },
-   getOnLoad: function() { return this.onLoad; },
    getResources: function() { return this.resources; },
-   getState: function() { return this.state; },
    getWidget: function() { return this.widget; },
    getWidgetName: function() { return this.widgetName; },
    getWidgetOptions: function() { return this.widgetOptions; },
-   isSuccess: function() { return this.error == null; },
 
    //Protected, pirvated helper methods
-   finalizeConstruction: function(){
-      this.constructChain.clearChain();
-      this.state = DocumentPlugin.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this );
+   compileConstructionChain : function(){
+      this.constructionChain.chain( this.loadResources, this.instantiateWidget, this.authorization, this.associateEditor, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.releaseResources, this.destroyWidget, this.detachEditor, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyWidget: function(){
+      if( this.widget && this.widget.destroy && typeOf( this.widget.destroy ) == 'function' ) this.widget.destroy();
+      this.destructionChain.callChain();
    }.protect(),
    
    instantiateWidget: function(){
@@ -135,13 +108,23 @@ var DocumentPlugin = new Class({
          try{
             var widgetClass = eval( this.widgetName );
             var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onError : this.onWidgetError } );
-            this.widget = new widgetClass( mergedOptions, this.internationalization );
+            this.widget = new widgetClass( mergedOptions, this.resourceBundle );
             this.widget.unmarshall();
             this.widget.construct();
          }catch( exception ){
             this.onWidgetError( exception );
          }
       }else this.onWidgetConstructed();
+   }.protect(),
+   
+   loadResources: function(){
+      if( this.resources ) this.resources.load();
+      else this.constructionChain.callChain();
+   }.protect(),
+   
+   releaseResources: function(){
+      if( this.resources ) this.resources.release();
+      this.destructionChain.callChain();
    }.protect(),
    
    unmarshallOptions: function(){
@@ -155,6 +138,7 @@ var DocumentPlugin = new Class({
    
    unmarshallProperties: function(){
       this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionElement );
+      this.parent();
    }.protect(),
    
    unmarshallResources: function() {
@@ -171,4 +155,4 @@ var DocumentPlugin = new Class({
    }
 });
 
-DocumentPlugin.States = { INITIALIZED : 0, UNMARSHALLED : 1, LOADED : 2, CONSTRUCTED : 3 };
+//DocumentPlugin.States = { INITIALIZED : 0, UNMARSHALLED : 1, LOADED : 2, CONSTRUCTED : 3 };

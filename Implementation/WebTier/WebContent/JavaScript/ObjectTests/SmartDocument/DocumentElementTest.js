@@ -113,7 +113,7 @@ window.DocumentElementTest = new Class( {
    unmarshall_whenPluginIsSpecified_instantiatesAndUnmarshallsPluginObject : function() {
       this.documentElementWithPlugin.unmarshall();
       assertThat( this.documentElementWithPlugin.getPlugin(), not( nil() ));
-      assertThat( this.documentElementWithPlugin.getPlugin().getState(), equalTo( DocumentPlugin.States.UNMARSHALLED ));
+      assertThat( this.documentElementWithPlugin.getPlugin().getState(), equalTo( DocumentElement.States.UNMARSHALLED ));
    },
    
    construct_setsStatusToConstructed : function() {

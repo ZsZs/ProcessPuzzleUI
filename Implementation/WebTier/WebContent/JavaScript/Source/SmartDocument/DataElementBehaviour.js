@@ -36,7 +36,9 @@ var DataElementBehaviour = new Class({
       indexVariableSelector : "@indexVariable",
       maxOccuresSelector : "@maxOccures",
       minOccuresSelector : "@minOccures",
+      notAvailableText : "N/A",
       overwriteElementReference : true,
+      relaxedBinding : true,
       sourceSelector : "@source",
       variables : { index : "'*'" }
    },
@@ -119,6 +121,8 @@ var DataElementBehaviour = new Class({
       }, this );
       
       this.numberOfConstructedSiblings = 0;
+
+      this.destructionChain.callChain();
    }.protect(),
    
    initializeBindVariables : function(){
@@ -174,6 +178,9 @@ var DataElementBehaviour = new Class({
          }
       
          if( this.text ) this.text.trim();
+         else if( this.options.relaxedBinding ) this.text = this.options.notAvailableText;
+         else throw new InvalidBindingException( this.id, this.bind );
+         
          if( href && this.options.overwriteElementReference ) this.reference = href;
       }      
       this.constructionChain.callChain();

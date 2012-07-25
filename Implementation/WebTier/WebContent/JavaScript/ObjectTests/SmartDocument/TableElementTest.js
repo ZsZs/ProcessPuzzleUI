@@ -65,7 +65,7 @@ window.TableElementTest = new Class( {
       this.tableElement.unmarshall();
       
       //VERIFY:
-      assertThat( this.tableElement.getDataElementsNumber(), equalTo( this.documentContentResource.selectNodes( "/rss/channel/item" ).length ));
+      assertThat( this.tableElement.getDataElementsNumber(), equalTo( this.documentContentResource.selectNodes( "/pn:rss/pn:channel/pn:item" ).length ));
    },
    
    unmarshall_instantiatesAndUnmarshallsTableHeader : function() {

@@ -28,8 +28,21 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var DocumentElement = new Class({
-   Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['associateEditor', 'authorization', 'checkTimeOut', 'createHtmlElement', 'constructPlugin', 'finalizeConstruction', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
+   Implements: [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds: [
+      'associateEditor', 
+      'authorization', 
+      'checkTimeOut', 
+      'createHtmlElement', 
+      'constructPlugin',
+      'destroyHtmlElements',
+      'destroyPlugin',
+      'detachEditor',
+      'finalizeConstruction', 
+      'finalizeDestruction',
+      'injectHtmlElement', 
+      'onPluginConstructed', 
+      'onPluginError'],   
    
    options: {
       componentName : "DocumentElement",
@@ -58,6 +71,7 @@ var DocumentElement = new Class({
       
       this.constructionChain = new Chain();
       this.contextElement;
+      this.destructionChain = new Chain();
       this.editable;
       this.editor;
       this.elementFactory;
@@ -87,18 +101,15 @@ var DocumentElement = new Class({
       this.elementFactory = new WidgetElementFactory( contextElement, this.resourceBundle );
       this.startTimeOutTimer( 'construct' );
       this.compileConstructionChain();
-      this.constructionChain.callChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }
    },
    
    destroy: function(){
       if( this.status == DocumentElement.States.INITIALIZED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
-
-      if( this.plugin ) this.plugin.destroy();
-      if( this.status == DocumentElement.States.CONSTRUCTED ) this.deleteHtmlElement();
-      if( this.status <= DocumentElement.States.CONSTRUCTED )this.resetProperties();
-      if( this.editor ) this.editor.detach();
-      this.error = null;
-      this.status = DocumentElement.States.INITIALIZED;
+      this.compileDestructionChain();
+      this.destructionChain.callChain();      
    },
    
    onPluginConstructed: function(){
@@ -106,8 +117,7 @@ var DocumentElement = new Class({
    },
    
    onPluginError: function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    },
    
    unmarshall: function(){
@@ -120,6 +130,7 @@ var DocumentElement = new Class({
    getDefinitionElement: function() { return this.definitionElement; },
    getBind: function() { return this.bind; },
    getEditor: function() { return this.editor; },
+   getError: function() { return this.error; },
    getHtmlElement: function() { return this.htmlElement; },
    getId: function() { return this.id; },
    getPlugin: function() { return this.plugin; },
@@ -153,8 +164,12 @@ var DocumentElement = new Class({
       this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.constructPlugin, this.authorization, this.associateEditor, this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
+   }.protect(),
+   
    constructPlugin: function(){
-      if( this.plugin ){ this.plugin.construct();
+      if( this.plugin ){ this.plugin.construct( this.contextElement );
       }else this.constructionChain.callChain();
    }.protect(),
    
@@ -189,12 +204,35 @@ var DocumentElement = new Class({
       if( attributeNode ) return attributeNode.value;
       else return defaultValue;
    }.protect(),
+   
+   destroyHtmlElements: function(){
+      if( this.status == DocumentElement.States.CONSTRUCTED ) this.deleteHtmlElement();
+      if( this.status <= DocumentElement.States.CONSTRUCTED )this.resetProperties();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyPlugin: function(){
+      if( this.plugin ) this.plugin.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   detachEditor: function(){
+      if( this.editor ) this.editor.detach();
+      this.destructionChain.callChain();
+   }.protect(),
       
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
       this.status = DocumentElement.States.CONSTRUCTED;
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this, this.options.eventFireDelay );
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.error = null;
+      this.destructionChain.clearChain();
+      this.status = DocumentElement.States.INITIALIZED;
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay );
    }.protect(),
    
    injectHtmlElement: function(){
@@ -211,18 +249,19 @@ var DocumentElement = new Class({
       this.text = null;
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( exception ){
+      this.error = exception;
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
-      if( this.plugin ) this.plugin.destroy();
+      if( this.plugin && this.plugin.getState() > DocumentElement.States.INITIALIZED ) this.plugin.destroy();
       this.deleteHtmlElement();
       this.status = DocumentElement.States.INITIALIZED;
+      this.logger.error( this.error.getMessage() );
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallId: function(){

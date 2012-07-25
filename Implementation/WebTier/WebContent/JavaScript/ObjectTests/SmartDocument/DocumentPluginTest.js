@@ -59,13 +59,13 @@ window.DocumentPluginTest = new Class( {
    afterEachTest : function (){
    	this.documentDefinition.release();
    	this.erroneousDocumentDefinition.release();
-   	this.plugin.destroy();
+   	if( this.plugin.getState() > DocumentElement.States.INITIALIZED ) this.plugin.destroy();
    	this.desktopContainerElement = null;
    	this.loadCallbackWasCalled = false;
    },
    
    initialize_setsState : function() {
-      assertThat( this.plugin.getState(), equalTo( DocumentPlugin.States.INITIALIZED ));
+      assertThat( this.plugin.getState(), equalTo( DocumentElement.States.INITIALIZED ));
    },
    
    unmarshall_determinesResources : function() {
@@ -85,13 +85,13 @@ window.DocumentPluginTest = new Class( {
       this.testCaseChain.chain(
          function(){
             this.plugin.unmarshall();
-            this.plugin.construct();
+            this.plugin.construct( this.desktopContainerElement );
          }.bind( this ),
          function(){
             assertThat( this.plugin.getResources().getResources().size(), equalTo( this.documentDefinition.selectNodes( this.constants.RESOURCE_ITEMS_SELECTOR ).length ));
          }.bind( this ),         
          function(){
-            assertThat( this.plugin.getState(), equalTo( DocumentPlugin.States.CONSTRUCTED ));
+            assertThat( this.plugin.getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -99,7 +99,7 @@ window.DocumentPluginTest = new Class( {
    
    construct_instantiatesWidget : function() {
       this.testCaseChain.chain(
-         function(){ this.plugin.unmarshall(); this.plugin.construct(); }.bind( this ),
+         function(){ this.plugin.unmarshall(); this.plugin.construct( this.desktopContainerElement ); }.bind( this ),
          function(){ /* wait for 'onResourcesLoaded' event */ },
          function(){
             assertThat( this.plugin.getWidget(), not( nil() ));
@@ -114,7 +114,7 @@ window.DocumentPluginTest = new Class( {
             var pluginDefinitionElement = this.erroneousDocumentDefinition.selectNode( this.constants.PLUGIN_DEFINITION_ELEMENT );
             this.plugin = new DocumentPlugin( pluginDefinitionElement, this.internationalization, { onResourcesLoaded : this.onResourcesLoaded, onConstructed : this.onConstructed, onConstructionError : this.onConstructionError } );
             this.plugin.unmarshall();
-            this.plugin.construct();
+            this.plugin.construct( this.desktopContainerElement );
          }.bind( this ),
          function(){
             assertThat( this.plugin.isSuccess(), is( false ));
@@ -130,7 +130,7 @@ window.DocumentPluginTest = new Class( {
             var pluginDefinitionElement = this.erroneousDocumentDefinition.selectNode( this.constants.ERRONEOUS_PLUGIN_DEFINITION_ELEMENT );
             this.plugin = new DocumentPlugin( pluginDefinitionElement, this.internationalization, { onResourcesLoaded : this.onResourcesLoaded, onConstructed : this.onConstructed, onConstructionError : this.onConstructionError } );
             this.plugin.unmarshall();
-            this.plugin.construct();
+            this.plugin.construct( this.desktopContainerElement );
          }.bind( this ),
          function(){
             assertThat( this.plugin.isSuccess(), is( false ));
@@ -144,7 +144,7 @@ window.DocumentPluginTest = new Class( {
       this.testCaseChain.chain(
          function(){
             this.plugin.unmarshall();
-            this.plugin.construct();
+            this.plugin.construct( this.desktopContainerElement );
          }.bind( this ),
          function(){ /* wait for 'onResourcesLoaded' event */ },
          function(){

@@ -32,7 +32,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDataElement = new Class({
    Extends: CompositeDocumentElement,
-   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
+   Binds: ['constructSiblings', 'destroySiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -53,17 +53,6 @@ var CompositeDataElement = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.contextElement = contextElement;
-      this.where = where;
-      this.parent( contextElement, where );
-   },
-   
-   destroy: function(){
-      this.destroySiblings();
-      this.parent();
-   },
-   
    unmarshall: function(){
       this.unmarshallDataBehaviour();
       this.parent();
@@ -84,6 +73,10 @@ var CompositeDataElement = new Class({
          this.constructSiblings,
          this.finalizeConstruction 
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroySiblings, this.destroyNestedElements, this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
    }.protect()
    
 });

@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DataElement = new Class({
    Extends: DocumentElement,
-   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
+   Binds: ['constructSiblings', 'destroySiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -48,16 +48,6 @@ var DataElement = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.parent( contextElement, where );
-   },
-   
-   destroy: function(){
-      this.destroySiblings();
-      this.parent();
-      this.numberOfConstructedSiblings = 0;
-   },
-   
    unmarshall: function(){
       this.unmarshallDataBehaviour();
       this.parent();
@@ -77,6 +67,10 @@ var DataElement = new Class({
          this.constructSiblings, 
          this.finalizeConstruction 
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroySiblings, this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
    }.protect(),
    
    injectHtmlElement: function(){

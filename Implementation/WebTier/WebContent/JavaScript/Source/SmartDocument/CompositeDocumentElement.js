@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDocumentElement = new Class({
    Extends: DocumentElement,
-   Binds: ['constructNestedElements', 'onNestedElementConstructed', 'onNestedElementConstructionError'],
+   Binds: ['constructNestedElements', 'destroyNestedElements', 'onNestedElementConstructed', 'onNestedElementConstructionError'],
    
    options: {
       componentName : "CompositeDocumentElement",
@@ -50,28 +50,13 @@ var CompositeDocumentElement = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.parent( contextElement, where );
-   },
-   
-   destroy: function(){
-      this.elements.each( function( elementsEntry, index ){
-         var nestedElement = elementsEntry.getValue();
-         if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
-      }, this );
-      this.numberOfConstructedNestedElements = 0;
-      this.parent();
-   },
-   
    onNestedElementConstructed: function( nestedElement ){
       this.numberOfConstructedNestedElements++;
       this.nestedElementsConstructionChain.callChain();
    },
    
    onNestedElementConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
-      this.fireEvent( 'constructionError', this.error );
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
@@ -101,6 +86,10 @@ var CompositeDocumentElement = new Class({
       );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyNestedElements, this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
+   }.protect(),
+   
    constructNestedElements: function( contextElement ){
       if( contextElement ) this.nestedElementsContext = contextElement;
       else this.nestedElementsContext = this.htmlElement;
@@ -125,20 +114,29 @@ var CompositeDocumentElement = new Class({
       }else this.constructionChain.callChain();
    }.protect(),
    
+   destroyNestedElements: function(){
+      this.elements.each( function( elementsEntry, index ){
+         var nestedElement = elementsEntry.getValue();
+         if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
+      }, this );
+      this.numberOfConstructedNestedElements = 0;
+      this.destructionChain.callChain();
+   }.protect(),
+   
    instantiateDocumentElement: function( elementDefinition ){
       var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
       if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
       return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( error ){
       this.elements.each( function( elementsEntry, index ){
          var nestedElement = elementsEntry.getValue();
          if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
       }, this );
       this.elements.clear();
       this.numberOfConstructedNestedElements = 0;
-      this.parent();
+      this.parent( error );
    }.protect(),
    
    unmarshallNestedElement: function( subElementDefinition, options ){

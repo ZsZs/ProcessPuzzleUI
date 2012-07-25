@@ -99,7 +99,7 @@ window.CompositeDocumentElementTest = new Class( {
          function(){ this.compositeElementWithPlugin.unmarshall(); this.compositeElementWithPlugin.construct( this.documentContainerElement, 'bottom' ); }.bind( this ),
          function(){
             assertThat( this.compositeElementWithPlugin.getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
-            assertThat( this.compositeElementWithPlugin.getElements().get( "languageSelector" ).getPlugin().getState(), equalTo( DocumentPlugin.States.CONSTRUCTED ));
+            assertThat( this.compositeElementWithPlugin.getElements().get( "languageSelector" ).getPlugin().getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

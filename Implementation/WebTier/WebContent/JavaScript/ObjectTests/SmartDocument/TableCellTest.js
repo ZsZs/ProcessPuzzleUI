@@ -37,11 +37,15 @@ window.TableCellTest = new Class( {
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-      this.cellData = this.documentContentResource.selectNode( "/rss/channel/item[1]/title" );
+      this.cellData = this.documentContentResource.selectNode( "/pn:rss/pn:channel/pn:item[1]/pn:title" );
       
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
       this.elementDefinition = this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_SELECTOR );
-      this.tableCell = new TableCell( this.elementDefinition, this.bundle, this.cellData, { onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });
+      this.tableCell = new TableCell( this.elementDefinition, this.bundle, this.cellData, { 
+         onConstructed : this.onConstructed, 
+         onConstructionError : this.onConstructionError,
+         relaxedBinding : false
+      });
       this.documentContainerElement = $( this.constants.DOCUMENT_CONTAINER_ID );
    },
    

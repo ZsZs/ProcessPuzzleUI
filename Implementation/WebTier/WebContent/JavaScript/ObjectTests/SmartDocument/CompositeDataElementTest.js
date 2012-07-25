@@ -60,7 +60,7 @@ window.CompositeDataElementTest = new Class( {
    
    unmarshall_whenMaxOccuresIsGiven_instantiatesSiblingElements : function() {
       this.compositeDataElement.unmarshall();
-      assertThat( this.compositeDataElement.getSiblings().size(), equalTo( this.documentContentResource.selectNodes( "/rss/channel/item" ).length -1 ));
+      assertThat( this.compositeDataElement.getSiblings().size(), equalTo( this.documentContentResource.selectNodes( "/pn:rss/pn:channel/pn:item" ).length -1 ));
    },
    
    construct_whenMaxOccuresIsGiven_constructsSiblingElements : function() {
@@ -70,7 +70,7 @@ window.CompositeDataElementTest = new Class( {
             this.compositeDataElement.construct( this.documentContainerElement, 'bottom' );
          }.bind( this ),
          function(){
-            assertThat( this.documentContainerElement.getChildren( 'ul' ).length, equalTo( this.documentContentResource.selectNodes( "/rss/channel/item" ).length ));
+            assertThat( this.documentContainerElement.getChildren( 'ul' ).length, equalTo( this.documentContentResource.selectNodes( "/pn:rss/pn:channel/pn:item" ).length ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
