@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pe:eventList 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns="http://www.w3.org/1999/xhtml" 
    xmlns:pe="http://www.processpuzzle.com/PartyEvent"
    xsi:schemaLocation="http://www.processpuzzle.com/PartyEvent http://processpuzzle.com/Schemas/PartyEvent.xsd">
