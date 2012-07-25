@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Photo Galery Document</name>
-   <description>Demonstrates Photo Galery widget embeded into a Smart Document.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Photo Galery Document</sd:name>
+   <sd:description>Demonstrates Photo Galery widget embeded into a Smart Document.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="photoGaleryDocumentHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h1">PhotoGaleryDocument.title</element>
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="photoGaleryDocumentHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h1">PhotoGaleryDocument.title</sd:element>
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="smartDocumentBody">
-      <element tag="p">PhotoGaleryDocument.paragraph</element>
-      <element tag="div" id="PhotoGaleryContainer" elementStyle="slideshow">
-      </element>
-   </documentBody>
+   <sd:documentBody tag="div" id="smartDocumentBody">
+      <sd:element tag="p">PhotoGaleryDocument.paragraph</sd:element>
+      <sd:element tag="div" id="PhotoGaleryContainer" elementStyle="slideshow"></sd:element>
+   </sd:documentBody>
    
-   <documentFooter tag="div" id="photoGaleryDocumentFooter">
-      <compositeElement tag="div" id="footerWrapper">
-         <element tag="h3">PhotoGaleryDocument.footer</element>
-      </compositeElement>
-   </documentFooter>
-</smartDocumentDefinition>
+   <sd:documentFooter tag="div" id="photoGaleryDocumentFooter">
+      <sd:compositeElement tag="div" id="footerWrapper">
+         <sd:element tag="h3">PhotoGaleryDocument.footer</sd:element>
+      </sd:compositeElement>
+   </sd:documentFooter>
+</sd:smartDocumentDefinition>

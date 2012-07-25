@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Diagram Widget Document</name>
-   <description>Demonstrates Diagram widget embeded into a Smart Document.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Diagram Widget Document</sd:name>
+   <sd:description>Demonstrates Diagram widget embeded into a Smart Document.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="photoGaleryDocumentHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h1">DiagramDocument.title</element>
-         <element tag="h2">DiagramDocument.subTitle</element>
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="photoGaleryDocumentHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h1">DiagramDocument.title</sd:element>
+         <sd:element tag="h2">DiagramDocument.subTitle</sd:element>
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="smartDocumentBody">
-      <element tag="p">DiagramDocument.introduction</element>
-      <element tag="p">DiagramDocument.exampleDescription</element>
-      <element tag="div" id="DiagramContainer" elementStyle="slideshow">
-         <plugin>
-            <widget name="DiagramWidget">
-               <options>
-                  <option name="widgetContainerId" value="'DiagramContainer'"/>
-                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/DiagramDefinition.xml'"/>
-               </options>
-            </widget>
-         </plugin>
-      </element>
-   </documentBody>
+   <sd:documentBody tag="div" id="smartDocumentBody">
+      <sd:element tag="p">DiagramDocument.introduction</sd:element>
+      <sd:element tag="p">DiagramDocument.exampleDescription</sd:element>
+      <sd:element tag="div" id="DiagramContainer" elementStyle="slideshow">
+         <sd:plugin>
+            <sd:widget name="DiagramWidget">
+               <sd:options>
+                  <sd:option name="widgetContainerId" value="'DiagramContainer'"/>
+                  <sd:option name="widgetDefinitionURI" value="'Content/WidgetExamples/DiagramDefinition.xml'"/>
+               </sd:options>
+            </sd:widget>
+         </sd:plugin>
+      </sd:element>
+   </sd:documentBody>
    
-</smartDocumentDefinition>
+</sd:smartDocumentDefinition>

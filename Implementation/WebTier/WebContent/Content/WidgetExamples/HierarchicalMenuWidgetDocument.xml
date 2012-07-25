@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Tree Widget Document</name>
-   <description>Demonstrates Tree widget embeded into a Smart Document.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets>
-         <styleSheet>Content/WidgetExamples/HierarchicalMenuWidget.css</styleSheet>
-      </styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Tree Widget Document</sd:name>
+   <sd:description>Demonstrates Tree widget embeded into a Smart Document.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets>
+         <sd:styleSheet>Content/WidgetExamples/HierarchicalMenuWidget.css</sd:styleSheet>
+      </sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="menuDocumentHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h1">HierarchicalMenuWidgetDocument.title</element>
-         <element tag="h2">HierarchicalMenuWidgetDocument.subTitle</element>
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="menuDocumentHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h1">HierarchicalMenuWidgetDocument.title</sd:element>
+         <sd:element tag="h2">HierarchicalMenuWidgetDocument.subTitle</sd:element>
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="menuDocumentBody">
-      <element tag="p">HierarchicalMenuWidgetDocument.introduction</element>
-      <element tag="p">HierarchicalMenuWidgetDocument.exampleDescription</element>
-      <element tag="div" id="menuExampleContainer">
-         <plugin>
-            <widget name="HierarchicalMenuWidget">
-               <options>
-                  <option name="accordionBehaviour" value="true" />
-                  <option name="componentName" value="'exmapleMenuWidget'"/>
-                  <option name="listStyle" value="'accordion'"/>
-                  <option name="showSubItems" value="false" />
-                  <option name="widgetContainerId" value="'menuExampleContainer'"/>
-                  <option name="widgetDataURI" value="'Content/WidgetExamples/MenuDefinition.xml'"/>
-                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/MenuWidgetDefinition.xml'"/>
-               </options>
-            </widget>
-         </plugin>
-      </element>
-   </documentBody>
+   <sd:documentBody tag="div" id="menuDocumentBody">
+      <sd:element tag="p">HierarchicalMenuWidgetDocument.introduction</sd:element>
+      <sd:element tag="p">HierarchicalMenuWidgetDocument.exampleDescription</sd:element>
+      <sd:element tag="div" id="menuExampleContainer">
+         <sd:plugin>
+            <sd:widget name="HierarchicalMenuWidget">
+               <sd:options>
+                  <sd:option name="accordionBehaviour" value="true" />
+                  <sd:option name="componentName" value="'exmapleMenuWidget'"/>
+                  <sd:option name="listStyle" value="'accordion'"/>
+                  <sd:option name="showSubItems" value="false" />
+                  <sd:option name="widgetContainerId" value="'menuExampleContainer'"/>
+                  <sd:option name="widgetDataURI" value="'Content/WidgetExamples/MenuDefinition.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'Content/WidgetExamples/MenuWidgetDefinition.xml'"/>
+               </sd:options>
+            </sd:widget>
+         </sd:plugin>
+      </sd:element>
+   </sd:documentBody>
    
-</smartDocumentDefinition>
+</sd:smartDocumentDefinition>

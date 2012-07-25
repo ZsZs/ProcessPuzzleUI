@@ -55,6 +55,10 @@ var TabWidget = new Class( {
    initialize : function( options, resourceBundle ) {
       this.setOptions( options );
       this.parent( options, resourceBundle );
+      
+      // Assertions
+      this.assertThat( this.definitionXml, not( nil()), "TabWidget.definitionXml" );
+      this.assertThat( this.dataXml, not( nil()), "TabWidget.dataXml" );
 
       // Private instance variables
       this.activeTab = null;

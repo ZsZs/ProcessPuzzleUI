@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
    xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
-   <name>Facebook news</name>
-   <description>Presents Facebook messages to the visitor by using NewsReaderWidget.</description>
-   <version>0.5</version>
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Facebook news</sd:name>
+   <sd:description>Presents Facebook messages to the visitor by using NewsReaderWidget.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentBody tag="div" id="newsDocumentBody">
-      <element tag="div" id="socialNetworkMessages">
-         <plugin>
-            <widget name="NewsReaderWidget">
-               <options>
-                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
-                  <option name="componentName" value="'FacebookWidget'"/>
-                  <option name="widgetContainerId" value="'socialNetworkMessages'"/>
-                  <option name="widgetDataURI" value="'Content/System/Facebook.xml'"/>
-                  <option name="widgetDefinitionURI" value="'Content/System/FacebookWidget.xml'"/>
-               </options>
-            </widget>
-         </plugin>
-      </element>
-   </documentBody>
+   <sd:documentBody tag="div" id="newsDocumentBody">
+      <sd:element tag="div" id="socialNetworkMessages">
+         <sd:plugin>
+            <sd:widget name="NewsReaderWidget">
+               <sd:options>
+                  <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+                  <sd:option name="componentName" value="'FacebookWidget'"/>
+                  <sd:option name="widgetContainerId" value="'socialNetworkMessages'"/>
+                  <sd:option name="widgetDataURI" value="'Content/System/Facebook.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'Content/System/FacebookWidget.xml'"/>
+               </sd:options>
+            </sd:widget>
+         </sd:plugin>
+      </sd:element>
+   </sd:documentBody>
    
-</smartDocumentDefinition>
+</sd:smartDocumentDefinition>

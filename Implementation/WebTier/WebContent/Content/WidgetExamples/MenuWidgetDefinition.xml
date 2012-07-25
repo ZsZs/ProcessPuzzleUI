@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:widgetDefinition
+<sd:widgetDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
    
-   <name>HierarchicalMenuWidget</name>
-   <description>Hierarchical Menu Widget configured for testing purposes.</description>
-   <version>0.5.0</version>
-   <options>
-      <option name="fireDefaultItem" value="false"/>
-   </options>
+   <sd:name>HierarchicalMenuWidget</sd:name>
+   <sd:description>Hierarchical Menu Widget configured for testing purposes.</sd:description>
+   <sd:version>0.5.0</sd:version>
+   <sd:options>
+      <sd:option name="fireDefaultItem" value="false"/>
+   </sd:options>
    
-</pp:widgetDefinition>
+</sd:widgetDefinition>

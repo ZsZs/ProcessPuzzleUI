@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:widgetDefinition
+<dd:diagramDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   xmlns:dd="http://www.processpuzzle.com/Diagram"
+   xmlns:uml="http://www.processpuzzle.com/Diagram/UML" 
+   xsi:schemaLocation="http://www.processpuzzle.com/Diagram http://processpuzzle.com/Schemas/SmartDiagram.xsd">
    
-   <name>DiagramWidget</name>
-   <title>DiagramWidget.title</title>
-   <description>DiagramWidget.description</description>
-   <author>Zsolt Zsuffa</author>
-   <properties>
-   </properties>
+   <dd:title>DiagramWidget.title</dd:title>
+   <dd:description>DiagramWidget.description</dd:description>
+   <dd:author>Zsolt Zsuffa</dd:author>
    
-   <canvas height="200" width="300" ></canvas>
+   <dd:canvas height="200" width="300"></dd:canvas>
    
-   <figures>
-      <annotation name="DiagramAnnotation" height="60" width="250" positionX="0" positionY="0">
-         <text>DiagramWidget.Annotation.text</text>
-      </annotation>
+   <dd:figurePalettes>
+      <dd:figurePalette/>
+   </dd:figurePalettes>
    
-      <class name="DiagramWidget.ExampleClassOne.name" positionX="50" positionY="100">
-         <attributes>
-            <attribute name="DiagramWidget.ExampleClassOne.Attributes.canvas" type="draw2d.workflow" defaultValue="null"/>
-         </attributes>
+   <dd:figurePropertyWindows>
+      <dd:figurePropertyWindow/>
+   </dd:figurePropertyWindows>
+   
+   <dd:figures>
+      <dd:annotation name="DiagramAnnotation" height="60" width="250" positionX="0" positionY="0">
+         <dd:text>DiagramWidget.Annotation.text</dd:text>
+      </dd:annotation>
+   
+      <uml:class name="DiagramWidget.ExampleClassOne.name" positionX="50" positionY="100">
+         <uml:attributes>
+            <uml:attribute name="DiagramWidget.ExampleClassOne.Attributes.canvas" type="draw2d.workflow" defaultValue="null"/>
+         </uml:attributes>
          
-         <operations>
-            <operation name="DiagramWidget.ExampleClassOne.Operations.construct"></operation>
-            <operation name="DiagramWidget.ExampleClassOne.Operations.destroy"></operation>
-            <operation name="DiagramWidget.ExampleClassOne.Operations.draw"></operation>
-         </operations>
-      </class>
+         <uml:operations>
+            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.construct"></uml:operation>
+            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.destroy"></uml:operation>
+            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.draw"></uml:operation>
+         </uml:operations>
+      </uml:class>
       
-      <class name="DiagramWidget.ExampleClassTwo.name" positionX="75" positionY="200">
-         <attributes>
-            <attribute name="DiagramWidget.ExampleClassTwo.Attributes.attributes" type="ArrayList" />
-            <attribute name="DiagramWidget.ExampleClassTwo.Attributes.operations" type="ArrayList" />
-         </attributes>
+      <uml:class name="DiagramWidget.ExampleClassTwo.name" positionX="75" positionY="200">
+         <uml:attributes>
+            <uml:attribute name="DiagramWidget.ExampleClassTwo.Attributes.attributes" type="ArrayList" />
+            <uml:attribute name="DiagramWidget.ExampleClassTwo.Attributes.operations" type="ArrayList" />
+         </uml:attributes>
          
-         <operations>
-            <operation name="DiagramWidget.ExampleClassTwo.Operations.drawAttributes"></operation>
-            <operation name="DiagramWidget.ExampleClassTwo.Operations.drawOperations"></operation>
-         </operations>
-      </class>
+         <uml:operations>
+            <uml:operation name="DiagramWidget.ExampleClassTwo.Operations.drawAttributes"></uml:operation>
+            <uml:operation name="DiagramWidget.ExampleClassTwo.Operations.drawOperations"></uml:operation>
+         </uml:operations>
+      </uml:class>
       
-      <inheritanceConnection name="ClassIsSpecializedFigure" source="DiagramWidget.ExampleClassTwo.name" target="DiagramWidget.ExampleClassOne.name" />
-   </figures>
-</pp:widgetDefinition>
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="DiagramWidget.ExampleClassTwo.name" target="DiagramWidget.ExampleClassOne.name" />
+   </dd:figures>
+</dd:diagramDefinition>

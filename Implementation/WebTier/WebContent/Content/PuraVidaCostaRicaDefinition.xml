@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Pura Vida Costa Rica</name>
-   <description>Short introduction of Costa Rica.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Pura Vida Costa Rica</sd:name>
+   <sd:description>Short introduction of Costa Rica.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentBody tag="div" id="smartDocumentBody">
-      <dataElement tag="h1" id="title" bind="/rss/channel/title"/>
-      <element tag="p" id="introduction"></element>
-      <element tag="div" id="photoAlbum">
-      </element>
-   </documentBody>
+   <sd:documentBody tag="div" id="smartDocumentBody">
+      <sd:dataElement tag="h1" id="title" bind="/rss/channel/title"/>
+      <sd:element tag="p" id="introduction"></sd:element>
+      <sd:element tag="div" id="photoAlbum"></sd:element>
+   </sd:documentBody>
    
-</smartDocumentDefinition>
+</sd:smartDocumentDefinition>

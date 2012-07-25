@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Upcomming Events</name>
-   <description>Shows the events in the near future.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets>
-         <styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</styleSheet>
-      </styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Upcomming Events</sd:name>
+   <sd:description>Shows the events in the near future.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets>
+         <sd:styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</sd:styleSheet>
+      </sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="eventListHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h1">EventWidget.title</element>
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="eventListHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h1">EventWidget.title</sd:element>
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="eventListBody">
-      <compositeDataElement tag="div" id="eventWrapper" bind="//pp:eventList/events/event[{index}]" maxOccures="unbounded">
-         <dataElement tag="h2" elementStyle="title" id="itemTitle" bind="//pp:eventList/events/event[{index}]/title"/>
-         <dataElement tag="div" elementStyle="description" id="itemDescription" bind="//pp:eventList/events/event[{index}]/description"/>
-         <formElement id="eventProperties" method="post" bind="//pp:eventList/events/event[{index}]">
-            <formField id="link" label="EventWidget.schedule" bind="//pp:eventList/events/event[{index}]/schedule/startDate"/>
-            <formField id="description" label="EventWidget.location" bind="//pp:eventList/events/event[{index}]/location/address"/>
-         </formElement>
-      </compositeDataElement>
-   </documentBody>
-</smartDocumentDefinition>
+   <sd:documentBody tag="div" id="eventListBody">
+      <sd:compositeDataElement tag="div" id="eventWrapper" bind="//pp:eventList/events/event[{index}]" maxOccures="unbounded">
+         <sd:dataElement tag="h2" elementStyle="title" id="itemTitle" bind="//pp:eventList/events/event[{index}]/title"/>
+         <sd:dataElement tag="div" elementStyle="description" id="itemDescription" bind="//pp:eventList/events/event[{index}]/description"/>
+         <sd:formElement id="eventProperties" method="post" bind="//pp:eventList/events/event[{index}]">
+            <sd:formField id="link" label="EventWidget.schedule" bind="//pp:eventList/events/event[{index}]/schedule/startDate"/>
+            <sd:formField id="description" label="EventWidget.location" bind="//pp:eventList/events/event[{index}]/location/address"/>
+         </sd:formElement>
+      </sd:compositeDataElement>
+   </sd:documentBody>
+</sd:smartDocumentDefinition>

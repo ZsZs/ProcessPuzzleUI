@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Personal To Do List</name>
-   <description>To Do list of the logged in person.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Personal To Do List</sd:name>
+   <sd:description>To Do list of the logged in person.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="toDoListHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h3">PersonalToDoList.title</element>
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="toDoListHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h3">PersonalToDoList.title</sd:element>
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="toDoListBody">
-      <tableElement id="toDoTableContainer" bind="//pp:workflow/workflowDetail/activities/activity[{index}]" maxOccures="unbounded">
-         <tableColumn id="activityName" label="PersonalToDoList.activityName" bind="name"/>
-         <tableColumn id="activityDescription" label="PersonalToDoList.activityDescription" bind="description"/>
-         <tableColumn id="activityDuration" label="PersonalToDoList.activityDuration" bind="duration"/>
-      </tableElement>
-   </documentBody>   
-</smartDocumentDefinition>
+   <sd:documentBody tag="div" id="toDoListBody">
+      <sd:tableElement id="toDoTableContainer" bind="//pp:workflow/workflowDetail/activities/activity[{index}]" maxOccures="unbounded">
+         <sd:tableColumn id="activityName" label="PersonalToDoList.activityName" bind="name"/>
+         <sd:tableColumn id="activityDescription" label="PersonalToDoList.activityDescription" bind="description"/>
+         <sd:tableColumn id="activityDuration" label="PersonalToDoList.activityDuration" bind="duration"/>
+      </sd:tableElement>
+   </sd:documentBody>   
+</sd:smartDocumentDefinition>

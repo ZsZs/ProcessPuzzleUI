@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pn:rss version="2.0" 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns="http://www.w3.org/1999/xhtml"
    xmlns:pn="http://www.processpuzzle.com/PartyNews"
-   xsi:schemaLocation="http://www.processpuzzle.com/PartyNews http://processpuzzle.com/Schemas/PartyNews.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com/PartyNews file:///E:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/PartyNews.xsd">
    <pn:channel>
       <pn:title>LinkedIn Üzenőfal</pn:title>
       <pn:link>https://www.facebook.com/groups/processpuzzle/</pn:link>
@@ -20,7 +21,7 @@
          <pn:link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</pn:link>
          <pn:description>
             ProcessPuzzle users voted on the following features build into April 2012 release: Calendar Widget, Google Calendar synchronization and Sortable Data Table.
-            For more details please visit the <a http="http://processpuzzle.com">ProcessPuzzle Development page</a>.
+            For more details please visit the <a href="http://processpuzzle.com">ProcessPuzzle Development page</a>.
          </pn:description>
          <pn:pubDate>Mon, 05 March 2012, 09:39:21 GMT</pn:pubDate>
          <pn:guid>http://processpuzzle.com#item575</pn:guid>
@@ -31,7 +32,7 @@
          <pn:link>http://www.linkedin.com/groups/ProcessPuzzle-Users-4338948?trk=myg_ugrp_ovr</pn:link>
          <pn:description>
             Tree Widget presents hierarchical data in tree like form. It can be used as a menu system or display complex, aggregated data structures like project plan or product catalog.
-            For more details please visit the <a http="http://processpuzzle.com">ProcessPuzzle Features page</a>.
+            For more details please visit the <a href="http://processpuzzle.com">ProcessPuzzle Features page</a>.
          </pn:description>
          <pn:pubDate>Mon, 05 March 2012, 09:39:21 GMT</pn:pubDate>
          <pn:guid>http://processpuzzle.com#item575</pn:guid>

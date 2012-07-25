@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:widgetDefinition
+<sd:photoGaleryWidgetDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/PhotoGaleryWidgetDefinition.xsd">
    
-   <name>PhotoGalery</name>
-   <description>Photo Galery presents a set of images, and their thumb nails.</description>
-   <properties>
-      <automaticallyLinkSlideToFullSizedImage>true</automaticallyLinkSlideToFullSizedImage>
-      <effectDuration>1500</effectDuration>
-      <firstSlide>0</firstSlide>
-      <galeryLink>http://www.tourism-costarica.com</galeryLink>
-      <height>300</height>
-      <imageFolderUri>Content/Album</imageFolderUri>
-      <showController>true</showController>
-      <showImageCaptions>true</showImageCaptions>
-      <showSlidesRandom>false</showSlidesRandom>
-      <showThumbnails>true</showThumbnails>
-      <skipTransition>WhenPaused | OnStart</skipTransition>
-      <slideChangeDelay>3000</slideChangeDelay>
-      <startPaused>true</startPaused>
-      <thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</thumbnailFileNameRule>
-      <width>450</width>
-   </properties>
-</pp:widgetDefinition>
+   <sd:name>PhotoGalery</sd:name>
+   <sd:description>Photo Galery presents a set of images, and their thumb nails.</sd:description>
+   <sd:version>1.0</sd:version>
+   
+   <sd:properties>
+      <sd:automaticallyLinkSlideToFullSizedImage>true</sd:automaticallyLinkSlideToFullSizedImage>
+      <sd:effectDuration>1500</sd:effectDuration>
+      <sd:firstSlide>0</sd:firstSlide>
+      <sd:galeryLink>http://www.tourism-costarica.com</sd:galeryLink>
+      <sd:height>300</sd:height>
+      <sd:imageFolderUri>Content/Album</sd:imageFolderUri>
+      <sd:showController>true</sd:showController>
+      <sd:showImageCaptions>true</sd:showImageCaptions>
+      <sd:showSlidesRandom>false</sd:showSlidesRandom>
+      <sd:showThumbnails>true</sd:showThumbnails>
+      <sd:skipTransition>WhenPaused | OnStart</sd:skipTransition>
+      <sd:slideChangeDelay>3000</sd:slideChangeDelay>
+      <sd:startPaused>true</sd:startPaused>
+      <sd:thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</sd:thumbnailFileNameRule>
+      <sd:width>450</sd:width>
+   </sd:properties>
+</sd:photoGaleryWidgetDefinition>

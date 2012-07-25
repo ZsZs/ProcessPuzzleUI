@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/SmartDocument.xsd">
-   <name>Comments Document</name>
-   <description>Shows comments of associated with the selected content.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>Comments Document</sd:name>
+   <sd:description>Shows comments of associated with the selected content.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentHeader tag="div" id="commentsHeader">
-      <compositeElement tag="div" id="headerWrapper">
-         <element tag="h3">DocumentComments.title</element>
-      </compositeElement>
-   </documentHeader>
+   <sd:documentHeader tag="div" id="commentsHeader">
+      <sd:compositeElement tag="div" id="headerWrapper">
+         <sd:element tag="h3">DocumentComments.title</sd:element>
+      </sd:compositeElement>
+   </sd:documentHeader>
    
-   <documentBody tag="div" id="commentsBody">
-      <element tag="p">DocumentComments.introduction</element>
-   </documentBody>   
-</smartDocumentDefinition>
+   <sd:documentBody tag="div" id="commentsBody">
+      <sd:element tag="p">DocumentComments.introduction</sd:element>
+   </sd:documentBody>   
+</sd:smartDocumentDefinition>

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:eventList
-   xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-   
+<pe:eventList 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns="http://www.w3.org/1999/xhtml" 
+   xmlns:pe="http://www.processpuzzle.com/PartyEvent"
+   xsi:schemaLocation="http://www.processpuzzle.com/PartyEvent http://processpuzzle.com/Schemas/PartyEvent.xsd">
+      
    <pe:events>
       <pe:event>
          <pe:title>Egység teszt központú JavaScript fejlesztés - Tanfolyam</pe:title>
          <pe:link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'1'}&amp;documentType=SMART</pe:link>
          <pe:description>Bevezetés az egység teszt alapú fejlesztésbe JavaScript fejlesztők számára.</pe:description>
          <pe:program>
-            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</pe:description>
+            <pe:description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</pe:description>
             <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
          </pe:program>
          <pe:schedule isFullDay="false">
@@ -22,7 +24,7 @@
 	      </pe:location>
          <pe:language>angol</pe:language>
          <pe:registration>
-            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
+            <pe:link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
          </pe:registration>
          <pe:publicationDate>Tue, 10 Jun 2003 04:00:00 GMT</pe:publicationDate>
       </pe:event>  
@@ -32,7 +34,7 @@
          <pe:link>Content/WidgetExamples/EventDetail.xml?contentUri='Content/WidgetExamples/UpcommingEvents.xml'&amp;documentVariables={index:'2'}&amp;documentType=SMART</pe:link>
          <pe:description>Bevezetés az elfogadási teszt alapú fejlesztésbe Java fejlesztők számára.</pe:description>
          <pe:program>
-            <description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</pe:description>
+            <pe:description href="Content/DynamicDocument.xml?contentUri='Content/DynamicContent.xml'&amp;documentType=SMART">Részletes program.</pe:description>
             <pe:link>http://processpuzzle.com/#!WebUIController: {locale: 'hu'}; communityTabs: {currentTabId: 'tab_CommunityTab.faceBook'}; consoleTabs: {currentTabId: 'tab_ConsoleTab.comments'}; verticalMenuColumn: {currentItemId: 'Development-BeginnersTrainings', contextItemId: 'Development'}; horizontalMenuBar: {currentItemId: 'Development', contextItemId: 'MenuWidget'}</pe:link>
          </pe:program>
          <pe:schedule isFullDay="false">
@@ -45,9 +47,9 @@
          </pe:location>
          <pe:language>angol</pe:language>
          <pe:registration>
-            <link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
+            <pe:link href="http://processpuzzle.eventbrite.com/">http://processpuzzle.eventbrite.com/</pe:link>
          </pe:registration>
          <pe:publicationDate>Tue, 03 Jun 2003 09:39:21 GMT</pe:publicationDate>
 	   </pe:event>  
    </pe:events> 
-</pp:eventList>
+</pe:eventList>

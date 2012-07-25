@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<smartDocumentDefinition 
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
    xmlns:pp="http://www.processpuzzle.com" 
    xmlns:sd="http://www.processpuzzle.com/SmartDocument" 
-   xsi:noNamespaceSchemaLocation="http://processpuzzle.com/Schemas/SmartDocument.xsd">
-   <name>Honnia News</name>
-   <description>Presents site news to the visitor.</description>
-   <version>0.5</version>
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/SmartDocument.xsd">
    
-   <resources>
-      <styleSheets></styleSheets>
-      <images></images>
-      <javaScripts></javaScripts>
-   </resources>
+   <sd:name>ProcessPuzzle News</sd:name>
+   <sd:description>Presents site news to the visitor.</sd:description>
+   <sd:version>0.5</sd:version>
+   
+   <sd:resources>
+      <sd:styleSheets></sd:styleSheets>
+      <sd:images></sd:images>
+      <sd:javaScripts></sd:javaScripts>
+   </sd:resources>
 
-   <documentBody tag="div" id="newsDocumentBody">
-      <dataElement tag="h1" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
-      <compositeDataElement tag="div" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
-         <dataElement tag="h3" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
-         <dataElement tag="p" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
-      </compositeDataElement>
-   </documentBody>
+   <sd:documentBody tag="div" id="newsDocumentBody">
+      <sd:dataElement tag="h1" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
+      <sd:compositeDataElement tag="div" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
+         <sd:dataElement tag="h3" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
+         <sd:dataElement tag="p" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+      </sd:compositeDataElement>
+   </sd:documentBody>
    
-</smartDocumentDefinition>
+</sd:smartDocumentDefinition>
