@@ -602,25 +602,13 @@ function error(errorMessage) {
  * @param comment an optional comment about the failure
  * @param message the reason for the failure
  */
-JsUnit.Failure = function(comment, message) {
-    /**
-     * Declaration that this is a JsUnit.Failure
-     * @ignore
-     */
+JsUnit.Failure = function( comment, message ) {
     this.isJsUnitFailure = true;
-    /**
-     * An optional comment about the failure
-     */
     this.comment = comment;
-    /**
-     * The reason for the failure
-     */
+    this.getMessage = function() { return message; };
     this.jsUnitMessage = message;
-    /**
-     * The stack trace at the point at which the failure was encountered
-     */
     this.stackTrace = JsUnit.Util.getStackTrace();
-}
+};
 
 /**
  * @deprecated
