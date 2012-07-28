@@ -107,12 +107,13 @@ var DocumentPlugin = new Class({
       if( this.widgetName ){
          try{
             var widgetClass = eval( this.widgetName );
+            if( !this.widgetOptions['widgetContainerId'] ) this.widgetOptions['widgetContainerId'] = this.contextElement.get( 'id' );
             var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onError : this.onWidgetError } );
             this.widget = new widgetClass( mergedOptions, this.resourceBundle );
             this.widget.unmarshall();
             this.widget.construct();
          }catch( exception ){
-            this.onWidgetError( exception );
+            this.onWidgetError( new WidgetConstructionException( this.widgetName, { cause : exception }));
          }
       }else this.onWidgetConstructed();
    }.protect(),

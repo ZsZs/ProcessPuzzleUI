@@ -18,10 +18,11 @@ window.ResourceManagerTest = new Class( {
 
    constants : {
       CONFIGURATION_URI : "../ResourceManager/WebUIConfiguration.xml",
-      RESOURCES_DEFINITION_URI : "../ResourceManager/TestResourcesDefinition.xml",
       IMAGE_ID : "logoImage",
       IMAGE_URI : "../SmartDocument/Images/ProcessPuzzleLogo.jpg",
       IMAGES_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources" + "/sd:images",
+      RESOURCES_DEFINITION_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      RESOURCES_DEFINITION_URI : "../ResourceManager/TestResourcesDefinition.xml",
       RESOURCES_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources",
       RESOURCE_ITEMS_SELECTOR : "/sd:abstractDocumentDefinition/sd:resources" + "/sd:styleSheets/sd:styleSheet | " + 
                                 "/sd:abstractDocumentDefinition/sd:resources" + "/sd:images/sd:image | " +
@@ -47,7 +48,7 @@ window.ResourceManagerTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
         
-      this.resourcesDefinition = new XmlResource( this.constants.RESOURCES_DEFINITION_URI );
+      this.resourcesDefinition = new XmlResource( this.constants.RESOURCES_DEFINITION_URI, { nameSpaces : this.constants.RESOURCES_DEFINITION_NAMESPACES });
       this.resourceManager = new ResourceManager( this.resourcesDefinition.selectNode( this.constants.RESOURCES_SELECTOR ), { onResourcesLoaded : this.onResourcesLoaded, onResourceError : this.onResourceError } );
         
       this.onResourceErrorWasCalled = false;

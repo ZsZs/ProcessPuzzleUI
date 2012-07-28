@@ -62,12 +62,16 @@ var DesktopElement = new Class({
    },
    
    //Public accessors and mutators
-   construct: function(){
+   construct: function( containerElement ){
       if( this.state != DesktopElement.States.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
+      this.determineContainerElement( containerElement );
+      this.assertThat( this.containerElement, not( nil() ), this.options.componentName + ".containerElement" );
+
       this.startTimeOutTimer( 'construct' );
       this.compileConstructionChain();
-      this.constructionChain.callChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( new DesktopElementConfigurationException( this.id, { cause : exception })); }
    },
    
    destroy: function(){
@@ -142,6 +146,11 @@ var DesktopElement = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
+   determineContainerElement: function( containerElement ){
+      if( containerElement ) this.containerElement = containerElement;
+      else this.containerElement = $( this.options.componentContainerId );
+   }.protect(),
+   
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
@@ -166,7 +175,7 @@ var DesktopElement = new Class({
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       this.state = DesktopElement.States.INITIALIZED;
-      this.logger.error( this.error.getMessage() );
+      this.logger.error( this.error.getMessage() + this.error.stackTrace() );
       this.fireEvent( 'error', this.error );
    }.protect(),
    
@@ -174,8 +183,6 @@ var DesktopElement = new Class({
       this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.configureLogger();
       this.containerElement = $( this.options.componentContainerId );
-      if( this.containerElement == null ) 
-         throw new IllegalArgumentException( "Parameter 'componetContainerId' in invalid." );
       this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.state = DesktopElement.States.INITIALIZED;
    }.protect(),

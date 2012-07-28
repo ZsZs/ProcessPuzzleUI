@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var ResourceManager = new Class({
-   Implements: [Events, Options],
+   Implements: [AssertionBehavior, Events, Options],
    Binds: ['onResourceError', 'onResourceLoaded'],   
 
    options: {
@@ -41,6 +41,7 @@ var ResourceManager = new Class({
    
    //Constructor
    initialize: function( resourceDefinition, options ){
+      this.assertThat( resourceDefinition, not( nil() ), "ResourceManager.resourceDefinition" );
       this.setOptions( options );
       
       this.error = null;

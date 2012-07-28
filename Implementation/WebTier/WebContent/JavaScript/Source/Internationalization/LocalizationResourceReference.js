@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var LocalizationResourceReference = new Class({
-   Implements : [ Options ],
+   Implements : [AssertionBehavior, Options],
    options : {
       baseNameOnlyVersionExists : true,
       baseNameOnlyVersionExistsSelector : "@baseNameOnlyVersionExists",
@@ -41,7 +41,8 @@ var LocalizationResourceReference = new Class({
    },
 
    // Constructor
-   initialize : function(resourceDefinitionXml, options) {
+   initialize : function( resourceDefinitionXml, options ) {
+      this.assertThat( resourceDefinitionXml, not( nil() ), "LocalizationResourceReference.resourceDefinitionXml" );
       this.setOptions( options );
 
       this.localeUtil = new ProcessPuzzleLocaleUtil();

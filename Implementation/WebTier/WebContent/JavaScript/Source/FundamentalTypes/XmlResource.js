@@ -27,6 +27,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var XmlResource = new Class({
    Extends: Request,
+   Implements : [AssertionBehavior],
 
    options: {
       applyCacheBuster : true,
@@ -57,8 +58,8 @@ var XmlResource = new Class({
    // Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
-      assertThat( Sarissa.XPATH_INITIALIZED, is( true ));
+      this.assertThat( uri, not( nil() ), "XmlResource.uri" );
+      this.assertThat( Sarissa.XPATH_INITIALIZED, is( true ), "XmlResource.Sarissa.XPATH_INITIALIZED" );
       
       if( this.options.applyCacheBuster ) {
          this.resourceUri = new ResourceUri( uri, null, { applyCacheBuster : true });

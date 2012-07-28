@@ -61,8 +61,8 @@ var DocumentElement = new Class({
    
    //Constructor
    initialize: function( definitionElement, bundle, options ){
-      assertThat( definitionElement, not( nil() ));
-      assertThat( bundle, not( nil() ));
+      this.assertThat( definitionElement, not( nil() ), "DocumentElement.definitionElement" );
+      this.assertThat( bundle, not( nil() ), "DocumentElement.bundle" );
       this.setOptions( options );
 
       //Protected, private variables
@@ -95,7 +95,7 @@ var DocumentElement = new Class({
       if( this.status != DocumentElement.States.UNMARSHALLED ) 
          throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
-      assertThat( contextElement, not( nil() ));
+      this.assertThat( contextElement, not( nil() ), "DocumentElement.contextElement" );
       this.contextElement = contextElement;
       this.where = where;
       this.elementFactory = new WidgetElementFactory( contextElement, this.resourceBundle );
@@ -103,7 +103,7 @@ var DocumentElement = new Class({
       this.compileConstructionChain();
       
       try{ this.constructionChain.callChain(); }
-      catch( exception ){ this.revertConstruction( exception ); }
+      catch( exception ){ this.revertConstruction( new DocumentElementConstructionException( this.id, { cause : exception })); }
    },
    
    destroy: function(){
@@ -256,7 +256,7 @@ var DocumentElement = new Class({
       if( this.plugin && this.plugin.getState() > DocumentElement.States.INITIALIZED ) this.plugin.destroy();
       this.deleteHtmlElement();
       this.status = DocumentElement.States.INITIALIZED;
-      this.logger.error( this.error.getMessage() );
+      this.logger.error( this.error.getMessage() + this.error.stackTrace() );
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 

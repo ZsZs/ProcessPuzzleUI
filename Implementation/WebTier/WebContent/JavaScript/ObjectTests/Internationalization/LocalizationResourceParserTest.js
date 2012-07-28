@@ -40,7 +40,7 @@ window.LocalizationResourceParserTest = new Class( {
             this.parser.parse( this.cache, this.constants.LOCALIZATION_RESOURCE_URI, this.locale );
          }.bind( this ),
          function(){
-            var localizationResource = new XmlResource( this.constants.LOCALIZATION_RESOURCE_URI );
+            var localizationResource = new XmlResource( this.constants.LOCALIZATION_RESOURCE_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com/ResourceBundle'" });
             var expectedNumberOfEntries = localizationResource.selectNodes( "/pp:Resources/Resource" ).length;
             expectedNumberOfEntries += localizationResource.selectNodes( "/pp:Resources/Language[@name='hu']/Resource" ).length;
             expectedNumberOfEntries += localizationResource.selectNodes( "/pp:Resources/Language[@name='hu']/Country[@name='HU']/Resource" ).length;

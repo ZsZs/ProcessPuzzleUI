@@ -38,14 +38,25 @@ var WebUIException = new Class({
    //Constructors
    initialize: function( options ){
      this.setOptions( options );
+     if( options && options.cause ) this.options.cause = options.cause;
+     
+     //Private instance variables
      this.parameters;
    },
    
    //Public accessor and mutator methods
    stackTrace: function() {
       var stackTrace = "";
-      if( this.options.cause && this.options.cause.stackTrace() )
-         stackTrace += "\n" + this.options.cause.stackTrace();
+      if( this.options.cause ){
+         if( this.options.cause.getMessage )
+            stackTrace += "\n\t" + this.options.cause.getMessage() + this.options.cause.stackTrace();
+         else{
+            stackTrace += "\n\t" + this.options.cause.message;
+            stackTrace += "\n\t" + printStackTrace();
+         }
+      }else{
+         stackTrace += "\n\t" + printStackTrace();
+      }
       
       return stackTrace;
    },
@@ -53,7 +64,7 @@ var WebUIException = new Class({
    //Properties
    getCause: function() { return this.options.cause; },
    getDescription : function() { return this.options.description; },
-   getMessage: function() { return this.options.description.substitute( this.parameters ); }, 
+   getMessage: function() { return this.options.description.substitute( this.parameters ) + " " + this.options.message; }, 
    getName: function() { return this.options.name; },
    getSource : function() { return this.options.source; }
 });

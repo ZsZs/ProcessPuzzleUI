@@ -54,7 +54,7 @@ window.DocumentHeaderTest = new Class( {
    },
    
    initialize_whenDefinitionElementOrInternationalizationIsNull_throwsException : function() {
-      assertThat( this.instantiateHeaderWithoutArguments, raises( JsUnit.Failure ));
+      assertThat( this.instantiateHeaderWithoutArguments, raises( AssertionException ));
    },
    
    unmarshall_unmarshallsHeaderProperties : function() {

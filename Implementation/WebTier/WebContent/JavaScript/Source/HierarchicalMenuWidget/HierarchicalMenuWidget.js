@@ -144,7 +144,7 @@ var HierarchicalMenuWidget = new Class({
    determineCurrentItemId : function(){
       if( this.options.contextItemId ){
          if( this.findItemById( this.options.contextItemId ) == null )
-            throw new WidgetConstructionException( this.options.componentName, "ContextItemId is invalid" );
+            throw new WidgetConstructionException( this.options.componentName, { description : "ContextItemId is invalid" });
       }
       if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
       this.constructionChain.callChain();

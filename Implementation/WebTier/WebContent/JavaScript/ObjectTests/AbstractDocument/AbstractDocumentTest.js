@@ -42,7 +42,7 @@ window.AbstractDocumentTest = new Class( {
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
       this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
       this.documentContainerElement = $( this.constants.DOCUMENT_CONTAINER_ID );
       this.abstractDocument = new AbstractDocument( this.bundle, { 
          documentContentUri : this.constants.DOCUMENT_CONTENT_URI, 

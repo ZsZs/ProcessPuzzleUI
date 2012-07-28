@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var LanguageSelectorWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['onSelection'],
+   Binds : ['createSpanElements', 'createSelectElement', 'createSelectElementOptions', 'onSelection'],
    
    options : {
       componentName : "LanguageSelectorWidget",
@@ -51,18 +51,6 @@ var LanguageSelectorWidget = new Class({
    },
 
    //Public accessor and mutator methods
-   construct : function() {
-      this.createSpanElements();
-      this.createSelectElement();
-      this.createSelectElementOptions();
-      return this.parent();
-   },
-   
-   destroy : function() {
-      this.availableLocales.clear();
-      this.parent();
-   },
-   
    onSelection : function() {
       var currentLocale = this.locale;
       var newLocale = new ProcessPuzzleLocale();
@@ -76,9 +64,18 @@ var LanguageSelectorWidget = new Class({
    getWebUIConfiguration : function() { return this.webUIConfiguration; },
    
    //Private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createSpanElements, this.createSelectElement, this.createSelectElementOptions, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
    createSelectElement : function(){
       this.selectElement = this.elementFactory.create( 'select', null, this.selectElementContainer, WidgetElementFactory.Positions.LastChild, { id : this.options.selectElementId } );
       this.selectElement.addEvent( 'change', this.onSelection );
+      this.constructionChain.callChain();
    }.protect(),
    
    createSelectElementOptions : function() {
@@ -88,11 +85,14 @@ var LanguageSelectorWidget = new Class({
       this.availableLocales.each( function( locale, index ){
          this.elementFactory.createOption( locale.getLanguage(), this.options.componentPrefix + "." + locale.getLanguage(), this.selectElement, WidgetElementFactory.Positions.LastChild );
       }, this );
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    createSpanElements: function() {
       var languageSelectorWrapper = this.elementFactory.create( 'span', null, null, null, {'class': this.options.wrapperElementStyle });
       this.selectElementContainer = this.elementFactory.create( 'span', null, languageSelectorWrapper );
+      this.constructionChain.callChain();
    }.protect(),
    
    determineAvailableLocales : function(){
@@ -110,6 +110,10 @@ var LanguageSelectorWidget = new Class({
          if( webUIController ) this.webUIConfiguration = webUIController.getWebUIConfiguration();
          else this.webUIConfiguration = Class.getInstanceOf( WebUIConfiguration );
       }
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.availableLocales.clear();
    }.protect()
    
 });

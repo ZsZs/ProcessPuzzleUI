@@ -8,6 +8,7 @@ window.OptionsResourceTest = new Class( {
    },
 
    constants : {
+      OPTIONS_ELEMENT_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       OPTIONS_ELEMENT_SELECTOR : "/sd:widgetDefinition/sd:options",
       OPTIONS_XML_URI : "../FundamentalTypes/Options.xml"
    },
@@ -21,7 +22,7 @@ window.OptionsResourceTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.optionsXml = new XmlResource( this.constants.OPTIONS_XML_URI );
+      this.optionsXml = new XmlResource( this.constants.OPTIONS_XML_URI, { nameSpaces : this.constants.OPTIONS_ELEMENT_NAMESPACES });
       this.optionsElement = this.optionsXml.selectNode( this.constants.OPTIONS_ELEMENT_SELECTOR );
       this.optionsResource = new OptionsResource( this.optionsElement );
    },

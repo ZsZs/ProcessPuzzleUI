@@ -135,19 +135,23 @@ var ComplexContentBehaviour = new Class({
       this.constructionChain.callChain();
    },
    
-   onHeaderConstructed: function(){
+   onHeaderConstructed: function( header ){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s header finished." );
       this.constructionChain.callChain();
    },
    
    onHeaderConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
+      this.revertConstruction( error );
       this.fireEvent( 'panelError', this.error, this.options.eventFireDelay );
       this.fireEvent('panelConstructed', this, this.options.eventFireDelay ); 
    },
    
-   onPluginConstructed: function(){
+   onHeaderDestructed: function(){
+      this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "'s header finished." );
+      this.destructionChain.callChain();
+   },
+   
+   onPluginConstructed: function( plugin ){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s plugin finished." );
       if( this.verticalScrollBar ) this.verticalScrollBar.refresh();
       this.constructionChain.callChain();
@@ -244,20 +248,24 @@ var ComplexContentBehaviour = new Class({
       }else this.constructionChain.callChain();
    }.protect(),
    
+   constructHeader: function(){
+      if( this.header ){
+         try{
+            this.header.construct( $( this.name + "_header" ));
+         }catch( exception ){
+            this.revertConstruction( new DesktopElementConfigurationException( this.name, { cause : exception, message : "Header construction failed." }));            
+         }
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
    constructPlugin: function(){
       if( this.plugin ){
          try{
-            this.plugin.construct();
-         }catch( e ){
-            this.logger.error( "Constructing plugin of panel: '" + this.name + "' caused error." );
-            //throw new DesktopElementConfigurationException( this.name );
+            this.plugin.construct( this.contentAreaElement );
+         }catch( exception ){
+            this.revertConstruction( new DesktopElementConfigurationException( this.name, { cause : exception, message : "Plugin construction failed." }));
          }
       } else this.constructionChain.callChain();
-   }.protect(),
-   
-   constructHeader: function(){
-      if( this.header ) this.header.construct( $( this.name + "_header" ));
-      else this.constructionChain.callChain();
    }.protect(),
    
    createContentAreaElement: function(){
@@ -491,7 +499,12 @@ var ComplexContentBehaviour = new Class({
    unmarshallHeader: function(){
       var headerConfigurationElement = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
       if( headerConfigurationElement ){
-          this.header = new DesktopPanelHeader( headerConfigurationElement, this.internationalization, { onHeaderConstructed : this.onHeaderConstructed, onHeaderConstructionError : this.onHeaderConstructionError });
+          this.header = new DesktopPanelHeader( headerConfigurationElement, this.internationalization, {
+             componentContainerId : this.name,
+             onConstructed : this.onHeaderConstructed, 
+             onDestructed : this.onHeaderDestructed, 
+             onError : this.onHeaderConstructionError 
+          });
           this.header.unmarshall();
       }
    }.protect(),

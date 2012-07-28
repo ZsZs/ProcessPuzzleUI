@@ -89,7 +89,7 @@ var Desktop = new Class({
       panelSelector : "/desktopConfiguration/panels/panel",
       pluginOnloadDelay : 1000,
       resourceLoadTimeout : 5000,
-      resourcesSelector : "/desktopConfiguration/resources", 
+      resourcesSelector : "/desktopConfiguration/sd:resources", 
       skin : "ProcessPuzzle",
       versionSelector : "/desktopConfiguration/version",
       windowDockerSelector : "/desktopConfiguration/windowDocker",
@@ -203,7 +203,7 @@ var Desktop = new Class({
    },
    
    onError: function( error ){
-      this.error = error;
+      this.revertConstruction( error );
    },
    
    onFooterConstructed: function(){
@@ -237,7 +237,7 @@ var Desktop = new Class({
    },
    
    onResourceError: function( error ){
-      this.error = error;
+      this.revertConstruction( error );
    },
    
    onResourcesLoaded: function(){
@@ -328,7 +328,7 @@ var Desktop = new Class({
    //Private methods
    callNextConfigurationStep: function(){
       if( this.isSuccess() ) this.constructionChain.callChain();
-      else{ this.revertConstruction(); }
+      else{ this.revertConstruction( new DesktopElementConfigurationException( this.error )); }
    }.protect(),
    
    configureLogger : function() {
@@ -532,7 +532,9 @@ var Desktop = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( error ){
+      this.error = error;
+      
       if( this.resources ) this.resources.release();
       if( this.header ) this.header.destroy();
       if( this.contentArea ) this.contentArea.destroy();
@@ -558,8 +560,7 @@ var Desktop = new Class({
    }.protect(),
    
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallColumns: function(){

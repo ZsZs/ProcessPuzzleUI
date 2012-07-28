@@ -9,7 +9,7 @@ window.WebUIMessageTest = new Class({
 
    constants : {
       MENU_DEFINITION_URI : "../HierarchicalMenuWidget/MenuDefinition.xml",
-      MENU_SELECTOR : "//pp:menuWidgetDefinition/menuItem[1]/menuItem[1]/menuItem[1]/messageProperties",
+      MENU_SELECTOR : "/md:menuDefinition/md:menuItem[1]/md:menuItem[1]/md:menuItem[1]/pp:messageProperties",
    },
    
    initialize : function( options ) {

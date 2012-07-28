@@ -1,8 +1,9 @@
 window.BrowserWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
           { method : 'initialize_whenArgumentsAreGiven_deducesAssociatedObjects', isAsynchron : false },
           { method : 'initialize_whenNoArgumentsAreGiven_usesWebUiController', isAsynchron : false },
@@ -28,8 +29,8 @@ window.BrowserWidgetTest = new Class( {
    constants : {
       CHILD_ELEMENT_TYPE : "DIV",
       CONFIGURATION_URI : "../BrowserWidget/WebUIConfiguration.xml",
-      LANGUAGE : "hu",
-      LOCALIZED_WIDGET_DATA_URI : "../BrowserWidget/WidgetData_hu.xml",
+      LANGUAGE : "en",
+      LOCALIZED_WIDGET_DATA_URI : "../BrowserWidget/WidgetData_en.xml",
       RESOURCE_PATH : "../BrowserWidget/WidgetInternationalization",
       RESOURCE_KEY : "Widget.ItemOne",
       ROW_LABEL : "row label:",
@@ -57,30 +58,36 @@ window.BrowserWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.domDocument = document;
-      this.messageBus = new WebUIMessageBus();
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.componentStateManager = new ComponentStateManager();
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.browserWidget = new BrowserWidget({
-         maxTries : 2,
-         onConstructed : this.onConstructed, 
-         onConstructionError : this.onConstructionError, 
-         onDestroyed : this.onDestroyed,
-         widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
-         widgetDataURI : this.constants.WIDGET_DATA_URI,
-         widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI
-      }, this.resourceBundle );
-      this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
+      this.beforeEachTestChain.chain(
+         function(){
+            this.domDocument = document;
+            this.messageBus = new WebUIMessageBus();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.componentStateManager = new ComponentStateManager();
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.browserWidget = new BrowserWidget({
+               maxTries : 2,
+               onConstructed : this.onConstructed, 
+               onConstructionError : this.onConstructionError, 
+               onDestroyed : this.onDestroyed,
+               subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo],
+               widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
+               widgetDataURI : this.constants.WIDGET_DATA_URI,
+               widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI
+            }, this.resourceBundle );
+            this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
+            
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
-      this.widgetContainerElement.getChildren().each( function( element ) {
-         element.destroy();
-      });
-     
+      this.browserWidget.destroy();
       this.messageBus.tearDown();
       this.componentStateManager.reset();
    },
@@ -91,7 +98,7 @@ window.BrowserWidgetTest = new Class( {
    },
    
    initialize_whenNoArgumentsAreGiven_usesWebUiController : function() {
-      var webUIController = new WebUIController({ contextRootPrefix : "../", configurationUri : this.constants.CONFIGURATION_URI } );
+      var webUIController = new WebUIController({ contextRootPrefix : "", configurationUri : this.constants.CONFIGURATION_URI });
       
       this.browserWidget = new BrowserWidget();
      
@@ -132,7 +139,7 @@ window.BrowserWidgetTest = new Class( {
    },
    
    initialize_whenMessageSubsciptionsAreGiven_subscribesToMessages : function() {
-      this.browserWidget = new BrowserWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, this.resourceBundle );
+      //this.browserWidget = new BrowserWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, this.resourceBundle );
       
       //VERIFY:
       assertEquals( "BrowserWidget is registered to message:", this.browserWidget.webUIMessageHandler, this.messageBus.getSubscribersToMessage( TestMessageOne ).get(0) );
@@ -144,7 +151,7 @@ window.BrowserWidgetTest = new Class( {
          new BrowserWidget( { widgetContainerId : "blabla" } , this.resourceBundle );
          fail( "Exception was expected. 'containerId' parameter should identify a valid dom element." );
        }catch( e ) {
-          assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+          assertThat( e, JsHamcrest.Matchers.instanceOf( AssertionException ));
        }
    },
    
@@ -153,7 +160,7 @@ window.BrowserWidgetTest = new Class( {
          new BrowserWidget( { widgetContainerId : this.constants.WIDGET_CONTAINER_ID }, new LocalizationResourceManager( this.webUIConfiguration ) );
           fail( "Exception was expected. 'resourceBundle' parameter can't be null or empty." );
        }catch( e ) {
-          assertTrue( "IllegalArgumentException is expected.", e instanceof IllegalArgumentException );
+          assertThat( e, JsHamcrest.Matchers.instanceOf( AssertionException ));
        }
    },
    
@@ -188,6 +195,7 @@ window.BrowserWidgetTest = new Class( {
                this.constructedMessageReceived = true;
                assertThat( webUIMessage.getOriginator(), equalTo( this.browserWidget.options.componentName ));
             }.bind( this ));
+            this.browserWidget.unmarshall();
             this.browserWidget.construct();
          }.bind( this ),
          function(){
@@ -219,6 +227,7 @@ window.BrowserWidgetTest = new Class( {
       this.testCaseChain.chain(
          function(){
             this.browserWidget.getElementFactory().createStaticRow( this.constants.ROW_LABEL, this.constants.ROW_VALUE, this.constants.ROW_VALUE_ID );
+            this.browserWidget.unmarshall();
             this.browserWidget.construct();
          }.bind( this ),
          function(){
@@ -235,11 +244,7 @@ window.BrowserWidgetTest = new Class( {
          function(){
             this.webUIMessageOne = new TestMessageOne();
             this.webUIMessageTwo = new TestMessageTwo();
-            this.browserWidget = new BrowserWidget({ 
-               widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
-               onConstructed : this.onConstructed, 
-               onDestroyed : this.onDestroyed,
-               subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, this.resourceBundle );
+            this.browserWidget.unmarshall();
             this.browserWidget.construct();
          }.bind( this ),
          function(){
@@ -281,6 +286,10 @@ window.BrowserWidgetTest = new Class( {
    
    onDestroyed : function( error ){
       this.testCaseChain.callChain();
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
    }
 
 });

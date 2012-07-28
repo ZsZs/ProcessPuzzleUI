@@ -110,10 +110,9 @@
 		</in:resouceBundles>
 		
 		<in:availableLocales>
-			<in:locale>hu</in:locale>
 			<in:locale>en</in:locale>
 		</in:availableLocales>
-		<in:defaultLocale>hu</in:defaultLocale>
+		<in:defaultLocale>en</in:defaultLocale>
 		<in:localeDefinitions>classpath:com/processpuzzle/internalization/domain/LocaleDefinitions.xml</in:localeDefinitions>
 	</in:internationalization>
 

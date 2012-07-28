@@ -21,7 +21,11 @@ var JsTestMethod = new Class({
    
    //Public accessors and mutators   
    run : function(){
-      this.testObject = new this.testClass({ onReady : function( arguments ) { this.onRunTestFinished( arguments ); }.bind( this ) });
+      this.testObject = new this.testClass({ 
+         onAfterEachTestReady : function( arguments ) { this.onAfterEachTestFinished( arguments ); }.bind( this ),
+         onBeforeEachTestReady : function( arguments ) { this.onBeforeEachTestFinished( arguments ); }.bind( this ),
+         onReady : function( arguments ) { this.onRunTestFinished( arguments ); }.bind( this ) 
+      });
       this.parent();
    },
    

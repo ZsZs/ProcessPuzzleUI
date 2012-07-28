@@ -38,7 +38,11 @@ var JsTestClassRunner = new Class({
    instantiateTestMethodOfClass : function( className, testClass ){
       this.testObject = new testClass();
       this.testObject.options.testMethods.each( function( testMethodProperties, index ){
-         this.testCases.include( new JsTestMethod( className, testClass, testMethodProperties, { url : this.options.url } ));
+         var testMethodOptions = { 
+            isAfterEachTestAsynchron : this.testObject.options.isAfterEachTestAsynchron,
+            isBeforeEachTestAsynchron : this.testObject.options.isBeforeEachTestAsynchron, 
+            url : this.options.url };
+         this.testCases.include( new JsTestMethod( className, testClass, testMethodProperties, testMethodOptions ));
       }, this );
    }.protect(),
       

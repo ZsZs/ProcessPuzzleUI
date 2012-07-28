@@ -103,7 +103,8 @@
          <plugin>
             <sd:widget name="PartyEventWidget">
                <sd:options>
-                  <sd:option name="widgetContainerId" value="'UpcommingEvents'"/>
+                  <sd:option name="widgetDataURI" value="'../PartyEventWidget/TestEvents.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'../PartyEventWidget/PartyEventWidgetDefinition.xml'"/>
                </sd:options>
             </sd:widget>
          </plugin>

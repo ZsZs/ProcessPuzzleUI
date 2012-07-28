@@ -1,17 +1,20 @@
 /*
-Name: WidgetConstructionException
+Name: 
+   - DocumentElementConstructionException
 
-Description: Thrown when constructing a BrowserWidget caused error.
+Description: 
+   - Thrown when configuring a document element fails.
 
 Requires: WebUIException
 
-Provides: WidgetConstructionException
+Provides: 
+   - DocumentElementConstructionException
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
 
 Authors: 
-	- Zsolt Zsuffa
+   - Zsolt Zsuffa
 
 Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
 GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
@@ -24,21 +27,19 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 //= require_directory ../MochaUI
-//= require ../FundamentalTypes/WebUIException.js
+//= require_directory ../FundamentalTypes
 
-var WidgetConstructionException = new Class({
+var DocumentElementConstructionException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Constructing widget: '{widgetName}' failed.",
-      name: "WidgetConstructionException"
+      description: "Constructing of '{documentElementId}' document element failed.",
+      name: "DocumentElementConstructionException"
    },
    
    //Constructor
-   initialize : function( widgetName, options ){
+   initialize : function( documentElementId, options ){
+      this.setOptions( options );
       this.parent( options );
-      this.parameters = { widgetName : widgetName };
-   },
-   
-   //Properties
-   getWidgetName : function() { return this.parameters['widgetName']; },
+      this.parameters = { documentElementId : documentElementId };
+   }
 });

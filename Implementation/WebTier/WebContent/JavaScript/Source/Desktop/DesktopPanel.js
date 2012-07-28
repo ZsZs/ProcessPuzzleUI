@@ -75,15 +75,6 @@ var DesktopPanel = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function(){
-      this.parent();
-   },
-   
-   destroy: function(){
-      this.parent();
-      this.columnReference = null;
-   },
-   
    onMUIPanelLoaded: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s MUIPanel finished." );
       this.MUIPanelLoaded = true;
@@ -139,6 +130,8 @@ var DesktopPanel = new Class({
    }.protect(),
    
    destroyMUIPanel: function(){
+      this.columnReference = null;
+      
       if( this.MUIPanel ){
          this.MUIPanel.removeEvents();
          this.MUIPanel.destroy();
@@ -174,11 +167,7 @@ var DesktopPanel = new Class({
             title : panelTitle 
          });
       }catch( exception ){
-         var logMessage = exception.name + ": " + exception.message;
-         logMessage += exception.stack ? "\n" + exception.stack : "";
-         this.logger.error( logMessage );
-         this.fireEvent( 'constructed', this, 3* this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
-         this.onConstructionError( exception );
+         this.revertConstruction( new DesktopElementConfigurationException( this.name, { cause : exception }));
       }
    }.protect(),
    
@@ -196,9 +185,9 @@ var DesktopPanel = new Class({
       });
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( exception ){
       this.revertComplexContentBehaviour();
-      this.parent();
+      this.parent( exception );
    }.protect(),
       
    unmarshallPanelProperties: function(){

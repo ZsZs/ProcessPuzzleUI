@@ -34,8 +34,8 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var LocalizationResourceManager = new Class({
-   Implements : [Events, Options],
-   Binds : ['finalizeLoad', 'loadResources', 'onParseFailure', 'onParseSuccess'],
+   Implements : [TimeOutBehaviour, Events, Options],
+   Binds : ['checkTimeOut', 'finalizeLoad', 'loadResources', 'onParseFailure', 'onParseSuccess'],
 
    options : {
       componentName : "LocalizationResourceManager",
@@ -80,6 +80,7 @@ var LocalizationResourceManager = new Class({
    load : function( locale ) {
       this.logger.debug( this.options.componentName + ".load() started." );
       this.currentLocale = locale;
+      this.startTimeOutTimer( 'load' );
       this.compileLoadChain();
       this.loadChain.callChain();
    },
@@ -105,6 +106,7 @@ var LocalizationResourceManager = new Class({
    
    //Properties
    getDefaultLocale : function() { return this.options.defaultLocale; },
+   getError : function() { return this.error; },
    getFile : function( key ) { var file = this.cache.get( key, "File" ); return new File( file ); },
    getLocale : function() { return this.currentLocale; },
    getNameSpace : function() { return this.options.nameSpaces; },
@@ -141,6 +143,15 @@ var LocalizationResourceManager = new Class({
       this.fireEvent( 'success', this );
    }.protect(),
    
+   handleLoadError : function( error ){
+      this.error = error;
+      this.stopTimeOutTimer();
+      this.loadChain.clearChain();
+      this.localizationResourceReferences.clear();
+      this.localizationResources.clear();
+      this.fireEvent( 'failure', error );
+   }.protect(),
+   
    loadResources : function(){
       if( this.localizationResourceReferences.size() > 0 ){
          this.localizationResourceReferences.each( function( localizationReference, index ){ 
@@ -164,8 +175,8 @@ var LocalizationResourceManager = new Class({
    parseResource : function( resourceUri, locale ) {
       try{
          this.parser.parse( this.cache, resourceUri, locale );
-      }catch( e ) {
-         this.fireEvent( 'failure', e );
+      }catch( error ) {
+         this.handleLoadError( error );
       }
    }.protect(),
    
@@ -175,5 +186,10 @@ var LocalizationResourceManager = new Class({
          if( localizationResource ) localizationResource.release();
       }.bind( this ));
       this.localizationResources.clear();
-   }.protect()
+   }.protect(),
+   
+   timeOut : function( error ){
+      this.handleLoadError( error );
+   }.protect(),
+   
 });

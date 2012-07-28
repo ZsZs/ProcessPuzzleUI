@@ -78,11 +78,9 @@ var BrowserWidget = new Class( {
       this.loadWidgetDefinition();
       this.loadWidgetData();
 
-      assertThat( this.i18Resource, not( nil() ) );
-      if( this.containerElement == null )
-         throw new IllegalArgumentException( "Parameter 'widgetContainerId' in invalid." );
-      if( !this.i18Resource.isLoaded )
-         throw new IllegalArgumentException( "ResourceBundle should be already loaded." );
+      this.assertThat( this.i18Resource, not( nil() ), this.options.componentName + ".i18Resource" );
+      this.assertThat( this.i18Resource.isLoaded, is( true ), this.options.componentName + ".i18Resource.isLoaded" );
+      this.assertThat( this.containerElement, not( nil() ), this.options.componentName + ".containerElement" );
       
       this.elementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource, elementFactoryOptions );
       this.restoreComponentState();
@@ -94,7 +92,9 @@ var BrowserWidget = new Class( {
       if( this.state < BrowserWidget.States.CONSTRUCTED ) {
          this.startTimeOutTimer( 'construct' );
          this.compileConstructionChain();
-         this.constructionChain.callChain();
+         
+         try{ this.constructionChain.callChain(); }
+         catch( exception ){ this.revertConstruction( new WidgetConstructionException( this.name, { cause : exception })); }
       }
       return this;
    },
@@ -284,7 +284,8 @@ var BrowserWidget = new Class( {
       //Abstract method, should be overwrite!
    }.protect(),
    
-   revertConstruction : function(){
+   revertConstruction : function( error ){
+      this.error = error;
       this.stopTimeOutTimer();
       this.state = BrowserWidget.States.INITIALIZED;
       this.fireEvent( 'constructionError', this.error );

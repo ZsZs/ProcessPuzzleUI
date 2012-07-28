@@ -160,7 +160,7 @@ window.DesktopPanelTest = new Class( {
       this.panelWithDocument.unmarshall();
 
       assertThat( this.panelWithDocument.getHeader(), not( nil() ) );
-      assertThat( this.panelWithDocument.getHeader().getState(), equalTo( DesktopPanelHeader.States.UNMARSHALLED ) );
+      assertThat( this.panelWithDocument.getHeader().getState(), equalTo( DesktopElement.States.UNMARSHALLED ) );
    },
    
    unmarshall_determinesDocumentProperties : function() {
@@ -202,7 +202,7 @@ window.DesktopPanelTest = new Class( {
       this.testCaseChain.chain(
          function(){ this.constructPanel( this.panelWithDocument ); }.bind( this ),
          function(){
-            assertThat( this.panelWithDocument.getHeader().getState(), equalTo( DesktopPanelHeader.States.CONSTRUCTED ) );
+            assertThat( this.panelWithDocument.getHeader().getState(), equalTo( DesktopElement.States.CONSTRUCTED ) );
          }.bind( this ),
          function(){
             assertThat( this.panelWithDocument.getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
@@ -258,7 +258,7 @@ window.DesktopPanelTest = new Class( {
          function(){ this.constructPanel( this.panelWithPlugin ); }.bind( this ),
          function(){
             assertThat( this.panelWithPlugin.getPlugin(), not( nil() ) );
-            assertThat( this.panelWithPlugin.getPlugin().getState(), equalTo( DesktopElement.States.CONSTRUCTED ));
+            assertThat( this.panelWithPlugin.getPlugin().getState(), equalTo( DocumentElement.States.CONSTRUCTED ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

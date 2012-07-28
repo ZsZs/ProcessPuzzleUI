@@ -10,6 +10,7 @@ window.LocalizationResourceReferenceTest = new Class( {
    },
 
    constants : {
+      CONFIGURATION_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com' xmlns:in='http://www.processpuzzle.com/InternationalizationConfiguration'",
       CONFIGURATION_URI : "../Internationalization/WebUIConfiguration.xml",
       COUNTRY : "HU",
       LANGUAGE : "hu",
@@ -30,7 +31,7 @@ window.LocalizationResourceReferenceTest = new Class( {
 
    beforeEachTest : function(){
       this.locale = new ProcessPuzzleLocale({ language: this.constants.LANGUAGE, country: this.constants.COUNTRY });
-      this.configurationXml = new XmlResource( this.constants.CONFIGURATION_URI );
+      this.configurationXml = new XmlResource( this.constants.CONFIGURATION_URI, { nameSpaces : this.constants.CONFIGURATION_NAMESPACES });
       this.resourceDefinitionXml = this.configurationXml.selectNode( this.constants.RESOURCE_DEFINITION_WITH_LOCALEEXPANSION_SELECTOR );
       this.localizationReference = new LocalizationResourceReference( this.resourceDefinitionXml );
       

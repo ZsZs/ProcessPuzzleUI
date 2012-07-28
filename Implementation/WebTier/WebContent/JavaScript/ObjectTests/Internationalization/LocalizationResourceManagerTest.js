@@ -8,10 +8,12 @@ window.LocalizationResourceManagerTest = new Class( {
          { method : 'initialize_determinesNameSpaceFromWebUIConfiguration', isAsynchron : false },
          { method : 'initialize_instantiatesLocalizationReferencesBasedOnWebUIConfiguration', isAsynchron : false },
          { method : 'load_maintainsResourceList', isAsynchron : true },
+         { method : 'load_whenTimesOut_firesFailureEvent', isAsynchron : true },
          { method : 'release_clearsEntryChacheAndResourceList', isAsynchron : false }]
    },
 
    constants : {
+      CONFIGURATION_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com' xmlns:in='http://www.processpuzzle.com/InternationalizationConfiguration'",
       CONFIGURATION_URI : "../Internationalization/WebUIConfiguration.xml",
       RESOURCE_BUNDLE_ONE_NAME : "../Internationalization/TestResources",
       RESOURCE_BUNDLE_TWO_NAME : "../Internationalization/TestResourcesTwo"
@@ -21,6 +23,7 @@ window.LocalizationResourceManagerTest = new Class( {
       this.setOptions( options );
       
       this.bundle;
+      this.error;
       this.locale;
       this.webUIConfiguration;
       this.webUILogger;
@@ -65,6 +68,21 @@ window.LocalizationResourceManagerTest = new Class( {
       ).callChain();
    },
 
+   load_whenTimesOut_firesFailureEvent : function(){
+      this.testCaseChain.chain(
+         function(){
+            this.bundle.options.maxTries = 2;
+            this.bundle.compileLoadChain = function(){ this.bundle.loadChain.chain( this.longTakingMethod ); }.bind( this );
+            this.bundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            assertThat( this.bundle.getError(), JsHamcrest.Matchers.instanceOf( TimeOutException ));
+            assertThat( this.bundle.getLocalizationResources().size(), equalTo( 0 ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+
    release_clearsEntryChacheAndResourceList : function(){
       //SETUP:
       this.bundle.load( this.locale );
@@ -81,7 +99,12 @@ window.LocalizationResourceManagerTest = new Class( {
    },
    
    //Event handler methods
+   longTakingMethod : function(){
+      //No operation
+   },
+   
    onFailure : function( error ){
+      this.error = error;
       this.testCaseChain.callChain();
    },
    

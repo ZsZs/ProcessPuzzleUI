@@ -364,7 +364,6 @@ var WebUIController = new Class({
       try{
          this.localizationResourceManager = new LocalizationResourceManager( this.webUIConfiguration, { onFailure : this.onError, onSuccess : this.onLocalizationResourcesLoaded } );
          this.localizationResourceManager.load( this.locale );
-         this.logger.debug( "Resource bundles: " + this.options.contextRootPrefix + this.localizationResourceManager.getResourceBundleNames() + " was loaded." );
       }catch( e ) {
          this.onError( e );
       }

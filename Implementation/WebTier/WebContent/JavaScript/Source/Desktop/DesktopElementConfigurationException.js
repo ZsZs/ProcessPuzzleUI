@@ -29,8 +29,8 @@ You should have received a copy of the GNU General Public License along with thi
 var DesktopElementConfigurationException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Configuring '{desktopElementName}' caused error.",
-      name: "ConfigurationTimeoutException"
+      description: "Configuring '{desktopElementName}' failed.",
+      name: "DesktopElementConfigurationException"
    },
    
    //Constructor

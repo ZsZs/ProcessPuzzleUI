@@ -134,7 +134,7 @@ window.DocumentPluginTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.plugin.isSuccess(), is( false ));
-            assertThat( instanceOf( this.plugin.getError(), IllegalArgumentException ), is( true ));
+            assertThat( this.plugin.getError(), JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

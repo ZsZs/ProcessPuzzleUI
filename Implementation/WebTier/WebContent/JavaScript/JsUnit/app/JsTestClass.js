@@ -2,12 +2,17 @@ var JsTestClass = new Class({
    Implements: [Events, Options],
    options: {
       componentName: "JsTestClass",
+      isAfterEachTestAsynchron : false,
+      isBeforeEachTestAsynchron : false,
       testCase: null,
       testMethods: []
    },
    
    initialize: function( options ){
       this.setOptions( options );
+      
+      this.afterEachTestReady = new Chain();
+      this.beforeEachTestChain = new Chain();
       this.testCaseChain = new Chain();
       this.tracer;
       
@@ -35,6 +40,14 @@ var JsTestClass = new Class({
    isJsTestClass: function() { return true; },
    
    //Protected, private helper methods
+   afterEachTestReady: function(){
+      this.fireEvent( 'afterEachTestReady', this );      
+   }.protect(),
+         
+   beforeEachTestReady: function(){
+      this.fireEvent( 'beforeEachTestReady', this );      
+   }.protect(),
+         
    debug : function( arguments ){
       this.tracer.debug( arguments );
    }.protect(),

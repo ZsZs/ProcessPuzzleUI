@@ -4,10 +4,12 @@
 
 var JsTestCase = new Class({
    Implements : [Events, Options],
-   Binds : ['callAfterEachTest', 'callBeforeEachTest', 'checkTimeOut', 'notifyOnTestCaseReady', 'notifyOnTestCaseStart', 'onRunTestFinished', 'run', 'testRunWrapper'],
+   Binds : ['afterEachTestWrapper', 'beforeEachTestWrapper', 'callAfterEachTest', 'callBeforeEachTest', 'checkTimeOut', 'notifyOnTestCaseReady', 'notifyOnTestCaseStart', 'onRunTestFinished', 'run', 'testRunWrapper'],
    options : {
       delayAfterTest : 10,
       eventFireDelay : 10,
+      isAfterEachTestAsynchron : false,
+      isBeforeEachTestAsynchron : false,
       maxTries: 20,
       url: null,
       waitDelay: 200
@@ -34,6 +36,14 @@ var JsTestCase = new Class({
       }
    },
    
+   onAfterEachTestFinished : function(){
+      this.testCaseChain.callChain();
+   },
+   
+   onBeforeEachTestFinished : function(){
+      this.testCaseChain.callChain();
+   },
+   
    onRunTestFinished : function( error ){
       clearInterval( this.timer );
       if( error ) this.testResult.testFailed( error );
@@ -53,21 +63,37 @@ var JsTestCase = new Class({
    isAsynchron : function() { return this.asynchron; },
 
    //Protected, private helper methods
+   afterEachTestWrapper: function(){
+      this.callAfterEachTest();
+      if( this.options.isAfterEachTestAsynchron )
+         this.waitForTestMethod();
+      else
+         this.testCaseChain.callChain();
+   },
+   
+   beforeEachTestWrapper: function(){
+      this.callBeforeEachTest();
+      this.testResult.testStarted();
+      if( this.options.isBeforeEachTestAsynchron )
+         this.waitForTestMethod();
+      else
+         this.testCaseChain.callChain();
+   },
+   
    callAfterEachTest: function(){
-      this.testCaseChain.callChain();
+      //Abstract method should be overwritten.
    }.protect(),
    
    callBeforeEachTest: function(){
-      this.testResult.testStarted();
-      this.testCaseChain.callChain();
+      //Abstract method should be overwritten.
    }.protect(),
    
    compileTestCaseChain : function(){
       this.testCaseChain.chain(
          function(){ this.notifyOnTestCaseStart(); }.bind( this ),
-         function(){ this.callBeforeEachTest(); }.bind( this ),
+         function(){ this.beforeEachTestWrapper(); }.bind( this ),
          function(){ this.testRunWrapper(); }.bind( this ), 
-         function(){ this.callAfterEachTest(); }.bind( this ),
+         function(){ this.afterEachTestWrapper(); }.bind( this ),
          function(){ this.notifyOnTestCaseReady(); }.bind( this )
       );
    }.protect(),
