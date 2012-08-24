@@ -40,6 +40,7 @@ var LocalizationResourceManager = new Class({
    options : {
       componentName : "LocalizationResourceManager",
       defaultLocale : null,
+      eventFireDelay : 2,
       nameSpaces : "xmlns:pp='http://www.processpuzzle.com/'"
    },
 
@@ -86,8 +87,7 @@ var LocalizationResourceManager = new Class({
    },
    
    onParseFailure : function( error ){
-      this.error = error;
-      this.fireEvent( 'failure', error );
+      this.handleLoadError( error );
    },
    
    onParseSuccess : function( resourceUri ){
@@ -138,9 +138,10 @@ var LocalizationResourceManager = new Class({
    }.protect(),
    
    finalizeLoad : function(){
+      this.stopTimeOutTimer();
       this.loadChain.clearChain();
       this.isLoaded = true;
-      this.fireEvent( 'success', this );
+      this.fireEvent( 'success', this, this.options.eventFireDelay );
    }.protect(),
    
    handleLoadError : function( error ){
@@ -149,7 +150,7 @@ var LocalizationResourceManager = new Class({
       this.loadChain.clearChain();
       this.localizationResourceReferences.clear();
       this.localizationResources.clear();
-      this.fireEvent( 'failure', error );
+      this.fireEvent( 'failure', error, this.options.eventFireDelay );
    }.protect(),
    
    loadResources : function(){
@@ -190,6 +191,6 @@ var LocalizationResourceManager = new Class({
    
    timeOut : function( error ){
       this.handleLoadError( error );
-   }.protect(),
+   }.protect()
    
 });

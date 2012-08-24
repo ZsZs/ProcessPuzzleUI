@@ -40,6 +40,7 @@ window.DesktopTest = new Class( {
       DOCUMENT_PANEL_ID : 'documents-panel',
       DOCUMENT_SELECTOR_ID : 'documentSelector',
       EMPTY_CONFIGURATION_PATH : 'Skins/ProcessPuzzle/Configuration/EmptyConfiguration.xml',
+      ERROR_DOCUMENT_URI : "ErrorDocument.xml",
       FOOTER_ONLY_CONFIGURATION_PATH : 'Skins/ProcessPuzzle/Configuration/FooterOnlyConfiguration.xml',
       FULL_CONFIGURATION_PATH : 'Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml',
       HEADER_ONLY_CONFIGURATION_PATH : 'Skins/ProcessPuzzle/Configuration/HeaderOnlyConfiguration.xml',
@@ -68,7 +69,7 @@ window.DesktopTest = new Class( {
       this.resourceBundle = this.webUIController.getResourceBundle();
       this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
          configurationURI : this.constants.DESKTOP_CONFIGURATION_URI, 
-         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         errorDocumentUri : this.constants.ERROR_DOCUMENT_URI,
          onConstructed : this.onConstructed, 
          onDestructed : this.onDestructed, 
          onError : this.onError 

@@ -35,7 +35,7 @@ var PartyEventWidget = new Class({
    
    options : {
       componentName : "PartyEventWidget",
-      dataXmlNameSpace : "xmlns:pe='http://www.processpuzzle.com/PartyEvent'",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pe='http://www.processpuzzle.com/PartyEvent'",
       eventOptions : {},
       eventsSelector : "/pe:eventList/pe:events/pe:event",
       useLocalizedData : true,

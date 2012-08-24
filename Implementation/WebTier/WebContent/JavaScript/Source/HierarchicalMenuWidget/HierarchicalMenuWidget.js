@@ -37,6 +37,7 @@ var HierarchicalMenuWidget = new Class({
    
    options : {
       accordionBehaviour : false,
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:md='http://www.processpuzzle.com/MenuDefinition'",
       componentName : "HierarchicalMenuWidget",
       contextItemId : "",
       idPathSeparator : "/",

@@ -106,8 +106,8 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-         <in:resourceBundle>../BrowserWidget/WidgetInternationalization</in:resourceBundle>
-         <in:resourceBundle>../TreeWidget/TreeWidgetInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../BrowserWidget/WidgetInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../TreeWidget/TreeWidgetInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

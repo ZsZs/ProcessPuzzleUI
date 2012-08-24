@@ -35,7 +35,7 @@ window.DocumentFooterTest = new Class( {
       this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
         
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
       this.footerDefinition = this.documentDefinition.selectNode( "/sd:smartDocumentDefinition/sd:documentFooter" );
       this.documentFooter = new DocumentFooter( this.footerDefinition, this.bundle, null, { onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });
       

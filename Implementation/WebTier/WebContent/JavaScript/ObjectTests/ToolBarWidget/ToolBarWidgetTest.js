@@ -45,7 +45,8 @@ window.ToolBarWidgetTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.toolBarInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.toolBarInternationalization.load( this.locale );
-      this.toolBarDefinition = new XmlResource( this.constants.TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:tb='http://www.processpuzzle.com/ToolBar" });
+      
+      this.toolBarDefinition = new XmlResource( this.constants.TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com' xmlns:tb='http://www.processpuzzle.com/ToolBar'" });
       
       this.toolBar = new ToolBarWidget({ 
          onConstructed : this.onConstructed, 
@@ -72,8 +73,6 @@ window.ToolBarWidgetTest = new Class( {
    
    unmarshall_determinesProperties : function(){
       this.toolBar.unmarshall();
-      assertThat( this.toolBar.getName(), equalTo( this.toolBarDefinition.selectNodeText( "/tb:toolBarDefinition/tb:name" )));
-      assertThat( this.toolBar.getDescription(), equalTo( this.toolBarDefinition.selectNodeText( "/tb:toolBarDefinition/tb:description" )));
       assertThat( this.toolBar.getListStyle(), equalTo( this.toolBarDefinition.selectNodeText( "/tb:toolBarDefinition/tb:buttons/@elementStyle" )));
    },
 

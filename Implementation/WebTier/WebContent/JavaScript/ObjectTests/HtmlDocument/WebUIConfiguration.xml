@@ -106,7 +106,7 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-			<in:resourceBundle>../SmartDocument/DocumentInternationalization</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../SmartDocument/DocumentInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

@@ -50,11 +50,12 @@ window.SmartDocumentTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
       this.smartDocument = new SmartDocument( 
          this.resourceBundle, 
          {  documentContainerId : this.constants.DOCUMENT_CONTAINER_ID, 
             documentDefinitionUri : this.constants.DOCUMENT_DEFINITION_URI, 
+            documentContentNameSpace : "xmlns:pn='http://www.processpuzzle.com/PartyNews'",
             documentContentUri : this.constants.DOCUMENT_DATA_URI, 
             onDocumentReady : this.onDocumentReady, 
             onDocumentError : this.onDocumentError 

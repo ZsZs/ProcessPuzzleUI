@@ -21,7 +21,8 @@ var JsTestCase = new Class({
       this.asynchron = false; 
       this.name = name;
       this.numberOfTries;
-      this.testCaseChain = new Chain();
+      this.state = JsTestCase.States.INITIALIZED;
+      this.testCaseActionChain = new Chain();
       this.testResult;
       this.timer;
    },
@@ -32,34 +33,40 @@ var JsTestCase = new Class({
       if( this.numberOfTries >= this.options.maxTries ){
          clearInterval( this.timer );
          this.testResult.testFailed( new JsTestCaseTimeOutException( this.name, this.options.waitDelay * this.options.maxTries ));
-         this.testCaseChain.callChain();      
+         this.testCaseActionChain.callChain();      
       }
    },
    
    onAfterEachTestFinished : function(){
-      this.testCaseChain.callChain();
+      this.testCaseActionChain.callChain();
    },
    
    onBeforeEachTestFinished : function(){
-      this.testCaseChain.callChain();
+      this.testCaseActionChain.callChain();
    },
    
    onRunTestFinished : function( error ){
       clearInterval( this.timer );
       if( error ) this.testResult.testFailed( error );
       else this.testResult.testFinished();
-      this.testCaseChain.callChain();
+      this.testCaseActionChain.callChain();
    },
    
    run : function(){
       this.testResult = new JsTestCaseResult( this );
       this.compileTestCaseChain();
-      this.testCaseChain.callChain();
+      try{
+         this.testCaseActionChain.callChain();
+      }catch( exception ){
+         this.testResult.testFailed( exception );
+         this.testCaseActionChain.callChain();
+      }
    },
    
    //Properties
    getName : function() { return this.name; },
    getFullName : function() { return this.options.url ? this.options.url.toLowerCase() + ":" + this.name : this.name; },
+   getState : function() { return this.state; },
    isAsynchron : function() { return this.asynchron; },
 
    //Protected, private helper methods
@@ -67,8 +74,9 @@ var JsTestCase = new Class({
       this.callAfterEachTest();
       if( this.options.isAfterEachTestAsynchron )
          this.waitForTestMethod();
-      else
-         this.testCaseChain.callChain();
+      else{
+         this.testCaseActionChain.callChain();
+      }
    },
    
    beforeEachTestWrapper: function(){
@@ -76,20 +84,13 @@ var JsTestCase = new Class({
       this.testResult.testStarted();
       if( this.options.isBeforeEachTestAsynchron )
          this.waitForTestMethod();
-      else
-         this.testCaseChain.callChain();
+      else{
+         this.testCaseActionChain.callChain();
+      }
    },
    
-   callAfterEachTest: function(){
-      //Abstract method should be overwritten.
-   }.protect(),
-   
-   callBeforeEachTest: function(){
-      //Abstract method should be overwritten.
-   }.protect(),
-   
    compileTestCaseChain : function(){
-      this.testCaseChain.chain(
+      this.testCaseActionChain.chain(
          function(){ this.notifyOnTestCaseStart(); }.bind( this ),
          function(){ this.beforeEachTestWrapper(); }.bind( this ),
          function(){ this.testRunWrapper(); }.bind( this ), 
@@ -99,13 +100,14 @@ var JsTestCase = new Class({
    }.protect(),
    
    notifyOnTestCaseReady : function(){
+      this.state = JsTestCase.States.INITIALIZED;
       this.fireEvent( 'testCaseReady', this.testResult, this.options.eventFireDelay );
-      this.testCaseChain.clearChain();
+      this.testCaseActionChain.clearChain();
    }.protect(),
    
    notifyOnTestCaseStart : function(){
       this.fireEvent( 'testCaseStart', this.testResult );
-      this.testCaseChain.callChain();
+      this.testCaseActionChain.callChain();
    }.protect(),
    
    testRunWrapper : function(){
@@ -116,11 +118,11 @@ var JsTestCase = new Class({
             this.waitForTestMethod();
          } else {
             this.testResult.testFinished();
-            this.testCaseChain.callChain();      
+            this.testCaseActionChain.callChain();      
          }
       }catch( e ){
          this.testResult.testFailed( e );
-         this.testCaseChain.callChain();      
+         this.testCaseActionChain.callChain();      
       }
       
    },
@@ -130,3 +132,5 @@ var JsTestCase = new Class({
       this.timer = this.checkTimeOut.periodical( this.options.waitDelay, this );
    }.protect()
 });
+
+JsTestCase.States = { INITIALIZED : "initialized", SETUP : "setUp", VERIFY : "verify", TEARDOWN : "tearDown" };

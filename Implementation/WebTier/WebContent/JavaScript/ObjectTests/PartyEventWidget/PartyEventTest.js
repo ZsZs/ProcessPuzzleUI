@@ -1,8 +1,9 @@
 window.PartyEventTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'unmarshall_determinesEventProperties', isAsynchron : false },
          { method : 'unmarshall_determinesScheduleProperties', isAsynchron : false },
@@ -40,16 +41,22 @@ window.PartyEventTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:pe='http://www.processpuzzle.com/PartyEvent" });
-      this.eventDefinition = this.rssResource.selectNode( this.constants.EVENT_SELECTOR );
-      this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
-      this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
-      this.event = new PartyEvent( this.eventDefinition, this.elementFactory );
-      
+      this.beforeEachTestChain.chain(
+         function(){
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com' xmlns:pe='http://www.processpuzzle.com/PartyEvent'" });
+            this.eventDefinition = this.rssResource.selectNode( this.constants.EVENT_SELECTOR );
+            this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
+            this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
+            this.event = new PartyEvent( this.eventDefinition, this.elementFactory );
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -139,5 +146,14 @@ window.PartyEventTest = new Class( {
       
       var locationElement = this.widgetContainerElement.getChildren( 'div.' + this.event.options.locationStyle )[0];
       assertThat( locationElement.get( 'text' ), equalTo( this.event.getLocationAddress() )); 
+   },
+   
+   //Protected, private helper methods
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
    }
 });

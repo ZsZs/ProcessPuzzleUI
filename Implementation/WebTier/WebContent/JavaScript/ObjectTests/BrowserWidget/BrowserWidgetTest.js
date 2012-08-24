@@ -1,6 +1,6 @@
 window.BrowserWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onLocalizationLoaded'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
       isBeforeEachTestAsynchron : true,
@@ -65,7 +65,7 @@ window.BrowserWidgetTest = new Class( {
             this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
             this.webUILogger = new WebUILogger( this.webUIConfiguration );
             this.componentStateManager = new ComponentStateManager();
-            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
             this.resourceBundle.load( this.locale );
          }.bind( this ),
          function(){
@@ -139,9 +139,6 @@ window.BrowserWidgetTest = new Class( {
    },
    
    initialize_whenMessageSubsciptionsAreGiven_subscribesToMessages : function() {
-      //this.browserWidget = new BrowserWidget({ widgetContainerId : this.constants.WIDGET_CONTAINER_ID, subscribeToWebUIMessages : [TestMessageOne, TestMessageTwo] }, this.resourceBundle );
-      
-      //VERIFY:
       assertEquals( "BrowserWidget is registered to message:", this.browserWidget.webUIMessageHandler, this.messageBus.getSubscribersToMessage( TestMessageOne ).get(0) );
       assertEquals( "BrowserWidget is registered to message:", this.browserWidget.webUIMessageHandler, this.messageBus.getSubscribersToMessage( TestMessageTwo ).get(0) );
    },
@@ -286,6 +283,10 @@ window.BrowserWidgetTest = new Class( {
    
    onDestroyed : function( error ){
       this.testCaseChain.callChain();
+   },
+   
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
    },
    
    onLocalizationLoaded : function(){

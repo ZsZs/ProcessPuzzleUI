@@ -106,17 +106,17 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-			<in:resourceBundle>../DesktopConfigurator/DesktopInternationalization</in:resourceBundle>
-			<in:resourceBundle>../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../DesktopConfigurator/DesktopInternationalization</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
 			<in:resourceBundle>../Internationalization/TestResources</in:resourceBundle>
-			<in:resourceBundle>../Internationalization/TestResourcesTwo</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../Internationalization/TestResourcesTwo</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>
 			<in:locale>hu</in:locale>
 			<in:locale>en, GB</in:locale>
 		</in:availableLocales>
-		<in:defaultLocale>hu</in:defaultLocale>
+		<in:defaultLocale>en, GB</in:defaultLocale>
 		<in:localeDefinitions>classpath:com/processpuzzle/internalization/domain/LocaleDefinitions.xml</in:localeDefinitions>
 	</in:internationalization>
 

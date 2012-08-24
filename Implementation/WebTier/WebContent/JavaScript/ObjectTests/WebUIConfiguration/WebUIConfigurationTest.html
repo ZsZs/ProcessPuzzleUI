@@ -10,10 +10,6 @@
       var contextRootPrefix = "../../../";
    </script>
    
-   <!--[if IE]>
-      <script type="text/javascript" src="../../Libraries/MochaUI/excanvas.js"></script>
-   <![endif]-->  
-   
    <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
    <script type="text/javascript" src="../../JsUnit/JsMockito/JsMockito.js"></script>
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
@@ -94,7 +90,7 @@
  
    //Internationalization, Locale
    function testGetI18DefaultLocale() {
-      assertEquals( "hu", webUIConfiguration.getI18DefaultLocale() );
+      assertEquals( "en, GB", webUIConfiguration.getI18DefaultLocale() );
    }
 	  
       function testGetI18Locale() {

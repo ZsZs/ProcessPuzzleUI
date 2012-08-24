@@ -41,7 +41,7 @@ window.DiagramTest = new Class( {
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       this.diagramLocalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.diagramLocalization.load( this.locale );
-      this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com/', xmlns:dd='http://www.processpuzzle.com/Diagram', xmlns:uml='http://www.processpuzzle.com/Diagram/UML'" } );
+      this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com/' xmlns:dd='http://www.processpuzzle.com/Diagram' xmlns:uml='http://www.processpuzzle.com/Diagram/UML'" } );
       
       this.diagramContainerElement = $( this.constants.DIAGRAM_CONTAINER_ID );
       this.elementFactory = new WidgetElementFactory( this.diagramContainerElement, this.diagramLocalization );

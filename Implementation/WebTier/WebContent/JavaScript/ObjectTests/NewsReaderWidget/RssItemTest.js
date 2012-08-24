@@ -1,8 +1,9 @@
 window.RssItemTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'unmarshall_determinesItemProperties', isAsynchron : false },
          { method : 'construct_displaysTitle', isAsynchron : false },
@@ -36,16 +37,23 @@ window.RssItemTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns='rss-2_0.xsd'" });
-      this.itemDefinition = this.rssResource.selectNode( this.constants.ITEM_SELECTOR );
-      this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
-      this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
-      this.item = new RssItem( this.itemDefinition, this.elementFactory );
-      
+      this.beforeEachTestChain.chain(
+         function(){
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.rssResource = new XmlResource( this.constants.LOCALIZED_RSS_URI, { nameSpaces : "xmlns:pn='http://www.processpuzzle.com/PartyNews'" });
+            this.itemDefinition = this.rssResource.selectNode( this.constants.ITEM_SELECTOR );
+            this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
+            this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
+            this.item = new RssItem( this.itemDefinition, this.elementFactory );
+            
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -102,6 +110,14 @@ window.RssItemTest = new Class( {
       var descriptionElement = this.widgetContainerElement.getChildren( 'div.' + this.item.options.descriptionStyle )[0];
       var expectedText = this.item.getDescription().substr( 0, this.item.options.truncatedDescriptionLength ) + this.item.options.trancatedDescriptionEnding;
       assertThat( descriptionElement.get( 'text' ), equalTo( expectedText )); 
-   }
+   },
+
+   //Protected, private helper methods
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
    
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
+   }
 });

@@ -52,7 +52,7 @@ window.TabTest = new Class( {
       this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.resourceBundle.load( this.locale );
       
-      this.tabsDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI );
+      this.tabsDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com' xmlns:td='http://www.processpuzzle.com/TabsDefinition'" });
       this.tabDefinition = this.tabsDefinition.selectNode( this.constants.TAB_DEFINITION_SELECTOR );
       
       this.tab = new Tab( this.tabDefinition, this.resourceBundle, { onTabSelected : this.onTabSelected } );

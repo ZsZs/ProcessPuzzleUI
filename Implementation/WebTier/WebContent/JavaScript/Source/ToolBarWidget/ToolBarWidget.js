@@ -37,24 +37,19 @@ var ToolBarWidget = new Class({
    options : {
       buttonsSelector : "/tb:toolBarDefinition/tb:buttons/tb:button | /tb:toolBarDefinition/tb:buttons/tb:divider",
       componentName : "ToolBarWidget",
-      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:tb='http://www.processpuzzle.com/ToolBar",
-      descriptionSelector : "/tb:toolBarDefinition/tb:description", 
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:tb='http://www.processpuzzle.com/ToolBar'",
       dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
       listStyleSelector : "/tb:toolBarDefinition/tb:buttons/@elementStyle",
-      nameSelector : "/tb:toolBarDefinition/tb:name",
       showCaptions : false
    },
 
    //Constructor
    initialize: function( options, internationalization ){
-      //this.setOptions( options );
       this.parent( options, internationalization );
       
       //Private attributes
       this.buttons = new LinkedHashMap();
-      this.description;
       this.dividers = new ArrayList();
-      this.name;
       this.listElement;
       this.listStyle;
       this.wrapperElement;
@@ -130,9 +125,7 @@ var ToolBarWidget = new Class({
    
    unmarshallProperties: function(){
       this.parent();
-      this.description = this.dataXml.selectNodeText( this.options.descriptionSelector );
       this.listStyle = this.dataXml.selectNodeText( this.options.listStyleSelector );
-      this.name = this.dataXml.selectNodeText( this.options.nameSelector );
    }.protect()
 
 });

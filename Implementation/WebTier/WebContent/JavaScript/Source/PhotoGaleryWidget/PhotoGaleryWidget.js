@@ -42,6 +42,7 @@ var PhotoGaleryWidget = new Class({
       centerImagesDefault : true,
       centerImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages",
       componentName : "PhotoGaleryWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pg='http://www.processpuzzle.com/PhotoGalery'",
       descriptionSelector : "//sd:photoGaleryWidgetDefinition/sd:description", 
       effectDurationDefault : 750,
       effectDurationSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:effectDuration",
@@ -188,11 +189,7 @@ var PhotoGaleryWidget = new Class({
    }.protect(),
    
    compileConstructionChain: function(){
-      this.constructionChain.chain(
-         this.compileDataObject,
-         this.instantiateSlideShow,
-         this.finalizeConstruction
-      );
+      this.constructionChain.chain( this.compileDataObject, this.instantiateSlideShow, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
@@ -223,7 +220,7 @@ var PhotoGaleryWidget = new Class({
          fast : this.skipTransition,
          height : this.height,
          href : this.galeryLink,
-         hu : this.imageFolderUri,
+         imageFolder : this.imageFolderUri,
          linked : this.automaticallyLinkSlide,
          loop : this.loopShow,
          onComplete : this.onComplete,

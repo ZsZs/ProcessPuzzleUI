@@ -260,10 +260,10 @@ var AbstractDocument = new Class({
       if( this.options.documentContentUri ){
          try{
             var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), { contentType: this.options.documentContentExtension.substring( 1 ) });
-            this.documentContent = new XmlResource( resourceUri.determineLocalizedUri() );
+            this.documentContent = new XmlResource( resourceUri.determineLocalizedUri(), { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
             try{
-               this.documentContent = new XmlResource( this.options.documentContentUri );
+               this.documentContent = new XmlResource( this.options.documentContentUri, { nameSpaces : this.options.documentContentNameSpace } );
             }catch( e ){
                throw new IllegalArgumentException( 'SmartDocument.options.documentContentUri', this.options.documentContentUri );
             }
@@ -271,7 +271,7 @@ var AbstractDocument = new Class({
       }else {
          this.options.documentContentUri = this.options.documentDefinitionUri.substring( 0, this.options.documentDefinitionUri.lastIndexOf( ".xml" ));
          try{
-            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension );
+            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension, { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
             this.logger.trace( "Content of " + this.name + " document couldn't be loaded." );
          }

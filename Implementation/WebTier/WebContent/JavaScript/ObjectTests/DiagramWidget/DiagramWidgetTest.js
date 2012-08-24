@@ -1,8 +1,9 @@
 window.DiagramWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'unmarshall_determinesProperties', isAsynchron : false },
          { method : 'unmarshall_instantiatesAndUnmarshallsDiagram', isAsynchron : false },
@@ -14,7 +15,7 @@ window.DiagramWidgetTest = new Class( {
       LANGUAGE : "hu",
       DIAGRAM_CONTAINER_ID : "DiagramContainer",
       DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramDefinition.xml",
-      DIAGRAM_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com', xmlns:dd='http://www.processpuzzle.com/Diagram', xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
+      DIAGRAM_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com' xmlns:dd='http://www.processpuzzle.com/Diagram' xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
       FIGURES_SELECTOR : "/dd:diagramDefinition/dd:figures/dd:annotation | //dd:diagramDefinition/dd:figures/uml:class | //dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
       WEBUI_CONFIGURATION_URI : "../DiagramWidget/WebUIConfiguration.xml",
       WIDGET_DEFINITION_URI : "../DiagramWidget/DiagramWidgetDefinition.xml"
@@ -36,23 +37,31 @@ window.DiagramWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.messageBus = new WebUIMessageBus();
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.componentStateManager = new ComponentStateManager();
-      this.diagramLocalization = new LocalizationResourceManager( this.webUIConfiguration );
-      this.diagramLocalization.load( this.locale );
-      this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : this.constants.DIAGRAM_NAMESPACES } );
-      this.diagramWidgetDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com'" } );
+      this.beforeEachTestChain.chain(
+         function(){
+            this.messageBus = new WebUIMessageBus();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.componentStateManager = new ComponentStateManager();
+            this.diagramLocalization = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.diagramLocalization.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.diagramDefinition = new XmlResource( this.constants.DIAGRAM_DEFINITION_URI, { nameSpaces : this.constants.DIAGRAM_NAMESPACES } );
+            this.diagramWidgetDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+            
+            this.diagramWidget = new DiagramWidget( {
+               onConstructed : this.onConstructed,
+               onDestroyed : this.onDestroyed,
+               widgetContainerId : this.constants.DIAGRAM_CONTAINER_ID, 
+               widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI, 
+               widgetDataURI : this.constants.DIAGRAM_DEFINITION_URI 
+            }, this.diagramLocalization );
+            this.diagramContainerElement = $( this.constants.DIAGRAM_CONTAINER_ID );
       
-      this.diagramWidget = new DiagramWidget( {
-         onConstructed : this.onConstructed,
-         onDestroyed : this.onDestroyed,
-         widgetContainerId : this.constants.DIAGRAM_CONTAINER_ID, 
-         widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI, 
-         widgetDataURI : this.constants.DIAGRAM_DEFINITION_URI 
-      }, this.diagramLocalization );
-      this.diagramContainerElement = $( this.constants.DIAGRAM_CONTAINER_ID );
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -111,6 +120,14 @@ window.DiagramWidgetTest = new Class( {
    
    onDestroyed : function(){
       this.testCaseChain.callChain();
+   },
+   
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
    },
    
    waitForImageLoading : function(){

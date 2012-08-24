@@ -56,12 +56,10 @@ var JsTestFunction = new Class({
    //Protected, private helper methods
    callAfterEachTest: function(){
       if( this.tearDownFunction ) this.tearDownFunction();
-      this.parent();
    }.protect(),
    
    callBeforeEachTest: function(){
       if( this.setUpFunction ) this.setUpFunction();
-      this.parent();
    }.protect(),
    
    deriveFakeClassNameFromUrl: function(){

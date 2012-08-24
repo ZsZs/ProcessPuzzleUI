@@ -106,8 +106,8 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-			<in:resourceBundle>../Desktop/DesktopInternationalization</in:resourceBundle>
-         <in:resourceBundle>../ToolBarWidget/ToolBarInternationalization</in:resourceBundle>
+			<in:resourceBundle localeSpecificVersionsExists="false">../Desktop/DesktopInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../ToolBarWidget/ToolBarInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

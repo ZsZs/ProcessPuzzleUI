@@ -1,8 +1,9 @@
 window.PhotoGaleryWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
           { method : 'initialization_setsState', isAsynchron : false },
           { method : 'unmarshall_determinesProperties', isAsynchron : false },
@@ -36,23 +37,30 @@ window.PhotoGaleryWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.messageBus = new WebUIMessageBus();
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.componentStateManager = new ComponentStateManager();
-      this.photoGaleryInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
-      this.photoGaleryInternationalization.load( this.locale );
-      this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" } );
-      this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
-      
-      this.photoGalery = new PhotoGaleryWidget( {
-         onConstructed : this.onConstructed,
-         onDestroyed : this.onDestroyed,
-         widgetContainerId : this.constants.PHOTO_GALERY_CONTAINER_ID, 
-         widgetDefinitionURI : this.constants.PHOTO_GALERY_DEFINITION_URI, 
-         widgetDataURI : this.constants.PHOTO_GALERY_DATA_URI 
-      }, this.photoGaleryInternationalization );
-      this.photoGaleryContainerElement = $( this.constants.PHOTO_GALERY_CONTAINER_ID );
+      this.beforeEachTestChain.chain(
+         function(){
+            this.messageBus = new WebUIMessageBus();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.componentStateManager = new ComponentStateManager();
+            this.photoGaleryInternationalization = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.photoGaleryInternationalization.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" });
+            this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
+            
+            this.photoGalery = new PhotoGaleryWidget( {
+               onConstructed : this.onConstructed,
+               onDestroyed : this.onDestroyed,
+               widgetContainerId : this.constants.PHOTO_GALERY_CONTAINER_ID, 
+               widgetDefinitionURI : this.constants.PHOTO_GALERY_DEFINITION_URI, 
+               widgetDataURI : this.constants.PHOTO_GALERY_DATA_URI 
+            }, this.photoGaleryInternationalization );
+            this.photoGaleryContainerElement = $( this.constants.PHOTO_GALERY_CONTAINER_ID );
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -151,6 +159,14 @@ window.PhotoGaleryWidgetTest = new Class( {
    
    onDestroyed : function(){
       this.testCaseChain.callChain();
+   },
+   
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
    },
    
    waitForImageLoading : function(){

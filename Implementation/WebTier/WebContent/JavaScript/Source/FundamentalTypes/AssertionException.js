@@ -33,14 +33,14 @@ var AssertionException = new Class({
    Extends: WebUIException,
    options: {
       description: "{assertion}",
-      name: "AssertionException",
+      name: "AssertionException"
    },
    
    //Constructors
    initialize: function( assertion, options ){
      this.parent( options );
      this.parameters = { assertion : assertion };
-   },
+   }
    
    //Public accessor and mutator methods
    

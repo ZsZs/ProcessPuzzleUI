@@ -36,7 +36,7 @@ var DesktopDocument = new Class({
       componentName : "DesktopDocument",
       documentDataNameSpace: "",
       documentDataUriSelector: "@documentData",
-      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      documentDefinitionNameSpace: "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       documentDefinitionUriSelector: "@documentDefinition"
    },
    
@@ -49,14 +49,6 @@ var DesktopDocument = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function(){
-      this.parent();
-   },
-   
-   destroy: function(){
-      this.parent();
-   },
-   
    onDocumentError: function( error ){
       this.onConstructionError( error );
    },
@@ -107,10 +99,10 @@ var DesktopDocument = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( error ){
       if( this.document && this.document.getState() > AbstractDocument.States.INITIALIZED ) this.document.destroy();
       this.document = null;
-      this.parent();
+      this.parent( error );
    },
    
    unmarshallProperties: function(){

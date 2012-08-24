@@ -106,12 +106,12 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-         <in:resourceBundle>../LanguageSelectorWidget/LanguageSelectionInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../LanguageSelectorWidget/LanguageSelectionInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>
 			<in:locale>hu</in:locale>
-			<in:locale>en</in:locale>
+			<in:locale>en, GB</in:locale>
 		</in:availableLocales>
 		<in:defaultLocale>hu</in:defaultLocale>
 		<in:localeDefinitions>classpath:com/processpuzzle/internalization/domain/LocaleDefinitions.xml</in:localeDefinitions>

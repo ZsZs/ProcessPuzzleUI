@@ -37,6 +37,7 @@ var DiagramWidget = new Class({
    
    options : {
       componentName : "DiagramWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:dd='http://www.processpuzzle.com/Diagram' xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
       widgetContainerId : "DiagramWidget",
       widgetDefinitionURI : "DiagramWidgetDefinition.xml"
    },
@@ -49,14 +50,6 @@ var DiagramWidget = new Class({
    },
    
    //Public accessor and mutator methods
-   construct : function() {
-      this.parent();
-   },
-   
-   destroy : function() {
-      this.parent();
-   },
-   
    onDiagramDraw: function(){
       this.constructionChain.callChain();
    },

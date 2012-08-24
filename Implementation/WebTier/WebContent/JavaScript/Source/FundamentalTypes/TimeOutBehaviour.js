@@ -60,7 +60,7 @@ var TimeOutBehaviour = new Class({
 
    stopTimeOutTimer : function() {
       clearInterval( this.timer );
-   },
+   }
    
    //Properties
    

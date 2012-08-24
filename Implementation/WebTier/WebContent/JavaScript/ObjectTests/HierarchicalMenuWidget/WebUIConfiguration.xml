@@ -106,7 +106,7 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-         <in:resourceBundle>../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

@@ -1,8 +1,9 @@
 window.HierarchicalMenuWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed', 'onSelectCallBack'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded', 'onSelectCallBack'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'initialize_instantiatesMenuItemFactory', isAsynchron : false },
          { method : 'initialize_whenComponentStateIsAvailable_overwritesDefaultValues', isAsynchron : false },
@@ -15,7 +16,7 @@ window.HierarchicalMenuWidgetTest = new Class( {
          { method : 'construct_whenContextItemIdIsInvalid_throwsException', isAsynchron : false },
          { method : 'construct_whenComponentStateIsAvailable_overwritesDefaultValues', isAsynchron : true },
          { method : 'onSelection_broadcastMenuSelectedMessage', isAsynchron : true }, 
-         { method : 'webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reloadsMenu', isAsynchron : true },
+         { method : 'webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reconstrutsMenu', isAsynchron : true },
          { method : 'destroy_destroysAllHtmlElements', isAsynchron : true }]
    },
 
@@ -43,20 +44,28 @@ window.HierarchicalMenuWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.messageBus = new WebUIMessageBus();
-      this.componentStateManager = new ComponentStateManager();
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
-      this.menuWidget = new HierarchicalMenuWidget({ 
-         onConstructed : this.onConstructed, 
-         onDestroyed : this.onDestroyed, 
-         widgetDataURI : this.constants.MENU_WIDGET_DATA_URI, 
-         widgetDefinitionURI : this.constants.MENU_WIDGET_DEFINITION_URI 
-      }, this.resourceBundle );
-      this.widgetDefinitionXml = this.menuWidget.getDefinitionXml();
+      this.beforeEachTestChain.chain(
+         function(){
+            this.messageBus = new WebUIMessageBus();
+            this.componentStateManager = new ComponentStateManager();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
+            this.menuWidget = new HierarchicalMenuWidget({ 
+               onConstructed : this.onConstructed, 
+               onConstructionError : this.onConstructionError, 
+               onDestroyed : this.onDestroyed, 
+               widgetDataURI : this.constants.MENU_WIDGET_DATA_URI, 
+               widgetDefinitionURI : this.constants.MENU_WIDGET_DEFINITION_URI 
+            }, this.resourceBundle );
+            this.widgetDefinitionXml = this.menuWidget.getDefinitionXml();
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -218,12 +227,13 @@ window.HierarchicalMenuWidgetTest = new Class( {
       ).callChain();
    },
    
-   webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reloadsMenu : function() {
+   webUIMessageHandler_whenWidgetSubscribesToMenuMessages_reconstrutsMenu : function() {
       this.testCaseChain.chain(
          function(){
             this.menuWidget = new HierarchicalMenuWidget({ 
                contextItemId : "/MenuWidget/mainItemOne",
                onConstructed : this.onConstructed, 
+               onConstructionError : this.onConstructionError, 
                onDestroyed : this.onDestroyed, 
                subscribeToWebUIMessages : [MenuSelectedMessage],
                widgetDataURI : this.constants.MENU_WIDGET_DATA_URI, 
@@ -234,11 +244,13 @@ window.HierarchicalMenuWidgetTest = new Class( {
          }.bind( this ),
          function(){
             assumeThat( this.menuWidget.getCurrentItemId(), equalTo( "/MenuWidget/mainItemOne/itemOneOfOne" ));
-            
             var menuMessage = new MenuSelectedMessage({ actionType : 'loadMenu', contextItemId : '/MenuWidget/mainItemTwo'});
             this.messageBus.notifySubscribers( menuMessage );
+         }.bind( this ),
+         function(){ //Destructed message fired as part of rebuild
+         }.bind( this ),
+         function(){ //Constructed message fired again
             assertThat( this.menuWidget.getCurrentItemId(), equalTo( "/MenuWidget/mainItemTwo/itemTwoOfTwo" ));
-            
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -260,17 +272,30 @@ window.HierarchicalMenuWidgetTest = new Class( {
       ).callChain();
    },
 
+   //Protected, private helper methods
+   callMenuWidgetConstruct : function(){
+      this.menuWidget.construct();
+   },
+   
    onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
-   onDestroyed : function( error ){
+   onConstructionError : function( error ){
+      this.error = error;
       this.testCaseChain.callChain();
    },
    
-   //Protected, private helper methods
-   callMenuWidgetConstruct : function(){
-      this.menuWidget.construct();
+   onDestroyed : function(){
+      this.testCaseChain.callChain();
+   },
+   
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
    },
    
    onSelectCallBack : function( webUIMessage ) {

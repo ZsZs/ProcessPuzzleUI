@@ -35,7 +35,7 @@ window.DocumentHeaderTest = new Class( {
       this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
         
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
       this.headerDefinition = this.documentDefinition.selectNode( "/sd:smartDocumentDefinition/sd:documentHeader" );
       this.documentHeader = new DocumentHeader( this.headerDefinition, this.bundle, null, { onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });
       

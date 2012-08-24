@@ -69,7 +69,8 @@ window.SplashFormTest = new Class( {
             var statusDisplayElement = this.splashForm.getSplashFormElement().getElements( 'div.statusDisplay' )[0]; 
             assertThat( statusDisplayElement, not( nil() ));
             assertThat( statusDisplayElement.getStyle( 'height' ), equalTo( this.splashForm.options.statusDisplayStyles['height'] ));
-            assertThat( statusDisplayElement.getStyle( 'width' ), equalTo( this.splashForm.options.statusDisplayStyles['width'] ));
+            if( !Browser.ie ) assertThat( statusDisplayElement.getStyle( 'width' ), equalTo( this.splashForm.options.statusDisplayStyles['width'] ));
+            else assertThat( statusDisplayElement.style.width, equalTo( this.splashForm.options.statusDisplayStyles['width'] ));
             
             assertThat( statusDisplayElement.get( 'text' ), equalTo( SplashForm.StatusText[this.splashForm.getBrowserLanguage()] ));
             

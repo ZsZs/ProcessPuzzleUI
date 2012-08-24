@@ -1,8 +1,9 @@
 window.LanguageSelectorWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed', 'onLanguageChangeCallback'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLanguageChangeCallback', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
           { method : 'initialize_whenConstructorArgumentsAreGiven_usesThem', isAsynchron : false },
           { method : 'initialize_whenConstructorArgumentsAreMissing_usesWebUIController', isAsynchron : false },
@@ -12,7 +13,7 @@ window.LanguageSelectorWidgetTest = new Class( {
    },
 
    constants : {
-      CONFIGURATION_URI : "../WebUIController/SampleConfiguration.xml",
+      CONFIGURATION_URI : "../LanguageSelectorWidget/WebUIConfiguration.xml",
       ELEMENT_SELECTOR : "LanguageSelector",
       LANGUAGE : "hu",
       WIDGET_CONTAINER_ID : "LanguageSelectorWidget"
@@ -34,16 +35,23 @@ window.LanguageSelectorWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.messageBus = new WebUIMessageBus();
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.componentStateManager = new ComponentStateManager();
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.languageSelector = new LanguageSelectorWidget({ onConstructed : this.onConstructed, onDestroyed : this.onDestroyed, widgetContainerId : this.constants.WIDGET_CONTAINER_ID }, this.resourceBundle, this.webUIConfiguration );
-      this.widgetContainerElement = this.languageSelector.getContainerElement();
-
-      this.callBackWasCalled = false;
+      this.beforeEachTestChain.chain(
+         function(){
+            this.messageBus = new WebUIMessageBus();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.componentStateManager = new ComponentStateManager();
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.languageSelector = new LanguageSelectorWidget({ onConstructed : this.onConstructed, onDestroyed : this.onDestroyed, widgetContainerId : this.constants.WIDGET_CONTAINER_ID }, this.resourceBundle, this.webUIConfiguration );
+            this.widgetContainerElement = this.languageSelector.getContainerElement();
+            this.callBackWasCalled = false;
+      
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -127,6 +135,13 @@ window.LanguageSelectorWidgetTest = new Class( {
    onLanguageChangeCallback : function( message ) {
       callBackWasCalled = true;
       callBackMessage = message;
-   }
+   },
 
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
+   }
 });

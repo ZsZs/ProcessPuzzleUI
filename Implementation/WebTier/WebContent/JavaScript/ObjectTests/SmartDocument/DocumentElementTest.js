@@ -58,7 +58,7 @@ window.DocumentElementTest = new Class( {
       this.desktopInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.desktopInternationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
       
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
       this.documentElementWithLink = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITH_LINK ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed } );
       this.documentElementWithoutId = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITHOUT_ID ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed } );
       this.documentElementWithPlugin = new DocumentElement( this.documentDefinition.selectNode( this.constants.ELEMENT_DEFINITION_WITH_PLUGIN ), this.desktopInternationalization, { isEditable : true, onConstructed : this.onConstructed, onConstructionError : this.onConstructionError });

@@ -33,7 +33,7 @@ window.DesktopPanelHeaderTest = new Class({
         
       this.componentStateManager = new ComponentStateManager();
       this.messageBus = new WebUIMessageBus();
-      this.desktopConfiguration = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI );
+      this.desktopConfiguration = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'"} );
       this.panelHeaderDefinition = this.desktopConfiguration.selectNode( this.constants.PANEL_HEADER_SELECTOR );
       this.panelHeader = new DesktopPanelHeader( this.panelHeaderDefinition, this.bundle, {
          componentContainerId : "console_header",

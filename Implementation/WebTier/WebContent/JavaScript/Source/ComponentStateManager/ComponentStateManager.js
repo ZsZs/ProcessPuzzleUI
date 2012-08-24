@@ -106,7 +106,7 @@ var ComponentStateManager = new Class({
    
    //Properties
    getDefaultTransformer: function() { return this.stateTransformer; },
-   getUriTransformer: function() { return this.uriTransformer; },
+   getUriTransformer: function() { return this.uriTransformer; }
    
    //Protected, private helper methods
 });

@@ -96,7 +96,7 @@ Notes:
 	height: 0; opacity: 0;
 }
 .slideshow-captions-visible {
-	height: 22px; opacity: .7;
+	aria-busy: false; height: 22px; opacity: 0.7;
 }
 
 /**

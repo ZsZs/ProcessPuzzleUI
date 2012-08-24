@@ -33,7 +33,7 @@ window.DesktopPanelTest = new Class( {
       DESKTOP_CONTAINER_ID : "desktop",
       COLUMN_DEFINITION : "/desktopConfiguration/columns/column[@name='mainColumn']",
       ERRONEOUS_DOCUMENT_URI : "../Desktop/ErroneousDocumentDefinition.xml",
-      ERROR_DOCUMENT_URI : "../../../Content/System/ErrorDocument.xml",
+      ERROR_DOCUMENT_URI : "ErrorDocument.xml",
       HTML_DOCUMENT_URI : "../Desktop/HtmlDocument.xml",
       SMART_DOCUMENT_URI : "../Desktop/StaticDocument.xml",
       PANEL_DOCUMENT_WRAPPER_ID : "panelDocumentWrapper",
@@ -80,14 +80,14 @@ window.DesktopPanelTest = new Class( {
       this.resourceBundle.load( new ProcessPuzzleLocale({ language : "hu" }) );
       this.componentStateManager = new ComponentStateManager();
 
-      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'"} );
+      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'"});
       this.columnDefinition = this.desktopDefinition.selectNode( this.constants.COLUMN_DEFINITION );
       this.column = new DesktopColumn( this.columnDefinition, { componentContainerId : this.constants.PAGE_WRAPPER_ID } );
       
       this.panelWithDocumentDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION );
       this.panelWithDocument = new DesktopPanel( this.panelWithDocumentDefinition, this.resourceBundle, { 
          componentContainerId : this.constants.PAGE_WRAPPER_ID, 
-         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         errorDocumentUri : this.constants.ERROR_DOCUMENT_URI,
          onConstructed : this.onPanelConstructed, 
          onDestructed : this.onPanelDestructed, 
          onDocumentLoaded : this.onDocumentLoaded, 
@@ -96,7 +96,7 @@ window.DesktopPanelTest = new Class( {
       this.panelWithErroneousDocumentDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_ERRONEOUS_DOCUMENT_DEFINITION );
       this.panelWithErroneousDocument = new DesktopPanel( this.panelWithErroneousDocumentDefinition, this.resourceBundle, { 
          componentContainerId : this.constants.PAGE_WRAPPER_ID, 
-         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         errorDocumentUri : this.constants.ERROR_DOCUMENT_URI,
          onConstructed : this.onPanelConstructed, 
          onDestructed : this.onPanelDestructed, 
          onDocumentLoaded : this.onDocumentLoaded, 
@@ -109,7 +109,7 @@ window.DesktopPanelTest = new Class( {
       this.panelWithErroneousPluginDefinition = this.desktopDefinition.selectNode( this.constants.PANEL_WITH_ERRONEOUS_PLUGIN_DEFINITION );
       this.panelWithErroneousPlugin = new DesktopPanel( this.panelWithErroneousPluginDefinition, this.resourceBundle, { 
          componentContainerId : this.constants.PAGE_WRAPPER_ID, 
-         errorDocumentUri : "../../../Content/System/ErrorDocument.xml",
+         errorDocumentUri : this.constants.ERROR_DOCUMENT_URI,
          onConstructed : this.onPanelConstructed, 
          onDestructed : this.onPanelDestructed, 
          onDocumentLoaded : this.onDocumentLoaded, onError : this.onPanelError } );

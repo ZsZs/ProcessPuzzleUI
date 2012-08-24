@@ -1,5 +1,6 @@
 //= require_directory ./AbstractDocument
 //= require_directory ./BrowserWidget
+//= require_directory ./BusyWidget
 //= require_directory ./ComponentStateManager
 //= require_directory ./Desktop
 //= require_directory ./DiagramWidget

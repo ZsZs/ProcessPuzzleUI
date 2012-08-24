@@ -29,7 +29,7 @@ var BrowserWidget = new Class( {
    options : {
       componentName : "BrowserWidget",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       descriptionSelector : "/sd:widgetDefinition/sd:description",
       domDocument : this.document,
       eventDeliveryDelay : 5,

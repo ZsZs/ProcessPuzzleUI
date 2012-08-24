@@ -35,7 +35,7 @@ var DesktopElement = new Class({
       componentContainerId: "desktop",
       componentName: "DesktopElement",
       defaultTag : "div",
-      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration', xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       eventFireDelay : 2,
       idSelector : "@id",
       tagSelector : "@tag",

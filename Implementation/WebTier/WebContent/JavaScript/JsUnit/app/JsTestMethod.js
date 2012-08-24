@@ -36,12 +36,10 @@ var JsTestMethod = new Class({
    //Protected, private helper methods
    callAfterEachTest: function(){
       this.testObject.afterEachTest();
-      this.parent();
    }.protect(),
    
    callBeforeEachTest: function(){
       this.testObject.beforeEachTest();
-      this.parent();
    }.protect(),
    
    runTest: function(){

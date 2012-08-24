@@ -1,8 +1,9 @@
 window.NewsReaderWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onDestroyed'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'initialize_loadsLocalizedRssVersion', isAsynchron : false },
          { method : 'unmarshall_instantiatesChannel', isAsynchron : false },
@@ -34,21 +35,28 @@ window.NewsReaderWidgetTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.componentStateManager = new ComponentStateManager();
-      this.messageBus = new WebUIMessageBus();
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.newsReaderWidget = new NewsReaderWidget({ 
-         widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
-         onConstructed : this.onConstructed, 
-         onDestroyed : this.onDestroyed,
-         widgetDataURI : this.constants.RSS_URI,
-         widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI
-      }, this.resourceBundle );
-      
-      this.widgetContainerElement = this.newsReaderWidget.getContainerElement();
+      this.beforeEachTestChain.chain(
+         function(){
+            this.componentStateManager = new ComponentStateManager();
+            this.messageBus = new WebUIMessageBus();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.newsReaderWidget = new NewsReaderWidget({ 
+               widgetContainerId : this.constants.WIDGET_CONTAINER_ID,
+               onConstructed : this.onConstructed, 
+               onDestroyed : this.onDestroyed,
+               widgetDataURI : this.constants.RSS_URI,
+               widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI
+            }, this.resourceBundle );
+            
+            this.widgetContainerElement = this.newsReaderWidget.getContainerElement();
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -104,6 +112,13 @@ window.NewsReaderWidgetTest = new Class( {
    
    onDestroyed : function( error ){
       this.testCaseChain.callChain();
-   }
+   },
 
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
+   }
 });

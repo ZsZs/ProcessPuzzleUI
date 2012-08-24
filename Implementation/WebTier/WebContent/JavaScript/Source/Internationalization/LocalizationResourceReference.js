@@ -35,6 +35,7 @@ var LocalizationResourceReference = new Class({
    options : {
       baseNameOnlyVersionExists : true,
       baseNameOnlyVersionExistsSelector : "@baseNameOnlyVersionExists",
+      eventFireDelay : 2,
       localeSpecificVersionExists : true,
       localeSpecificVersionExistsSelector : "@localeSpecificVersionsExists",
       nameSpase : "xmlns:pp='http://www.processpuzzle.com'"

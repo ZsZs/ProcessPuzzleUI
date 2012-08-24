@@ -37,7 +37,7 @@ var TreeWidget = new Class( {
    
    options : {
       componentName : "TreeWidget",
-      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com', xmlns:tr='http://www.processpuzzle.com/TreeDefinition",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:tr='http://www.processpuzzle.com/TreeDefinition'",
       imagesFolder : "",
       nodeOptions : {},
       nodeTypeOptions : {},

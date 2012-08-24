@@ -49,7 +49,7 @@ window.DocumentPluginTest = new Class( {
       this.webUILogger = this.webUIController.getLogger(); 
       this.internationalization = this.webUIController.getResourceBundle();
 	   
-      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
+      this.documentDefinition = new XmlResource( this.constants.DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
       this.erroneousDocumentDefinition = new XmlResource( this.constants.ERRONEOUS_DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
       var pluginDefinitionElement = this.documentDefinition.selectNode( this.constants.PLUGIN_DEFINITION_ELEMENT );
       this.plugin = new DocumentPlugin( pluginDefinitionElement, this.internationalization, { onResourcesLoaded : this.onResourcesLoaded, onConstructed : this.onConstructed, onConstructionError : this.onConstructionError } );

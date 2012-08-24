@@ -36,10 +36,10 @@
             <sd:dataElement tag="li" id="userAddresses" source="../SmartDocument/UserProfile.xml" bind="/userProfile/addresses/address[{index}]" minOccures="0" maxOccures="unbounded" />
          </sd:compositeElement>
          <sd:element tag="h4">SmartDocument.roles</sd:element>
-         <sd:compositeDataElement tag="ul" id="roleList" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]" indexVariable="roleIndex" maxOccures="unbounded">
-            <sd:dataElement tag="li" id="roleName" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/@name"/>
-	         <sd:compositeDataElement tag="ul" id="activityList" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]" indexVariable="activityIndex" maxOccures="unbounded">
-	            <sd:dataElement tag="li" id="activityName" source="../SmartDocument/UserProfile.xml" bind="//userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]/@name"/>
+         <sd:compositeDataElement tag="ul" id="roleList" source="../SmartDocument/UserProfile.xml" bind="/userProfile/roles/role[{roleIndex}]" indexVariable="roleIndex" maxOccures="unbounded">
+            <sd:dataElement tag="li" id="roleName" source="../SmartDocument/UserProfile.xml" bind="/userProfile/roles/role[{roleIndex}]/@name"/>
+	         <sd:compositeDataElement tag="ul" id="activityList" source="../SmartDocument/UserProfile.xml" bind="/userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]" indexVariable="activityIndex" maxOccures="unbounded">
+	            <sd:dataElement tag="li" id="activityName" source="../SmartDocument/UserProfile.xml" bind="/userProfile/roles/role[{roleIndex}]/activities/activity[{activityIndex}]/@name"/>
 	         </sd:compositeDataElement>
          </sd:compositeDataElement>
          

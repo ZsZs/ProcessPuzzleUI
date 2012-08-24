@@ -80,7 +80,7 @@ var FixedComponentOrderedTransformer = new Class({
    },
    
    //Properties
-   getComponentNames: function(){ return this.componentList; },
+   getComponentNames: function(){ return this.componentList; }
    
    //Protected, private helper methods
    

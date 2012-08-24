@@ -43,15 +43,7 @@ var DocumentBody = new Class({
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
       this.parent( contextElement, where );
-   },
-   
-   constructed: function(){
-      this.parent();
-   },
-   
-   unmarshall: function(){
-      this.parent();
    }
-
+   
    //Properties
 });

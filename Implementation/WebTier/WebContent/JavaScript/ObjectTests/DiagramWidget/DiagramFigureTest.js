@@ -11,7 +11,7 @@ window.DiagramFigureTest = new Class({
       DIAGRAM_DATA_URI : "../DiagramWidget/DiagramDefinition.xml",
       DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramWidgetDefinition.xml",
       DIAGRAM_CONTAINER_ID : "DiagramContainer",
-      DIAGRAM_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com', xmlns:dd='http://www.processpuzzle.com/Diagram', xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
+      DIAGRAM_NAMESPACES : "xmlns:pp='http://www.processpuzzle.com' xmlns:dd='http://www.processpuzzle.com/Diagram' xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
       FIGURE_SELECTOR : "//dd:widgetDefinition/dd:figures/uml:class[@name='ClassFigure']",
       PAINT_AREA_ID : "paintarea",
       WEBUI_CONFIGURATION_URI : "../DiagramWidget/WebUIConfiguration.xml",

@@ -33,6 +33,7 @@ var TabWidget = new Class( {
       buttonPrefix : "button_",
       closeButtonCaptionKey : "TabWidget.Close",
       componentName : "TabWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:td='http://www.processpuzzle.com/TabsDefinition'",
       idDefault : "TabWidget",
       printButtonCaptionKey : "TabWidget.Print",
       selectedTabClass : "selectedTab",

@@ -1,8 +1,9 @@
 window.MenuItemTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onFailure', 'onSuccess'],
+   Binds : ['onFailure', 'onLocalizationFailure', 'onLocalizationLoaded', 'onSuccess'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'unmarshall_determinesProperties', isAsynchron : false },
          { method : 'unmarshall_instantiatesMessages', isAsynchron : false },
@@ -35,16 +36,23 @@ window.MenuItemTest = new Class( {
    },   
 
    beforeEachTest : function(){
-      this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
-      this.webUILogger = new WebUILogger( this.webUIConfiguration );
-      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
-      this.resourceBundle.load( this.locale );
-      this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
-      this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
-      
-      this.menuDefinition = new XmlResource( this.constants.MENU_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:md='http://www.processpuzzle.com/MenuDefinition" });
-      this.menuItemDefinition = this.menuDefinition.selectNode( this.constants.MENU_SELECTOR );
-      this.menuItem = new MenuItem( this.menuItemDefinition, this.elementFactory, {} );
+      this.beforeEachTestChain.chain(
+         function(){
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.resourceBundle.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.widgetContainerElement = $( this.constants.MENU_WIDGET_ID );
+            this.elementFactory = new WidgetElementFactory( this.widgetContainerElement, this.resourceBundle );
+            
+            this.menuDefinition = new XmlResource( this.constants.MENU_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com' xmlns:md='http://www.processpuzzle.com/MenuDefinition'" });
+            this.menuItemDefinition = this.menuDefinition.selectNode( this.constants.MENU_SELECTOR );
+            this.menuItem = new MenuItem( this.menuItemDefinition, this.elementFactory, {} );
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
@@ -93,6 +101,14 @@ window.MenuItemTest = new Class( {
       
       assertThat( this.menuItem.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
       assertThat( this.widgetContainerElement.getChildren( '*' ).length, equalTo( 0 ));
+   },
+   
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
    },
    
    onSuccess : function(){

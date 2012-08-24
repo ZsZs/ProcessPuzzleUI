@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Test page for CompositeMenu.js</title>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+   <link type="text/css" rel="stylesheet" href="../HierarchicalMenuWidget/VerticalLayout.css">
+   <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   
+   <script type="text/javascript">
+      var contextRootPrefix = "../../../";
+   </script>
+   
+   <script type="text/javascript" src="../../Libraries/JsHamcrest/jshamcrest.js"></script>
+   <script type="text/javascript" src="../../JsUnit/JsMockito/JsMockito.js"></script>
+   <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.5-full-compat.js"></script>
+   <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
+   <script type="text/javascript" src="../../JsUnit/app/JsTestFunction.js"></script>
+
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa.js"></script>  
+   <script type="text/javascript" src="../../Libraries/Sarissa/sarissa_ieemu_xpath.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlIO.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlEscape.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/xmlsax.js"></script>
+   <script type="text/javascript" src="../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
+
+   <script type="text/javascript" src="../../Source/FundamentalTypes/AssertionBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutBehaviour.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
+   <script type="text/javascript" src="../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   
+   <script type="text/javascript" src="../../Source/AbstractDocument/AbstractDocument.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructedMessage.js"></script> 
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructionException.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script> 
+   <script type="text/javascript" src="../../Source/BrowserWidget/UnconfiguredWidgetException.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/StateTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/FixedComponentOrderedTransformer.js"></script>
+   <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/AssertionException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/LinkedHashMap.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/OptionsResource.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/ResourceUri.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/HierarchicalMenuWidget.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuItem.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuItemFactory.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/CompositeMenu.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/LeafMenuItem.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/MenuSelectedMessage.js"></script>
+   <script type="text/javascript" src="../../Source/HierarchicalMenuWidget/RootMenu.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocaleUtil.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocalizationResourceManager.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocalizationResourceParser.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/LocalizationResourceReference.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
+   <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
+   <script type="text/javascript" src="../../Source/jStorage/jstorage.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
+   <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script> 
+   <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script> 
+
+   <script type="text/javascript" src="../../ObjectTests/HierarchicalMenuWidget/CompositeMenuTest.js"></script>
+   
+   <script type="text/javascript">
+   window.addEvent('domready', function() {
+   });
+   
+   JsHamcrest.Integration.JsUnit();
+   JsMockito.Integration.JsUnit();   
+   
+   </script>
+</head>
+
+<body>
+   <h1>CompositeMenu.js test page</h1>
+   <div id="HierarchicalMenuWidget"></div>
+   <div id="AnotherMenuWidget"></div>
+</body>
+</html>

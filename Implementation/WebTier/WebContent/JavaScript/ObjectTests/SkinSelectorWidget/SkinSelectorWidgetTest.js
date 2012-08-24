@@ -18,7 +18,7 @@ window.SkinSelectorWidgetTest = new Class( {
       SKIN_ONE_PATH : "../DesktopConfigurator/Skins/MochaUI",
       SKIN_TWO_NAME : "ProcessPuzzle",
       SKIN_TWO_PATH : "../DesktopConfigurator/Skins/ProcessPuzzle",
-      WIDGET_CONTAINER_ID : "SkinSelectorWidget",
+      WIDGET_CONTAINER_ID : "SkinSelectorWidget"
    },
    
    initialize : function( options ) {

@@ -36,7 +36,8 @@ var LocalizationResourceParser = new Class({
    Binds : [],
 
    options : {
-      componentName : "LocalizationResourceParser"
+      componentName : "LocalizationResourceParser",
+      eventFireDelay : 2
    },
 
    // Constructor

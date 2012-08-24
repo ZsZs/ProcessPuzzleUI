@@ -42,7 +42,7 @@ window.ToolBarDividerTest = new Class( {
       this.webUIMessageBus = new WebUIMessageBus();
       this.toolBarInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.toolBarInternationalization.load( this.locale );
-      this.toolBarDefinition = new XmlResource( this.constants.TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com', xmlns:tb='http://www.processpuzzle.com/ToolBar" } );
+      this.toolBarDefinition = new XmlResource( this.constants.TOOLBAR_DEFINITION_URI, { nameSpaces : "xmlns:pp='http://www.processpuzzle.com' xmlns:tb='http://www.processpuzzle.com/ToolBar'" });
       this.toolBarDividerDefinition = this.toolBarDefinition.selectNode( this.constants.TOOLBAR_BUTTON_SELECTOR );
       
       this.toolBarContainerElement = $( this.constants.TOOLBAR_CONTAINER_ID );

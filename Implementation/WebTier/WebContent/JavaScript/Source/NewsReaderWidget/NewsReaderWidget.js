@@ -38,7 +38,7 @@ var NewsReaderWidget = new Class({
       channelOptions : {},
       channelSelector : "/pn:rss/pn:channel",
       componentName : "NewsReaderWidget",
-      dataXmlNameSpace : "xmlns:pn='http://www.processpuzzle.com/PartyNews'",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pn='http://www.processpuzzle.com/PartyNews'",
       useLocalizedData : true,
       widgetContainerId : "NewsReaderWidget"
    },

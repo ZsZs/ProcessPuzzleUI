@@ -75,7 +75,7 @@ var Desktop = new Class({
       callChainDelay : 2000,
       componentName : "Desktop",
       columnSelector : "/desktopConfiguration/columns/column",
-      configurationXmlNameSpace : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'",
+      configurationXmlNameSpace : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument' xmlns:pp='http://www.processpuzzle.com'",
       configurationURI : "DesktopConfiguration.xml",
       containerIdSelector : "/desktopConfiguration/containerId",
       contentAreaSelector : "/desktopConfiguration/contentArea",
