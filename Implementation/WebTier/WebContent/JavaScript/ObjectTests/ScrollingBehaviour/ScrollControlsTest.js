@@ -46,7 +46,7 @@ window.ScrollControlsTest = new Class( {
    },
    
    initialize_whenContentViewIsUndefined_ThrowsException : function(){
-      assertThat( this.instantiateScrollControlWithoutArguments, raises( JsUnit.Failure ));
+      assertThat( this.instantiateScrollControlWithoutArguments, raises( AssertionException ));
    },
    
    construct_createsScrollBarElements : function() {

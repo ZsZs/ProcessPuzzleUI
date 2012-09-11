@@ -74,8 +74,8 @@ window.TabTest = new Class( {
       try{ 
          new Tab();
          fail("No exception was thrown.");
-      }catch(e) {
-         assertThat( instanceOf( e, JsUnit.Failure ), is( true ));
+      }catch( exception ) {
+         assertThat( exception, JsHamcrest.Matchers.instanceOf( AssertionException ));
       }
    },
 

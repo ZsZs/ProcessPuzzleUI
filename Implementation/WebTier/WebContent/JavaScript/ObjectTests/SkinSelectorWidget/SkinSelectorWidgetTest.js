@@ -65,6 +65,11 @@ window.SkinSelectorWidgetTest = new Class( {
    initialize_whenConstructorArgumentsAreMissing_usesWebUIController : function() {
       //SETUP:
       var webUIController = new WebUIController({ configurationUri : "../WebUIController/SampleConfiguration.xml" });
+      webUIController = mock( webUIController );
+      when( webUIController ).getResourceBundle().thenReturn( this.resourceBundle );
+      when( webUIController ).getCurrentLocale().thenReturn( this.locale );
+      when( webUIController ).getWebUIConfiguration().thenReturn( this.webUIConfiguration );
+      WebUIController.prototype.replaceInstance( webUIController );
       
       //EXCERCISE:
       var skinSelector = new SkinSelectorWidget();

@@ -99,12 +99,16 @@ window.BrowserWidgetTest = new Class( {
    
    initialize_whenNoArgumentsAreGiven_usesWebUiController : function() {
       var webUIController = new WebUIController({ contextRootPrefix : "", configurationUri : this.constants.CONFIGURATION_URI });
+      webUIController = mock( webUIController );
+      when( webUIController ).getResourceBundle().thenReturn( this.resourceBundle );
+      when( webUIController ).getCurrentLocale().thenReturn( this.locale );
+      WebUIController.prototype.replaceInstance( webUIController );
       
       this.browserWidget = new BrowserWidget();
      
       assertNotNull( "Browser widget successfully instantiated.", this.browserWidget );
       assertNotNull( "Identifies container element.", this.widgetContainerElement );
-      assertEquals( "Browser Widget uses the Resource Bundle of WebUIController.", webUIController.getResourceBundle(), this.browserWidget.getResourceBundle() );
+      assertThat( this.browserWidget.getResourceBundle(), equalTo( this.resourceBundle ), "Browser Widget uses the Resource Bundle of WebUIController." );
    },
    
    initialize_findsContainerElement : function() {
@@ -213,8 +217,9 @@ window.BrowserWidgetTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.browserWidget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
-            assertThat( this.error, JsHamcrest.Matchers.instanceOf( TimeOutException ));
-            assertThat( this.browserWidget.getError(), JsHamcrest.Matchers.instanceOf( TimeOutException ));
+            assertThat( this.browserWidget.getError(), JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
+            assertThat( this.error, JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
+            assertThat( this.error.getCause(), JsHamcrest.Matchers.instanceOf( TimeOutException ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

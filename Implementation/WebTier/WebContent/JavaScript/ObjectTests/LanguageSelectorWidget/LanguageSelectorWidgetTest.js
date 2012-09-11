@@ -72,14 +72,19 @@ window.LanguageSelectorWidgetTest = new Class( {
    
    initialize_whenConstructorArgumentsAreMissing_usesWebUIController : function() {
       var webUIController = new WebUIController({ configurationUri : "../WebUIController/SampleConfiguration.xml" });
+      webUIController = mock( webUIController );
+      when( webUIController ).getResourceBundle().thenReturn( this.resourceBundle );
+      when( webUIController ).getCurrentLocale().thenReturn( this.locale );
+      when( webUIController ).getWebUIConfiguration().thenReturn( this.webUIConfiguration );
+      WebUIController.prototype.replaceInstance( webUIController );
       
       //EXCERCISE:
       this.languageSelector = new LanguageSelectorWidget();
       
       //VERIFY:
       assertTrue( "When 'LanguageSelector' is instantiated without arguments, 'WebUIController' is used as data source.", true );
-      assertEquals( webUIController.getResourceBundle(), this.languageSelector.getResourceBundle() );
-      assertEquals( webUIController.getWebUIConfiguration(), this.languageSelector.getWebUIConfiguration() );
+      assertEquals( this.resourceBundle, this.languageSelector.getResourceBundle() );
+      assertEquals( this.webUIConfiguration, this.languageSelector.getWebUIConfiguration() );
       assertEquals( 2, this.languageSelector.getAvailableLocales().size() );
       
       webUIController.destroy();

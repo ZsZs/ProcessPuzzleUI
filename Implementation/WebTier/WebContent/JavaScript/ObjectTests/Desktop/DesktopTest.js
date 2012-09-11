@@ -66,7 +66,9 @@ window.DesktopTest = new Class( {
       this.webUIConfiguration = this.webUIController.getWebUIConfiguration();
       this.webUILogger = this.webUIController.getLogger();
       this.webUIMessageBus = new WebUIMessageBus();
-      this.resourceBundle = this.webUIController.getResourceBundle();
+      this.resourceBundle = new LocalizationResourceManager( this.webUIConfiguration );
+      this.resourceBundle.load( new ProcessPuzzleLocale({ language : "hu" }));
+      
       this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
          configurationURI : this.constants.DESKTOP_CONFIGURATION_URI, 
          errorDocumentUri : this.constants.ERROR_DOCUMENT_URI,

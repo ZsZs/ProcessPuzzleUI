@@ -59,6 +59,11 @@ Class.Singleton.prototype.destroyInstance = function(item){
 	if( instance ) item.destroy( 'single:' + this.$className, this );
 };
 
+Class.Singleton.prototype.replaceInstance = function( newInstance ){
+   var instance = storage.retrieve( 'single:' + this.$className );
+   if( instance ) storage.store( 'single:' + this.$className, newInstance );
+};
+
 var gIO = function(klass){
 
    var name = klass.prototype.$className;

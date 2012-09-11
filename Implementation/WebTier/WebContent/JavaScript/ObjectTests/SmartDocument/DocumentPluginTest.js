@@ -47,7 +47,8 @@ window.DocumentPluginTest = new Class( {
       this.webUIController = new WebUIController( { configurationUri : this.constants.WEBUI_CONFIGURATION_URI } );
       this.webUIConfiguration = this.webUIController.getWebUIConfiguration(); //new WebUIConfiguration( WEBUI_CONFIGURATION_URI );
       this.webUILogger = this.webUIController.getLogger(); 
-      this.internationalization = this.webUIController.getResourceBundle();
+      this.internationalization = new LocalizationResourceManager( this.webUIConfiguration );
+      this.internationalization.load( new ProcessPuzzleLocale({ language : "hu" }));
 	   
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
       this.erroneousDocumentDefinition = new XmlResource( this.constants.ERRONEOUS_DOCUMENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
@@ -118,7 +119,8 @@ window.DocumentPluginTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.plugin.isSuccess(), is( false ));
-            assertThat( instanceOf( this.plugin.getError(), UndefinedDocumentResourceException ), is( true ));
+            assertThat( this.plugin.getError(), JsHamcrest.Matchers.instanceOf( DocumentPluginConstructionException ));
+            assertThat( this.plugin.getError().getCause(), JsHamcrest.Matchers.instanceOf( UndefinedDocumentResourceException ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -134,7 +136,8 @@ window.DocumentPluginTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.plugin.isSuccess(), is( false ));
-            assertThat( this.plugin.getError(), JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
+            assertThat( this.plugin.getError(), JsHamcrest.Matchers.instanceOf( DocumentPluginConstructionException ));
+            assertThat( this.plugin.getError().getCause(), JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

@@ -42,7 +42,7 @@ window.ScrollAreaTest = new Class( {
    },
    
    initialize_whenScrollableElementNotDefined_throwsExeption : function() {
-      assertThat( this.instantiateScrollAreaWithoutArguments, raises( JsUnit.Failure ));
+      assertThat( this.instantiateScrollAreaWithoutArguments, raises( AssertionException ));
    },
    
    construct_whenContentSizeIsGiven_setsContentViewSize : function() {
