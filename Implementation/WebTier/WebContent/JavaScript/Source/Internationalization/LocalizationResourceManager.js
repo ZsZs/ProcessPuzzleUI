@@ -34,7 +34,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var LocalizationResourceManager = new Class({
-   Implements : [TimeOutBehaviour, Events, Options],
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds : ['checkTimeOut', 'finalizeLoad', 'loadResources', 'onParseFailure', 'onParseSuccess'],
 
    options : {
@@ -46,9 +46,8 @@ var LocalizationResourceManager = new Class({
 
    // Constructor
    initialize : function( webUIConfiguration, options ) {
-
       // parameter assertions
-      assertThat( webUIConfiguration, not( nil() ));
+      this.assertThat( webUIConfiguration, not( nil() ), "LocalizationResourceManager.webUIConfiguration" );
       this.setOptions( options );
 
       // private instance variables

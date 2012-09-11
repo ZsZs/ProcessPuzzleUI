@@ -47,6 +47,7 @@ var DocumentElement = new Class({
    options: {
       componentName : "DocumentElement",
       defaultTag : "div",
+      delay : 100,
       eventFireDelay : 2,
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
@@ -107,7 +108,8 @@ var DocumentElement = new Class({
    },
    
    destroy: function(){
-      if( this.status == DocumentElement.States.INITIALIZED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
+      if( this.status == DocumentElement.States.INITIALIZED ) 
+         throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       this.compileDestructionChain();
       this.destructionChain.callChain();      
    },
@@ -240,6 +242,10 @@ var DocumentElement = new Class({
       this.constructionChain.callChain();
    }.protect(),
    
+   instantiateConstructionException : function( exception ){
+      return new DocumentElementConstructionException( this.id, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    resetProperties: function(){
       this.id = null;
       this.htmlElement = null;
@@ -250,7 +256,7 @@ var DocumentElement = new Class({
    }.protect(),
    
    revertConstruction: function( exception ){
-      this.error = exception;
+      this.error = this.instantiateConstructionException( exception );
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       if( this.plugin && this.plugin.getState() > DocumentElement.States.INITIALIZED ) this.plugin.destroy();

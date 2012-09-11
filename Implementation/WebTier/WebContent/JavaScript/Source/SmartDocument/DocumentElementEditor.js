@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var DocumentElementEditor = new Class({
-   Implements: [Events, Options],
+   Implements: [AssertionBehavior, Events, Options],
    Binds: ['onBlur', 'onClick'],
    options: {
       dataType : 'string', //DocumentElementEditor.DataType.STRING,
@@ -40,7 +40,7 @@ var DocumentElementEditor = new Class({
    
    initialize: function( subjectHtmlElement, options ){
       this.setOptions( options );
-      assertThat( subjectHtmlElement, not( nil() ));
+      this.assertThat( subjectHtmlElement, not( nil() ));
       
       //private fields
       this.inputElement;

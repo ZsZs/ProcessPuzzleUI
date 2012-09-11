@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var RssChannel = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
 
    options: {
       buildDateSelector : "/pn:rss/pn:channel/pn:lastBuildDate",
@@ -54,7 +54,7 @@ var RssChannel = new Class({
    //Constructor
    initialize: function ( rssResource, internationalization, elementFactory, options ) {
       // parameter assertions
-      assertThat( rssResource, not( nil() ));
+      this.assertThat( rssResource, not( nil() ));
       this.setOptions( options );
       
       this.buildDate;

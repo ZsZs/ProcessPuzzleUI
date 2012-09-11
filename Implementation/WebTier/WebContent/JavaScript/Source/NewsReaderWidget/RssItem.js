@@ -27,7 +27,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var RssItem = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
 
    options: {
       descriptionSelector: "pn:description",
@@ -47,7 +47,7 @@ var RssItem = new Class({
    //Constructor
    initialize: function ( itemResource, elementFactory, options ) {
       // parameter assertions
-      assertThat( itemResource, not( nil() ));      
+      this.assertThat( itemResource, not( nil() ));      
       this.setOptions( options );
       
       this.containerElement;

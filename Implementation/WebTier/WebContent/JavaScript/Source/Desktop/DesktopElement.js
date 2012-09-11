@@ -36,6 +36,7 @@ var DesktopElement = new Class({
       componentName: "DesktopElement",
       defaultTag : "div",
       definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      delay : 300,
       eventFireDelay : 2,
       idSelector : "@id",
       tagSelector : "@tag",
@@ -84,9 +85,7 @@ var DesktopElement = new Class({
    },
    
    onConstructionError: function( error ){
-      this.error = error;
-      this.logger.error( this.error.getMessage() );
-      this.revertConstruction();
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
@@ -165,13 +164,17 @@ var DesktopElement = new Class({
       this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
+   instantiateConstructionException : function( exception ){
+      return new DesktopElementConfigurationException( this.id, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    resetProperties: function(){
       //Abstract method, should be overwritten.
       this.destructionChain.callChain();
    }.protect(),
    
    revertConstruction: function( exception ){
-      this.error = exception;
+      this.error = this.instantiateConstructionException( exception ); 
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       this.state = DesktopElement.States.INITIALIZED;

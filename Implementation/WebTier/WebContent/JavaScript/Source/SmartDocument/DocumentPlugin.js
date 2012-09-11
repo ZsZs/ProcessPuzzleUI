@@ -103,12 +103,17 @@ var DocumentPlugin = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
+   instantiateConstructionException : function( exception ){
+      var componentName = ( this.widget && this.widget.options.componentName ) ? this.widget.options.componentName : this.options.componentName;  
+      return new DocumentPluginConstructionException( this.widgetName, { cause : exception, source : componentName + ".revertConstruction()" });
+   }.protect(),
+   
    instantiateWidget: function(){
       if( this.widgetName ){
          try{
             var widgetClass = eval( this.widgetName );
             if( !this.widgetOptions['widgetContainerId'] ) this.widgetOptions['widgetContainerId'] = this.contextElement.get( 'id' );
-            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onError : this.onWidgetError } );
+            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onConstructionError : this.onWidgetError } );
             this.widget = new widgetClass( mergedOptions, this.resourceBundle );
             this.widget.unmarshall();
             this.widget.construct();

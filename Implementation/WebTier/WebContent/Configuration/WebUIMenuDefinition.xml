@@ -1,75 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:menuWidgetDefinition
-	xmlns:pp="http://www.processpuzzle.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<md:menuDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:md="http://www.processpuzzle.com/MenuDefinition"
+   xsi:schemaLocation="http://www.processpuzzle.com/MenuDefinition http://processpuzzle.com/Schemas/MenuDefinition.xsd">
 	
-	<menuItem menuItemId="MenuWidget">
-		<menuItem menuItemId="YourMenu" caption="WebUIMenu.documentExamples" isDefault="true">
-			<messageProperties>{actionType : 'loadMenu'}</messageProperties>
+	<md:menuItem menuItemId="MenuWidget">
+		<md:menuItem menuItemId="YourMenu" caption="WebUIMenu.documentExamples" isDefault="true">
+			<pp:messageProperties>{actionType : 'loadMenu'}</pp:messageProperties>
 					
-         <menuItem menuItemId="YourMenu-Html" caption="WebUIMenu.documentExamples.htmlContent" isDefault="true">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument.xml', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-         </menuItem>       
+         <md:menuItem menuItemId="YourMenu-Html" caption="WebUIMenu.documentExamples.htmlContent" isDefault="true">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument.xml', documentType : AbstractDocument.Types.HTML }</pp:messageProperties>         
+         </md:menuItem>       
                
-			<menuItem menuItemId="YourMenu-Static" caption="WebUIMenu.documentExamples.staticDocument" isDefault="false">
-				<messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/StaticDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>			
-			</menuItem>			
+			<md:menuItem menuItemId="YourMenu-Static" caption="WebUIMenu.documentExamples.staticDocument" isDefault="false">
+				<pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/StaticDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>			
+			</md:menuItem>			
                
-         <menuItem menuItemId="YourMenu-Dynamic" caption="WebUIMenu.documentExamples.dynamicDocument" isDefault="false">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="YourMenu-Dynamic" caption="WebUIMenu.documentExamples.dynamicDocument" isDefault="false">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/DynamicDocument.xml', documentContentURI : 'Content/DynamicContent.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
          
-         <menuItem menuItemId="YourMenu-PhotoAlbum" caption="WebUIMenu.documentExamples.photoAlbum" isDefault="false">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/PhotoGaleryDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="YourMenu-PhotoAlbum" caption="WebUIMenu.documentExamples.photoAlbum" isDefault="false">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/PhotoGaleryDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
          
-         <menuItem menuItemId="YourMenu-VideoAlbum" caption="WebUIMenu.documentExamples.videoAlbum" isDefault="false">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/VideoGaleryDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>       
+         <md:menuItem menuItemId="YourMenu-VideoAlbum" caption="WebUIMenu.documentExamples.videoAlbum" isDefault="false">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/VideoGaleryDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>       
          
-         <menuItem menuItemId="YourMenu-Diagram" caption="WebUIMenu.documentExamples.diagram" isDefault="false">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
-		</menuItem>
+         <md:menuItem menuItemId="YourMenu-Diagram" caption="WebUIMenu.documentExamples.diagram" isDefault="false">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
+		</md:menuItem>
 		
-      <menuItem menuItemId="Widgets" caption="WebUIMenu.widgets">
-         <messageProperties>{ actionType : 'loadMenu'}</messageProperties>
+      <md:menuItem menuItemId="Widgets" caption="WebUIMenu.widgets">
+         <pp:messageProperties>{ actionType : 'loadMenu'}</pp:messageProperties>
                
-         <menuItem menuItemId="Widgets-HierachicalMenuWidget" caption="WebUIMenu.widgets.menuWidget" isDefault="true">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/HierarchicalMenuWidgetDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="Widgets-HierachicalMenuWidget" caption="WebUIMenu.widgets.menuWidget" isDefault="true">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/HierarchicalMenuWidgetDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
                
-         <menuItem menuItemId="Widgets-NewsReader" caption="WebUIMenu.widgets.newsReader" isDefault="false">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="Widgets-NewsReader" caption="WebUIMenu.widgets.newsReader" isDefault="false">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
                   
-         <menuItem menuItemId="Widgets-Event" caption="WebUIMenu.widgets.eventsReader">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="Widgets-Event" caption="WebUIMenu.widgets.eventsReader">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/DiagramDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
                   
-         <menuItem menuItemId="Widgets-Tree" caption="WebUIMenu.widgets.treeView">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/TreeDocument.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-         </menuItem>
-      </menuItem>
+         <md:menuItem menuItemId="Widgets-Tree" caption="WebUIMenu.widgets.treeView">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/WidgetExamples/TreeDocument.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+         </md:menuItem>
+      </md:menuItem>
       
-      <menuItem menuItemId="Administration" caption="WebUIMenu.administration">
-         <messageProperties>{ actionType : 'loadMenu'}</messageProperties>
+      <md:menuItem menuItemId="Administration" caption="WebUIMenu.administration">
+         <pp:messageProperties>{ actionType : 'loadMenu'}</pp:messageProperties>
 					
-         <menuItem menuItemId="Administration-Users" caption="WebUIMenu.administration.users" isDefault="true">
-            <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="Administration-Users" caption="WebUIMenu.administration.users" isDefault="true">
+            <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/HtmlDocument', documentType : AbstractDocument.Types.HTML }</pp:messageProperties>         
+         </md:menuItem>
 						
-         <menuItem menuItemId="Administration-About" caption="WebUIMenu.administration.about">
-            <messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'about' }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="Administration-About" caption="WebUIMenu.administration.about">
+            <pp:messageProperties>{ activityType : DesktopWindow.Activity.SHOW_WINDOW, windowName : 'about' }</pp:messageProperties>         
+         </md:menuItem>
 						
-         <menuItem menuItemId="Administration-PPSkin" caption="WebUIMenu.administration.processPuzzleSkin">
-            <messageProperties>{ actionType : 'changeSkin', skinName : 'ProcessPuzzle' }</messageProperties>         
-         </menuItem>
+         <md:menuItem menuItemId="Administration-PPSkin" caption="WebUIMenu.administration.processPuzzleSkin">
+            <pp:messageProperties>{ actionType : 'changeSkin', skinName : 'ProcessPuzzle' }</pp:messageProperties>         
+         </md:menuItem>
 						
-         <menuItem menuItemId="Administration-MochaSkin" caption="WebUIMenu.administration.mochaUiSkin">
-            <messageProperties>{ actionType : 'changeSkin', skinName : 'MochaUI' }</messageProperties>         
-         </menuItem>
-      </menuItem>
-   </menuItem>
-</pp:menuWidgetDefinition>
+         <md:menuItem menuItemId="Administration-MochaSkin" caption="WebUIMenu.administration.mochaUiSkin">
+            <pp:messageProperties>{ actionType : 'changeSkin', skinName : 'MochaUI' }</pp:messageProperties>         
+         </md:menuItem>
+      </md:menuItem>
+   </md:menuItem>
+</md:menuDefinition>

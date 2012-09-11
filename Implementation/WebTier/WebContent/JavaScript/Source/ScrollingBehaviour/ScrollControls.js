@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var ScrollControls = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds : ['onDocumentClick', 'onDocumentKeyDown', 'onDocumentMouseUp', 'scrollDown', 'scrollUp'],
    options : {
       componentName : "ScrollControls",
@@ -49,8 +49,8 @@ var ScrollControls = new Class({
    },
 
    initialize : function( contentViewElement, overHang, options ) {
-      assertThat( contentViewElement, not( nil() ));
-      assertThat( overHang, not( nil() ));
+      this.assertThat( contentViewElement, not( nil() ));
+      this.assertThat( overHang, not( nil() ));
       this.setOptions( options );
 
       this.contentViewElement = contentViewElement;

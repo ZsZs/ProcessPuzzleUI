@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var MenuItem = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['onClick'],
    
    options : {
@@ -72,7 +72,7 @@ var MenuItem = new Class({
    },
    
    construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.parentHtmlElement = parentElement;
       if( this.state == BrowserWidget.States.UNMARSHALLED && this.needsToBeDisplayed() ) {
          this.instantiateHtmlElements();

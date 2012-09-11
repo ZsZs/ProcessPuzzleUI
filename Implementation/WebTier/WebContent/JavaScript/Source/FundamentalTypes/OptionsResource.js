@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 
 var OptionsResource = new Class({
-   Implements: [Options],
+   Implements: [AssertionBehavior, Options],
    
    options : {
       nameSelector : "@name",
@@ -38,7 +38,7 @@ var OptionsResource = new Class({
 
    //Constructor
    initialize : function( definitionElement, options ) {
-      assertThat( definitionElement, not( nil() ));
+      this.assertThat( definitionElement, not( nil() ));
       this.setOptions( options );
       
       this.definitionElement = definitionElement;

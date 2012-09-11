@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 
 var StringTokenizer = new Class( {
-   Implements : [Options], 
+   Implements : [AssertionBehavior, Options], 
    options : {
       delimiters: " \t\n\r\f",
       returnTokens: false
@@ -34,7 +34,7 @@ var StringTokenizer = new Class( {
    
    //Constructors
    initialize: function( string, options ) {
-      assertThat( string, not( nil() ));
+      this.assertThat( string, not( nil() ));
       this.setOptions( options );
       this.s = string;
       this.current = 0;

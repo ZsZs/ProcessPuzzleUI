@@ -48,7 +48,7 @@ var TimeOutBehaviour = new Class({
       this.numberOfTries++;
       if (this.numberOfTries >= this.options.maxTries) {
          clearInterval( this.timer );
-         this.timeOut( new TimeOutException( this.options.componentName, this.checkedProcessName ));
+         this.timeOut( new TimeOutException( this.options.componentName, this.checkedProcessName, { source : this.options.componentName + ".checkTimeOut()" }));
       }
    },
 

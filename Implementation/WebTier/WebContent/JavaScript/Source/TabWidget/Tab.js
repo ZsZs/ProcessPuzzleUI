@@ -20,7 +20,7 @@
 //= require_directory ../FundamentalTypes
 
 var Tab = new Class( {
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds : ['onSelection'],
 
    options : {
@@ -38,7 +38,7 @@ var Tab = new Class( {
    // Constructor
    initialize : function( definition, internationalization, options ) {
       // check parameter assertions
-      assertThat( internationalization, not( nil() ));
+      this.assertThat( internationalization, not( nil() ), "Tab.internationalization" );
 
       this.setOptions( options );
 
@@ -75,7 +75,7 @@ var Tab = new Class( {
    },
 
    construct : function( parentElement ) {
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.createHtmlElements( parentElement );
       this.visible = true;
    },

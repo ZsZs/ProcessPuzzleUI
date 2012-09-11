@@ -125,9 +125,9 @@ var SmartDocument = new Class({
    }.protect(),
    
    destroyHeaderBodyAndFooter: function(){
-      if( this.documentHeader ) this.documentHeader.destroy();
-      if( this.documentBody ) this.documentBody.destroy();
-      if( this.documentFooter ) this.documentFooter.destroy();
+      if( this.documentHeader && this.documentHeader.getState() > DocumentElement.States.INITIALIZED ) this.documentHeader.destroy();
+      if( this.documentBody && this.documentBody.getState() > DocumentElement.States.INITIALIZED ) this.documentBody.destroy();
+      if( this.documentFooter && this.documentFooter.getState() > DocumentElement.States.INITIALIZED ) this.documentFooter.destroy();
       this.destructionChain.callChain();
    }.protect(),
    
@@ -139,10 +139,8 @@ var SmartDocument = new Class({
    }.protect(),
    
    revertConstruction: function(){
+      this.destroyHeaderBodyAndFooter();
       if( this.resources ) this.resources.release();
-      if( this.documentHeader ) this.documentHeader.destroy();
-      if( this.documentBody ) this.documentBody.destroy();
-      if( this.documentFooter ) this.documentFooter.destroy();
       this.parent();
    }.protect(),
    

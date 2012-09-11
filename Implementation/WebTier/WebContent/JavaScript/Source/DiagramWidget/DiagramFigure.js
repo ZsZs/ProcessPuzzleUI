@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../DiagramWidget/DiagramWidget.js
 
 var DiagramFigure = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['addFigureToCanvas', 'finalizeDraw'],
    
    options : {
@@ -66,7 +66,7 @@ var DiagramFigure = new Class({
    },
    
    draw: function( diagram ){
-      assertThat( diagram, not( nil() ));
+      this.assertThat( diagram, not( nil() ));
       this.diagram = diagram;
       this.canvas = diagram.getCanvas();
       this.compileDrawChain();

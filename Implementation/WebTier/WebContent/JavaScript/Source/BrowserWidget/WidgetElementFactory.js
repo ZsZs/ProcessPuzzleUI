@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 
 var WidgetElementFactory = new Class({
-   Implements : Options,
+   Implements : [AssertionBehavior, Options],
    
    options : {
       appendByDefault : true,
@@ -50,8 +50,8 @@ var WidgetElementFactory = new Class({
 
    // Constructor
    initialize : function( containerElement, i18Resource, options ) {
-      assertThat( containerElement, not( nil() ) );
-      assertThat( i18Resource, not( nil() ) );
+      this.assertThat( containerElement, not( nil() ) );
+      this.assertThat( i18Resource, not( nil() ) );
       this.setOptions( options );
 
       this.containerElement = containerElement;
@@ -131,8 +131,8 @@ var WidgetElementFactory = new Class({
    },
 
    createForm : function( formName, methodType, contextElement, position, elementProperties ) {
-      assertThat( formName, not( nil() ));
-      assertThat( methodType.toUpperCase() == "POST" || methodType.toUpperCase() == "GET", is( true ) );
+      this.assertThat( formName, not( nil() ));
+      this.assertThat( methodType.toUpperCase() == "POST" || methodType.toUpperCase() == "GET", is( true ) );
       
       var newForm = this.create( 'FORM', null, contextElement, position, this.mergeProperties( { id : formName, name : 'form', method : methodType }, elementProperties ) );
       this.create( 'DIV', null, newForm, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.formFieldsContainerClassName } );

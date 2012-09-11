@@ -8,7 +8,6 @@ window.ToolBarWidgetTest = new Class( {
          { method : 'unmarshall_determinesProperties', isAsynchron : false },
          { method : 'unmarshall_unmarshallsButtonsAndDividers', isAsynchron : false },
          { method : 'construct_instantiatesWrapperDIVWithId', isAsynchron : true },
-         { method : 'construct_instantiatesWrapperDIVWithId', isAsynchron : true },
          { method : 'construct_instantiatesWrapperULVWithStyle', isAsynchron : true },
          { method : 'onButtonSelection_instantiatesAndSendsMenuSelectedMessage', isAsynchron : true },
          { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
@@ -89,16 +88,6 @@ window.ToolBarWidgetTest = new Class( {
       }, this );
    },
    
-   construct_instantiatesWrapperDIVWithId : function(){
-      this.testCaseChain.chain(
-         function(){ this.toolBar.unmarshall(); this.toolBar.construct(); }.bind( this ),
-         function(){
-            assertThat( this.toolBarContainerEelement.getElementById( this.toolBar.getName() ).get( 'tag' ), equalTo( 'div' ));
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-
    construct_instantiatesWrapperDIVWithId : function(){
       this.testCaseChain.chain(
          function(){ this.toolBar.unmarshall(); this.toolBar.construct(); }.bind( this ),

@@ -49,13 +49,13 @@ var WebUIException = new Class({
       var stackTrace = "";
       if( this.options.cause ){
          if( this.options.cause.getMessage )
-            stackTrace += "\n\t" + this.options.cause.getMessage() + this.options.cause.stackTrace();
+            stackTrace += this.options.cause.getMessage() + "\r\n" + this.options.cause.stackTrace();
          else{
-            stackTrace += "\n\t" + this.options.cause.message;
-            stackTrace += "\n\t" + printStackTrace();
+            stackTrace += this.options.cause.message;
+            stackTrace += "\r\n" + printStackTrace();
          }
       }else{
-         stackTrace += "\n\t" + printStackTrace();
+         stackTrace += printStackTrace();
       }
       
       return stackTrace;
@@ -64,7 +64,7 @@ var WebUIException = new Class({
    //Properties
    getCause: function() { return this.options.cause; },
    getDescription : function() { return this.options.description; },
-   getMessage: function() { return this.options.description.substitute( this.parameters ) + " " + this.options.message; }, 
+   getMessage: function() { return this.options.source + ": " + this.options.description.substitute( this.parameters ) + " " + this.options.message; }, 
    getName: function() { return this.options.name; },
    getSource : function() { return this.options.source; }
 });

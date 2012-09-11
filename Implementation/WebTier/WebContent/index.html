@@ -6,10 +6,6 @@
    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
 	<title>ProcessPuzzle</title>
 			
-   <!--[if IE]>
-      <script type="text/javascript" src="JavaScript/Libraries/MochaUI/excanvas.js"></script>
-   <![endif]--> 
-    
    <script type="text/javascript" src="JavaScript/Libraries/JsHamcrest/jshamcrest.js"></script>
    <script type="text/javascript" src="JavaScript/Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="JavaScript/Libraries/MooTools/mootools-core-1.4.5-full-compat.js"></script>
@@ -80,6 +76,7 @@
    <script type="text/javascript" src="JavaScript/Source/SmartDocument/DocumentFooter.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SmartDocument/DocumentHeader.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SmartDocument/DocumentPlugin.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/SmartDocument/DocumentPluginConstructionException.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SmartDocument/FormElement.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SmartDocument/FormField.js"></script>
    <script type="text/javascript" src="JavaScript/Source/SmartDocument/SmartDocument.js"></script>
@@ -94,9 +91,11 @@
    <script type="text/javascript" src="JavaScript/Source/Desktop/ComplexContentBehaviour.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/ConfigurationTimeoutException.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopElement.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopElementConfigurationException.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopElementFactory.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/Desktop.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopDocument.js"></script>
+   <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopDocumentConstructionException.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopContentArea.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopColumn.js"></script>
    <script type="text/javascript" src="JavaScript/Source/Desktop/DesktopFooter.js"></script>
@@ -197,7 +196,7 @@
       var webUIController;
    
       window.addEvent('domready', function() {
-         JsHamcrest.Integration.ProcessPuzzle();
+         JsHamcrest.Integration.JsUnit();
          webUIController = new WebUIController({ contextRootPrefix : "", configurationUri : "Configuration/default_configuration.xml", showSplashForm : true });
          webUIController.configure();
       });

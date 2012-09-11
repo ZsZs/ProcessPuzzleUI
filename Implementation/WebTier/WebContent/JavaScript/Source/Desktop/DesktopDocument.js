@@ -81,6 +81,10 @@ var DesktopDocument = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
+   instantiateConstructionException : function( exception ){
+      return new DesktopDocumentConstructionException( this.documentDefinitionUri, this.documentDataUri, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    instantiateDocument: function(){
       this.document = new SmartDocument( this.internationalization, {  
          documentContainerId : this.options.componentContainerId, 

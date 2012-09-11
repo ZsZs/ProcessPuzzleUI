@@ -30,14 +30,14 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var StateTransformer = new Class({
-   Implements: [Events, Options],
+   Implements: [AssertionBehavior, Events, Options],
    options: {
       unknownValue : 'unknown'
    },
 
    //Constructor
    initialize: function( stateMachine, options ){
-      assertThat( stateMachine, not( nil() ));
+      this.assertThat( stateMachine, not( nil() ));
       this.setOptions( options );
       this.stateMachine = stateMachine;
    },

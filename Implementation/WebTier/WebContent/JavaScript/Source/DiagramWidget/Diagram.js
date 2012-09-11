@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var Diagram = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['destroyCanvas', 'drawCanvas', 'drawFigures', 'eraseFigures', 'finalizeDraw', 'finalizeErase', 'onFigureConstructed', 'onFigureConstructionError'],
    
    options : {
@@ -73,7 +73,7 @@ var Diagram = new Class({
    
    //Public accessor and mutator methods
    draw: function( containerElement ){
-      assertThat( containerElement, not( nil() ));
+      this.assertThat( containerElement, not( nil() ));
       this.containerElement = containerElement;
 
       this.compileDrawChain();

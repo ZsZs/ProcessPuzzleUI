@@ -32,7 +32,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../BrowserWidget/BrowserWidget.js
 
 var TreeNode = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds : ['addNodeEvents', 'createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
    options : {
       captionSelector : '@caption',
@@ -50,9 +50,9 @@ var TreeNode = new Class({
    // constructor
    initialize : function( parentNode, nodeType, nodeResource, elementFactory, options ) {
       // parameter assertions
-      assertThat( nodeType, not( nil() ) );
-      assertThat( nodeResource, not( nil() ) );
-      assertThat( elementFactory, not( nil() ) );
+      this.assertThat( nodeType, not( nil()), "TreeNode.nodeType" );
+      this.assertThat( nodeResource, not( nil()), "TreeNode.nodeResource" );
+      this.assertThat( elementFactory, not( nil()), "TreeNode.elementFactory" );
       this.setOptions( options );
 
       // private instance variables

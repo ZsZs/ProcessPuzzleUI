@@ -1,11 +1,11 @@
 /*
-Name: DesktopElementConfigurationException
+Name: DesktopDocumentConstructionException
 
-Description: Thrown when configuring a desktop element failed.
+Description: Thrown when constructing a desktop document failed.
 
 Requires: WebUIException
 
-Provides: DesktopElementConfigurationException
+Provides: DesktopDocumentConstructionException
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -26,17 +26,17 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
-var DesktopElementConfigurationException = new Class({
+var DesktopDocumentConstructionException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Constructing of '{desktopElementName}' desktop element failed.",
+      description: "Constructing of '{documentDefinitionUri}' desktop document with '{documentDataUri}' data failed.",
       name: "DesktopElementConfigurationException"
    },
    
    //Constructor
-   initialize : function( desktopElementName, options ){
+   initialize : function( documentDefinitionUri, documentDataUri, options ){
       this.setOptions( options );
       this.parent( options );
-      this.parameters = { desktopElementName : desktopElementName };
+      this.parameters = { documentDefinitionUri : documentDefinitionUri, documentDataUri : documentDataUri };
    }
 });

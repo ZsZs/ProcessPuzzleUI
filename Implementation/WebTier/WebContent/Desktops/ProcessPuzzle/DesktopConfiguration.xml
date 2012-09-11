@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <desktopConfiguration 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:pp="http://www.processpuzzle.com"
    xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
    xsi:schemaLocation="http://www.processpuzzle.com/DesktopConfiguration http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
 	<name>ProcessPuzzle</name>
@@ -10,24 +11,24 @@
 	<description>This is full flagged desktop configuration.</description>
    <containerId>desktop</containerId>
 
-	<resources>
-		<styleSheets>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Content.css</styleSheet>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Core.css</styleSheet>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Dock.css</styleSheet>
-         <styleSheet>Desktops/ProcessPuzzle/Styles/Form.css</styleSheet>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Layout.css</styleSheet>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Panels.css</styleSheet>
-         <styleSheet>Desktops/ProcessPuzzle/Styles/ScrollBar.css</styleSheet>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Tabs.css</styleSheet>
-         <styleSheet>Desktops/ProcessPuzzle/Styles/ToolBar.css</styleSheet>
-			<styleSheet>Desktops/ProcessPuzzle/Styles/Window.css</styleSheet>
-         <styleSheet>Desktops/ProcessPuzzle/Styles/PhotoGalery.css</styleSheet>
-         <styleSheet>Desktops/ProcessPuzzle/Styles/TreeWidget.css</styleSheet>
-		</styleSheets>
-		<images></images>
-		<javaScripts></javaScripts>
-	</resources>
+	<sd:resources>
+		<sd:styleSheets>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Content.css</sd:styleSheet>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Core.css</sd:styleSheet>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Dock.css</sd:styleSheet>
+         <sd:styleSheet>Desktops/ProcessPuzzle/Styles/Form.css</sd:styleSheet>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Layout.css</sd:styleSheet>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Panels.css</sd:styleSheet>
+         <sd:styleSheet>Desktops/ProcessPuzzle/Styles/ScrollBar.css</sd:styleSheet>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Tabs.css</sd:styleSheet>
+         <sd:styleSheet>Desktops/ProcessPuzzle/Styles/ToolBar.css</sd:styleSheet>
+			<sd:styleSheet>Desktops/ProcessPuzzle/Styles/Window.css</sd:styleSheet>
+         <sd:styleSheet>Desktops/ProcessPuzzle/Styles/PhotoGalery.css</sd:styleSheet>
+         <sd:styleSheet>Desktops/ProcessPuzzle/Styles/TreeWidget.css</sd:styleSheet>
+		</sd:styleSheets>
+		<sd:images></sd:images>
+		<sd:javaScripts></sd:javaScripts>
+	</sd:resources>
 	
    <header documentDefinition="Desktops/ProcessPuzzle/DesktopHeader.xml"/>
 	
@@ -48,21 +49,21 @@
 			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
          <contentURL>Desktops/ProcessPuzzle/Pages/VerticalMenuColumn.html</contentURL>
 			<plugin>
-            <resources>
-               <styleSheets>
-                  <styleSheet>Desktops/ProcessPuzzle/Styles/VerticalMenuLayout.css</styleSheet>
-               </styleSheets>
-            </resources>
-            <widget name="HierarchicalMenuWidget">
-               <options>
-                  <option name="contextItemId" value="'MenuWidget/YourMenu'"/>
-                  <option name="componentName" value="'verticalMenuColumn'"/>
-                  <option name="subscribeToWebUIMessages " value="[MenuSelectedMessage]"/>
-                  <option name="widgetContainerId" value="'VerticalMenuColumn'"/>
-                  <option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
-                  <option name="widgetDefinitionURI" value="'Desktops/ProcessPuzzle/Widgets/MenuWidgetDefinition.xml'"/>
-               </options>
-            </widget>
+            <sd:resources>
+               <sd:styleSheets>
+                  <sd:styleSheet>Desktops/ProcessPuzzle/Styles/VerticalMenuLayout.css</sd:styleSheet>
+               </sd:styleSheets>
+            </sd:resources>
+            <sd:widget name="HierarchicalMenuWidget">
+               <sd:options>
+                  <sd:option name="contextItemId" value="'MenuWidget/YourMenu'"/>
+                  <sd:option name="componentName" value="'verticalMenuColumn'"/>
+                  <sd:option name="subscribeToWebUIMessages " value="[MenuSelectedMessage]"/>
+                  <sd:option name="widgetContainerId" value="'VerticalMenuColumn'"/>
+                  <sd:option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'Desktops/ProcessPuzzle/Widgets/MenuWidgetDefinition.xml'"/>
+               </sd:options>
+            </sd:widget>
 			</plugin>
 		</panel>
 		
@@ -70,15 +71,15 @@
 			<title>DesktopConfigurator.Panel.documentsTitle</title>
          <panelHeader>
             <plugin>
-               <resources></resources>
-               <widget name="ToolBarWidget">
-                  <options>
-                     <option name="componentName " value="'documentEditorToolBar'"/>
-                     <option name="dividerIconImageUri" value="'Desktops/ProcessPuzzle/Images/ToolboxDivider.jpg'"/>
-                     <option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
-                     <option name="widgetDefinitionURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
-                  </options>
-               </widget>
+               <sd:resources></sd:resources>
+               <sd:widget name="ToolBarWidget">
+                  <sd:options>
+                     <sd:option name="componentName " value="'documentEditorToolBar'"/>
+                     <sd:option name="dividerIconImageUri" value="'Desktops/ProcessPuzzle/Images/ToolboxDivider.jpg'"/>
+                     <sd:option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
+                     <sd:option name="widgetDefinitionURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
+                  </sd:options>
+               </sd:widget>
             </plugin>
          </panelHeader>
 		</panel>
@@ -87,18 +88,18 @@
 			<title>DesktopConfigurator.Panel.consoleTitle</title>
          <panelHeader contentStyle="documentTabs">
             <plugin>
-               <resources>
-                  <styleSheets>
-                     <styleSheet>Desktops/ProcessPuzzle/Styles/ConsoleTabs.css</styleSheet>
-                  </styleSheets>
-               </resources>
-               <widget name="TabWidget">
-                  <options>
-                     <option name="componentName " value="'consoleTabs'"/>
-                     <option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
-                     <option name="widgetDefinitionURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
-                  </options>
-               </widget> 
+               <sd:resources>
+                  <sd:styleSheets>
+                     <sd:styleSheet>Desktops/ProcessPuzzle/Styles/ConsoleTabs.css</sd:styleSheet>
+                  </sd:styleSheets>
+               </sd:resources>
+               <sd:widget name="TabWidget">
+                  <sd:options>
+                     <sd:option name="componentName " value="'consoleTabs'"/>
+                     <sd:option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
+                     <sd:option name="widgetDefinitionURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
+                  </sd:options>
+               </sd:widget> 
             </plugin>
          </panelHeader>
          <document tag="div" id="consoleDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
@@ -111,20 +112,20 @@
 			<title>DesktopConfigurator.Panel.eventsTitle</title>
          <contentURL>Desktops/ProcessPuzzle/Pages/EventsPanel.html</contentURL>
          <plugin>
-            <resources>
-               <styleSheets>
-                  <styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</styleSheet>
-               </styleSheets>
-            </resources>
-            <widget name="PartyEventWidget">
-               <options>
-                  <option name="widgetContainerId" value="'UpcommingEvents'"/>
-                  <option name="widgetDataURI" value="'Content/WidgetExamples/UpcommingEvents.xml'"/>
-                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/UpcommingEventsDefinition.xml'"/>
-                  <option name="componentName" value="'UpcommingEventsWidget'"/>
-                  <option name="eventOptions" value="{ showDescription : true, showTitle : true, truncateDescription : true }"/>
-               </options>
-            </widget>
+            <sd:resources>
+               <sd:styleSheets>
+                  <sd:styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</sd:styleSheet>
+               </sd:styleSheets>
+            </sd:resources>
+            <sd:widget name="PartyEventWidget">
+               <sd:options>
+                  <sd:option name="widgetContainerId" value="'UpcommingEvents'"/>
+                  <sd:option name="widgetDataURI" value="'Content/WidgetExamples/UpcommingEvents.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'Content/WidgetExamples/UpcommingEventsDefinition.xml'"/>
+                  <sd:option name="componentName" value="'UpcommingEventsWidget'"/>
+                  <sd:option name="eventOptions" value="{ showDescription : true, showTitle : true, truncateDescription : true }"/>
+               </sd:options>
+            </sd:widget>
          </plugin>
 		</panel>
 		
@@ -132,20 +133,20 @@
 			<title>DesktopConfigurator.Panel.newsTitle</title>
          <contentURL>Desktops/ProcessPuzzle/Pages/NewsPanel.html</contentURL>
          <plugin>
-            <resources>
-               <styleSheets>
-                  <styleSheet>Desktops/ProcessPuzzle/Styles/NewsPanel.css</styleSheet>
-               </styleSheets>
-            </resources>
-            <widget name="NewsReaderWidget">
-               <options>
-                  <option name="widgetContainerId" value="'TopNews'"/>
-                  <option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
-                  <option name="widgetDefinitionURI" value="'Content/WidgetExamples/SiteNewsDefinition.xml'"/>
-                  <option name="componentName" value="'TopNewsWidget'"/>
-                  <option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
-               </options>
-            </widget>
+            <sd:resources>
+               <sd:styleSheets>
+                  <sd:styleSheet>Desktops/ProcessPuzzle/Styles/NewsPanel.css</sd:styleSheet>
+               </sd:styleSheets>
+            </sd:resources>
+            <sd:widget name="NewsReaderWidget">
+               <sd:options>
+                  <sd:option name="widgetContainerId" value="'TopNews'"/>
+                  <sd:option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
+                  <sd:option name="widgetDefinitionURI" value="'Content/WidgetExamples/SiteNewsDefinition.xml'"/>
+                  <sd:option name="componentName" value="'TopNewsWidget'"/>
+                  <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
+               </sd:options>
+            </sd:widget>
          </plugin>
 		</panel>
 		
@@ -153,18 +154,18 @@
          <title>DesktopConfigurator.Panel.comunityTitle</title>
          <panelHeader contentStyle="panelTabs">
             <plugin>
-               <resources>
-                  <styleSheets>
-                     <styleSheet>Desktops/ProcessPuzzle/Styles/CommunityPanelTabs.css</styleSheet>
-                  </styleSheets>
-               </resources>
-               <widget name="TabWidget">
-                  <options>
-                     <option name="componentName" value="'communityTabs'"/>
-                     <option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
-                     <option name="widgetDefinitionURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
-                  </options>
-               </widget> 
+               <sd:resources>
+                  <sd:styleSheets>
+                     <sd:styleSheet>Desktops/ProcessPuzzle/Styles/CommunityPanelTabs.css</sd:styleSheet>
+                  </sd:styleSheets>
+               </sd:resources>
+               <sd:widget name="TabWidget">
+                  <sd:options>
+                     <sd:option name="componentName" value="'communityTabs'"/>
+                     <sd:option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
+                     <sd:option name="widgetDefinitionURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
+                  </sd:options>
+               </sd:widget> 
             </plugin>
          </panelHeader>
          <document tag="div" id="communityDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">

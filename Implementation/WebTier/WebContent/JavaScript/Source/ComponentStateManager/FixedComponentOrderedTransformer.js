@@ -39,7 +39,7 @@ var FixedComponentOrderedTransformer = new Class({
 
    //Constructor
    initialize: function( stateMachine, componentList, options ){
-      assertThat( componentList, not( nil() ));
+      this.assertThat( componentList, not( nil() ));
       this.parent( stateMachine, options );
       
       this.componentList = componentList;

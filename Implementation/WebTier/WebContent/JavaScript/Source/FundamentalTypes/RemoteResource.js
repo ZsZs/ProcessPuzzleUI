@@ -29,6 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var RemoteResource = new Class({
    Extends: Request,
+   Implements: [AssertionBehavior],
    
    options: {
       async : true,
@@ -39,7 +40,7 @@ var RemoteResource = new Class({
    // Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
+      this.assertThat( uri, not( nil() ));
       
       this.parent( options );
       this.options.url = uri;

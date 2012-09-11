@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var Desktop = new Class({
-   Implements : [Events, Options, TimeOutBehaviour], 
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour], 
    Binds : ['checkTimeOut',
             'constructColumns', 
             'constructContentArea', 
@@ -80,6 +80,7 @@ var Desktop = new Class({
       containerIdSelector : "/desktopConfiguration/containerId",
       contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
+      delay : 500,
       descriptionSelector : "/desktopConfiguration/description",
       errorDocumentUri : "Content/System/ErrorDocument.xml",
       eventFireDelay : 5,
@@ -88,7 +89,6 @@ var Desktop = new Class({
       nameSelector : "/desktopConfiguration/name",
       panelSelector : "/desktopConfiguration/panels/panel",
       pluginOnloadDelay : 1000,
-      resourceLoadTimeout : 5000,
       resourcesSelector : "/desktopConfiguration/sd:resources", 
       skin : "ProcessPuzzle",
       versionSelector : "/desktopConfiguration/version",
@@ -97,7 +97,9 @@ var Desktop = new Class({
    },
 	
 	//Constructor
-   initialize : function( webUIConfiguration, resourceBundle, options ) {
+   initialize : function( webUIConfiguration, localizationResourceManager, options ) {
+      this.assertThat( webUIConfiguration, not( nil() ), "Desktop.webUIConfiguration" );
+      this.assertThat( localizationResourceManager, not( nil() ), "Desktop.localizationResourceManager" );
       this.presetOptionsBasedOnWebUIConfiguration( webUIConfiguration );
       this.setOptions( options );
 
@@ -125,7 +127,7 @@ var Desktop = new Class({
       this.numberOfConstructedPanels = 0;
       this.numberOfConstructedWindows = 0;
       this.panels = new LinkedHashMap();
-      this.resourceBundle = resourceBundle;
+      this.localizationResourceManager = localizationResourceManager;
       this.resources = null;
       this.state = DesktopElement.States.UNINITIALIZED;
       this.version;
@@ -266,7 +268,7 @@ var Desktop = new Class({
    
    showNotification: function( notificationText ){
       if( this.state == DesktopElement.States.CONSTRUCTED ){
-         MUI.notification( this.resourceBundle.getText( "DesktopNotification." + notificationText ));
+         MUI.notification( this.localizationResourceManager.getText( "DesktopNotification." + notificationText ));
       }
    },
    
@@ -446,7 +448,7 @@ var Desktop = new Class({
    }.protect(),
 	
    determineCurrentLocale : function() {
-      if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
+      if( this.localizationResourceManager.isLoaded ) this.currentLocale = this.localizationResourceManager.getLocale();
       else {
          this.currentLocale = new ProcessPuzzleLocale();
          this.currentLocale.parse( this.webUIConfiguration.getI18DefaultLocale() );
@@ -503,8 +505,8 @@ var Desktop = new Class({
    }.protect(),
    
    loadI18Resources : function() {
-      if( !this.resourceBundle.isLoaded )
-         this.resourceBundle.load( this.currentLocale );
+      if( !this.localizationResourceManager.isLoaded )
+         this.localizationResourceManager.load( this.currentLocale );
    }.protect(),
 	
    presetOptionsBasedOnWebUIConfiguration : function( webUIConfiguration ){
@@ -534,7 +536,7 @@ var Desktop = new Class({
    
    revertConstruction: function( error ){
       this.error = error;
-      
+      this.stopTimeOutTimer();
       if( this.resources ) this.resources.release();
       if( this.header ) this.header.destroy();
       if( this.contentArea ) this.contentArea.destroy();
@@ -575,7 +577,7 @@ var Desktop = new Class({
    unmarshallDesktopContentArea: function(){
       var areaDefinitionElement = this.configurationXml.selectNode( this.options.contentAreaSelector );
       if( areaDefinitionElement ){
-         this.contentArea = new DesktopContentArea( areaDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onContentAreaConstructed, onConstructionError : this.onError } );
+         this.contentArea = new DesktopContentArea( areaDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onContentAreaConstructed, onConstructionError : this.onError } );
          this.contentArea.unmarshall();
       }
    }.protect(),
@@ -593,7 +595,7 @@ var Desktop = new Class({
    unmarshallFooter: function(){
       var footerDefinitionElement = this.configurationXml.selectNode( this.options.footerSelector );
       if( footerDefinitionElement ){
-         this.footer = new DesktopFooter( footerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed, onError : this.onError } );
+         this.footer = new DesktopFooter( footerDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed, onError : this.onError } );
          this.footer.unmarshall();
       }
    }.protect(),
@@ -601,7 +603,7 @@ var Desktop = new Class({
    unmarshallHeader: function(){
       var headerDefinitionElement = this.configurationXml.selectNode( this.options.headerSelector );
       if( headerDefinitionElement ){
-         this.header = new DesktopHeader( headerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed, onError : this.onError } );
+         this.header = new DesktopHeader( headerDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed, onError : this.onError } );
          this.header.unmarshall();
       }
    }.protect(),
@@ -609,7 +611,7 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { 
+         var desktopPanel = new DesktopPanel( panelDefinition, this.localizationResourceManager, { 
             componentContainerId: this.containerId,
             errorDocumentUri : this.options.errorDocumentUri,
             onConstructed: this.onPanelConstructed, 
@@ -631,7 +633,7 @@ var Desktop = new Class({
    unmarshallWindowDocker: function(){
       var windowDockerDefinitionElement = this.configurationXml.selectNode( this.options.windowDockerSelector );
       if( windowDockerDefinitionElement ){
-         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed, onError : this.onError } );
+         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed, onError : this.onError } );
          this.windowDocker.unmarshall();         
       }
    }.protect(),
@@ -639,7 +641,7 @@ var Desktop = new Class({
    unmarshallWindows: function(){
       var windowDefinitionElements = this.configurationXml.selectNodes( this.options.windowSelector );
       windowDefinitionElements.each( function( windowDefinition, index ){
-         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { 
+         var desktopWindow = new DesktopWindow( windowDefinition, this.localizationResourceManager, { 
             componentContainerId: this.containerId, 
             errorDocumentUri : this.options.errorDocumentUri,
             onConstructed: this.onWindowConstructed, 

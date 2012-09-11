@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pp:tabWidgetDefinition
-	xmlns:pp="http://www.processpuzzle.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<td:tabsDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:td="http://www.processpuzzle.com/TabsDefinition" 
+   xsi:schemaLocation="http://www.processpuzzle.com/TabsDefinition http://processpuzzle.com/Schemas/TabsDefinition.xsd">
 	
-	<tabWidget tabWidgetId="CommunityTabs" selectedTabClass="selectedTab" showCloseButton="false" showPrintButton="false">
-		<tab tabId="CommunityTab.faceBook" caption="CommunityTabs.faceBook" isDefault="true">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/FacebookPanelContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-      </tab>
-		<tab tabId="CommunityTab.linkedIn" caption="CommunityTabs.linkedIn" isDefault="false">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/LinkedInPanelContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-      </tab>
-		<tab tabId="CommunityTab.twitter" caption="CommunityTabs.twitter">
-         <messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/TwitterPanelContent.xml', documentType : AbstractDocument.Types.SMART }</messageProperties>         
-      </tab>
-	</tabWidget>
+	<td:tabs>
+		<td:tab tabId="CommunityTab.faceBook" caption="CommunityTabs.faceBook" isDefault="true">
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/FacebookPanelContent.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+      </td:tab>
+		<td:tab tabId="CommunityTab.linkedIn" caption="CommunityTabs.linkedIn" isDefault="false">
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/LinkedInPanelContent.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+      </td:tab>
+		<td:tab tabId="CommunityTab.twitter" caption="CommunityTabs.twitter">
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentURI : 'Content/System/TwitterPanelContent.xml', documentType : AbstractDocument.Types.SMART }</pp:messageProperties>         
+      </td:tab>
+	</td:tabs>
 	
-</pp:tabWidgetDefinition>
+</td:tabsDefinition>

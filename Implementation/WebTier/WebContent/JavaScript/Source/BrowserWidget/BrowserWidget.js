@@ -94,7 +94,7 @@ var BrowserWidget = new Class( {
          this.compileConstructionChain();
          
          try{ this.constructionChain.callChain(); }
-         catch( exception ){ this.revertConstruction( new WidgetConstructionException( this.name, { cause : exception })); }
+         catch( exception ){ this.revertConstruction( exception ); }
       }
       return this;
    },
@@ -250,6 +250,10 @@ var BrowserWidget = new Class( {
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
    }.protect(),
 
+   instantiateConstructionException : function( exception ){
+      return new WidgetConstructionException( this.name, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );
@@ -285,7 +289,7 @@ var BrowserWidget = new Class( {
    }.protect(),
    
    revertConstruction : function( error ){
-      this.error = error;
+      this.error = this.instantiateConstructionException( error );
       this.stopTimeOutTimer();
       this.state = BrowserWidget.States.INITIALIZED;
       this.fireEvent( 'constructionError', this.error );

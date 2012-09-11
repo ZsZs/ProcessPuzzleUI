@@ -21,11 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //= require_directory ../FundamentalTypes
 
 var ResourceKey = new Class({
+   Implements : [AssertionBehavior],
    
    initialize: function( theKey, theType ) {
       //parameter assertions
-      assertThat( theKey, not( nil() ));
-      assertThat( theType, not( nil() ));
+      this.assertThat( theKey, not( nil() ), "ResourceKey.theKey" );
+      this.assertThat( theType, not( nil() ), "ResourceKey.theType" );
       
       //private instance variables
       this.key = theKey;

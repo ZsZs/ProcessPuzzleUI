@@ -104,7 +104,6 @@ var WebUIController = new Class({
          this.restoreComponentsState(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
-         this.loadInternationalizations();
 
          this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
       }else{
@@ -195,8 +194,7 @@ var WebUIController = new Class({
    },
    
    onError: function( error ){
-      this.error = error;
-      this.showWebUIExceptionPage( this.error );
+      this.revertConstruction( error );
    },
 	
    restoreComponentsState : function(){
@@ -367,7 +365,6 @@ var WebUIController = new Class({
       }catch( e ) {
          this.onError( e );
       }
-      this.configurationChain.callChain();
    }.protect(),
    
    loadWebUIConfiguration : function() {
@@ -378,6 +375,12 @@ var WebUIController = new Class({
          this.onError( e );
       }
       this.configurationChain.callChain();
+   }.protect(),
+   
+   revertConstruction : function( error ){
+      this.error = error;
+      this.destroySplashForm();
+      this.showWebUIExceptionPage( this.error );
    }.protect(),
 
    setLanguage : function( newLanguage ) {
@@ -407,17 +410,22 @@ var WebUIController = new Class({
       this.warningContainer.grab( warningHeader );
       
       var warningNameElement = new Element( 'h3' );
-      warningNameElement.appendText( exception.name );
+      warningNameElement.appendText( exception.getName() );
       this.warningContainer.grab( warningNameElement );
       
-      var messageElement = new Element( 'p' );
-      messageElement.appendText( exception.message );
+      var messageElement = new Element( 'div' );
+      messageElement.appendText( exception.getMessage() );
       this.warningContainer.grab( messageElement );
       
-      var stackElement = new Element( 'p' );
-      if( exception.stack ) {
-         stackElement.appendText( exception.stack );
-         this.warningContainer.grab( stackElement );
+      var stackElement = new Element( 'div' );
+      this.warningContainer.grab( stackElement );
+      if( exception.stackTrace ) {
+         var lines = exception.stackTrace().split(/\r\n|\r|\n/);
+         lines.each( function( line, index ){
+            var lineElement = new Element( 'div' );
+            lineElement.appendText( line );
+            this.warningContainer.grab( lineElement );
+         }.bind( this ));
       }
    }.protect(),
 	

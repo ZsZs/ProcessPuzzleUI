@@ -32,7 +32,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../PartyEventWidget/PartyEventWidget.js
 
 var PartyEvent = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
 
    options: {
       descriptionSelector: "pe:description",
@@ -62,7 +62,7 @@ var PartyEvent = new Class({
    //Constructor
    initialize: function ( eventResource, elementFactory, options ) {
       // parameter assertions
-      assertThat( eventResource, not( nil() ));      
+      this.assertThat( eventResource, not( nil() ));      
       this.setOptions( options );
       
       this.containerElement;

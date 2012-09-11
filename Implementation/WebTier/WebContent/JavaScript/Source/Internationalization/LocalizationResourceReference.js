@@ -67,7 +67,7 @@ var LocalizationResourceReference = new Class({
    },
    
    unmarshall : function() {
-      assertThat( this.resourceDefinitionXml, not( nil() ) );
+      this.assertThat( this.resourceDefinitionXml, not( nil() ) );
 
       this.uri = XmlResource.determineNodeText( this.resourceDefinitionXml );
       this.options.baseNameOnlyVersionExists = parseBoolean( XmlResource.selectNodeText( this.options.baseNameOnlyVersionExistsSelector, this.resourceDefinitionXml, this.options.nameSpace, this.options.baseNameOnlyVersionExists ));

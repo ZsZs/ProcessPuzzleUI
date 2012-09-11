@@ -31,6 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var ProcessPuzzleLocaleUtil = new Class({
+   Implements : [AssertionBehavior],
 
 	// Constructor
 	initialize: function () {
@@ -67,8 +68,8 @@ var ProcessPuzzleLocaleUtil = new Class({
 	},
 
 	getFileNameList : function( locale, prefix, suffix ) {
-		assertThat( suffix, not( nil() ));
-		assertThat( suffix, containsString( "." ));
+		this.assertThat( suffix, not( nil() ));
+		this.assertThat( suffix, containsString( "." ));
 		
 		var list = new ArrayList();
 		for (var i = 0; i < 3; i++) {

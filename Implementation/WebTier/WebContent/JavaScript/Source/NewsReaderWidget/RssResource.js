@@ -35,7 +35,7 @@ var RssResource = new Class({
    //Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
+      this.assertThat( uri, not( nil() ));
       
       this.parent( uri, options );
 

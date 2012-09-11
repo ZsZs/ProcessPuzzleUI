@@ -1566,12 +1566,12 @@ MUI.extend({
 		if( MUI.Desktop ) { MUI.Desktop.resizePanels(); }
 
 		// Do this when creating and removing panels
-      var panels=$(column).getElements('.panelWrapper');
-		panels.each(function(panelWrapper){
+      var panels = columnInstance.columnEl.getElements('.panelWrapper');
+		panels.each( function(panelWrapper ){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
 		
-      if(panels.length>0) panels.getLast().getElement('.panel').addClass('bottomPanel');
+      if( panels.length > 0 ) panels.getLast().getElement('.panel').addClass( 'bottomPanel' );
 
 		instances.erase( instance.options.id );
 		return true;

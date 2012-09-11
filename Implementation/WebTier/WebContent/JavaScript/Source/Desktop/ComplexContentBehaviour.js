@@ -327,9 +327,9 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    destroyPlugin: function(){
-      if( this.plugin ) {
-         this.plugin.removeEvents();
+      if( this.plugin && this.plugin.getState() >= DocumentElement.States.INITIALIZED ) {
          this.plugin.destroy();
+         this.plugin = null;
       }
    }.protect(),
    

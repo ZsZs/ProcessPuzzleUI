@@ -1,127 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<toolBarDefinition
+<tb:toolBarDefinition 
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-   xsi:noNamespaceSchemaLocation="file:///e:/GitRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopToolBar.xsd">
+   xmlns:tb="http://www.processpuzzle.com/ToolBar"
+   xsi:schemaLocation="http://www.processpuzzle.com/ToolBar http://processpuzzle.com/Schemas/DesktopToolBar.xsd">
    
-   <name>DocumentEditorToolBar</name>
-   <description>Provides user interface for editing smart documents</description>
-   <showCaptions>false</showCaptions>
-   <buttons elementStyle="toolBar">
-      <button name="bold">
-         <caption>DocumentEditorToolBar.bold</caption>
-         <iconImage>Desktops/Images/TextEditor/bold.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.BOLD }</messageProperties>         
-      </button>
+   <tb:name>DocumentEditorToolBar</tb:name>
+   <tb:description>Provides user interface for editing smart documents</tb:description>
+   
+   <tb:buttons elementStyle="toolBar">
+      <tb:button name="bold">
+         <tb:caption>DocumentEditorToolBar.bold</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/bold.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.BOLD }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="italic">
-         <caption>DocumentEditorToolBar.italic</caption>
-         <iconImage>Desktops/Images/TextEditor/italic.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ITALIC }</messageProperties>         
-      </button>
+      <tb:button name="italic">
+         <tb:caption>DocumentEditorToolBar.italic</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/italic.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ITALIC }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="underline">
-         <caption>DocumentEditorToolBar.underline</caption>
-         <iconImage>Desktops/Images/TextEditor/underline.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDERLINE }</messageProperties>         
-      </button>
+      <tb:button name="underline">
+         <tb:caption>DocumentEditorToolBar.underline</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/underline.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDERLINE }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="strikethrough">
-         <caption>DocumentEditorToolBar.strikethrough</caption>
-         <iconImage>Desktops/Images/TextEditor/strikethrough.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.STRIKETHROUGH }</messageProperties>         
-      </button>
+      <tb:button name="strikethrough">
+         <tb:caption>DocumentEditorToolBar.strikethrough</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/strikethrough.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.STRIKETHROUGH }</pp:messageProperties>         
+      </tb:button>
       
-      <divider/>
+      <tb:divider/>
       
-      <button name="unorderedList">
-         <caption>DocumentEditorToolBar.unorderedList</caption>
-         <iconImage>Desktops/Images/TextEditor/insertunorderedlist.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNORDERED_LIST }</messageProperties>         
-      </button>
+      <tb:button name="unorderedList">
+         <tb:caption>DocumentEditorToolBar.unorderedList</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/insertunorderedlist.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNORDERED_LIST }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="orderedList">
-         <caption>DocumentEditorToolBar.orderedList</caption>
-         <iconImage>Desktops/Images/TextEditor/insertorderedlist.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ORDERED_LIST }</messageProperties>         
-      </button>
+      <tb:button name="orderedList">
+         <tb:caption>DocumentEditorToolBar.orderedList</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/insertorderedlist.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ORDERED_LIST }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="indent">
-         <caption>DocumentEditorToolBar.indent</caption>
-         <iconImage>Desktops/Images/TextEditor/indent.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.INDENT }</messageProperties>         
-      </button>
+      <tb:button name="indent">
+         <tb:caption>DocumentEditorToolBar.indent</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/indent.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.INDENT }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="outdent">
-         <caption>DocumentEditorToolBar.outdent</caption>
-         <iconImage>Desktops/Images/TextEditor/outdent.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.OUTDENT }</messageProperties>         
-      </button>
+      <tb:button name="outdent">
+         <tb:caption>DocumentEditorToolBar.outdent</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/outdent.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.OUTDENT }</pp:messageProperties>         
+      </tb:button>
       
-      <divider/>
+      <tb:divider/>
       
-      <button name="alignLeft">
-         <caption>DocumentEditorToolBar.alignLeft</caption>
-         <iconImage>Desktops/Images/TextEditor/justifyleft.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_LEFT }</messageProperties>         
-      </button>
+      <tb:button name="alignLeft">
+         <tb:caption>DocumentEditorToolBar.alignLeft</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/justifyleft.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_LEFT }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="alignCenter">
-         <caption>DocumentEditorToolBar.alignCenter</caption>
-         <iconImage>Desktops/Images/TextEditor/justifycenter.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_CENTER }</messageProperties>         
-      </button>
+      <tb:button name="alignCenter">
+         <tb:caption>DocumentEditorToolBar.alignCenter</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/justifycenter.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_CENTER }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="alignRight">
-         <caption>DocumentEditorToolBar.alignRight</caption>
-         <iconImage>Desktops/Images/TextEditor/justifyright.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_RIGHT }</messageProperties>         
-      </button>
+      <tb:button name="alignRight">
+         <tb:caption>DocumentEditorToolBar.alignRight</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/justifyright.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_RIGHT }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="alignJustify">
-         <caption>DocumentEditorToolBar.alignJustify</caption>
-         <iconImage>Desktops/Images/TextEditor/justifyfull.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_JUSTIFY }</messageProperties>         
-      </button>
+      <tb:button name="alignJustify">
+         <tb:caption>DocumentEditorToolBar.alignJustify</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/justifyfull.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ALIGN_JUSTIFY }</pp:messageProperties>         
+      </tb:button>
       
-      <divider/>
+      <tb:divider/>
       
-      <button name="undo">
-         <caption>DocumentEditorToolBar.undo</caption>
-         <iconImage>Desktops/Images/TextEditor/undo.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDO }</messageProperties>         
-      </button>
+      <tb:button name="undo">
+         <tb:caption>DocumentEditorToolBar.undo</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/undo.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.UNDO }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="redo">
-         <caption>DocumentEditorToolBar.redo</caption>
-         <iconImage>Desktops/Images/TextEditor/redo.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REDO }</messageProperties>         
-      </button>
+      <tb:button name="redo">
+         <tb:caption>DocumentEditorToolBar.redo</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/redo.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REDO }</pp:messageProperties>         
+      </tb:button>
       
-      <divider/>
+      <tb:divider/>
       
-      <button name="addLink">
-         <caption>DocumentEditorToolBar.addLink</caption>
-         <iconImage>Desktops/Images/TextEditor/createlink.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_LINK }</messageProperties>         
-      </button>
+      <tb:button name="addLink">
+         <tb:caption>DocumentEditorToolBar.addLink</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/createlink.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_LINK }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="removeLink">
-         <caption>DocumentEditorToolBar.removeLink</caption>
-         <iconImage>Desktops/Images/TextEditor/unlink.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REMOVE_LINK }</messageProperties>         
-      </button>
+      <tb:button name="removeLink">
+         <tb:caption>DocumentEditorToolBar.removeLink</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/unlink.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.REMOVE_LINK }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="addImage">
-         <caption>DocumentEditorToolBar.addImage</caption>
-         <iconImage>Desktops/Images/TextEditor/urlimage.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_IMAGE }</messageProperties>         
-      </button>
+      <tb:button name="addImage">
+         <tb:caption>DocumentEditorToolBar.addImage</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/urlimage.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.ADD_IMAGE }</pp:messageProperties>         
+      </tb:button>
       
-      <button name="toggleView">
-         <caption>DocumentEditorToolBar.toggleView</caption>
-         <iconImage>Desktops/Images/TextEditor/toggleview.png</iconImage>
-         <messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.TOGGLE_VIEW }</messageProperties>         
-      </button>
-   </buttons>
-</toolBarDefinition>
+      <tb:button name="toggleView">
+         <tb:caption>DocumentEditorToolBar.toggleView</tb:caption>
+         <tb:iconImage>Desktops/Images/TextEditor/toggleview.png</tb:iconImage>
+         <pp:messageProperties>{ activityType : AbstractDocument.Activity.MODIFY_DOCUMENT, actionType : AbstractDocument.Action.TOGGLE_VIEW }</pp:messageProperties>         
+      </tb:button>
+   </tb:buttons>
+</tb:toolBarDefinition>

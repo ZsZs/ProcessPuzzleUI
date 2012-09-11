@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var ToolBarDivider = new Class({
-   Implements : Options,
+   Implements : [AssertionBehavior, Options],
    
    options : {
       dividerStyle : "toolBarDivider",
@@ -55,7 +55,7 @@ var ToolBarDivider = new Class({
    
    //Public accessor and mutator methods
    construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.parentElement = parentElement;
       this.instantiateHtmlElements();
       this.state = ToolBarButton.States.CONSTRUCTED;

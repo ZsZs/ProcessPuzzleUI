@@ -95,8 +95,8 @@ var XmlResource = new Class({
    },
    
    injectElement : function( elementToInject, contextSelector, position ){
-      assertThat( elementToInject, not( nil() ));
-      assertThat( contextSelector, not( nil() ));
+      this.assertThat( elementToInject, not( nil() ));
+      this.assertThat( contextSelector, not( nil() ));
       
       var contextElement = this.selectNode( contextSelector );
       if( !contextElement ) throw new XPathSelectionException( contextSelector, this.options.url );

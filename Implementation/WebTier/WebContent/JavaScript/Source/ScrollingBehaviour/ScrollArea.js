@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var ScrollArea = new Class({
-   Implements : Options,
+   Implements : [AssertionBehavior, Options],
    Binds : ['onScrollContent', 'onScrollableElementClick', 'onScrollableElementKeyDown', 'onScrollableElementMouseWheel'],
    options : {
       componentName : "ScrollArea",
@@ -43,7 +43,7 @@ var ScrollArea = new Class({
    },
 
    initialize : function( scrollableElement, windowFxScroll, options ) {
-      assertThat( scrollableElement, not( nil() ));
+      this.assertThat( scrollableElement, not( nil() ));
       this.setOptions( options );
 
       this.borderHeight;

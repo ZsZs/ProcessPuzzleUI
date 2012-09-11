@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var ToolBarButton = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['onSelection'],
    
    options : {
@@ -63,7 +63,7 @@ var ToolBarButton = new Class({
    
    //Public accessor and mutator methods
    construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.parentElement = parentElement;
       this.instantiateHtmlElements();
       this.state = ToolBarButton.States.CONSTRUCTED;

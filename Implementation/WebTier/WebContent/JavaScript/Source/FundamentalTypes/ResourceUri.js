@@ -28,7 +28,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 
 var ResourceUri = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
    
    options: {
       applyCacheBuster : false,
@@ -41,7 +41,7 @@ var ResourceUri = new Class({
    // Constructor
    initialize: function ( fullUri, locale, options ) {
       // parameter assertions
-      assertThat( fullUri, not( nil() ));
+      this.assertThat( fullUri, not( nil() ));
       
       this.setOptions( options );
       
