@@ -26,22 +26,22 @@
       <sd:element tag="p">DynamicDocument.introduction</sd:element>
       <sd:element tag="p">DynamicDocument.exampleDescription</sd:element>
       
-      <sd:dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/rss/channel/title"/>
-      <sd:formElement id="channelProperties" method="post" bind="/rss/channel">
-         <sd:formField id="link" label="DynamicDocument.RSS.link" bind="/rss/channel/link"/>
-         <sd:formField id="description" label="DynamicDocument.RSS.description" bind="/rss/channel/description"/>
-         <sd:formField id="language" label="DynamicDocument.RSS.language" bind="/rss/channel/language"/>
-         <sd:formField id="pubDate" label="DynamicDocument.RSS.pubDate" bind="/rss/channel/pubDate"/>
-         <sd:formField id="lastBuildDate" label="DynamicDocument.RSS.lastBuildDate" bind="/rss/channel/lastBuildDate"/>
-         <sd:formField id="docs" label="DynamicDocument.RSS.docs" bind="/rss/channel/docs"/>
-         <sd:formField id="generator" label="DynamicDocument.RSS.generator" bind="/rss/channel/generator"/>
-         <sd:formField id="managingEditor" label="DynamicDocument.RSS.managingEditor" bind="/rss/channel/managingEditor"/>
-         <sd:formField id="webMaster" label="DynamicDocument.RSS.webMaster" bind="/rss/channel/webMaster"/>
+      <sd:dataElement tag="h2" id="title" elementStyle="channelTitle" bind="/pn:rss/pn:channel/pn:title"/>
+      <sd:formElement id="channelProperties" method="post" bind="/pn:rss/pn:channel">
+         <sd:formField id="link" label="DynamicDocument.RSS.link" bind="/pn:rss/pn:channel/pn:link"/>
+         <sd:formField id="description" label="DynamicDocument.RSS.description" bind="/pn:rss/pn:channel/pn:description"/>
+         <sd:formField id="language" label="DynamicDocument.RSS.language" bind="/pn:rss/pn:channel/pn:language"/>
+         <sd:formField id="pubDate" label="DynamicDocument.RSS.pubDate" bind="/pn:rss/pn:channel/pn:pubDate"/>
+         <sd:formField id="lastBuildDate" label="DynamicDocument.RSS.lastBuildDate" bind="/pn:rss/pn:channel/pn:lastBuildDate"/>
+         <sd:formField id="docs" label="DynamicDocument.RSS.docs" bind="/pn:rss/pn:channel/pn:docs"/>
+         <sd:formField id="generator" label="DynamicDocument.RSS.generator" bind="/pn:rss/pn:channel/pn:generator"/>
+         <sd:formField id="managingEditor" label="DynamicDocument.RSS.managingEditor" bind="/pn:rss/pn:channel/pn:managingEditor"/>
+         <sd:formField id="webMaster" label="DynamicDocument.RSS.webMaster" bind="/pn:rss/pn:channel/pn:webMaster"/>
       </sd:formElement>
       <sd:element  tag="h2" id="channelItems">DynamicDocument.itemsTitle</sd:element>
-      <sd:compositeDataElement tag="div" id="channelItemsContainer" bind="/rss/channel/item[{index}]" maxOccures="unbounded">
-         <sd:dataElement tag="h4" elementStyle="title" id="itemTitle" bind="/rss/channel/item[{index}]/title"/>
-         <sd:dataElement tag="p" elementStyle="description" id="itemDescription" bind="/rss/channel/item[{index}]/description"/>
+      <sd:compositeDataElement tag="div" id="channelItemsContainer" bind="/pn:rss/pn:channel/pn:item[{index}]" maxOccures="unbounded">
+         <sd:dataElement tag="h4" elementStyle="title" id="itemTitle" bind="/pn:rss/pn:channel/pn:item[{index}]/pn:title"/>
+         <sd:dataElement tag="p" elementStyle="description" id="itemDescription" bind="/pn:rss/pn:channel/pn:item[{index}]/pn:description"/>
       </sd:compositeDataElement>
    </sd:documentBody>
    

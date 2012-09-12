@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<documentProperties
+<sd:smartDocumentDefinition 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-   xmlns:pp="http://www.processpuzzle.com">
+   xmlns:pp="http://www.processpuzzle.com" 
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument">
+   
    <uri>Content/DynamicDocument.xml</uri>
    <title>Dynamic Document</title>
    <subject>Smart Document Exmaple</subject>
    <created>Tuesday, 10 Jun 2003 04:00:00 GMT</created>
    <lastModified>Monday, 22 November 2011 11:33:00 GMT</lastModified>
-</documentProperties>
+   
+</sd:smartDocumentDefinition>

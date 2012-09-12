@@ -24,12 +24,12 @@
    </sd:documentHeader>
    
    <sd:documentBody tag="div" id="eventListBody">
-      <sd:compositeDataElement tag="div" id="eventWrapper" bind="//pp:eventList/events/event[{index}]" maxOccures="unbounded">
-         <sd:dataElement tag="h2" elementStyle="title" id="itemTitle" bind="//pp:eventList/events/event[{index}]/title"/>
-         <sd:dataElement tag="div" elementStyle="description" id="itemDescription" bind="//pp:eventList/events/event[{index}]/description"/>
-         <sd:formElement id="eventProperties" method="post" bind="//pp:eventList/events/event[{index}]">
-            <sd:formField id="link" label="EventWidget.schedule" bind="//pp:eventList/events/event[{index}]/schedule/startDate"/>
-            <sd:formField id="description" label="EventWidget.location" bind="//pp:eventList/events/event[{index}]/location/address"/>
+      <sd:compositeDataElement tag="div" id="eventWrapper" bind="/pe:eventList/pe:events/pe:event[{index}]" maxOccures="unbounded">
+         <sd:dataElement tag="h2" elementStyle="title" id="itemTitle" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:title"/>
+         <sd:dataElement tag="div" elementStyle="description" id="itemDescription" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:description"/>
+         <sd:formElement id="eventProperties" method="post" bind="/pe:eventList/pe:events/pe:event[{index}]">
+            <sd:formField id="link" label="EventWidget.schedule" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:schedule/pe:startDate"/>
+            <sd:formField id="description" label="EventWidget.location" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:location/pe:address"/>
          </sd:formElement>
       </sd:compositeDataElement>
    </sd:documentBody>

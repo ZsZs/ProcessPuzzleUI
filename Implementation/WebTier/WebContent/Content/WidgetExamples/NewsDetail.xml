@@ -16,12 +16,12 @@
    </sd:resources>
 
    <sd:documentBody tag="div" id="newsDocumentBody">
-      <sd:dataElement tag="h1" elementStyle="title" id="itemTitle" bind="//rss/channel/item[{index}]/title"/>
-      <sd:compositeDataElement tag="div" id="channelItemsContainer" bind="//rss/channel/item[{index}]" maxOccures="unbounded">
-         <sd:dataElement tag="p" elementStyle="description" id="itemDescription" bind="//rss/channel/item[{index}]/description"/>
-         <sd:formElement id="newsProperties" method="post" bind="//rss/channel/item[{index}]">
-            <sd:formField id="publicationDate" label="NewsWidget.publicationDate" bind="//rss/channel/item[{index}]/pubDate"/>
-            <sd:formField id="link" label="NewsWidget.link" bind="//rss/channel/item[{index}]/guid"/>
+      <sd:dataElement tag="h1" elementStyle="title" id="itemTitle" bind="/pn:rss/pn:channel/pn:item[{index}]/pn:title"/>
+      <sd:compositeDataElement tag="div" id="channelItemsContainer" bind="/pn:rss/pn:channel/pn:item[{index}]" maxOccures="unbounded">
+         <sd:dataElement tag="p" elementStyle="description" id="itemDescription" bind="/pn:rss/pn:channel/pn:item[{index}]/pn:description"/>
+         <sd:formElement id="newsProperties" method="post" bind="/pn:rss/pn:channel/pn:item[{index}]">
+            <sd:formField id="publicationDate" label="NewsWidget.publicationDate" bind="/pn:rss/pn:channel/pn:item[{index}]/pn:pubDate"/>
+            <sd:formField id="link" label="NewsWidget.link" bind="/pn:rss/pn:channel/pn:item[{index}]/pn:guid"/>
          </sd:formElement>
       </sd:compositeDataElement>
    </sd:documentBody>

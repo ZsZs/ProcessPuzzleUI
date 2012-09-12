@@ -17,14 +17,14 @@
    </sd:resources>
 
    <sd:documentBody tag="div" id="eventDocumentBody">
-      <sd:compositeDataElement tag="div" id="eventWrapper" bind="//pp:eventList/events/event[{index}]" maxOccures="1">
-         <sd:dataElement tag="h1" elementStyle="title" id="itemTitle" bind="//pp:eventList/events/event[{index}]/title"/>
-         <sd:dataElement tag="div" elementStyle="description" id="itemDescription" bind="//pp:eventList/events/event[{index}]/description"/>
-         <sd:formElement id="eventProperties" method="post" bind="//pp:eventList/events/event[{index}]">
-            <sd:formField id="program" label="EventWidget.program" bind="//pp:eventList/events/event[{index}]/program/description"/>
-            <sd:formField id="link" label="EventWidget.schedule" bind="//pp:eventList/events/event[{index}]/schedule/startDate"/>
-            <sd:formField id="location" label="EventWidget.location" bind="//pp:eventList/events/event[{index}]/location/address"/>
-            <sd:formField id="registration" label="EventWidget.registration" bind="//pp:eventList/events/event[{index}]/registration/link"/>
+      <sd:compositeDataElement tag="div" id="eventWrapper" bind="/pe:eventList/pe:events/pe:event[{index}]" maxOccures="1">
+         <sd:dataElement tag="h1" elementStyle="title" id="itemTitle" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:title"/>
+         <sd:dataElement tag="div" elementStyle="description" id="itemDescription" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:description"/>
+         <sd:formElement id="eventProperties" method="post" bind="/pe:eventList/pe:events/pe:event[{index}]">
+            <sd:formField id="program" label="EventWidget.program" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:program/pe:description"/>
+            <sd:formField id="link" label="EventWidget.schedule" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:schedule/pe:startDate"/>
+            <sd:formField id="location" label="EventWidget.location" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:location/pe:address"/>
+            <sd:formField id="registration" label="EventWidget.registration" bind="/pe:eventList/pe:events/pe:event[{index}]/pe:registration/pe:link"/>
          </sd:formElement>
       </sd:compositeDataElement>
    </sd:documentBody>
