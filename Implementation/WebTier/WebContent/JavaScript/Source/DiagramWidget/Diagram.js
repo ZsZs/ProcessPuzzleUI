@@ -29,6 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
+//= require ../DiagramWidget/DiagramFigure.js
 
 var Diagram = new Class({
    Implements : [AssertionBehavior, Events, Options],

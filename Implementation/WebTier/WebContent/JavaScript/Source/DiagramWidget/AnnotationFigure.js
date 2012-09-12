@@ -38,7 +38,7 @@ var AnnotationFigure = new Class({
    
    options : {
       componentName : "AnnotationFigure",
-      textSelector : "text",
+      textSelector : "dd:text",
       heightSelector : "@height",
       widthSelector : "@width"
    },

@@ -37,7 +37,7 @@ var ClassFigure = new Class({
    Binds: ['instantiateDraw2dObject', 'drawAttributes'],
    
    options : {
-      attributesSelector : "attributes/attribute",
+      attributesSelector : "uml:attributes/uml:attribute",
       componentName : "ClassFigure"
    },
 
