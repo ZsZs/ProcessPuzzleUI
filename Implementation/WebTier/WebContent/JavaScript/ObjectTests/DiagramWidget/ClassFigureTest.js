@@ -11,7 +11,7 @@ window.ClassFigureTest = new Class({
    },
 
    constants : {
-      ATTRIBUTE_SELECTOR : "/attributes/attribute",
+      ATTRIBUTE_SELECTOR : "/uml:attributes/uml:attribute",
       FIGURE_SELECTOR : "/dd:diagramDefinition/dd:figures/uml:class[@name='ClassFigure']"
    },
    

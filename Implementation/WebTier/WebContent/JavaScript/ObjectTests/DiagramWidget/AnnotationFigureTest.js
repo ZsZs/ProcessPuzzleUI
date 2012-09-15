@@ -30,7 +30,7 @@ window.AnnotationFigureTest = new Class({
       this.figure.unmarshall();
 
       assertThat( this.figure.getHeight(), equalTo( this.diagramDefinition.selectNodeText( this.constants.FIGURE_SELECTOR + "/@height" ) ));
-      assertThat( this.figure.getText(), equalTo( this.diagramInternationalization.getText( this.diagramDefinition.selectNodeText( this.constants.FIGURE_SELECTOR + "/text" ) )));
+      assertThat( this.figure.getText(), equalTo( this.diagramInternationalization.getText( this.diagramDefinition.selectNodeText( this.constants.FIGURE_SELECTOR + "/dd:text" ) )));
       assertThat( this.figure.getWidth(), equalTo( this.diagramDefinition.selectNodeText( this.constants.FIGURE_SELECTOR + "/@width" ) ));
    },
    
