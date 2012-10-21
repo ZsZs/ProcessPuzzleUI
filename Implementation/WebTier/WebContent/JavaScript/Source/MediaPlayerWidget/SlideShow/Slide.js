@@ -1,14 +1,15 @@
 /*
 Name: 
-    - PhotoGaleryImage
+    - Slide
 
 Description: 
-    - Represents an image of a photo galery. 
+    - Represents a slide in the slide show. 
 
 Requires:
+   - 
 
 Provides:
-    - PhotoGaleryImage
+    - Slide
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,8 +30,9 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
-var PhotoGaleryImage = new Class({
-   Implements : Options,
+var Slide = new Class({
+   Implements : [AssertionBehavior, Options],
+   Binds: [],
    
    options : {
       captionSelector : "pg:caption",
@@ -47,6 +49,7 @@ var PhotoGaleryImage = new Class({
       this.data;
       this.dataAsText;
       this.definitionXml = definitionXml;
+      this.imageElement;
       this.internationalization = internationalization;
       this.link;
       this.thumbnailUri;
@@ -55,12 +58,17 @@ var PhotoGaleryImage = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function(){
+   construct: function( containerElement ){
+      this.assertThat( containerElement, not( nil() ), "Slide.containerElement" );
+      this.containerElement = containerElement;
+      
       this.compileDataFromProperties();
+      this.createElements();
       this.state = PhotoGaleryImage.States.CONSTRUCTED;
    },
    
    destroy: function(){
+      this.destroyElements();
       this.data = null;
       this.dataAsText = null;
       this.link = null;
@@ -78,6 +86,8 @@ var PhotoGaleryImage = new Class({
    getCaption: function() { return this.caption; },
    getData: function() { return this.data; },
    getDataAsText: function() { return this.dataAsText; },
+   getElement : function(){ return this.anchorElement; },
+   getImageElement : function(){ return this.imageElement; },
    getLink: function() { return this.link; },
    getState: function() { return this.state; },
    getThumbnailUri: function() { return this.thumbnailUri; },
@@ -99,6 +109,21 @@ var PhotoGaleryImage = new Class({
       
       this.dataAsText = "'" + this.uri + "': {" + dataFragment + "}";
       this.data = eval( "({" + this.dataAsText + "})" );
+   }.protect(),
+   
+   createElements : function(){
+      this.anchorElement = new Element( 'a' );
+      this.anchorElement.inject( this.containerElement );
+      
+      this.imageElement = new Element( 'img' );
+      this.imageElement.setStyles({ 'display' : 'none' });
+      this.imageElement.inject( this.anchorElement );
+      
+   }.protect(),
+   
+   destroyElements : function(){
+      if( this.imageElement ) this.imageElement.destroy();
+      if( this.anchorElement ) this.anchorElement.destroy();
    }.protect(),
    
    unmarshallProperties: function(){

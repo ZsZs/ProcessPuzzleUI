@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 // = require_directory ../FundamentalTypes
 var SlideshowController = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds : ['hide', 'onKeyDown', 'onKeyUp', 'onMousMove', 'show'],
+   Binds : ['hide', 'onKeyDown', 'onKeyUp', 'onMouseMove', 'show'],
    options : {
       accessKeys : { 
          'first' : { 'key' : 'shift left', 'label' : 'Shift + Leftwards Arrow' },
@@ -40,6 +40,7 @@ var SlideshowController = new Class({
          'last' : { 'key' : 'shift right', 'label' : 'Shift + Rightwards Arrow' }
       },
       controllerClass : 'controller',
+      eventDeliveryDelay : 5,
       hiddenClass : "hidden",
       link : 'cancel',
       morphProperties : { duration: 500, fps: 50, link : 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
@@ -72,6 +73,7 @@ var SlideshowController = new Class({
       this.createControllerWrapperElements();
       this.createButtons();
       this.addEvents();
+      this.finalizeConstruction();
    },
    
    destroy : function(){
@@ -172,6 +174,10 @@ var SlideshowController = new Class({
       if( this.controllerWrapperElement ) this.controllerWrapperElement.destroy();
    }.protect(),
 
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
    instantiateShortCutKeys : function(){
       for( action in this.options.accessKeys ){
          var keyDefinition = this.options.accessKeys[action];

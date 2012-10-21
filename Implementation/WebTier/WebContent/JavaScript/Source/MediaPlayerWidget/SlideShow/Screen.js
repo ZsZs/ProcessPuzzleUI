@@ -31,10 +31,11 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var Screen = new Class({
-   Implements : [AssertionBehavior, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: [],
    
    options : {
+      eventDeliveryDelay : 5,
       height: 300,
       screenClass: 'images',
       slideShowClass: 'slideshow',
@@ -58,12 +59,13 @@ var Screen = new Class({
    construct: function(){
       this.createScreenElement();
       this.instantiateSlides();
+      this.finalizeConstruction();
    },
    
    coordinateIsWithinScreen : function( coordinate ){
       var screenCoordinates = this.screenElement.getCoordinates();
       return ( coordinate.x > screenCoordinates.left && coordinate.x < screenCoordinates.right && coordinate.y > screenCoordinates.top && coordinate.y < screenCoordinates.bottom );
-   }.protect(),
+   },
    
    destroy: function(){
       this.destroySlides();
@@ -98,6 +100,10 @@ var Screen = new Class({
    instantiateSlides : function(){
       this.currentSlide = new Slide( this.screenElement ); this.currentSlide.construct();
       this.nextSlide = new Slide( this.screenElement ); this.nextSlide.construct();
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
    }.protect()
    
 });

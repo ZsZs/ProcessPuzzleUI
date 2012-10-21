@@ -44,12 +44,12 @@
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessage.js"></script>
 
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
-   <script type="text/javascript" src="../../Source/BrowserWidget/BusyElement.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/ShortCutKey.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetAction.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructedMessage.js"></script> 
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructionException.js"></script> 
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
+   <script type="text/javascript" src="../../Source/BusyWidget/BusyWidget.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/StateTransformer.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateTransformer.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/FixedComponentOrderedTransformer.js"></script>
@@ -99,15 +99,15 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
-<!-- 
    <script type="text/javascript" src="../../ObjectTests/Slideshow/ScreenTest.js"></script>
    <script type="text/javascript" src="../../ObjectTests/Slideshow/SlideCaptionTest.js"></script>
    <script type="text/javascript" src="../../ObjectTests/Slideshow/SlideshowControllerButtonTest.js"></script>
    <script type="text/javascript" src="../../ObjectTests/Slideshow/SlideshowControllerTest.js"></script>
    <script type="text/javascript" src="../../ObjectTests/Slideshow/SlideshowTest.js"></script>
    <script type="text/javascript" src="../../ObjectTests/Slideshow/SlideTest.js"></script>
- -->
    <script type="text/javascript" src="../../ObjectTests/Slideshow/SlidesThumbnailsTest.js"></script>
+<!-- 
+ -->
    
    <script type="text/javascript">
       window.addEvent('domready', function() {
@@ -120,9 +120,9 @@
       var testObject;
       
       function runTestMethod(){
-         testObject = new PhotoGaleryWidgetTest({ onReady : onReady });
+         testObject = new SlideShowTest({ onReady : onReady });
          testObject.beforeEachTest();
-         testObject.construct_instantiatesSlideShow();
+         testObject.construct_constructsComponents();
       }
       
       function onReady(){

@@ -34,7 +34,9 @@ window.SlidesThumbnailsTest = new Class( {
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
       this.constants.THUMBNAIL_IMAGES.each( function( thumbnailUri, index ){ this.thummnailImages.push( this.constants.IMAGE_FORDER + thumbnailUri ); }.bind( this ));
-      this.thumbnails = new SlidesThumbnails( this.containerElement, this.thummnailImages, { thumbnailsClass : this.constants.THUMBNAILS_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS });
+      this.thumbnails = new SlidesThumbnails( this.containerElement, this.thummnailImages, { 
+         thumbnailsClass : this.constants.THUMBNAILS_CLASS,
+         slideShowClass : this.constants.SLIDESHOW_CLASS });
    },
    
    afterEachTest : function (){

@@ -12,6 +12,7 @@ var SlideCaption = new Class({
    
    options : {
       captionClass : "captions",
+      eventDeliveryDelay : 5,
       hiddenClass : "hidden",
       idPrefix : "Slideshow-",
       slideShowClass : "slideshow",
@@ -33,7 +34,7 @@ var SlideCaption = new Class({
    //Public accessor and mutator methods
    construct : function(){
       this.createCaptionElement();
-//      slideshow.el.retrieve( 'images' ).set( 'aria-labelledby', caption.get( 'id' ));
+      this.finalizeConstruction();
    },
    
    destroy : function(){
@@ -75,6 +76,10 @@ var SlideCaption = new Class({
       this.captionElement.set({ 'aria-hidden': false, 'text': this.text });
       this.captionElement.removeClass( this.getHiddenClass() );
       this.captionElement.addClass( this.getVisibleClass() );
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    
    hideCaption : function(){

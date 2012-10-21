@@ -1,6 +1,6 @@
 /*
 Name: 
-    - PhotoGaleryWidget
+    - MediaPlayerWidget
 
 Description: 
     - Represents a collection of images with thumbnails, displays the selected one in original size and runs slide show. 
@@ -31,8 +31,8 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 //= require ../BrowserWidget/BrowserWidget.js
 
-var PhotoGaleryWidget = new Class({
-   Extends : BrowserWidget,
+var SlideShow = new Class({
+   Implements : [AssertionBehavior, Chain, Events, Options],
    Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'onComplete', 'onDestroy', 'onEnd', 'onShow', 'onStart', 'resetFields'],
    options : {
       accessKeysDefault : null,

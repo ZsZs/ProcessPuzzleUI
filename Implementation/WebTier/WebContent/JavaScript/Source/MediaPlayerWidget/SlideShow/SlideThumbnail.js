@@ -119,7 +119,7 @@ var SlideThumbnail = new Class( {
    
    onImageLoaded : function(){
       this.imageElement.inject( this.anchorElement );
-   }.protect(),
+   },
 
    onSelection : function( clickEvent ) {
       this.fireEvent( 'selected', this );

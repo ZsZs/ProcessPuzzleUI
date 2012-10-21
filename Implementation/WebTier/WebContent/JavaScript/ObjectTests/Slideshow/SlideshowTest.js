@@ -7,13 +7,9 @@ window.SlideShowTest = new Class( {
          { method : 'initialize_whenOverlapIsFalse_doublesDuration', isAsynchron : false },
          { method : 'initialize_whenTrailingSlashIsMissing_appendsToImageFolder', isAsynchron : false },
          { method : 'initialize_whenFastIsTrue_setWhenPausedAndPlaying', isAsynchron : false },
-//         { method : 'initialize_whenContainerElementHasAnchor_infersLink', isAsynchron : false },
-//         { method : 'initialize_whenImageDataIsUndefined_infersFromHtml', isAsynchron : false },
-//         { method : 'initialize_addsModifierKeysToAccessKeys', isAsynchron : false },
-//         { method : 'initialize_definesElementsClasses', isAsynchron : false },
-//         { method : 'initialize_definesDocumentEventPushFunction', isAsynchron : false },
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
-         { method : 'construct_constructsComponents', isAsynchron : true }]
+         { method : 'construct_constructsComponents', isAsynchron : true },
+         { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
    constants : {
@@ -27,7 +23,8 @@ window.SlideShowTest = new Class( {
          fast : true, 
          onConstructed : this.onConstructed, 
          onConstructionError : this.onConstructionError, 
-         overlap : false, 
+         overlap : false,
+         thumbnailFileNameRule : [/(\.[^\.]+)$/, '_thumb$1'],
          width: 400 
       }
    },
@@ -49,7 +46,7 @@ window.SlideShowTest = new Class( {
    },
    
    afterEachTest : function (){
-      //this.slideShow.destroy();
+      this.slideShow.destroy();
    },
    
    initialize_whenOverlapIsFalse_doublesDuration : function(){
@@ -65,33 +62,6 @@ window.SlideShowTest = new Class( {
       assertThat( this.slideShow.getFast(), equalTo( this.slideShow.constants.WhenPaused | this.slideShow.constants.WhenPlaying ));
    },
    
-   initialize_whenContainerElementHasAnchor_infersLink : function(){
-      assertThat( this.slideShow.getLink(), equalTo( this.containerElement.getElement( 'a').get( 'href' )));
-   },
-   
-   initialize_whenImageDataIsUndefined_infersFromHtml : function(){
-      this.slideShow = new Slideshow( this.containerElement, null, this.constants.SLIDESHOW_OPTIONS );
-      
-      assertThat( this.slideShow.getImageDefinitions(), hasMember( this.constants.IMAGE_IN_HTML ));
-      assertThat( this.slideShow.getImageDefinitions()[this.constants.IMAGE_IN_HTML], hasMember( 'caption' ));
-      assertThat( this.slideShow.getImageDefinitions()[this.constants.IMAGE_IN_HTML], hasMember( 'href' ));
-      assertThat( this.slideShow.getImageDefinitions()[this.constants.IMAGE_IN_HTML], hasMember( 'thumbnail' ));
-   },
-   
-   initialize_addsModifierKeysToAccessKeys : function(){
-      assertThat( this.slideShow.getAccessKeys()['first'], hasMember( "shift" ));
-      assertThat( this.slideShow.getAccessKeys()['first'], hasMember( "control" ));
-      assertThat( this.slideShow.getAccessKeys()['first'], hasMember( "alt" ));
-   },
-   
-   initialize_definesElementsClasses : function(){
-      assertThat( this.slideShow.getElementsClasses(), hasMember( "slideshow" ));
-   },
-   
-   initialize_definesDocumentEventPushFunction : function(){
-      assertThat( this.slideShow.getEvents(), hasFunction( 'push' ));
-   },
-   
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
       assertThat( function() { new Slideshow( null, this.constants.IMAGES, this.constants.SLIDESHOW_OPTIONS );}.bind( this ), raises( AssertionException ));
    },
@@ -103,6 +73,21 @@ window.SlideShowTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.slideShow.getScreen(), JsHamcrest.Matchers.instanceOf( Screen ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   destroy_removesAllCreatedElements : function(){
+      this.testCaseChain.chain(
+         function(){
+            this.slideShow.construct();
+         }.bind( this ),
+         function(){
+            this.slideShow.destroy();
+               
+            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+               
             this.testMethodReady();
          }.bind( this )
       ).callChain();

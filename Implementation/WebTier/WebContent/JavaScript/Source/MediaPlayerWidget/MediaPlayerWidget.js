@@ -1,20 +1,48 @@
-/**
- * Script: Slideshow.js Slideshow - A javascript class for Mootools to stream
- * and animate the presentation of images on your website.
- * 
- * License: MIT-style license.
- * 
- * Copyright: Copyright (c) 2011 [Aeron
- * Glemann](http://www.electricprism.com/aeron/).
- * 
- * Dependencies: Mootools 1.3.1 Core: Fx.Morph, Fx.Tween, Selectors,
- * Element.Dimensions. Mootools 1.3.1.1 More: Assets.
- */
+/*
+Name: 
+    - MediaPlayerWidget
+
+Description: 
+    - Plays different type of media like audio, video or slide show. 
+
+Requires:
+    - BrowserWidget
+    
+Provides:
+    - MediaPlayerWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 // = require_directory ../FundamentalTypes
-var Slideshow = new Class({
+
+var MediaPlayerWidget = new Class({
+   Extends : BrowserWidget,
    Implements : [AssertionBehavior, Chain, Events, Options],
-   Binds : ['addKeyUpEventHandler', 'constructComponents', 'createComponents', 'createImageElement', 'createImagesWrapper', 'finalizeConstruction'],
+   Binds : ['addKeyUpEventHandler', 
+            'constructScreen',
+            'constructCaption',
+            'constructController',
+            'constructBusyWidget',
+            'constructThumbnails',
+            'createComponents', 
+            'createImageElement', 
+            'createImagesWrapper', 
+            'finalizeConstruction', 
+            'onComponentConstructed'],
    constants : {
       OnStart : 1 << 2,
       WhenPaused : 1 << 0,
@@ -41,9 +69,11 @@ var Slideshow = new Class({
       overlap : true,
       paused : false,
       random : false,
-      replace : [ /(\.[^\.]+)$/, 't$1' ],
+      thumbnailFileNameRule : [ /(\.[^\.]+)$/, 't$1' ],
       resize : 'fill',
       slide : 0,
+      slideshowClass : 'slideshow',
+      spinnerClass : 'loader',
       thumbnails : true,
       titles : false,
       transition : 'sine:in:out',
@@ -84,22 +114,7 @@ var Slideshow = new Class({
    },
 
    destroy : function(p) {
-      Object.each( this.events, function( array, e ) {
-         if( 'each' in array ){
-            array.each( function( fn ) {
-               document.removeEvent( e, fn );
-            });
-         }
-      });
-      this.pause( 1 );
-      'caption busyWidget thumbnails'.split( ' ' ).each( function(i, timer) {
-         this.options[i] && this[i].retrieve && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
-      }, this );
-      typeOf( this.containerElement[p] ) == 'function' && this.containerElement[p]();
-      if (this.containerElement.eliminate) this.containerElement.eliminate( 'uid' );
-      if (this.preloader && this.preloader.removeEvents) this.preloader.removeEvents();
-      if (this.preloader && this.preloader.destroy) this.preloader.destroy();
-
+      this.destroyComponents();
       this.fireEvent( 'destroy', this );
    },
 
@@ -125,6 +140,10 @@ var Slideshow = new Class({
    next : function( last ) {
       var n = last ? this.data.images.length - 1 : this._slide;
       this.go( n, 'left' );
+   },
+   
+   onComponentConstructed : function(){
+      this.constructionChain.callChain();
    },
 
    pause : function( p ) {
@@ -171,6 +190,7 @@ var Slideshow = new Class({
 
    //Properties
    getAccessKeys : function(){ return this.accesskeys; },
+   getBusyWidgetClass : function(){ return this.options.slideshowClass + "-" + this.options.spinnerClass; },
    getDuration : function(){ return this.options.duration; },
    getElementsClasses : function(){ return this.classes; },
    getEvents : function(){ return this.events; },
@@ -181,16 +201,6 @@ var Slideshow = new Class({
    getScreen : function(){ return this.screen; },
    
    //Protected, private helper methods
-//   addKeyUpEventHandler : function(){
-//      this.events.push( 'keyup', function( event ) {
-//         this.accesskeys.each( function( accesskey, action ) {
-//            if( event.key == accesskey.key && event.shift == accesskey.shift && event.control == accesskey.control && event.alt == accesskey.alt ) this[action]();
-//         }, this );
-//      }.bind( this ));
-//      
-//      this.constructionChain.callChain();
-//   }.protect(),
-   
    appendSlashToImageFolder : function(){
       if( this.options.imageFolder.length && !this.options.imageFolder.test( /\/$/ )) this.options.imageFolder += '/';
    }.protect(),
@@ -202,8 +212,11 @@ var Slideshow = new Class({
    
    compileConstructionChain : function(){
       this.constructionChain.chain(
-//         this.addKeyUpEventHandler,
-         this.constructComponents,
+         this.constructScreen,
+         this.constructCaption,
+         this.constructController,
+         this.constructBusyWidget,
+         this.constructThumbnails,
 //         function(){ this.preload( this.options.fast & OnStart ); }.bind( this ),
          this.finalizeConstruction
       );
@@ -215,14 +228,37 @@ var Slideshow = new Class({
       this.fireEvent( 'complete', [], 10 );
    }.protect(),
    
-   constructComponents : function(){
-      this.screen = new Screen( this.containerElement ); this.screen.construct();
-      if( this.options.captions ){ this.caption = new SlideCaption( this.containerElement ); this.caption.construct(); }
-      if( this.options.controller ){ this.controller = new SlideshowController( this.containerElement, this.screen ); this.controller.construct(); }
-      if( this.options.busyWidget ){ this.busyWidget = new BusyElement( this.containerElement ); this.busyWidget.construct(); }
-//      if( this.options.thumbnails ) this.thumbnails = new Thumbnails( this );
-      
-      this.constructionChain.callChain();
+   constructBusyWidget : function(){
+      if( this.options.busyWidget ){ 
+         this.busyWidget = new BusyElement( this.containerElement, { elementClass : this.getBusyWidgetClass(), onConstructed : this.onComponentConstructed }); 
+         this.busyWidget.construct(); 
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
+   constructCaption : function(){
+      if( this.options.captions ){ 
+         this.caption = new SlideCaption( this.containerElement, { onConstructed : this.onComponentConstructed }); 
+         this.caption.construct(); 
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
+   constructController : function(){
+      if( this.options.controller ){ 
+         this.controller = new SlideshowController( this.containerElement, this.screen, { onConstructed : this.onComponentConstructed }); 
+         this.controller.construct(); 
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
+   constructScreen : function(){
+      this.screen = new Screen( this.containerElement, { onConstructed : this.onComponentConstructed }); 
+      this.screen.construct();
+   }.protect(),
+   
+   constructThumbnails : function(){
+      if( this.options.thumbnails ){ 
+         this.thumbnails = new SlidesThumbnails( this.containerElement, this.data.thumbnails, { onConstructed : this.onComponentConstructed }); 
+         this.thumbnails.construct(); 
+      }else this.constructionChain.callChain();
    }.protect(),
    
    createImageData : function() {
@@ -239,7 +275,7 @@ var Slideshow = new Class({
          var caption = obj.caption ? obj.caption.trim() : '';
          var href = obj.href ? obj.href.trim() : this.options.linked ? image : this.options.href;
          var target = obj.target ? obj.target.trim() : '_self';
-         var thumbnail = obj.thumbnail ? this.options.imageFolder + obj.thumbnail.trim() : image.replace( this.options.replace[0], this.options.replace[1] );
+         var thumbnail = obj.thumbnail ? this.options.imageFolder + obj.thumbnail.trim() : image.replace( this.options.thumbnailFileNameRule[0], this.options.thumbnailFileNameRule[1] );
          var title = caption.replace( /<.+?>/gm, '' ).replace( /</g, '&lt;' ).replace( />/g, '&gt;' ).replace( /"/g, "'" );
          this.data.images.push( image );
          this.data.captions.push( caption );
@@ -281,6 +317,14 @@ var Slideshow = new Class({
          document.addEvent( type, fn );
          return this;
       }.bind( this.events );
+   }.protect(),
+   
+   destroyComponents : function(){
+      if( this.screen ) this.screen.destroy();
+      if( this.caption ) this.caption.destroy();
+      if( this.controller ) this.controller.destroy();
+      if( this.busyWidget ) this.busyWidget.destroy();
+      if( this.thumbnails ) this.thumbnails.destroy();
    }.protect(),
    
    doubleDurationWhenNoOverlap : function(){

@@ -34,6 +34,7 @@ var SlidesThumbnails = new Class( {
    Binds : ['onMouseMove', 'onThumbnailSelected'],
    options : {
       columns : null,
+      eventDeliveryDelay : 5,
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       position : null,
       rows : null,
@@ -62,6 +63,7 @@ var SlidesThumbnails = new Class( {
       this.createListElement();
       this.createThumbnailElements();
       this.determineProperties();
+      this.finalizeConstruction();
    },
 
    destroy : function(){
@@ -120,6 +122,10 @@ var SlidesThumbnails = new Class( {
       if( !this.options.scroll )
          this.options.scroll = (wrapperElementCoordinates.height > wrapperElementCoordinates.width) ? 'y' : 'x';
       this.properties = ( this.options.scroll == 'y' ) ? 'top bottom height y width'.split( ' ' ) : 'left right width x height'.split( ' ' );
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    
    mouseIsWithinThumbnailsArea : function( mouseEvent ){
