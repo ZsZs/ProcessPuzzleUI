@@ -29,10 +29,10 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
-//= require ../BrowserWidget/BrowserWidget.js
+//= require ../MediaPlayerWidget/Media.js
 
 var SlideShow = new Class({
-   Implements : [AssertionBehavior, Chain, Events, Options],
+   Extends : Media,
    Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'onComplete', 'onDestroy', 'onEnd', 'onShow', 'onStart', 'resetFields'],
    options : {
       accessKeysDefault : null,
@@ -41,7 +41,7 @@ var SlideShow = new Class({
       automaticallyLinkSlideSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:automaticallyLinkSlideToFullSizedImage",
       centerImagesDefault : true,
       centerImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages",
-      componentName : "PhotoGaleryWidget",
+      componentName : "Slideshow",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pg='http://www.processpuzzle.com/PhotoGalery'",
       descriptionSelector : "//sd:photoGaleryWidgetDefinition/sd:description", 
       effectDurationDefault : 750,
@@ -86,9 +86,8 @@ var SlideShow = new Class({
    },
 
    //Constructor
-   initialize: function( options, internationalization ){
-      this.setOptions( options );
-      this.parent( options, internationalization );
+   initialize: function( internationalization, mediaDefinitionXml, options ){
+      this.parent( internationalization, mediaDefinitionXml, options );
       
       //Private attributes
       this.accessKeys;

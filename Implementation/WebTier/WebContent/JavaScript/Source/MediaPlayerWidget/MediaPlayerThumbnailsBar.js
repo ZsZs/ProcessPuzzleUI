@@ -1,15 +1,15 @@
 /*
 Name: 
-    - SlidesThumbnails
+    - MediaPlayerThumbnailsBar
 
 Description: 
-    - Displays the list of slide's thumbnails. 
+    - Displays the list of thumbnails associated with the media. 
 
 Requires:
    - 
 
 Provides:
-    - SlidesThumbnails
+    - MediaPlayerThumbnailsBar
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,11 +29,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 
-var SlidesThumbnails = new Class( {
+var MediaPlayerThumbnailsBar = new Class( {
    Implements : [AssertionBehavior, Events, Options],
    Binds : ['onMouseMove', 'onThumbnailSelected'],
    options : {
       columns : null,
+      componentName : 'MediaPlayerThumbnailsBar',
       eventDeliveryDelay : 5,
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       position : null,
@@ -46,8 +47,8 @@ var SlidesThumbnails = new Class( {
 
    initialize : function( containerElement, thumbnailImageUris, options ) {
       this.setOptions( options );
-      this.assertThat( containerElement, not( nil()), "SlidesThumbnails.containerElement" );
-      this.assertThat( thumbnailImageUris, not( nil()), "SlidesThumbnails.thumbnailImageUris" );
+      this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
+      this.assertThat( thumbnailImageUris, not( nil()), this.options.componentName + ".thumbnailImageUris" );
       
       this.containerElement = containerElement;
       this.listElement;

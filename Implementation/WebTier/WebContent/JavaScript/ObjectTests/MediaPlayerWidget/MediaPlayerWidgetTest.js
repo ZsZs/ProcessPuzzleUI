@@ -5,20 +5,18 @@ window.MediaPlayerWidgetTest = new Class( {
    options : {
       isBeforeEachTestAsynchron : true,
       testMethods : [
-          { method : 'initialization_setsState', isAsynchron : false },
-          { method : 'unmarshall_determinesProperties', isAsynchron : false },
-          { method : 'unmarshall_determinesImagesData', isAsynchron : false },
-          { method : 'construct_compilesDataObject', isAsynchron : true }, 
-          { method : 'construct_instantiatesSlideShow', isAsynchron : true },
-          { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
+         { method : 'initialization_setsState', isAsynchron : false },
+         { method : 'unmarshall_instantiatesAndUnmarshallsMedia', isAsynchron : false },
+         { method : 'construct_constructsDisplay', isAsynchron : true },
+         { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
    },
 
    constants : {
       LANGUAGE : "hu",
-      PHOTO_GALERY_DATA_URI : "../PhotoGaleryWidget/PhotoGaleryData.xml",
-      PHOTO_GALERY_DEFINITION_URI : "../PhotoGaleryWidget/PhotoGaleryWidgetDefinition.xml",
-      PHOTO_GALERY_CONTAINER_ID : "PhotoGaleryContainer",
-      WEBUI_CONFIGURATION_URI : "../PhotoGaleryWidget/WebUIConfiguration.xml",
+      WIDGET_DATA_URI : "../MediaPlayerWidget/Slideshow/PhotoGaleryData.xml",
+      WIDGET_DEFINITION_URI : "../MediaPlayerWidget/MediaPlayerWidgetDefinition.xml",
+      WIDGET_CONTAINER_ID : "PhotoGaleryContainer",
+      WEBUI_CONFIGURATION_URI : "../MediaPlayerWidget/WebUIConfiguration.xml",
    },
    
    initialize : function( options ) {
@@ -26,11 +24,11 @@ window.MediaPlayerWidgetTest = new Class( {
       this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
       this.componentStateManager;
       this.messageBus;
-      this.photoGalery;
-      this.photoGaleryContainerElement;
-      this.photoGaleryData;
-      this.photoGaleryDefinition;
-      this.photoGaleryInternationalization;
+      this.widget;
+      this.widgetContainerElement;
+      this.widgetData;
+      this.widgetDefinition;
+      this.widgetInternationalization;
       this.webUIConfiguration;
       this.webUIController;
       this.webUILogger;
@@ -43,94 +41,56 @@ window.MediaPlayerWidgetTest = new Class( {
             this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
             this.webUILogger = new WebUILogger( this.webUIConfiguration );
             this.componentStateManager = new ComponentStateManager();
-            this.photoGaleryInternationalization = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
-            this.photoGaleryInternationalization.load( this.locale );
+            this.widgetInternationalization = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.widgetInternationalization.load( this.locale );
          }.bind( this ),
          function(){
-            this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" });
-            this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
+            this.widgetData = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" });
+            this.widgetDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
             
-            this.photoGalery = new PhotoGaleryWidget( {
+            this.widget = new MediaPlayerWidget( this.widgetInternationalization, {
                onConstructed : this.onConstructed,
                onDestroyed : this.onDestroyed,
-               widgetContainerId : this.constants.PHOTO_GALERY_CONTAINER_ID, 
-               widgetDefinitionURI : this.constants.PHOTO_GALERY_DEFINITION_URI, 
-               widgetDataURI : this.constants.PHOTO_GALERY_DATA_URI 
-            }, this.photoGaleryInternationalization );
-            this.photoGaleryContainerElement = $( this.constants.PHOTO_GALERY_CONTAINER_ID );
+               widgetContainerId : this.constants.WIDGET_CONTAINER_ID, 
+               widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI, 
+               widgetDataURI : this.constants.WIDGET_DATA_URI 
+            });
+            this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
             this.beforeEachTestReady();
          }.bind( this )
       ).callChain();
    },
    
    afterEachTest : function (){
-      this.photoGalery.destroy();
-      this.photoGaleryData.release();
-      this.photoGaleryDefinition.release();
+      this.widget.destroy();
+      this.widgetData.release();
+      this.widgetDefinition.release();
       this.messageBus.tearDown();
       this.componentStateManager.reset();
    },
    
    initialization_setsState : function() {
-      assertThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+      assertThat( this.widget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
    },
    
-   unmarshall_determinesProperties : function() {
-      this.photoGalery.unmarshall();
+   unmarshall_instantiatesAndUnmarshallsMedia : function(){
+      this.widget.unmarshall();
       
-      assertThat( this.photoGalery.getAccessKeys(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:accessKeys' )));
-      assertThat( this.photoGalery.getAutomaticallyLinkSlide(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:automaticallyLinkSlideToFullSizedImage' )));
-      assertThat( this.photoGalery.getCenterImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages' ))));
-      assertThat( this.photoGalery.getEffectDuration(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:effectDuration' ))));
-      assertThat( this.photoGalery.getFirstSlide(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:firstSlide' ))));
-      assertThat( this.photoGalery.getGaleryLink(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:galeryLink' )));
-      assertThat( this.photoGalery.getHeight(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:height' ))));
-      assertThat( this.photoGalery.getImageFolderUri(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:imageFolderUri' )));
-      assertThat( this.photoGalery.getLoopShow(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:loopShow' ))));
-      assertThat( this.photoGalery.getOverlapImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:overlapImages' ))));
-      assertThat( this.photoGalery.getResizeImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:resizeImages' ))));
-      assertThat( this.photoGalery.getShowController(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showController' ))));
-      assertThat( this.photoGalery.getShowImageCaptions(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showImageCaptions' ))));
-      assertThat( this.photoGalery.getShowSlidesRandom(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showSlidesRandom' ))));
-      assertThat( this.photoGalery.getShowThumbnails(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showThumbnails' ))));
-      assertThat( this.photoGalery.getSkipTransition(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:skipTransition' ))));
-      assertThat( this.photoGalery.getSlideChangeDelay(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideChangeDelay' ))));
-      assertThat( this.photoGalery.getSlideTransition(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideTransition' )));
-      assertThat( this.photoGalery.getStartPaused(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:startPaused' ))));
-      assertThat( this.photoGalery.getThumbnailFileNameRule(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:thumbnailFileNameRule' )));
-      assertThat( this.photoGalery.getWidth(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:width' ))));
+      assertThat( this.widget.getState(), equalTo( BrowserWidget.States.UNMARSHALLED ));
+      assertThat( this.widget.getMedia(), not( nil() ));
+      assertThat( this.widget.getMedia(), JsHamcrest.Matchers.instanceOf( Media ));
    },
    
-   unmarshall_determinesImagesData : function() {
-      this.photoGalery.unmarshall();
-      
-      assertThat( this.photoGalery.getImages().size(), equalTo( this.photoGaleryData.selectNodes( 'pg:photoGalery/pg:images/pg:image' ).length ));
-   },
-   
-   construct_compilesDataObject : function() {
+   construct_constructsDisplay : function() {
       this.testCaseChain.chain(
          function(){
-            this.photoGalery.unmarshall();
-            this.photoGalery.construct();
+            this.widget.unmarshall();
+            this.widget.construct();
          }.bind( this ),
          function(){
-            assertThat( this.photoGalery.getData()['IMAG0337.jpg']['caption'], equalTo( this.photoGalery.getImages().get('IMAG0337.jpg').getCaption() ));
-            assertThat( this.photoGalery.getData()['IMAG0337.jpg']['href'], equalTo( this.photoGalery.getImages().get('IMAG0337.jpg').getLink() ));
-            assertThat( this.photoGalery.getData()['IMAG0337.jpg']['thumbnail'], equalTo( this.photoGalery.getImages().get('IMAG0337.jpg').getThumbnailUri() ));
-            this.testMethodReady();
-         }.bind( this )
-      ).callChain();
-   },
-   
-   construct_instantiatesSlideShow : function() {
-      this.testCaseChain.chain(
-         function(){
-            this.photoGalery.unmarshall();
-            this.photoGalery.construct();
-         }.bind( this ),
-         function(){
-            assertThat( this.photoGalery.getSlideShow(), not( nil() ));
-            assertThat( $( this.constants.PHOTO_GALERY_CONTAINER_ID ).getElements( 'div' ).length, greaterThan( 0 ) );
+            assertThat( this.widget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            assertThat( this.widget.getDisplay(), JsHamcrest.Matchers.instanceOf( MediaPlayerDisplay ));
+            
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -138,21 +98,20 @@ window.MediaPlayerWidgetTest = new Class( {
    
    destroy_destroysAllCreatedElements : function() {
       this.testCaseChain.chain(
-         function(){ this.photoGalery.unmarshall(); this.photoGalery.construct(); }.bind( this ),
+         function(){ this.widget.unmarshall(); this.widget.construct(); }.bind( this ),
          function(){
-            assumeThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
-            
-            this.photoGalery.destroy();
+            assumeThat( this.widget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            this.widget.destroy();
          }.bind( this ),
          function(){
-            assertThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
-            assertThat( this.photoGaleryContainerElement.getElements( '*' ).length, equalTo( 0 ));
+            assertThat( this.widget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+            assertThat( this.widgetContainerElement.getElements( '*' ).length, equalTo( 0 ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
    },
    
-   //Event handling methods
+   //Protected, private helper methods
    onConstructed : function(){
       this.testCaseChain.callChain();
    },
@@ -166,11 +125,7 @@ window.MediaPlayerWidgetTest = new Class( {
    },
    
    onLocalizationLoaded : function(){
-      this.beforeEachTestChain.callChain();
-   },
-   
-   waitForImageLoading : function(){
-      //NOP
-   }.protect()
+	  this.beforeEachTestChain.callChain();
+   }
 
 });

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sd:widgetDefinition
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pp="http://www.processpuzzle.com"
+   xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
+   
+   <sd:name>MediaPlayerWidget</sd:name>
+   <sd:description>MediaPlayerWidget.description</sd:description>
+   <sd:version>1.0</sd:version>
+   
+</sd:widgetDefinition>

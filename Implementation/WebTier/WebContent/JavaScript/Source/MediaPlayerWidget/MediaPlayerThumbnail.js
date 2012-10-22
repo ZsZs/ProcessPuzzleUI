@@ -1,15 +1,15 @@
 /*
 Name: 
-    - SlideThumbnail
+    - MediaPlayerThumbnail
 
 Description: 
-    - Represents a slide's thumbnail. 
+    - Represents a thumbnail, displayed in the thumbnails bar. 
 
 Requires:
    - 
 
 Provides:
-    - SlideThumbnail
+    - MediaPlayerThumbnail
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,10 +29,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 
-var SlideThumbnail = new Class( {
+var MediaPlayerThumbnail = new Class( {
    Implements : [AssertionBehavior, Events, Options],
    Binds : ['onImageLoaded', 'onSelection'],
    options : {
+      componentName : 'MediaPlayerThumbnail',
       hiddenClass : "hidden",
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       slideShowClass : "slideshow",
@@ -43,8 +44,8 @@ var SlideThumbnail = new Class( {
 
    initialize : function( containerElement, thumbnailUri, index, options ) {
       this.setOptions( options );
-      this.assertThat( containerElement, not( nil()), "SlidesThumbnails.containerElement" );
-      this.assertThat( thumbnailUri, not( nil()), "SlidesThumbnails.thumbnailUri" );
+      this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
+      this.assertThat( thumbnailUri, not( nil()), this.options.componentName + ".thumbnailUri" );
       this.assertThat( index, not( nil()), "SlidesThumbnails.index" );
       
       this.anchorElement;

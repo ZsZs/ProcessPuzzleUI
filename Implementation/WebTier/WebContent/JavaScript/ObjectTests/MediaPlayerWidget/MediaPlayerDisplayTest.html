@@ -2,7 +2,7 @@
 
 <html>
 <head>
-   <title>Test page for MediaPlayerWidget.js</title>
+   <title>Test page for MediaPlayerDisplay.js</title>
    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
@@ -71,10 +71,14 @@
    <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../../Source/jStorage/jstorage.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/Media.js"></script>
    <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerDisplay.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerScreen.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerThumbnailsBar.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerThumbnail.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerTitleBar.js"></script>
    <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerWidget.js"></script>
    <script type="text/javascript" src="../../Source/MediaPlayerWidget/Media.js"></script>
-   <script type="text/javascript" src="../../Source/MediaPlayerWidget/SlideShow/Slides.js"></script>
    <script type="text/javascript" src="../../Source/MediaPlayerWidget/SlideShow/Slideshow.js"></script>
    <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarButton.js"></script>
    <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarWidget.js"></script>
@@ -83,33 +87,21 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
-   <script type="text/javascript" src="../../ObjectTests/MediaPlayerWidget/MediaPlayerWidgetTest.js"></script>
+   <script type="text/javascript" src="../../ObjectTests/MediaPlayerWidget/MediaPlayerDisplayTest.js"></script>
    
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //runTestMethod();
       });
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
 
-      var testObject;
-      
-      function runTestMethod(){
-         testObject = new MediaPlayerWidgetTest({ onReady : onReady });
-         testObject.beforeEachTest();
-         testObject.construct_instantiatesSlideShow();
-      }
-      
-      function onReady(){
-         testObject.afterEachTest();
-      }
    </script>
 </head>
 
 <body>
-   <h1>MediaPlayerWidget.js test page</H1>
-   <p>This page contains tests for MediaPlayerWidget.js JavaScript class.</P>
-   <div id="PhotoGaleryContainer" class="slideshow"></div>
+   <h1>MediaPlayerDisplay.js test page</H1>
+   <p>This page contains tests for MediaPlayerDisplay.js JavaScript class.</P>
+   <div id="widgetContainer" class="slideshow"></div>
 </body>
 </html>

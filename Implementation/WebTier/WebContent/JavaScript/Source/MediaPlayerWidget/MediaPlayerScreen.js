@@ -1,15 +1,15 @@
 /*
 Name: 
-    - Screen
+    - MediaPlayerScreen
 
 Description: 
-    - Represents the display area of the slide show. 
+    - Represents the display area of the Media Player. 
 
 Requires:
    - 
 
 Provides:
-    - Screen
+   - MediaPlayerScreen
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
-var Screen = new Class({
+var MediaPlayerScreen = new Class({
    Implements : [AssertionBehavior, Events, Options],
    Binds: [],
    
@@ -58,7 +58,7 @@ var Screen = new Class({
    //Public accessor and mutator methods
    construct: function(){
       this.createScreenElement();
-      this.instantiateSlides();
+//      this.instantiateSlides();
       this.finalizeConstruction();
    },
    
@@ -68,7 +68,7 @@ var Screen = new Class({
    },
    
    destroy: function(){
-      this.destroySlides();
+      //this.destroySlides();
       this.destroyScreenElement();
    },
    

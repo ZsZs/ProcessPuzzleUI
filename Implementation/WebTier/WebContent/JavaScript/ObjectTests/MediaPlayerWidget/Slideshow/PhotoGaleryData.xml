@@ -5,6 +5,30 @@
    xmlns:pg="http://www.processpuzzle.com/PhotoGalery" 
    xsi:schemaLocation="http://www.processpuzzle.com/PhotoGalery http://processpuzzle.com/Schemas/PhotoGalery.xsd">
    
+   <sd:properties>
+      <sd:accessKeys>shift+h</sd:accessKeys>
+      <sd:automaticallyLinkSlideToFullSizedImage>true</sd:automaticallyLinkSlideToFullSizedImage>
+      <sd:centerImages>true</sd:centerImages>
+      <sd:effectDuration>1500</sd:effectDuration>
+      <sd:firstSlide>7</sd:firstSlide>
+      <sd:galeryLink>http://www.tourism-costarica.com</sd:galeryLink>
+      <sd:height>300</sd:height>
+      <sd:imageFolderUri>../PhotoGaleryWidget/Album</sd:imageFolderUri>
+      <sd:loopShow>true</sd:loopShow>
+      <sd:overlapImages>true</sd:overlapImages>
+      <sd:resizeImages>true</sd:resizeImages>
+      <sd:showController>true</sd:showController>
+      <sd:showImageCaptions>true</sd:showImageCaptions>
+      <sd:showSlidesRandom>true</sd:showSlidesRandom>
+      <sd:showThumbnails>true</sd:showThumbnails>
+      <sd:skipTransition>WhenPaused | OnStart</sd:skipTransition>
+      <sd:slideChangeDelay>3000</sd:slideChangeDelay>
+      <sd:slideTransition>elastic:in:out</sd:slideTransition>
+      <sd:startPaused>true</sd:startPaused>
+      <sd:thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</sd:thumbnailFileNameRule>
+      <sd:width>450</sd:width>
+   </sd:properties>
+   
    <pg:name>Pura Vida Costa Rica</pg:name>
    <pg:description>Photos from Costa Rica.</pg:description>
    <pg:images>
