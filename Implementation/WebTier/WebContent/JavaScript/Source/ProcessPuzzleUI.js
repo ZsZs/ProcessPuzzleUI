@@ -11,11 +11,11 @@
 //= require_directory ./Internationalization
 //= require_directory ./jStorage
 //= require_directory ./LanguageSelectorWidget
+//= require_directory ./MediaPlayerWidget
 //= require_directory ./MochaUI
 //= require_directory ./MooEditable
 //= require_directory ./NewsReaderWidget
 //= require_directory ./PartyEventWidget
-//= require_directory ./PhotoGaleryWidget
 //= require_directory ./ResourceManager
 //= require_directory ./ScrollingBehaviour
 //= require_directory ./Singleton

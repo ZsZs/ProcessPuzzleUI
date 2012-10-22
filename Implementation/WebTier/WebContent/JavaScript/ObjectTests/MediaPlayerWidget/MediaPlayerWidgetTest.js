@@ -1,4 +1,4 @@
-window.PhotoGaleryWidgetTest = new Class( {
+window.MediaPlayerWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 

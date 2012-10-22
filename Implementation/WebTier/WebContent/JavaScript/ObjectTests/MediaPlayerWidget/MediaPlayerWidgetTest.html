@@ -2,12 +2,12 @@
 
 <html>
 <head>
-   <title>Test page for PhotoGaleryWidget.js</title>
+   <title>Test page for MediaPlayerWidget.js</title>
    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
    <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
-   <link rel="stylesheet" type="text/css" href="../PhotoGaleryWidget/PhotoGalery.css">
+   <link rel="stylesheet" type="text/css" href="../MediaPlayerWidget/PhotoGalery.css">
    
    <script type="text/javascript">
       var contextRootPrefix = "../../../";
@@ -70,8 +70,8 @@
    <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
    <script type="text/javascript" src="../../Source/jStorage/jstorage.js"></script>
-   <script type="text/javascript" src="../../Source/PhotoGaleryWidget/PhotoGaleryImage.js"></script>
-   <script type="text/javascript" src="../../Source/PhotoGaleryWidget/PhotoGaleryWidget.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/PhotoGaleryImage.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerWidget.js"></script>
    <script type="text/javascript" src="../../Source/SlideShow/Slideshow.js"></script>
    <script type="text/javascript" src="../../Source/SlideShow/Slideshow.flash.js"></script>
    <script type="text/javascript" src="../../Source/SlideShow/Slideshow.fold.js"></script>
@@ -84,7 +84,7 @@
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
-   <script type="text/javascript" src="../../ObjectTests/PhotoGaleryWidget/PhotoGaleryWidgetTest.js"></script>
+   <script type="text/javascript" src="../../ObjectTests/MediaPlayerWidget/MediaPlayerWidgetTest.js"></script>
    
    <script type="text/javascript">
       window.addEvent('domready', function() {
@@ -97,7 +97,7 @@
       var testObject;
       
       function runTestMethod(){
-         testObject = new PhotoGaleryWidgetTest({ onReady : onReady });
+         testObject = new MediaPlayerWidgetTest({ onReady : onReady });
          testObject.beforeEachTest();
          testObject.construct_instantiatesSlideShow();
       }
@@ -109,8 +109,8 @@
 </head>
 
 <body>
-   <h1>PhotoGaleryWidget.js test page</H1>
-   <p>This page contains tests for PhotoGaleryWidget.js JavaScript class.</P>
+   <h1>MediaPlayerWidget.js test page</H1>
+   <p>This page contains tests for MediaPlayerWidget.js JavaScript class.</P>
    <div id="PhotoGaleryContainer" class="slideshow"></div>
 </body>
 </html>
