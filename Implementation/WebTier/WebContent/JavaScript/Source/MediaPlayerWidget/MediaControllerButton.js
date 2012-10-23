@@ -39,6 +39,7 @@ var MediaControllerButton = new Class({
       isActiveClass : 'active',
       key : null,
       label : null,
+      slideShowClass : 'slideshow',
       tabIndex : null
    },
 
@@ -64,7 +65,7 @@ var MediaControllerButton = new Class({
    },
    
    lostFocus: function(){
-      this.removeClass( this.options.isActiveClass );
+      this.anchorElement.removeClass( this.options.isActiveClass );
    },
    
    onSelected: function(){
@@ -76,10 +77,11 @@ var MediaControllerButton = new Class({
    },
    
    gotFocus: function(){
-      this.addClass( this.options.isActiveClass );
+      this.anchorElement.addClass( this.options.isActiveClass );
    },
    
    //Properties
+   getAnchorClass : function(){ return this.options.slideShowClass + "-controller"; },
    getAnchorElement : function(){ return this.anchorElement; },
    getElementClass : function(){ return this.options.buttonClass; },
    getListItemElement : function(){ return this.listItemElement; },

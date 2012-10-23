@@ -29,9 +29,9 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../FundamentalTypes
 
-var MediaPlayerThumbnailsBar = new Class( {
+var MediaPlayerThumbnailsBar = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds : ['onMouseMove', 'onThumbnailSelected'],
+   Binds : ['onMouseMove', 'onThumbnailSelected', 'scroll'],
    options : {
       columns : null,
       componentName : 'MediaPlayerThumbnailsBar',

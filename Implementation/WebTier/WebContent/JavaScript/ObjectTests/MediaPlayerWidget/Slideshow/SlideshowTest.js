@@ -1,109 +1,176 @@
-window.SlideShowTest = new Class( {
+window.MediaPlayerWidgetTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onConstructionError'],
+   Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isBeforeEachTestAsynchron : true,
       testMethods : [
-         { method : 'initialize_whenOverlapIsFalse_doublesDuration', isAsynchron : false },
-         { method : 'initialize_whenTrailingSlashIsMissing_appendsToImageFolder', isAsynchron : false },
-         { method : 'initialize_whenFastIsTrue_setWhenPausedAndPlaying', isAsynchron : false },
-         { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
-         { method : 'construct_constructsComponents', isAsynchron : true },
-         { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
+          { method : 'initialization_setsState', isAsynchron : false },
+          { method : 'unmarshall_determinesProperties', isAsynchron : false },
+          { method : 'unmarshall_determinesImagesData', isAsynchron : false },
+          { method : 'construct_compilesDataObject', isAsynchron : true }, 
+          { method : 'construct_instantiatesSlideShow', isAsynchron : true },
+          { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
    },
 
    constants : {
-      CONTAINER_ELEMENT_ID : "SlideShowContainer",
-      IMAGES : { 'IMAG0337.jpg': { caption: '1' }, 'IMAG0339.jpg': { caption: '2' }, 'SANY0008.JPG': { caption: '3' }, 'SANY0012.JPG': { caption: '4' }},
-      IMAGE_IN_HTML : '../PhotoGaleryWidget/Album/SANY0071.JPG',
-      SLIDESHOW_OPTIONS : { 
-         duration : 1500, 
-         height: 300, 
-         imageFolder: '../PhotoGaleryWidget/Album', 
-         fast : true, 
-         onConstructed : this.onConstructed, 
-         onConstructionError : this.onConstructionError, 
-         overlap : false,
-         thumbnailFileNameRule : [/(\.[^\.]+)$/, '_thumb$1'],
-         width: 400 
-      }
+      LANGUAGE : "hu",
+      PHOTO_GALERY_DATA_URI : "../PhotoGaleryWidget/PhotoGaleryData.xml",
+      PHOTO_GALERY_DEFINITION_URI : "../PhotoGaleryWidget/PhotoGaleryWidgetDefinition.xml",
+      PHOTO_GALERY_CONTAINER_ID : "PhotoGaleryContainer",
+      WEBUI_CONFIGURATION_URI : "../PhotoGaleryWidget/WebUIConfiguration.xml",
    },
    
    initialize : function( options ) {
       this.setOptions( options );
-      
-      this.containerElement;
-      this.slideShow;
+      this.locale = new ProcessPuzzleLocale({ language : this.constants.LANGUAGE });
+      this.componentStateManager;
+      this.messageBus;
+      this.photoGalery;
+      this.photoGaleryContainerElement;
+      this.photoGaleryData;
+      this.photoGaleryDefinition;
+      this.photoGaleryInternationalization;
+      this.webUIConfiguration;
+      this.webUIController;
+      this.webUILogger;
    },   
 
    beforeEachTest : function(){
-      this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.slideShow = new Slideshow( this.containerElement, this.constants.IMAGES, Object.merge( this.constants.SLIDESHOW_OPTIONS, {
-         onConstructed : this.onConstructed, 
-         onConstructionError : this.onConstructionError, 
-         onDestroyed : this.onDestroyed
-      }));
+      this.beforeEachTestChain.chain(
+         function(){
+            this.messageBus = new WebUIMessageBus();
+            this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
+            this.webUILogger = new WebUILogger( this.webUIConfiguration );
+            this.componentStateManager = new ComponentStateManager();
+            this.photoGaleryInternationalization = new LocalizationResourceManager( this.webUIConfiguration, { onFailure: this.onLocalizationFailure, onSuccess : this.onLocalizationLoaded });
+            this.photoGaleryInternationalization.load( this.locale );
+         }.bind( this ),
+         function(){
+            this.photoGaleryData = new XmlResource( this.constants.PHOTO_GALERY_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" });
+            this.photoGaleryDefinition = new XmlResource( this.constants.PHOTO_GALERY_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
+            
+            this.photoGalery = new PhotoGaleryWidget( {
+               onConstructed : this.onConstructed,
+               onDestroyed : this.onDestroyed,
+               widgetContainerId : this.constants.PHOTO_GALERY_CONTAINER_ID, 
+               widgetDefinitionURI : this.constants.PHOTO_GALERY_DEFINITION_URI, 
+               widgetDataURI : this.constants.PHOTO_GALERY_DATA_URI 
+            }, this.photoGaleryInternationalization );
+            this.photoGaleryContainerElement = $( this.constants.PHOTO_GALERY_CONTAINER_ID );
+            this.beforeEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    afterEachTest : function (){
-      this.slideShow.destroy();
+      this.photoGalery.destroy();
+      this.photoGaleryData.release();
+      this.photoGaleryDefinition.release();
+      this.messageBus.tearDown();
+      this.componentStateManager.reset();
    },
    
-   initialize_whenOverlapIsFalse_doublesDuration : function(){
-      assertThat( this.slideShow.getDuration(), equalTo( 2 * this.constants.SLIDESHOW_OPTIONS['duration'] ));
+   initialization_setsState : function() {
+      assertThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
    },
    
-   initialize_whenTrailingSlashIsMissing_appendsToImageFolder : function(){
-      assumeThat( this.constants.SLIDESHOW_OPTIONS['imageFolder'], not( endsWith( "/" )));
-      assertThat( this.slideShow.getImageFolder(), endsWith( "/" ));
+   unmarshall_determinesProperties : function() {
+      this.photoGalery.unmarshall();
+      
+      assertThat( this.photoGalery.getAccessKeys(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:accessKeys' )));
+      assertThat( this.photoGalery.getAutomaticallyLinkSlide(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:automaticallyLinkSlideToFullSizedImage' )));
+      assertThat( this.photoGalery.getCenterImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages' ))));
+      assertThat( this.photoGalery.getEffectDuration(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:effectDuration' ))));
+      assertThat( this.photoGalery.getFirstSlide(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:firstSlide' ))));
+      assertThat( this.photoGalery.getGaleryLink(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:galeryLink' )));
+      assertThat( this.photoGalery.getHeight(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:height' ))));
+      assertThat( this.photoGalery.getImageFolderUri(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:imageFolderUri' )));
+      assertThat( this.photoGalery.getLoopShow(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:loopShow' ))));
+      assertThat( this.photoGalery.getOverlapImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:overlapImages' ))));
+      assertThat( this.photoGalery.getResizeImages(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:resizeImages' ))));
+      assertThat( this.photoGalery.getShowController(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showController' ))));
+      assertThat( this.photoGalery.getShowImageCaptions(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showImageCaptions' ))));
+      assertThat( this.photoGalery.getShowSlidesRandom(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showSlidesRandom' ))));
+      assertThat( this.photoGalery.getShowThumbnails(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:showThumbnails' ))));
+      assertThat( this.photoGalery.getSkipTransition(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:skipTransition' ))));
+      assertThat( this.photoGalery.getSlideChangeDelay(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideChangeDelay' ))));
+      assertThat( this.photoGalery.getSlideTransition(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideTransition' )));
+      assertThat( this.photoGalery.getStartPaused(), equalTo( parseBoolean( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:startPaused' ))));
+      assertThat( this.photoGalery.getThumbnailFileNameRule(), equalTo( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:thumbnailFileNameRule' )));
+      assertThat( this.photoGalery.getWidth(), equalTo( parseInt( this.photoGaleryDefinition.selectNodeText( '/sd:photoGaleryWidgetDefinition/sd:properties/sd:width' ))));
    },
    
-   initialize_whenFastIsTrue_setWhenPausedAndPlaying : function(){
-      assertThat( this.slideShow.getFast(), equalTo( this.slideShow.constants.WhenPaused | this.slideShow.constants.WhenPlaying ));
+   unmarshall_determinesImagesData : function() {
+      this.photoGalery.unmarshall();
+      
+      assertThat( this.photoGalery.getImages().size(), equalTo( this.photoGaleryData.selectNodes( 'pg:photoGalery/pg:images/pg:image' ).length ));
    },
    
-   initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
-      assertThat( function() { new Slideshow( null, this.constants.IMAGES, this.constants.SLIDESHOW_OPTIONS );}.bind( this ), raises( AssertionException ));
-   },
-   
-   construct_constructsComponents : function() {
+   construct_compilesDataObject : function() {
       this.testCaseChain.chain(
          function(){
-            this.slideShow.construct();
+            this.photoGalery.unmarshall();
+            this.photoGalery.construct();
          }.bind( this ),
          function(){
-            assertThat( this.slideShow.getScreen(), JsHamcrest.Matchers.instanceOf( Screen ));
+            assertThat( this.photoGalery.getData()['IMAG0337.jpg']['caption'], equalTo( this.photoGalery.getImages().get('IMAG0337.jpg').getCaption() ));
+            assertThat( this.photoGalery.getData()['IMAG0337.jpg']['href'], equalTo( this.photoGalery.getImages().get('IMAG0337.jpg').getLink() ));
+            assertThat( this.photoGalery.getData()['IMAG0337.jpg']['thumbnail'], equalTo( this.photoGalery.getImages().get('IMAG0337.jpg').getThumbnailUri() ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
    },
    
-   destroy_removesAllCreatedElements : function(){
+   construct_instantiatesSlideShow : function() {
       this.testCaseChain.chain(
          function(){
-            this.slideShow.construct();
+            this.photoGalery.unmarshall();
+            this.photoGalery.construct();
          }.bind( this ),
          function(){
-            this.slideShow.destroy();
-               
-            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
-               
+            assertThat( this.photoGalery.getSlideShow(), not( nil() ));
+            assertThat( $( this.constants.PHOTO_GALERY_CONTAINER_ID ).getElements( 'div' ).length, greaterThan( 0 ) );
             this.testMethodReady();
          }.bind( this )
       ).callChain();
    },
    
+   destroy_destroysAllCreatedElements : function() {
+      this.testCaseChain.chain(
+         function(){ this.photoGalery.unmarshall(); this.photoGalery.construct(); }.bind( this ),
+         function(){
+            assumeThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
+            
+            this.photoGalery.destroy();
+         }.bind( this ),
+         function(){
+            assertThat( this.photoGalery.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
+            assertThat( this.photoGaleryContainerElement.getElements( '*' ).length, equalTo( 0 ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   //Event handling methods
    onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
-   onConstructionError : function( error ){
-      this.error = error;
+   onDestroyed : function(){
       this.testCaseChain.callChain();
    },
    
-   onDestroyed : function( error ){
-      this.testCaseChain.callChain();
-   }
+   onLocalizationFailure : function( error ){
+      fail( "Failed to load localization resources" );
+   },
+   
+   onLocalizationLoaded : function(){
+      this.beforeEachTestChain.callChain();
+   },
+   
+   waitForImageLoading : function(){
+      //NOP
+   }.protect()
 
 });
