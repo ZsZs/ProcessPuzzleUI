@@ -87,7 +87,7 @@ var MediaPlayerThumbnailsBar = new Class( {
    
    createThumbnailElements : function(){
       this.thumbnailImageUris.each( function( thumbnailUri, index ) {
-         var slideThumbnail = new SlideThumbnail( this.listElement, thumbnailUri, index, { onSelected : this.onThumbnailSelected });
+         var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, { onSelected : this.onThumbnailSelected });
          slideThumbnail.construct();
          this.slideThumbnails.add( slideThumbnail );
       }, this );
@@ -129,7 +129,7 @@ var MediaPlayerThumbnailsBar = new Class( {
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    
-   mouseIsWithinThumbnailsArea : function( mouseEvent ){
+   mouseIsWithinThumbnailsArea : function( mouseMoveEvent ){
       var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
       return mouseMoveEvent.page.x > wrapperElementCoordinates.left && 
              mouseMoveEvent.page.x < wrapperElementCoordinates.right && 
@@ -138,7 +138,7 @@ var MediaPlayerThumbnailsBar = new Class( {
    }.protect(),
    
    onMouseMove : function( mouseMoveEvent ) {
-      if( this.mouseIsWithinThumbnailsArea( mouseEvent )) {
+      if( this.mouseIsWithinThumbnailsArea( mouseMoveEvent )) {
          if( !this.scrollingTimer ) {
             this.scrollingTimer = this.scroll.periodical( this.options.scrollingFrequency );
          }

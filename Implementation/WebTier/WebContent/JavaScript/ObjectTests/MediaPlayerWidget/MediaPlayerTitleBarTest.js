@@ -1,4 +1,4 @@
-window.SlideCaptionTest = new Class( {
+window.MediaPlayerTitleBarTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['checkMorphReady', 'onFailure', 'onSuccess'],
 
@@ -16,7 +16,7 @@ window.SlideCaptionTest = new Class( {
    constants : {
       CAPTION_CLASS : "captions",
       CAPTION_TEXT : "Hellow world!",
-      CONTAINER_ELEMENT_ID : "SlideShowContainer",
+      CONTAINER_ELEMENT_ID : "widgetContainer",
       FAST_TRANSITION : true,
       SLIDESHOW_CLASS : "slideshow",
       SMOOTH_TRANSITION : false,
@@ -32,7 +32,7 @@ window.SlideCaptionTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.slideCaption = new SlideCaption( this.containerElement, { captionClass : this.constants.CAPTION_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS });
+      this.slideCaption = new MediaPlayerTitleBar( this.containerElement, { captionClass : this.constants.CAPTION_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS });
    },
    
    afterEachTest : function (){
@@ -44,7 +44,7 @@ window.SlideCaptionTest = new Class( {
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
-      assertThat( function(){ new SlideCaption(); }, raises( AssertionException ));
+      assertThat( function(){ new MediaPlayerTitleBar(); }, raises( AssertionException ));
    },
    
    construct_createsCaptionElement : function() {

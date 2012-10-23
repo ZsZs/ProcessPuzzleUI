@@ -1,4 +1,4 @@
-window.SlideshowControllerButtonTest = new Class( {
+window.MediaControllerButtonTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onSelected'],
 
@@ -12,7 +12,7 @@ window.SlideshowControllerButtonTest = new Class( {
 
    constants : {
       BUTTON_OPTIONS : { action : 'prev', buttonClass : 'prev', key : 'shift left', label : 'Shift + Leftwards Arrow', tabIndex : 1 },
-      CONTAINER_ELEMENT_ID : "SlideShowContainer",
+      CONTAINER_ELEMENT_ID : "widgetContainer",
       CONTROLLER_CLASS : "controller",
       SLIDESHOW_CLASS : "slideshow"
    },
@@ -28,7 +28,7 @@ window.SlideshowControllerButtonTest = new Class( {
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
       var buttonOptions = Object.merge( { onSelected : this.onSelected }, this.constants.BUTTON_OPTIONS );
-      this.button = new SlideshowControllerButton( this.containerElement, buttonOptions );
+      this.button = new MediaControllerButton( this.containerElement, buttonOptions );
    },
    
    afterEachTest : function (){
@@ -37,7 +37,7 @@ window.SlideshowControllerButtonTest = new Class( {
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
-      assertThat( function(){ new SlideshowControllerButton(); }, raises( AssertionException ));
+      assertThat( function(){ new MediaControllerButton(); }, raises( AssertionException ));
    },
    
    construct_createsButtonElements : function(){

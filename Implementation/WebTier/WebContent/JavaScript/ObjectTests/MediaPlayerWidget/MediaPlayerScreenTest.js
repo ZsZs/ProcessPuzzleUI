@@ -6,12 +6,11 @@ window.ScreenTest = new Class( {
       testMethods : [
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
          { method : 'construct_createsScreenElement', isAsynchron : false },
-         { method : 'construct_instantiatesCurrentAndNextSlide', isAsynchron : false },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : false }],
    },
 
    constants : {
-      CONTAINER_ELEMENT_ID : "SlideShowContainer",
+      CONTAINER_ELEMENT_ID : "widgetContainer",
       SCREEN_CLASS : "",
       SLIDESHOW_CLASS : "slideshow"
    },
@@ -26,7 +25,7 @@ window.ScreenTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.screen = new Screen( this.containerElement, { screenClass : this.constants.SCREEN_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS } );
+      this.screen = new MediaPlayerScreen( this.containerElement, { screenClass : this.constants.SCREEN_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS } );
    },
    
    afterEachTest : function (){
@@ -34,20 +33,13 @@ window.ScreenTest = new Class( {
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
-      assertThat( function(){ new Screen(); }, raises( AssertionException ));
+      assertThat( function(){ new MediaPlayerScreen(); }, raises( AssertionException ));
    },
    
    construct_createsScreenElement : function(){
       this.screen.construct();
       
       assertThat( this.containerElement.getElement( '.' + this.screen.getElementClass() ), equalTo( this.screen.getElement() ));
-   },
-   
-   construct_instantiatesCurrentAndNextSlide : function(){
-      this.screen.construct();
-      
-      assertThat( this.screen.getCurrentSlide(), JsHamcrest.Matchers.instanceOf( Slide ));
-      assertThat( this.screen.getNextSlide(), JsHamcrest.Matchers.instanceOf( Slide ));
    },
    
    destroy_removesAllCreatedElements : function(){

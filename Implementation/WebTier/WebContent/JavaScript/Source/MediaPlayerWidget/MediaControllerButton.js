@@ -1,14 +1,14 @@
 /*
 Name: 
-    - SlideshowControllerButton
+    - MediaControllerButton
 
 Description: 
-    - Represents a button of a slide show controller panel. 
+    - Represents a button of a media player's controller panel. 
 
 Requires:
 
 Provides:
-    - SlideshowControllerButton
+    - MediaControllerButton
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,7 +29,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 
-var SlideshowControllerButton = new Class({
+var MediaControllerButton = new Class({
    Implements : [AssertionBehavior, Events, Options],
    Binds: ['gotFocus', 'lostFocus', 'onSelection'],
    

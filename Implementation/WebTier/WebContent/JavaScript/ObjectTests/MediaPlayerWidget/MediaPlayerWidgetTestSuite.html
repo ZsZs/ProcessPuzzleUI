@@ -2,7 +2,7 @@
 
 <html>
 <head>
-   <title>PhotoGaleryWidget Test Suite</title>
+   <title>MediaPlayerWidget Test Suite</title>
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 	
@@ -15,8 +15,13 @@
 
    <script type="text/javascript">
       function suite() {
-        var newsuite = new JsTestSuite();
+         var newsuite = new JsTestSuite();
+         newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaControllerButtonTest.html" );
+         newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaPlayerControllerTest.html" );
          newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaPlayerDisplayTest.html" );
+         newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaPlayerScreenTest.html" );
+         newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaPlayerThumbnailsBarTest.html" );
+         newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaPlayerTitleBarTest.html" );
          newsuite.addTestPage( "../ObjectTests/MediaPlayerWidget/MediaPlayerWidgetTest.html" );
          return newsuite;
       }

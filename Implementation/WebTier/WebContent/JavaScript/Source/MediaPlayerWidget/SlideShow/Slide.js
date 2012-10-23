@@ -54,7 +54,7 @@ var Slide = new Class({
       this.link;
       this.thumbnailUri;
       this.uri;
-      this.state = PhotoGaleryImage.States.INITIALIZED;
+      this.state = Slide.States.INITIALIZED;
    },
    
    //Public accessor and mutator methods
@@ -64,7 +64,7 @@ var Slide = new Class({
       
       this.compileDataFromProperties();
       this.createElements();
-      this.state = PhotoGaleryImage.States.CONSTRUCTED;
+      this.state = Slide.States.CONSTRUCTED;
    },
    
    destroy: function(){
@@ -74,12 +74,12 @@ var Slide = new Class({
       this.link = null;
       this.thumbnailUri = null;
       this.uri = null;
-      this.state = PhotoGaleryImage.States.INITIALIZED;
+      this.state = Slide.States.INITIALIZED;
    },
    
    unmarshall: function(){
       this.unmarshallProperties();
-      this.state = PhotoGaleryImage.States.UNMARSHALLED;
+      this.state = Slide.States.UNMARSHALLED;
    },
    
    //Properties
@@ -135,4 +135,4 @@ var Slide = new Class({
    }.protect(),
 });
 
-PhotoGaleryImage.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
+Slide.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };

@@ -10,7 +10,7 @@ window.SlideShowTest = new Class( {
 
    constants : {
       CONTAINER_ELEMENT_ID : "widgetContainer",
-      THUMBNAIL_URIS : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.JPG', 'SANY0012_thumb.JPG']
+      THUMBNAIL_URIS : ['Album/IMAG0337_thumb.jpg', 'Album/IMAG0339_thumb.jpg', 'Album/SANY0008_thumb.JPG', 'Album/SANY0012_thumb.JPG']
    },
    
    initialize : function( options ) {
@@ -23,8 +23,9 @@ window.SlideShowTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.media = mock( Media );
-      when( this.media ).getThumbnailsUri().thenReturn( this.constants.THUMBNAIL_URIS);
+      this.media = new Media( mock( Object ), mock( Object ));
+      this.media = spy( this.media );
+      when( this.media ).getThumbnailsUri().thenReturn( this.constants.THUMBNAIL_URIS );
       
       this.display = new MediaPlayerDisplay( this.containerElement, this.media, { 
          onConstructed : this.onConstructed, 
@@ -45,6 +46,7 @@ window.SlideShowTest = new Class( {
             assertThat( this.display.getScreen(), JsHamcrest.Matchers.instanceOf( MediaPlayerScreen ));
             assertThat( this.display.getTitleBar(), JsHamcrest.Matchers.instanceOf( MediaPlayerTitleBar ));
             assertThat( this.display.getThumbnailsBar(), JsHamcrest.Matchers.instanceOf( MediaPlayerThumbnailsBar ));
+            assertThat( this.display.getController(), JsHamcrest.Matchers.instanceOf( MediaPlayerController ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

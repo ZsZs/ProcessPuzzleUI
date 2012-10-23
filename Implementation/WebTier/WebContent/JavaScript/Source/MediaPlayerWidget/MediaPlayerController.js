@@ -1,15 +1,15 @@
 /*
 Name: 
-    - SlideshowController
+    - MediaPlayerController
 
 Description: 
-    - Provides controlling functionality, such as start/stop, previous/next for the slide show. 
+    - Provides controlling functionality, such as start/stop, previous/next for the media player. 
 
 Requires:
    - 
 
 Provides:
-    - Screen
+    - MediaPlayerController
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -28,7 +28,8 @@ You should have received a copy of the GNU General Public License along with thi
 */
 
 // = require_directory ../FundamentalTypes
-var SlideshowController = new Class({
+
+var MediaPlayerController = new Class({
    Implements : [AssertionBehavior, Events, Options],
    Binds : ['hide', 'onKeyDown', 'onKeyUp', 'onMouseMove', 'show'],
    options : {
@@ -39,6 +40,7 @@ var SlideshowController = new Class({
          'next' : { 'key' : 'right', 'label' : 'Rightwards Arrow' },
          'last' : { 'key' : 'shift right', 'label' : 'Shift + Rightwards Arrow' }
       },
+      componentName : 'MediaPlayerController',
       controllerClass : 'controller',
       eventDeliveryDelay : 5,
       hiddenClass : "hidden",
@@ -50,8 +52,8 @@ var SlideshowController = new Class({
 
    initialize : function( containerElement, screen, options ) {
       this.setOptions( options );
-      this.assertThat( containerElement, not( nil()), "SlideshowController.containerElement" );
-      this.assertThat( screen, not( nil()), "SlideshowController.screen" );
+      this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
+      this.assertThat( screen, not( nil()), this.options.componentName + ".screen" );
       
       this.containerElement = containerElement;
       this.controlButtonsWrapper;
@@ -147,11 +149,11 @@ var SlideshowController = new Class({
    }.protect(),
    
    createButtons : function(){
-      this.firstButton = new FirstSlideButton( this.controlButtonsWrapper ); this.firstButton.construct();
-      this.lastButton = new LastSlideButton( this.controlButtonsWrapper ); this.lastButton.construct();
-      this.nextButton = new NextSlideButton( this.controlButtonsWrapper ); this.nextButton.construct();
-      this.pauseButton = new StartStopSlideButton( this.controlButtonsWrapper ); this.pauseButton.construct();
-      this.previousButton = new PreviousSlideButton( this.controlButtonsWrapper ); this.previousButton.construct();
+      this.firstButton = new MediaBeginningButton( this.controlButtonsWrapper ); this.firstButton.construct();
+      this.lastButton = new MediaEndButton( this.controlButtonsWrapper ); this.lastButton.construct();
+      this.nextButton = new MediaForwardButton( this.controlButtonsWrapper ); this.nextButton.construct();
+      this.pauseButton = new MediaStartStopButton( this.controlButtonsWrapper ); this.pauseButton.construct();
+      this.previousButton = new MediaBackwardButton( this.controlButtonsWrapper ); this.previousButton.construct();
    }.protect(),
    
    createControllerWrapperElements : function(){

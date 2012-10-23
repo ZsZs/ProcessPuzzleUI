@@ -1,15 +1,15 @@
 /*
 Name: 
-    - LastSlideButton
+    - MediaForwardButton
 
 Description: 
-    - Represents the go first button in a slide show controller panel. 
+    - Represents the go forward in the media controller panel. 
 
 Requires:
-   - SlideshowControllerButton
+   - MediaControllerButton
 
 Provides:
-    - LastSlideButton
+    - MediaForwardButton
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,18 +29,18 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
-//= require ../SlideShow/SlideshowControllerButton.js
+//= require ../MediaPlayerWidget/MediaControllerButton.js
 
-var LastSlideButton = new Class({
-   Extends : SlideshowControllerButton,
+var MediaForwardButton = new Class({
+   Extends : MediaControllerButton,
    Binds: [],
    
    options : {
-      action : 'last',
-      buttonClass : 'last',
-      key : 'shift right',
-      label : 'Shift + Rightwards Arrow',
-      tabIndex : 4
+      action : 'next',
+      buttonClass : 'next',
+      key : 'right',
+      label : 'Rightwards Arrow',
+      tabIndex : 3
    },
 
    //Constructor

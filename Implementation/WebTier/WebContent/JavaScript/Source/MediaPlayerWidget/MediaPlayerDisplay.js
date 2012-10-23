@@ -34,9 +34,11 @@ var MediaPlayerDisplay = new Class({
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds: [
       'checkTimeOut', 
+      'constructController',
       'constructScreen',
       'constructThumbnailsBar',
       'constructTitleBar',
+      'destroyController',
       'destroyScreen', 
       'destroyThumbnailsBar',
       'destroyTitleBar',
@@ -57,6 +59,7 @@ var MediaPlayerDisplay = new Class({
       
       this.constructionChain = new Chain();
       this.containerElement = containerElement;
+      this.controller;
       this.destructionChain = new Chain();
       this.error;
       this.media = media;
@@ -88,17 +91,23 @@ var MediaPlayerDisplay = new Class({
    },
    
    //Properties
+   getController : function(){ return this.controller; },
    getScreen : function(){ return this.screen; },
    getThumbnailsBar : function(){ return this.thumbnailsBar; },
    getTitleBar : function(){ return this.titleBar; },
    
    //Protected, private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructScreen, this.constructTitleBar, this.constructThumbnailsBar, this.finalizeConstruction );
+      this.constructionChain.chain( this.constructScreen, this.constructTitleBar, this.constructThumbnailsBar, this.constructController, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
-      this.destructionChain.chain( this.destroyScreen, this.destroyTitleBar, this.destroyThumbnailsBar, this.finalizeDestruction );
+      this.destructionChain.chain( this.destroyScreen, this.destroyTitleBar, this.destroyThumbnailsBar, this.destroyController, this.finalizeDestruction );
+   }.protect(),
+   
+   constructController: function(){
+      this.controller = new MediaPlayerController( this.containerElement, this.screen, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
+      this.controller.construct();
    }.protect(),
    
    constructScreen: function(){
@@ -107,13 +116,20 @@ var MediaPlayerDisplay = new Class({
    }.protect(),
    
    constructThumbnailsBar: function(){
-      this.thumbnailsBar = new MediaPlayerThumbnailsBar( this.containerElement, this.media, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
+      this.thumbnailsBar = new MediaPlayerThumbnailsBar( this.containerElement, this.media.getThumbnailsUri(), { 
+         onConstructed : this.onComponentConstructed, 
+         onDestroyed : this.onComponentDestroyed });
       this.thumbnailsBar.construct();
    }.protect(),
    
    constructTitleBar: function(){
       this.titleBar = new MediaPlayerTitleBar( this.containerElement, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
       this.titleBar.construct();
+   }.protect(),
+   
+   destroyController: function(){
+      if( this.controller ) this.controller.destroy();
+      this.destructionChain.callChain();
    }.protect(),
    
    destroyScreen: function(){

@@ -13,7 +13,7 @@ window.SlidesThumbnailsTest = new Class( {
 
    constants : {
       CAPTION_TEXT : "Hellow world!",
-      CONTAINER_ELEMENT_ID : "SlideShowContainer",
+      CONTAINER_ELEMENT_ID : "widgetContainer",
       FAST_TRANSITION : true,
       IMAGE_FORDER: '../PhotoGaleryWidget/Album/', 
       SLIDESHOW_CLASS : "slideshow",
@@ -34,7 +34,7 @@ window.SlidesThumbnailsTest = new Class( {
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
       this.constants.THUMBNAIL_IMAGES.each( function( thumbnailUri, index ){ this.thummnailImages.push( this.constants.IMAGE_FORDER + thumbnailUri ); }.bind( this ));
-      this.thumbnails = new SlidesThumbnails( this.containerElement, this.thummnailImages, { 
+      this.thumbnails = new MediaPlayerThumbnailsBar( this.containerElement, this.thummnailImages, { 
          thumbnailsClass : this.constants.THUMBNAILS_CLASS,
          slideShowClass : this.constants.SLIDESHOW_CLASS });
    },
@@ -45,7 +45,7 @@ window.SlidesThumbnailsTest = new Class( {
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
-      assertThat( function(){ new SlideCaption(); }, raises( AssertionException ));
+      assertThat( function(){ new MediaPlayerThumbnailsBar(); }, raises( AssertionException ));
    },
    
    construct_createsWrapperElement : function() {

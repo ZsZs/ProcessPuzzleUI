@@ -1,15 +1,15 @@
 /*
 Name: 
-    - FirstSlideButton
+    - MediaBackwardButton
 
 Description: 
-    - Represents the go first button in a slide show controller panel. 
+    - Represents the go backward button in a media controller panel. 
 
 Requires:
-   - SlideshowControllerButton
+   - MediaControllerButton
 
 Provides:
-    - FirstSlideButton
+    - MediaBackwardButton
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,18 +29,18 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
-//= require ../SlideShow/SlideshowControllerButton.js
+//= require ../MediaPlayerWidget/MediaControllerButton.js
 
-var FirstSlideButton = new Class({
-   Extends : SlideshowControllerButton,
+var MediaBackwardButton = new Class({
+   Extends : MediaControllerButton,
    Binds: [],
    
    options : {
-      action : 'first',
-      buttonClass : 'first',
-      key : 'shift left',
-      label : 'Shift + Leftwards Arrow',
-      tabIndex : 0
+      action : 'prev',
+      buttonClass : 'prev',
+      key : 'left',
+      label : 'Leftwards Arrow',
+      tabIndex : 1
    },
 
    //Constructor

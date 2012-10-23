@@ -48,9 +48,7 @@ var MediaPlayerScreen = new Class({
       this.assertThat( containerElement, not( nil() ), "Screen.containerElement" );
       
       this.containerElement = containerElement;
-      this.currentSlide;
       this.height;
-      this.nextSlide;
       this.screenElement;
       this.width;
    },
@@ -58,7 +56,6 @@ var MediaPlayerScreen = new Class({
    //Public accessor and mutator methods
    construct: function(){
       this.createScreenElement();
-//      this.instantiateSlides();
       this.finalizeConstruction();
    },
    
@@ -95,11 +92,6 @@ var MediaPlayerScreen = new Class({
    destroySlides : function(){
       if( this.currentSlide ) this.currentSlide.destroy();
       if( this.nextSlide ) this.nextSlide.destroy();
-   }.protect(),
-   
-   instantiateSlides : function(){
-      this.currentSlide = new Slide( this.screenElement ); this.currentSlide.construct();
-      this.nextSlide = new Slide( this.screenElement ); this.nextSlide.construct();
    }.protect(),
    
    finalizeConstruction : function(){

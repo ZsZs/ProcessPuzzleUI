@@ -47,6 +47,7 @@ var Media = new Class({
       
       this.internationalization = internationalization;
       this.mediaDefinitionXml = mediaDefinitionXml;
+      this.thumbnailsUri = new Array();
    },
    
    //Public accessor and mutator methods
@@ -55,10 +56,11 @@ var Media = new Class({
    },
    
    unmarshall: function(){
-	   //Abstract method, should be overwritten.
-   }
+	  //Abstract method, should be overwritten.
+   },
    
    //Properties
+   getThumbnailsUri: function(){ return this.thumbnailsUri; }
    
    //Protected, private helper methods
 });

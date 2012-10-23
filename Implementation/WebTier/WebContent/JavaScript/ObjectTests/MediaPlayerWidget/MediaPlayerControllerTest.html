@@ -2,11 +2,12 @@
 
 <html>
 <head>
-   <title>Test page for PhotoGaleryImage.js</title>
+   <title>Test page for MediaPlayerController.js</title>
    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
    <link rel="stylesheet" type="text/css" href="../../JsUnit/css/jsUnitStyle.css">
+   <link rel="stylesheet" type="text/css" href="../MediaPlayerWidget/PhotoGalery.css">
    
    <script type="text/javascript">
       var contextRootPrefix = "../../../";
@@ -17,6 +18,7 @@
    <script type="text/javascript" src="../../Libraries/Log4JavaScript/log4javascript.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-core-1.4.5-full-compat.js"></script>
    <script type="text/javascript" src="../../Libraries/MooTools/mootools-more-1.4.0.1.js"></script>
+   <script type="text/javascript" src="../../Libraries/StackTrace/stacktrace.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/jsUnitCore.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestCase.js"></script>
    <script type="text/javascript" src="../../JsUnit/app/JsTestClass.js"></script>
@@ -43,13 +45,17 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/WebUIException.js"></script>
 
    <script type="text/javascript" src="../../Source/BrowserWidget/BrowserWidget.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/ShortCutKey.js"></script>
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetAction.js"></script>
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructedMessage.js"></script> 
+   <script type="text/javascript" src="../../Source/BrowserWidget/WidgetConstructionException.js"></script> 
    <script type="text/javascript" src="../../Source/BrowserWidget/WidgetElementFactory.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/StateTransformer.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/DefaultStateTransformer.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/FixedComponentOrderedTransformer.js"></script>
    <script type="text/javascript" src="../../Source/ComponentStateManager/ComponentStateManager.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/ArrayList.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/AssertionException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/HashMap.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/JavaCompatibility.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/IllegalArgumentException.js"></script>
@@ -57,6 +63,7 @@
    <script type="text/javascript" src="../../Source/FundamentalTypes/RemoteStyleSheet.js"></script>  
    <script type="text/javascript" src="../../Source/FundamentalTypes/ResourceUri.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/StringTokenizer.js"></script>
+   <script type="text/javascript" src="../../Source/FundamentalTypes/TimeOutException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/UndefinedXmlResourceException.js"></script>
    <script type="text/javascript" src="../../Source/FundamentalTypes/XmlResource.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/Locale.js"></script>
@@ -66,13 +73,31 @@
    <script type="text/javascript" src="../../Source/Internationalization/LocalizationResourceReference.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/ResourceKey.js"></script>
    <script type="text/javascript" src="../../Source/Internationalization/ResourceCache.js"></script>
-   <script type="text/javascript" src="../../Source/PhotoGaleryWidget/PhotoGaleryImage.js"></script>
+   <script type="text/javascript" src="../../Source/jStorage/jstorage.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/Media.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaControllerButton.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaBackwardButton.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaBeginningButton.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaEndButton.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaForwardButton.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerController.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerDisplay.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerScreen.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerThumbnailsBar.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerThumbnail.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerTitleBar.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaPlayerWidget.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/MediaStartStopButton.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/Media.js"></script>
+   <script type="text/javascript" src="../../Source/MediaPlayerWidget/SlideShow/Slideshow.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarButton.js"></script>
+   <script type="text/javascript" src="../../Source/ToolBarWidget/ToolBarWidget.js"></script>
    <script type="text/javascript" src="../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../../Source/WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
-   <script type="text/javascript" src="../../ObjectTests/PhotoGaleryWidget/PhotoGaleryImageTest.js"></script>
+   <script type="text/javascript" src="../../ObjectTests/MediaPlayerWidget/MediaPlayerControllerTest.js"></script>
    
    <script type="text/javascript">
       window.addEvent('domready', function() {
@@ -80,11 +105,13 @@
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
+
    </script>
 </head>
 
 <body>
-   <h1>PhotoGaleryImage.js test page</H1>
-   <p>This page contains tests for PhotoGaleryImage.js JavaScript class.</P>
+   <h1>MediaPlayerController.js test page</H1>
+   <p>This page contains tests for MediaPlayerController.js JavaScript class.</P>
+   <div id="widgetContainer" class="slideshow"></div>
 </body>
 </html>

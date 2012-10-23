@@ -67,7 +67,7 @@ var MediaPlayerWidget = new Class({
    }.protect(),
    
    constructDisplay: function(){
-      this.display = new MediaPlayerDisplay( this.containerElement, { onConstructed : this.onDisplayConstructed, onDestroyed : this.onDisplayDestroyed });
+      this.display = new MediaPlayerDisplay( this.containerElement, this.media, { onConstructed : this.onDisplayConstructed, onDestroyed : this.onDisplayDestroyed });
       this.display.construct();
    }.protect(),
    

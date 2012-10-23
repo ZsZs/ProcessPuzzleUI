@@ -1,4 +1,4 @@
-window.SlideshowControllerTest = new Class( {
+window.MediaPlayerControllerTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['checkMorphReady', 'onFailure', 'onSuccess'],
 
@@ -13,7 +13,7 @@ window.SlideshowControllerTest = new Class( {
    },
 
    constants : {
-      CONTAINER_ELEMENT_ID : "SlideShowContainer",
+      CONTAINER_ELEMENT_ID : "widgetContainer",
       CONTROLLER_CLASS : "controller",
       SLIDESHOW_CLASS : "slideshow"
    },
@@ -29,8 +29,8 @@ window.SlideshowControllerTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.screen = new Screen( this.containerElement, { slideShowClass : this.constants.SLIDESHOW_CLASS } );
-      this.controller = new SlideshowController( this.containerElement, this.screen, { captionClass : this.constants.CONTROLLER_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS } );
+      this.screen = new MediaPlayerScreen( this.containerElement, { slideShowClass : this.constants.SLIDESHOW_CLASS } );
+      this.controller = new MediaPlayerController( this.containerElement, this.screen, { captionClass : this.constants.CONTROLLER_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS } );
    },
    
    afterEachTest : function (){
@@ -42,7 +42,7 @@ window.SlideshowControllerTest = new Class( {
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
-      assertThat( function(){ new SlideshowController(); }, raises( AssertionException ));
+      assertThat( function(){ new MediaPlayerController(); }, raises( AssertionException ));
    },
    
    construct_createControllerElements : function(){
@@ -54,7 +54,11 @@ window.SlideshowControllerTest = new Class( {
    construct_constructsButtons : function(){
       this.controller.construct();
       
-      assertThat( this.controller.getFirstButton(), JsHamcrest.Matchers.instanceOf( FirstSlideButton ));
+      assertThat( this.controller.getFirstButton(), JsHamcrest.Matchers.instanceOf( MediaBeginningButton ));
+      assertThat( this.controller.getLastButton(), JsHamcrest.Matchers.instanceOf( MediaEndButton ));
+      assertThat( this.controller.getNextButton(), JsHamcrest.Matchers.instanceOf( MediaForwardButton ));
+      assertThat( this.controller.getPauseButton(), JsHamcrest.Matchers.instanceOf( MediaStartStopButton ));
+      assertThat( this.controller.getPreviousButton(), JsHamcrest.Matchers.instanceOf( MediaBackwardButton ));
    },
    
    show_hide_morphsOpacity : function() {

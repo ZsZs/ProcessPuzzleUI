@@ -1,15 +1,15 @@
 /*
 Name: 
-    - StartStopSlideButton
+    - MediaBeginningButton
 
 Description: 
-    - Represents the start/stop button in a slide show controller panel. 
+    - Represents the go first button in a slide show controller panel. 
 
 Requires:
-   - SlideshowControllerButton
+   - MediaControllerButton
 
 Provides:
-    - StartStopSlideButton
+    - MediaBeginningButton
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -29,39 +29,28 @@ You should have received a copy of the GNU General Public License along with thi
 
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
-//= require ../SlideShow/SlideshowControllerButton.js
+//= require ../MediaPlayerWidget/MediaControllerButton.js
 
-var StartStopSlideButton = new Class({
-   Extends : SlideshowControllerButton,
+var MediaBeginningButton = new Class({
+   Extends : MediaControllerButton,
    Binds: [],
    
    options : {
-      action : 'pause',
-      buttonClass : 'pause',
-      key : 'p',
-      label : 'P',
-      playClass : 'play',
-      tabIndex : 2
+      action : 'first',
+      buttonClass : 'first',
+      key : 'shift left',
+      label : 'Shift + Leftwards Arrow',
+      tabIndex : 0
    },
 
    //Constructor
    initialize: function( containerElement, options ){
       this.parent( containerElement, options );
-      
-      this.paused = false;
    },
    
    //Public accessor and mutator methods
-   start: function(){
-      this.paused = false;
-   },
-   
-   stop: function(){
-      this.paused = true;
-   },
    
    //Properties
-   getElementClass : function(){ return this.paused ? this.options.playClass + ' ' + this.options.buttonClass : this.options.buttonClass; },
    
    //Protected, private helper methods
 });
