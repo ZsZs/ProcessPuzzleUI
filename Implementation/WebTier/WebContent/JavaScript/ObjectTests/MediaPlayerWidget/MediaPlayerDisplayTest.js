@@ -5,11 +5,14 @@ window.SlideShowTest = new Class( {
    options : {
       testMethods : [
          { method : 'construct_constructsComponents', isAsynchron : true },
+         { method : 'onUpdate_updatesComponents', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
    constants : {
       CONTAINER_ELEMENT_ID : "widgetContainer",
+      IMAGE_TITLE : "Hello World",
+      IMAGE_URI : "Album/IMAG0337.jpg",
       THUMBNAIL_URIS : ['Album/IMAG0337_thumb.jpg', 'Album/IMAG0339_thumb.jpg', 'Album/SANY0008_thumb.JPG', 'Album/SANY0012_thumb.JPG']
    },
    
@@ -47,6 +50,20 @@ window.SlideShowTest = new Class( {
             assertThat( this.display.getTitleBar(), JsHamcrest.Matchers.instanceOf( MediaPlayerTitleBar ));
             assertThat( this.display.getThumbnailsBar(), JsHamcrest.Matchers.instanceOf( MediaPlayerThumbnailsBar ));
             assertThat( this.display.getController(), JsHamcrest.Matchers.instanceOf( MediaPlayerController ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   onUpdate_updatesComponents: function(){
+      this.testCaseChain.chain(
+         function(){
+            this.display.construct();
+         }.bind( this ),
+         function(){
+            this.display.onUpdate({ imageUri: this.constants.IMAGE_URI, thumbnailIndex: 1, title: this.constants.IMAGE_TITLE });
+            
+            assertThat( this.containerElement.getElement( 'img' ).get( 'src' ), equalTo( this.constants.IMAGE_URI ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();

@@ -15,7 +15,7 @@ window.SlidesThumbnailsTest = new Class( {
       CAPTION_TEXT : "Hellow world!",
       CONTAINER_ELEMENT_ID : "widgetContainer",
       FAST_TRANSITION : true,
-      IMAGE_FORDER: '../PhotoGaleryWidget/Album/', 
+      IMAGE_FORDER: '../MediaPlayerWidget/Album/', 
       SLIDESHOW_CLASS : "slideshow",
       SMOOTH_TRANSITION : false,
       THUMBNAIL_IMAGES : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.JPG', 'SANY0012_thumb.JPG'],

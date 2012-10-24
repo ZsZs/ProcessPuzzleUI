@@ -31,18 +31,21 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var Slide = new Class({
-   Implements : [AssertionBehavior, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: [],
    
    options : {
-      captionSelector : "pg:caption",
-      linkSelector : "pg:link",
-      thumbnailSelector : "pg:thumbnailUri",
-      uriSelector : "pg:uri"
+      captionSelector : "sh:caption",
+      componentName : "Slide",
+      linkSelector : "sh:link",
+      thumbnailSelector : "sh:thumbnailUri",
+      uriSelector : "sh:uri"
    },
 
    //Constructor
    initialize: function( definitionXml, internationalization, options ){
+      this.assertThat( definitionXml, not( nil() ), this.options.componentName + ".definitionXml" );
+      this.assertThat( internationalization, not( nil() ), this.options.componentName + ".internationalization" );
       this.setOptions( options );
       this.anchorElement;
       this.caption;
@@ -58,15 +61,6 @@ var Slide = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function( containerElement ){
-      this.assertThat( containerElement, not( nil() ), "Slide.containerElement" );
-      this.containerElement = containerElement;
-      
-      this.compileDataFromProperties();
-      this.createElements();
-      this.state = Slide.States.CONSTRUCTED;
-   },
-   
    destroy: function(){
       this.destroyElements();
       this.data = null;
@@ -94,38 +88,6 @@ var Slide = new Class({
    getUri: function() { return this.uri; },
    
    //Protected, private helper methods
-   compileDataFromProperties: function(){
-      var caption = this.caption ? "caption:'" + this.caption + "'" : null;
-      var href = this.link ? "href:'" + this.link + "'" : null;
-      var thumbnail = this.thumbnailUri ? "thumbnail:'" + this.thumbnailUri + "'" : null;
-      
-      var dataFragment = caption ? caption : "";
-
-      if( dataFragment != "" && href ) dataFragment += ", ";
-      dataFragment += href ? href : "";
-
-      if( dataFragment != "" && thumbnail ) dataFragment += ", ";
-      dataFragment += thumbnail ? thumbnail : "";
-      
-      this.dataAsText = "'" + this.uri + "': {" + dataFragment + "}";
-      this.data = eval( "({" + this.dataAsText + "})" );
-   }.protect(),
-   
-   createElements : function(){
-      this.anchorElement = new Element( 'a' );
-      this.anchorElement.inject( this.containerElement );
-      
-      this.imageElement = new Element( 'img' );
-      this.imageElement.setStyles({ 'display' : 'none' });
-      this.imageElement.inject( this.anchorElement );
-      
-   }.protect(),
-   
-   destroyElements : function(){
-      if( this.imageElement ) this.imageElement.destroy();
-      if( this.anchorElement ) this.anchorElement.destroy();
-   }.protect(),
-   
    unmarshallProperties: function(){
       this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
       this.caption = this.internationalization.getText( this.caption );

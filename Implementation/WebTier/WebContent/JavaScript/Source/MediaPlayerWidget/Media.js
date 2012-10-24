@@ -51,6 +51,10 @@ var Media = new Class({
    },
    
    //Public accessor and mutator methods
+   collectThumbnaildUris : function(){
+      //Abstract method, should be overwritten.
+   },
+   
    relase: function(){
       //Abstract method, should be overwritten.
    },

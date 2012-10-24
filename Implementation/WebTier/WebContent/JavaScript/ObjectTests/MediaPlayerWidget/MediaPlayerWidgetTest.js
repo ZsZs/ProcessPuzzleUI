@@ -13,7 +13,7 @@ window.MediaPlayerWidgetTest = new Class( {
 
    constants : {
       LANGUAGE : "hu",
-      WIDGET_DATA_URI : "../MediaPlayerWidget/Slideshow/PhotoGaleryData.xml",
+      WIDGET_DATA_URI : "../MediaPlayerWidget/Slideshow/SlideShowData.xml",
       WIDGET_DEFINITION_URI : "../MediaPlayerWidget/MediaPlayerWidgetDefinition.xml",
       WIDGET_CONTAINER_ID : "PhotoGaleryContainer",
       WEBUI_CONFIGURATION_URI : "../MediaPlayerWidget/WebUIConfiguration.xml",
@@ -45,7 +45,7 @@ window.MediaPlayerWidgetTest = new Class( {
             this.widgetInternationalization.load( this.locale );
          }.bind( this ),
          function(){
-            this.widgetData = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:pg='http://www.processpuzzle.com/PhotoGalery'" });
+            this.widgetData = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:sh='http://www.processpuzzle.com/SlideShow'" });
             this.widgetDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
             
             this.widget = new MediaPlayerWidget( this.widgetInternationalization, {

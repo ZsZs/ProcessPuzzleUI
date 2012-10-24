@@ -107,7 +107,7 @@
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
 			<in:resourceBundle localeSpecificVersionsExists="false">../Desktop/DesktopInternationalization</in:resourceBundle>
-         <in:resourceBundle localeSpecificVersionsExists="false">../PhotoGaleryWidget/PhotoGaleryInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../MediaPlayerWidget/PhotoGaleryInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>

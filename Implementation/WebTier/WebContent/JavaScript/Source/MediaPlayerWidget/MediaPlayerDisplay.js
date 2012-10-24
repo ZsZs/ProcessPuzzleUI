@@ -90,6 +90,10 @@ var MediaPlayerDisplay = new Class({
       this.destructionChain.callChain();
    },
    
+   onUpdate : function( imageData ){
+      this.screen.show( imageData.imageUri );
+   },
+   
    //Properties
    getController : function(){ return this.controller; },
    getScreen : function(){ return this.screen; },

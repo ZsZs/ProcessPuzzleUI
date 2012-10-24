@@ -46,9 +46,11 @@ var MediaPlayerScreen = new Class({
    initialize: function( containerElement, options ){
       this.setOptions( options );
       this.assertThat( containerElement, not( nil() ), "Screen.containerElement" );
-      
+
+      this.anchorElement;
       this.containerElement = containerElement;
       this.height;
+      this.imageElement;
       this.screenElement;
       this.width;
    },
@@ -65,17 +67,29 @@ var MediaPlayerScreen = new Class({
    },
    
    destroy: function(){
-      //this.destroySlides();
       this.destroyScreenElement();
    },
    
+   show: function( imageUri ){
+      if( this.anchorElement ) this.destroyImageElements();
+      this.createImageElements( imageUri );
+   },
+   
    //Properties
-   getCurrentSlide : function(){ return this.currentSlide; },
    getElement : function(){ return this.screenElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.screenClass; },
-   getNextSlide : function(){ return this.nextSlide; },
    
    //Protected, private helper methods
+   createImageElements : function( imageUri ){
+      this.anchorElement = new Element( 'a' );
+      this.anchorElement.inject( this.screenElement );
+      
+      this.imageElement = new Element( 'img' );
+      this.imageElement.set( 'src', imageUri );
+      this.imageElement.inject( this.anchorElement );
+      
+   }.protect(),
+   
    createScreenElement : function(){
       this.screenElement = new Element( 'div', { 'class' : this.getElementClass() });
       this.screenElement.inject( this.containerElement );
@@ -85,13 +99,15 @@ var MediaPlayerScreen = new Class({
       this.screenElement.setStyles({ 'height' : this.height, 'width' : this.width });
    }.protect(),
    
-   destroyScreenElement : function(){
-      if( this.screenElement ) this.screenElement.destroy();
+   destroyImageElements : function(){
+      if( this.imageElement ){ this.imageElement.destroy(); }
+      if( this.anchorElement ){ this.anchorElement.destroy(); }
+      this.anchorElement = null;
+      this.imageElement = null;
    }.protect(),
    
-   destroySlides : function(){
-      if( this.currentSlide ) this.currentSlide.destroy();
-      if( this.nextSlide ) this.nextSlide.destroy();
+   destroyScreenElement : function(){
+      if( this.screenElement ) this.screenElement.destroy();
    }.protect(),
    
    finalizeConstruction : function(){

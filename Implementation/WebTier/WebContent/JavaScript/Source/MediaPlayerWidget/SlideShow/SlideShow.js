@@ -1,15 +1,15 @@
 /*
 Name: 
-    - MediaPlayerWidget
+    - SlideShow
 
 Description: 
-    - Represents a collection of images with thumbnails, displays the selected one in original size and runs slide show. 
+    - Defines a slide show media, playable withing the Media Player Widget. 
 
 Requires:
-    - PhotoGaleryImage, BrowserWidget, WidgetElementFactory
+    - Media
     
 Provides:
-    - PhotoGaleryWidget
+    - SlideShow
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -36,53 +36,53 @@ var SlideShow = new Class({
    Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'onComplete', 'onDestroy', 'onEnd', 'onShow', 'onStart', 'resetFields'],
    options : {
       accessKeysDefault : null,
-      accessKeysSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:accessKeys",
+      accessKeysSelector : "/sh:slideShow/sh:properties/sh:accessKeys",
       automaticallyLinkSlideDefault : false,
-      automaticallyLinkSlideSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:automaticallyLinkSlideToFullSizedImage",
+      automaticallyLinkSlideSelector : "/sh:slideShow/sh:properties/sh:automaticallyLinkSlideToFullSizedImage",
       centerImagesDefault : true,
-      centerImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:centerImages",
-      componentName : "Slideshow",
-      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pg='http://www.processpuzzle.com/PhotoGalery'",
-      descriptionSelector : "//sd:photoGaleryWidgetDefinition/sd:description", 
+      centerImagesSelector : "/sh:slideShow/sh:properties/sh:centerImages",
+      componentName : "SlideShow",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pg='http://www.processpuzzle.com/SlideShow'",
+      descriptionSelector : "//sh:slideShow/sh:description", 
       effectDurationDefault : 750,
-      effectDurationSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:effectDuration",
+      effectDurationSelector : "/sh:slideShow/sh:properties/sh:effectDuration",
       eventDeliveryDelay : 50,
       firstSlideDefault: 0,
-      firstSlideSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:firstSlide",
+      firstSlideSelector: "/sh:slideShow/sh:properties/sh:firstSlide",
       galeryLinkDefault: null,
-      galeryLinkSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:galeryLink",
+      galeryLinkSelector: "/sh:slideShow/sh:properties/sh:galeryLink",
       heightDefault: 300,
-      heightSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:height",
+      heightSelector: "/sh:slideShow/sh:properties/sh:height",
       imageFolderUriDefault: "",
-      imageFolderUriSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:imageFolderUri",
-      imagesSelector: "/pg:photoGalery/pg:images/pg:image",
+      imageFolderUriSelector: "/sh:slideShow/sh:properties/sh:imageFolderUri",
+      imagesSelector: "/sh:slideShow/sh:images/sh:image",
       loopShowDefault: true,
-      loopShowSelector: "/sd:photoGaleryWidgetDefinition/sd:properties/sd:loopShow",
-      nameSelector : "//sd:photoGaleryWidgetDefinition/sd:name",
+      loopShowSelector: "/sh:slideShow/sh:properties/sh:loopShow",
+      nameSelector : "//sh:slideShow/sh:name",
       overlapImagesDefault : true,
-      overlapImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:overlapImages",
+      overlapImagesSelector : "/sh:slideShow/sh:properties/sh:overlapImages",
       resizeImagesDefault : true,
-      resizeImagesSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:resizeImages",
+      resizeImagesSelector : "/sh:slideShow/sh:properties/sh:resizeImages",
       showControllerDefault : true,
-      showControllerSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showController",
+      showControllerSelector : "/sh:slideShow/sh:properties/sh:showController",
       showImageCaptionsDefault : true,
-      showImageCaptionsSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showImageCaptions",
+      showImageCaptionsSelector : "/sh:slideShow/sh:properties/sh:showImageCaptions",
       showSlidesRandomDefault : false,
-      showSlidesRandomSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showSlidesRandom",
+      showSlidesRandomSelector : "/sh:slideShow/sh:properties/sh:showSlidesRandom",
       showThumbnailsDefault : true,
-      showThumbnailsSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:showThumbnails",
+      showThumbnailsSelector : "/sh:slideShow/sh:properties/sh:showThumbnails",
       skipTransitionDefault : null,
-      skipTransitionSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:skipTransition",
+      skipTransitionSelector : "/sh:slideShow/sh:properties/sh:skipTransition",
       slideChangeDelayDefault : 2000,
-      slideChangeDelaySelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideChangeDelay",
+      slideChangeDelaySelector : "/sh:slideShow/sh:properties/sh:slideChangeDelay",
       slideTransitionDefault : "Sine",
-      slideTransitionSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:slideTransition",
+      slideTransitionSelector : "/sh:slideShow/sh:properties/sh:slideTransition",
       startPausedDefault : true,
-      startPausedSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:startPaused",
+      startPausedSelector : "/sh:slideShow/sh:properties/sh:startPaused",
       thumbnailFileNameRuleDefault : null,
-      thumbnailFileNameRuleSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:thumbnailFileNameRule",
+      thumbnailFileNameRuleSelector : "/sh:slideShow/sh:properties/sh:thumbnailFileNameRule",
       widthDefault : 450,
-      widthSelector : "/sd:photoGaleryWidgetDefinition/sd:properties/sd:width"
+      widthSelector : "/sh:slideShow/sh:properties/sh:width"
    },
 
    //Constructor
@@ -100,7 +100,7 @@ var SlideShow = new Class({
       this.firstSlide;
       this.galeryLink;
       this.height;
-      this.images = new LinkedHashMap();
+      this.slides = new LinkedHashMap();
       this.imageFolderUri;
       this.loopShow;
       this.overlapImages;
@@ -111,7 +111,6 @@ var SlideShow = new Class({
       this.showThumbnails;
       this.skipTransition;
       this.slideChangeDelay;
-      this.slideShow;
       this.slideTransition;
       this.startPaused;
       this.thumbnailFileNameRule;
@@ -119,6 +118,16 @@ var SlideShow = new Class({
    },
    
    //Public accessor and mutator methods
+   collectThumbnailUris : function(){
+      this.thumbnailsUri.erase();
+      this.slides.each( function( slideEntry, index ){
+         var slide = slideEntry.getValue();
+         this.thumbnailsUri.include( this.imageFolderUri + '/' + slide.getThumbnailUri() );
+      }.bind( this ));
+      
+      return this.thumbnailsUri;
+   },
+   
    onComplete: function(){
       if( this.state < BrowserWidget.States.CONSTRUCTED ){
          this.logger.trace( this.options.componentName + ".onComplete() completed to load Slideshow 2." );
@@ -148,6 +157,16 @@ var SlideShow = new Class({
       }
    },
    
+   release: function(){
+      this.destroySlides();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.unmarshallSlides();
+      this.collectThumbnailUris();
+   },
+   
    //Properties
    getAccessKeys: function() { return this.accessKeys; },
    getAutomaticallyLinkSlide: function() { return this.automaticallyLinkSlide; },
@@ -157,7 +176,6 @@ var SlideShow = new Class({
    getFirstSlide: function() { return this.firstSlide; },
    getGaleryLink: function() { return this.galeryLink; },
    getHeight: function() { return this.height; },
-   getImages: function() { return this.images; },
    getImageFolderUri: function() { return this.imageFolderUri; },
    getLoopShow: function() { return this.loopShow; },
    getOverlapImages: function() { return this.overlapImages; },
@@ -168,6 +186,7 @@ var SlideShow = new Class({
    getShowThumbnails: function() { return this.showThumbnails; },
    getSkipTransition: function() { return this.skipTransition; },
    getSlideChangeDelay: function() { return this.slideChangeDelay; },
+   getSlides: function() { return this.slides; },
    getSlideShow: function() { return this.slideShow; },
    getSlideTransition: function() { return this.slideTransition; },
    getStartPaused: function() { return this.startPaused; },
@@ -176,7 +195,7 @@ var SlideShow = new Class({
    
    //Protected and private helper methods
    compileDataObject: function(){
-      this.images.each( function( imageEntry, index ){
+      this.slides.each( function( imageEntry, index ){
          var image = imageEntry.getValue();
          image.construct();
          if( this.dataAsText ) this.dataAsText += ", ";
@@ -200,13 +219,12 @@ var SlideShow = new Class({
       else this.destructionChain.callChain();
    }.protect(),
    
-   destroyImages: function(){
-      this.images.each( function( imageEntry, index ){
-         var image = imageEntry.getValue();
-         image.destroy();
+   destroySlides: function(){
+      this.slides.each( function( slideEntry, index ){
+         var slide = slideEntry.getValue();
+         slide.destroy();
       }.bind( this ));
-      this.images.clear();
-      this.destructionChain.callChain();
+      this.slides.clear();
    }.protect(),
    
    instantiateSlideShow: function(){
@@ -267,13 +285,13 @@ var SlideShow = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
-   unmarshallComponents: function(){
-      var imagesElement = this.dataXml.selectNodes( this.options.imagesSelector );
+   unmarshallSlides: function(){
+      var imagesElement = this.mediaDefinitionXml.selectNodes( this.options.imagesSelector );
       if( imagesElement ){
          imagesElement.each( function( imageElement, index ){
-            var image = new PhotoGaleryImage( imageElement, this.i18Resource );
+            var image = new Slide( imageElement, this.internationalization );
             image.unmarshall();
-            this.images.put( image.getUri(), image );
+            this.slides.put( image.getUri(), image );
          }, this );
       }
    }.protect(),
@@ -300,12 +318,15 @@ var SlideShow = new Class({
       this.startPaused = parseBoolean( this.unmarshallProperty( this.options.startPausedDefault, this.options.startPausedSelector ));
       this.thumbnailFileNameRule = this.unmarshallProperty( this.options.thumbnailFileNameRuleDefault, this.options.thumbnailFileNameRuleSelector );
       this.width = parseInt( this.unmarshallProperty( this.options.widthDefault, this.options.widthSelector ));
-      this.parent();
    }.protect(),
    
    unmarshallProperty: function( defaultValue, selector ){
-      var propertyValue = this.definitionXml.selectNodeText( selector );
+      var propertyValue = this.mediaDefinitionXml.selectNodeText( selector );
       if( propertyValue ) return propertyValue;
       else return defaultValue;
    }.protect()
 });
+
+SlideShow.OnStart = 1 << 2;
+SlideShow.WhenPaused = 1 << 0;
+SlideShow.WhenPlaying = 1 << 1;

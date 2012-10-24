@@ -2,15 +2,14 @@
 
 <html>
 <head>
-   <title>Test page for SlideShow.js</title>
+   <title>Test page for Slide.js</title>
    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=8"/>
 
    <link rel="stylesheet" type="text/css" href="../../../JsUnit/css/jsUnitStyle.css">
-   <link rel="stylesheet" type="text/css" href="../../MediaPlayerWidget/PhotoGalery.css">
    
    <script type="text/javascript">
-      var contextRootPrefix = "../../../../";
+      var contextRootPrefix = "../../../";
    </script>
    
    <script type="text/javascript" src="../../../Libraries/JsHamcrest/jshamcrest.js"></script>
@@ -37,19 +36,15 @@
    <script type="text/javascript" src="../../../Libraries/XMLforScript/xmlsax.js"></script>
    <script type="text/javascript" src="../../../Libraries/XMLforScript/preMadeSaxEventHandler.js"></script>
 
+   <script type="text/javascript" src="../../../Source/Singleton/Singleton.js"></script>
+   <script type="text/javascript" src="../../../Source/WebUIMessageBus/WebUIMessage.js"></script>
    <script type="text/javascript" src="../../../Source/FundamentalTypes/AssertionBehaviour.js"></script>
    <script type="text/javascript" src="../../../Source/FundamentalTypes/TimeOutBehaviour.js"></script>
    <script type="text/javascript" src="../../../Source/FundamentalTypes/WebUIException.js"></script>
-   <script type="text/javascript" src="../../../Source/Singleton/Singleton.js"></script>
-   <script type="text/javascript" src="../../../Source/WebUIMessageBus/WebUIMessage.js"></script>
 
    <script type="text/javascript" src="../../../Source/BrowserWidget/BrowserWidget.js"></script>
-   <script type="text/javascript" src="../../../Source/BrowserWidget/ShortCutKey.js"></script>
-   <script type="text/javascript" src="../../../Source/BrowserWidget/WidgetAction.js"></script>
    <script type="text/javascript" src="../../../Source/BrowserWidget/WidgetConstructedMessage.js"></script> 
-   <script type="text/javascript" src="../../../Source/BrowserWidget/WidgetConstructionException.js"></script> 
    <script type="text/javascript" src="../../../Source/BrowserWidget/WidgetElementFactory.js"></script>
-   <script type="text/javascript" src="../../../Source/BusyWidget/BusyWidget.js"></script>
    <script type="text/javascript" src="../../../Source/ComponentStateManager/StateTransformer.js"></script>
    <script type="text/javascript" src="../../../Source/ComponentStateManager/DefaultStateTransformer.js"></script>
    <script type="text/javascript" src="../../../Source/ComponentStateManager/FixedComponentOrderedTransformer.js"></script>
@@ -72,63 +67,27 @@
    <script type="text/javascript" src="../../../Source/Internationalization/LocalizationResourceReference.js"></script>
    <script type="text/javascript" src="../../../Source/Internationalization/ResourceKey.js"></script>
    <script type="text/javascript" src="../../../Source/Internationalization/ResourceCache.js"></script>
-   <script type="text/javascript" src="../../../Source/jStorage/jstorage.js"></script>
-   <script type="text/javascript" src="../../../Source/PhotoGaleryWidget/PhotoGaleryImage.js"></script>
-   <script type="text/javascript" src="../../../Source/PhotoGaleryWidget/PhotoGaleryWidget.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/SlideCaption.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/SlideshowController.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/SlideshowControllerButton.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/FirstSlideButton.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/LastSlideButton.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/NextSlideButton.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/PreviousSlideButton.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Slideshow.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/SlidesThumbnails.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/SlideThumbnail.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Screen.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Slide.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Slideshow.flash.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Slideshow.fold.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Slideshow.kenburns.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/Slideshow.push.js"></script>
-   <script type="text/javascript" src="../../../Source/SlideShow/StartStopSlideButton.js"></script>
-   <script type="text/javascript" src="../../../Source/ToolBarWidget/ToolBarButton.js"></script>
-   <script type="text/javascript" src="../../../Source/ToolBarWidget/ToolBarWidget.js"></script>
+   <script type="text/javascript" src="../../../Source/MediaPlayerWidget/Media.js"></script>
+   <script type="text/javascript" src="../../../Source/MediaPlayerWidget/SlideShow/Slide.js"></script>
+   <script type="text/javascript" src="../../../Source/MediaPlayerWidget/SlideShow/SlideShow.js"></script>
    <script type="text/javascript" src="../../../Source/WebUIConfiguration/WebUIConfiguration.js"></script>
    <script type="text/javascript" src="../../../Source/WebUIController/WebUIController.js"></script>
    <script type="text/javascript" src="../../../Source/WebUILogger/WebUILogger.js"></script>
    <script type="text/javascript" src="../../../Source/WebUIMessageBus/WebUIMessageBus.js"></script>
 
-   <script type="text/javascript" src="../../../ObjectTests/Slideshow/SlideshowTest.js"></script>
-<!-- 
- -->
+   <script type="text/javascript" src="../../../ObjectTests/MediaPlayerWidget/SlideShow/SlideTest.js"></script>
    
    <script type="text/javascript">
       window.addEvent('domready', function() {
-         //runTestMethod();
       });
 
       JsHamcrest.Integration.JsUnit();
       JsMockito.Integration.JsUnit();
-
-      var testObject;
-      
-      function runTestMethod(){
-         testObject = new SlideShowTest({ onReady : onReady });
-         testObject.beforeEachTest();
-         testObject.construct_constructsComponents();
-      }
-      
-      function onReady(){
-         testObject.afterEachTest();
-      }
    </script>
 </head>
 
 <body>
-   <h1>SlideShow.js test page</H1>
-   <p>This page contains tests for SlideShow.js JavaScript class.</P>
-   <div id="SlideShowContainer" class="slideshow">
-   </div>
+   <h1>Slide.js test page</H1>
+   <p>This page contains tests for Slide.js JavaScript class.</P>
 </body>
 </html>
