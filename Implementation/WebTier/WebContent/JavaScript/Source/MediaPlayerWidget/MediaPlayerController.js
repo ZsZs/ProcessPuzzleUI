@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerController = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds : ['hide', 'onKeyDown', 'onKeyUp', 'onMouseMove', 'show'],
+   Binds : ['hide', 'onBackward', 'onBeginning', 'onEnd', 'onForward', 'onKeyDown', 'onKeyUp', 'onMouseMove', 'onStartStop', 'show'],
    options : {
       accessKeys : { 
          'first' : { 'key' : 'shift left', 'label' : 'Shift + Leftwards Arrow' },
@@ -58,12 +58,13 @@ var MediaPlayerController = new Class({
       this.containerElement = containerElement;
       this.controlButtonsWrapper;
       this.controllerWrapperElement;
-      this.firstButton;
-      this.lastButton;
+      this.isRunning = false;
+      this.mediaBackwardButton;
+      this.mediaBeginningButton;
+      this.mediaEndButton;
+      this.mediaForwardButton;
       this.morph;
-      this.nextButton;
-      this.pauseButton;
-      this.previousButton;
+      this.mediaStartStopButton;
       this.screen = screen;
       this.shortCutKeys = new Array();
       
@@ -92,6 +93,22 @@ var MediaPlayerController = new Class({
       }
    },
 
+   onBackward : function(){
+      this.fireEvent( 'mediaBackward', this, this.options.eventDeliveryDelay );
+   },
+
+   onBeginning : function(){
+      this.fireEvent( 'mediaBeginning', this, this.options.eventDeliveryDelay );
+   },
+
+   onEnd : function(){
+      this.fireEvent( 'mediaEnd', this, this.options.eventDeliveryDelay );
+   },
+
+   onForward : function(){
+      this.fireEvent( 'mediaForward', this.options.eventDeliveryDelay );
+   },
+
    onKeyDown : function( keyboardEvent ) {
       var action = this.keyboardEventsAction( keyboardEvent );
       if( action ){
@@ -112,6 +129,16 @@ var MediaPlayerController = new Class({
       if( this.screen.coordinateIsWithinScreen({ x : mouseEvent.page.x, y : mouseEvent.page.y })) this.show();
       else this.hide();
    },
+   
+   onStartStop : function(){
+      if( this.isRunning ){
+         this.fireEvent( 'mediaStop', this, this.options.eventDeliveryDelay );
+         this.isRunning = false;
+      }else{
+         this.fireEvent( 'mediaStart', this, this.options.eventDeliveryDelay );
+         this.isRunning = true;
+      }
+   },
 
    show : function() {
       if( this.controllerWrapperElement.get( 'aria-hidden' ) == 'true' ){
@@ -123,12 +150,12 @@ var MediaPlayerController = new Class({
    
    //Properties
    getControllerClass : function(){ return this.options.slideShowClass + "-" + this.options.controllerClass; },
-   getFirstButton : function(){ return this.firstButton; },
+   getFirstButton : function(){ return this.mediaBeginningButton; },
    getHiddenClass : function(){ return this.getControllerClass() + "-" + this.options.hiddenClass; },
-   getLastButton : function(){ return this.lastButton; },
-   getNextButton : function(){ return this.nextButton; },
-   getPauseButton : function(){ return this.pauseButton; },
-   getPreviousButton : function(){ return this.previousButton; },
+   getLastButton : function(){ return this.mediaEndButton; },
+   getNextButton : function(){ return this.mediaForwardButton; },
+   getPauseButton : function(){ return this.mediaStartStopButton; },
+   getPreviousButton : function(){ return this.mediaBackwardButton; },
    getShortCutKeys : function(){ return this.shortCutKeys; },
    getVisibleClass : function(){ return this.getControllerClass() + "-" + this.options.visibleClass; },
    getWrapperElement : function(){ return this.controllerWrapperElement; },
@@ -149,11 +176,11 @@ var MediaPlayerController = new Class({
    }.protect(),
    
    createButtons : function(){
-      this.firstButton = new MediaBeginningButton( this.controlButtonsWrapper ); this.firstButton.construct();
-      this.lastButton = new MediaEndButton( this.controlButtonsWrapper ); this.lastButton.construct();
-      this.nextButton = new MediaForwardButton( this.controlButtonsWrapper ); this.nextButton.construct();
-      this.pauseButton = new MediaStartStopButton( this.controlButtonsWrapper ); this.pauseButton.construct();
-      this.previousButton = new MediaBackwardButton( this.controlButtonsWrapper ); this.previousButton.construct();
+      this.mediaBackwardButton = new MediaBackwardButton( this.controlButtonsWrapper, { onSelected: this.onBackward }); this.mediaBackwardButton.construct();
+      this.mediaBeginningButton = new MediaBeginningButton( this.controlButtonsWrapper, { onSelected: this.onBeginning }); this.mediaBeginningButton.construct();
+      this.mediaEndButton = new MediaEndButton( this.controlButtonsWrapper, { onSelected: this.onEnd }); this.mediaEndButton.construct();
+      this.mediaForwardButton = new MediaForwardButton( this.controlButtonsWrapper, { onSelected: this.onForward }); this.mediaForwardButton.construct();
+      this.mediaStartStopButton = new MediaStartStopButton( this.controlButtonsWrapper, { onSelected: this.onStartStop }); this.mediaStartStopButton.construct();
    }.protect(),
    
    createControllerWrapperElements : function(){
@@ -165,11 +192,11 @@ var MediaPlayerController = new Class({
    }.protect(),
    
    destroyButtons : function(){
-      if( this.firstButton ) this.firstButton.destroy();
-      if( this.lastButton ) this.lastButton.destroy();
-      if( this.nextButton ) this.nextButton.destroy();
-      if( this.pauseButton ) this.pauseButton.destroy();
-      if( this.previousButton ) this.previousButton.destroy();
+      if( this.mediaBeginningButton ) this.mediaBeginningButton.destroy();
+      if( this.mediaEndButton ) this.mediaEndButton.destroy();
+      if( this.mediaForwardButton ) this.mediaForwardButton.destroy();
+      if( this.mediaStartStopButton ) this.mediaStartStopButton.destroy();
+      if( this.mediaBackwardButton ) this.mediaBackwardButton.destroy();
    }.protect(),
    
    destroyControllerWrapperElement : function(){
@@ -208,5 +235,6 @@ var MediaPlayerController = new Class({
    
    setUp : function(){
       this.instantiateShortCutKeys();
-   }.protect(),
+   }.protect()
+   
 });

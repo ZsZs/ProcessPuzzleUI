@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaControllerButton = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds: ['gotFocus', 'lostFocus', 'onSelection'],
+   Binds: ['gotFocus', 'lostFocus', 'onSelected'],
    
    options : {
       action : null,
@@ -69,7 +69,7 @@ var MediaControllerButton = new Class({
    },
    
    onSelected: function(){
-      this.fireEvent( 'selected', this );
+      this.fireEvent( 'onSelected', this );
    },
    
    pause: function(){
@@ -89,7 +89,7 @@ var MediaControllerButton = new Class({
    //Protected, private helper methods
    addEvents : function(){
       this.anchorElement.addEvents({
-         'click' : this.onSelection,
+         'click' : this.onSelected,
          'mouseenter' : this.gotFocus,
          'mouseleave' : this.lostFocus
       });

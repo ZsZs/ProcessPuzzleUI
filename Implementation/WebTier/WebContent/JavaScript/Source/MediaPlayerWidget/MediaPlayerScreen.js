@@ -70,7 +70,7 @@ var MediaPlayerScreen = new Class({
       this.destroyScreenElement();
    },
    
-   show: function( imageUri ){
+   update: function( imageUri ){
       if( this.anchorElement ) this.destroyImageElements();
       this.createImageElements( imageUri );
    },

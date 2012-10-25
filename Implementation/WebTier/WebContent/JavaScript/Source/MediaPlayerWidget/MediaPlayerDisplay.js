@@ -33,6 +33,8 @@ You should have received a copy of the GNU General Public License along with thi
 var MediaPlayerDisplay = new Class({
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds: [
+      'addControllerEvents',
+      'addMediaEvents',
       'checkTimeOut', 
       'constructController',
       'constructScreen',
@@ -43,9 +45,16 @@ var MediaPlayerDisplay = new Class({
       'destroyThumbnailsBar',
       'destroyTitleBar',
       'finalizeConstruction', 
-      'finalizeDestruction', 
+      'finalizeDestruction',
       'onComponentConstructed', 
-      'onComponentDestructed'],
+      'onComponentDestructed',
+      'onMediaBackward',
+      'onMediaBeginning',
+      'onMediaEnd',
+      'onMediaForward',
+      'onMediaStart',
+      'onMediaStop',
+      'onUpdateDisplay'],
    
    options : {
       eventDeliveryDelay : 5,
@@ -90,8 +99,33 @@ var MediaPlayerDisplay = new Class({
       this.destructionChain.callChain();
    },
    
-   onUpdate : function( imageData ){
-      this.screen.show( imageData.imageUri );
+   onMediaBackward : function(){
+      this.media.backward();
+   },
+
+   onMediaBeginning : function(){
+      this.media.beginning();
+   },
+
+   onMediaEnd : function(){
+      this.media.end();
+   },
+
+   onMediaForward : function(){
+      this.media.forward();
+   },
+
+   onMediaStart : function(){
+      this.media.start();
+   },
+
+   onMediaStop : function(){
+      this.media.stop();
+   },
+
+   onUpdateDisplay : function( imageData ){
+      this.screen.update( imageData.imageUri );
+      this.titleBar.update( imageData.title, false );
    },
    
    //Properties
@@ -101,8 +135,30 @@ var MediaPlayerDisplay = new Class({
    getTitleBar : function(){ return this.titleBar; },
    
    //Protected, private helper methods
+   addControllerEvents: function(){
+      this.controller.addEvent( 'mediaBackward', this.onMediaBackward );
+      this.controller.addEvent( 'mediaBeginning', this.onMediaBeginning );
+      this.controller.addEvent( 'mediaEnd', this.onMediaEnd );
+      this.controller.addEvent( 'mediaForward', this.onMediaForward );
+      this.controller.addEvent( 'mediaStart', this.onMediaStart );
+      this.controller.addEvent( 'mediaStop', this.onMediaStop );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   addMediaEvents: function(){
+      this.media.addEvent( 'updateDisplay', this.onUpdateDisplay );
+      this.constructionChain.callChain();
+   }.protect(),
+   
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructScreen, this.constructTitleBar, this.constructThumbnailsBar, this.constructController, this.finalizeConstruction );
+      this.constructionChain.chain( 
+         this.constructScreen, 
+         this.constructTitleBar, 
+         this.constructThumbnailsBar, 
+         this.constructController,
+         this.addControllerEvents,
+         this.addMediaEvents, 
+         this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){

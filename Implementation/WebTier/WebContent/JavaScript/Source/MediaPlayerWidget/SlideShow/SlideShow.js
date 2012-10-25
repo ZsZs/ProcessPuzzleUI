@@ -33,7 +33,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var SlideShow = new Class({
    Extends : Media,
-   Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'onComplete', 'onDestroy', 'onEnd', 'onShow', 'onStart', 'resetFields'],
+   Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'resetFields'],
    options : {
       accessKeysDefault : null,
       accessKeysSelector : "/sh:slideShow/sh:properties/sh:accessKeys",
@@ -94,6 +94,7 @@ var SlideShow = new Class({
       this.automaticallyLinkSlide;
       this.centerImages;
       this.constructionChain = new Chain();
+      this.currentSlide;
       this.data;
       this.dataAsText = "";
       this.effectDuration;
@@ -102,6 +103,7 @@ var SlideShow = new Class({
       this.height;
       this.slides = new LinkedHashMap();
       this.imageFolderUri;
+      this.isRunning = false;
       this.loopShow;
       this.overlapImages;
       this.resizeImages;
@@ -118,6 +120,16 @@ var SlideShow = new Class({
    },
    
    //Public accessor and mutator methods
+   backward: function(){
+      this.currentSlide = this.slides.next();
+      this.updateDisplyeWithCurrentSlide();
+   },
+   
+   beginning: function(){
+      this.currentSlide = this.slides.first();
+      this.updateDisplyeWithCurrentSlide();
+   },
+   
    collectThumbnailUris : function(){
       this.thumbnailsUri.erase();
       this.slides.each( function( slideEntry, index ){
@@ -128,42 +140,32 @@ var SlideShow = new Class({
       return this.thumbnailsUri;
    },
    
-   onComplete: function(){
-      if( this.state < BrowserWidget.States.CONSTRUCTED ){
-         this.logger.trace( this.options.componentName + ".onComplete() completed to load Slideshow 2." );
-         this.constructionChain.callChain();
-      }
+   end: function(){
+      this.currentSlide = this.slides.first();
+      this.updateDisplyeWithCurrentSlide();
    },
    
-   onDestroy: function(){
-      this.destructionChain.callChain();
-   },
-   
-   onEnd: function(){
-      this.logger.trace( this.options.componentName + ".onEnd() ended Slideshow 2." );
-   },
-   
-   onShow: function(){
-      if( this.state < BrowserWidget.States.CONSTRUCTED ){
-         this.logger.trace( this.options.componentName + ".onShow() started to load Slideshow 2." );
-         this.constructionChain.callChain();
-      }
-   },
-   
-   onStart: function(){
-      if( this.state < BrowserWidget.States.CONSTRUCTED ){
-         this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
-         this.constructionChain.callChain();
-      }
+   forward: function(){
+      this.currentSlide = this.slides.previous();
+      this.updateDisplyeWithCurrentSlide();
    },
    
    release: function(){
       this.destroySlides();
    },
    
+   start: function(){
+      this.beginning();
+   },
+   
+   stop: function(){
+      this.isRunning = false;
+   },
+   
    unmarshall: function(){
       this.unmarshallProperties();
       this.unmarshallSlides();
+      this.appendSlashToImageFolder();
       this.collectThumbnailUris();
    },
    
@@ -194,6 +196,10 @@ var SlideShow = new Class({
    getWidth: function() { return this.width; },
    
    //Protected and private helper methods
+   appendSlashToImageFolder : function(){
+      if( this.imageFolderUri.length && !this.imageFolderUri.test( /\/$/ )) this.imageFolderUri += '/';
+   }.protect(),
+   
    compileDataObject: function(){
       this.slides.each( function( imageEntry, index ){
          var image = imageEntry.getValue();
@@ -225,37 +231,6 @@ var SlideShow = new Class({
          slide.destroy();
       }.bind( this ));
       this.slides.clear();
-   }.protect(),
-   
-   instantiateSlideShow: function(){
-      var slideShowOptions = {
-         captions : this.showImageCaptions,
-         center : this.centerImages,
-         controller : this.showController,
-         delay : this.slideChangeDelay,
-         duration : this.effectDuration,
-         fast : this.skipTransition,
-         height : this.height,
-         href : this.galeryLink,
-         imageFolder : this.imageFolderUri,
-         linked : this.automaticallyLinkSlide,
-         loop : this.loopShow,
-         onComplete : this.onComplete,
-         onDestroy : this.onDestroy,
-         onEnd : this.onEnd,
-         onShow : this.onShow,
-         onStart : this.onStart,
-         overlap : this.overlapImages,
-         paused : this.startPaused,
-         random : this.showSlidesRandom,
-         replace : this.thumbnailFileNameRule,
-         resize : this.resizeImages,
-         slide : this.firstSlide,
-         thumbnails : this.showThumbnails,
-         transition : this.slideTransition,
-         width : this.width
-      };
-      this.slideShow = new Slideshow( this.containerElement, this.data, slideShowOptions );
    }.protect(),
    
    resetFields: function(){
@@ -324,6 +299,11 @@ var SlideShow = new Class({
       var propertyValue = this.mediaDefinitionXml.selectNodeText( selector );
       if( propertyValue ) return propertyValue;
       else return defaultValue;
+   }.protect(),
+   
+   updateDisplyeWithCurrentSlide : function(){
+      var imageData = { imageUri: this.imageFolderUri + this.currentSlide.getUri(), thumbnailIndex: 1, title: this.currentSlide.getCaption() };
+      this.fireEvent( 'updateDisplay', imageData );
    }.protect()
 });
 

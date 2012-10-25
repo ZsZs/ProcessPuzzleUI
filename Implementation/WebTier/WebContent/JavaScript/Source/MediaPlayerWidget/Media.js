@@ -51,11 +51,35 @@ var Media = new Class({
    },
    
    //Public accessor and mutator methods
+   backward: function(){
+      
+   },
+   
+   beginning: function(){
+      //Abstract method, should be overwritten.
+   },
+   
    collectThumbnaildUris : function(){
       //Abstract method, should be overwritten.
    },
    
+   end: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   forward: function(){
+      //Abstract method, should be overwritten.
+   },
+   
    relase: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   start: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   stop: function(){
       //Abstract method, should be overwritten.
    },
    

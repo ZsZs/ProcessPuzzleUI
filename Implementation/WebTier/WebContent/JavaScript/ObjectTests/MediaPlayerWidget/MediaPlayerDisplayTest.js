@@ -5,6 +5,7 @@ window.SlideShowTest = new Class( {
    options : {
       testMethods : [
          { method : 'construct_constructsComponents', isAsynchron : true },
+         { method : 'construct_subscribesToControllerEvents', isAsynchron : true },
          { method : 'onUpdate_updatesComponents', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
@@ -55,6 +56,19 @@ window.SlideShowTest = new Class( {
       ).callChain();
    },
    
+   construct_subscribesToControllerEvents : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.display.construct();
+         }.bind( this ),
+         function(){
+            var spyedDisplay = spy( this.display );
+            spyedDisplay.getController();
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
    onUpdate_updatesComponents: function(){
       this.testCaseChain.chain(
          function(){
@@ -64,6 +78,7 @@ window.SlideShowTest = new Class( {
             this.display.onUpdate({ imageUri: this.constants.IMAGE_URI, thumbnailIndex: 1, title: this.constants.IMAGE_TITLE });
             
             assertThat( this.containerElement.getElement( 'img' ).get( 'src' ), equalTo( this.constants.IMAGE_URI ));
+            assertThat( this.containerElement.getElement( 'div.slideshow-captions' ).get( 'text' ), equalTo( this.constants.IMAGE_TITLE ));
             this.testMethodReady();
          }.bind( this )
       ).callChain();
