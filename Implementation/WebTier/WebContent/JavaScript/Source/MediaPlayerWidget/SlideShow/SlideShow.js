@@ -33,7 +33,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var SlideShow = new Class({
    Extends : Media,
-   Binds : ['compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'resetFields'],
+   Binds : ['automaticSlideShow', 'compileDataObject', 'destroyImages', 'destroySlideShow', 'instantiateSlideShow', 'resetFields'],
    options : {
       accessKeysDefault : null,
       accessKeysSelector : "/sh:slideShow/sh:properties/sh:accessKeys",
@@ -43,7 +43,9 @@ var SlideShow = new Class({
       centerImagesSelector : "/sh:slideShow/sh:properties/sh:centerImages",
       componentName : "SlideShow",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pg='http://www.processpuzzle.com/SlideShow'",
+      delay : 2000,
       descriptionSelector : "//sh:slideShow/sh:description", 
+      duration : 1000,
       effectDurationDefault : 750,
       effectDurationSelector : "/sh:slideShow/sh:properties/sh:effectDuration",
       eventDeliveryDelay : 50,
@@ -79,7 +81,7 @@ var SlideShow = new Class({
       slideTransitionSelector : "/sh:slideShow/sh:properties/sh:slideTransition",
       startPausedDefault : true,
       startPausedSelector : "/sh:slideShow/sh:properties/sh:startPaused",
-      thumbnailFileNameRuleDefault : null,
+      thumbnailFileNameRuleDefault : [ /(\.[^\.]+)$/, 't$1' ],
       thumbnailFileNameRuleSelector : "/sh:slideShow/sh:properties/sh:thumbnailFileNameRule",
       widthDefault : 450,
       widthSelector : "/sh:slideShow/sh:properties/sh:width"
@@ -116,10 +118,24 @@ var SlideShow = new Class({
       this.slideTransition;
       this.startPaused;
       this.thumbnailFileNameRule;
+      this.timer;
       this.width;
    },
    
    //Public accessor and mutator methods
+   automaticSlideShow: function(){
+      var previousSlide = this.currentSlide;
+      
+      if( !this.currentSlide ) this.currentSlide = this.slides.first();
+      else this.currentSlide = this.slides.next( this.currentSlide.getUri() );
+
+      if( !this.currentSlide && this.loopShow ){
+         this.currentSlide = this.slides.first();
+      }else this.isRunning = false;
+      
+      if( !previousSlide || !previousSlide.equals( this.currentSlide )) this.updateDisplyeWithCurrentSlide();
+   },
+   
    backward: function(){
       this.currentSlide = this.slides.previous( this.currentSlide.getUri() );
       if( !this.currentSlide ) this.currentSlide = this.slides.first();
@@ -147,7 +163,8 @@ var SlideShow = new Class({
    },
    
    forward: function(){
-      this.currentSlide = this.slides.next( this.currentSlide.getUri() );
+      if( !this.currentSlide ) this.currentSlide = this.slides.first();
+      else this.currentSlide = this.slides.next( this.currentSlide.getUri() );
       if( !this.currentSlide ) this.currentSlide = this.slides.last();
       this.updateDisplyeWithCurrentSlide();
    },
@@ -157,10 +174,13 @@ var SlideShow = new Class({
    },
    
    start: function(){
-      this.beginning();
+      this.isRunning = true;
+      this.automaticSlideShow();
+      this.timer = this.automaticSlideShow.periodical( this.options.duration + this.options.delay );
    },
    
    stop: function(){
+      clearInterval( this.timer );
       this.isRunning = false;
    },
    

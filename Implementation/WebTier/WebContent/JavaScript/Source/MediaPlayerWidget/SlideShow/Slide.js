@@ -52,7 +52,6 @@ var Slide = new Class({
       this.data;
       this.dataAsText;
       this.definitionXml = definitionXml;
-      this.imageElement;
       this.internationalization = internationalization;
       this.link;
       this.thumbnailUri;
@@ -63,12 +62,15 @@ var Slide = new Class({
    //Public accessor and mutator methods
    destroy: function(){
       this.destroyElements();
-      this.data = null;
-      this.dataAsText = null;
       this.link = null;
       this.thumbnailUri = null;
       this.uri = null;
       this.state = Slide.States.INITIALIZED;
+   },
+   
+   equals: function( obj ){
+      if( !(typeOf( this ) === typeOf( obj ))) return false;
+      return this.uri == obj.uri;
    },
    
    unmarshall: function(){
@@ -78,10 +80,7 @@ var Slide = new Class({
    
    //Properties
    getCaption: function() { return this.caption; },
-   getData: function() { return this.data; },
-   getDataAsText: function() { return this.dataAsText; },
    getElement : function(){ return this.anchorElement; },
-   getImageElement : function(){ return this.imageElement; },
    getLink: function() { return this.link; },
    getState: function() { return this.state; },
    getThumbnailUri: function() { return this.thumbnailUri; },
