@@ -121,7 +121,8 @@ var SlideShow = new Class({
    
    //Public accessor and mutator methods
    backward: function(){
-      this.currentSlide = this.slides.next();
+      this.currentSlide = this.slides.previous( this.currentSlide.getUri() );
+      if( !this.currentSlide ) this.currentSlide = this.slides.first();
       this.updateDisplyeWithCurrentSlide();
    },
    
@@ -141,12 +142,13 @@ var SlideShow = new Class({
    },
    
    end: function(){
-      this.currentSlide = this.slides.first();
+      this.currentSlide = this.slides.last();
       this.updateDisplyeWithCurrentSlide();
    },
    
    forward: function(){
-      this.currentSlide = this.slides.previous();
+      this.currentSlide = this.slides.next( this.currentSlide.getUri() );
+      if( !this.currentSlide ) this.currentSlide = this.slides.last();
       this.updateDisplyeWithCurrentSlide();
    },
    
