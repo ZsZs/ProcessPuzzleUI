@@ -137,6 +137,7 @@ var LinkedEntry = new Class( {
    },
 
    getNextEntry: function() { return this.nextEntry; },
+   getPreviousEntry: function() { return this.previousEntry; },
    getSerialIndex : function() { return this.serialIndex; },
    setNextEntry: function( nextEntry ) { this.nextEntry = nextEntry; }
 });
