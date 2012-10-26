@@ -41,6 +41,7 @@ var MediaStartStopButton = new Class({
       key : 'p',
       label : 'P',
       playClass : 'play',
+      startPaused : false,
       tabIndex : 2
    },
 
@@ -48,16 +49,26 @@ var MediaStartStopButton = new Class({
    initialize: function( containerElement, options ){
       this.parent( containerElement, options );
       
-      this.paused = false;
+      this.paused = this.options.startPaused;
    },
    
    //Public accessor and mutator methods
+   onSelected: function(){
+      if( this.paused ) this.start();
+      else this.stop();
+      this.parent();
+   },
+   
    start: function(){
+      this.listItemElement.removeClass( this.getElementClass() );
       this.paused = false;
+      this.listItemElement.addClass( this.getElementClass() );
    },
    
    stop: function(){
+      this.listItemElement.removeClass( this.getElementClass() );
       this.paused = true;
+      this.listItemElement.addClass( this.getElementClass() );
    },
    
    //Properties

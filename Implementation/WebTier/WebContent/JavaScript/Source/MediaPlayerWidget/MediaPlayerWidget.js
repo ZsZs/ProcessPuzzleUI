@@ -31,11 +31,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['constructDisplay', 'destroyDisplay', 'onDisplayConstructed', 'onDisplayDestroyed', 'releaseMedia'],
+   Binds : ['autoStartMedia', 'constructDisplay', 'destroyDisplay', 'onDisplayConstructed', 'onDisplayDestroyed', 'releaseMedia'],
    constants : {
    },
    
    options : {
+      startPaused : false
    },
 
    initialize : function( resourceBundle, options ) {
@@ -56,18 +57,26 @@ var MediaPlayerWidget = new Class({
    //Properties
    getDisplay : function(){ return this.display; },
    getMedia : function(){ return this.media; },
+   getStartPaused: function() { return this.options.startPaused; },
    
    //Protected, private helper methods
+   autoStartMedia : function(){
+      if( !this.options.startPaused ) this.media.start();
+      this.constructionChain.callChain();
+   }.protect(),
+   
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.constructDisplay, this.finalizeConstruction );
+      this.constructionChain.chain( this.constructDisplay, this.autoStartMedia, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
-      this.destructionChain.chain( this.destroyDisplay, this.releaseMedia, this.finalizeDestruction );
+      this.destructionChain.chain( this.releaseMedia, this.destroyDisplay, this.finalizeDestruction );
    }.protect(),
    
    constructDisplay: function(){
-      this.display = new MediaPlayerDisplay( this.containerElement, this.media, { onConstructed : this.onDisplayConstructed, onDestroyed : this.onDisplayDestroyed });
+      var displayOptions = { startPaused : this.options.startPaused };
+      var eventHandlers = { onConstructed : this.onDisplayConstructed, onDestroyed : this.onDisplayDestroyed };
+      this.display = new MediaPlayerDisplay( this.containerElement, this.media, Object.merge( displayOptions, eventHandlers ));
       this.display.construct();
    }.protect(),
    

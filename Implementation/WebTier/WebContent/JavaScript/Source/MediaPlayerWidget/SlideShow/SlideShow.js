@@ -79,8 +79,6 @@ var SlideShow = new Class({
       slideChangeDelaySelector : "/sh:slideShow/sh:properties/sh:slideChangeDelay",
       slideTransitionDefault : "Sine",
       slideTransitionSelector : "/sh:slideShow/sh:properties/sh:slideTransition",
-      startPausedDefault : true,
-      startPausedSelector : "/sh:slideShow/sh:properties/sh:startPaused",
       thumbnailFileNameRuleDefault : [ /(\.[^\.]+)$/, 't$1' ],
       thumbnailFileNameRuleSelector : "/sh:slideShow/sh:properties/sh:thumbnailFileNameRule",
       widthDefault : 450,
@@ -116,7 +114,6 @@ var SlideShow = new Class({
       this.skipTransition;
       this.slideChangeDelay;
       this.slideTransition;
-      this.startPaused;
       this.thumbnailFileNameRule;
       this.timer;
       this.width;
@@ -129,11 +126,10 @@ var SlideShow = new Class({
       if( !this.currentSlide ) this.currentSlide = this.slides.first();
       else this.currentSlide = this.slides.next( this.currentSlide.getUri() );
 
-      if( !this.currentSlide && this.loopShow ){
-         this.currentSlide = this.slides.first();
-      }else this.isRunning = false;
+      if( !this.currentSlide && this.loopShow ) this.currentSlide = this.slides.first();
       
       if( !previousSlide || !previousSlide.equals( this.currentSlide )) this.updateDisplyeWithCurrentSlide();
+      else this.stop();
    },
    
    backward: function(){
@@ -170,6 +166,7 @@ var SlideShow = new Class({
    },
    
    release: function(){
+      this.stop();
       this.destroySlides();
    },
    
@@ -213,7 +210,6 @@ var SlideShow = new Class({
    getSlides: function() { return this.slides; },
    getSlideShow: function() { return this.slideShow; },
    getSlideTransition: function() { return this.slideTransition; },
-   getStartPaused: function() { return this.startPaused; },
    getThumbnailFileNameRule: function() { return this.thumbnailFileNameRule; },
    getWidth: function() { return this.width; },
    

@@ -6,8 +6,10 @@ window.MediaPlayerWidgetTest = new Class( {
       isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'initialization_setsState', isAsynchron : false },
+         { method : 'unmarshall_determinesProperties', isAsynchron : false },
          { method : 'unmarshall_instantiatesAndUnmarshallsMedia', isAsynchron : false },
          { method : 'construct_constructsDisplay', isAsynchron : true },
+         { method : 'construct_whenSpecified_startsMedia', isAsynchron : true },
          { method : 'destroy_destroysAllCreatedElements', isAsynchron : true }]
    },
 
@@ -73,6 +75,12 @@ window.MediaPlayerWidgetTest = new Class( {
       assertThat( this.widget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
    },
    
+   unmarshall_determinesProperties : function() {
+      this.widget.unmarshall();
+      
+      assertThat( this.widget.getStartPaused(), equalTo( parseBoolean( this.widgetDefinition.selectNodeText( "/sd:widgetDefinition/sd:options/sd:option[@name='startPaused']/@value" ))));
+   },
+   
    unmarshall_instantiatesAndUnmarshallsMedia : function(){
       this.widget.unmarshall();
       
@@ -90,6 +98,21 @@ window.MediaPlayerWidgetTest = new Class( {
          function(){
             assertThat( this.widget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
             assertThat( this.widget.getDisplay(), JsHamcrest.Matchers.instanceOf( MediaPlayerDisplay ));
+            
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_whenSpecified_startsMedia : function() {
+      this.testCaseChain.chain(
+         function(){
+            this.widget.unmarshall();
+            this.widget.options.startPaused = false;
+            this.widget.construct();
+         }.bind( this ),
+         function(){
+            assertThat( this.widget.getMedia().isRunning, is( true ));
             
             this.testMethodReady();
          }.bind( this )

@@ -58,6 +58,7 @@ var MediaPlayerDisplay = new Class({
    
    options : {
       eventDeliveryDelay : 5,
+      startPaused : false
    },
 
    //Constructor
@@ -166,7 +167,9 @@ var MediaPlayerDisplay = new Class({
    }.protect(),
    
    constructController: function(){
-      this.controller = new MediaPlayerController( this.containerElement, this.screen, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
+      var displayOptions = { startPaused : this.options.startPaused };
+      var eventHandlers = { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed };
+      this.controller = new MediaPlayerController( this.containerElement, this.screen, Object.merge( displayOptions, eventHandlers ));
       this.controller.construct();
    }.protect(),
    

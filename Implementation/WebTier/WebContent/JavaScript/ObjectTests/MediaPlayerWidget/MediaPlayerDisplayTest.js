@@ -1,4 +1,4 @@
-window.SlideShowTest = new Class( {
+window.MediaPlayerDisplayTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onConstructionError', 'onDestroyed'],
 
@@ -75,7 +75,7 @@ window.SlideShowTest = new Class( {
             this.display.construct();
          }.bind( this ),
          function(){
-            this.display.onUpdate({ imageUri: this.constants.IMAGE_URI, thumbnailIndex: 1, title: this.constants.IMAGE_TITLE });
+            this.display.onUpdateDisplay({ imageUri: this.constants.IMAGE_URI, thumbnailIndex: 1, title: this.constants.IMAGE_TITLE });
             
             assertThat( this.containerElement.getElement( 'img' ).get( 'src' ), equalTo( this.constants.IMAGE_URI ));
             assertThat( this.containerElement.getElement( 'div.slideshow-captions' ).get( 'text' ), equalTo( this.constants.IMAGE_TITLE ));

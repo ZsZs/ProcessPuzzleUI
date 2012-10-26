@@ -73,7 +73,6 @@ window.MediaPlayerWidgetTest = new Class( {
       assertThat( this.slideshow.getSkipTransition(), equalTo( parseBoolean( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:skipTransition' ))));
       assertThat( this.slideshow.getSlideChangeDelay(), equalTo( parseInt( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:slideChangeDelay' ))));
       assertThat( this.slideshow.getSlideTransition(), equalTo( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:slideTransition' )));
-      assertThat( this.slideshow.getStartPaused(), equalTo( parseBoolean( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:startPaused' ))));
       assertThat( this.slideshow.getThumbnailFileNameRule(), equalTo( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:thumbnailFileNameRule' )));
       assertThat( this.slideshow.getWidth(), equalTo( parseInt( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:width' ))));
    },

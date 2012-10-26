@@ -9,4 +9,8 @@
    <sd:description>MediaPlayerWidget.description</sd:description>
    <sd:version>1.0</sd:version>
    
+   <sd:options>
+   	<sd:option name='startPaused' value='true'/>
+   </sd:options>
+   
 </sd:widgetDefinition>

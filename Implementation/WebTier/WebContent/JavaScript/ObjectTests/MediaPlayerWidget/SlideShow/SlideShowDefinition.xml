@@ -29,7 +29,6 @@
       <sd:skipTransition>WhenPaused | OnStart</sd:skipTransition>
       <sd:slideChangeDelay>3000</sd:slideChangeDelay>
       <sd:slideTransition>elastic:in:out</sd:slideTransition>
-      <sd:startPaused>true</sd:startPaused>
       <sd:thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</sd:thumbnailFileNameRule>
       <sd:width>450</sd:width>
    </sd:properties>

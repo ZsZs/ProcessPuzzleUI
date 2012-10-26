@@ -47,6 +47,7 @@ var MediaPlayerController = new Class({
       link : 'cancel',
       morphProperties : { duration: 500, fps: 50, link : 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       slideShowClass : "slideshow",
+      startPaused : false,
       visibleClass : "visible"
    },
 
@@ -180,7 +181,7 @@ var MediaPlayerController = new Class({
       this.mediaBeginningButton = new MediaBeginningButton( this.controlButtonsWrapper, { onSelected: this.onBeginning }); this.mediaBeginningButton.construct();
       this.mediaEndButton = new MediaEndButton( this.controlButtonsWrapper, { onSelected: this.onEnd }); this.mediaEndButton.construct();
       this.mediaForwardButton = new MediaForwardButton( this.controlButtonsWrapper, { onSelected: this.onForward }); this.mediaForwardButton.construct();
-      this.mediaStartStopButton = new MediaStartStopButton( this.controlButtonsWrapper, { onSelected: this.onStartStop }); this.mediaStartStopButton.construct();
+      this.mediaStartStopButton = new MediaStartStopButton( this.controlButtonsWrapper, { onSelected: this.onStartStop, startPaused: this.options.startPaused }); this.mediaStartStopButton.construct();
    }.protect(),
    
    createControllerWrapperElements : function(){
