@@ -51,6 +51,8 @@ var MediaPlayerThumbnailsBar = new Class({
       this.assertThat( thumbnailImageUris, not( nil()), this.options.componentName + ".thumbnailImageUris" );
       
       this.containerElement = containerElement;
+      this.delay = 1000 / this.options.scrollingFrequency;
+      this.lastMouseMoveEvent;
       this.listElement;
       this.scrollingTimer;
       this.slideThumbnails = new ArrayList();
@@ -138,6 +140,7 @@ var MediaPlayerThumbnailsBar = new Class({
    }.protect(),
    
    onMouseMove : function( mouseMoveEvent ) {
+      this.lastMouseMoveEvent = mouseMoveEvent;
       if( this.mouseIsWithinThumbnailsArea( mouseMoveEvent )) {
          if( !this.scrollingTimer ) {
             this.scrollingTimer = this.scroll.periodical( this.options.scrollingFrequency );
@@ -234,8 +237,8 @@ var MediaPlayerThumbnailsBar = new Class({
          tween[fast ? 'set' : 'start']( value );
       }else {
          var area = wrapperElementCoordinates[this.properties[2]] / 3;
-         var page = this.retrieve( 'page' );
-         var velocity = -(this.retrieve( 'delay' ) * 0.01 );
+         var page = this.lastMouseMoveEvent.page;
+         var velocity = -(this.delay * 0.01 );
          if( page[axis] < ( wrapperElementCoordinates[pos] + area ))
             delta = ( page[axis] - wrapperElementCoordinates[pos] - area ) * velocity;
          else if( page[axis] > (wrapperElementCoordinates[pos] + wrapperElementCoordinates[size] - area ))
