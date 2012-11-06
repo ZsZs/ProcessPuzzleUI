@@ -152,9 +152,8 @@ var MediaPlayerThumbnailsBar = new Class({
    },
 
    onLoad : function(i) {
-      var thumbnails = this.thumbnails;
-      var a = thumbnails.getElements( 'a' )[i];
-      if (a) {
+      var a = this.wrapperElement.getElements( 'a' )[i];
+      if( a ) {
          (function(a) {
             var visible = i == this.slide ? 'active' : 'inactive';
             if (a.store) {
@@ -167,52 +166,41 @@ var MediaPlayerThumbnailsBar = new Class({
          }).delay( Math.max( 1000 / this.data.thumbnails.length, 100 ), this, a );
       }
 
-      if (thumbnails.retrieve( 'limit' ))
-         return;
+      if (this.wrapperElement.retrieve( 'limit' )) return;
 
-      var props = thumbnails.retrieve( 'props' ); // left right width x
-      // height
+      var props = this.wrapperElement.retrieve( 'props' );
       var options = this.options.thumbnails;
-      //var pos = props ? props[1] : 'right';
       var length = props[2];
       var width = props[4];
-      var li = thumbnails.getElement( 'li:nth-child(' + (i + 1) + ')' ).getCoordinates();
+      var li = this.wrapperElement.getElement( 'li:nth-child(' + (i + 1) + ')' ).getCoordinates();
 
-      if (options.columns || options.rows) {
-         thumbnails.setStyles( {
-            'height' : this.height,
-            'width' : this.width
-         } );
-         if (options.columns.toInt())
-            thumbnails.setStyle( 'width', li.width * options.columns.toInt() );
-         if (options.rows.toInt())
-            thumbnails.setStyle( 'height', li.height * options.rows.toInt() );
+      if( options.columns || options.rows ) {
+         this.wrapperElement.setStyles({ 'height' : this.height, 'width' : this.width });
+         if( options.columns.toInt() )
+            this.wrapperElement.setStyle( 'width', li.width * options.columns.toInt() );
+         if( options.rows.toInt() )
+            this.wrapperElement.setStyle( 'height', li.height * options.rows.toInt() );
       }
-      var div = thumbnails.getCoordinates();
-      if (options.position) {
-         if (options.position.test( /bottom|top/ )) {
-            thumbnails.setStyles( {
-               'bottom' : 'auto',
-               'top' : 'auto'
-            } ).setStyle( options.position, -div.height );
+      
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+
+      if( options.position ) {
+         if( options.position.test( /bottom|top/ )) {
+            this.wrapperElement.setStyles({ 'bottom' : 'auto', 'top' : 'auto' }).setStyle( options.position, -wrapperElementCoordinates.height );
          }
-         if (options.position.test( /left|right/ )) {
-            thumbnails.setStyles( {
-               'left' : 'auto',
-               'right' : 'auto'
-            } ).setStyle( options.position, -div.width );
+         
+         if( options.position.test( /left|right/ )) {
+            this.wrapperElement.setStyles({ 'left' : 'auto', 'right' : 'auto' }).setStyle( options.position, -wrapperElementCoordinates.width );
          }
       }
 
-      var units = div[width] >= li[width] ? Math.floor( div[width] / li[width] ) : 1;
-      var x = Math.ceil( this.data.images.length / units );
-      //var r = this.data.images.length % units;
-      var len = x * li[length], ul = thumbnails.getElement( 'ul' ).setStyle( length, len );
-      ul.getElements( 'li' ).setStyles( {
-         'height' : li.height,
-         'width' : li.width
-      } );
-      thumbnails.store( 'limit', div[length] - len );
+      var units = wrapperElementCoordinates[width] >= li[width] ? Math.floor( wrapperElementCoordinates[width] / li[width] ) : 1;
+      var x = Math.ceil( this.thumbnailImageUris.length / units );
+      var len = x * li[length];
+      var ul = this.wrapperElement.getElement( 'ul' ).setStyle( length, len );
+      ul.getElements( 'li' ).setStyles({ 'height' : li.height, 'width' : li.width });
+      
+      this.wrapperElement.store( 'limit', wrapperElementCoordinates[length] - len );
    },
    
    onThumbnailSelected : function( thumbnail ){
