@@ -30,10 +30,11 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var MediaPlayerThumbnail = new Class( {
-   Implements : [AssertionBehavior, Events, Options],
-   Binds : ['onImageLoaded', 'onSelection'],
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection'],
    options : {
       componentName : 'MediaPlayerThumbnail',
+      eventDeliveryDelay : 5,
       hiddenClass : "hidden",
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       slideShowClass : "slideshow",
@@ -49,7 +50,9 @@ var MediaPlayerThumbnail = new Class( {
       this.assertThat( index, not( nil()), "SlidesThumbnails.index" );
       
       this.anchorElement;
+      this.constructionChain = new Chain();
       this.containerElement = containerElement;
+      this.error;
       this.id = "Slideshow-" + Date.now() + index;
       this.imageElement;
       this.index = index;
@@ -59,9 +62,11 @@ var MediaPlayerThumbnail = new Class( {
    
    //Public accessor and mutator methods
    construct : function(){
-      this.createListItemElement();
-      this.createAnchorElement();
-      this.createImageElement();
+      this.startTimeOutTimer( 'construct' );
+      this.compileConstructionChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }
    },
 
    destroy : function(){
@@ -78,9 +83,12 @@ var MediaPlayerThumbnail = new Class( {
    getVisibleClass : function(){ return this.getElementClass() + "-" + this.options.visibleClass; },
    
    //Protected, private helper methods
-   createListItemElement : function(){
-      this.listItemElement = new Element( 'li', { 'id' : this.id });
-      this.listItemElement.inject( this.containerElement );
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createListItemElement, this.createAnchorElement, this.createImageElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );
    }.protect(),
    
    createAnchorElement : function( thumbnailUri, index ){
@@ -95,12 +103,19 @@ var MediaPlayerThumbnail = new Class( {
       this.anchorElement.inject( this.listItemElement );
       
       this.anchorElement.addEvent( 'click', this.onSelection );
+      this.constructionChain.callChain();
    }.protect(),
    
    createImageElement : function(){
       this.imageElement = new Asset.image( this.thumbnailUri, {
          'onload' : this.onImageLoaded
       });
+   }.protect(),
+   
+   createListItemElement : function(){
+      this.listItemElement = new Element( 'li', { 'id' : this.id });
+      this.listItemElement.inject( this.containerElement );
+      this.constructionChain.callChain();
    }.protect(),
    
    destroyAnchorElement : function(){
@@ -118,12 +133,30 @@ var MediaPlayerThumbnail = new Class( {
       if( this.imageElement ) this.imageElement.destroy();
    }.protect(),
    
+   finalizeConstruction : function(){
+      this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+   
    onImageLoaded : function(){
       this.imageElement.inject( this.anchorElement );
+      this.finalizeConstruction();
    },
 
    onSelection : function( clickEvent ) {
       this.fireEvent( 'selected', this );
       return false;
-   }
+   },
+   
+   revertConstruction : function( error ){
+      this.error =  error;
+      this.stopTimeOutTimer();
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+
+   timeOut : function( exception ){
+      this.revertConstruction( exception );
+   }.protect()
+   
 });

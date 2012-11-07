@@ -1,4 +1,4 @@
-window.SlidesThumbnailsTest = new Class( {
+window.MediaPlayerThumbnailsTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['checkMorphReady', 'onFailure', 'onSuccess'],
 
@@ -15,7 +15,7 @@ window.SlidesThumbnailsTest = new Class( {
       CAPTION_TEXT : "Hellow world!",
       CONTAINER_ELEMENT_ID : "widgetContainer",
       FAST_TRANSITION : true,
-      IMAGE_FORDER: '../MediaPlayerWidget/Album/', 
+      IMAGE_FOLDER: '../MediaPlayerWidget/Album/', 
       SLIDESHOW_CLASS : "slideshow",
       SMOOTH_TRANSITION : false,
       THUMBNAIL_IMAGES : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.JPG', 'SANY0012_thumb.JPG'],
@@ -33,7 +33,7 @@ window.SlidesThumbnailsTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.constants.THUMBNAIL_IMAGES.each( function( thumbnailUri, index ){ this.thummnailImages.push( this.constants.IMAGE_FORDER + thumbnailUri ); }.bind( this ));
+      this.constants.THUMBNAIL_IMAGES.each( function( thumbnailUri, index ){ this.thummnailImages.push( this.constants.IMAGE_FOLDER + thumbnailUri ); }.bind( this ));
       this.thumbnails = new MediaPlayerThumbnailsBar( this.containerElement, this.thummnailImages, { 
          thumbnailsClass : this.constants.THUMBNAILS_CLASS,
          slideShowClass : this.constants.SLIDESHOW_CLASS });

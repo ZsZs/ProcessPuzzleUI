@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerWidget = new Class({
    Extends : BrowserWidget,
-   Implements : [AssertionBehavior, Chain, Events, Options],
+   Implements : [AssertionBehavior, Chain, Events, Options, TimeOutBehaviour],
    Binds : ['addKeyUpEventHandler', 
             'constructScreen',
             'constructCaption',
@@ -106,10 +106,10 @@ var MediaPlayerWidget = new Class({
    construct : function(){
       this.compileConstructionChain();
       
-      try{
+      try{ 
+         this.startTimeOutTimer( 'construct' );
          this.constructionChain.callChain();
-      }catch( exception ){
-         alert( "Construction exception." );
+      }catch( exception ){ alert( "Construction exception." );
       }
    },
 
