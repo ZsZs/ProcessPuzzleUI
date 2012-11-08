@@ -31,9 +31,10 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerThumbnail = new Class( {
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
-   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection'],
+   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection', 'show'],
    options : {
       componentName : 'MediaPlayerThumbnail',
+      dimensions : ['left', 'right', 'width', 'x', 'height'],
       eventDeliveryDelay : 5,
       hiddenClass : "hidden",
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
@@ -58,6 +59,7 @@ var MediaPlayerThumbnail = new Class( {
       this.index = index;
       this.listItemElement;
       this.loaded = false;
+      this.morph;
       this.thumbnailUri = thumbnailUri;
    },
    
@@ -78,16 +80,18 @@ var MediaPlayerThumbnail = new Class( {
    
    show : function( isCurrent ){
       this.isCurrent = isCurrent;
-      var morph = new Fx.Morph( this.anchorElement, this.options.morphProperties );
-      morph.start( "." + this.classes.get( 'thumbnails', this.getVisibleClass() ));
+      this.morph = new Fx.Morph( this.anchorElement, this.options.morphProperties );
+      this.morph.start( "." + this.getVisibleClass() );
    },
    
    //Properties
+   getActiveClass : function(){ return this.isCurrent ? 'active' : 'inactive'; },
+   getAnchorElement : function(){ return this.anchorElement; },
    getElement : function(){ return this.listItemElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
    getHiddenClass : function(){ return this.getElementClass() + "-" + this.options.hiddenClass; },
    getId : function(){ return this.id; },
-   getVisibleClass : function(){ return this.getElementClass() + "-" + this.isCurrent ? 'active' : 'inactive'; },
+   getVisibleClass : function(){ return this.getElementClass() + "-" + this.getActiveClass(); },
    
    //Protected, private helper methods
    compileConstructionChain: function(){

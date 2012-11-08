@@ -30,11 +30,24 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../FundamentalTypes
 
 var MediaPlayerThumbnailsBar = new Class({
-   Implements : [AssertionBehavior, Events, Options],
-   Binds : ['onMouseMove', 'onThumbnailSelected', 'scroll'],
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds : [
+      'calculateLimit',
+      'checkTimeOut',
+      'createListElement', 
+      'createThumbnailElements',
+      'createWrapperElement', 
+      'determineDimensions',
+      'finalizeConstruction',
+      'onMouseMove', 
+      'onThumbnailConstructed',
+      'onThumbnailSelected', 
+      'scroll',
+      'showThumbnails'],
    options : {
       columns : null,
       componentName : 'MediaPlayerThumbnailsBar',
+      dimensions : [],
       eventDeliveryDelay : 5,
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       position : null,
@@ -50,23 +63,28 @@ var MediaPlayerThumbnailsBar = new Class({
       this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
       this.assertThat( thumbnailImageUris, not( nil()), this.options.componentName + ".thumbnailImageUris" );
       
+      this.constructionChain = new Chain();
       this.containerElement = containerElement;
+      this.currentThumbnailIndex = 0;
       this.delay = 1000 / this.options.scrollingFrequency;
+      this.dimensions;
       this.lastMouseMoveEvent;
+      this.limit;
       this.listElement;
       this.scrollingTimer;
       this.thumbnails = new ArrayList();
+      this.thumbnailsConstructionChain = new Chain();
       this.thumbnailImageUris = thumbnailImageUris;
       this.wrapperElement;
    },
    
    //Public accessor and mutator methods
    construct : function(){
-      this.createWrapperElement();
-      this.createListElement();
-      this.createThumbnailElements();
-      this.determineProperties();
-      this.finalizeConstruction();
+      this.startTimeOutTimer( 'construct' );
+      this.compileConstructionChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }      
    },
 
    destroy : function(){
@@ -82,17 +100,59 @@ var MediaPlayerThumbnailsBar = new Class({
    getSlideThumbnails : function(){ return this.thumbnails; },
    
    //Protected, private helper methods
+   calculateLimit : function(){
+      var length = this.dimensions[2];
+      var width = this.dimensions[4];
+      var lineItemElementCoordinates = this.wrapperElement.getElement( 'li:nth-child(' + 1 + ')' ).getCoordinates();
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      var units = wrapperElementCoordinates[width] >= lineItemElementCoordinates[width] ? Math.floor( wrapperElementCoordinates[width] / lineItemElementCoordinates[width] ) : 1;
+      var x = Math.ceil( this.thumbnailImageUris.length / units );
+      var len = x * lineItemElementCoordinates[length];
+      this.listElement.setStyle( length, len );
+      //this.listElement.getElements( 'li' ).setStyles({ 'height' : lineItemElementCoordinates.height, 'width' : lineItemElementCoordinates.width });
+      
+      this.limit = wrapperElementCoordinates[length] - len;
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain : function(){
+      this.constructionChain.chain( 
+         this.createWrapperElement, 
+         this.createListElement, 
+         this.createThumbnailElements,
+         this.determineDimensions,
+         this.calculateLimit,
+         this.showThumbnails,
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
    createListElement : function(){
       this.listElement = new Element( 'ul', { 'role' : 'menu', 'styles' : { 'left' : 0, 'position' : 'absolute', 'top' : 0 }});
       this.listElement.inject( this.wrapperElement );
+      this.constructionChain.callChain();
    }.protect(),
    
    createThumbnailElements : function(){
       this.thumbnailImageUris.each( function( thumbnailUri, index ) {
-         var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, { onSelected : this.onThumbnailSelected });
-         slideThumbnail.construct();
-         this.thumbnails.add( slideThumbnail );
+         this.thumbnailsConstructionChain.chain(
+            function(){
+               var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, {
+                  dimensions : this.dimensions,
+                  onSelected : this.onThumbnailSelected 
+               });
+               slideThumbnail.construct();
+               this.thumbnails.add( slideThumbnail );
+            }.bind( this )
+         );
       }, this );
+      
+      this.thumbnailsConstructionChain.chain(
+         function(){
+            this.thumbnailsConstructionChain.clearChain();
+            this.constructionChain.callChain(); 
+         }.bind( this )
+      ).callChain();
    }.protect(),
    
    createWrapperElement : function(){
@@ -101,6 +161,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.wrapperElement.inject( this.containerElement );
       
       this.wrapperElement.addEvent( 'mousemove', this.onMouseMove );
+      this.constructionChain.callChain();
    }.protect(),
    
    destroyListElement : function(){
@@ -120,15 +181,18 @@ var MediaPlayerThumbnailsBar = new Class({
       }
    }.protect(),
    
-   determineProperties : function(){
+   determineDimensions : function(){
       var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
       if( !this.options.scroll )
          this.options.scroll = (wrapperElementCoordinates.height > wrapperElementCoordinates.width) ? 'y' : 'x';
-      this.properties = ( this.options.scroll == 'y' ) ? 'top bottom height y width'.split( ' ' ) : 'left right width x height'.split( ' ' );
+      this.dimensions = ( this.options.scroll == 'y' ) ? 'top bottom height y width'.split( ' ' ) : 'left right width x height'.split( ' ' );
+      this.constructionChain.callChain();
    }.protect(),
    
    finalizeConstruction : function(){
-      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+      this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
    }.protect(),
    
    mouseIsWithinThumbnailsArea : function( mouseMoveEvent ){
@@ -151,55 +215,26 @@ var MediaPlayerThumbnailsBar = new Class({
       }
    },
 
-   onLoad : function(i) {
-
-      if (this.wrapperElement.retrieve( 'limit' )) return;
-
-      var props = this.wrapperElement.retrieve( 'props' );
-      var options = this.options.thumbnails;
-      var length = props[2];
-      var width = props[4];
-      var li = this.wrapperElement.getElement( 'li:nth-child(' + (i + 1) + ')' ).getCoordinates();
-
-      if( options.columns || options.rows ) {
-         this.wrapperElement.setStyles({ 'height' : this.height, 'width' : this.width });
-         if( options.columns.toInt() )
-            this.wrapperElement.setStyle( 'width', li.width * options.columns.toInt() );
-         if( options.rows.toInt() )
-            this.wrapperElement.setStyle( 'height', li.height * options.rows.toInt() );
-      }
-      
-      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
-
-      if( options.position ) {
-         if( options.position.test( /bottom|top/ )) {
-            this.wrapperElement.setStyles({ 'bottom' : 'auto', 'top' : 'auto' }).setStyle( options.position, -wrapperElementCoordinates.height );
-         }
-         
-         if( options.position.test( /left|right/ )) {
-            this.wrapperElement.setStyles({ 'left' : 'auto', 'right' : 'auto' }).setStyle( options.position, -wrapperElementCoordinates.width );
-         }
-      }
-
-      var units = wrapperElementCoordinates[width] >= li[width] ? Math.floor( wrapperElementCoordinates[width] / li[width] ) : 1;
-      var x = Math.ceil( this.thumbnailImageUris.length / units );
-      var len = x * li[length];
-      var ul = this.wrapperElement.getElement( 'ul' ).setStyle( length, len );
-      ul.getElements( 'li' ).setStyles({ 'height' : li.height, 'width' : li.width });
-      
-      this.wrapperElement.store( 'limit', wrapperElementCoordinates[length] - len );
+   onThumbnailConstructed: function( thumbnail ){
+      this.thumbnailsConstructionChain.callChain();
    },
    
    onThumbnailSelected : function( thumbnail ){
    },
+   
+   revertConstruction : function( error ){
+      this.error =  error;
+      this.stopTimeOutTimer();
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
 
    scroll : function( n, fast ) {
       var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
       var listElementPosition = this.listElement.getPosition();
-      var axis = this.properties[3];
+      var axis = this.dimensions[3];
       var delta = null;
-      var pos = this.properties[0];
-      var size = this.properties[2];
+      var pos = this.dimensions[0];
+      var size = this.dimensions[2];
       var value;
       var tween = this.getElement( 'ul' ).set( 'tween', { 'property' : pos }).get( 'tween' );
       
@@ -207,10 +242,10 @@ var MediaPlayerThumbnailsBar = new Class({
          var uid = this.retrieve( 'uid' );
          var li = document.id( uid + n ).getCoordinates();
          delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (li[size] / 2) - li[pos];
-         value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.retrieve( 'limit' ), 0 );
+         value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
          tween[fast ? 'set' : 'start']( value );
       }else {
-         var area = wrapperElementCoordinates[this.properties[2]] / 3;
+         var area = wrapperElementCoordinates[this.dimensions[2]] / 3;
          var page = this.lastMouseMoveEvent.page;
          var velocity = -(this.delay * 0.01 );
          if( page[axis] < ( wrapperElementCoordinates[pos] + area ))
@@ -218,7 +253,7 @@ var MediaPlayerThumbnailsBar = new Class({
          else if( page[axis] > (wrapperElementCoordinates[pos] + wrapperElementCoordinates[size] - area ))
             delta = ( page[axis] - wrapperElementCoordinates[pos] - wrapperElementCoordinates[size] + area ) * velocity;
          if( delta ) {
-            value = ( listElementPosition[axis] - wrapperElementCoordinates[pos] + delta ).limit( this.retrieve( 'limit' ), 0 );
+            value = ( listElementPosition[axis] - wrapperElementCoordinates[pos] + delta ).limit( this.limit, 0 );
             tween.set( value );
          }
       }
@@ -227,9 +262,10 @@ var MediaPlayerThumbnailsBar = new Class({
    showThumbnails : function(){
       var delay = Math.max( 1000 / this.thumbnails.length, 100 );
       this.thumbnails.each(function( thumbnail, index ){
-         var isCurrent = this.current == index;
+         var isCurrent = this.currentThumbnailIndex == index;
          thumbnail.show.delay( delay, this, isCurrent );
       }.bind( this ));
+      this.constructionChain.callChain();
    }.protect(),
 
    update : function(fast) {
@@ -261,5 +297,10 @@ var MediaPlayerThumbnailsBar = new Class({
 
       if (!thumbnails.retrieve( 'mouseover' ))
          thumbnails.fireEvent( 'scroll', [ this._slide, fast ] );
-   }
+   },
+   
+   timeOut : function( exception ){
+      this.revertConstruction( exception );
+   }.protect()
+   
 });

@@ -6,8 +6,7 @@ window.MediaPlayerThumbnailTest = new Class( {
       testMethods : [
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
          { method : 'construct_createsElements', isAsynchron : true },
-//         { method : 'construct_createsListElement', isAsynchron : false },
-//         { method : 'construct_instantiatesSlideThumbnails', isAsynchron : false },
+         { method : 'show_startsMorph', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
@@ -65,53 +64,19 @@ window.MediaPlayerThumbnailTest = new Class( {
       ).callChain();
    },
    
-   construct_createsListElement : function() {
-      this.thumbnail.construct();
-      
-      assertThat( this.containerElement.getElement( 'div.' + this.thumbnail.getElementClass() + ' ul' ), equalTo( this.thumbnail.getListElement() ));
-   },
-   
-   construct_instantiatesSlideThumbnails : function() {
-      this.thumbnail.construct();
-      
-      assertThat( this.thumbnail.getSlideThumbnails().size(), equalTo( this.thummnailImage.length ));
-   },
-   
-   update_whenTextIsValid_appliesVisibleClass : function(){
-      this.thumbnail.construct();
-      this.thumbnail.update( this.constants.CAPTION_TEXT, this.constants.FAST_TRANSITION );
-      
-      assertThat( this.thumbnail.getCaptionElement().get( 'text' ), equalTo( this.constants.CAPTION_TEXT ));
-      assertThat( this.thumbnail.getCaptionElement().hasClass( this.thumbnail.getVisibleClass() ), is( true ));
-      assertThat( this.thumbnail.getCaptionElement().hasClass( this.thumbnail.getHiddenClass() ), is( false ));
-   },
-   
-   update_whenTextIsValidAndSmoothTransition_appliesMorph : function(){
+   show_startsMorph : function() {
       this.testCaseChain.chain(
-         function(){
-            this.thumbnail.construct();
-            this.thumbnail.update( this.constants.CAPTION_TEXT, this.constants.SMOOTH_TRANSITION );
-            
+         function(){ this.thumbnail.construct(); }.bind( this ),
+         function(){ 
+            this.thumbnail.show( true ); 
             this.timer = this.checkMorphReady.periodical( 500 );
          }.bind( this ),
          function(){
-            assertThat( this.thumbnail.morph, not( nil() ));
-            assertThat( this.thumbnail.getCaptionElement().get( 'text' ), equalTo( this.constants.CAPTION_TEXT ));
-            assertThat( this.thumbnail.getCaptionElement().getStyles( 'height', 'opacity' ), hasMember( 'height' ));
-            assertThat( this.thumbnail.getCaptionElement().getStyles( 'height', 'opacity' ), hasMember( 'opacity' ));
-            assertThat( this.thumbnail.getCaptionElement().hasClass( this.thumbnail.getHiddenClass() ), is( false ));
+            assertThat( this.thumbnail.getAnchorElement().getStyle( 'opacity' ), equalTo( 1 ));
+               
             this.testMethodReady();
          }.bind( this )
       ).callChain();
-   },
-   
-   update_whenTextIsEmpty_appliesHiddenClass : function(){
-      this.thumbnail.construct();
-      this.thumbnail.update( "", this.constants.FAST_TRANSITION );
-      
-      assertThat( this.thumbnail.getCaptionElement().get( 'text' ), equalTo( "" ));
-      assertThat( this.thumbnail.getCaptionElement().hasClass( this.thumbnail.getHiddenClass() ), is( true ));
-      assertThat( this.thumbnail.getCaptionElement().hasClass( this.thumbnail.getVisibleClass() ), is( false ));
    },
    
    destroy_removesAllCreatedElements : function(){
