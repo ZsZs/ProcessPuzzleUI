@@ -57,6 +57,7 @@ var MediaPlayerThumbnail = new Class( {
       this.imageElement;
       this.index = index;
       this.listItemElement;
+      this.loaded = false;
       this.thumbnailUri = thumbnailUri;
    },
    
@@ -75,12 +76,18 @@ var MediaPlayerThumbnail = new Class( {
       this.destroyListItemElement();
    },
    
+   show : function( isCurrent ){
+      this.isCurrent = isCurrent;
+      var morph = new Fx.Morph( this.anchorElement, this.options.morphProperties );
+      morph.start( "." + this.classes.get( 'thumbnails', this.getVisibleClass() ));
+   },
+   
    //Properties
    getElement : function(){ return this.listItemElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
    getHiddenClass : function(){ return this.getElementClass() + "-" + this.options.hiddenClass; },
    getId : function(){ return this.id; },
-   getVisibleClass : function(){ return this.getElementClass() + "-" + this.options.visibleClass; },
+   getVisibleClass : function(){ return this.getElementClass() + "-" + this.isCurrent ? 'active' : 'inactive'; },
    
    //Protected, private helper methods
    compileConstructionChain: function(){
@@ -141,6 +148,7 @@ var MediaPlayerThumbnail = new Class( {
    
    onImageLoaded : function(){
       this.imageElement.inject( this.anchorElement );
+      this.loaded = true;
       this.finalizeConstruction();
    },
 

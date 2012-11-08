@@ -55,7 +55,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.lastMouseMoveEvent;
       this.listElement;
       this.scrollingTimer;
-      this.slideThumbnails = new ArrayList();
+      this.thumbnails = new ArrayList();
       this.thumbnailImageUris = thumbnailImageUris;
       this.wrapperElement;
    },
@@ -79,7 +79,7 @@ var MediaPlayerThumbnailsBar = new Class({
    getElement : function(){ return this.wrapperElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
    getListElement : function(){ return this.listElement; },
-   getSlideThumbnails : function(){ return this.slideThumbnails; },
+   getSlideThumbnails : function(){ return this.thumbnails; },
    
    //Protected, private helper methods
    createListElement : function(){
@@ -91,7 +91,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.thumbnailImageUris.each( function( thumbnailUri, index ) {
          var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, { onSelected : this.onThumbnailSelected });
          slideThumbnail.construct();
-         this.slideThumbnails.add( slideThumbnail );
+         this.thumbnails.add( slideThumbnail );
       }, this );
    }.protect(),
    
@@ -108,7 +108,7 @@ var MediaPlayerThumbnailsBar = new Class({
    }.protect(),
 
    destroyThumnailElements : function(){
-      this.slideThumbnails.each( function( slideThumbnail, index ){
+      this.thumbnails.each( function( slideThumbnail, index ){
          slideThumbnail.destroy();
       }.bind( this ));
    }.protect(),
@@ -152,19 +152,6 @@ var MediaPlayerThumbnailsBar = new Class({
    },
 
    onLoad : function(i) {
-      var a = this.wrapperElement.getElements( 'a' )[i];
-      if( a ) {
-         (function(a) {
-            var visible = i == this.slide ? 'active' : 'inactive';
-            if (a.store) {
-               a.store( 'loaded', true );
-               var morphProperty = a.get( 'morph' );
-               morphProperty.set( this.classes.get( 'thumbnails', 'hidden' ) );
-               morphProperty.start( this.classes.get( 'thumbnails', visible ) );
-
-            }
-         }).delay( Math.max( 1000 / this.data.thumbnails.length, 100 ), this, a );
-      }
 
       if (this.wrapperElement.retrieve( 'limit' )) return;
 
@@ -204,7 +191,6 @@ var MediaPlayerThumbnailsBar = new Class({
    },
    
    onThumbnailSelected : function( thumbnail ){
-      
    },
 
    scroll : function( n, fast ) {
@@ -237,6 +223,14 @@ var MediaPlayerThumbnailsBar = new Class({
          }
       }
    },
+   
+   showThumbnails : function(){
+      var delay = Math.max( 1000 / this.thumbnails.length, 100 );
+      this.thumbnails.each(function( thumbnail, index ){
+         var isCurrent = this.current == index;
+         thumbnail.show.delay( delay, this, isCurrent );
+      }.bind( this ));
+   }.protect(),
 
    update : function(fast) {
       var thumbnails = this.thumbnails;
