@@ -1,6 +1,6 @@
 window.MediaPlayerTitleBarTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['checkMorphReady', 'onFailure', 'onSuccess'],
+   Binds : ['checkMorphReady', 'onConstructed'],
 
    options : {
       testMethods : [
@@ -32,7 +32,12 @@ window.MediaPlayerTitleBarTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.slideCaption = new MediaPlayerTitleBar( this.containerElement, { captionClass : this.constants.CAPTION_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS });
+      this.slideCaption = new MediaPlayerTitleBar( this.containerElement, { 
+         captionClass : this.constants.CAPTION_CLASS, 
+         onConstructed : this.onConstructed,
+         onConstructionError : this.onConstructionError,
+         slideShowClass : this.constants.SLIDESHOW_CLASS 
+      });
    },
    
    afterEachTest : function (){
@@ -107,11 +112,11 @@ window.MediaPlayerTitleBarTest = new Class( {
       }
    },
    
-   onSuccess : function(){
+   onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
-   onFailure : function( error ){
+   onConstructionError : function(){
       this.testCaseChain.callChain();
    }
 

@@ -1,14 +1,15 @@
 window.MediaPlayerThumbnailsTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['checkMorphReady', 'onFailure', 'onSuccess'],
+   Binds : ['checkMorphReady', 'onConstructed', 'onConstructionError'],
 
    options : {
       testMethods : [
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
-         { method : 'construct_createsWrapperElement', isAsynchron : false },
-         { method : 'construct_createsListElement', isAsynchron : false },
-         { method : 'construct_instantiatesSlideThumbnails', isAsynchron : false },
-         { method : 'destroy_removesAllCreatedElements', isAsynchron : false }],
+         { method : 'construct_createsWrapperElement', isAsynchron : true },
+         { method : 'construct_createsListElement', isAsynchron : true },
+         { method : 'construct_instantiatesSlideThumbnails', isAsynchron : true },
+         { method : 'scroll_centersGivenThumbnail', isAsynchron : true },
+         { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
    constants : {
@@ -18,7 +19,7 @@ window.MediaPlayerThumbnailsTest = new Class( {
       IMAGE_FOLDER: '../MediaPlayerWidget/Album/', 
       SLIDESHOW_CLASS : "slideshow",
       SMOOTH_TRANSITION : false,
-      THUMBNAIL_IMAGES : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.JPG', 'SANY0012_thumb.JPG'],
+      THUMBNAIL_IMAGES : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.JPG', 'SANY0012_thumb.JPG', 'SANY0022_thumb.JPG'],
       THUMBNAILS_CLASS : "thumbnails"
    },
    
@@ -35,8 +36,11 @@ window.MediaPlayerThumbnailsTest = new Class( {
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
       this.constants.THUMBNAIL_IMAGES.each( function( thumbnailUri, index ){ this.thummnailImages.push( this.constants.IMAGE_FOLDER + thumbnailUri ); }.bind( this ));
       this.thumbnails = new MediaPlayerThumbnailsBar( this.containerElement, this.thummnailImages, { 
-         thumbnailsClass : this.constants.THUMBNAILS_CLASS,
-         slideShowClass : this.constants.SLIDESHOW_CLASS });
+         onConstructed : this.onConstructed,
+         onConstructionError : this.onConstructionError,
+         slideShowClass : this.constants.SLIDESHOW_CLASS,
+         thumbnailsClass : this.constants.THUMBNAILS_CLASS
+      });
    },
    
    afterEachTest : function (){
@@ -49,67 +53,60 @@ window.MediaPlayerThumbnailsTest = new Class( {
    },
    
    construct_createsWrapperElement : function() {
-      this.thumbnails.construct();
-      
-      assertThat( this.containerElement.getElement( 'div.' + this.thumbnails.getElementClass() ), equalTo( this.thumbnails.getElement() ));
-      assertThat( this.thumbnails.getElement(), JsHamcrest.Matchers.instanceOf( Element ));
-      assertThat( this.thumbnails.getElement().hasClass( this.constants.SLIDESHOW_CLASS + "-" + this.constants.THUMBNAILS_CLASS ), is( true ));
-   },
-   
-   construct_createsListElement : function() {
-      this.thumbnails.construct();
-      
-      assertThat( this.containerElement.getElement( 'div.' + this.thumbnails.getElementClass() + ' ul' ), equalTo( this.thumbnails.getListElement() ));
-   },
-   
-   construct_instantiatesSlideThumbnails : function() {
-      this.thumbnails.construct();
-      
-      assertThat( this.thumbnails.getSlideThumbnails().size(), equalTo( this.thummnailImages.length ));
-   },
-   
-   update_whenTextIsValid_appliesVisibleClass : function(){
-      this.thumbnails.construct();
-      this.thumbnails.update( this.constants.CAPTION_TEXT, this.constants.FAST_TRANSITION );
-      
-      assertThat( this.thumbnails.getCaptionElement().get( 'text' ), equalTo( this.constants.CAPTION_TEXT ));
-      assertThat( this.thumbnails.getCaptionElement().hasClass( this.thumbnails.getVisibleClass() ), is( true ));
-      assertThat( this.thumbnails.getCaptionElement().hasClass( this.thumbnails.getHiddenClass() ), is( false ));
-   },
-   
-   update_whenTextIsValidAndSmoothTransition_appliesMorph : function(){
       this.testCaseChain.chain(
+         function(){ this.thumbnails.construct(); }.bind( this ),
          function(){
-            this.thumbnails.construct();
-            this.thumbnails.update( this.constants.CAPTION_TEXT, this.constants.SMOOTH_TRANSITION );
-            
-            this.timer = this.checkMorphReady.periodical( 500 );
-         }.bind( this ),
-         function(){
-            assertThat( this.thumbnails.morph, not( nil() ));
-            assertThat( this.thumbnails.getCaptionElement().get( 'text' ), equalTo( this.constants.CAPTION_TEXT ));
-            assertThat( this.thumbnails.getCaptionElement().getStyles( 'height', 'opacity' ), hasMember( 'height' ));
-            assertThat( this.thumbnails.getCaptionElement().getStyles( 'height', 'opacity' ), hasMember( 'opacity' ));
-            assertThat( this.thumbnails.getCaptionElement().hasClass( this.thumbnails.getHiddenClass() ), is( false ));
+            assertThat( this.containerElement.getElement( 'div.' + this.thumbnails.getElementClass() ), equalTo( this.thumbnails.getElement() ));
+            assertThat( this.thumbnails.getElement(), JsHamcrest.Matchers.instanceOf( Element ));
+            assertThat( this.thumbnails.getElement().hasClass( this.constants.SLIDESHOW_CLASS + "-" + this.constants.THUMBNAILS_CLASS ), is( true ));
+                  
             this.testMethodReady();
          }.bind( this )
       ).callChain();
    },
    
-   update_whenTextIsEmpty_appliesHiddenClass : function(){
-      this.thumbnails.construct();
-      this.thumbnails.update( "", this.constants.FAST_TRANSITION );
+   construct_createsListElement : function() {
+      this.testCaseChain.chain(
+         function(){ this.thumbnails.construct(); }.bind( this ),
+         function(){
+            assertThat( this.containerElement.getElement( 'div.' + this.thumbnails.getElementClass() + ' ul' ), equalTo( this.thumbnails.getListElement() ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   construct_instantiatesSlideThumbnails : function() {
+      this.testCaseChain.chain(
+         function(){ this.thumbnails.construct(); }.bind( this ),
+         function(){
+            assertThat( this.thumbnails.getSlideThumbnails().size(), equalTo( this.thummnailImages.length ));
+
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
+   },
+   
+   scroll_centersGivenThumbnail : function(){
+      this.testCaseChain.chain(
+         function(){ this.thumbnails.construct(); }.bind( this ),
+         function(){
+            this.thumbnails.scroll( 3 );
       
-      assertThat( this.thumbnails.getCaptionElement().get( 'text' ), equalTo( "" ));
-      assertThat( this.thumbnails.getCaptionElement().hasClass( this.thumbnails.getHiddenClass() ), is( true ));
-      assertThat( this.thumbnails.getCaptionElement().hasClass( this.thumbnails.getVisibleClass() ), is( false ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    destroy_removesAllCreatedElements : function(){
-      this.thumbnails.construct();
-      this.thumbnails.destroy();
+      this.testCaseChain.chain(
+         function(){ this.thumbnails.construct(); }.bind( this ),
+         function(){
+            this.thumbnails.destroy();
       
-      assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    //Protected, private helper methods
@@ -120,12 +117,12 @@ window.MediaPlayerThumbnailsTest = new Class( {
       }
    },
    
-   onSuccess : function(){
+   onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
-   onFailure : function( error ){
+   onConstructionError : function(){
       this.testCaseChain.callChain();
-   }
+   }   
 
 });

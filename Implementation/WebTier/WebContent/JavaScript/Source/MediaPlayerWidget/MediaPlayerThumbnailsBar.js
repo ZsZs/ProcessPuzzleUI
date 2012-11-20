@@ -139,6 +139,7 @@ var MediaPlayerThumbnailsBar = new Class({
             function(){
                var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, {
                   dimensions : this.dimensions,
+                  onConstructed : this.onThumbnailConstructed,
                   onSelected : this.onThumbnailSelected 
                });
                slideThumbnail.construct();
