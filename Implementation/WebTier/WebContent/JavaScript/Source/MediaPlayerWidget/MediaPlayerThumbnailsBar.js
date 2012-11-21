@@ -49,7 +49,7 @@ var MediaPlayerThumbnailsBar = new Class({
       componentName : 'MediaPlayerThumbnailsBar',
       dimensions : [],
       eventDeliveryDelay : 5,
-      morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
+      tweenProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       position : null,
       rows : null,
       scroll : null,
@@ -75,6 +75,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.thumbnails = new ArrayList();
       this.thumbnailsConstructionChain = new Chain();
       this.thumbnailImageUris = thumbnailImageUris;
+      this.tween;
       this.wrapperElement;
    },
    
@@ -237,14 +238,14 @@ var MediaPlayerThumbnailsBar = new Class({
       var pos = this.dimensions[0];
       var size = this.dimensions[2];
       var value;
-      var tween = this.getElement( 'ul' ).set( 'tween', { 'property' : pos }).get( 'tween' );
       
       if( n != undefined ) {
-         var uid = this.retrieve( 'uid' );
-         var li = document.id( uid + n ).getCoordinates();
-         delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (li[size] / 2) - li[pos];
+         var thumbnailCoordinates = this.thumbnails.get( n ).getCoordinates();
+         delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (thumbnailCoordinates[size] / 2) - thumbnailCoordinates[pos];
          value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
-         tween[fast ? 'set' : 'start']( value );
+         this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
+         if( fast ) this.tween.set( value );
+         else this.tween.start( value );
       }else {
          var area = wrapperElementCoordinates[this.dimensions[2]] / 3;
          var page = this.lastMouseMoveEvent.page;

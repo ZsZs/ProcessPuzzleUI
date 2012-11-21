@@ -8,7 +8,7 @@ window.MediaPlayerThumbnailsTest = new Class( {
          { method : 'construct_createsWrapperElement', isAsynchron : true },
          { method : 'construct_createsListElement', isAsynchron : true },
          { method : 'construct_instantiatesSlideThumbnails', isAsynchron : true },
-         { method : 'scroll_centersGivenThumbnail', isAsynchron : true },
+         { method : 'scroll_shiftsThumbnailsBar', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
@@ -86,12 +86,16 @@ window.MediaPlayerThumbnailsTest = new Class( {
       ).callChain();
    },
    
-   scroll_centersGivenThumbnail : function(){
+   scroll_shiftsThumbnailsBar : function(){
       this.testCaseChain.chain(
          function(){ this.thumbnails.construct(); }.bind( this ),
          function(){
-            this.thumbnails.scroll( 3 );
-      
+            this.thumbnails.scroll( 3, true );
+            this.timer = this.checkMorphReady.periodical( 500 );
+         }.bind( this ),
+         function(){
+            assertThat( Math.abs( parseInt( this.thumbnails.getListElement().getStyle( 'left' ))), greaterThan( 0 ));
+            
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -111,7 +115,7 @@ window.MediaPlayerThumbnailsTest = new Class( {
    
    //Protected, private helper methods
    checkMorphReady : function(){
-      if( !this.thumbnails.morph.isRunning() ){
+      if( !this.thumbnails.tween.isRunning() ){
          clearInterval( this.timer );
          this.testCaseChain.callChain();
       }

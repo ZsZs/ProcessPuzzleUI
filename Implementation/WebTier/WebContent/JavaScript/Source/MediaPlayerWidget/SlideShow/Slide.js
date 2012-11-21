@@ -38,6 +38,7 @@ var Slide = new Class({
       captionSelector : "sh:caption",
       componentName : "Slide",
       linkSelector : "sh:link",
+      index : 1,
       thumbnailSelector : "sh:thumbnailUri",
       uriSelector : "sh:uri"
    },
@@ -81,6 +82,7 @@ var Slide = new Class({
    //Properties
    getCaption: function() { return this.caption; },
    getElement : function(){ return this.anchorElement; },
+   getIndex : function(){ return this.options.index; },
    getLink: function() { return this.link; },
    getState: function() { return this.state; },
    getThumbnailUri: function() { return this.thumbnailUri; },

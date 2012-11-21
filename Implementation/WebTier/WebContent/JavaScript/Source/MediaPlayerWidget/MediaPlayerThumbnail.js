@@ -87,6 +87,7 @@ var MediaPlayerThumbnail = new Class( {
    //Properties
    getActiveClass : function(){ return this.isCurrent ? 'active' : 'inactive'; },
    getAnchorElement : function(){ return this.anchorElement; },
+   getCoordinates : function(){ return this.getElement().getCoordinates(); },
    getElement : function(){ return this.listItemElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
    getHiddenClass : function(){ return this.getElementClass() + "-" + this.options.hiddenClass; },

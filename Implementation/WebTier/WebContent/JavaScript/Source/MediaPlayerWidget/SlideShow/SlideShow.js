@@ -282,7 +282,7 @@ var SlideShow = new Class({
       var imagesElement = this.mediaDefinitionXml.selectNodes( this.options.imagesSelector );
       if( imagesElement ){
          imagesElement.each( function( imageElement, index ){
-            var image = new Slide( imageElement, this.internationalization );
+            var image = new Slide( imageElement, this.internationalization, { index : index } );
             image.unmarshall();
             this.slides.put( image.getUri(), image );
          }, this );
@@ -320,7 +320,7 @@ var SlideShow = new Class({
    }.protect(),
    
    updateDisplyeWithCurrentSlide : function(){
-      var imageData = { imageUri: this.imageFolderUri + this.currentSlide.getUri(), thumbnailIndex: 1, title: this.currentSlide.getCaption() };
+      var imageData = { imageUri: this.imageFolderUri + this.currentSlide.getUri(), thumbnailIndex: this.currentSlide.getIndex(), title: this.currentSlide.getCaption() };
       this.fireEvent( 'updateDisplay', imageData );
    }.protect()
 });
