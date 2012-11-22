@@ -8,7 +8,7 @@ window.MediaPlayerThumbnailsTest = new Class( {
          { method : 'construct_createsWrapperElement', isAsynchron : true },
          { method : 'construct_createsListElement', isAsynchron : true },
          { method : 'construct_instantiatesSlideThumbnails', isAsynchron : true },
-         { method : 'scroll_shiftsThumbnailsBar', isAsynchron : true },
+         { method : 'update_scrollsThumbnailsBarAndHandlesActivation', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
@@ -86,11 +86,11 @@ window.MediaPlayerThumbnailsTest = new Class( {
       ).callChain();
    },
    
-   scroll_shiftsThumbnailsBar : function(){
+   update_scrollsThumbnailsBarAndHandlesActivation : function(){
       this.testCaseChain.chain(
          function(){ this.thumbnails.construct(); }.bind( this ),
          function(){
-            this.thumbnails.scroll( 3, true );
+            this.thumbnails.update( 3 );
             this.timer = this.checkMorphReady.periodical( 500 );
          }.bind( this ),
          function(){

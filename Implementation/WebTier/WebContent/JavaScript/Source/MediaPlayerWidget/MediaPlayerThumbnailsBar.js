@@ -43,19 +43,20 @@ var MediaPlayerThumbnailsBar = new Class({
       'onThumbnailConstructed',
       'onThumbnailSelected', 
       'scroll',
-      'showThumbnails'],
+      'updateThumbnails'],
    options : {
       columns : null,
       componentName : 'MediaPlayerThumbnailsBar',
       dimensions : [],
       eventDeliveryDelay : 5,
-      tweenProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
+      fastTransformation : false,
       position : null,
       rows : null,
       scroll : null,
       scrollingFrequency : 1000,
       slideShowClass : "slideshow",
-      thumbnailsClass : "thumbnails"
+      thumbnailsClass : "thumbnails",
+      tweenProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false }
    },
 
    initialize : function( containerElement, thumbnailImageUris, options ) {
@@ -94,6 +95,12 @@ var MediaPlayerThumbnailsBar = new Class({
       this.destroyWrapperElement();
    },
    
+   update : function( slideIndex ){
+      this.currentThumbnailIndex = slideIndex;
+      this.updateThumbnails();
+      this.scroll();
+   },
+   
    //Properties
    getElement : function(){ return this.wrapperElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
@@ -123,7 +130,7 @@ var MediaPlayerThumbnailsBar = new Class({
          this.createThumbnailElements,
          this.determineDimensions,
          this.calculateLimit,
-         this.showThumbnails,
+         this.updateThumbnails,
          this.finalizeConstruction
       );
    }.protect(),
@@ -140,6 +147,7 @@ var MediaPlayerThumbnailsBar = new Class({
             function(){
                var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, {
                   dimensions : this.dimensions,
+                  fastTransformation : this.options.fastTransformation,
                   onConstructed : this.onThumbnailConstructed,
                   onSelected : this.onThumbnailSelected 
                });
@@ -230,7 +238,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
-   scroll : function( n, fast ) {
+   scroll : function() {
       var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
       var listElementPosition = this.listElement.getPosition();
       var axis = this.dimensions[3];
@@ -239,12 +247,12 @@ var MediaPlayerThumbnailsBar = new Class({
       var size = this.dimensions[2];
       var value;
       
-      if( n != undefined ) {
-         var thumbnailCoordinates = this.thumbnails.get( n ).getCoordinates();
+      if( this.currentThumbnailIndex != undefined ) {
+         var thumbnailCoordinates = this.thumbnails.get( this.currentThumbnailIndex ).getCoordinates();
          delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (thumbnailCoordinates[size] / 2) - thumbnailCoordinates[pos];
          value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
          this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
-         if( fast ) this.tween.set( value );
+         if( this.options.fastTransformation ) this.tween.set( value );
          else this.tween.start( value );
       }else {
          var area = wrapperElementCoordinates[this.dimensions[2]] / 3;
@@ -259,48 +267,17 @@ var MediaPlayerThumbnailsBar = new Class({
             tween.set( value );
          }
       }
-   },
+   }.protect(),
    
-   showThumbnails : function(){
+   updateThumbnails : function(){
       var delay = Math.max( 1000 / this.thumbnails.length, 100 );
       this.thumbnails.each(function( thumbnail, index ){
          var isCurrent = this.currentThumbnailIndex == index;
-         thumbnail.show.delay( delay, this, isCurrent );
+         thumbnail.update.delay( delay, this, isCurrent );
       }.bind( this ));
       this.constructionChain.callChain();
    }.protect(),
 
-   update : function(fast) {
-      var thumbnails = this.thumbnails;
-      //var uid = thumbnails.retrieve( 'uid' );
-      thumbnails.getElements( 'a' ).each( function(a, i) {
-         if (a.retrieve( 'loaded' )) {
-            if (a.retrieve( 'uid' ) == this._slide) {
-               if (!a.retrieve( 'active', false )) {
-                  a.store( 'active', true );
-                  var active = this.classes.get( 'thumbnails', 'active' );
-                  if (fast)
-                     a.get( 'morph' ).set( active );
-                  else
-                     a.morph( active );
-               }
-            } else {
-               if (a.retrieve( 'active', true )) {
-                  a.store( 'active', false );
-                  var inactive = this.classes.get( 'thumbnails', 'inactive' );
-                  if (fast)
-                     a.get( 'morph' ).set( inactive );
-                  else
-                     a.morph( inactive );
-               }
-            }
-         }
-      }, this );
-
-      if (!thumbnails.retrieve( 'mouseover' ))
-         thumbnails.fireEvent( 'scroll', [ this._slide, fast ] );
-   },
-   
    timeOut : function( exception ){
       this.revertConstruction( exception );
    }.protect()

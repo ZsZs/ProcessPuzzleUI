@@ -126,7 +126,7 @@ var MediaPlayerDisplay = new Class({
 
    onUpdateDisplay : function( imageData ){
       this.screen.update( imageData.imageUri );
-      this.thumbnailsBar.scroll( imageData.thumbnailIndex );
+      this.thumbnailsBar.update( imageData.thumbnailIndex );
       this.titleBar.update( imageData.title, false );
    },
    

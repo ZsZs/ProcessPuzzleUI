@@ -31,11 +31,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerThumbnail = new Class( {
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
-   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection', 'show'],
+   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection', 'update'],
    options : {
       componentName : 'MediaPlayerThumbnail',
       dimensions : ['left', 'right', 'width', 'x', 'height'],
       eventDeliveryDelay : 5,
+      fastTransformation : false,
       hiddenClass : "hidden",
       morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
       slideShowClass : "slideshow",
@@ -78,7 +79,7 @@ var MediaPlayerThumbnail = new Class( {
       this.destroyListItemElement();
    },
    
-   show : function( isCurrent ){
+   update : function( isCurrent ){
       this.isCurrent = isCurrent;
       this.morph = new Fx.Morph( this.anchorElement, this.options.morphProperties );
       this.morph.start( "." + this.getVisibleClass() );
