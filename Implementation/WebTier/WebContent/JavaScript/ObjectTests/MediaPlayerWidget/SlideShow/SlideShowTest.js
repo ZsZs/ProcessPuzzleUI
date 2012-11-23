@@ -1,4 +1,4 @@
-window.MediaPlayerWidgetTest = new Class( {
+window.SlideShowTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
@@ -62,7 +62,7 @@ window.MediaPlayerWidgetTest = new Class( {
       assertThat( this.slideshow.getFirstSlide(), equalTo( parseInt( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:firstSlide' ))));
       assertThat( this.slideshow.getGaleryLink(), equalTo( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:galeryLink' )));
       assertThat( this.slideshow.getHeight(), equalTo( parseInt( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:height' ))));
-      assertThat( this.slideshow.getImageFolderUri(), equalTo( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:imageFolderUri' )));
+      assertThat( this.slideshow.getImageFolderUri(), equalTo( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:imageFolderUri' ) + '/' ));
       assertThat( this.slideshow.getLoopShow(), equalTo( parseBoolean( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:loopShow' ))));
       assertThat( this.slideshow.getOverlapImages(), equalTo( parseBoolean( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:overlapImages' ))));
       assertThat( this.slideshow.getResizeImages(), equalTo( parseBoolean( this.slideshowData.selectNodeText( '/sh:slideShow/sh:properties/sh:resizeImages' ))));

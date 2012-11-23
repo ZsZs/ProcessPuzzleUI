@@ -50,7 +50,7 @@ window.SlideTest = new Class( {
    },
    
    afterEachTest : function (){
-      this.slide.destroy();
+      this.slide.release();
    },
    
    initialize_whenDefinitionElementIsUndefined_throwsAssertionException : function() {

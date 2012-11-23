@@ -178,7 +178,7 @@ var SlideShow = new Class({
    
    release: function(){
       this.stop();
-      this.destroySlides();
+      this.releaseSlides();
    },
    
    start: function(){
@@ -254,10 +254,10 @@ var SlideShow = new Class({
       else this.destructionChain.callChain();
    }.protect(),
    
-   destroySlides: function(){
+   releaseSlides: function(){
       this.slides.each( function( slideEntry, index ){
          var slide = slideEntry.getValue();
-         slide.destroy();
+         slide.release();
       }.bind( this ));
       this.slides.clear();
    }.protect(),

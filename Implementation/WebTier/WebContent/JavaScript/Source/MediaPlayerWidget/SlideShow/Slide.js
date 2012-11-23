@@ -61,17 +61,16 @@ var Slide = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
-      this.destroyElements();
+   equals: function( obj ){
+      if( !(typeOf( this ) === typeOf( obj ))) return false;
+      return this.uri == obj.uri;
+   },
+   
+   release: function(){
       this.link = null;
       this.thumbnailUri = null;
       this.uri = null;
       this.state = Slide.States.INITIALIZED;
-   },
-   
-   equals: function( obj ){
-      if( !(typeOf( this ) === typeOf( obj ))) return false;
-      return this.uri == obj.uri;
    },
    
    unmarshall: function(){
