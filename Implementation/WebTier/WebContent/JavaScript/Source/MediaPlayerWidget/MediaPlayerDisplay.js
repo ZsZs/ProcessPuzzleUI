@@ -48,10 +48,12 @@ var MediaPlayerDisplay = new Class({
       'finalizeDestruction',
       'onComponentConstructed', 
       'onComponentDestructed',
+      'onComponentUpdated',
       'onMediaBackward',
       'onMediaBeginning',
       'onMediaEnd',
       'onMediaForward',
+      'onMediaPosition',
       'onMediaStart',
       'onMediaStop',
       'onUpdateDisplay'],
@@ -100,6 +102,10 @@ var MediaPlayerDisplay = new Class({
       this.destructionChain.callChain();
    },
    
+   onComponentUpdated : function( component ){
+      this.fireEvent( 'updated' );
+   },
+   
    onMediaBackward : function(){
       this.media.backward();
    },
@@ -114,6 +120,10 @@ var MediaPlayerDisplay = new Class({
 
    onMediaForward : function(){
       this.media.forward();
+   },
+
+   onMediaPosition : function( position ){
+      this.media.position( position );
    },
 
    onMediaStart : function(){
@@ -175,14 +185,20 @@ var MediaPlayerDisplay = new Class({
    }.protect(),
    
    constructScreen: function(){
-      this.screen = new MediaPlayerScreen( this.containerElement, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
+      this.screen = new MediaPlayerScreen( this.containerElement, { 
+         onConstructed : this.onComponentConstructed, 
+         onDestroyed : this.onComponentDestroyed, 
+         onUpdated : this.onComponentUpdated,
+      });
       this.screen.construct();
    }.protect(),
    
    constructThumbnailsBar: function(){
       this.thumbnailsBar = new MediaPlayerThumbnailsBar( this.containerElement, this.media.getThumbnailsUri(), { 
          onConstructed : this.onComponentConstructed, 
-         onDestroyed : this.onComponentDestroyed });
+         onDestroyed : this.onComponentDestroyed,
+         onMediaPosition : this.onMediaPosition
+      });
       this.thumbnailsBar.construct();
    }.protect(),
    
@@ -214,6 +230,7 @@ var MediaPlayerDisplay = new Class({
    finalizeConstruction : function(){
       this.constructionChain.clearChain();
       this.stopTimeOutTimer();
+      this.media.prepare();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    

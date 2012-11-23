@@ -1,6 +1,6 @@
 window.MediaPlayerDisplayTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onUpdated'],
 
    options : {
       testMethods : [
@@ -34,7 +34,9 @@ window.MediaPlayerDisplayTest = new Class( {
       this.display = new MediaPlayerDisplay( this.containerElement, this.media, { 
          onConstructed : this.onConstructed, 
          onConstructionError : this.onConstructionError, 
-         onDestroyed : this.onDestroyed });
+         onDestroyed : this.onDestroyed,
+         onUpdated : this.onUpdated
+      });
    },
    
    afterEachTest : function (){
@@ -76,7 +78,8 @@ window.MediaPlayerDisplayTest = new Class( {
          }.bind( this ),
          function(){
             this.display.onUpdateDisplay({ imageUri: this.constants.IMAGE_URI, thumbnailIndex: 1, title: this.constants.IMAGE_TITLE });
-            
+         }.bind( this ),
+         function(){
             assertThat( this.containerElement.getElement( 'img' ).get( 'src' ), equalTo( this.constants.IMAGE_URI ));
             assertThat( this.containerElement.getElement( 'div.slideshow-captions' ).get( 'text' ), equalTo( this.constants.IMAGE_TITLE ));
             this.testMethodReady();
@@ -110,6 +113,10 @@ window.MediaPlayerDisplayTest = new Class( {
    },
    
    onDestroyed : function( error ){
+      this.testCaseChain.callChain();
+   },
+
+   onUpdated : function(){
       this.testCaseChain.callChain();
    }
 

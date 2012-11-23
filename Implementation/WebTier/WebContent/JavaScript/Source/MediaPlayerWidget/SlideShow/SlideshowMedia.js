@@ -446,13 +446,6 @@ var MediaPlayerWidget = new Class({
       }
    }.protect(),
 
-   _resize : function(img) {
-      var h = img.get( 'height' ).toFloat(), w = img.get( 'width' ).toFloat(), dh = this.height / h, dw = this.width / w;
-      if( this.options.resize == 'fit') dh = dw = dh > dw ? dw : dh;
-      if( this.options.resize == 'fill') dh = dw = dh > dw ? dh : dw;
-      img.set( 'styles', { 'height' : Math.ceil( h * dh ), 'width' : Math.ceil( w * dw ) });
-   }.protect(),
-   
    setUp : function(){
       this.doubleDurationWhenNoOverlap();
       this.appendSlashToImageFolder();

@@ -93,6 +93,7 @@ var MediaPlayerThumbnail = new Class( {
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
    getHiddenClass : function(){ return this.getElementClass() + "-" + this.options.hiddenClass; },
    getId : function(){ return this.id; },
+   getIndex : function(){ return this.index; },
    getVisibleClass : function(){ return this.getElementClass() + "-" + this.getActiveClass(); },
    
    //Protected, private helper methods

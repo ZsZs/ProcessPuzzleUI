@@ -165,6 +165,17 @@ var SlideShow = new Class({
       this.updateDisplyeWithCurrentSlide();
    },
    
+   position: function( position ){
+      this.slides.each( function( slideEntry, index ){
+         if( index == position ) this.currentSlide = slideEntry.getValue();
+      }.bind( this ));
+      this.updateDisplyeWithCurrentSlide();
+   },
+   
+   prepare: function(){
+      this.position( this.options.firstSlideDefault );
+   },
+   
    release: function(){
       this.stop();
       this.destroySlides();

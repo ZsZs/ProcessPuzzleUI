@@ -32,11 +32,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerScreen = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds: [],
+   Binds: ['onImageLoaded'],
    
    options : {
       eventDeliveryDelay : 5,
       height: 300,
+      resize : 'fill',
       screenClass: 'images',
       slideShowClass: 'slideshow',
       width: 450
@@ -71,8 +72,8 @@ var MediaPlayerScreen = new Class({
    },
    
    update: function( imageUri ){
-      if( this.anchorElement ) this.destroyImageElements();
-      this.createImageElements( imageUri );
+      if( this.imageElement ) this.imageElement.destroy();
+      this.createImageElement( imageUri );
    },
    
    //Properties
@@ -80,14 +81,10 @@ var MediaPlayerScreen = new Class({
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.screenClass; },
    
    //Protected, private helper methods
-   createImageElements : function( imageUri ){
-      this.anchorElement = new Element( 'a' );
-      this.anchorElement.inject( this.screenElement );
-      
-      this.imageElement = new Element( 'img' );
-      this.imageElement.set( 'src', imageUri );
-      this.imageElement.inject( this.anchorElement );
-      
+   createImageElement : function( imageUri ){
+      this.imageElement = new Asset.image( imageUri, {
+         'onload' : this.onImageLoaded
+      });
    }.protect(),
    
    createScreenElement : function(){
@@ -97,6 +94,9 @@ var MediaPlayerScreen = new Class({
       this.height = this.options.height || this.screenElement.getSize().y;
       this.width = this.options.width || this.screenElement.getSize().x;
       this.screenElement.setStyles({ 'height' : this.height, 'width' : this.width });
+      
+      this.anchorElement = new Element( 'a' );
+      this.anchorElement.inject( this.screenElement );
    }.protect(),
    
    destroyImageElements : function(){
@@ -112,6 +112,23 @@ var MediaPlayerScreen = new Class({
    
    finalizeConstruction : function(){
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   finalizeUpdate : function(){
+      this.fireEvent( 'updated', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   onImageLoaded : function(){
+      this.imageElement.inject( this.anchorElement );
+      this.resizeImage( this.imageElement );
+      this.finalizeUpdate();
+   },
+   
+   resizeImage : function(img) {
+      var h = img.get( 'height' ).toFloat(), w = img.get( 'width' ).toFloat(), dh = this.height / h, dw = this.width / w;
+      if( this.options.resize == 'fit') dh = dw = dh > dw ? dw : dh;
+      if( this.options.resize == 'fill') dh = dw = dh > dw ? dh : dw;
+      img.set( 'styles', { 'height' : Math.ceil( h * dh ), 'width' : Math.ceil( w * dw ) });
    }.protect()
    
 });

@@ -71,6 +71,10 @@ var Media = new Class({
       //Abstract method, should be overwritten.
    },
    
+   prepare: function(){
+      //Abstract method, should be overwritten.
+   },
+   
    relase: function(){
       //Abstract method, should be overwritten.
    },

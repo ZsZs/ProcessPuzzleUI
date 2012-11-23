@@ -98,7 +98,7 @@ var MediaPlayerThumbnailsBar = new Class({
    update : function( slideIndex ){
       this.currentThumbnailIndex = slideIndex;
       this.updateThumbnails();
-      this.scroll();
+      this.scrollToCurrent();
    },
    
    //Properties
@@ -217,7 +217,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.lastMouseMoveEvent = mouseMoveEvent;
       if( this.mouseIsWithinThumbnailsArea( mouseMoveEvent )) {
          if( !this.scrollingTimer ) {
-            this.scrollingTimer = this.scroll.periodical( this.options.scrollingFrequency );
+            this.scrollingTimer = this.scroll.periodical( this.options.scrollingFrequency / this.options.tweenProperties.fps );
          }
       }else {
          clearTimeout( this.scrollingTimer );
@@ -230,6 +230,7 @@ var MediaPlayerThumbnailsBar = new Class({
    },
    
    onThumbnailSelected : function( thumbnail ){
+      this.fireEvent( 'mediaPosition', thumbnail.getIndex() );
    },
    
    revertConstruction : function( error ){
@@ -247,26 +248,35 @@ var MediaPlayerThumbnailsBar = new Class({
       var size = this.dimensions[2];
       var value;
       
-      if( this.currentThumbnailIndex != undefined ) {
-         var thumbnailCoordinates = this.thumbnails.get( this.currentThumbnailIndex ).getCoordinates();
-         delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (thumbnailCoordinates[size] / 2) - thumbnailCoordinates[pos];
-         value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
+      var area = wrapperElementCoordinates[this.dimensions[2]] / 3;
+      var page = this.lastMouseMoveEvent.page;
+      var velocity = -(this.delay * 0.01 );
+      if( page[axis] < ( wrapperElementCoordinates[pos] + area ))
+         delta = ( page[axis] - wrapperElementCoordinates[pos] - area ) * velocity;
+      else if( page[axis] > (wrapperElementCoordinates[pos] + wrapperElementCoordinates[size] - area ))
+         delta = ( page[axis] - wrapperElementCoordinates[pos] - wrapperElementCoordinates[size] + area ) * velocity;
+      if( delta ) {
+         value = ( listElementPosition[axis] - wrapperElementCoordinates[pos] + delta ).limit( this.limit, 0 );
          this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
-         if( this.options.fastTransformation ) this.tween.set( value );
-         else this.tween.start( value );
-      }else {
-         var area = wrapperElementCoordinates[this.dimensions[2]] / 3;
-         var page = this.lastMouseMoveEvent.page;
-         var velocity = -(this.delay * 0.01 );
-         if( page[axis] < ( wrapperElementCoordinates[pos] + area ))
-            delta = ( page[axis] - wrapperElementCoordinates[pos] - area ) * velocity;
-         else if( page[axis] > (wrapperElementCoordinates[pos] + wrapperElementCoordinates[size] - area ))
-            delta = ( page[axis] - wrapperElementCoordinates[pos] - wrapperElementCoordinates[size] + area ) * velocity;
-         if( delta ) {
-            value = ( listElementPosition[axis] - wrapperElementCoordinates[pos] + delta ).limit( this.limit, 0 );
-            tween.set( value );
-         }
+         this.tween.set( value );
       }
+   },
+   
+   scrollToCurrent : function(){
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      var listElementPosition = this.listElement.getPosition();
+      var axis = this.dimensions[3];
+      var delta = null;
+      var pos = this.dimensions[0];
+      var size = this.dimensions[2];
+      var value;
+      
+      var thumbnailCoordinates = this.thumbnails.get( this.currentThumbnailIndex ).getCoordinates();
+      delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (thumbnailCoordinates[size] / 2) - thumbnailCoordinates[pos];
+      value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
+      this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
+      if( this.options.fastTransformation ) this.tween.set( value );
+      else this.tween.start( value );
    }.protect(),
    
    updateThumbnails : function(){
