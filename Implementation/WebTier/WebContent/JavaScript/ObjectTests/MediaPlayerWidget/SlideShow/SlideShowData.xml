@@ -3,7 +3,7 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns="http://www.w3.org/1999/xhtml"
    xmlns:sh="http://www.processpuzzle.com/SlideShow" 
-   xsi:schemaLocation="http://www.processpuzzle.com/SlideShow http://processpuzzle.com/Schemas/SlideShow.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com/SlideShow http://www.processpuzzle.com/Schemas/SlideShow.xsd">
    
    <sh:name>Pura Vida Costa Rica</sh:name>
    <sh:description>Photos from Costa Rica.</sh:description>
