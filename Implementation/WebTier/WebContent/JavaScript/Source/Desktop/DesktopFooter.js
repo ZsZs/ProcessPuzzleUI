@@ -50,10 +50,9 @@ var DesktopFooter = new Class({
    
    unmarshall: function(){
       this.parent();
-      this.footerId = this.document.getBody().elements.first().getId();
    },
 
    //Properties
    getId: function() { return this.document.getBody().getId(); },
-   getFooterId: function() { return this.footerId; }
+   getFooterId: function() { return this.document.getBody().elements.first().getId(); }
 });
