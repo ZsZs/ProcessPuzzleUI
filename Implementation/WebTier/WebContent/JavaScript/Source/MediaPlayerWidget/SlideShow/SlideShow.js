@@ -128,19 +128,19 @@ var SlideShow = new Class({
 
       if( !this.currentSlide && this.loopShow ) this.currentSlide = this.slides.first();
       
-      if( !previousSlide || !previousSlide.equals( this.currentSlide )) this.updateDisplyeWithCurrentSlide();
+      if( !previousSlide || !previousSlide.equals( this.currentSlide )) this.updateDisplayWithCurrentSlide();
       else this.stop();
    },
    
    backward: function(){
       this.currentSlide = this.slides.previous( this.currentSlide.getUri() );
       if( !this.currentSlide ) this.currentSlide = this.slides.first();
-      this.updateDisplyeWithCurrentSlide();
+      this.updateDisplayWithCurrentSlide();
    },
    
    beginning: function(){
       this.currentSlide = this.slides.first();
-      this.updateDisplyeWithCurrentSlide();
+      this.updateDisplayWithCurrentSlide();
    },
    
    collectThumbnailUris : function(){
@@ -169,7 +169,7 @@ var SlideShow = new Class({
       this.slides.each( function( slideEntry, index ){
          if( index == position ) this.currentSlide = slideEntry.getValue();
       }.bind( this ));
-      this.updateDisplyeWithCurrentSlide();
+      this.updateDisplayWithCurrentSlide();
    },
    
    prepare: function(){
@@ -330,7 +330,7 @@ var SlideShow = new Class({
       else return defaultValue;
    }.protect(),
    
-   updateDisplyeWithCurrentSlide : function(){
+   updateDisplayWithCurrentSlide : function(){
       var imageData = { imageUri: this.imageFolderUri + this.currentSlide.getUri(), thumbnailIndex: this.currentSlide.getIndex(), title: this.currentSlide.getCaption() };
       this.fireEvent( 'updateDisplay', imageData );
    }.protect()
