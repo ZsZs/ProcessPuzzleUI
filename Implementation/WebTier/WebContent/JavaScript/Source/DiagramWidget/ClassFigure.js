@@ -34,11 +34,12 @@ You should have received a copy of the GNU General Public License along with thi
 var ClassFigure = new Class({
    Extends : DiagramFigure,
    Implements : [Events, Options],
-   Binds: ['instantiateDraw2dObject', 'drawAttributes'],
+   Binds: ['instantiateDraw2dObject', 'drawAttributes', 'drawOperations'],
    
    options : {
       attributesSelector : "uml:attributes/uml:attribute",
-      componentName : "ClassFigure"
+      componentName : "ClassFigure",
+      operationsSelector : "uml:operations/uml:operation",
    },
 
    //Constructor
@@ -46,6 +47,7 @@ var ClassFigure = new Class({
       this.parent( definition, internationalization, options );
       
       this.attributes = new ArrayList();
+      this.operations = new ArrayList();
    },
    
    //Public accessor and mutator methods
@@ -59,20 +61,30 @@ var ClassFigure = new Class({
    
    unmarshall: function(){
       this.unmarshallAttributes();
+      this.unmarshallOperations();
       this.parent();
    },
    
    //Properties
    getAttributes : function() { return this.attributes; },
+   getOperations : function() { return this.operations; },
    
    //Protected, private helper methods
    compileDrawChain : function(){
-      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.addFigureToCanvas, this.finalizeDraw );
+      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.drawOperations, this.addFigureToCanvas, this.finalizeDraw );
    }.protect(),
 
    drawAttributes : function(){
       this.attributes.each( function( attribute, index ){
          this.draw2dObject.addAttribute( attribute.getInternationalizedName(), attribute.getType(), attribute.getDefaultValue() );
+      }.bind( this ));
+      
+      this.drawChain.callChain();
+   }.protect(),
+   
+   drawOperations : function(){
+      this.operations.each( function( operation, index ){
+         this.draw2dObject.addOperation( operation.getInternationalizedName(), operation.getType() );
       }.bind( this ));
       
       this.drawChain.callChain();
@@ -93,7 +105,18 @@ var ClassFigure = new Class({
             this.attributes.add( attribute );
          }, this );
       }
-   }.protect()
+   }.protect(),
    
+   unmarshallOperations: function(){
+      var operationsElement = this.definitionXml.selectNodes( this.options.operationsSelector );
+      if( operationsElement ){
+         if( !operationsElement.each ) operationsElement = Array.from( operationsElement );
+         operationsElement.each( function( operationElement, index ){
+            var operation = new OperationFigure( operationElement, this.internationalization );
+            operation.unmarshall();
+            this.operations.add( operation );
+         }, this );
+      }
+   }.protect()
 });
 

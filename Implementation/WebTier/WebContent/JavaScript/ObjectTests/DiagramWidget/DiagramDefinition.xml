@@ -31,9 +31,13 @@
          </uml:attributes>
          
          <uml:operations>
-            <uml:operation name="construct"></uml:operation>
-            <uml:operation name="destroy"></uml:operation>
-            <uml:operation name="draw"></uml:operation>
+            <uml:operation name="construct" type="void"></uml:operation>
+            <uml:operation name="destroy" type="void"></uml:operation>
+            <uml:operation name="draw" type="void">
+            	<uml:arguments>
+            		<uml:argument  name="construct" type="void"/>
+            	</uml:arguments>
+            </uml:operation>
          </uml:operations>
       </uml:class>
       

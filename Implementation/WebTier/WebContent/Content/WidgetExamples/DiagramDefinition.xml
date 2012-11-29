@@ -31,9 +31,9 @@
          </uml:attributes>
          
          <uml:operations>
-            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.construct"></uml:operation>
-            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.destroy"></uml:operation>
-            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.draw"></uml:operation>
+            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.construct" type="void"></uml:operation>
+            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.destroy" type="void"></uml:operation>
+            <uml:operation name="DiagramWidget.ExampleClassOne.Operations.draw" type="void"></uml:operation>
          </uml:operations>
       </uml:class>
       

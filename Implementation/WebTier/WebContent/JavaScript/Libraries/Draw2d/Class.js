@@ -103,6 +103,24 @@ draw2d.shape.uml.Class.prototype.addAttribute=function(/*:String*/ name, /*:Stri
   this.recalculateSize();
 };
 
+/**
+ * Add a new operation to the UML Class figure. An operation is a simple table row ("tr").
+ *
+ **/
+draw2d.shape.uml.Class.prototype.addOperation=function(/*:String*/ name, /*:String*/ type )
+{
+  var row = document.createElement("tr");
+  this.table.appendChild(row);
+
+  var td = document.createElement("td");
+  td.style.whiteSpace="nowrap";
+  row.appendChild(td);
+  this.disableTextSelection(td);
+
+  td.innerHTML=name+" : "+type;
+  this.recalculateSize();
+};
+
 /** 
  * Adjust the ports if the user resize the element
  *
