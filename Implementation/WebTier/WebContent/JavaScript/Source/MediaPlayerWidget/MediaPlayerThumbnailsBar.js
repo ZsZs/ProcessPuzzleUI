@@ -32,6 +32,7 @@ You should have received a copy of the GNU General Public License along with thi
 var MediaPlayerThumbnailsBar = new Class({
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds : [
+      'addEvents',
       'calculateLimit',
       'checkTimeOut',
       'createListElement', 
@@ -108,6 +109,14 @@ var MediaPlayerThumbnailsBar = new Class({
    getSlideThumbnails : function(){ return this.thumbnails; },
    
    //Protected, private helper methods
+   addEvents : function(){
+      document.addEvents({
+         'mousemove' : this.onMouseMove
+      });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
    calculateLimit : function(){
       var length = this.dimensions[2];
       var width = this.dimensions[4];
@@ -131,6 +140,7 @@ var MediaPlayerThumbnailsBar = new Class({
          this.determineDimensions,
          this.calculateLimit,
          this.updateThumbnails,
+         this.addEvents,
          this.finalizeConstruction
       );
    }.protect(),
@@ -170,7 +180,6 @@ var MediaPlayerThumbnailsBar = new Class({
       this.wrapperElement.set({ 'role' : 'menubar', 'styles' : { 'overflow' : 'hidden' }});
       this.wrapperElement.inject( this.containerElement );
       
-      this.wrapperElement.addEvent( 'mousemove', this.onMouseMove );
       this.constructionChain.callChain();
    }.protect(),
    
