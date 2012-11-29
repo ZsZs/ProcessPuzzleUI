@@ -1,48 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pg:photoGalery 
+<sh:slideShow 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:pg="http://www.processpuzzle.com/PhotoGalery" 
-   xsi:schemaLocation="http://www.processpuzzle.com/PhotoGalery http://processpuzzle.com/Schemas/PhotoGalery.xsd">
+   xmlns:sh="http://www.processpuzzle.com/SlideShow" 
+   xsi:schemaLocation="http://www.processpuzzle.com/SlideShow http://www.processpuzzle.com/Schemas/SlideShow.xsd">
    
-   <pg:name>Pura Vida Costa Rica</pg:name>
-   <pg:description>Photos from Costa Rica.</pg:description>
-   <pg:images>
-      <pg:image>
-         <pg:uri>IMAG0337.jpg</pg:uri>
-         <pg:caption>PhotoGalery.tabacon</pg:caption>
-         <pg:link>http://www.tabacon.com/</pg:link>
-         <pg:thumbnailUri>IMAG0337_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>IMAG0339.jpg</pg:uri>
-         <pg:caption>PhotoGalery.baldi</pg:caption>
-         <pg:link>http://www.arenal.net/hotel/baldi-hotel/index.html</pg:link>
-         <pg:thumbnailUri>IMAG0339_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>SANY0008.JPG</pg:uri>
-         <pg:thumbnailUri>SANY0008_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>SANY0012.JPG</pg:uri>
-         <pg:thumbnailUri>SANY0012_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>SANY0022.JPG</pg:uri>
-         <pg:thumbnailUri>SANY0022_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>SANY0042.JPG</pg:uri>
-         <pg:thumbnailUri>SANY0042_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>SANY0058.JPG</pg:uri>
-         <pg:thumbnailUri>SANY0058_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-      <pg:image>
-         <pg:uri>SANY0071.JPG</pg:uri>
-         <pg:thumbnailUri>SANY0071_thumb.jpg</pg:thumbnailUri>
-      </pg:image>
-   </pg:images>
-</pg:photoGalery>
+   <sh:name>Pura Vida Costa Rica</sh:name>
+   <sh:description>Photos from Costa Rica.</sh:description>
+   
+   <sh:properties>
+      <sh:automaticallyLinkSlideToFullSizedImage>true</sh:automaticallyLinkSlideToFullSizedImage>
+      <sh:effectDuration>1500</sh:effectDuration>
+      <sh:firstSlide>0</sh:firstSlide>
+      <sh:galeryLink>http://www.tourism-costarica.com</sh:galeryLink>
+      <sh:height>300</sh:height>
+      <sh:imageFolderUri>Content/Album</sh:imageFolderUri>
+      <sh:showController>true</sh:showController>
+      <sh:showImageCaptions>true</sh:showImageCaptions>
+      <sh:showSlidesRandom>false</sh:showSlidesRandom>
+      <sh:showThumbnails>true</sh:showThumbnails>
+      <sh:skipTransition>SlideShow.WhenPaused | SlideShow.OnStart</sh:skipTransition>
+      <sh:slideChangeDelay>3000</sh:slideChangeDelay>
+      <sh:startPaused>true</sh:startPaused>
+      <sh:thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</sh:thumbnailFileNameRule>
+      <sh:width>450</sh:width>
+   </sh:properties>
+   
+   <sh:images>
+      <sh:image>
+         <sh:uri>IMAG0337.jpg</sh:uri>
+         <sh:caption>PhotoGalery.tabacon</sh:caption>
+         <sh:link>http://www.tabacon.com/</sh:link>
+         <sh:thumbnailUri>IMAG0337_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>IMAG0339.jpg</sh:uri>
+         <sh:caption>PhotoGalery.baldi</sh:caption>
+         <sh:link>http://www.arenal.net/hotel/baldi-hotel/index.html</sh:link>
+         <sh:thumbnailUri>IMAG0339_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>SANY0008.JPG</sh:uri>
+         <sh:thumbnailUri>SANY0008_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>SANY0012.JPG</sh:uri>
+         <sh:thumbnailUri>SANY0012_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>SANY0022.JPG</sh:uri>
+         <sh:thumbnailUri>SANY0022_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>SANY0042.JPG</sh:uri>
+         <sh:thumbnailUri>SANY0042_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>SANY0058.JPG</sh:uri>
+         <sh:thumbnailUri>SANY0058_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+      <sh:image>
+         <sh:uri>SANY0071.JPG</sh:uri>
+         <sh:thumbnailUri>SANY0071_thumb.jpg</sh:thumbnailUri>
+      </sh:image>
+   </sh:images>
+</sh:slideShow>

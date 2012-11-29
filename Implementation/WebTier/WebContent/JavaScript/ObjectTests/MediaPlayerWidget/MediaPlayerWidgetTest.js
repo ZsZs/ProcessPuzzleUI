@@ -50,13 +50,13 @@ window.MediaPlayerWidgetTest = new Class( {
             this.widgetData = new XmlResource( this.constants.WIDGET_DATA_URI, { nameSpaces : "xmlns:sh='http://www.processpuzzle.com/SlideShow'" });
             this.widgetDefinition = new XmlResource( this.constants.WIDGET_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" });
             
-            this.widget = new MediaPlayerWidget( this.widgetInternationalization, {
+            this.widget = new MediaPlayerWidget({
                onConstructed : this.onConstructed,
                onDestroyed : this.onDestroyed,
                widgetContainerId : this.constants.WIDGET_CONTAINER_ID, 
                widgetDefinitionURI : this.constants.WIDGET_DEFINITION_URI, 
                widgetDataURI : this.constants.WIDGET_DATA_URI 
-            });
+            }, this.widgetInternationalization );
             this.widgetContainerElement = $( this.constants.WIDGET_CONTAINER_ID );
             this.beforeEachTestReady();
          }.bind( this )

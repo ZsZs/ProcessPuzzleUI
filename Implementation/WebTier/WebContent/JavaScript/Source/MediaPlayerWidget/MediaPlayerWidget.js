@@ -39,7 +39,7 @@ var MediaPlayerWidget = new Class({
       startPaused : false
    },
 
-   initialize : function( resourceBundle, options ) {
+   initialize : function( options, resourceBundle ) {
       this.parent( options, resourceBundle );
       
       this.display;

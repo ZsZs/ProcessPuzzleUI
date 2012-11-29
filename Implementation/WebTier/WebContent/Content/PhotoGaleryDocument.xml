@@ -27,7 +27,7 @@
       <sd:element tag="p">PhotoGaleryDocument.exampleDescription</sd:element>
       <sd:element tag="div" id="PhotoGaleryContainer" elementStyle="slideshow">
          <sd:plugin>
-            <sd:widget name="PhotoGaleryWidget">
+            <sd:widget name="MediaPlayerWidget">
                <sd:options>
                   <sd:option name="widgetContainerId" value="'PhotoGaleryContainer'"/>
                   <sd:option name="widgetDefinitionURI" value="'Content/PhotoGaleryDefinition.xml'"/>

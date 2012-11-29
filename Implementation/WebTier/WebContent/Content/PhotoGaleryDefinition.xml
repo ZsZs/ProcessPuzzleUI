@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sd:photoGaleryWidgetDefinition
+<sd:widgetDefinition
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:sd="http://www.processpuzzle.com/SmartDocument"
-   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/PhotoGaleryWidgetDefinition.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
    
    <sd:name>PhotoGalery</sd:name>
    <sd:description>Photo Galery presents a set of images, and their thumb nails.</sd:description>
    <sd:version>1.0</sd:version>
    
-   <sd:properties>
-      <sd:automaticallyLinkSlideToFullSizedImage>true</sd:automaticallyLinkSlideToFullSizedImage>
-      <sd:effectDuration>1500</sd:effectDuration>
-      <sd:firstSlide>0</sd:firstSlide>
-      <sd:galeryLink>http://www.tourism-costarica.com</sd:galeryLink>
-      <sd:height>300</sd:height>
-      <sd:imageFolderUri>Content/Album</sd:imageFolderUri>
-      <sd:showController>true</sd:showController>
-      <sd:showImageCaptions>true</sd:showImageCaptions>
-      <sd:showSlidesRandom>false</sd:showSlidesRandom>
-      <sd:showThumbnails>true</sd:showThumbnails>
-      <sd:skipTransition>WhenPaused | OnStart</sd:skipTransition>
-      <sd:slideChangeDelay>3000</sd:slideChangeDelay>
-      <sd:startPaused>true</sd:startPaused>
-      <sd:thumbnailFileNameRule>[/(\.[^\.]+)$/, '_thumb$1']</sd:thumbnailFileNameRule>
-      <sd:width>450</sd:width>
-   </sd:properties>
-</sd:photoGaleryWidgetDefinition>
+   <sd:options>
+   	<sd:option name='startPaused' value='true'/>
+   </sd:options>   
+</sd:widgetDefinition>
