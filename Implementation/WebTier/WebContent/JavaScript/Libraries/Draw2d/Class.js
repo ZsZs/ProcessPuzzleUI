@@ -86,7 +86,7 @@ draw2d.shape.uml.Class.prototype.setClassName=function(/*:String*/ name)
  * table row ("tr").
  *
  **/
-draw2d.shape.uml.Class.prototype.addAttribute=function(/*:String*/ name, /*:String*/ type, /*:String*/ defaultValue)
+draw2d.shape.uml.Class.prototype.addAttribute=function( name, type, defaultValue)
 {
   var row = document.createElement("tr");
   this.table.appendChild(row);
@@ -107,7 +107,7 @@ draw2d.shape.uml.Class.prototype.addAttribute=function(/*:String*/ name, /*:Stri
  * Add a new operation to the UML Class figure. An operation is a simple table row ("tr").
  *
  **/
-draw2d.shape.uml.Class.prototype.addOperation=function(/*:String*/ name, /*:String*/ type )
+draw2d.shape.uml.Class.prototype.addOperation=function( name, operationArguments, type )
 {
   var row = document.createElement("tr");
   this.table.appendChild(row);
@@ -117,7 +117,12 @@ draw2d.shape.uml.Class.prototype.addOperation=function(/*:String*/ name, /*:Stri
   row.appendChild(td);
   this.disableTextSelection(td);
 
-  td.innerHTML=name+" : "+type;
+  if( operationArguments ) operationArguments = " " + operationArguments.trim() + " ";
+  else operationArguments = "";
+  
+  if( type ) type = ":" + type;
+  else type = "";
+  td.innerHTML = name + "(" + operationArguments + ")" + type;
   this.recalculateSize();
 };
 

@@ -35,7 +35,7 @@
             <uml:operation name="destroy" type="void"></uml:operation>
             <uml:operation name="draw" type="void">
             	<uml:arguments>
-            		<uml:argument  name="construct" type="void"/>
+            		<uml:argument  name="parentFigure" type="Figure"/>
             	</uml:arguments>
             </uml:operation>
          </uml:operations>

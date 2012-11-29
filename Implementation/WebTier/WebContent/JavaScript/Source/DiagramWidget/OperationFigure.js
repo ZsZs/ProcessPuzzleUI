@@ -36,6 +36,7 @@ var OperationFigure = new Class({
    Binds: [],
    
    options : {
+      argumentsSelector : "uml:arguments/uml:argument",
       componentName : "OperationFigure",
       nameSelector : "@name",
       typeSelector : "@type"
@@ -45,6 +46,7 @@ var OperationFigure = new Class({
    initialize: function( definition, internationalization, options ){
       this.setOptions( options );
       
+      this.arguments;
       this.defaultValue;
       this.definitionXml = definition;
       this.internationalization = internationalization;
@@ -63,13 +65,29 @@ var OperationFigure = new Class({
    
    unmarshall: function(){
       this.parent();
+      this.unmarshallArguments();
    },
    
    //Properties
-   getDefaultValue : function() { return this.defaultValue; },
+   getArguments : function() { return this.arguments; },
    getType : function() { return this.type; },
    
    //Protected, private helper methods
+   unmarshallArguments : function(){
+      var argumentsElement = this.definitionXml.selectNodes( this.options.argumentsSelector );
+      if( argumentsElement ){
+         if( !argumentsElement.each ) argumentsElement = Array.from( argumentsElement );
+         argumentsElement.each( function( argumentElement, index ){
+            var argumentName = XmlResource.selectNodeText( this.options.nameSelector, argumentElement );
+            var argumentType = XmlResource.selectNodeText( this.options.typeSelector, argumentElement );
+            if( this.arguments ) this.arguments += ", ";
+            else this.arguments = "";
+            this.arguments += argumentName + " : " + argumentType;
+         }, this );
+      }
+      
+   }.protect(),
+   
    unmarshallProperties : function(){
       this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
       this.parent();

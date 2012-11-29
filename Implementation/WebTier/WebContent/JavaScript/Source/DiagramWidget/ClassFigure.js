@@ -84,7 +84,7 @@ var ClassFigure = new Class({
    
    drawOperations : function(){
       this.operations.each( function( operation, index ){
-         this.draw2dObject.addOperation( operation.getInternationalizedName(), operation.getType() );
+         this.draw2dObject.addOperation( operation.getInternationalizedName(), operation.getArguments(), operation.getType() );
       }.bind( this ));
       
       this.drawChain.callChain();
