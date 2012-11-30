@@ -44,13 +44,9 @@ var OperationFigure = new Class({
 
    //Constructor
    initialize: function( definition, internationalization, options ){
-      this.setOptions( options );
+      this.parent( definition, internationalization, options );
       
       this.arguments;
-      this.defaultValue;
-      this.definitionXml = definition;
-      this.internationalization = internationalization;
-      this.name;
       this.type;
    },
    
