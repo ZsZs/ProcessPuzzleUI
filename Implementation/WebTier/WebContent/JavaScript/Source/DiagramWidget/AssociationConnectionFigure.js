@@ -1,15 +1,15 @@
 /*
 Name: 
-    - InheritanceConnectionFigure
+    - AssociationConnectionFigure
 
 Description: 
-    - Represents a inheritance connection between two figures. 
+    - Represents a association connection between two figures. 
 
 Requires:
     - ConnectionFigure
 
 Provides:
-    - InheritanceConnectionFigure
+    - AssociationConnectionFigure
 
 Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
 http://www.processpuzzle.com
@@ -32,18 +32,22 @@ You should have received a copy of the GNU General Public License along with thi
 //= require ../DiagramWidget/DiagramFigure.js
 //= require ../DiagramWidget/DiagramWidget.js
 
-var InheritanceConnectionFigure = new Class({
+var AssociationConnectionFigure = new Class({
    Extends : ConnectionFigure,
    Implements : [Events, Options],
    Binds: ['instantiateDraw2dObject'],
    
    options : {
-      componentName : "InheritanceConnectionFigure"
+      componentName : "InheritanceConnectionFigure",
+      sourceRoleSelector : "/uml:sourceRole",
+      targetRoleSelectgor : "/uml:targetRole",
    },
 
    //Constructor
    initialize: function( definition, internationalization, options ){
       this.parent( definition, internationalization, options );
+      this.sourceRole;
+      this.targetRole;
    },
    
    //Public accessor and mutator methods
@@ -60,11 +64,33 @@ var InheritanceConnectionFigure = new Class({
    },
    
    //Properties
+   getSourceRole: function(){ return this.sourceRole; },
+   getTargetRole: function(){ return this.targetRole; },
    
    //Protected, private helper methods
    instantiateDraw2dObject : function(){
       this.draw2dObject = new draw2d.shape.uml.InheritanceConnection( this.name );
       this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.unmarshallSourceRole();
+      this.unmarshallTargetRole();
+      this.parent();
+   }.protect(),
+   
+   unmarshallRole: function( roleSelector ){
+      var roleSpecification = {};
+      
+      return roleSpecification;
+   }.protect(),
+   
+   unmarshallSourceRole: function(){
+      this.sourceRole = this.unmarshallRole( this.options.sourceRoleSelector );
+   }.protect(),
+   
+   unmarshallTargetRole: function(){
+      this.targetRole = this.unmarshallRole( this.options.targetRoleSelector );
    }.protect()
 });
 

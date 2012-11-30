@@ -44,6 +44,8 @@ var DiagramFigureFactory = new Class({
          newFigure = new AnnotationFigure( definitionXmlElement, internationalization, options ); break;
       case "UML:CLASS": 
          newFigure = new ClassFigure( definitionXmlElement, internationalization, options ); break;
+      case "UML:ASSOCIATIONCONNECTION":
+         newFigure = new AssociationConnectionFigure( definitionXmlElement, internationalization, options ); break;
       case "UML:INHERITANCECONNECTION":
          newFigure = new InheritanceConnectionFigure( definitionXmlElement, internationalization, options ); break;
       default:

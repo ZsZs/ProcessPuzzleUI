@@ -66,16 +66,16 @@
       
       <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="ClassFigure" target="DiagramFigure"/>
       
-      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="AttributeFigure" target="DiagramFigure"/>
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure_1" source="AttributeFigure" target="DiagramFigure"/>
       
-      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="OperationFigure" target="DiagramFigure"/>
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure_2" source="OperationFigure" target="DiagramFigure"/>
       
-      <uml:associationConnection name="" source="ClassFigure" target="AttributeFigure">
+      <uml:associationConnection name="has" source="ClassFigure" target="AttributeFigure">
          <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
          <uml:targetRole name="attributes" multiplicity="*" containment="by reference"/>
       </uml:associationConnection>
       
-      <uml:associationConnection name="" source="ClassFigure" target="OperationFigure">
+      <uml:associationConnection name="has_1" source="ClassFigure" target="OperationFigure">
          <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
          <uml:targetRole name="operations" multiplicity="*" containment="by reference"/>
       </uml:associationConnection>

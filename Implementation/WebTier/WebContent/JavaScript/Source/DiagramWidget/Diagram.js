@@ -43,7 +43,7 @@ var Diagram = new Class({
       canvasWidthSelector : "/dd:diagramDefinition/dd:canvas/@width",
       componentName : "Diagram",
       descriptionSelector : "/dd:diagramDefinition/dd:description",
-      figuresSelector : "/dd:diagramDefinition/dd:figures/dd:annotation | /dd:diagramDefinition/dd:figures/uml:class | /dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
+      figuresSelector : "/dd:diagramDefinition/dd:figures/dd:annotation | /dd:diagramDefinition/dd:figures/uml:class | /dd:diagramDefinition/dd:figures/uml:associationConnection | /dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
       paintAreaId : "paintarea",
       positionXSelector : "@positionX",
       positionYSelector : "@positionY",
