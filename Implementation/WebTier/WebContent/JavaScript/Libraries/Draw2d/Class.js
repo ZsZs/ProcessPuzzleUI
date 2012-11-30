@@ -89,7 +89,7 @@ draw2d.shape.uml.Class.prototype.setClassName=function(/*:String*/ name)
 draw2d.shape.uml.Class.prototype.addAttribute=function( name, type, defaultValue)
 {
   var row = document.createElement("tr");
-  this.table.appendChild(row);
+  this.tableBody.appendChild(row);
 
   var td = document.createElement("td");
   td.style.whiteSpace="nowrap";
@@ -110,7 +110,7 @@ draw2d.shape.uml.Class.prototype.addAttribute=function( name, type, defaultValue
 draw2d.shape.uml.Class.prototype.addOperation=function( name, operationArguments, type )
 {
   var row = document.createElement("tr");
-  this.table.appendChild(row);
+  this.tableFooter.appendChild(row);
 
   var td = document.createElement("td");
   td.style.whiteSpace="nowrap";
@@ -175,12 +175,12 @@ draw2d.shape.uml.Class.prototype.createHTMLElement=function()
     this.table.style.padding= "0px";
     item.appendChild(this.table);
 
-    var tableBody = document.createElement("tbody");
-    this.table.appendChild(tableBody);
+    this.tableHeader = document.createElement("thead");
+    this.table.appendChild( this.tableHeader );
 
     var header = document.createElement("tr");
-    tableBody.appendChild(header);
-
+    this.tableHeader.appendChild(header);
+    
     this.headerLabel = document.createElement("td");
     this.headerLabel.style.align="left";
     this.headerLabel.style.verticalAlign="top";
@@ -189,8 +189,14 @@ draw2d.shape.uml.Class.prototype.createHTMLElement=function()
     this.headerLabel.style.textAlign="center";
 
     header.appendChild(this.headerLabel);
-
     this.headerLabel.innerHTML="";
+
+    this.tableBody = document.createElement("tbody");
+    this.table.appendChild( this.tableBody );
+
+    this.tableFooter = document.createElement("tfoot");
+    this.table.appendChild( this.tableFooter );
+    this.tableFooter.style.borderTop="1px solid black";
 
     return item;
 };
