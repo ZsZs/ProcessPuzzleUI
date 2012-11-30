@@ -5,11 +5,13 @@
    xmlns:sd="http://www.processpuzzle.com/SmartDocument"
    xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
    
-   <sd:name>HierarchicalMenuWidget</sd:name>
-   <sd:description>Hierarchical Menu Widget configured for testing purposes.</sd:description>
+   <sd:name>TabWidget</sd:name>
+   <sd:description>Tab Widget configured for testing purposes.</sd:description>
    <sd:version>0.5.0</sd:version>
-   <sd:options>
-      <sd:option name="selectedItemClass" value="'selectedMenuItem'" />
-   </sd:options>
    
+   <sd:options>
+      <sd:option name="selectedTabClass" value="'selectedTab'" />
+      <sd:option name="showCloseButton" value="false" />
+      <sd:option name="showPrintButton" value="false" />
+   </sd:options>
 </sd:widgetDefinition>

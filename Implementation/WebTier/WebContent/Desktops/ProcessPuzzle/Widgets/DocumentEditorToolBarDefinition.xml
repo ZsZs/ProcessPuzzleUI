@@ -5,11 +5,11 @@
    xmlns:sd="http://www.processpuzzle.com/SmartDocument"
    xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/WidgetDefinition.xsd">
    
-   <sd:name>HierarchicalMenuWidget</sd:name>
-   <sd:description>Hierarchical Menu Widget configured for testing purposes.</sd:description>
+   <sd:name>DocumentEditorToolBar</sd:name>
+   <sd:description>Toolbar Widget configured for document editing.</sd:description>
    <sd:version>0.5.0</sd:version>
    <sd:options>
-      <sd:option name="selectedItemClass" value="'selectedMenuItem'" />
+      <sd:option name="showCaptions" value="false"/>
    </sd:options>
    
 </sd:widgetDefinition>

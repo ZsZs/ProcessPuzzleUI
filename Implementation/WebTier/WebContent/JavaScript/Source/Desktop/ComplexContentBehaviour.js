@@ -342,6 +342,7 @@ var ComplexContentBehaviour = new Class({
       this.componentRootElement = $( this.componentRootElement );     //required by Internet Explorer
       this.contentContainerElement = $( this.getContentContainerId() );
       this.contentContainerElement = document.id( this.contentContainerElement ); //Applies Element's methods, required by Internet Explorer
+      this.assertThat( this.contentContainerElement, not( nil() ), this.options.componentName + ".determineComponentElements" );
       this.constructionChain.callChain();
    }.protect(),
    
