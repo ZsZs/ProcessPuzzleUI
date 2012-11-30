@@ -31,11 +31,11 @@
     <Resource key="DesktopWindow.about.title" type="String">ProcessPuzzle névjegy</Resource>
     <Resource key="DesktopWindow.documentExplorer.title" type="String">Dokumentum intéző</Resource>
 
-    <Resource key="DiagramDocument.title" type="String">Document with embedded Diagram widget</Resource>
+    <Resource key="DiagramDocument.title" type="String">Okos dokumentum beágyazott diagrammal</Resource>
     <Resource key="DiagramDocument.introduction" type="String">...</Resource>
     <Resource key="DiagramDocument.exampleDescription" type="String">...</Resource>
-    <Resource key="DiagramDocument.footer" type="String">ProcessPuzzle - Desktop like, back-end agnostic browser interface.</Resource>
-    <Resource key="DiagramDocument.subTitle" type="String">Smart Document Example</Resource>
+    <Resource key="DiagramDocument.footer" type="String">ProcessPuzzle - Windows szerű, háttér rendszer független, böngészős felhasználói felület.</Resource>
+    <Resource key="DiagramDocument.subTitle" type="String">Okos dokumentum példa</Resource>
     
     <Resource key="DiagramWidget.title" type="String">Sample UML Diagram</Resource>
     <Resource key="DiagramWidget.description" type="String">Nos, ez egy nagyon egyszerű diagram.</Resource>
