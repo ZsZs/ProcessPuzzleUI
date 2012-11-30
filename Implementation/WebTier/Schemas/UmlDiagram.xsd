@@ -11,8 +11,8 @@
   <xs:element name="class">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="uml:attributes"/>
-        <xs:element ref="uml:operations"/>
+        <xs:element ref="uml:attributes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="uml:operations" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <xs:attribute name="positionX" use="required" type="xs:integer"/>
@@ -23,14 +23,14 @@
   <xs:element name="attributes">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="uml:attribute"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="uml:attribute"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   
   <xs:element name="attribute">
     <xs:complexType>
-      <xs:attribute name="defaultValue" type="xs:NCName"/>
+      <xs:attribute name="defaultValue" type="xs:string"/>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <xs:attribute name="type" use="required" type="xs:NCName"/>
     </xs:complexType>
@@ -39,7 +39,7 @@
   <xs:element name="operations">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="uml:operation"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="uml:operation"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -77,4 +77,35 @@
       <xs:attribute name="target" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="associationConnection">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="sourceRole" type="uml:associationRole" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="targetRole" type="uml:associationRole" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="source" use="required" type="xs:NCName"/>
+      <xs:attribute name="target" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:complexType name="associationRole">
+    <xs:attribute name="name" use="optional" type="xs:string"/>
+    <xs:attribute name="multiplicity" use="optional" type="xs:string"/>
+    <xs:attribute name="containment" use="optional" type="xs:string"/>
+  </xs:complexType>
+  
+  <xs:complexType name="sourceRole">
+    <xs:complexContent> 
+      <xs:extension base="uml:associationRole"/>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <xs:complexType name="targetRole">
+    <xs:complexContent> 
+      <xs:extension base="uml:associationRole"/>
+    </xs:complexContent>
+  </xs:complexType>
+  
 </xs:schema>

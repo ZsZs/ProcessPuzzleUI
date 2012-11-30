@@ -28,6 +28,8 @@
       <uml:class name="DiagramFigure" positionX="50" positionY="50">
          <uml:attributes>
             <uml:attribute name="canvas" type="draw2d.workflow" defaultValue="null"/>
+            <uml:attribute name="name" type="String"/>
+            <uml:attribute name="internationalization" type="LocalizationResource" defaultValue="null"/>
          </uml:attributes>
          
          <uml:operations>
@@ -42,17 +44,40 @@
       </uml:class>
       
       <uml:class name="ClassFigure" positionX="50" positionY="100">
-         <uml:attributes>
-            <uml:attribute name="attributes" type="ArrayList"/>
-            <uml:attribute name="operations" type="ArrayList"/>
-         </uml:attributes>
-         
          <uml:operations>
             <uml:operation name="drawAttributes"></uml:operation>
             <uml:operation name="drawOperations"></uml:operation>
          </uml:operations>
       </uml:class>
       
+      <uml:class name="AttributeFigure" positionX="50" positionY="100">
+         <uml:attributes>
+            <uml:attribute name="defaultValue" type="String"/>
+            <uml:attribute name="type" type="String"/>
+         </uml:attributes>
+      </uml:class>
+      
+      <uml:class name="OperationFigure" positionX="50" positionY="100">
+         <uml:attributes>
+            <uml:attribute name="arguments" type="String"/>
+            <uml:attribute name="type" type="String"/>
+         </uml:attributes>
+      </uml:class>
+      
       <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="ClassFigure" target="DiagramFigure"/>
+      
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="AttributeFigure" target="DiagramFigure"/>
+      
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="OperationFigure" target="DiagramFigure"/>
+      
+      <uml:associationConnection name="" source="ClassFigure" target="AttributeFigure">
+         <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
+         <uml:targetRole name="attributes" multiplicity="*" containment="by reference"/>
+      </uml:associationConnection>
+      
+      <uml:associationConnection name="" source="ClassFigure" target="OperationFigure">
+         <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
+         <uml:targetRole name="operations" multiplicity="*" containment="by reference"/>
+      </uml:associationConnection>
    </dd:figures>
 </dd:diagramDefinition>

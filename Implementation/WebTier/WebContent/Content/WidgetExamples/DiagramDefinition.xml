@@ -21,11 +21,11 @@
    </dd:figurePropertyWindows>
    
    <dd:figures>
-      <dd:annotation name="DiagramAnnotation" height="60" width="250" positionX="0" positionY="0">
+      <dd:annotation name="DiagramAnnotation" height="40" width="350" positionX="0" positionY="0">
          <dd:text>DiagramWidget.Annotation.text</dd:text>
       </dd:annotation>
    
-      <uml:class name="DiagramWidget.ExampleClassOne.name" positionX="50" positionY="100">
+      <uml:class name="DiagramWidget.ExampleClassOne.name" positionX="50" positionY="50">
          <uml:attributes>
             <uml:attribute name="DiagramWidget.ExampleClassOne.Attributes.canvas" type="draw2d.workflow" defaultValue="null"/>
          </uml:attributes>
@@ -42,7 +42,7 @@
          </uml:operations>
       </uml:class>
       
-      <uml:class name="DiagramWidget.ExampleClassTwo.name" positionX="75" positionY="200">
+      <uml:class name="DiagramWidget.ExampleClassTwo.name" positionX="0" positionY="200">
          <uml:attributes>
             <uml:attribute name="DiagramWidget.ExampleClassTwo.Attributes.attributes" type="ArrayList" />
             <uml:attribute name="DiagramWidget.ExampleClassTwo.Attributes.operations" type="ArrayList" />
@@ -54,6 +54,34 @@
          </uml:operations>
       </uml:class>
       
+      <uml:class name="AttributeFigure" positionX="150" positionY="200">
+         <uml:attributes>
+            <uml:attribute name="defaultValue" type="String"/>
+            <uml:attribute name="type" type="String"/>
+         </uml:attributes>
+      </uml:class>
+      
+      <uml:class name="OperationFigure" positionX="300" positionY="300">
+         <uml:attributes>
+            <uml:attribute name="arguments" type="String"/>
+            <uml:attribute name="type" type="String"/>
+         </uml:attributes>
+      </uml:class>
+      
       <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="DiagramWidget.ExampleClassTwo.name" target="DiagramWidget.ExampleClassOne.name" />
+      
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="AttributeFigure" target="DiagramWidget.ExampleClassOne.name"/>
+      
+      <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="OperationFigure" target="DiagramWidget.ExampleClassOne.name"/>
+      
+      <uml:associationConnection name="" source="ClassFigure" target="AttributeFigure">
+         <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
+         <uml:targetRole name="attributes" multiplicity="*" containment="by reference"/>
+      </uml:associationConnection>
+      
+      <uml:associationConnection name="" source="ClassFigure" target="OperationFigure">
+         <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
+         <uml:targetRole name="operations" multiplicity="*" containment="by reference"/>
+      </uml:associationConnection>
    </dd:figures>
 </dd:diagramDefinition>

@@ -61,8 +61,9 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="dd:annotation"/>
-        <xs:element maxOccurs="unbounded" ref="uml:class"/>
-        <xs:element ref="uml:inheritanceConnection"/>
+        <xs:element ref="uml:class" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="uml:inheritanceConnection" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="uml:associationConnection" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
