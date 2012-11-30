@@ -19,6 +19,7 @@
       <xs:attribute name="positionY" use="required" type="xs:integer"/>
     </xs:complexType>
   </xs:element>
+  
   <xs:element name="attributes">
     <xs:complexType>
       <xs:sequence>
@@ -26,6 +27,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  
   <xs:element name="attribute">
     <xs:complexType>
       <xs:attribute name="defaultValue" type="xs:NCName"/>
@@ -33,6 +35,7 @@
       <xs:attribute name="type" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
+  
   <xs:element name="operations">
     <xs:complexType>
       <xs:sequence>
@@ -40,11 +43,33 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  
   <xs:element name="operation">
     <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="uml:operationArguments"/>
+      </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="operationArguments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="uml:operationArgument"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="operationArgument">
+    <xs:complexType>
+      <xs:attribute name="defaultValue" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  
   <xs:element name="inheritanceConnection">
     <xs:complexType>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
