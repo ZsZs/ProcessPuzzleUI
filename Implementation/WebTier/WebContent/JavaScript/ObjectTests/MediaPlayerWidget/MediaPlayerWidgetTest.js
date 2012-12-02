@@ -15,7 +15,7 @@ window.MediaPlayerWidgetTest = new Class( {
 
    constants : {
       LANGUAGE : "hu",
-      WIDGET_DATA_URI : "../MediaPlayerWidget/Slideshow/SlideShowData.xml",
+      WIDGET_DATA_URI : "../MediaPlayerWidget/SlideShow/SlideShowData.xml",
       WIDGET_DEFINITION_URI : "../MediaPlayerWidget/MediaPlayerWidgetDefinition.xml",
       WIDGET_CONTAINER_ID : "PhotoGaleryContainer",
       WEBUI_CONFIGURATION_URI : "../MediaPlayerWidget/WebUIConfiguration.xml",
