@@ -34,10 +34,10 @@
             <uml:operation name="DiagramWidget.ExampleClassOne.Operations.construct" type="void"></uml:operation>
             <uml:operation name="DiagramWidget.ExampleClassOne.Operations.destroy" type="void"></uml:operation>
             <uml:operation name="DiagramWidget.ExampleClassOne.Operations.draw" type="void">
-               <uml:arguments>
-                  <uml:argument  name="parentFigure" type="Figure"/>
-                  <uml:argument  name="options" type="Options"/>
-               </uml:arguments>
+               <uml:operationArguments>
+                  <uml:operationArgument  name="parentFigure" type="Figure"/>
+                  <uml:operationArgument  name="options" type="Options"/>
+               </uml:operationArguments>
             </uml:operation>
          </uml:operations>
       </uml:class>
