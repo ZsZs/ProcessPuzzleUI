@@ -14,7 +14,7 @@ window.MediaPlayerDisplayTest = new Class( {
       CONTAINER_ELEMENT_ID : "widgetContainer",
       IMAGE_TITLE : "Hello World",
       IMAGE_URI : "Album/IMAG0337.jpg",
-      THUMBNAIL_URIS : ['Album/IMAG0337_thumb.jpg', 'Album/IMAG0339_thumb.jpg', 'Album/SANY0008_thumb.JPG', 'Album/SANY0012_thumb.JPG']
+      THUMBNAIL_URIS : ['Album/IMAG0337_thumb.jpg', 'Album/IMAG0339_thumb.jpg', 'Album/SANY0008_thumb.jpg', 'Album/SANY0012_thumb.jpg']
    },
    
    initialize : function( options ) {

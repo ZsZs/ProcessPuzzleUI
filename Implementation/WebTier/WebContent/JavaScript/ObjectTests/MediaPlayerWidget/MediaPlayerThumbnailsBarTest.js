@@ -19,7 +19,7 @@ window.MediaPlayerThumbnailsTest = new Class( {
       IMAGE_FOLDER: '../MediaPlayerWidget/Album/', 
       SLIDESHOW_CLASS : "slideshow",
       SMOOTH_TRANSITION : false,
-      THUMBNAIL_IMAGES : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.JPG', 'SANY0012_thumb.JPG', 'SANY0022_thumb.JPG'],
+      THUMBNAIL_IMAGES : ['IMAG0337_thumb.jpg', 'IMAG0339_thumb.jpg', 'SANY0008_thumb.jpg', 'SANY0012_thumb.jpg', 'SANY0022_thumb.jpg'],
       THUMBNAILS_CLASS : "thumbnails"
    },
    
