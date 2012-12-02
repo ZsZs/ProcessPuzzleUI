@@ -47,7 +47,7 @@
   <xs:element name="operation">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="uml:operationArguments"/>
+        <xs:element ref="uml:operationArguments" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <xs:attribute name="type" use="required" type="xs:NCName"/>
@@ -57,7 +57,7 @@
   <xs:element name="operationArguments">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="uml:operationArgument"/>
+        <xs:element ref="uml:operationArgument" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
