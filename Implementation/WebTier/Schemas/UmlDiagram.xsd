@@ -32,7 +32,7 @@
     <xs:complexType>
       <xs:attribute name="defaultValue" type="xs:string"/>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
-      <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="optional" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
   
@@ -50,7 +50,7 @@
         <xs:element ref="uml:operationArguments" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
-      <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="optional" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
   
@@ -66,7 +66,7 @@
     <xs:complexType>
       <xs:attribute name="defaultValue" type="xs:NCName"/>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
-      <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="optional" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
   
