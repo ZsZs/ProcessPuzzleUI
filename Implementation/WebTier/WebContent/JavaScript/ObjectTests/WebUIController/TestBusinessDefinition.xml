@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <businessDefinition xmlns="http://www.processpuzzle.com/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/BusinessDefinition.xsd ">
+	xsi:schemaLocation="http://www.processpuzzle.com/ http://www.processpuzzle.com/Schemas/BusinessDefinitionsConfigurations.xsd ">
 
 	<!-- PartyTypes: Defines acceptable types of parties. -->
 	<partyTypes>
