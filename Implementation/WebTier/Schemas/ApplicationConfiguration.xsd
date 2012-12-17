@@ -14,10 +14,10 @@
       <xs:sequence>
         <xs:element ref="ac:applicationName"/>
         <xs:element ref="ac:version"/>
-        <xs:element ref="ac:serverWorkingFolder"/>
-        <xs:element ref="ac:clientWorkingFolder"/>
-        <xs:element ref="ac:defaultUserAccount"/>
-        <xs:element ref="ac:persistentDataInitializationStrategy"/>
+        <xs:element ref="ac:serverWorkingFolder" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ac:clientWorkingFolder" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ac:defaultUserAccount" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ac:persistentDataInitializationStrategy" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -44,8 +44,17 @@
         <xs:element ref="bi:businessImplementations" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="em:emailing" minOccurs="0" maxOccurs="1"/>
         <xs:element ref="bc:beanContainer" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="pp:custom" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
     
+  <xs:element name="custom">
+    <xs:complexType mixed="true">
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="http://www.w3.org/1999/xhtml" processContents="lax" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
 </xs:schema>
