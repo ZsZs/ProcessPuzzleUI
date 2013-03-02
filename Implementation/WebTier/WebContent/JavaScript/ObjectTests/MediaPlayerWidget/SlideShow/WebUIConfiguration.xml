@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pp:processPuzzleConfiguration 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:pp="http://www.processpuzzle.com" 
+	xmlns:ac="http://www.processpuzzle.com/ApplicationConfiguration" 
+	xmlns:bc="http://www.processpuzzle.com/BeanContainerConfiguration" 
+	xmlns:bd="http://www.processpuzzle.com/BusinessDefinitionsConfiguration" 
+	xmlns:bi="http://www.processpuzzle.com/BusinessImplementationsConfiguration" 
+	xmlns:dl="http://www.processpuzzle.com/DataLoadersConfiguration" 
+	xmlns:em="http://www.processpuzzle.com/EmailConfiguration" 
+	xmlns:fc="http://www.processpuzzle.com/FrontControllerConfiguration" 
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:in="http://www.processpuzzle.com/InternationalizationConfiguration" 
+	xmlns:pr="http://www.processpuzzle.com/PersistenceConfiguration" 
+	xmlns:rt="http://www.processpuzzle.com/RuntimeConfiguration" 
+	xmlns:wui="http://www.processpuzzle.com/WebUIConfiguration" 
+	xsi:schemaLocation="http://www.processpuzzle.com http://www.processpuzzle.com/Schemas/ProcessPuzzleConfiguration.xsd">
+
+	<ac:application>
+		<ac:applicationName>ProcessPuzzle</ac:applicationName>
+		<ac:version>1.0</ac:version>
+		<ac:serverWorkingFolder>c:\\processpuzzle</ac:serverWorkingFolder>
+		<ac:clientWorkingFolder>c:\\processpuzzle</ac:clientWorkingFolder>
+		<ac:defaultUserAccount>
+			<ge:userName>ProcessPuzzle</ge:userName>
+			<ge:password>ProcessPuzzle</ge:password>
+		</ac:defaultUserAccount>
+		<ac:persistentDataInitializationStrategy>dropAndCreate</ac:persistentDataInitializationStrategy>
+	</ac:application>
+	
+	<wui:webUI>
+		<wui:desktop>
+			<wui:menu definitionURI="../HierarchicalMenuWidget/MenuDefinition.xml"></wui:menu>
+			<wui:availableSkins>
+				<wui:skin name="MochaUI" relativePath="../../DesktopConfigurator/Skins/MochaUI" configurationURI="../../DesktopConfigurator/Skins/MochaUI/DesktopConfiguration.xml" />
+				<wui:skin name="ProcessPuzzle" relativePath="../../DesktopConfigurator/Skins/ProcessPuzzle" configurationURI="../../DesktopConfigurator/Skins/ProcessPuzzle/Configuration/DesktopConfiguration.xml" />
+			</wui:availableSkins>
+			<wui:defaultSkin name="ProcessPuzzle" />
+		</wui:desktop>
+		
+		<wui:logging>
+			<wui:loggers>
+				<wui:logger name="WebUI" level="info"><wui:appenderReference name="formattedPopUpAppender"/></wui:logger>
+				<wui:logger name="ProcessPuzzle" level="info"><wui:appenderReference name="xmlAjaxAppender"/></wui:logger>
+				<wui:logger name="LoggerForUnitTest" level="info" isDefault="true"><wui:appenderReference name="formattedConsoleAppender"/></wui:logger>
+			</wui:loggers>
+			
+			<wui:layouts>
+				<wui:patternLayout name="formattedLayout" pattern="%d{HH:mm:ss} %-5p - %c: %m%n"/>
+				<wui:xmlLayout name="xmlLayout" pattern="[%-5p] %m"/>
+			</wui:layouts>
+
+			<wui:appenders>
+				<wui:ajaxAppender name="xmlAjaxAppender"
+                              batchSize="5"
+                              failCallback="function() {alert('Logging error occured.')}"
+                              layoutReference="xmlLayout"
+							         lazyInit="true"
+                              postVariableName="logData"
+                              requestSuccessCallback="function() { alert('Log was successfully sent') };"
+                              sendAllOnUnload="no"
+                              threshold="info"
+                              timedSending="true"
+                              timerInterval="3000"
+                              waitForResponse="true"
+                              url="http://localhost"/>
+                              
+				<wui:popUpAppender name="formattedPopUpAppender"
+                               commandLineObjectExpansionDepth="10"
+                               complainAboutPopUpBlocking="true"
+                               focusPopUp="true"
+                               height="600"
+                               initiallyMinimized="true"
+                               layoutReference="formattedLayout" 
+                               lazyInit="true"
+                               maxMessages="1000"
+                               newestMessageAtTop="true"
+                               reopenWhenClosed="true"
+                               scrollToLatestMessage="true"
+                               showCommandLine="true"
+                               threshold="info"
+                               useDocumentWrite="false"
+                               useOldPopUp="true"
+                               width="800"/>
+				<wui:inPageAppender name="formattedInPageAppender"
+                                containerElementId="JavaScriptLogging"
+                                height="600"
+                                layoutReference="formattedLayout"
+                                lazyInit="false"
+                                initiallyMinimized="false"
+                                threshold="trace"
+                                useDocumentWrite="true"
+                                width="800"/>
+				<wui:browserConsoleAppender name="formattedConsoleAppender"
+                                            layoutReference="formattedLayout"/>
+			</wui:appenders>			
+		</wui:logging>
+	</wui:webUI>
+
+	<!-- Runtime Configuration -->	
+  
+	<!-- Front Controller Configuration -->
+  
+  	<!-- Persistence Configuration -->
+	
+	<!-- Internationalization Configuration -->
+	<in:internationalization>
+		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
+			<in:resourceBundle localeSpecificVersionsExists="false">../../Desktop/DesktopInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">../../MediaPlayerWidget/PhotoGaleryInternationalization</in:resourceBundle>
+		</in:resouceBundles>
+		
+		<in:availableLocales>
+			<in:locale>hu</in:locale>
+			<in:locale>en</in:locale>
+		</in:availableLocales>
+		<in:defaultLocale>hu</in:defaultLocale>
+		<in:localeDefinitions>classpath:com/processpuzzle/internalization/domain/LocaleDefinitions.xml</in:localeDefinitions>
+	</in:internationalization>
+
+	<!-- Data Loaders Configuration -->
+  	<!-- Email Configuration -->
+  	<!-- Bean Container Configuration -->
+
+</pp:processPuzzleConfiguration>
