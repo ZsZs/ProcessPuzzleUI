@@ -17,7 +17,7 @@ window.SlideShowTest = new Class( {
    constants : {
       LANGUAGE : "hu",
       SLIDESHOW_DATA_URI : "../../MediaPlayerWidget/SlideShow/SlideShowData.xml",
-      WEBUI_CONFIGURATION_URI : "../../MediaPlayerWidget/WebUIConfiguration.xml",
+      WEBUI_CONFIGURATION_URI : "../../MediaPlayerWidget/SlideShow/WebUIConfiguration.xml",
    },
    
    initialize : function( options ) {
