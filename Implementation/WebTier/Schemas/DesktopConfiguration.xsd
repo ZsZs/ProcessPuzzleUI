@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ elementFormDefault="qualified"
  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+ xmlns:pp="http://www.processpuzzle.com"
  xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
- elementFormDefault="qualified">
+ xmlns:sd="http://www.processpuzzle.com/SmartDocument"
+ targetNamespace="http://www.processpuzzle.com/DesktopConfiguration">
 
+ <xs:import namespace="http://www.processpuzzle.com/SmartDocument" schemaLocation="SmartDocument.xsd"/>
+  
  <xs:element name="desktopConfiguration">
   <xs:complexType>
    <xs:sequence>
@@ -12,14 +17,14 @@
     <xs:element name="version" type="xs:decimal" />
     <xs:element name="description" type="xs:string" />
     <xs:element name="containerId" type="xs:NCName" />
-    <xs:element ref="resources" />
-    <xs:element ref="header" />
-    <xs:element ref="windowDocker" />
-    <xs:element ref="contentArea" />
-    <xs:element ref="footer" />
-    <xs:element ref="columns" />
-    <xs:element ref="panels" />
-    <xs:element ref="windows" />
+    <xs:element ref="sd:resources" minOccurs="0" maxOccurs="1"/>
+    <xs:element ref="dc:header" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:windowDocker" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:contentArea" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:footer" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:columns" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:panels" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:windows" minOccurs="0" maxOccurs="1" />
    </xs:sequence>
   </xs:complexType>
  </xs:element>
@@ -53,7 +58,7 @@
  <xs:element name="columns">
   <xs:complexType>
    <xs:sequence>
-    <xs:element maxOccurs="unbounded" ref="column" />
+    <xs:element ref="dc:column" maxOccurs="unbounded" />
    </xs:sequence>
   </xs:complexType>
  </xs:element>
@@ -71,7 +76,7 @@
  <xs:element name="panels">
   <xs:complexType>
    <xs:sequence>
-    <xs:element maxOccurs="unbounded" ref="panel" />
+    <xs:element ref="dc:panel" maxOccurs="unbounded" />
    </xs:sequence>
   </xs:complexType>
  </xs:element>
@@ -79,11 +84,11 @@
  <xs:element name="panel">
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref="title" />
-    <xs:element minOccurs="0" maxOccurs="1" ref="contentURL" />
-    <xs:element minOccurs="0" maxOccurs="1" ref="panelHeader" />
-    <xs:element minOccurs="0" maxOccurs="1" ref="plugin" />
-    <xs:element minOccurs="0" maxOccurs="1" ref="document" />
+    <xs:element ref="dc:title" />
+    <xs:element ref="dc:contentURL" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:panelHeader" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:plugin" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:document" minOccurs="0" maxOccurs="1" />
    </xs:sequence>
    <xs:attribute name="columnReference" use="required" type="xs:NCName" />
    <xs:attribute name="disableScrollBars" type="xs:boolean" use="optional" default="false"/>
@@ -104,7 +109,7 @@
  <xs:element name="panelHeader">
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref="plugin" />
+    <xs:element ref="dc:plugin" />
    </xs:sequence>
    <xs:attribute name="toolBoxUrl" type="xs:anyURI" use="optional" />
    <xs:attribute name="contentStyle" type="xs:string" use="optional" />
@@ -114,39 +119,17 @@
  <xs:element name="plugin">
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref="resources" />
-    <xs:element ref="widget" />
+    <xs:element ref="sd:resources" />
+    <xs:element name="widget" type="sd:Widget" />
    </xs:sequence>
-  </xs:complexType>
- </xs:element>
-
- <xs:element name="widget">
-  <xs:complexType>
-   <xs:sequence>
-    <xs:element ref="options" />
-   </xs:sequence>
-   <xs:attribute name="name" use="required" type="xs:NCName" />
-  </xs:complexType>
- </xs:element>
- <xs:element name="options">
-  <xs:complexType>
-   <xs:sequence>
-    <xs:element maxOccurs="unbounded" ref="option" />
-   </xs:sequence>
-  </xs:complexType>
- </xs:element>
- <xs:element name="option">
-  <xs:complexType>
-   <xs:attribute name="name" use="required" type="xs:NCName" />
-   <xs:attribute name="value" use="required" />
   </xs:complexType>
  </xs:element>
 
  <xs:element name="document">
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref="documentDefinitionUri" />
-    <xs:element ref="documentContentUri" />
+    <xs:element ref="dc:documentDefinitionUri" />
+    <xs:element ref="dc:documentContentUri" />
    </xs:sequence>
    <xs:attribute name="elementStyle" use="required" type="xs:NCName" />
    <xs:attribute name="id" use="required" type="xs:NCName" />
@@ -167,7 +150,7 @@
  <xs:element name="windows">
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref="window" minOccurs="0" maxOccurs="unbounded" />
+    <xs:element ref="dc:window" minOccurs="0" maxOccurs="unbounded" />
    </xs:sequence>
   </xs:complexType>
  </xs:element>
@@ -175,10 +158,10 @@
  <xs:element name="window">
   <xs:complexType>
    <xs:sequence>
-    <xs:element ref="title" minOccurs="1" maxOccurs="1" />
-    <xs:element ref="contentURL" minOccurs="0" maxOccurs="1" />
-    <xs:element ref="plugin" minOccurs="0" maxOccurs="1" />
-    <xs:element ref="document" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:title" minOccurs="1" maxOccurs="1" />
+    <xs:element ref="dc:contentURL" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:plugin" minOccurs="0" maxOccurs="1" />
+    <xs:element ref="dc:document" minOccurs="0" maxOccurs="1" />
    </xs:sequence>
    <xs:attribute name="name" type="xs:string" use="required" />
    <xs:attribute name="height" type="xs:integer" use="optional" />
@@ -186,47 +169,4 @@
   </xs:complexType>
  </xs:element>
 
- <xs:element name="resources">
-  <xs:complexType>
-   <xs:sequence>
-    <xs:element ref="styleSheets" minOccurs="0" maxOccurs="unbounded" />
-    <xs:element ref="images" minOccurs="0" maxOccurs="unbounded" />
-    <xs:element ref="javaScripts" minOccurs="0" maxOccurs="unbounded" />
-   </xs:sequence>
-  </xs:complexType>
- </xs:element>
-
- <xs:element name="styleSheets">
-  <xs:complexType>
-   <xs:sequence>
-    <xs:element ref="styleSheet" minOccurs="0" maxOccurs="unbounded" />
-   </xs:sequence>
-  </xs:complexType>
- </xs:element>
- <xs:element name="styleSheet" type="xs:string" />
-
- <xs:element name="images">
-  <xs:complexType>
-   <xs:sequence>
-    <xs:element ref="image" minOccurs="0" maxOccurs="unbounded" />
-   </xs:sequence>
-  </xs:complexType>
- </xs:element>
-
- <xs:element name="image">
-  <xs:complexType mixed="true">
-   <xs:attribute name="id" use="optional" type="xs:NCName" />
-   <xs:attribute name="title" use="optional" type="xs:NCName" />
-  </xs:complexType>
- </xs:element>
-
- <xs:element name="javaScripts">
-  <xs:complexType>
-   <xs:sequence>
-    <xs:element ref="javaScript" minOccurs="0" maxOccurs="unbounded" />
-   </xs:sequence>
-  </xs:complexType>
- </xs:element>
-
- <xs:element name="javaScript" type="xs:string" />
 </xs:schema>
