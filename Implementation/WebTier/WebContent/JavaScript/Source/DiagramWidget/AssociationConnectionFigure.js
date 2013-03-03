@@ -30,6 +30,7 @@ You should have received a copy of the GNU General Public License along with thi
 //= require_directory ../MochaUI
 //= require_directory ../FundamentalTypes
 //= require ../DiagramWidget/DiagramFigure.js
+//= require ../DiagramWidget/ConnectionFigure.js
 //= require ../DiagramWidget/DiagramWidget.js
 
 var AssociationConnectionFigure = new Class({
