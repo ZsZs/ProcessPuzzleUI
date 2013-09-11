@@ -34,8 +34,9 @@
     <xs:complexType>
 	 <xs:simpleContent>
 	  <xs:extension base="xs:anyURI">
-       <xs:attribute name="localeSpecificVersionsExists" type="xs:boolean" />
-       <xs:attribute name="baseNameOnlyVersionExists" type="xs:boolean" />
+       <xs:attribute name="baseNameOnlyVersionExists" type="xs:boolean" use="optional" default="false" />
+       <xs:attribute name="isBackendOnly" type="xs:boolean" use="optional" default="false"/>
+       <xs:attribute name="localeSpecificVersionsExists" type="xs:boolean" use="optional" default="true" />
 	  </xs:extension>
 	 </xs:simpleContent>
     </xs:complexType>
