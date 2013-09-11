@@ -36,6 +36,8 @@ var LocalizationResourceReference = new Class({
       baseNameOnlyVersionExists : true,
       baseNameOnlyVersionExistsSelector : "@baseNameOnlyVersionExists",
       eventFireDelay : 2,
+      isBackendOnly : false,
+      isBackendOnlySelector : "@isBackendOnly",
       localeSpecificVersionExists : true,
       localeSpecificVersionExistsSelector : "@localeSpecificVersionsExists",
       nameSpase : "xmlns:pp='http://www.processpuzzle.com'"
@@ -71,12 +73,14 @@ var LocalizationResourceReference = new Class({
 
       this.uri = XmlResource.determineNodeText( this.resourceDefinitionXml );
       this.options.baseNameOnlyVersionExists = parseBoolean( XmlResource.selectNodeText( this.options.baseNameOnlyVersionExistsSelector, this.resourceDefinitionXml, this.options.nameSpace, this.options.baseNameOnlyVersionExists ));
+      this.options.isBackendOnly = parseBoolean( XmlResource.selectNodeText( this.options.isBackendOnlySelector, this.resourceDefinitionXml, this.options.nameSpace, this.options.isBackendOnly ));
       this.options.localeSpecificVersionExists = parseBoolean( XmlResource.selectNodeText( this.options.localeSpecificVersionExistsSelector, this.resourceDefinitionXml, this.options.nameSpace, this.options.localeSpecificVersionExists ));
    },
 
    // Properties
    getUri : function() { return this.uri; },
    isBaseNameOnlyVersionExists : function(){ return this.options.baseNameOnlyVersionExists; },
+   isBackendOnly : function(){ return this.options.isBackendOnly; },
    isLocaleSpecificVersionExists : function() { return this.options.localeSpecificVersionExists; }
 
 // private methods

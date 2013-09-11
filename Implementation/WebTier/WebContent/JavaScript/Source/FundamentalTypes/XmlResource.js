@@ -218,7 +218,7 @@ XmlResource.selectNodes = function( selector, xmlElement ){
 
 XmlResource.selectNodeText = function( selector, xmlElement, nameSpaces, defaultValue ) {
    var selectedElement = XmlResource.selectNode( selector, xmlElement, nameSpaces );
-   if( !selectedElement && defaultValue ) return defaultValue;
+   if( !selectedElement && ( typeof defaultValue != 'undefined' )) return defaultValue;
    else return XmlResource.determineNodeText( selectedElement, defaultValue );
 };
 

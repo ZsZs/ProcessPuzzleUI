@@ -106,6 +106,7 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
+         <in:resourceBundle isBackendOnly="true">classpath:com/processpuzzle/internalization/domain/DomainTier_Resources</in:resourceBundle>
 			<in:resourceBundle localeSpecificVersionsExists="false">../Desktop/DesktopInternationalization</in:resourceBundle>
 			<in:resourceBundle localeSpecificVersionsExists="false">../HierarchicalMenuWidget/MenuInternationalization</in:resourceBundle>
 			<in:resourceBundle baseNameOnlyVersionExists="true">../Internationalization/TestResources</in:resourceBundle>

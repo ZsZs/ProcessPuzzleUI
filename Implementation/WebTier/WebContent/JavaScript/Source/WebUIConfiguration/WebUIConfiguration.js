@@ -71,7 +71,7 @@ var WebUIConfiguration = new Class({
       i18ElementSelector : "/pp:processPuzzleConfiguration/in:internationalization",
       i18LocaleSelector : "text()",
       i18LocaleElementsSelector : "in:availableLocales/in:locale",
-      i18ResourceBundleElementsSelector : "in:resouceBundles/in:resourceBundle",
+      i18ResourceBundleElementsSelector : "in:resouceBundles/in:resourceBundle[not(@isBackendOnly='true')]",
       i18ResourceBundleNameSelector : "text()",
       i18ResourceBundleNameSpaceSelector : "in:resouceBundles/@nameSpace",
       layoutElementsSelector : "wui:logging/wui:layouts/wui:patternLayout | wui:logging/wui:layouts/wui:xmlLayout",

@@ -132,7 +132,7 @@ var LocalizationResourceManager = new Class({
       this.webUIConfiguration.getI18ResourceBundleElements().each( function( localizationResourceDefinition, index ){
          var localizationResourceReference = new LocalizationResourceReference( localizationResourceDefinition );
          localizationResourceReference.unmarshall();
-         this.localizationResourceReferences.add( localizationResourceReference );
+         if( !localizationResourceReference.isBackendOnly() ) this.localizationResourceReferences.add( localizationResourceReference );
       }.bind( this ));
    }.protect(),
    

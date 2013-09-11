@@ -14,6 +14,7 @@ window.LocalizationResourceReferenceTest = new Class( {
       CONFIGURATION_URI : "../Internationalization/WebUIConfiguration.xml",
       COUNTRY : "HU",
       LANGUAGE : "hu",
+      RESOURCE_DEFINITION_WITH_BACKENDONLY_SELECTOR : "/pp:processPuzzleConfiguration/in:internationalization/in:resouceBundles/in:resourceBundle[@isBackendOnly='true']",
       RESOURCE_DEFINITION_WITH_LOCALEEXPANSION_SELECTOR : "/pp:processPuzzleConfiguration/in:internationalization/in:resouceBundles/in:resourceBundle[@baseNameOnlyVersionExists='true']",
       RESOURCE_DEFINITION_WITHOUT_LOCALEEXPANSION_SELECTOR : "/pp:processPuzzleConfiguration/in:internationalization/in:resouceBundles/in:resourceBundle[@localeSpecificVersionsExists='false']"
    },
@@ -32,11 +33,15 @@ window.LocalizationResourceReferenceTest = new Class( {
    beforeEachTest : function(){
       this.locale = new ProcessPuzzleLocale({ language: this.constants.LANGUAGE, country: this.constants.COUNTRY });
       this.configurationXml = new XmlResource( this.constants.CONFIGURATION_URI, { nameSpaces : this.constants.CONFIGURATION_NAMESPACES });
+      
       this.resourceDefinitionXml = this.configurationXml.selectNode( this.constants.RESOURCE_DEFINITION_WITH_LOCALEEXPANSION_SELECTOR );
       this.localizationReference = new LocalizationResourceReference( this.resourceDefinitionXml );
       
       this.resourceWithoutLocaleExpansionDefinitionXml = this.configurationXml.selectNode( this.constants.RESOURCE_DEFINITION_WITHOUT_LOCALEEXPANSION_SELECTOR );
       this.localizationReferenceWithoutLocaleExpansion = new LocalizationResourceReference( this.resourceWithoutLocaleExpansionDefinitionXml );
+      
+      this.resourceWithBackendOnlyDefinitionXml = this.configurationXml.selectNode( this.constants.RESOURCE_DEFINITION_WITH_BACKENDONLY_SELECTOR );
+      this.localizationReferenceForBackendOnly = new LocalizationResourceReference( this.resourceWithBackendOnlyDefinitionXml );
    },
    
    afterEachTest : function (){
@@ -45,16 +50,23 @@ window.LocalizationResourceReferenceTest = new Class( {
    },
    
    unmarshall_determinesProperties : function(){
-      this.localizationReference.unmarshall();
-      this.localizationReferenceWithoutLocaleExpansion.unmarshall();
-      
+      this.localizationReference.unmarshall();      
       assertThat( this.localizationReference.getUri(), equalTo( XmlResource.determineNodeText( this.resourceDefinitionXml )));
-      assertThat( this.localizationReference.isLocaleSpecificVersionExists(), equalTo( true ));
       assertThat( this.localizationReference.isBaseNameOnlyVersionExists(), equalTo( parseBoolean( XmlResource.selectNodeText( "@baseNameOnlyVersionExists", this.resourceDefinitionXml ))));
+      assertThat( this.localizationReferenceWithoutLocaleExpansion.isBackendOnly(), equalTo( false ));
+      assertThat( this.localizationReference.isLocaleSpecificVersionExists(), equalTo( true ));
       
+      this.localizationReferenceWithoutLocaleExpansion.unmarshall();
       assertThat( this.localizationReferenceWithoutLocaleExpansion.getUri(), equalTo( XmlResource.determineNodeText( this.resourceWithoutLocaleExpansionDefinitionXml )));
-      assertThat( this.localizationReferenceWithoutLocaleExpansion.isLocaleSpecificVersionExists(), equalTo( parseBoolean( XmlResource.selectNodeText( "@localeSpecificVersionsExists", this.resourceWithoutLocaleExpansionDefinitionXml ))));
       assertThat( this.localizationReferenceWithoutLocaleExpansion.isBaseNameOnlyVersionExists(), equalTo( true ));
+      assertThat( this.localizationReferenceWithoutLocaleExpansion.isBackendOnly(), equalTo( false ));
+      assertThat( this.localizationReferenceWithoutLocaleExpansion.isLocaleSpecificVersionExists(), equalTo( parseBoolean( XmlResource.selectNodeText( "@localeSpecificVersionsExists", this.resourceWithoutLocaleExpansionDefinitionXml ))));
+      
+      this.localizationReferenceForBackendOnly.unmarshall();
+      assertThat( this.localizationReferenceForBackendOnly.getUri(), equalTo( XmlResource.determineNodeText( this.resourceWithBackendOnlyDefinitionXml )));
+      assertThat( this.localizationReferenceForBackendOnly.isBaseNameOnlyVersionExists(), equalTo( true ));
+      assertThat( this.localizationReferenceForBackendOnly.isBackendOnly(), equalTo( true ));
+      assertThat( this.localizationReferenceForBackendOnly.isLocaleSpecificVersionExists(), equalTo( true ));
    },
    
    expandedUris_whenEnabled_returnsLanguageAndCountrySpecificUris : function(){
