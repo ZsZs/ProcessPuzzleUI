@@ -18,7 +18,7 @@
       </ant>
    </target>
 
-   <target name="call-webtier-build" depends="call-domaintier-build">
+   <target name="call-webtier-build">
 		<ant dir="${project.webtier.root}" antfile="${project.build.file}" inheritall="false">
 			<property name="project.root" location="${project.webtier.root}" />
 			<property name="view.root.path" location="${view.root.path}" />
