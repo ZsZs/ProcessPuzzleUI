@@ -10,7 +10,7 @@ window.DesktopFooterTest = new Class( {
    constants : {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "Desktop",
-      FOOTER_DEFINITION_SELECTOR : "/desktopConfiguration/footer",
+      FOOTER_DEFINITION_SELECTOR : "/dc:desktopConfiguration/dc:footer",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml",
    },
    

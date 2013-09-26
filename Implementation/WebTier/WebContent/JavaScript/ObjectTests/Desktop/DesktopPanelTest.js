@@ -31,17 +31,17 @@ window.DesktopPanelTest = new Class( {
    constants : {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
-      COLUMN_DEFINITION : "/desktopConfiguration/columns/column[@name='mainColumn']",
+      COLUMN_DEFINITION : "/dc:desktopConfiguration/dc:columns/dc:column[@name='mainColumn']",
       ERRONEOUS_DOCUMENT_URI : "../Desktop/ErroneousDocumentDefinition.xml",
       ERROR_DOCUMENT_URI : "ErrorDocument.xml",
       HTML_DOCUMENT_URI : "../Desktop/HtmlDocument.xml",
       SMART_DOCUMENT_URI : "../Desktop/StaticDocument.xml",
       PANEL_DOCUMENT_WRAPPER_ID : "panelDocumentWrapper",
       PANEL_NAME : "documents-panel",
-      PANEL_WITH_DOCUMENT_DEFINITION : "/desktopConfiguration/panels/panel[@name='documents-panel']",
-      PANEL_WITH_ERRONEOUS_DOCUMENT_DEFINITION : "/desktopConfiguration/panels/panel[@name='tips-panel']",
-      PANEL_WITH_ERRONEOUS_PLUGIN_DEFINITION : "/desktopConfiguration/panels/panel[@name='eventsPanel']",
-      PANEL_WITH_PLUGIN_DEFINITION : "/desktopConfiguration/panels/panel[@name='newsPanel']",
+      PANEL_WITH_DOCUMENT_DEFINITION : "/dc:desktopConfiguration/dc:panels/dc:panel[@name='documents-panel']",
+      PANEL_WITH_ERRONEOUS_DOCUMENT_DEFINITION : "/dc:desktopConfiguration/dc:panels/dc:panel[@name='tips-panel']",
+      PANEL_WITH_ERRONEOUS_PLUGIN_DEFINITION : "/dc:desktopConfiguration/dc:panels/dc:panel[@name='eventsPanel']",
+      PANEL_WITH_PLUGIN_DEFINITION : "/dc:desktopConfiguration/dc:panels/dc:panel[@name='newsPanel']",
       PAGE_WRAPPER_ID : "pageWrapper",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml"
    },
@@ -144,7 +144,7 @@ window.DesktopPanelTest = new Class( {
    unmarshall_determinesPanelProperties : function() {
       this.panelWithDocument.unmarshall();
       assertThat( this.panelWithDocument.getColumnReference(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@columnReference" ).value ) );
-      assertThat( this.panelWithDocument.getContentUrl(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/contentURL" ) ) );
+      assertThat( this.panelWithDocument.getContentUrl(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:contentURL" ) ) );
       assertThat( this.panelWithDocument.getEventSources(), equalTo( eval( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@eventOriginators" ))));
       assertThat( this.panelWithDocument.getHeight(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@height" ).value ) );
       assertThat( this.panelWithDocument.getName(), equalTo( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@name" ).value ) );
@@ -153,7 +153,7 @@ window.DesktopPanelTest = new Class( {
       assertThat( this.panelWithDocument.getStoreState(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@storeState" ).value ) ) );
       assertThat( this.panelWithDocument.getStoreStateInUri(), equalTo( parseBoolean( this.desktopDefinition.selectNode( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/@storeStateInUri" ).value ) ) );
       assertThat( this.panelWithDocument.getToolBox(), not( nil() ) );
-      assertThat( this.panelWithDocument.getTitle(), equalTo( this.resourceBundle.getText( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/title" ) ) ) );
+      assertThat( this.panelWithDocument.getTitle(), equalTo( this.resourceBundle.getText( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:title" ) ) ) );
    },
    
    unmarshall_unmarshallsPanelHeader : function() {
@@ -167,11 +167,11 @@ window.DesktopPanelTest = new Class( {
       this.panelWithDocument.unmarshall();
       assertThat( this.panelWithDocument.getDocument(), not( nil() ) );
       assertThat( instanceOf( this.panelWithDocument.getDocument(), SmartDocument ), is( true ) );
-      assertThat( this.panelWithDocument.getDocumentDefinitionUri(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
-      assertThat( this.panelWithDocument.getDocumentContentUri(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentContentUri" ) ) );
-      assertThat( this.panelWithDocument.getDocumentWrapperId(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/@id" ) ) );
-      assertThat( this.panelWithDocument.getDocumentWrapperStyle(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/@elementStyle" ) ) );
-      assertThat( this.panelWithDocument.getDocumentWrapperTag(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/@tag" ) ) );
+      assertThat( this.panelWithDocument.getDocumentDefinitionUri(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );
+      assertThat( this.panelWithDocument.getDocumentContentUri(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentContentUri" ) ) );
+      assertThat( this.panelWithDocument.getDocumentWrapperId(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/@id" ) ) );
+      assertThat( this.panelWithDocument.getDocumentWrapperStyle(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/@elementStyle" ) ) );
+      assertThat( this.panelWithDocument.getDocumentWrapperTag(), equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/@tag" ) ) );
    },
    
    unmarshall_whenSpecified_subscribesForMenuSelectedMessage : function() {
@@ -332,7 +332,7 @@ window.DesktopPanelTest = new Class( {
             this.constructPanel( this.panelWithDocument );
          }.bind( this ),
          function(){
-            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );            
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );            
          }.bind( this ),
          function(){
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.HTML, documentURI : this.constants.HTML_DOCUMENT_URI, originator : "verticalMenuColumn" });
@@ -352,7 +352,7 @@ window.DesktopPanelTest = new Class( {
             this.constructPanel( this.panelWithDocument );
          }.bind( this ),
          function(){
-            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );
          }.bind( this ),
          function(){
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "verticalMenuColumn" });
@@ -372,12 +372,12 @@ window.DesktopPanelTest = new Class( {
             this.constructPanel( this.panelWithDocument );
          }.bind( this ),
          function(){
-            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );
          }.bind( this ),
          function(){
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "invalidSource" });
             this.webUIMessageBus.notifySubscribers( message );
-            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -390,7 +390,7 @@ window.DesktopPanelTest = new Class( {
             this.constructPanel( this.panelWithDocument );
          }.bind( this ),
          function(){
-            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );
          }.bind( this ),
          function(){
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.SMART_DOCUMENT_URI, originator : "verticalMenuColumn" });

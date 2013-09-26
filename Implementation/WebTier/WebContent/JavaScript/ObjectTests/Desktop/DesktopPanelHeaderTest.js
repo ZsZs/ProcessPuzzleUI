@@ -13,7 +13,7 @@ window.DesktopPanelHeaderTest = new Class({
    constants : {
       CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
-      PANEL_HEADER_SELECTOR : "/desktopConfiguration/panels/panel[@name='console']/panelHeader"
+      PANEL_HEADER_SELECTOR : "/dc:desktopConfiguration/dc:panels/dc:panel[@name='console']/dc:panelHeader"
    },
    
    initialize : function( options ) {

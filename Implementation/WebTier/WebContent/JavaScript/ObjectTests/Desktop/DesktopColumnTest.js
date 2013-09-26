@@ -14,7 +14,7 @@ window.DesktopColumnTest = new Class( {
    constants : {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
-      COLUMN_DEFINITION : "/desktopConfiguration/columns/column[@name='leftColumn']",
+      COLUMN_DEFINITION : "/dc:desktopConfiguration/dc:columns/dc:column[@name='leftColumn']",
       PAGE_WRAPPER_ID : "pageWrapper",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml"
    },

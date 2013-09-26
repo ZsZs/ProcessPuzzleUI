@@ -18,8 +18,8 @@ window.RemoteResourceTest = new Class( {
    constants : {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
-      WINDOW_DEFINITION_WITH_HTMLCONTENT : "/desktopConfiguration/windows/window[@name='aboutDialog']",
-      WINDOW_DEFINITION_WITH_SMARTCONTENT : "/desktopConfiguration/windows/window[@name='newDocumentDialog']",
+      WINDOW_DEFINITION_WITH_HTMLCONTENT : "/dc:desktopConfiguration/dc:windows/dc:window[@name='aboutDialog']",
+      WINDOW_DEFINITION_WITH_SMARTCONTENT : "/dc:desktopConfiguration/dc:windows/dc:window[@name='newDocumentDialog']",
       PAGE_WRAPPER_ID : "pageWrapper",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml"
    },

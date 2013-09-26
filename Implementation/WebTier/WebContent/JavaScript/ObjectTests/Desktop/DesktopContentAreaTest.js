@@ -10,7 +10,7 @@ window.DesktopContentAreaTest = new Class( {
    constants : {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
-      CONTENT_AREA_DEFINITION : "/desktopConfiguration/contentArea",
+      CONTENT_AREA_DEFINITION : "/dc:desktopConfiguration/dc:contentArea",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml"
    },
    

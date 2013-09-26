@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<desktopConfiguration 
+<dc:desktopConfiguration 
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:pp="http://www.processpuzzle.com"
    xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
+   xmlns:pp="http://www.processpuzzle.com"
    xmlns:sd="http://www.processpuzzle.com/SmartDocument"
-   xsi:schemaLocation="http://www.processpuzzle.com/SmartDocument http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com/DesktopConfiguration http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
-	<name>ProcessPuzzle</name>
-	<version>1.0</version>
-	<description>This is full flagged desktop configuration.</description>
-	<containerId>desktopContainer</containerId>
+	<dc:name>ProcessPuzzle</dc:name>
+	<dc:version>1.0</dc:version>
+	<dc:description>This is full flagged desktop configuration.</dc:description>
+	<dc:containerId>desktopContainer</dc:containerId>
 
 	<sd:resources>
 		<sd:styleSheets>
@@ -25,27 +25,27 @@
 		<sd:javaScripts></sd:javaScripts>
 	</sd:resources>
 	
-	<header documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopHeader.xml"/>
+	<dc:header documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopHeader.xml"/>
 	
-	<windowDocker tag="div" id="dockWrapper"/>
+	<dc:windowDocker tag="div" id="dockWrapper"/>
 	
-	<contentArea tag="div" id="pageWrapper"/>
+	<dc:contentArea tag="div" id="pageWrapper"/>
 	
-	<footer documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopFooter.xml"/>
+	<dc:footer documentDefinition="../Desktop/Skins/ProcessPuzzle/DesktopFooter.xml"/>
 	
-	<columns>
-		<column name="leftColumn" placement="left" width="200" minimumWidth="100" maximumWidth="300"/>
-		<column name="mainColumn" placement="main"/>
-		<column name="rightColumn" placement="right" width="220" minimumWidth="200" maximumWidth="300"/>
-	</columns>
+	<dc:columns>
+		<dc:column name="leftColumn" placement="left" width="200" minimumWidth="100" maximumWidth="300"/>
+		<dc:column name="mainColumn" placement="main"/>
+		<dc:column name="rightColumn" placement="right" width="220" minimumWidth="200" maximumWidth="300"/>
+	</dc:columns>
 	
-	<panels>
-		<panel name="documents-browser" columnReference="leftColumn" disableScrollBars="true" height="250">
-			<title>DesktopConfigurator.Panel.contentBrowserTitle</title>
-			<contentURL>../Desktop/Content/TreeView.html</contentURL>
-		</panel>
+	<dc:panels>
+		<dc:panel name="documents-browser" columnReference="leftColumn" disableScrollBars="true" height="250">
+			<dc:title>DesktopConfigurator.Panel.contentBrowserTitle</dc:title>
+			<dc:contentURL>../Desktop/Content/TreeView.html</dc:contentURL>
+		</dc:panel>
 		
-		<panel name="documents-panel" 
+		<dc:panel name="documents-panel" 
 		       columnReference="mainColumn" 
 		       showHeader="true" 
 		       height="400" 
@@ -53,73 +53,73 @@
 		       storeState="true"
 		       storeStateInUri="true" 
 		       eventOriginators="['horizontalMenuBar', 'verticalMenuColumn', 'webUIController']">
-			<title>DesktopConfigurator.Panel.documentsTitle</title>
-			<contentURL>../Desktop/Content/HelloWorldContent.html</contentURL>
-         <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
-            <plugin>
+			<dc:title>DesktopConfigurator.Panel.documentsTitle</dc:title>
+			<dc:contentURL>../Desktop/Content/HelloWorldContent.html</dc:contentURL>
+         <dc:panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html">
+            <dc:plugin>
                <sd:resources>
                   <sd:styleSheets>
                      <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentToolBar.css</sd:styleSheet>
                   </sd:styleSheets>
                   <sd:javaScripts></sd:javaScripts>
                </sd:resources>
-               <sd:widget name="ToolBarWidget">
+               <dc:widget name="ToolBarWidget">
                   <sd:options>
                      <sd:option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'../ToolBarWidget/ToolBarDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'../ToolBarWidget/ToolBarWidgetDefinition.xml'"/>
                   </sd:options>
-               </sd:widget>
-            </plugin>
-         </panelHeader>
-			<document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
-			    <documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</documentDefinitionUri>
-			    <documentContentUri>../Desktop/SampleDocumentContent.xml</documentContentUri>
-			</document>
-		</panel>
+               </dc:widget>
+            </dc:plugin>
+         </dc:panelHeader>
+			<dc:document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
+			    <dc:documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</dc:documentDefinitionUri>
+			    <dc:documentContentUri>../Desktop/SampleDocumentContent.xml</dc:documentContentUri>
+			</dc:document>
+		</dc:panel>
 		
-		<panel name="console" columnReference="mainColumn" height="100" showHeader="true">
-			<title>DesktopConfigurator.Panel.consoleTitle</title>
-         <panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html" contentStyle="DocumentTabs">
-            <plugin>
+		<dc:panel name="console" columnReference="mainColumn" height="100" showHeader="true">
+			<dc:title>DesktopConfigurator.Panel.consoleTitle</dc:title>
+         <dc:panelHeader toolBoxUrl="../Desktop/EmptyToolboxContent.html" contentStyle="DocumentTabs">
+            <dc:plugin>
                <sd:resources>
                   <sd:styleSheets>
                      <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentSelector.css</sd:styleSheet>
                   </sd:styleSheets>
                </sd:resources>
-               <sd:widget name="TabWidget">
+               <dc:widget name="TabWidget">
                   <sd:options>
                      <sd:option name="widgetContainerId" value="'console_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'../TabWidget/TabsDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'../TabWidget/TabWidgetDefinition.xml'"/>
                   </sd:options>
-               </sd:widget>
-            </plugin>
-         </panelHeader>
-		</panel>
+               </dc:widget>
+            </dc:plugin>
+         </dc:panelHeader>
+		</dc:panel>
 		
-		<panel name="eventsPanel" columnReference="mainColumn" showHeader="true">
-         <title>DesktopConfigurator.Panel.eventsTitle</title>
-         <plugin>
-            <sd:widget name="PartyEventWidget">
+		<dc:panel name="eventsPanel" columnReference="mainColumn" showHeader="true">
+         <dc:title>DesktopConfigurator.Panel.eventsTitle</dc:title>
+         <dc:plugin>
+            <dc:widget name="PartyEventWidget">
                <sd:options>
                   <sd:option name="widgetDataURI" value="'../PartyEventWidget/TestEvents.xml'"/>
                   <sd:option name="widgetDefinitionURI" value="'../PartyEventWidget/PartyEventWidgetDefinition.xml'"/>
                </sd:options>
-            </sd:widget>
-         </plugin>
-		</panel>
+            </dc:widget>
+         </dc:plugin>
+		</dc:panel>
 		
-      <panel name='newsPanel' columnReference='mainColumn' height='350' showHeader='true'>
-         <title>DesktopConfigurator.Panel.newsTitle</title>
-         <contentURL>../Desktop/NewsPanel.html</contentURL>
-         <plugin>
+      <dc:panel name='newsPanel' columnReference='mainColumn' height='350' showHeader='true'>
+         <dc:title>DesktopConfigurator.Panel.newsTitle</dc:title>
+         <dc:contentURL>../Desktop/NewsPanel.html</dc:contentURL>
+         <dc:plugin>
             <sd:resources>
                <sd:styleSheets>
                   <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/NewsPanel.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <sd:widget name="NewsReaderWidget">
+            <dc:widget name="NewsReaderWidget">
                <sd:options>
                   <sd:option name="widgetContainerId" value="'TopNews'"/>
                   <sd:option name="widgetDataURI" value="'../NewsReaderWidget/TestNews.xml'"/>
@@ -127,30 +127,31 @@
                   <sd:option name="componentName" value="'NewsReaderWidget'"/>
                   <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
                </sd:options>
-            </sd:widget>
-         </plugin>
-      </panel>
+            </dc:widget>
+         </dc:plugin>
+      </dc:panel>
       
-		<panel name="tips-panel" columnReference="mainColumn" height="150" showHeader="true">
-			<title>DesktopConfigurator.Panel.tipsTitle</title>
-         <document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
-             <documentDefinitionUri>../Desktop/ErroneousDocumentDefinition.xml</documentDefinitionUri>
-         </document>
-		</panel>
-	</panels>
+		<dc:panel name="tips-panel" columnReference="mainColumn" height="150" showHeader="true">
+			<dc:title>DesktopConfigurator.Panel.tipsTitle</dc:title>
+         <dc:document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
+             <dc:documentDefinitionUri>../Desktop/ErroneousDocumentDefinition.xml</dc:documentDefinitionUri>
+             <dc:documentContentUri>../Desktop/SampleDocumentContent.xml</dc:documentContentUri>
+         </dc:document>
+		</dc:panel>
+	</dc:panels>
 	
-	<windows>
-      <window name="aboutDialog" height="300" width="500">
-         <title>DesktopWindow.aboutDialog.title</title>
-         <contentURL>../Desktop/Content/About.html</contentURL>
-      </window>
+	<dc:windows>
+      <dc:window name="aboutDialog" height="300" width="500">
+         <dc:title>DesktopWindow.aboutDialog.title</dc:title>
+         <dc:contentURL>../Desktop/Content/About.html</dc:contentURL>
+      </dc:window>
       
-		<window name="newDocumentDialog" height="400" width="600">
-         <title>DesktopWindow.newDocumentDialog.title</title>
-         <document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
-             <documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</documentDefinitionUri>
-             <documentContentUri>../Desktop/SampleDocumentContent.xml</documentContentUri>
-         </document>
-      </window>
-	</windows>
-</desktopConfiguration>
+		<dc:window name="newDocumentDialog" height="400" width="600">
+         <dc:title>DesktopWindow.newDocumentDialog.title</dc:title>
+         <dc:document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
+             <dc:documentDefinitionUri>../Desktop/SmartDocumentDefinition.xml</dc:documentDefinitionUri>
+             <dc:documentContentUri>../Desktop/SampleDocumentContent.xml</dc:documentContentUri>
+         </dc:document>
+      </dc:window>
+	</dc:windows>
+</dc:desktopConfiguration>

@@ -15,7 +15,7 @@ window.DesktopDocumentTest = new Class( {
    constants : {
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "Desktop",
-      HEADER_DEFINITION_SELECTOR : "/desktopConfiguration/header",
+      HEADER_DEFINITION_SELECTOR : "/dc:desktopConfiguration/dc:header",
       WEBUI_CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml"
    },
    
