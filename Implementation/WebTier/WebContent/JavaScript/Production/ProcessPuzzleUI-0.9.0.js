@@ -1515,40 +1515,42 @@ MUI.Dock = {
 	}
 };
  
-// Copyright 2006 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/*
+Copyright 2006 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 
-// Known Issues:
-//
-// * Patterns are not implemented.
-// * Radial gradient are not implemented. The VML version of these look very
-//   different from the canvas one.
-// * Clipping paths are not implemented.
-// * Coordsize. The width and height attribute have higher priority than the
-//   width and height style values which isn't correct.
-// * Painting mode isn't implemented.
-// * Canvas width/height should is using content-box by default. IE in
-//   Quirks mode will draw the canvas using border-box. Either change your
-//   doctype to HTML5
-//   (http://www.whatwg.org/specs/web-apps/current-work/#the-doctype)
-//   or use Box Sizing Behavior from WebFX
-//   (http://webfx.eae.net/dhtml/boxsizing/boxsizing.html)
-// * Non uniform scaling does not correctly scale strokes.
-// * Optimize. There is always room for speed improvements.
+Known Issues:
 
-// Only add this code if we do not already have a canvas implementation
+- Patterns are not implemented.
+- Radial gradient are not implemented. The VML version of these look very
+  different from the canvas one.
+- Clipping paths are not implemented.
+- Coordsize. The width and height attribute have higher priority than the
+  width and height style values which isn't correct.
+- Painting mode isn't implemented.
+- Canvas width/height should is using content-box by default. IE in
+  Quirks mode will draw the canvas using border-box. Either change your
+  doctype to HTML5
+  (http://www.whatwg.org/specs/web-apps/current-work/#the-doctype)
+  or use Box Sizing Behavior from WebFX
+  (http://webfx.eae.net/dhtml/boxsizing/boxsizing.html)
+- Non uniform scaling does not correctly scale strokes.
+- Optimize. There is always room for speed improvements.
+*/
+//Only add this code if we do not already have a canvas implementation
+
 if( !document.createElement('canvas').getContext ) {
 
 (function() {
@@ -4008,12 +4010,12 @@ MUI.extend({
 		if( MUI.Desktop ) { MUI.Desktop.resizePanels(); }
 
 		// Do this when creating and removing panels
-      var panels=$(column).getElements('.panelWrapper');
-		panels.each(function(panelWrapper){
+      var panels = columnInstance.columnEl.getElements('.panelWrapper');
+		panels.each( function(panelWrapper ){
 			panelWrapper.getElement('.panel').removeClass('bottomPanel');
 		});
 		
-      if(panels.length>0) panels.getLast().getElement('.panel').addClass('bottomPanel');
+      if( panels.length > 0 ) panels.getLast().getElement('.panel').addClass( 'bottomPanel' );
 
 		instances.erase( instance.options.id );
 		return true;
@@ -7032,6 +7034,185 @@ AssertUtil.assertMemberStateString = function(member, memberName, mandatory, val
 	}
 };
 /*
+Name: AssertionBehaviour
+
+Description:
+   - Add 'assertThat' and 'assumeThat' behavior to a Class.
+
+Requires:
+   - JsHamcrest
+
+Provides:
+   - AssertionBehaviour
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var AssertionBehavior = new Class({
+   //Constructors
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   assertThat : function( actual, matcher, message ) {
+      return JsHamcrest.Operators.assert( actual, matcher, {
+         message: message,
+        
+         fail: function( message ) {
+            throw new AssertionException( message );
+         },
+        
+         pass: function( message ) { }
+      });
+   }.protect(),
+
+   assumeThat : function( actual, matcher, message ) {
+      return JsHamcrest.Operators.assert( actual, matcher, {
+         message: message,
+        
+         fail: function( message ) {
+            throw new AssertionException( message );
+         },
+        
+         pass: function( message ) { }
+      });
+   }.protect()
+});
+
+/*
+Name: WebUIException
+
+Description: 
+
+Requires:
+
+Provides:
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var WebUIException = new Class({
+   Implements: Options,
+   options: {
+      cause: null,
+      description: "Please overwrite this option.",
+      message : "",
+      name: "WebUIException",
+      source: null
+   },
+   
+   //Constructors
+   initialize: function( options ){
+     this.setOptions( options );
+     if( options && options.cause ) this.options.cause = options.cause;
+     
+     //Private instance variables
+     this.parameters;
+   },
+   
+   //Public accessor and mutator methods
+   stackTrace: function() {
+      var stackTrace = "";
+      if( this.options.cause ){
+         if( this.options.cause.getMessage )
+            stackTrace += this.options.cause.getMessage() + "\r\n" + this.options.cause.stackTrace();
+         else{
+            stackTrace += this.options.cause.message;
+            stackTrace += "\r\n" + printStackTrace();
+         }
+      }else{
+         stackTrace += printStackTrace();
+      }
+      
+      return stackTrace;
+   },
+   
+   //Properties
+   getCause: function() { return this.options.cause; },
+   getDescription : function() { return this.options.description; },
+   getMessage: function() { return this.options.source + ": " + this.options.description.substitute( this.parameters ) + " " + this.options.message; }, 
+   getName: function() { return this.options.name; },
+   getSource : function() { return this.options.source; }
+});
+/*
+Name: AssertionException
+
+Description:
+   - Thrown when an assertion in production code fails.
+
+Requires:
+   - WebUIException
+
+Provides:
+   - AssertionException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var AssertionException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "{assertion}",
+      name: "AssertionException"
+   },
+   
+   //Constructors
+   initialize: function( assertion, options ){
+     this.parent( options );
+     this.parameters = { assertion : assertion };
+   }
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+});
+/*
 Name: HashMap
 
 Description: JavaScript implementation of Java HashMap.
@@ -7457,65 +7638,6 @@ var SetIterator = new Class({
    }
 });
 
-/*
-Name: WebUIException
-
-Description: 
-
-Requires:
-
-Provides:
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-	- Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-var WebUIException = new Class({
-   Implements: Options,
-   options: {
-      cause: null,
-      description: "Please overwrite this option.",
-      message : "",
-      name: "WebUIException",
-      source: null
-   },
-   
-   //Constructors
-   initialize: function( options ){
-     this.setOptions( options );
-     this.parameters;
-   },
-   
-   //Public accessor and mutator methods
-   stackTrace: function() {
-      var stackTrace = "";
-      if( this.options.cause && this.options.cause.stackTrace() )
-         stackTrace += "\n" + this.options.cause.stackTrace();
-      
-      return stackTrace;
-   },
-   
-   //Properties
-   getCause: function() { return this.options.cause; },
-   getDescription : function() { return this.options.description; },
-   getMessage: function() { return this.options.description.substitute( this.parameters ); }, 
-   getName: function() { return this.options.name; },
-   getSource : function() { return this.options.source; }
-});
 /*
 Name: UndefinedXmlResourceException
 
@@ -7971,6 +8093,7 @@ var LinkedEntry = new Class( {
    },
 
    getNextEntry: function() { return this.nextEntry; },
+   getPreviousEntry: function() { return this.previousEntry; },
    getSerialIndex : function() { return this.serialIndex; },
    setNextEntry: function( nextEntry ) { this.nextEntry = nextEntry; }
 });
@@ -7991,7 +8114,81 @@ var LinkedHashIterator = new Class({
    }
 });
 
-/*Name: OptionsResourceDescription: Unmarshalls a set of options from an XML file and transforms to a JavaScript object.Requires:    - XmlResourceProvides:	- OptionsResourcePart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors: 	- Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUIvar OptionsResource = new Class({   Implements: [Options],      options : {      nameSelector : "@name",      optionSelector : "option",      valueSelector : "@value"   },   //Constructor   initialize : function( definitionElement, options ) {      assertThat( definitionElement, not( nil() ));      this.setOptions( options );            this.definitionElement = definitionElement;      this.optionsAsText = "";      this.optionsObject;   },      //Public accessors and mutators   unmarshall: function(){      this.unmarshallOptions();      this.evaluateOptions();   },      //Properties   getOptions: function() { return this.optionsObject; },      //Protected, private helper methods   evaluateOptions: function(){      this.optionsObject = eval( "({" + this.optionsAsText + "})" );   }.protect(),      unmarshallOptions: function(){      var optionElements = XmlResource.selectNodes( this.options.optionSelector, this.definitionElement );      optionElements.each( function( optionElement, index ){         if( index > 0 ) this.optionsAsText += ", ";         var name = XmlResource.selectNodeText( this.options.nameSelector, optionElement );         var value = XmlResource.selectNodeText( this.options.valueSelector, optionElement );//         var arrayExpression = new RegExp( "^[\[]" ); //^[\[]+.*+[]$//         if( value.match( arrayExpression )) //            this.optionsAsText += name + " : " + eval( value );         this.optionsAsText += name + " : " + value ;      }, this );   }.protect()});
+/*
+Name: OptionsResource
+
+Description: Unmarshalls a set of options from an XML file and transforms to a JavaScript object.
+
+Requires:
+    - XmlResource
+
+Provides:
+    - OptionsResource
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var OptionsResource = new Class({
+   Implements: [AssertionBehavior, Options],
+   
+   options : {
+      nameSelector : "@name",
+      optionSelector : "sd:option",
+      valueSelector : "@value"
+   },
+
+   //Constructor
+   initialize : function( definitionElement, options ) {
+      this.assertThat( definitionElement, not( nil() ));
+      this.setOptions( options );
+      
+      this.definitionElement = definitionElement;
+      this.optionsAsText = "";
+      this.optionsObject;
+   },
+   
+   //Public accessors and mutators
+   unmarshall: function(){
+      this.unmarshallOptions();
+      this.evaluateOptions();
+   },
+   
+   //Properties
+   getOptions: function() { return this.optionsObject; },
+   
+   //Protected, private helper methods
+   evaluateOptions: function(){
+      this.optionsObject = eval( "({" + this.optionsAsText + "})" );
+   }.protect(),
+   
+   unmarshallOptions: function(){
+      var optionElements = XmlResource.selectNodes( this.options.optionSelector, this.definitionElement );
+      optionElements.each( function( optionElement, index ){
+         if( index > 0 ) this.optionsAsText += ", ";
+         var name = XmlResource.selectNodeText( this.options.nameSelector, optionElement );
+         var value = XmlResource.selectNodeText( this.options.valueSelector, optionElement );
+//         var arrayExpression = new RegExp( "^[\[]" ); //^[\[]+.*+[]$
+//         if( value.match( arrayExpression )) 
+//            this.optionsAsText += name + " : " + eval( value );
+         this.optionsAsText += name + " : " + value ;
+      }, this );
+   }.protect()
+});
 /*
 Name: RemoteResource
 
@@ -8023,6 +8220,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var RemoteResource = new Class({
    Extends: Request,
+   Implements: [AssertionBehavior],
    
    options: {
       async : true,
@@ -8033,7 +8231,7 @@ var RemoteResource = new Class({
    // Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
+      this.assertThat( uri, not( nil() ));
       
       this.parent( options );
       this.options.url = uri;
@@ -8208,7 +8406,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var ResourceUri = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
    
    options: {
       applyCacheBuster : false,
@@ -8221,7 +8419,7 @@ var ResourceUri = new Class({
    // Constructor
    initialize: function ( fullUri, locale, options ) {
       // parameter assertions
-      assertThat( fullUri, not( nil() ));
+      this.assertThat( fullUri, not( nil() ));
       
       this.setOptions( options );
       
@@ -8290,7 +8488,7 @@ var ResourceUri = new Class({
    
    determineStrippedUri : function(){
       if( this.fullUri.indexOf( '?' ) > 0 )
-         this.uri = this.fullUri.substring( 0, this.fullUri.indexOf( '?' ))
+         this.uri = this.fullUri.substring( 0, this.fullUri.indexOf( '?' ));
       else this.uri = this.fullUri;
    }
 });
@@ -8323,7 +8521,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var StringTokenizer = new Class( {
-   Implements : [Options], 
+   Implements : [AssertionBehavior, Options], 
    options : {
       delimiters: " \t\n\r\f",
       returnTokens: false
@@ -8331,7 +8529,7 @@ var StringTokenizer = new Class( {
    
    //Constructors
    initialize: function( string, options ) {
-      assertThat( string, not( nil() ));
+      this.assertThat( string, not( nil() ));
       this.setOptions( options );
       this.s = string;
       this.current = 0;
@@ -8452,7 +8650,7 @@ var TimeOutBehaviour = new Class({
       this.numberOfTries++;
       if (this.numberOfTries >= this.options.maxTries) {
          clearInterval( this.timer );
-         this.timeOut( new TimeOutException( this.options.componentName, this.checkedProcessName ));
+         this.timeOut( new TimeOutException( this.options.componentName, this.checkedProcessName, { source : this.options.componentName + ".checkTimeOut()" }));
       }
    },
 
@@ -8464,7 +8662,7 @@ var TimeOutBehaviour = new Class({
 
    stopTimeOutTimer : function() {
       clearInterval( this.timer );
-   },
+   }
    
    //Properties
    
@@ -8500,7 +8698,7 @@ You should have received a copy of the GNU General Public License along with thi
 var TimeOutException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Executing the '{componentName}' element's '{processName}' timed out. See the stack trace for the root cause.",
+      description: "Executing the '{componentName}' element's '{processName}' method timed out. See the stack trace for the root cause.",
       name: "TimeoutException"
    },
    
@@ -8675,6 +8873,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var XmlResource = new Class({
    Extends: Request,
+   Implements : [AssertionBehavior],
 
    options: {
       applyCacheBuster : true,
@@ -8705,8 +8904,8 @@ var XmlResource = new Class({
    // Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
-      assertThat( Sarissa.XPATH_INITIALIZED, is( true ));
+      this.assertThat( uri, not( nil() ), "XmlResource.uri" );
+      this.assertThat( Sarissa.XPATH_INITIALIZED, is( true ), "XmlResource.Sarissa.XPATH_INITIALIZED" );
       
       if( this.options.applyCacheBuster ) {
          this.resourceUri = new ResourceUri( uri, null, { applyCacheBuster : true });
@@ -8742,8 +8941,8 @@ var XmlResource = new Class({
    },
    
    injectElement : function( elementToInject, contextSelector, position ){
-      assertThat( elementToInject, not( nil() ));
-      assertThat( contextSelector, not( nil() ));
+      this.assertThat( elementToInject, not( nil() ));
+      this.assertThat( contextSelector, not( nil() ));
       
       var contextElement = this.selectNode( contextSelector );
       if( !contextElement ) throw new XPathSelectionException( contextSelector, this.options.url );
@@ -8972,6 +9171,11 @@ Class.Singleton.prototype.destroyInstance = function(item){
 	if( instance ) item.destroy( 'single:' + this.$className, this );
 };
 
+Class.Singleton.prototype.replaceInstance = function( newInstance ){
+   var instance = storage.retrieve( 'single:' + this.$className );
+   if( instance ) storage.store( 'single:' + this.$className, newInstance );
+};
+
 var gIO = function(klass){
 
    var name = klass.prototype.$className;
@@ -9029,19 +9233,19 @@ var WebUILogger = new Class({
    
    //Public accessors and mutators
    configure : function( webUIConfiguration ) {
-      for( i = 0; i < webUIConfiguration.getLoggingLayoutElements().length; i++ ) {
+      for( var i = 0; i < webUIConfiguration.getLoggingLayoutElements().length; i++ ) {
          var layoutName = webUIConfiguration.getLoggingLayoutName( i );
          var layout = this.configureLayout( layoutName, webUIConfiguration );
          this.layouts.put( layoutName, layout );
       }
       
-      for( i = 0; i < webUIConfiguration.getLoggingAppenderElements().length; i++ ) {
+      for( var i = 0; i < webUIConfiguration.getLoggingAppenderElements().length; i++ ) {
          var appenderName = webUIConfiguration.getLoggingAppenderName( i );
          var appender = this.configureAppender( appenderName, webUIConfiguration );
          this.appenders.put( appenderName, appender );
       }
       
-      for( i = 0; i < webUIConfiguration.getLoggerElements().length; i++ ) {
+      for( var i = 0; i < webUIConfiguration.getLoggerElements().length; i++ ) {
          var loggerName = webUIConfiguration.getLoggerName( i );
          var logger = this.configureLogger( loggerName, webUIConfiguration );
          this.loggers.put( loggerName, logger );
@@ -9259,7 +9463,7 @@ var WebUIMessageBus = new Class({
       var messageClass = message.getClass();
       var subscribersToMessage = this.getSubscribersToMessage( messageClass );
       if( subscribersToMessage && subscribersToMessage.size() > 0 ){
-         var largestIndex;
+         var largestIndex = 0;
          subscribersToMessage.each( function( callBack, index ){
             callBack( message );
             largestIndex = index;
@@ -9350,12 +9554,12 @@ var AbstractDocument = new Class({
    
    options: {
       componentName : "AbstractDocument",
-      contentUriSelector : "contentUri",
-      descriptionSelector : "description",
+      contentUriSelector : "sd:contentUri",
+      descriptionSelector : "sd:description",
       documentContainerId : "DocumentContainer",
       documentContentExtension : ".xml",
       documentContentUri : null,
-      documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com/'",
       documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       documentDefinitionUri : null,
       documentDefinitionUriSelector: "@documentDefinition",
@@ -9363,11 +9567,11 @@ var AbstractDocument = new Class({
       documentVariables : null,
       eventFireDelay : 5,
       handleMenuSelectedEventsDefault : false,
-      handleMenuSelectedEventsSelector : "handleMenuSelectedEvents",
-      nameSelector : "name",
-      resourcesSelector : "resources",
-      rootElementName : "/smartDocumentDefinition",
-      versionSelector : "version"
+      handleMenuSelectedEventsSelector : "sd:handleMenuSelectedEvents",
+      nameSelector : "sd:name",
+      resourcesSelector : "sd:resources",
+      rootElementName : "/sd:smartDocumentDefinition",
+      versionSelector : "sd:version"
    },
    
    //Constructor
@@ -9555,10 +9759,10 @@ var AbstractDocument = new Class({
       if( this.options.documentContentUri ){
          try{
             var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), { contentType: this.options.documentContentExtension.substring( 1 ) });
-            this.documentContent = new XmlResource( resourceUri.determineLocalizedUri() );
+            this.documentContent = new XmlResource( resourceUri.determineLocalizedUri(), { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
             try{
-               this.documentContent = new XmlResource( this.options.documentContentUri );
+               this.documentContent = new XmlResource( this.options.documentContentUri, { nameSpaces : this.options.documentContentNameSpace } );
             }catch( e ){
                throw new IllegalArgumentException( 'SmartDocument.options.documentContentUri', this.options.documentContentUri );
             }
@@ -9566,7 +9770,7 @@ var AbstractDocument = new Class({
       }else {
          this.options.documentContentUri = this.options.documentDefinitionUri.substring( 0, this.options.documentDefinitionUri.lastIndexOf( ".xml" ));
          try{
-            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension );
+            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension, { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
             this.logger.trace( "Content of " + this.name + " document couldn't be loaded." );
          }
@@ -9574,7 +9778,7 @@ var AbstractDocument = new Class({
    }.protect(),
    
    loadDocumentDefinition: function() {
-      if( this.options.documentDefinitionUri ) this.documentDefinition = new XmlResource( this.options.documentDefinitionUri );
+      if( this.options.documentDefinitionUri ) this.documentDefinition = new XmlResource( this.options.documentDefinitionUri, { nameSpaces : this.options.documentDefinitionNameSpace });
       else throw new IllegalArgumentException( 'SmartDocument.options.documentDefinitionUri', this.options.documentDefinitionUri );
    }.protect(),
    
@@ -9693,7 +9897,7 @@ var WebUIMessage = new Class({
    getActivityType: function() { return this.options.activityType; },
    getClass: function() { return this.options.messageClass; },
    getDescription: function() { return this.options.description; },
-   getMessageProperties: function() { return this.messageProperties },
+   getMessageProperties: function() { return this.messageProperties; },
    getName: function() { return this.options.name; },
    getOptions: function() { return this.options; },
    getOriginator: function() { return this.options.originator; },
@@ -9798,24 +10002,24 @@ var DocumentSelectedMessage = new Class({
 
 
 var BrowserWidget = new Class( {
-   Implements : [Events, Options],
-   Binds : ['broadcastConstructedMessage', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds : ['broadcastConstructedMessage', 'checkTimeOut', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
       dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
-      descriptionSelector : "//pp:widgetDefinition/description",
+      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      descriptionSelector : "/sd:widgetDefinition/sd:description",
       domDocument : this.document,
       eventDeliveryDelay : 5,
-      nameSelector : "//pp:widgetDefinition/name",
-      optionsSelector : "//pp:widgetDefinition/options",
+      nameSelector : "/sd:widgetDefinition/sd:name",
+      optionsSelector : "/sd:widgetDefinition/sd:options",
       subscribeToWebUIMessages : false,
       useLocalizedData : false,
       widgetContainerId : "widgetContainer",
       widgetDataURI : null,
       widgetDefinitionURI : null,
-      widgetVersionSelector : "//pp:widgetDefinition/version"
+      widgetVersionSelector : "/sd:widgetDefinition/sd:version"
    },
 
    // constructor
@@ -9853,11 +10057,9 @@ var BrowserWidget = new Class( {
       this.loadWidgetDefinition();
       this.loadWidgetData();
 
-      assertThat( this.i18Resource, not( nil() ) );
-      if( this.containerElement == null )
-         throw new IllegalArgumentException( "Parameter 'widgetContainerId' in invalid." );
-      if( !this.i18Resource.isLoaded )
-         throw new IllegalArgumentException( "ResourceBundle should be already loaded." );
+      this.assertThat( this.i18Resource, not( nil() ), this.options.componentName + ".i18Resource" );
+      this.assertThat( this.i18Resource.isLoaded, is( true ), this.options.componentName + ".i18Resource.isLoaded" );
+      this.assertThat( this.containerElement, not( nil() ), this.options.componentName + ".containerElement" );
       
       this.elementFactory = new WidgetElementFactory( this.containerElement, this.i18Resource, elementFactoryOptions );
       this.restoreComponentState();
@@ -9867,8 +10069,11 @@ var BrowserWidget = new Class( {
    // public accessor and mutator methods
    construct : function() {
       if( this.state < BrowserWidget.States.CONSTRUCTED ) {
+         this.startTimeOutTimer( 'construct' );
          this.compileConstructionChain();
-         this.constructionChain.callChain();
+         
+         try{ this.constructionChain.callChain(); }
+         catch( exception ){ this.revertConstruction( exception ); }
       }
       return this;
    },
@@ -9911,6 +10116,7 @@ var BrowserWidget = new Class( {
    unmarshall : function(){
       this.unmarshallProperties();
       this.unmarshallOptions();
+      this.unmarshallComponents();
       this.state = BrowserWidget.States.UNMARSHALLED;
       return this;
    },
@@ -9933,6 +10139,7 @@ var BrowserWidget = new Class( {
    getDefinitionXml : function() { return this.definitionXml; },
    getDescription: function() { return this.description; },
    getElementFactory : function() { return this.elementFactory; },
+   getError : function() { return this.error; },
    getHtmlDOMDocument : function() { return this.options.domDocument; },
    getLastMessage : function() { return this.lastHandledMessage; },
    getLocale : function() { return this.locale; },
@@ -9987,6 +10194,7 @@ var BrowserWidget = new Class( {
          this.locale = resourceBundle.getLocale();
       }else{
          this.webUIController = Class.getInstanceOf( WebUIController );
+         if( !this.webUIController ) throw new IllegalArgumentException( "localizationResource' and 'webUIController", "undefined" );
          this.i18Resource = this.webUIController.getResourceBundle();
          this.locale = this.webUIController.getCurrentLocale();
       }
@@ -10008,6 +10216,7 @@ var BrowserWidget = new Class( {
       this.logger.trace( this.options.componentName + ".onConstructed() of '" + this.name + "'." );
       this.storeComponentState();
       this.state = BrowserWidget.States.CONSTRUCTED;
+      this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       this.broadcastConstructedMessage();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
@@ -10020,6 +10229,10 @@ var BrowserWidget = new Class( {
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
    }.protect(),
 
+   instantiateConstructionException : function( exception ){
+      return new WidgetConstructionException( this.name, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    loadWebUIConfiguration : function() {
       try{
          this.webUIConfiguration = new WebUIConfiguration( this.options.configurationUri );
@@ -10032,8 +10245,7 @@ var BrowserWidget = new Class( {
       if( this.options.widgetDataURI ){
          try{
             var dataUri = this.options.useLocalizedData ? new ResourceUri( this.options.widgetDataURI, this.locale ).determineLocalizedUri() : this.options.widgetDataURI;
-            this.dataXml = new XmlResource( dataUri, {
-               nameSpaces : this.options.dataXmlNameSpace} );
+            this.dataXml = new XmlResource( dataUri, { nameSpaces : this.options.dataXmlNameSpace});
          }catch (e){
             this.logger.debug( "Widget data: '" + this.options.widgetDataURI + "' not found." );
          }
@@ -10055,7 +10267,10 @@ var BrowserWidget = new Class( {
       //Abstract method, should be overwrite!
    }.protect(),
    
-   revertConstruction : function(){
+   revertConstruction : function( error ){
+      this.error = this.instantiateConstructionException( error );
+      this.stopTimeOutTimer();
+      this.state = BrowserWidget.States.INITIALIZED;
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
@@ -10065,6 +10280,14 @@ var BrowserWidget = new Class( {
             this.messageBus.subscribeToMessage( messageClass, this.webUIMessageHandler );
          }, this );
       }
+   }.protect(),
+   
+   timeOut : function( exception ){
+      this.revertConstruction( exception );
+   }.protect(),
+   
+   unmarshallComponents: function(){
+      //Abstract method, should be overwrite!
    }.protect(),
    
    unmarshallOptions: function(){
@@ -10097,6 +10320,86 @@ var BrowserWidget = new Class( {
 });
 
 BrowserWidget.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
+/*
+Name: 
+    - ShortCutKey
+
+Description: 
+    - Represents short cut key for a widget action. 
+
+Requires:
+   - AssertionBehivour
+
+Provides:
+    - ShortCutKey
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var ShortCutKey = new Class({
+   Implements : [AssertionBehavior, Options],
+   Binds: [],
+   
+   options : {
+      label : null
+   },
+
+   //Constructor
+   initialize: function( keySpecification, action, options ){
+      this.setOptions( options );
+      this.assertThat( keySpecification, not( nil() ), "ShortCutKey.keySpecification" );
+      this.assertThat( action, not( nil() ), "ShortCutKey.action" );
+      
+      this.action = action;
+      this.action.options.shortCutKey = this;
+      this.alt;
+      this.control;
+      this.key;
+      this.shift;
+      
+      this.determineKeyAndModifiers( keySpecification );
+   },
+   
+   //Public accessor and mutator methods
+   equalsWithKeyboardEvent : function( keyboardEvent ){
+      return ( keyboardEvent.key == this.key && keyboardEvent.shift == this.options.shift && keyboardEvent.control == this.options.control && keyboardEvent.alt == this.options.alt );
+   },
+   
+   //Properties
+   getAction : function(){ return this.action; },
+   getAlt : function(){ return this.alt; },
+   getControl : function(){ return this.control; },
+   getKey : function(){ return this.key; },
+   getShift : function(){ return this.shift; },
+   
+   //Protected, private helper methods
+   determineKeyAndModifiers : function( keySpecification ){
+      ['shift', 'control', 'alt'].each( function( modifier ){
+         var re = new RegExp( modifier, 'i' );
+         this[modifier] = keySpecification.test( re );
+         keySpecification = keySpecification.replace( re, '' );
+      }.bind( this ));
+      
+      this.key = keySpecification.trim();
+      
+   }.protect()
+});
 //UnconfiguredWidget.js
 
 
@@ -10114,6 +10417,62 @@ var UnconfiguredWidgetException = new Class({
       this.setOptions( options );
       this.parent( options );
    }
+});
+/*
+Name: 
+    - WidgetAction
+
+Description: 
+    - Represents an action of a browser widget. 
+
+Requires:
+   - AssertionBehaviour
+
+Provides:
+    - WidgetAction
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var WidgetAction = new Class({
+   Implements : [AssertionBehavior, Options],
+   Binds: [],
+   
+   options : {
+      shortCutKey : null
+   },
+
+   //Constructor
+   initialize: function( name, options ){
+      this.setOptions( options );
+      this.assertThat( name, not( nil() ), "WidgetAction.name" );
+      
+      this.name = name;
+   },
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   getName : function(){ return this.name; },
+   getShorCutKey : function(){ return this.options.shortCutKey; }
+   
+   //Protected, private helper methods
 });
 /*
 Name: 
@@ -10207,18 +10566,17 @@ You should have received a copy of the GNU General Public License along with thi
 var WidgetConstructionException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Constructing widget: '{widgetName}' caused the following error: '{configurationErrorDescription}'.",
+      description: "Constructing widget: '{widgetName}' failed.",
       name: "WidgetConstructionException"
    },
    
    //Constructor
-   initialize : function( widgetName, configurationErrorDescription, options ){
+   initialize : function( widgetName, options ){
       this.parent( options );
-      this.parameters = { widgetName : widgetName, configurationErrorDescription : configurationErrorDescription };
+      this.parameters = { widgetName : widgetName };
    },
    
    //Properties
-   getConfigurationErrorDescription : function() { return this.parameters['ConfigurationErrorDescription']; },
    getWidgetName : function() { return this.parameters['widgetName']; },
 });
 /*
@@ -10253,7 +10611,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var WidgetElementFactory = new Class({
-   Implements : Options,
+   Implements : [AssertionBehavior, Options],
    
    options : {
       appendByDefault : true,
@@ -10273,8 +10631,8 @@ var WidgetElementFactory = new Class({
 
    // Constructor
    initialize : function( containerElement, i18Resource, options ) {
-      assertThat( containerElement, not( nil() ) );
-      assertThat( i18Resource, not( nil() ) );
+      this.assertThat( containerElement, not( nil() ) );
+      this.assertThat( i18Resource, not( nil() ) );
       this.setOptions( options );
 
       this.containerElement = containerElement;
@@ -10354,8 +10712,8 @@ var WidgetElementFactory = new Class({
    },
 
    createForm : function( formName, methodType, contextElement, position, elementProperties ) {
-      assertThat( formName, not( nil() ));
-      assertThat( methodType.toUpperCase() == "POST" || methodType.toUpperCase() == "GET", is( true ) );
+      this.assertThat( formName, not( nil() ));
+      this.assertThat( methodType.toUpperCase() == "POST" || methodType.toUpperCase() == "GET", is( true ) );
       
       var newForm = this.create( 'FORM', null, contextElement, position, this.mergeProperties( { id : formName, name : 'form', method : methodType }, elementProperties ) );
       this.create( 'DIV', null, newForm, WidgetElementFactory.Positions.LastChild, { 'class' : this.options.formFieldsContainerClassName } );
@@ -10571,6 +10929,304 @@ WidgetElementFactory.Positions = {
    Undefined : 4 };
 /*
 Name: 
+    - WidgetElementSlider
+
+Description: 
+    - Slides an element within it's parent. 
+
+Requires:
+
+Provides:
+    - WidgetElementSlider
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var WidgetElementSlider = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds: [],
+   
+   options : {
+      axes : ['x', 'y'],
+      linkedElementAlignment : 'left',
+      linkedElements : null,
+      linkedElementsSelector : null,
+      slidingOptions : { duration: 500, link: 'cancel', offset: {'x': 0, 'y': 0}, transition: Fx.Transitions.Quad.easeInOut }
+   },
+
+   //Constructor
+   initialize: function( subjectElement, options ){
+      this.assertThat( subjectElement, not( nil() ), "WidgetElementSlider.subjectElement" );
+      this.setOptions( options );
+      
+      this.fxScroll = new Fx.Scroll( subjectElement, this.options.slidingOptions );
+      this.linkedElementIndex = 0;
+      this.subjectElement = subjectElement;
+   },
+   
+   //Public accessor and mutator methods
+   next : function(){
+      if( this.options.linkedElements ){
+         this.toElement( this.options.linkedElements.get( this.linkedElementIndex ));
+         this.linkedElementIndex++;
+         if( this.linkedElementIndex == this.options.linkedElements.size() ) this.linkedElementIndex = 0;
+      }
+   },
+   
+   toElement : function( linkedElement ){
+      switch( this.options.linkedElementAlignment ){
+      case 'center': this.fxScroll.toElementCenter( linkedElement, this.options.axes ); break;
+      case 'right': this.fxScroll.toElementEdge( linkedElement, this.options.axes ); break;
+      case 'left': this.fxScroll.toElement( linkedElement, this.options.axes ); break;
+      }
+   }
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - WidgetElementHorizontalSlider
+
+Description: 
+    - Slides an element within it's parent horizontally. 
+
+Requires:
+
+Provides:
+    - WidgetElementHorizontalSlider
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var WidgetElementHorizontalSlider = new Class({
+   Extends : WidgetElementSlider,
+   Binds: [],
+   
+   options : {
+   },
+
+   //Constructor
+   initialize: function( subjectElement, options ){
+      this.parent( subjectElement, options );
+      
+   },
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - BusyElement
+
+Description: 
+    - Displays a spinner to indicate a process in progress. 
+
+Requires:
+
+Provides:
+    - SlideshowControllerButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var BusyElement = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds: ['animate', 'createElements', 'finalizeConstruction', 'loadBackgroundImage', 'onImageLoaded'],
+   
+   options : {
+      animationFrequency : 1000,
+      elementClass : 'spinner',
+      hiddenClass : "hidden",
+      imageUri : null,
+      morphProperties : { duration: 500, fps: 20, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
+      visibleClass : "visible"
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.assertThat( containerElement, not( nil() ), "BusyElement.containerElement" );
+      this.setOptions( options );
+      
+      this.animationTimer;
+      this.backgroundImageElement;
+      this.backgroundSlideDirection;
+      this.backgroundSlideValue;
+      this.busyElement;
+      this.constructionChain = new Chain();
+      this.containerElement = containerElement;
+      this.currentFrame = 0;
+      this.morph;
+      this.numberOfFrames;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function(){
+      this.constructionChain.chain(
+         this.createElements,
+         this.loadBackgroundImage,
+         this.finalizeConstruction
+      );
+      this.constructionChain.callChain();
+   },
+   
+   destroy: function(){
+      if( this.animationTimer ) clearInterval( this.animationTimer );
+      this.destroyElements();
+      this.fireEvent( 'destroyed', this, 5 );
+   },
+   
+   hide : function() {
+      if( this.busyElement.get( 'aria-hidden' ) == 'false') {
+         this.busyElement.set( 'aria-hidden', true );
+         this.morph = new Fx.Morph( this.busyElement, this.options.morphProperties );
+         this.morph.start( "." + this.getHiddenClass() );
+         
+         if( this.animationTimer ) clearInterval( this.animationTimer );
+      }
+   },
+   
+   show : function() {
+      if( this.busyElement.get( 'aria-hidden' ) == 'true' ) {
+         this.busyElement.set( 'aria-hidden', false );
+         this.morph = new Fx.Morph( this.busyElement, this.options.morphProperties );
+         this.morph.start( "." + this.getVisibleClass() );
+      }
+      
+      this.animationTimer = this.animate.periodical( this.options.animationFrequency, this );
+   },
+   
+   //Properties
+   getBackgroundImageElement : function(){ return this.backgroundImageElement; },
+   getElement : function(){ return this.busyElement; },
+   getElementClass : function(){ return this.options.elementClass; },
+   getHiddenClass : function(){ return this.getElementClass() + "-" + this.options.hiddenClass; },
+   getVisibleClass : function(){ return this.getElementClass() + "-" + this.options.visibleClass; },
+   
+   //Protected, private helper methods
+   animate : function() {
+      var currenShift = ( this.currentFrame * this.backgroundSlideValue ) + 'px';
+      
+      switch( this.backgroundSlideDirection ){
+      case BusyElement.BackgroundSlideDirections.horizontal:
+         this.busyElement.setStyle( 'backgroundPosition', currenShift + ' 0px' ); break;
+      case BusyElement.BackgroundSlideDirections.vertical:
+         this.busyElement.setStyle( 'backgroundPosition', '0px ' + currenShift ); break;
+      }
+      
+      this.currentFrame = this.currentFrame < this.numberOfFrames ? this.currentFrame +1 : 0;
+   },
+   
+   createElements : function(){
+      this.busyElement = new Element( 'div', {
+         'aria-hidden' : false,
+         'class' : this.options.elementClass,
+         'morph' : this.options,
+         'role' : 'progressbar'
+      });
+      
+      if( this.options.imageUri ) this.busyElement.setStyle( 'background', 'url(' + this.options.imageUri + ')' );
+      
+      this.busyElement.inject( this.containerElement );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyElements : function(){
+      if( this.busyElement ) this.busyElement.destroy();
+      this.busyElement = null;
+   }.protect(),
+   
+   determineAnimationProperties : function(){
+      if( this.backgroundImageElement.get( 'width' ) > this.backgroundImageElement.get( 'height' ) ){
+         this.backgroundSlideDirection = BusyElement.BackgroundSlideDirections.horizontal;
+         this.backgroundSlideValue = this.busyElement.getSize().x;
+         this.numberOfFrames = ( this.backgroundImageElement.get( 'width' ) / this.backgroundSlideValue ).toInt();
+      }
+      else{
+         this.backgroundSlideDirection = BusyElement.BackgroundSlideDirections.vertical;
+         this.backgroundSlideValue = this.busyElement.getSize().y;
+         this.numberOfFrames = ( this.backgroundImageElement.get( 'height' ) / this.backgroundSlideValue ).toInt();
+      }
+   }.protect(),
+   
+   determineImageUriFromElementStyle : function(){
+      this.options.imageUri = this.busyElement.getStyle( 'backgroundImage' ).replace( /url\(['"]?(.*?)['"]?\)/, '$1' ).trim();
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, 5 );
+   }.protect(),
+
+   loadBackgroundImage : function(){
+      if( !this.options.imageUri ) this.determineImageUriFromElementStyle();
+      
+      this.backgroundImageElement = new Asset.image( this.options.imageUri, { 'onload' : this.onImageLoaded  });
+   }.protect(),
+   
+   onImageLoaded : function(){
+      this.determineAnimationProperties();
+      this.constructionChain.callChain();
+   }
+
+});
+
+BusyElement.BackgroundSlideDirections = { vertical : 'vertical', horizontal : 'horizontal' };
+/*
+Name: 
     - StateTransformer
 
 Description: 
@@ -10601,14 +11257,14 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var StateTransformer = new Class({
-   Implements: [Events, Options],
+   Implements: [AssertionBehavior, Events, Options],
    options: {
       unknownValue : 'unknown'
    },
 
    //Constructor
    initialize: function( stateMachine, options ){
-      assertThat( stateMachine, not( nil() ));
+      this.assertThat( stateMachine, not( nil() ));
       this.setOptions( options );
       this.stateMachine = stateMachine;
    },
@@ -10847,7 +11503,7 @@ var ComponentStateManager = new Class({
    
    //Properties
    getDefaultTransformer: function() { return this.stateTransformer; },
-   getUriTransformer: function() { return this.uriTransformer; },
+   getUriTransformer: function() { return this.uriTransformer; }
    
    //Protected, private helper methods
 });
@@ -10892,7 +11548,7 @@ var FixedComponentOrderedTransformer = new Class({
 
    //Constructor
    initialize: function( stateMachine, componentList, options ){
-      assertThat( componentList, not( nil() ));
+      this.assertThat( componentList, not( nil() ));
       this.parent( stateMachine, options );
       
       this.componentList = componentList;
@@ -10933,7 +11589,7 @@ var FixedComponentOrderedTransformer = new Class({
    },
    
    //Properties
-   getComponentNames: function(){ return this.componentList; },
+   getComponentNames: function(){ return this.componentList; }
    
    //Protected, private helper methods
    
@@ -11075,19 +11731,23 @@ var ComplexContentBehaviour = new Class({
       this.constructionChain.callChain();
    },
    
-   onHeaderConstructed: function(){
+   onHeaderConstructed: function( header ){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s header finished." );
       this.constructionChain.callChain();
    },
    
    onHeaderConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
+      this.revertConstruction( error );
       this.fireEvent( 'panelError', this.error, this.options.eventFireDelay );
       this.fireEvent('panelConstructed', this, this.options.eventFireDelay ); 
    },
    
-   onPluginConstructed: function(){
+   onHeaderDestructed: function(){
+      this.logger.trace( this.options.componentName + ".destroy() of '" + this.name + "'s header finished." );
+      this.destructionChain.callChain();
+   },
+   
+   onPluginConstructed: function( plugin ){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s plugin finished." );
       if( this.verticalScrollBar ) this.verticalScrollBar.refresh();
       this.constructionChain.callChain();
@@ -11184,20 +11844,24 @@ var ComplexContentBehaviour = new Class({
       }else this.constructionChain.callChain();
    }.protect(),
    
+   constructHeader: function(){
+      if( this.header ){
+         try{
+            this.header.construct( $( this.name + "_header" ));
+         }catch( exception ){
+            this.revertConstruction( new DesktopElementConfigurationException( this.name, { cause : exception, message : "Header construction failed." }));            
+         }
+      }else this.constructionChain.callChain();
+   }.protect(),
+   
    constructPlugin: function(){
       if( this.plugin ){
          try{
-            this.plugin.construct();
-         }catch( e ){
-            this.logger.error( "Constructing plugin of panel: '" + this.name + "' caused error." );
-            //throw new DesktopElementConfigurationException( this.name );
+            this.plugin.construct( this.contentAreaElement );
+         }catch( exception ){
+            this.revertConstruction( new DesktopElementConfigurationException( this.name, { cause : exception, message : "Plugin construction failed." }));
          }
       } else this.constructionChain.callChain();
-   }.protect(),
-   
-   constructHeader: function(){
-      if( this.header ) this.header.construct( $( this.name + "_header" ));
-      else this.constructionChain.callChain();
    }.protect(),
    
    createContentAreaElement: function(){
@@ -11259,9 +11923,9 @@ var ComplexContentBehaviour = new Class({
    }.protect(),
    
    destroyPlugin: function(){
-      if( this.plugin ) {
-         this.plugin.removeEvents();
+      if( this.plugin && this.plugin.getState() >= DocumentElement.States.INITIALIZED ) {
          this.plugin.destroy();
+         this.plugin = null;
       }
    }.protect(),
    
@@ -11274,6 +11938,7 @@ var ComplexContentBehaviour = new Class({
       this.componentRootElement = $( this.componentRootElement );     //required by Internet Explorer
       this.contentContainerElement = $( this.getContentContainerId() );
       this.contentContainerElement = document.id( this.contentContainerElement ); //Applies Element's methods, required by Internet Explorer
+      this.assertThat( this.contentContainerElement, not( nil() ), this.options.componentName + ".determineComponentElements" );
       this.constructionChain.callChain();
    }.protect(),
    
@@ -11431,7 +12096,12 @@ var ComplexContentBehaviour = new Class({
    unmarshallHeader: function(){
       var headerConfigurationElement = XmlResource.selectNode( this.options.headerSelector, this.definitionElement );
       if( headerConfigurationElement ){
-          this.header = new DesktopPanelHeader( headerConfigurationElement, this.internationalization, { onHeaderConstructed : this.onHeaderConstructed, onHeaderConstructionError : this.onHeaderConstructionError });
+          this.header = new DesktopPanelHeader( headerConfigurationElement, this.internationalization, {
+             componentContainerId : this.name,
+             onConstructed : this.onHeaderConstructed, 
+             onDestructed : this.onHeaderDestructed, 
+             onError : this.onHeaderConstructionError 
+          });
           this.header.unmarshall();
       }
    }.protect(),
@@ -11542,7 +12212,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var Desktop = new Class({
-   Implements : [Events, Options, TimeOutBehaviour], 
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour], 
    Binds : ['checkTimeOut',
             'constructColumns', 
             'constructContentArea', 
@@ -11587,11 +12257,12 @@ var Desktop = new Class({
       callChainDelay : 2000,
       componentName : "Desktop",
       columnSelector : "/desktopConfiguration/columns/column",
-      configurationXmlNameSpace : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'",
+      configurationXmlNameSpace : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument' xmlns:pp='http://www.processpuzzle.com'",
       configurationURI : "DesktopConfiguration.xml",
       containerIdSelector : "/desktopConfiguration/containerId",
       contentAreaSelector : "/desktopConfiguration/contentArea",
       defaultContainerId : "desktop",
+      delay : 500,
       descriptionSelector : "/desktopConfiguration/description",
       errorDocumentUri : "Content/System/ErrorDocument.xml",
       eventFireDelay : 5,
@@ -11600,8 +12271,7 @@ var Desktop = new Class({
       nameSelector : "/desktopConfiguration/name",
       panelSelector : "/desktopConfiguration/panels/panel",
       pluginOnloadDelay : 1000,
-      resourceLoadTimeout : 5000,
-      resourcesSelector : "/desktopConfiguration/resources", 
+      resourcesSelector : "/desktopConfiguration/sd:resources", 
       skin : "ProcessPuzzle",
       versionSelector : "/desktopConfiguration/version",
       windowDockerSelector : "/desktopConfiguration/windowDocker",
@@ -11609,7 +12279,9 @@ var Desktop = new Class({
    },
 	
 	//Constructor
-   initialize : function( webUIConfiguration, resourceBundle, options ) {
+   initialize : function( webUIConfiguration, localizationResourceManager, options ) {
+      this.assertThat( webUIConfiguration, not( nil() ), "Desktop.webUIConfiguration" );
+      this.assertThat( localizationResourceManager, not( nil() ), "Desktop.localizationResourceManager" );
       this.presetOptionsBasedOnWebUIConfiguration( webUIConfiguration );
       this.setOptions( options );
 
@@ -11637,7 +12309,7 @@ var Desktop = new Class({
       this.numberOfConstructedPanels = 0;
       this.numberOfConstructedWindows = 0;
       this.panels = new LinkedHashMap();
-      this.resourceBundle = resourceBundle;
+      this.localizationResourceManager = localizationResourceManager;
       this.resources = null;
       this.state = DesktopElement.States.UNINITIALIZED;
       this.version;
@@ -11715,7 +12387,7 @@ var Desktop = new Class({
    },
    
    onError: function( error ){
-      this.error = error;
+      this.revertConstruction( error );
    },
    
    onFooterConstructed: function(){
@@ -11749,7 +12421,7 @@ var Desktop = new Class({
    },
    
    onResourceError: function( error ){
-      this.error = error;
+      this.revertConstruction( error );
    },
    
    onResourcesLoaded: function(){
@@ -11778,7 +12450,7 @@ var Desktop = new Class({
    
    showNotification: function( notificationText ){
       if( this.state == DesktopElement.States.CONSTRUCTED ){
-         MUI.notification( this.resourceBundle.getText( "DesktopNotification." + notificationText ));
+         MUI.notification( this.localizationResourceManager.getText( "DesktopNotification." + notificationText ));
       }
    },
    
@@ -11840,7 +12512,7 @@ var Desktop = new Class({
    //Private methods
    callNextConfigurationStep: function(){
       if( this.isSuccess() ) this.constructionChain.callChain();
-      else{ this.revertConstruction(); }
+      else{ this.revertConstruction( new DesktopElementConfigurationException( this.error )); }
    }.protect(),
    
    configureLogger : function() {
@@ -11958,7 +12630,7 @@ var Desktop = new Class({
    }.protect(),
 	
    determineCurrentLocale : function() {
-      if( this.resourceBundle.isLoaded ) this.currentLocale = this.resourceBundle.getLocale();
+      if( this.localizationResourceManager.isLoaded ) this.currentLocale = this.localizationResourceManager.getLocale();
       else {
          this.currentLocale = new ProcessPuzzleLocale();
          this.currentLocale.parse( this.webUIConfiguration.getI18DefaultLocale() );
@@ -12015,8 +12687,8 @@ var Desktop = new Class({
    }.protect(),
    
    loadI18Resources : function() {
-      if( !this.resourceBundle.isLoaded )
-         this.resourceBundle.load( this.currentLocale );
+      if( !this.localizationResourceManager.isLoaded )
+         this.localizationResourceManager.load( this.currentLocale );
    }.protect(),
 	
    presetOptionsBasedOnWebUIConfiguration : function( webUIConfiguration ){
@@ -12044,7 +12716,9 @@ var Desktop = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( error ){
+      this.error = error;
+      this.stopTimeOutTimer();
       if( this.resources ) this.resources.release();
       if( this.header ) this.header.destroy();
       if( this.contentArea ) this.contentArea.destroy();
@@ -12070,8 +12744,7 @@ var Desktop = new Class({
    }.protect(),
    
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallColumns: function(){
@@ -12086,7 +12759,7 @@ var Desktop = new Class({
    unmarshallDesktopContentArea: function(){
       var areaDefinitionElement = this.configurationXml.selectNode( this.options.contentAreaSelector );
       if( areaDefinitionElement ){
-         this.contentArea = new DesktopContentArea( areaDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onContentAreaConstructed, onConstructionError : this.onError } );
+         this.contentArea = new DesktopContentArea( areaDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onContentAreaConstructed, onConstructionError : this.onError } );
          this.contentArea.unmarshall();
       }
    }.protect(),
@@ -12104,7 +12777,7 @@ var Desktop = new Class({
    unmarshallFooter: function(){
       var footerDefinitionElement = this.configurationXml.selectNode( this.options.footerSelector );
       if( footerDefinitionElement ){
-         this.footer = new DesktopFooter( footerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed, onError : this.onError } );
+         this.footer = new DesktopFooter( footerDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onFooterConstructed, onError : this.onError } );
          this.footer.unmarshall();
       }
    }.protect(),
@@ -12112,7 +12785,7 @@ var Desktop = new Class({
    unmarshallHeader: function(){
       var headerDefinitionElement = this.configurationXml.selectNode( this.options.headerSelector );
       if( headerDefinitionElement ){
-         this.header = new DesktopHeader( headerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed, onError : this.onError } );
+         this.header = new DesktopHeader( headerDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onHeaderConstructed, onError : this.onError } );
          this.header.unmarshall();
       }
    }.protect(),
@@ -12120,7 +12793,7 @@ var Desktop = new Class({
    unmarshallPanels: function(){
       var panelDefinitionElements = this.configurationXml.selectNodes( this.options.panelSelector );
       panelDefinitionElements.each( function( panelDefinition, index ){
-         var desktopPanel = new DesktopPanel( panelDefinition, this.resourceBundle, { 
+         var desktopPanel = new DesktopPanel( panelDefinition, this.localizationResourceManager, { 
             componentContainerId: this.containerId,
             errorDocumentUri : this.options.errorDocumentUri,
             onConstructed: this.onPanelConstructed, 
@@ -12142,7 +12815,7 @@ var Desktop = new Class({
    unmarshallWindowDocker: function(){
       var windowDockerDefinitionElement = this.configurationXml.selectNode( this.options.windowDockerSelector );
       if( windowDockerDefinitionElement ){
-         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.resourceBundle, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed, onError : this.onError } );
+         this.windowDocker = new WindowDocker( windowDockerDefinitionElement, this.localizationResourceManager, { componentContainerId : this.containerId, onConstructed : this.onWindowDockerConstructed, onError : this.onError } );
          this.windowDocker.unmarshall();         
       }
    }.protect(),
@@ -12150,7 +12823,7 @@ var Desktop = new Class({
    unmarshallWindows: function(){
       var windowDefinitionElements = this.configurationXml.selectNodes( this.options.windowSelector );
       windowDefinitionElements.each( function( windowDefinition, index ){
-         var desktopWindow = new DesktopWindow( windowDefinition, this.resourceBundle, { 
+         var desktopWindow = new DesktopWindow( windowDefinition, this.localizationResourceManager, { 
             componentContainerId: this.containerId, 
             errorDocumentUri : this.options.errorDocumentUri,
             onConstructed: this.onWindowConstructed, 
@@ -12191,14 +12864,15 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var DesktopElement = new Class({
-   Implements: [Events, Options, TimeOutBehaviour],
+   Implements: [AssertionBehavior, Events, Options, TimeOutBehaviour],
    Binds: ['checkTimeOut', 'constructed', 'createHtmlElement', 'destroyComponents', 'destroyHtmlElement', 'finalizeConstruction', 'finalizeDestruction', 'resetProperties', 'onConstructionError'],
    
    options: {
       componentContainerId: "desktop",
       componentName: "DesktopElement",
       defaultTag : "div",
-      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      definitionXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      delay : 300,
       eventFireDelay : 2,
       idSelector : "@id",
       tagSelector : "@tag",
@@ -12225,12 +12899,16 @@ var DesktopElement = new Class({
    },
    
    //Public accessors and mutators
-   construct: function(){
+   construct: function( containerElement ){
       if( this.state != DesktopElement.States.UNMARSHALLED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
+      this.determineContainerElement( containerElement );
+      this.assertThat( this.containerElement, not( nil() ), this.options.componentName + ".containerElement" );
+
       this.startTimeOutTimer( 'construct' );
       this.compileConstructionChain();
-      this.constructionChain.callChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( new DesktopElementConfigurationException( this.id, { cause : exception })); }
    },
    
    destroy: function(){
@@ -12243,8 +12921,7 @@ var DesktopElement = new Class({
    },
    
    onConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
@@ -12304,6 +12981,11 @@ var DesktopElement = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
+   determineContainerElement: function( containerElement ){
+      if( containerElement ) this.containerElement = containerElement;
+      else this.containerElement = $( this.options.componentContainerId );
+   }.protect(),
+   
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
       this.state = DesktopElement.States.CONSTRUCTED;
@@ -12318,14 +13000,21 @@ var DesktopElement = new Class({
       this.fireEvent( 'destructed', this, this.options.eventFireDelay ); 
    }.protect(),
    
+   instantiateConstructionException : function( exception ){
+      return new DesktopElementConfigurationException( this.id, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    resetProperties: function(){
       //Abstract method, should be overwritten.
       this.destructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( exception ){
+      this.error = this.instantiateConstructionException( exception ); 
       this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
       this.state = DesktopElement.States.INITIALIZED;
+      this.logger.error( this.error.getMessage() + this.error.stackTrace() );
       this.fireEvent( 'error', this.error );
    }.protect(),
    
@@ -12333,15 +13022,12 @@ var DesktopElement = new Class({
       this.componentStateManager = Class.getInstanceOf( ComponentStateManager );
       this.configureLogger();
       this.containerElement = $( this.options.componentContainerId );
-      if( this.containerElement == null ) 
-         throw new IllegalArgumentException( "Parameter 'componetContainerId' in invalid." );
       this.messageBus = Class.getInstanceOf( WebUIMessageBus );
       this.state = DesktopElement.States.INITIALIZED;
    }.protect(),
    
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallElementProperties: function(){
@@ -12559,7 +13245,7 @@ var DesktopDocument = new Class({
       componentName : "DesktopDocument",
       documentDataNameSpace: "",
       documentDataUriSelector: "@documentData",
-      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
+      documentDefinitionNameSpace: "xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       documentDefinitionUriSelector: "@documentDefinition"
    },
    
@@ -12572,14 +13258,6 @@ var DesktopDocument = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function(){
-      this.parent();
-   },
-   
-   destroy: function(){
-      this.parent();
-   },
-   
    onDocumentError: function( error ){
       this.onConstructionError( error );
    },
@@ -12612,6 +13290,10 @@ var DesktopDocument = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
+   instantiateConstructionException : function( exception ){
+      return new DesktopDocumentConstructionException( this.documentDefinitionUri, this.documentDataUri, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
+   }.protect(),
+   
    instantiateDocument: function(){
       this.document = new SmartDocument( this.internationalization, {  
          documentContainerId : this.options.componentContainerId, 
@@ -12630,15 +13312,57 @@ var DesktopDocument = new Class({
       this.destructionChain.callChain();
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( error ){
       if( this.document && this.document.getState() > AbstractDocument.States.INITIALIZED ) this.document.destroy();
       this.document = null;
-      this.parent();
+      this.parent( error );
    },
    
    unmarshallProperties: function(){
       this.documentDefinitionUri = XmlResource.selectNodeText( this.options.documentDefinitionUriSelector, this.definitionElement, [this.options.definitionXmlNameSpace, this.options.documentDefinitionNameSpace] );
    }.protect()
+});
+/*
+Name: DesktopDocumentConstructionException
+
+Description: Thrown when constructing a desktop document failed.
+
+Requires: WebUIException
+
+Provides: DesktopDocumentConstructionException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+   - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DesktopDocumentConstructionException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Constructing of '{documentDefinitionUri}' desktop document with '{documentDataUri}' data failed.",
+      name: "DesktopElementConfigurationException"
+   },
+   
+   //Constructor
+   initialize : function( documentDefinitionUri, documentDataUri, options ){
+      this.setOptions( options );
+      this.parent( options );
+      this.parameters = { documentDefinitionUri : documentDefinitionUri, documentDataUri : documentDataUri };
+   }
 });
 /*
 Name: DesktopElementConfigurationException
@@ -12671,8 +13395,8 @@ You should have received a copy of the GNU General Public License along with thi
 var DesktopElementConfigurationException = new Class({
    Extends: WebUIException,
    options: {
-      description: "Configuring '{desktopElementName}' caused error.",
-      name: "ConfigurationTimeoutException"
+      description: "Constructing of '{desktopElementName}' desktop element failed.",
+      name: "DesktopElementConfigurationException"
    },
    
    //Constructor
@@ -12803,12 +13527,11 @@ var DesktopFooter = new Class({
    
    unmarshall: function(){
       this.parent();
-      this.footerId = this.document.getBody().elements.first().getId();
    },
 
    //Properties
    getId: function() { return this.document.getBody().getId(); },
-   getFooterId: function() { return this.footerId; }
+   getFooterId: function() { return this.document.getBody().elements.first().getId(); }
 });
 /*
 Name: DesktopHeader
@@ -12945,15 +13668,6 @@ var DesktopPanel = new Class({
    },
    
    //Public accessor and mutator methods
-   construct: function(){
-      this.parent();
-   },
-   
-   destroy: function(){
-      this.parent();
-      this.columnReference = null;
-   },
-   
    onMUIPanelLoaded: function(){
       this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "'s MUIPanel finished." );
       this.MUIPanelLoaded = true;
@@ -13009,6 +13723,8 @@ var DesktopPanel = new Class({
    }.protect(),
    
    destroyMUIPanel: function(){
+      this.columnReference = null;
+      
       if( this.MUIPanel ){
          this.MUIPanel.removeEvents();
          this.MUIPanel.destroy();
@@ -13044,11 +13760,7 @@ var DesktopPanel = new Class({
             title : panelTitle 
          });
       }catch( exception ){
-         var logMessage = exception.name + ": " + exception.message;
-         logMessage += exception.stack ? "\n" + exception.stack : "";
-         this.logger.error( logMessage );
-         this.fireEvent( 'constructed', this, 3* this.options.eventFireDelay ); //Needed by Desktop, to able to count panels created.
-         this.onConstructionError( exception );
+         this.revertConstruction( new DesktopElementConfigurationException( this.name, { cause : exception }));
       }
    }.protect(),
    
@@ -13066,9 +13778,9 @@ var DesktopPanel = new Class({
       });
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( exception ){
       this.revertComplexContentBehaviour();
-      this.parent();
+      this.parent( exception );
    }.protect(),
       
    unmarshallPanelProperties: function(){
@@ -13105,8 +13817,8 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var DesktopPanelHeader = new Class({
-   Implements: [Events, Options],
-   Binds: ['construct', 'onPluginConstructed', 'onPluginConstructionError'],   
+   Extends: DesktopElement,
+   Binds: ['addContentStyle', 'constructPlugin', 'destroyPlugin', 'onPluginConstructed', 'onPluginConstructionError'],   
    
    options: {
       componentName : "DesktopPanelHeader",
@@ -13122,82 +13834,76 @@ var DesktopPanelHeader = new Class({
    
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
-      this.setOptions( options );
+      this.parent( definitionElement, internationalization, options );
       
       this.contentStyle;
-      this.contextElement;
-      this.definitionElement = definitionElement;
-      this.error = false;
-      this.internationalization = internationalization;
-      this.logger = Class.getInstanceOf( WebUILogger );
       this.plugin;
-      this.state = DesktopPanelHeader.States.INITIALIZED;
       this.toolBox = null;
       this.toolBoxOnLoad = null;
       this.toolBoxUrl = this.options.toolboxContent;
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.contextElement = contextElement;
-      this.constructPlugin();
-      this.addContentStyle();
-   },
-   
-   destroy: function(){
-      if( this.plugin ) this.plugin.destroy();
-   },
-   
    onPluginConstructed : function(){
-      this.state = DesktopPanelHeader.States.CONSTRUCTED;      
-      this.fireEvent( 'headerConstructed', this );
+      this.constructionChain.callChain();
    },
    
-   onPluginConstructionError: function(){
-      this.error = true;
-      this.revertConstruction();
-      this.state = DesktopPanelHeader.States.INITIALIZED;
-      this.fireEvent( 'headerConstructionError', this );
+   onPluginConstructionError: function( error ){
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
-      this.contentStyle = XmlResource.selectNodeText( this.options.contentStyleSelector, this.definitionElement );
-      this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
-      if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
-      var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
-      if( pluginDefinition ){
-         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginConstructionError });
-         this.plugin.unmarshall();
-      }
-      this.state = DesktopPanelHeader.States.UNMARSHALLED;      
+      this.unmarshallProperties();
+      this.unmarshallPlugin();
+      this.parent();
    },
 
    //Properties
    getContentStyle: function() { return this.contentStyle; },
-   getDefinitionElement: function() { return this.definitionElement; },
    getHeaderToolBox: function() { return this.plugin != null; },
    getPlugin: function() { return this.plugin; },
-   getState: function() { return this.state; },
    getToolBoxUrl: function() { return this.toolBoxUrl; },
    
    //Protected, private helper methods
    addContentStyle: function(){
       if( this.contentStyle ){
-         this.contextElement.getElementById( this.contextElement.get( 'id' ) + "Content" ).addClass( this.contentStyle );
+         this.containerElement.getElementById( this.containerElement.get( 'id' ) + "Content" ).addClass( this.contentStyle );
       }
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructPlugin, this.addContentStyle, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyPlugin, this.resetProperties, this.destroyHtmlElement, this.finalizeDestruction );
    }.protect(),
    
    constructPlugin: function(){
-      if( this.plugin ) this.plugin.construct();
+      if( this.plugin ) this.plugin.construct( this.containerElement );
       else this.onPluginConstructed();
    }.protect(),
    
-   revertConstruction: function(){
+   destroyPlugin: function(){
       if( this.plugin ) this.plugin.destroy();
-   }
-});
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   unmarshallPlugin: function(){
+      var pluginDefinition = XmlResource.selectNode( this.options.pluginSelector, this.definitionElement );
+      if( pluginDefinition ){
+         this.plugin = new DocumentPlugin( pluginDefinition, this.internationalization, { onConstructed : this.onPluginConstructed, onConstructionError : this.onPluginConstructionError });
+         this.plugin.unmarshall();
+      }
+   }.protect(),
 
-DesktopPanelHeader.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
+   unmarshallProperties: function(){
+      this.contentStyle = XmlResource.selectNodeText( this.options.contentStyleSelector, this.definitionElement );
+      this.toolBoxUrl = XmlResource.selectNodeText( this.options.toolBoxUrlSelector, this.definitionElement );
+      if( !this.toolBoxUrl ) this.toolBoxUrl = this.options.contextRootPrefix + this.options.toolboxContent;
+   }.protect(),
+});
 /*
 ProcessPuzzle User Interface
 Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
@@ -13876,154 +14582,60 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DiagramWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['destroyCanvas', 'destroyFigures', 'drawCanvas', 'drawFigures', 'onFigureConstructed', 'onFigureConstructionError'],
+   Binds : ['drawDiagram', 'eraseDiagram', 'onDiagramDraw','onDiagramErase'],
    
    options : {
-      authorSelector : "//pp:widgetDefinition/author",
-      canvasHeightDefault : 200,
-      canvasHeightSelector : "//pp:widgetDefinition/canvas/@height",
-      canvasWidthDefault : 300,
-      canvasWidthSelector : "//pp:widgetDefinition/canvas/@width",
       componentName : "DiagramWidget",
-      descriptionSelector : "//pp:widgetDefinition/description",
-      figuresSelector : "//pp:widgetDefinition/figures/annotation | //pp:widgetDefinition/figures/class | //pp:widgetDefinition/figures/inheritanceConnection",
-      nameSelector : "//pp:widgetDefinition/name",
-      paintAreaId : "paintarea",
-      titleSelector : "//pp:widgetDefinition/title",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:dd='http://www.processpuzzle.com/Diagram' xmlns:uml='http://www.processpuzzle.com/Diagram/UML'",
       widgetContainerId : "DiagramWidget",
-      widgetDefinitionURI : "MenuDefinition.xml"
+      widgetDefinitionURI : "DiagramWidgetDefinition.xml"
    },
    
    //Constructor
    initialize : function( options, resourceBundle ){
       this.parent( options, resourceBundle );
       
-      this.author;
-      this.canvas;
-      this.canvasHeight;
-      this.canvasWidth;
-      this.description;
-      this.figures = new ArrayList();
-      this.figuresConstructionChain = new Chain();
-      this.name;
-      this.title;
-      this.paintArea;
+      this.diagram;
    },
    
    //Public accessor and mutator methods
-   construct : function( configurationOptions ) {
-      this.parent();
+   onDiagramDraw: function(){
+      this.constructionChain.callChain();
    },
    
-   destroy : function() {
-      this.parent();
+   onDiagramErase: function(){
+      this.destructionChain.callChain();
    },
       
-   onFigureConstructed: function( figure ){
-      this.figuresConstructionChain.callChain();
-   },
-   
-   onFigureConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
-   },
-   
    unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallFigures();
       return this.parent();
    },
    
    //Properties
-   getAuthor : function() { return this.author; },
-   getCanvas : function() { return this.canvas; },
-   getCanvasHeight : function() { return this.canvasHeight; },
-   getCanvasWidth : function() { return this.canvasWidth; },
-   getDescription : function() { return this.i18Resource.getText( this.description ); },
-   getFigures : function() { return this.figures; },
-   getName : function() { return this.name; },
-   getTitle : function() { return this.i18Resource.getText( this.title ); },
-   getPaintArea : function() { return this.paintArea; },
+   getDiagram: function(){ return this.diagram; },
    
    //Private helper methods
    compileConstructionChain: function(){
-      this.constructionChain.chain( this.drawCanvas, this.drawFigures, this.finalizeConstruction );
+      this.constructionChain.chain( this.drawDiagram, this.finalizeConstruction );
    }.protect(),
    
    compileDestructionChain: function(){
-      this.destructionChain.chain( this.destroyFigures, this.destroyCanvas, this.destroyChildHtmlElements, this.finalizeDestruction );
+      this.destructionChain.chain( this.eraseDiagram, this.finalizeDestruction );
    }.protect(),
    
-   destroyCanvas : function(){
-      if( this.paintArea && this.paintArea.destroy ) this.paintArea.destroy();
-      
-      this.destructionChain.callChain();
+   drawDiagram: function(){
+      this.diagram.draw( this.containerElement );
    }.protect(),
    
-   destroyFigures : function(){
-      this.figures.each( function( figure, index ){
-         figure.destroy();
-      }.bind( this ));
-      
-      this.figures.clear();
-      
-      this.destructionChain.callChain();
+   eraseDiagram: function(){
+      this.diagram.erase();
    }.protect(),
    
-   drawCanvas : function(){
-      this.paintArea = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
-            id : this.options.paintAreaId,
-            styles : { height : this.canvasHeight, width : this.canvasWidth }
-         });
-      this.canvas = new draw2d.Workflow( this.options.paintAreaId );
-      
-      this.constructionChain.callChain();
-   }.protect(),
-   
-   drawFigures : function(){
-      if( this.figures.size() > 0 ){
-         this.figures.each( function( figure, index ){
-            this.figuresConstructionChain.chain( function(){ figure.draw( this ); }.bind( this ));
-         }, this );
-            
-         this.figuresConstructionChain.chain(
-            function(){
-               this.figuresConstructionChain.clearChain();
-               this.constructionChain.callChain(); 
-            }.bind( this )
-         );
-         this.figuresConstructionChain.callChain();
-      }else this.constructionChain.callChain();
-   }.protect(),
-   
-   unmarshallFigures: function(){
-      var figuresElement = this.definitionXml.selectNodes( this.options.figuresSelector );
-      if( figuresElement ){
-         figuresElement.each( function( figureElement, index ){
-            var figure = DiagramFigureFactory.create( figureElement, this.i18Resource, { 
-               onFigureConstructed : this.onFigureConstructed, 
-               onFigureConstructionError : this.onFigureConstructionError 
-            });
-            figure.unmarshall();
-            this.figures.add( figure );
-         }, this );
-      }
-   }.protect(),
-   
-   unmarshallProperties: function(){
-      this.name = this.unmarshallWidgetProperty( null, this.options.nameSelector );
-      this.description = this.unmarshallWidgetProperty( "", this.options.descriptionSelector );
-      this.title = this.unmarshallWidgetProperty( "", this.options.titleSelector );
-      this.author = this.unmarshallWidgetProperty( "", this.options.authorSelector );
-      this.canvasHeight = parseInt( this.unmarshallWidgetProperty( this.options.canvasHeightDefault, this.options.canvasHeightSelector ));
-      this.canvasWidth = parseInt( this.unmarshallWidgetProperty( this.options.canvasWidthDefault, this.options.canvasWidthSelector ));
-   }.protect(),
-   
-   unmarshallWidgetProperty: function( defaultValue, selector ){
-      var propertyValue = this.definitionXml.selectNodeText( selector );
-      if( propertyValue ) return propertyValue;
-      else return defaultValue;
+   unmarshallComponents: function(){
+      this.diagram = new Diagram(  this.dataXml, this.i18Resource, this.elementFactory, { onDraw : this.onDiagramDraw, onErase : this.onDiagramErase });
+      this.diagram.unmarshall();
    }.protect()
+   
 });
 /*
 Name: 
@@ -14058,7 +14670,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var DiagramFigure = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['addFigureToCanvas', 'finalizeDraw'],
    
    options : {
@@ -14085,7 +14697,7 @@ var DiagramFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
+   erase: function(){
       if( this.state == DiagramFigure.States.CONSTRUCTED ){
          this.removeFigureFromCanvas();
          this.state = DiagramFigure.States.INITIALIZED;
@@ -14093,7 +14705,7 @@ var DiagramFigure = new Class({
    },
    
    draw: function( diagram ){
-      assertThat( diagram, not( nil() ));
+      this.assertThat( diagram, not( nil() ));
       this.diagram = diagram;
       this.canvas = diagram.getCanvas();
       this.compileDrawChain();
@@ -14192,7 +14804,7 @@ var AnnotationFigure = new Class({
    
    options : {
       componentName : "AnnotationFigure",
-      textSelector : "text",
+      textSelector : "dd:text",
       heightSelector : "@height",
       widthSelector : "@width"
    },
@@ -14207,12 +14819,12 @@ var AnnotationFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
-      this.parent();
-   },
-   
    draw: function( diagram ){
       this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
    },
    
    unmarshall: function(){
@@ -14246,185 +14858,6 @@ var AnnotationFigure = new Class({
       this.width = parseInt( XmlResource.selectNodeText( this.options.widthSelector, this.definitionXml ));
       
       this.parent();
-   }.protect()
-   
-});
-
-/*
-Name: 
-    - AttributeFigure
-
-Description: 
-    - Represents an attribute of ClassFigure. 
-
-Requires:
-
-Provides:
-    - AttributeFigure
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-
-
-var AttributeFigure = new Class({
-   Extends : DiagramFigure,
-   Binds: [],
-   
-   options : {
-      componentName : "AttributeFigure",
-      defaultValueSelector : "@defaultValue",
-      nameSelector : "@name",
-      typeSelector : "@type"
-   },
-
-   //Constructor
-   initialize: function( definition, internationalization, options ){
-      this.setOptions( options );
-      
-      this.defaultValue;
-      this.definitionXml = definition;
-      this.internationalization = internationalization;
-      this.name;
-      this.type;
-   },
-   
-   //Public accessor and mutator methods
-   destroy: function(){
-      this.parent();
-   },
-   
-   draw: function( diagram ){
-      this.parent( diagram );
-   },
-   
-   unmarshall: function(){
-      this.parent();
-   },
-   
-   //Properties
-   getDefaultValue : function() { return this.defaultValue; },
-   getType : function() { return this.type; },
-   
-   //Protected, private helper methods
-   unmarshallProperties : function(){
-      this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
-      this.defaultValue = XmlResource.selectNodeText( this.options.defaultValueSelector, this.definitionXml );
-      this.parent();
-   }.protect()
-});
-
-/*
-Name: 
-    - ClassFigure
-
-Description: 
-    - Represents a figure of UML class. 
-
-Requires:
-
-Provides:
-    - ClassFigure
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-
-
-var ClassFigure = new Class({
-   Extends : DiagramFigure,
-   Implements : [Events, Options],
-   Binds: ['instantiateDraw2dObject', 'drawAttributes'],
-   
-   options : {
-      attributesSelector : "attributes/attribute",
-      componentName : "ClassFigure"
-   },
-
-   //Constructor
-   initialize: function( definition, internationalization, options ){
-      this.parent( definition, internationalization, options );
-      
-      this.attributes = new ArrayList();
-   },
-   
-   //Public accessor and mutator methods
-   destroy: function(){
-      this.parent();
-   },
-   
-   draw: function( diagram ){
-      this.parent( diagram );
-   },
-   
-   unmarshall: function(){
-      this.unmarshallAttributes();
-      this.parent();
-   },
-   
-   //Properties
-   getAttributes : function() { return this.attributes; },
-   
-   //Protected, private helper methods
-   compileDrawChain : function(){
-      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.addFigureToCanvas, this.finalizeDraw );
-   }.protect(),
-
-   drawAttributes : function(){
-      this.attributes.each( function( attribute, index ){
-         this.draw2dObject.addAttribute( attribute.getInternationalizedName(), attribute.getType(), attribute.getDefaultValue() );
-      }.bind( this ));
-      
-      this.drawChain.callChain();
-   }.protect(),
-   
-   instantiateDraw2dObject : function(){
-      this.draw2dObject = new draw2d.shape.uml.Class( this.getInternationalizedName() );
-      this.drawChain.callChain();
-   }.protect(),
-   
-   unmarshallAttributes: function(){
-      var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
-      if( attributesElement ){
-         if( !attributesElement.each ) attributesElement = Array.from( attributesElement );
-         attributesElement.each( function( attributeElement, index ){
-            var attribute = new AttributeFigure( attributeElement, this.internationalization );
-            attribute.unmarshall();
-            this.attributes.add( attribute );
-         }, this );
-      }
    }.protect()
    
 });
@@ -14482,12 +14915,12 @@ var ConnectionFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
-      this.parent();
-   },
-   
    draw: function( diagram ){
       this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
    },
    
    unmarshall: function(){
@@ -14523,6 +14956,521 @@ var ConnectionFigure = new Class({
    }.protect()
 });
 
+/*
+Name: 
+    - AssociationConnectionFigure
+
+Description: 
+    - Represents a association connection between two figures. 
+
+Requires:
+    - ConnectionFigure
+
+Provides:
+    - AssociationConnectionFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+
+var AssociationConnectionFigure = new Class({
+   Extends : ConnectionFigure,
+   Implements : [Events, Options],
+   Binds: ['instantiateDraw2dObject'],
+   
+   options : {
+      componentName : "InheritanceConnectionFigure",
+      sourceRoleSelector : "/uml:sourceRole",
+      targetRoleSelectgor : "/uml:targetRole",
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      this.sourceRole;
+      this.targetRole;
+   },
+   
+   //Public accessor and mutator methods
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+   
+   //Properties
+   getSourceRole: function(){ return this.sourceRole; },
+   getTargetRole: function(){ return this.targetRole; },
+   
+   //Protected, private helper methods
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.shape.uml.InheritanceConnection( this.name );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.unmarshallSourceRole();
+      this.unmarshallTargetRole();
+      this.parent();
+   }.protect(),
+   
+   unmarshallRole: function( roleSelector ){
+      var roleSpecification = {};
+      
+      return roleSpecification;
+   }.protect(),
+   
+   unmarshallSourceRole: function(){
+      this.sourceRole = this.unmarshallRole( this.options.sourceRoleSelector );
+   }.protect(),
+   
+   unmarshallTargetRole: function(){
+      this.targetRole = this.unmarshallRole( this.options.targetRoleSelector );
+   }.protect()
+});
+
+/*
+Name: 
+    - AttributeFigure
+
+Description: 
+    - Represents an attribute of ClassFigure. 
+
+Requires:
+
+Provides:
+    - AttributeFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+var AttributeFigure = new Class({
+   Extends : DiagramFigure,
+   Binds: [],
+   
+   options : {
+      componentName : "AttributeFigure",
+      defaultValueSelector : "@defaultValue",
+      nameSelector : "@name",
+      typeSelector : "@type"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      
+      this.defaultValue;
+      this.type;
+   },
+   
+   //Public accessor and mutator methods
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.parent();
+   },
+   
+   //Properties
+   getDefaultValue : function() { return this.defaultValue; },
+   getType : function() { return this.type; },
+   
+   //Protected, private helper methods
+   unmarshallProperties : function(){
+      this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
+      this.defaultValue = XmlResource.selectNodeText( this.options.defaultValueSelector, this.definitionXml );
+      this.parent();
+   }.protect()
+});
+
+/*
+Name: 
+    - ClassFigure
+
+Description: 
+    - Represents a figure of UML class. 
+
+Requires:
+
+Provides:
+    - ClassFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+var ClassFigure = new Class({
+   Extends : DiagramFigure,
+   Implements : [Events, Options],
+   Binds: ['instantiateDraw2dObject', 'drawAttributes', 'drawOperations'],
+   
+   options : {
+      attributesSelector : "uml:attributes/uml:attribute",
+      componentName : "ClassFigure",
+      operationsSelector : "uml:operations/uml:operation",
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      
+      this.attributes = new ArrayList();
+      this.operations = new ArrayList();
+   },
+   
+   //Public accessor and mutator methods
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallAttributes();
+      this.unmarshallOperations();
+      this.parent();
+   },
+   
+   //Properties
+   getAttributes : function() { return this.attributes; },
+   getOperations : function() { return this.operations; },
+   
+   //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.instantiateDraw2dObject, this.drawAttributes, this.drawOperations, this.addFigureToCanvas, this.finalizeDraw );
+   }.protect(),
+
+   drawAttributes : function(){
+      this.attributes.each( function( attribute, index ){
+         this.draw2dObject.addAttribute( attribute.getInternationalizedName(), attribute.getType(), attribute.getDefaultValue() );
+      }.bind( this ));
+      
+      this.drawChain.callChain();
+   }.protect(),
+   
+   drawOperations : function(){
+      this.operations.each( function( operation, index ){
+         this.draw2dObject.addOperation( operation.getInternationalizedName(), operation.getArguments(), operation.getType() );
+      }.bind( this ));
+      
+      this.drawChain.callChain();
+   }.protect(),
+   
+   instantiateDraw2dObject : function(){
+      this.draw2dObject = new draw2d.shape.uml.Class( this.getInternationalizedName() );
+      this.drawChain.callChain();
+   }.protect(),
+   
+   unmarshallAttributes: function(){
+      var attributesElement = this.definitionXml.selectNodes( this.options.attributesSelector );
+      if( attributesElement ){
+         if( !attributesElement.each ) attributesElement = Array.from( attributesElement );
+         attributesElement.each( function( attributeElement, index ){
+            var attribute = new AttributeFigure( attributeElement, this.internationalization );
+            attribute.unmarshall();
+            this.attributes.add( attribute );
+         }, this );
+      }
+   }.protect(),
+   
+   unmarshallOperations: function(){
+      var operationsElement = this.definitionXml.selectNodes( this.options.operationsSelector );
+      if( operationsElement ){
+         if( !operationsElement.each ) operationsElement = Array.from( operationsElement );
+         operationsElement.each( function( operationElement, index ){
+            var operation = new OperationFigure( operationElement, this.internationalization );
+            operation.unmarshall();
+            this.operations.add( operation );
+         }, this );
+      }
+   }.protect()
+});
+
+/*
+Name: 
+    - Diagram
+
+Description: 
+    - Represents the diagram i.e. group of specifically placed diagram figures. 
+
+Requires:
+    - DigramFigure
+
+Provides:
+    - Diagram
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var Diagram = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds: ['destroyCanvas', 'drawCanvas', 'drawFigures', 'eraseFigures', 'finalizeDraw', 'finalizeErase', 'onFigureConstructed', 'onFigureConstructionError'],
+   
+   options : {
+      authorSelector : "/dd:diagramDefinition/dd:author",
+      canvasHeightDefault : 200,
+      canvasHeightSelector : "/dd:diagramDefinition/dd:canvas/@height",
+      canvasWidthDefault : 300,
+      canvasWidthSelector : "/dd:diagramDefinition/dd:canvas/@width",
+      componentName : "Diagram",
+      descriptionSelector : "/dd:diagramDefinition/dd:description",
+      figuresSelector : "/dd:diagramDefinition/dd:figures/dd:annotation | /dd:diagramDefinition/dd:figures/uml:class | /dd:diagramDefinition/dd:figures/uml:associationConnection | /dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
+      paintAreaId : "paintarea",
+      positionXSelector : "@positionX",
+      positionYSelector : "@positionY",
+      titleSelector : "/dd:diagramDefinition/dd:title",
+   },
+
+   //Constructor
+   initialize: function( definitionXml, localization, elementFactory, options ){
+      this.setOptions( options );
+      
+      this.author;
+      this.canvas;
+      this.canvasHeight;
+      this.canvasWidth;
+      this.containerElement;
+      this.definitionXml = definitionXml;
+      this.description;
+      this.eraseChain = new Chain();
+      this.drawChain = new Chain();
+      this.elementFactory = elementFactory;
+      this.figures = new ArrayList();
+      this.figuresDrawChain = new Chain();
+      this.localization = localization;
+      this.title;
+      this.paintArea;
+      this.state = DiagramFigure.States.INITIALIZED;
+   },
+   
+   //Public accessor and mutator methods
+   draw: function( containerElement ){
+      this.assertThat( containerElement, not( nil() ));
+      this.containerElement = containerElement;
+
+      this.compileDrawChain();
+      this.drawChain.callChain();
+   },
+   
+   erase: function(){
+      if( this.state == DiagramFigure.States.CONSTRUCTED ){
+         this.compileEraseChain();
+         this.eraseChain.callChain();
+      }
+   },
+   
+   onFigureConstructed: function( figure ){
+      this.figuresDrawChain.callChain();
+   },
+   
+   onFigureConstructionError: function( error ){
+      this.error = error;
+      this.revertConstruction();
+   },
+   
+   unmarshall: function(){
+      this.unmarshallProperties();
+      this.unmarshallCanvas();
+      this.unmarshallFigures();
+      this.state = DiagramFigure.States.UNMARSHALLED;
+   },
+   
+   //Properties
+   getAuthor : function() { return this.author; },
+   getCanvas : function() { return this.canvas; },
+   getCanvasHeight : function() { return this.canvasHeight; },
+   getCanvasWidth : function() { return this.canvasWidth; },
+   getDescription : function() { return this.localization.getText( this.description ); },
+   getFigures : function() { return this.figures; },
+   getTitle : function() { return this.localization.getText( this.title ); },
+   getPaintArea : function() { return this.paintArea; },
+   getState: function() { return this.state; },
+   
+   //Protected, private helper methods
+   compileDrawChain : function(){
+      this.drawChain.chain( this.drawCanvas, this.drawFigures, this.finalizeDraw );
+   }.protect(),
+   
+   compileEraseChain: function(){
+      this.eraseChain.chain( this.eraseFigures, this.destroyCanvas, this.destroyChildHtmlElements, this.finalizeErase );
+   }.protect(),
+   
+   destroyCanvas : function(){
+      if( this.paintArea && this.paintArea.destroy ) this.paintArea.destroy();
+      
+      this.eraseChain.callChain();
+   }.protect(),
+   
+   eraseFigures : function(){
+      this.figures.each( function( figure, index ){
+         figure.erase();
+      }.bind( this ));
+      
+      this.figures.clear();
+      
+      this.eraseChain.callChain();
+   }.protect(),
+   
+   drawCanvas : function(){
+      this.paintArea = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { 
+            id : this.options.paintAreaId,
+            styles : { height : this.canvasHeight, width : this.canvasWidth }
+         });
+      this.canvas = new draw2d.Workflow( this.options.paintAreaId );
+      
+      this.drawChain.callChain();
+   }.protect(),
+   
+   drawFigures : function(){
+      if( this.figures.size() > 0 ){
+         this.figures.each( function( figure, index ){
+            this.figuresDrawChain.chain( function(){ 
+               figure.draw( this ); 
+            }.bind( this ));
+         }, this );
+            
+         this.figuresDrawChain.chain(
+            function(){
+               this.figuresDrawChain.clearChain();
+               this.drawChain.callChain(); 
+            }.bind( this )
+         );
+         this.figuresDrawChain.callChain();
+      }else this.drawChain.callChain();
+   }.protect(),
+   
+   finalizeDraw : function(){
+      this.drawChain.clearChain();
+      this.state = DiagramFigure.States.CONSTRUCTED;
+      this.fireEvent( 'draw', this );
+   }.protect(),
+   
+   finalizeErase : function(){
+      this.eraseChain.clearChain();
+      this.state = DiagramFigure.States.INITIALIZED;
+      this.fireEvent( 'erase', this );
+   }.protect(),
+   
+   lookUpDiagramFigure : function( figureName ){
+      var searchedFigure = null;
+      this.diagram.getFigures().each( function( figure, index ){
+         if( figure.getName() == figureName ) 
+            searchedFigure = figure;
+      }.bind( this ));
+      
+      return searchedFigure;
+   }.protect(),
+   
+   unmarshallCanvas: function(){
+      this.canvasHeight = parseInt( this.definitionXml.selectNodeText( this.options.canvasHeightSelector, null, this.options.canvasHeightDefault ));
+      this.canvasWidth = parseInt( this.definitionXml.selectNodeText( this.options.canvasWidthSelector, null, this.options.canvasWidthDefault ));
+   }.protect(),
+   
+   unmarshallFigures: function(){
+      var figuresElement = this.definitionXml.selectNodes( this.options.figuresSelector );
+      if( figuresElement ){
+         figuresElement.each( function( figureElement, index ){
+            var figure = DiagramFigureFactory.create( figureElement, this.localization, { 
+               onFigureConstructed : this.onFigureConstructed, 
+               onFigureConstructionError : this.onFigureConstructionError 
+            });
+            figure.unmarshall();
+            this.figures.add( figure );
+         }, this );
+      }
+   }.protect(),
+   
+   unmarshallProperties: function(){
+      this.title = this.definitionXml.selectNodeText( this.options.titleSelector );
+      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
+      this.author = this.definitionXml.selectNodeText( this.options.authorSelector );
+   }.protect()
+});
+
+DiagramFigure.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
 /*
 Name: DiagramFigureFactory
 
@@ -14565,13 +15513,16 @@ var DiagramFigureFactory = new Class({
    create: function( definitionXmlElement, internationalization, options ){
       var newFigure;
       switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "ANNOTATION": 
+      case "DD:ANNOTATION": 
          newFigure = new AnnotationFigure( definitionXmlElement, internationalization, options ); break;
-      case "CLASS": 
+      case "UML:CLASS": 
          newFigure = new ClassFigure( definitionXmlElement, internationalization, options ); break;
-      case "INHERITANCECONNECTION":
-      default:
+      case "UML:ASSOCIATIONCONNECTION":
+         newFigure = new AssociationConnectionFigure( definitionXmlElement, internationalization, options ); break;
+      case "UML:INHERITANCECONNECTION":
          newFigure = new InheritanceConnectionFigure( definitionXmlElement, internationalization, options ); break;
+      default:
+         throw new UnknownDiagramElementException( definitionXmlElement.tagName );
       }
       
       return newFigure;
@@ -14591,6 +15542,7 @@ Description:
     - Represents a inheritance connection between two figures. 
 
 Requires:
+    - ConnectionFigure
 
 Provides:
     - InheritanceConnectionFigure
@@ -14631,12 +15583,12 @@ var InheritanceConnectionFigure = new Class({
    },
    
    //Public accessor and mutator methods
-   destroy: function(){
-      this.parent();
-   },
-   
    draw: function( diagram ){
       this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
    },
    
    unmarshall: function(){
@@ -14652,6 +15604,144 @@ var InheritanceConnectionFigure = new Class({
    }.protect()
 });
 
+/*
+Name: 
+    - OperationFigure
+
+Description: 
+    - Represents an operation of ClassFigure. 
+
+Requires:
+
+Provides:
+    - OperationFigure
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+
+var OperationFigure = new Class({
+   Extends : DiagramFigure,
+   Binds: [],
+   
+   options : {
+      argumentsSelector : "uml:arguments/uml:argument",
+      componentName : "OperationFigure",
+      nameSelector : "@name",
+      typeSelector : "@type"
+   },
+
+   //Constructor
+   initialize: function( definition, internationalization, options ){
+      this.parent( definition, internationalization, options );
+      
+      this.arguments;
+      this.type;
+   },
+   
+   //Public accessor and mutator methods
+   draw: function( diagram ){
+      this.parent( diagram );
+   },
+   
+   erase: function(){
+      this.parent();
+   },
+   
+   unmarshall: function(){
+      this.parent();
+      this.unmarshallArguments();
+   },
+   
+   //Properties
+   getArguments : function() { return this.arguments; },
+   getType : function() { return this.type; },
+   
+   //Protected, private helper methods
+   unmarshallArguments : function(){
+      var argumentsElement = this.definitionXml.selectNodes( this.options.argumentsSelector );
+      if( argumentsElement ){
+         if( !argumentsElement.each ) argumentsElement = Array.from( argumentsElement );
+         argumentsElement.each( function( argumentElement, index ){
+            var argumentName = XmlResource.selectNodeText( this.options.nameSelector, argumentElement );
+            var argumentType = XmlResource.selectNodeText( this.options.typeSelector, argumentElement );
+            if( this.arguments ) this.arguments += ", ";
+            else this.arguments = "";
+            this.arguments += argumentName + " : " + argumentType;
+         }, this );
+      }
+      
+   }.protect(),
+   
+   unmarshallProperties : function(){
+      this.type = XmlResource.selectNodeText( this.options.typeSelector, this.definitionXml );
+      this.parent();
+   }.protect()
+});
+
+/*
+Name: 
+   - UnknownDigramElementException
+   
+Description: 
+   - Thrown when an unknown diagram element found in the digram definition.
+
+Requires:
+   - WebUIException
+
+Provides:
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var UnknownDiagramElementException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Diagram element: '{elementName}' is unknown. Please revise you digram defintion.",
+      name: "UnknownDiagramElementException"
+   },
+   
+   //Constructor
+   initialize : function( elementName, options ){
+      this.setOptions( options );
+      this.parent( options );
+      this.parameters = { elementName : elementName };
+   }	
+});
 /*
 Name: 
     - DocumentEditor
@@ -14823,7 +15913,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var MenuItem = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['onClick'],
    
    options : {
@@ -14836,7 +15926,7 @@ var MenuItem = new Class({
       idPathSeparator : "/",
       isDefaultSelector : "@isDefault",
       menuItemIdSelector : "@menuItemId",
-      messagePropertiesSelector : "messageProperties",
+      messagePropertiesSelector : "pp:messageProperties",
       parentItemId : "",
       selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
@@ -14865,7 +15955,7 @@ var MenuItem = new Class({
    },
    
    construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.parentHtmlElement = parentElement;
       if( this.state == BrowserWidget.States.UNMARSHALLED && this.needsToBeDisplayed() ) {
          this.instantiateHtmlElements();
@@ -15011,7 +16101,7 @@ var CompositeMenu = new Class({
    options : {
       componentName : 'CompositeMenu',
       menuStyle : 'menuWidget',
-      subItemsSelector : 'menuItem'
+      subItemsSelector : 'md:menuItem'
    },
 
    //Constructor
@@ -15195,13 +16285,14 @@ var HierarchicalMenuWidget = new Class({
    
    options : {
       accordionBehaviour : false,
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:md='http://www.processpuzzle.com/MenuDefinition'",
       componentName : "HierarchicalMenuWidget",
       contextItemId : "",
       idPathSeparator : "/",
       fireDefaultItem : true,
       menuItemOptions : {},
       menuStyle : "menuWidget",
-      rootMenuSelector : "//pp:menuWidgetDefinition/menuItem[1]",
+      rootMenuSelector : "/md:menuDefinition/md:menuItem[1]",
       selectedItemStyle : 'selectedMenuItem',
       showSubItems : false,
       widgetContainerId : "HierarchicalMenuWidget"
@@ -15221,14 +16312,6 @@ var HierarchicalMenuWidget = new Class({
    },
    
    //Public accessor and mutator methods
-   construct : function() {
-      this.parent();
-   },
-   
-   destroy : function() {      
-      this.parent();
-   },
-   
    findItemById: function( itemFullId ){
       if(( itemFullId == null ) || ( this.state != BrowserWidget.States.UNMARSHALLED && this.state != BrowserWidget.States.CONSTRUCTED )) return null;
       return this.rootMenu.findItemById( itemFullId );
@@ -15247,11 +16330,6 @@ var HierarchicalMenuWidget = new Class({
       
       this.storeComponentState();
       this.messageBus.notifySubscribers( this.createMessage( menuItem ));      
-   },
-   
-   unmarshall: function(){
-      this.parent();
-      this.unmarshallMenu();
    },
    
    webUIMessageHandler: function( webUIMessage ){
@@ -15315,7 +16393,7 @@ var HierarchicalMenuWidget = new Class({
    determineCurrentItemId : function(){
       if( this.options.contextItemId ){
          if( this.findItemById( this.options.contextItemId ) == null )
-            throw new WidgetConstructionException( this.options.componentName, "ContextItemId is invalid" );
+            throw new WidgetConstructionException( this.options.componentName, { description : "ContextItemId is invalid" });
       }
       if( !this.currentItemId ) this.currentItemId = this.defaultItemId;
       this.constructionChain.callChain();
@@ -15366,7 +16444,7 @@ var HierarchicalMenuWidget = new Class({
       }
    }.protect(),
    
-   unmarshallMenu: function(){
+   unmarshallComponents: function(){
       var rootMenuElement = this.dataXml.selectNode( this.options.rootMenuSelector );
       this.standardizeContextItemId();
       if( rootMenuElement ){
@@ -15480,7 +16558,7 @@ var MenuItemFactory = new Class({
 
    //Public mutators and accessors
    create: function( menuItemDefinition, elementFactory, options ){
-      var hasChildNodes = XmlResource.selectNodes( "menuItem", menuItemDefinition ).length > 0 ? true : false;
+      var hasChildNodes = XmlResource.selectNodes( "md:menuItem", menuItemDefinition ).length > 0 ? true : false;
       var treeNode;
       
       if( hasChildNodes ) treeNode = new CompositeMenu( menuItemDefinition, elementFactory, options );
@@ -15677,9 +16755,8 @@ var HtmlDocument = new Class({
    options: {
       componentName : "HtmlDocument",
       documentContentExtension : ".html",
-      documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'",
       documentEditorClass : "TextAreaEditor",
-      rootElementName : "/htmlDocumentDefinition",
+      rootElementName : "/sd:htmlDocumentDefinition",
    },
    
    //Constructor
@@ -15836,28 +16913,39 @@ var ProcessPuzzleLocale = new Class({
 	
 });
 /*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
+Name: 
+    - LocaleUtil
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Description: 
+    - Helps to determine a series of localization resource URIs from a base URI and Locale.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Requires:
+    - 
+    
+Provides:
+    - LocaleUtil
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
 
 
 var ProcessPuzzleLocaleUtil = new Class({
+   Implements : [AssertionBehavior],
 
 	// Constructor
 	initialize: function () {
@@ -15894,8 +16982,8 @@ var ProcessPuzzleLocaleUtil = new Class({
 	},
 
 	getFileNameList : function( locale, prefix, suffix ) {
-		assertThat( suffix, not( nil() ));
-		assertThat( suffix, containsString( "." ));
+		this.assertThat( suffix, not( nil() ));
+		this.assertThat( suffix, containsString( "." ));
 		
 		var list = new ArrayList();
 		for (var i = 0; i < 3; i++) {
@@ -15925,6 +17013,418 @@ var ProcessPuzzleLocaleUtil = new Class({
 	//public mutators methods
 
 	//private methods
+});
+/*
+Name: 
+    - LocalizationResourceManager
+
+Description: 
+    - Facilitates internationalization by maintaining a Locale dependent map of key : text pair. Translations i.e. key / text pairs are loaded from xml resources.
+
+Requires:
+    - LocalizationResourceParser
+    - ProcessPuzzleLocale
+    - ResourceCache
+    - ResouceKey
+    
+Provides:
+    - LocalizationResourceManager
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var LocalizationResourceManager = new Class({
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds : ['checkTimeOut', 'finalizeLoad', 'loadResources', 'onParseFailure', 'onParseSuccess'],
+
+   options : {
+      componentName : "LocalizationResourceManager",
+      defaultLocale : null,
+      eventFireDelay : 2,
+      nameSpaces : "xmlns:pp='http://www.processpuzzle.com/'"
+   },
+
+   // Constructor
+   initialize : function( webUIConfiguration, options ) {
+      // parameter assertions
+      this.assertThat( webUIConfiguration, not( nil() ), "LocalizationResourceManager.webUIConfiguration" );
+      this.setOptions( options );
+
+      // private instance variables
+      this.cache = new ResourceCache();
+      this.currentLocale = null;
+      this.isLoaded = false;
+      this.loadChain = new Chain();
+      this.localizationResourceReferences = new ArrayList();
+      this.localizationResources = new HashMap();
+      this.logger = Class.getInstanceOf( WebUILogger );
+      this.parser = new LocalizationResourceParser({ onFailure: this.onParseFailure, onSuccess : this.onParseSuccess });
+      this.resourceChain = new Chain();
+      this.webUIConfiguration = webUIConfiguration;
+
+      this.determineDefaultLocale();
+      this.determineNameSpace();
+      this.determineLocalizationResourceReferences();
+   },
+
+   //Public accessor and mutator methods
+   getText : function( resourceKey ) {
+      if( !resourceKey ) return null;
+
+      var resourceValue;
+      try{ resourceValue = this.cache.get( resourceKey, "String" ); } 
+      catch( e ) { resourceValue = resourceKey; }
+      return resourceValue;
+   },
+
+   load : function( locale ) {
+      this.logger.debug( this.options.componentName + ".load() started." );
+      this.currentLocale = locale;
+      this.startTimeOutTimer( 'load' );
+      this.compileLoadChain();
+      this.loadChain.callChain();
+   },
+   
+   onParseFailure : function( error ){
+      this.handleLoadError( error );
+   },
+   
+   onParseSuccess : function( resourceUri ){
+      this.localizationResources.put( resourceUri, this.parser.getLocalizationResource() );
+      this.resourceChain.callChain();
+   },
+
+   release : function() {
+      this.currentLocale = null;
+      if( this.cache ) this.cache.clear();
+      this.cache = null;
+      this.localizationResourceReferences.clear();
+      this.releaseLocalizationResources();
+      this.isLoaded = false;
+   },
+   
+   //Properties
+   getDefaultLocale : function() { return this.options.defaultLocale; },
+   getError : function() { return this.error; },
+   getFile : function( key ) { var file = this.cache.get( key, "File" ); return new File( file ); },
+   getLocale : function() { return this.currentLocale; },
+   getNameSpace : function() { return this.options.nameSpaces; },
+   getLocalizationReferences : function() { return this.localizationResourceReferences; },
+   getLocalizationResources : function() { return this.localizationResources; },
+
+   //Protected, private methods
+   compileLoadChain : function(){
+      this.loadChain.chain( this.loadResources, this.finalizeLoad );
+   }.protect(),
+   
+   determineDefaultLocale : function() {
+      var defaultLocaleInConfig = this.webUIConfiguration.getI18DefaultLocale();
+      if( defaultLocaleInConfig != null ) this.options.defaultLocale = defaultLocaleInConfig;
+   }.protect(),
+
+   determineNameSpace : function() {
+      var nameSpaceInConfig = this.webUIConfiguration.getI18ResourceBundleNameSpace();
+      if (nameSpaceInConfig != null)
+         this.options.nameSpaces = nameSpaceInConfig;
+   }.protect(),
+
+   determineLocalizationResourceReferences : function() {
+      this.webUIConfiguration.getI18ResourceBundleElements().each( function( localizationResourceDefinition, index ){
+         var localizationResourceReference = new LocalizationResourceReference( localizationResourceDefinition );
+         localizationResourceReference.unmarshall();
+         this.localizationResourceReferences.add( localizationResourceReference );
+      }.bind( this ));
+   }.protect(),
+   
+   finalizeLoad : function(){
+      this.stopTimeOutTimer();
+      this.loadChain.clearChain();
+      this.isLoaded = true;
+      this.fireEvent( 'success', this, this.options.eventFireDelay );
+   }.protect(),
+   
+   handleLoadError : function( error ){
+      this.error = error;
+      this.stopTimeOutTimer();
+      this.loadChain.clearChain();
+      this.localizationResourceReferences.clear();
+      this.localizationResources.clear();
+      this.fireEvent( 'failure', error, this.options.eventFireDelay );
+   }.protect(),
+   
+   loadResources : function(){
+      if( this.localizationResourceReferences.size() > 0 ){
+         this.localizationResourceReferences.each( function( localizationReference, index ){ 
+            localizationReference.expandedUris( this.currentLocale ).each( function( resourceUri, index ){
+               if( !this.localizationResources.containsKey( resourceUri )){
+                  this.resourceChain.chain( function(){ this.parseResource( resourceUri, this.currentLocale ); }.bind( this ));
+               }
+            }.bind( this ));
+         }.bind( this ));
+         
+         this.resourceChain.chain(
+            function(){
+               this.resourceChain.clearChain();
+               this.loadChain.callChain();
+            }.bind( this )
+         );
+         this.resourceChain.callChain();
+      }else this.loadChain.callChain();
+   }.protect(),
+
+   parseResource : function( resourceUri, locale ) {
+      try{
+         this.parser.parse( this.cache, resourceUri, locale );
+      }catch( error ) {
+         this.handleLoadError( error );
+      }
+   }.protect(),
+   
+   releaseLocalizationResources : function(){
+      this.localizationResources.each( function( resourceEntry, index ){
+         var localizationResource = resourceEntry.getValue();
+         if( localizationResource ) localizationResource.release();
+      }.bind( this ));
+      this.localizationResources.clear();
+   }.protect(),
+   
+   timeOut : function( error ){
+      this.handleLoadError( error );
+   }.protect()
+   
+});
+/*
+Name: 
+    - LocalizationResourceParser
+
+Description: 
+    - Parses an xml resource and builds up a map of key <-> translation pairs filtered by a specified language.
+
+Requires:
+    - ProcessPuzzleLocale
+    - ResourceCache
+    - ResouceKey
+    
+Provides:
+    - LocalizationResourceParser
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var LocalizationResourceParser = new Class({
+   Implements : [ Events, Options ],
+   Binds : [],
+
+   options : {
+      componentName : "LocalizationResourceParser",
+      eventFireDelay : 2
+   },
+
+   // Constructor
+   initialize : function( options ) {
+      this.setOptions( options );
+      
+      // private instance variables
+      this.buffer = new String();
+      this.cache = new ResourceCache();
+      this.key;
+      this.parserLanguage, this.parserCountry, this.parserVariant;
+      this.resourceUri;
+      this.targetLanguage, this.targetCountry, this.targetVariant;
+      this.saxEventHandler = new SAXEventHandler();
+      this.xmlResource = null;
+      this.xmlAsText = "";
+   },
+
+   // Public accessors and mutator methods
+   characters : function( chars, offset, length ) {
+      this.buffer += chars.substring( offset, offset + length );
+   },
+
+   endDocument : function(){
+      this.fireEvent( 'success', this.resourceUri );
+   },
+
+   endElement : function( qName ) {
+      var content = this.buffer.trim();
+      this.buffer = new String();
+      if( qName.equals( "Language" )) {
+         this.parserLanguage = null;
+      }
+      if( qName.equals( "Country" )) {
+         this.parserCountry = null;
+      }
+      if( qName.equals( "Variant" )) {
+         this.parserVariant = null;
+      }
+      if( qName.equals( "Resource" ) && this.inContext() ) {
+         this.cache.put( this.key, content );
+      }
+   },
+
+   parse : function( resourceCache, resourceUri, theTargetLocale ) {
+      this.cache = resourceCache;
+      this.resourceUri = resourceUri;
+      this.targetLanguage = theTargetLocale.getLanguage();
+      this.targetCountry = theTargetLocale.getCountry();
+      this.targetVariant = theTargetLocale.getVariant();
+
+      var parser = new SAXDriver();
+      parser.setDocumentHandler( this );
+      parser.setLexicalHandler( this );
+      parser.setErrorHandler( this );
+      this.xmlResource = new XmlResource( resourceUri, { parseOnComplete : false });
+      parser.parse( this.xmlResource.getXmlAsText() );
+   },
+   
+   startDocument : function(){
+   },
+
+   startElement : function( qName, attrs ) {
+      if( qName.equals( "Language" )) {
+         this.parserLanguage = attrs.getValueByName( "name" );
+      }
+      if( qName.equals( "Country" )) {
+         this.parserCountry = attrs.getValueByName( "name" );
+      }
+      if( qName.equals( "Variant" )) {
+         this.parserVariant = attrs.getValueByName( "name" );
+      }
+      if( qName.equals( "Resource" )) {
+         this.key = new ResourceKey( attrs.getValueByName( "key" ), attrs.getValueByName( "type" ) );
+      }
+   },
+
+   // Properties
+   getEventHandler : function() { return this.saxEventHandler; },
+   getLocalizationResource : function() { return this.xmlResource; },
+   setXML : function( strXML ) { this.xmlAsText = strXML; },
+
+   // Protected private helper methods
+   inContext : function() {
+      if( this.parserLanguage == null || this.parserLanguage.equals( this.targetLanguage )) {
+         if( this.parserCountry == null || this.parserCountry.equals( this.targetCountry )) {
+            if( this.parserVariant == null || this.parserVariant.equals( this.targetVariant )) {
+               return true;
+            }
+         }
+      }
+      return false;
+   }.protect()
+});
+/*
+Name: 
+    - LocalizationResourceReference
+
+Description: 
+    - Determines localization resource URI or URIs from xml definition segment.
+
+Requires:
+    - 
+    
+Provides:
+    - LocalizationResourceReference
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
+
+var LocalizationResourceReference = new Class({
+   Implements : [AssertionBehavior, Options],
+   options : {
+      baseNameOnlyVersionExists : true,
+      baseNameOnlyVersionExistsSelector : "@baseNameOnlyVersionExists",
+      eventFireDelay : 2,
+      localeSpecificVersionExists : true,
+      localeSpecificVersionExistsSelector : "@localeSpecificVersionsExists",
+      nameSpase : "xmlns:pp='http://www.processpuzzle.com'"
+   },
+
+   // Constructor
+   initialize : function( resourceDefinitionXml, options ) {
+      this.assertThat( resourceDefinitionXml, not( nil() ), "LocalizationResourceReference.resourceDefinitionXml" );
+      this.setOptions( options );
+
+      this.localeUtil = new ProcessPuzzleLocaleUtil();
+      this.resourceDefinitionXml = resourceDefinitionXml;
+      this.uri;
+   },
+
+   // Public accessors and mutator methods
+   expandedUris : function( locale ){
+      var expandedUris;
+      if( this.options.localeSpecificVersionExists ){
+         expandedUris = this.localeUtil.getFileNameList( locale, this.getUri(), ".xml" );
+         if( !this.options.baseNameOnlyVersionExists ){
+            expandedUris.erase( this.getUri() + ".xml" );
+         }
+      }else{
+         expandedUris = Array.from( this.getUri() + ".xml" );
+      }
+
+      return expandedUris;
+   },
+   
+   unmarshall : function() {
+      this.assertThat( this.resourceDefinitionXml, not( nil() ) );
+
+      this.uri = XmlResource.determineNodeText( this.resourceDefinitionXml );
+      this.options.baseNameOnlyVersionExists = parseBoolean( XmlResource.selectNodeText( this.options.baseNameOnlyVersionExistsSelector, this.resourceDefinitionXml, this.options.nameSpace, this.options.baseNameOnlyVersionExists ));
+      this.options.localeSpecificVersionExists = parseBoolean( XmlResource.selectNodeText( this.options.localeSpecificVersionExistsSelector, this.resourceDefinitionXml, this.options.nameSpace, this.options.localeSpecificVersionExists ));
+   },
+
+   // Properties
+   getUri : function() { return this.uri; },
+   isBaseNameOnlyVersionExists : function(){ return this.options.baseNameOnlyVersionExists; },
+   isLocaleSpecificVersionExists : function() { return this.options.localeSpecificVersionExists; }
+
+// private methods
 });
 /*
 name: ResourceCache
@@ -15961,7 +17461,7 @@ var ResourceCache = new Class({
 	  this.resources.clear(); 
 	},
 
-	//public accessors methods
+	//Public accessor and mutator methods
 	get : function( name, type ) {
 	    var resourceKey = new ResourceKey( name, type );
 	    if( !this.resources.containsKey( resourceKey ) ) {
@@ -15970,10 +17470,12 @@ var ResourceCache = new Class({
 	    return this.resources.get( resourceKey );
 	},
 	
-	//public mutators methods
 	put : function( resourceKey, resourceValue ){
 		this.resources.put( resourceKey, resourceValue );
-	}
+	},
+	
+	//Properties
+	getResources : function() { return this.resources; }
 
 	//private methods
 });
@@ -16000,11 +17502,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 var ResourceKey = new Class({
+   Implements : [AssertionBehavior],
    
    initialize: function( theKey, theType ) {
       //parameter assertions
-      assertThat( theKey, not( nil() ));
-      assertThat( theType, not( nil() ));
+      this.assertThat( theKey, not( nil() ), "ResourceKey.theKey" );
+      this.assertThat( theType, not( nil() ), "ResourceKey.theType" );
       
       //private instance variables
       this.key = theKey;
@@ -16041,264 +17544,6 @@ var ResourceKey = new Class({
 
    //private methods
 });
-/*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var XMLBundleParser = new Class({
-	
-	//Constructor
-	initialize: function() {
-		//private instance variables
-		this.buffer = new String();
-		this.cache = new ResourceCache();
-		this.key;
-		this.parserLanguage, this.parserCountry, this.parserVariant;
-		this.targetLanguage, this.targetCountry, this.targetVariant;
-		this.saxEventHandler = new SAXEventHandler(); 
-		this.xmlResource = null;
-		this.xmlAsText = "";
-	},
-	
-	//Public accessors and mutator methods
-	characters : function( chars, offset, length ) {
-	    this.buffer += chars.substring( offset, offset + length );
-	},
-
-	endElement : function( qName ) {
-	    var content = this.buffer.trim();
-	    this.buffer = new String();
-	    if( qName.equals("Language")) {
-	        this.parserLanguage = null;
-	    }
-	    if( qName.equals("Country")) {
-	        this.parserCountry = null;
-	    }
-	    if( qName.equals("Variant")) {
-	        this.parserVariant = null;
-	    }
-	    if( qName.equals("Resource") && this.inContext()) {
-	        this.cache.put( this.key, content );
-	    }
-	},
-
-	parse : function( theCache, theFilename, theTargetLocale ) {
-	    this.cache = theCache;
-	    this.targetLanguage = theTargetLocale.getLanguage();
-	    this.targetCountry = theTargetLocale.getCountry();
-	    this.targetVariant = theTargetLocale.getVariant();
-	    
-	    var parser = new SAXDriver();
-	    parser.setDocumentHandler( this );
-	    parser.setLexicalHandler(this );
-	    parser.setErrorHandler( this );
-	    this.xmlResource = new XmlResource( theFilename, { parseOnComplete : false } );
-	    parser.parse( this.xmlResource.getXmlAsText() );
-	},
-
-	startElement : function( qName, attrs ) {
-	    if( qName.equals("Language")) {
-	    	this.parserLanguage = attrs.getValueByName("name");
-	    }
-	    if( qName.equals("Country")) {
-	    	this.parserCountry = attrs.getValueByName("name");
-	    }
-	    if( qName.equals("Variant")) {
-	    	this.parserVariant = attrs.getValueByName("name");
-	    }
-	    if( qName.equals("Resource")) {
-	    	this.key = new ResourceKey(attrs.getValueByName("key"), attrs.getValueByName("type"));
-	    }
-	},
-
-	//Properties
-	setXML : function( strXML ) { this.xmlAsText = strXML; },
-	
-	//Protected private helper methods
-	inContext : function() {
-	    if( this.parserLanguage == null || this.parserLanguage.equals( this.targetLanguage )) {
-	        if( this.parserCountry == null || this.parserCountry.equals( this.targetCountry )) {
-	        if( this.parserVariant == null || this.parserVariant.equals( this.targetVariant )) {
-	            return true;
-	        }
-	        }
-	    }
-	    return false;
-	}.protect()
-});
-/*
-ProcessPuzzle User Interface
-Backend agnostic, desktop like configurable, browser font-end based on MochaUI.
-Copyright (C) 2011  Joe Kueser, Zsolt Zsuffa
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var XMLResourceBundle = new Class( {
-   Implements : Options,
-
-   options : {
-      componentName : "XMLResourceBundle",
-      defaultLocale : null,
-      nameSpaces : "xmlns:pp='http://www.processpuzzle.com/'"
-   },
-
-   // Constructor
-   initialize : function(webUIConfiguration, options) {
-
-      // parameter assertions
-   assertThat( webUIConfiguration, not( nil() ));
-   this.setOptions( options );
-
-   // private instance variables
-   this.cache;
-   this.currentLocale = null;
-   this.isLoaded = false;
-   this.logger = Class.getInstanceOf( WebUILogger );
-   this.localeUtil = new ProcessPuzzleLocaleUtil();
-   this.parser = new XMLBundleParser();
-   this.resourceBundleNames = new Array();
-   this.webUIConfiguration = webUIConfiguration;
-
-   this.determineDefaultLocale();
-   this.determineNameSpace();
-   this.determineResourceBundleNames();
-},
-
-// public accessors methods
-   getDefaultLocale : function() {
-      return this.options.defaultLocale;
-   },
-
-   getFile : function(key) {
-      var file = this.cache.get( key, "File" );
-      return new File( file );
-   },
-   
-   getLocale : function() { return this.currentLocale; },
-
-   getNameSpace : function() {
-      return this.options.nameSpaces;
-   },
-   getResourceBundleNames : function() {
-      return this.resourceBundleNames;
-   },
-
-   getText : function( resourceKey ) {
-      if( !resourceKey ) return null;
-      
-      var resourceValue;
-      try {
-         resourceValue = this.cache.get( resourceKey, "String" );
-      }catch( e ) {
-         resourceValue = resourceKey;
-      }
-      return resourceValue;
-   },
-
-   // public mutators methods
-   load : function( locale ) {
-      this.logger.debug( this.options.componentName + ".load() started." );
-      this.currentLocale = locale;
-      this.cache = new ResourceCache();
-      var fileList = this.determineFileNames( locale );
-      var numOfSuccess = 0;
-      for ( var i = 0; i < fileList.size(); i++) {
-         if (this.parseFile( fileList.get( i ), locale )) {
-            numOfSuccess++;
-         }
-      }
-      if (numOfSuccess == 0) {
-         var exception = new UndefinedXmlResourceException( fileList.get( 0 ) );
-         throw exception;
-      }
-      this.isLoaded = true;
-   },
-   
-   release : function(){
-      this.currentLocale = null;
-      this.cache.clear();
-      this.cache = null;
-      this.resourceBundleNames.empty();
-      this.isLoaded = false;
-   },
-
-   // private methods
-   determineDefaultLocale : function() {
-      var defaultLocaleInConfig = this.webUIConfiguration.getI18DefaultLocale();
-      if (defaultLocaleInConfig != null)
-         this.options.defaultLocale = defaultLocaleInConfig;
-   }.protect(),
-
-   determineFileNames : function(locale) {
-      var fileNames = new ArrayList();
-      this.resourceBundleNames.each( function(resourceBundleName, index) {
-         var fileList = this.localeUtil.getFileNameList( locale, resourceBundleName, ".xml" );
-         fileNames.addAll( fileList );
-      }, this );
-
-      return fileNames;
-   }.protect(),
-
-   determineNameSpace : function() {
-      var nameSpaceInConfig = this.webUIConfiguration.getI18ResourceBundleNameSpace();
-      if (nameSpaceInConfig != null)
-         this.options.nameSpaces = nameSpaceInConfig;
-   }.protect(),
-
-   determineResourceBundleNames : function() {
-      var resourceBundleElements = this.webUIConfiguration.getI18ResourceBundleElements();
-      for (i = 0; i < this.webUIConfiguration.getI18ResourceBundleElements().length; i++) {
-         var resourceBundleName = this.webUIConfiguration.getI18ResourceBundleName( i );
-         this.resourceBundleNames[i] = resourceBundleName;
-      }
-      ;
-   }.protect(),
-
-   parseFile : function(theFilename, theLocale) {
-      try {
-         var xmlDocument = new XmlResource( theFilename, {
-            nameSpaces : this.options.nameSpaces
-         } );
-      } catch (e) {
-         return false;
-      }
-      this.parser.parse( this.cache, theFilename, theLocale );
-      return true;
-   }.protect()
-} );
 /*
  * ----------------------------- JSTORAGE -------------------------------------
  * Simple local storage wrapper to save data on the browser side, supporting
@@ -16891,7 +18136,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 var LanguageSelectorWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['onSelection'],
+   Binds : ['createSpanElements', 'createSelectElement', 'createSelectElementOptions', 'onSelection'],
    
    options : {
       componentName : "LanguageSelectorWidget",
@@ -16918,18 +18163,6 @@ var LanguageSelectorWidget = new Class({
    },
 
    //Public accessor and mutator methods
-   construct : function() {
-      this.createSpanElements();
-      this.createSelectElement();
-      this.createSelectElementOptions();
-      return this.parent();
-   },
-   
-   destroy : function() {
-      this.availableLocales.clear();
-      this.parent();
-   },
-   
    onSelection : function() {
       var currentLocale = this.locale;
       var newLocale = new ProcessPuzzleLocale();
@@ -16943,9 +18176,18 @@ var LanguageSelectorWidget = new Class({
    getWebUIConfiguration : function() { return this.webUIConfiguration; },
    
    //Private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createSpanElements, this.createSelectElement, this.createSelectElementOptions, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
    createSelectElement : function(){
       this.selectElement = this.elementFactory.create( 'select', null, this.selectElementContainer, WidgetElementFactory.Positions.LastChild, { id : this.options.selectElementId } );
       this.selectElement.addEvent( 'change', this.onSelection );
+      this.constructionChain.callChain();
    }.protect(),
    
    createSelectElementOptions : function() {
@@ -16955,11 +18197,14 @@ var LanguageSelectorWidget = new Class({
       this.availableLocales.each( function( locale, index ){
          this.elementFactory.createOption( locale.getLanguage(), this.options.componentPrefix + "." + locale.getLanguage(), this.selectElement, WidgetElementFactory.Positions.LastChild );
       }, this );
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    createSpanElements: function() {
       var languageSelectorWrapper = this.elementFactory.create( 'span', null, null, null, {'class': this.options.wrapperElementStyle });
       this.selectElementContainer = this.elementFactory.create( 'span', null, languageSelectorWrapper );
+      this.constructionChain.callChain();
    }.protect(),
    
    determineAvailableLocales : function(){
@@ -16977,8 +18222,1858 @@ var LanguageSelectorWidget = new Class({
          if( webUIController ) this.webUIConfiguration = webUIController.getWebUIConfiguration();
          else this.webUIConfiguration = Class.getInstanceOf( WebUIConfiguration );
       }
+   }.protect(),
+   
+   finalizeDestruction: function(){
+      this.availableLocales.clear();
    }.protect()
    
+});
+/*
+Name: 
+    - Media
+
+Description: 
+    - Represents an abstract displayable media.
+
+Requires:
+   - 
+
+Provides:
+    - Media
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var Media = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds: [],
+   
+   options : {
+      componentName : 'Media',
+      eventDeliveryDelay : 5
+   },
+
+   //Constructor
+   initialize: function( internationalization, mediaDefinitionXml, options ){
+      this.assertThat( internationalization, not( nil() ), this.options.componentName + ".internationalization" );
+      this.assertThat( mediaDefinitionXml, not( nil() ), this.options.componentName + ".mediaDefinitionXml" );
+      this.setOptions( options );
+      
+      this.internationalization = internationalization;
+      this.mediaDefinitionXml = mediaDefinitionXml;
+      this.thumbnailsUri = new Array();
+   },
+   
+   //Public accessor and mutator methods
+   backward: function(){
+      
+   },
+   
+   beginning: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   collectThumbnaildUris : function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   end: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   forward: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   prepare: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   relase: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   start: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   stop: function(){
+      //Abstract method, should be overwritten.
+   },
+   
+   unmarshall: function(){
+	  //Abstract method, should be overwritten.
+   },
+   
+   //Properties
+   getThumbnailsUri: function(){ return this.thumbnailsUri; }
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - MediaControllerButton
+
+Description: 
+    - Represents a button of a media player's controller panel. 
+
+Requires:
+
+Provides:
+    - MediaControllerButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var MediaControllerButton = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds: ['gotFocus', 'lostFocus', 'onSelected'],
+   
+   options : {
+      action : null,
+      buttonClass : null,
+      isActiveClass : 'active',
+      key : null,
+      label : null,
+      slideShowClass : 'slideshow',
+      tabIndex : null
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.assertThat( containerElement, not( nil() ), "SlideshowControllerButton.containerElement" );
+      this.setOptions( options );
+      
+      this.anchorElement;
+      this.containerElement = containerElement;
+      this.listItemElement;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function(){
+      this.createElements();
+      this.addEvents();
+   },
+   
+   destroy: function(){
+      this.removeEvents();
+      this.destroyElements();
+   },
+   
+   lostFocus: function(){
+      this.anchorElement.removeClass( this.options.isActiveClass );
+   },
+   
+   onSelected: function(){
+      this.fireEvent( 'onSelected', this );
+   },
+   
+   pause: function(){
+      this.paused = true;
+   },
+   
+   gotFocus: function(){
+      this.anchorElement.addClass( this.options.isActiveClass );
+   },
+   
+   //Properties
+   getAnchorClass : function(){ return this.options.slideShowClass + "-controller"; },
+   getAnchorElement : function(){ return this.anchorElement; },
+   getElementClass : function(){ return this.options.buttonClass; },
+   getListItemElement : function(){ return this.listItemElement; },
+   
+   //Protected, private helper methods
+   addEvents : function(){
+      this.anchorElement.addEvents({
+         'click' : this.onSelected,
+         'mouseenter' : this.gotFocus,
+         'mouseleave' : this.lostFocus
+      });
+   }.protect(),
+   
+   createElements : function(){
+      this.listItemElement = new Element( 'li', { 'class' : this.getElementClass() });
+      this.anchorElement = new Element( 'a', { 'role' : 'menuitem', 'tabindex' : this.options.tabIndex, 'title' : this.options.label });
+      this.anchorElement.inject( this.listItemElement );
+      this.listItemElement.inject( this.containerElement );
+   }.protect(),
+   
+   destroyElements : function(){
+      if( this.anchorElement ) this.anchorElement.destroy();
+      if( this.listItemElement ) this.listItemElement.destroy();
+   }.protect(),
+   
+   removeEvents : function(){
+      if( this.anchorElement ) this.anchorElement.removeEvents();
+   }.protect()
+});
+/*
+Name: 
+    - MediaBackwardButton
+
+Description: 
+    - Represents the go backward button in a media controller panel. 
+
+Requires:
+   - MediaControllerButton
+
+Provides:
+    - MediaBackwardButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var MediaBackwardButton = new Class({
+   Extends : MediaControllerButton,
+   Binds: [],
+   
+   options : {
+      action : 'prev',
+      buttonClass : 'prev',
+      key : 'left',
+      label : 'Leftwards Arrow',
+      tabIndex : 1
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.parent( containerElement, options );
+   },
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - MediaBeginningButton
+
+Description: 
+    - Represents the go first button in a slide show controller panel. 
+
+Requires:
+   - MediaControllerButton
+
+Provides:
+    - MediaBeginningButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var MediaBeginningButton = new Class({
+   Extends : MediaControllerButton,
+   Binds: [],
+   
+   options : {
+      action : 'first',
+      buttonClass : 'first',
+      key : 'shift left',
+      label : 'Shift + Leftwards Arrow',
+      tabIndex : 0
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.parent( containerElement, options );
+   },
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - MediaEndButton
+
+Description: 
+    - Represents the go first button in a slide show controller panel. 
+
+Requires:
+   - MediaControllerButton
+
+Provides:
+    - MediaButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var MediaEndButton = new Class({
+   Extends : MediaControllerButton,
+   Binds: [],
+   
+   options : {
+      action : 'last',
+      buttonClass : 'last',
+      key : 'shift right',
+      label : 'Shift + Rightwards Arrow',
+      tabIndex : 4
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.parent( containerElement, options );
+   },
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - MediaForwardButton
+
+Description: 
+    - Represents the go forward in the media controller panel. 
+
+Requires:
+   - MediaControllerButton
+
+Provides:
+    - MediaForwardButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var MediaForwardButton = new Class({
+   Extends : MediaControllerButton,
+   Binds: [],
+   
+   options : {
+      action : 'next',
+      buttonClass : 'next',
+      key : 'right',
+      label : 'Rightwards Arrow',
+      tabIndex : 3
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.parent( containerElement, options );
+   },
+   
+   //Public accessor and mutator methods
+   
+   //Properties
+   
+   //Protected, private helper methods
+});
+/*
+Name: 
+    - MediaPlayerController
+
+Description: 
+    - Provides controlling functionality, such as start/stop, previous/next for the media player. 
+
+Requires:
+   - 
+
+Provides:
+    - MediaPlayerController
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var MediaPlayerController = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds : ['hide', 'onBackward', 'onBeginning', 'onEnd', 'onForward', 'onKeyDown', 'onKeyUp', 'onMouseMove', 'onStartStop', 'show'],
+   options : {
+      accessKeys : { 
+         'first' : { 'key' : 'shift left', 'label' : 'Shift + Leftwards Arrow' },
+         'prev' : { 'key' : 'left', 'label' : 'Leftwards Arrow' },
+         'pause' : { 'key' : 'p', 'label' : 'P' },
+         'next' : { 'key' : 'right', 'label' : 'Rightwards Arrow' },
+         'last' : { 'key' : 'shift right', 'label' : 'Shift + Rightwards Arrow' }
+      },
+      componentName : 'MediaPlayerController',
+      controllerClass : 'controller',
+      eventDeliveryDelay : 5,
+      hiddenClass : "hidden",
+      link : 'cancel',
+      morphProperties : { duration: 500, fps: 50, link : 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
+      slideShowClass : "slideshow",
+      startPaused : false,
+      visibleClass : "visible"
+   },
+
+   initialize : function( containerElement, screen, options ) {
+      this.setOptions( options );
+      this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
+      this.assertThat( screen, not( nil()), this.options.componentName + ".screen" );
+      
+      this.containerElement = containerElement;
+      this.controlButtonsWrapper;
+      this.controllerWrapperElement;
+      this.isRunning = false;
+      this.mediaBackwardButton;
+      this.mediaBeginningButton;
+      this.mediaEndButton;
+      this.mediaForwardButton;
+      this.morph;
+      this.mediaStartStopButton;
+      this.screen = screen;
+      this.shortCutKeys = new Array();
+      
+      this.setUp();
+   },
+   
+   //Public accessors and mutator elements
+   construct : function(){
+      this.createControllerWrapperElements();
+      this.createButtons();
+      this.addEvents();
+      this.finalizeConstruction();
+   },
+   
+   destroy : function(){
+      this.removeEvents();
+      this.destroyButtons();
+      this.destroyControllerWrapperElement();
+   },
+
+   hide : function() {
+      if( this.controllerWrapperElement.get( 'aria-hidden' ) == 'false' ){
+         this.controllerWrapperElement.set( 'aria-hidden', true );
+         this.morph = new Fx.Morph( this.controllerWrapperElement, this.options.morphProperties );
+         this.morph.start( "." + this.getHiddenClass() );
+      }
+   },
+
+   onBackward : function(){
+      this.fireEvent( 'mediaBackward', this, this.options.eventDeliveryDelay );
+   },
+
+   onBeginning : function(){
+      this.fireEvent( 'mediaBeginning', this, this.options.eventDeliveryDelay );
+   },
+
+   onEnd : function(){
+      this.fireEvent( 'mediaEnd', this, this.options.eventDeliveryDelay );
+   },
+
+   onForward : function(){
+      this.fireEvent( 'mediaForward', this.options.eventDeliveryDelay );
+   },
+
+   onKeyDown : function( keyboardEvent ) {
+      var action = this.keyboardEventsAction( keyboardEvent );
+      if( action ){
+         this.show();
+         //this.el.retrieve( action ).fireEvent( 'mouseenter' );      
+      }
+   },
+
+   onKeyUp : function( keyboardEvent ) {
+      var action = this.keyboardEventsAction( keyboardEvent );
+      if( action ){
+         this.hide();
+         //this.el.retrieve( action ).fireEvent( 'mouseleave' );      
+      }
+   },
+
+   onMouseMove : function( mouseEvent ) {
+      if( this.screen.coordinateIsWithinScreen({ x : mouseEvent.page.x, y : mouseEvent.page.y })) this.show();
+      else this.hide();
+   },
+   
+   onStartStop : function(){
+      if( this.isRunning ){
+         this.fireEvent( 'mediaStop', this, this.options.eventDeliveryDelay );
+         this.isRunning = false;
+      }else{
+         this.fireEvent( 'mediaStart', this, this.options.eventDeliveryDelay );
+         this.isRunning = true;
+      }
+   },
+
+   show : function() {
+      if( this.controllerWrapperElement.get( 'aria-hidden' ) == 'true' ){
+         this.controllerWrapperElement.set( 'aria-hidden', false );
+         this.morph = new Fx.Morph( this.controllerWrapperElement, this.options.morphProperties );
+         this.morph.start( "." + this.getVisibleClass() );
+      }
+   },
+   
+   //Properties
+   getControllerClass : function(){ return this.options.slideShowClass + "-" + this.options.controllerClass; },
+   getFirstButton : function(){ return this.mediaBeginningButton; },
+   getHiddenClass : function(){ return this.getControllerClass() + "-" + this.options.hiddenClass; },
+   getLastButton : function(){ return this.mediaEndButton; },
+   getNextButton : function(){ return this.mediaForwardButton; },
+   getPauseButton : function(){ return this.mediaStartStopButton; },
+   getPreviousButton : function(){ return this.mediaBackwardButton; },
+   getShortCutKeys : function(){ return this.shortCutKeys; },
+   getVisibleClass : function(){ return this.getControllerClass() + "-" + this.options.visibleClass; },
+   getWrapperElement : function(){ return this.controllerWrapperElement; },
+   isVisible : function(){ return this.controllerWrapperElement ? !parseBoolean( this.controllerWrapperElement.get( 'aria-hidden' )) : false; },
+   
+   //Protected, private helper methods
+   addEvents : function(){
+      this.controllerWrapperElement.addEvents({
+         'hide' : this.hide,
+         'show' : this.show
+      });
+      
+      document.addEvents({
+         'mousemove' : this.onMouseMove,
+         'keydown' : this.onKeyDown,
+         'keyup' : this.onKeyUp
+      });
+   }.protect(),
+   
+   createButtons : function(){
+      this.mediaBackwardButton = new MediaBackwardButton( this.controlButtonsWrapper, { onSelected: this.onBackward }); this.mediaBackwardButton.construct();
+      this.mediaBeginningButton = new MediaBeginningButton( this.controlButtonsWrapper, { onSelected: this.onBeginning }); this.mediaBeginningButton.construct();
+      this.mediaEndButton = new MediaEndButton( this.controlButtonsWrapper, { onSelected: this.onEnd }); this.mediaEndButton.construct();
+      this.mediaForwardButton = new MediaForwardButton( this.controlButtonsWrapper, { onSelected: this.onForward }); this.mediaForwardButton.construct();
+      this.mediaStartStopButton = new MediaStartStopButton( this.controlButtonsWrapper, { onSelected: this.onStartStop, startPaused: this.options.startPaused }); this.mediaStartStopButton.construct();
+   }.protect(),
+   
+   createControllerWrapperElements : function(){
+      this.controllerWrapperElement = new Element( 'div', { 'class' : this.getControllerClass() });
+      this.controllerWrapperElement.set({ 'aria-hidden' : false, 'role' : 'menubar' });
+      this.controlButtonsWrapper = new Element( 'ul', { 'role' : 'menu' });
+      this.controlButtonsWrapper.inject( this.controllerWrapperElement );
+      this.controllerWrapperElement.inject( this.containerElement );
+   }.protect(),
+   
+   destroyButtons : function(){
+      if( this.mediaBeginningButton ) this.mediaBeginningButton.destroy();
+      if( this.mediaEndButton ) this.mediaEndButton.destroy();
+      if( this.mediaForwardButton ) this.mediaForwardButton.destroy();
+      if( this.mediaStartStopButton ) this.mediaStartStopButton.destroy();
+      if( this.mediaBackwardButton ) this.mediaBackwardButton.destroy();
+   }.protect(),
+   
+   destroyControllerWrapperElement : function(){
+      if( this.controllerWrapperElement ) this.controllerWrapperElement.destroy();
+   }.protect(),
+
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   instantiateShortCutKeys : function(){
+      for( action in this.options.accessKeys ){
+         var keyDefinition = this.options.accessKeys[action];
+         var shortCutKey = new ShortCutKey( keyDefinition.key, new WidgetAction( action ), { 'label' : keyDefinition.label } );
+         this.shortCutKeys.push( shortCutKey );
+      }
+   }.protect(),
+   
+   keyboardEventsAction : function( keyboardEvent ){
+      var action = null;
+      this.shortCutKeys.each( function( shortCutKey, index ) {
+         if( shortCutKey.equalsWithKeyboardEvent( keyboardEvent ) ) {
+            action = shortCutKey.getAction();
+         }
+      }, this );
+
+      return action;
+   },
+   
+   removeEvents : function(){
+      if( this.controllerWrapperElement ) this.controllerWrapperElement.removeEvents();
+      document.removeEvent( 'mousemove', this.onMouseMove );
+      document.removeEvent( 'keydown', this.onKeyDown );
+      document.removeEvent( 'keyup', this.onKeyUp );
+   }.protect(),
+   
+   setUp : function(){
+      this.instantiateShortCutKeys();
+   }.protect()
+   
+});
+/*
+Name: 
+    - MediaPlayerDisplay
+
+Description: 
+    - Represents the display components of the Media Player. It is composed from different subelements.
+
+Requires:
+   - 
+
+Provides:
+    - MediaPlayerDisplay
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var MediaPlayerDisplay = new Class({
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds: [
+      'addControllerEvents',
+      'addMediaEvents',
+      'checkTimeOut', 
+      'constructController',
+      'constructScreen',
+      'constructThumbnailsBar',
+      'constructTitleBar',
+      'destroyController',
+      'destroyScreen', 
+      'destroyThumbnailsBar',
+      'destroyTitleBar',
+      'finalizeConstruction', 
+      'finalizeDestruction',
+      'onComponentConstructed', 
+      'onComponentDestructed',
+      'onComponentUpdated',
+      'onMediaBackward',
+      'onMediaBeginning',
+      'onMediaEnd',
+      'onMediaForward',
+      'onMediaPosition',
+      'onMediaStart',
+      'onMediaStop',
+      'onUpdateDisplay'],
+   
+   options : {
+      eventDeliveryDelay : 5,
+      startPaused : false
+   },
+
+   //Constructor
+   initialize: function( containerElement, media, options ){
+      this.setOptions( options );
+      this.assertThat( containerElement, not( nil() ), this.options.componentName + ".containerElement" );
+      this.assertThat( media, not( nil() ), this.options.componentName + ".media" );
+      
+      this.constructionChain = new Chain();
+      this.containerElement = containerElement;
+      this.controller;
+      this.destructionChain = new Chain();
+      this.error;
+      this.media = media;
+      this.screen;
+      this.thumbnailsBar;
+      this.titleBar;
+   },
+   
+   //Public accessor and mutator methods
+   construct : function() {
+      this.startTimeOutTimer( 'construct' );
+      this.compileConstructionChain();
+         
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }
+   },
+
+   destroy : function() {
+      this.compileDestructionChain();
+      this.destructionChain.callChain();
+   },
+
+   onComponentConstructed : function( component ){
+      this.constructionChain.callChain();
+   },
+   
+   onComponentDestroyed : function( component ){
+      this.destructionChain.callChain();
+   },
+   
+   onComponentUpdated : function( component ){
+      this.fireEvent( 'updated' );
+   },
+   
+   onMediaBackward : function(){
+      this.media.backward();
+   },
+
+   onMediaBeginning : function(){
+      this.media.beginning();
+   },
+
+   onMediaEnd : function(){
+      this.media.end();
+   },
+
+   onMediaForward : function(){
+      this.media.forward();
+   },
+
+   onMediaPosition : function( position ){
+      this.media.position( position );
+   },
+
+   onMediaStart : function(){
+      this.media.start();
+   },
+
+   onMediaStop : function(){
+      this.media.stop();
+   },
+
+   onUpdateDisplay : function( imageData ){
+      this.screen.update( imageData.imageUri );
+      this.thumbnailsBar.update( imageData.thumbnailIndex );
+      this.titleBar.update( imageData.title, false );
+   },
+   
+   //Properties
+   getController : function(){ return this.controller; },
+   getScreen : function(){ return this.screen; },
+   getThumbnailsBar : function(){ return this.thumbnailsBar; },
+   getTitleBar : function(){ return this.titleBar; },
+   
+   //Protected, private helper methods
+   addControllerEvents: function(){
+      this.controller.addEvent( 'mediaBackward', this.onMediaBackward );
+      this.controller.addEvent( 'mediaBeginning', this.onMediaBeginning );
+      this.controller.addEvent( 'mediaEnd', this.onMediaEnd );
+      this.controller.addEvent( 'mediaForward', this.onMediaForward );
+      this.controller.addEvent( 'mediaStart', this.onMediaStart );
+      this.controller.addEvent( 'mediaStop', this.onMediaStop );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   addMediaEvents: function(){
+      this.media.addEvent( 'updateDisplay', this.onUpdateDisplay );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain( 
+         this.constructScreen, 
+         this.constructTitleBar, 
+         this.constructThumbnailsBar, 
+         this.constructController,
+         this.addControllerEvents,
+         this.addMediaEvents, 
+         this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyScreen, this.destroyTitleBar, this.destroyThumbnailsBar, this.destroyController, this.finalizeDestruction );
+   }.protect(),
+   
+   constructController: function(){
+      var displayOptions = { startPaused : this.options.startPaused };
+      var eventHandlers = { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed };
+      this.controller = new MediaPlayerController( this.containerElement, this.screen, Object.merge( displayOptions, eventHandlers ));
+      this.controller.construct();
+   }.protect(),
+   
+   constructScreen: function(){
+      this.screen = new MediaPlayerScreen( this.containerElement, { 
+         onConstructed : this.onComponentConstructed, 
+         onDestroyed : this.onComponentDestroyed, 
+         onUpdated : this.onComponentUpdated,
+      });
+      this.screen.construct();
+   }.protect(),
+   
+   constructThumbnailsBar: function(){
+      this.thumbnailsBar = new MediaPlayerThumbnailsBar( this.containerElement, this.media.getThumbnailsUri(), { 
+         onConstructed : this.onComponentConstructed, 
+         onDestroyed : this.onComponentDestroyed,
+         onMediaPosition : this.onMediaPosition
+      });
+      this.thumbnailsBar.construct();
+   }.protect(),
+   
+   constructTitleBar: function(){
+      this.titleBar = new MediaPlayerTitleBar( this.containerElement, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
+      this.titleBar.construct();
+   }.protect(),
+   
+   destroyController: function(){
+      if( this.controller ) this.controller.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyScreen: function(){
+      if( this.screen ) this.screen.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyThumbnailsBar: function(){
+      if( this.thumbnailsBar ) this.thumbnailsBar.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyTitleBar: function(){
+      if( this.titleBar ) this.titleBar.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.constructionChain.clearChain();
+      this.stopTimeOutTimer();
+      this.media.prepare();
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   finalizeDestruction : function(){
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+
+   revertConstruction : function( error ){
+      this.error = error;
+      this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+
+   timeOut : function( exception ){
+      this.revertConstruction( exception );
+   }.protect()
+   
+});
+/*
+Name: 
+    - MediaPlayerScreen
+
+Description: 
+    - Represents the display area of the Media Player. 
+
+Requires:
+   - 
+
+Provides:
+   - MediaPlayerScreen
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var MediaPlayerScreen = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds: ['onImageLoaded'],
+   
+   options : {
+      eventDeliveryDelay : 5,
+      height: 300,
+      resize : 'fill',
+      screenClass: 'images',
+      slideShowClass: 'slideshow',
+      width: 450
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.setOptions( options );
+      this.assertThat( containerElement, not( nil() ), "Screen.containerElement" );
+
+      this.anchorElement;
+      this.containerElement = containerElement;
+      this.height;
+      this.imageElement;
+      this.screenElement;
+      this.width;
+   },
+   
+   //Public accessor and mutator methods
+   construct: function(){
+      this.createScreenElement();
+      this.finalizeConstruction();
+   },
+   
+   coordinateIsWithinScreen : function( coordinate ){
+      var screenCoordinates = this.screenElement.getCoordinates();
+      return ( coordinate.x > screenCoordinates.left && coordinate.x < screenCoordinates.right && coordinate.y > screenCoordinates.top && coordinate.y < screenCoordinates.bottom );
+   },
+   
+   destroy: function(){
+      this.destroyScreenElement();
+   },
+   
+   update: function( imageUri ){
+      if( this.imageElement ) this.imageElement.destroy();
+      this.createImageElement( imageUri );
+   },
+   
+   //Properties
+   getElement : function(){ return this.screenElement; },
+   getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.screenClass; },
+   
+   //Protected, private helper methods
+   createImageElement : function( imageUri ){
+      this.imageElement = new Asset.image( imageUri, {
+         'onload' : this.onImageLoaded
+      });
+   }.protect(),
+   
+   createScreenElement : function(){
+      this.screenElement = new Element( 'div', { 'class' : this.getElementClass() });
+      this.screenElement.inject( this.containerElement );
+      
+      this.height = this.options.height || this.screenElement.getSize().y;
+      this.width = this.options.width || this.screenElement.getSize().x;
+      this.screenElement.setStyles({ 'height' : this.height, 'width' : this.width });
+      
+      this.anchorElement = new Element( 'a' );
+      this.anchorElement.inject( this.screenElement );
+   }.protect(),
+   
+   destroyImageElements : function(){
+      if( this.imageElement ){ this.imageElement.destroy(); }
+      if( this.anchorElement ){ this.anchorElement.destroy(); }
+      this.anchorElement = null;
+      this.imageElement = null;
+   }.protect(),
+   
+   destroyScreenElement : function(){
+      if( this.screenElement ) this.screenElement.destroy();
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   finalizeUpdate : function(){
+      this.fireEvent( 'updated', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   onImageLoaded : function(){
+      this.imageElement.inject( this.anchorElement );
+      this.resizeImage( this.imageElement );
+      this.finalizeUpdate();
+   },
+   
+   resizeImage : function(img) {
+      var h = img.get( 'height' ).toFloat(), w = img.get( 'width' ).toFloat(), dh = this.height / h, dw = this.width / w;
+      if( this.options.resize == 'fit') dh = dw = dh > dw ? dw : dh;
+      if( this.options.resize == 'fill') dh = dw = dh > dw ? dh : dw;
+      img.set( 'styles', { 'height' : Math.ceil( h * dh ), 'width' : Math.ceil( w * dw ) });
+   }.protect()
+   
+});
+/*
+Name: 
+    - MediaPlayerThumbnail
+
+Description: 
+    - Represents a thumbnail, displayed in the thumbnails bar. 
+
+Requires:
+   - 
+
+Provides:
+    - MediaPlayerThumbnail
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var MediaPlayerThumbnail = new Class( {
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection', 'update'],
+   options : {
+      componentName : 'MediaPlayerThumbnail',
+      dimensions : ['left', 'right', 'width', 'x', 'height'],
+      eventDeliveryDelay : 5,
+      fastTransformation : false,
+      hiddenClass : "hidden",
+      morphProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false },
+      slideShowClass : "slideshow",
+      thumbnailsClass : "thumbnails",
+      title : null,
+      visibleClass : "visible"
+   },
+
+   initialize : function( containerElement, thumbnailUri, index, options ) {
+      this.setOptions( options );
+      this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
+      this.assertThat( thumbnailUri, not( nil()), this.options.componentName + ".thumbnailUri" );
+      this.assertThat( index, not( nil()), "SlidesThumbnails.index" );
+      
+      this.anchorElement;
+      this.constructionChain = new Chain();
+      this.containerElement = containerElement;
+      this.error;
+      this.id = "Slideshow-" + Date.now() + index;
+      this.imageElement;
+      this.index = index;
+      this.listItemElement;
+      this.loaded = false;
+      this.morph;
+      this.thumbnailUri = thumbnailUri;
+   },
+   
+   //Public accessor and mutator methods
+   construct : function(){
+      this.startTimeOutTimer( 'construct' );
+      this.compileConstructionChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }
+   },
+
+   destroy : function(){
+      this.destroyImageElement();
+      this.destroyAnchorElement();
+      this.destroyListItemElement();
+   },
+   
+   update : function( isCurrent ){
+      this.isCurrent = isCurrent;
+      this.morph = new Fx.Morph( this.anchorElement, this.options.morphProperties );
+      this.morph.start( "." + this.getVisibleClass() );
+   },
+   
+   //Properties
+   getActiveClass : function(){ return this.isCurrent ? 'active' : 'inactive'; },
+   getAnchorElement : function(){ return this.anchorElement; },
+   getCoordinates : function(){ return this.getElement().getCoordinates(); },
+   getElement : function(){ return this.listItemElement; },
+   getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
+   getHiddenClass : function(){ return this.getElementClass() + "-" + this.options.hiddenClass; },
+   getId : function(){ return this.id; },
+   getIndex : function(){ return this.index; },
+   getVisibleClass : function(){ return this.getElementClass() + "-" + this.getActiveClass(); },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createListItemElement, this.createAnchorElement, this.createImageElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
+   createAnchorElement : function( thumbnailUri, index ){
+      this.anchorElement = new Element( 'a', {
+         'class' : this.getHiddenClass(),
+         'href' : this.thumbnailUri,
+         'role' : 'menuitem',
+         'tabindex' : index
+      });
+      
+      if( this.options.title ) this.anchorElement.set( 'title', this.options.title );
+      this.anchorElement.inject( this.listItemElement );
+      
+      this.anchorElement.addEvent( 'click', this.onSelection );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   createImageElement : function(){
+      this.imageElement = new Asset.image( this.thumbnailUri, {
+         'onload' : this.onImageLoaded
+      });
+   }.protect(),
+   
+   createListItemElement : function(){
+      this.listItemElement = new Element( 'li', { 'id' : this.id });
+      this.listItemElement.inject( this.containerElement );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyAnchorElement : function(){
+      if( this.anchorElement ){
+         this.anchorElement.removeEvents();
+         this.anchorElement.destroy();
+      }
+   }.protect(),
+
+   destroyListItemElement : function(){
+      if( this.listItemElement ) this.listItemElement.destroy();
+   }.protect(),
+   
+   destroyImageElement : function(){
+      if( this.imageElement ) this.imageElement.destroy();
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+   
+   onImageLoaded : function(){
+      this.imageElement.inject( this.anchorElement );
+      this.loaded = true;
+      this.finalizeConstruction();
+   },
+
+   onSelection : function( clickEvent ) {
+      this.fireEvent( 'selected', this );
+      return false;
+   },
+   
+   revertConstruction : function( error ){
+      this.error =  error;
+      this.stopTimeOutTimer();
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+
+   timeOut : function( exception ){
+      this.revertConstruction( exception );
+   }.protect()
+   
+});
+/*
+Name: 
+    - MediaPlayerThumbnailsBar
+
+Description: 
+    - Displays the list of thumbnails associated with the media. 
+
+Requires:
+   - 
+
+Provides:
+    - MediaPlayerThumbnailsBar
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var MediaPlayerThumbnailsBar = new Class({
+   Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds : [
+      'addEvents',
+      'calculateLimit',
+      'checkTimeOut',
+      'createListElement', 
+      'createThumbnailElements',
+      'createWrapperElement', 
+      'determineDimensions',
+      'finalizeConstruction',
+      'onMouseMove', 
+      'onThumbnailConstructed',
+      'onThumbnailSelected', 
+      'scroll',
+      'updateThumbnails'],
+   options : {
+      columns : null,
+      componentName : 'MediaPlayerThumbnailsBar',
+      dimensions : [],
+      eventDeliveryDelay : 5,
+      fastTransformation : false,
+      position : null,
+      rows : null,
+      scroll : null,
+      scrollingFrequency : 1000,
+      slideShowClass : "slideshow",
+      thumbnailsClass : "thumbnails",
+      tweenProperties : { duration: 500, fps : 50, link: 'cancel', transition: Fx.Transitions.Sine.easeInOut, unit: false }
+   },
+
+   initialize : function( containerElement, thumbnailImageUris, options ) {
+      this.setOptions( options );
+      this.assertThat( containerElement, not( nil()), this.options.componentName + ".containerElement" );
+      this.assertThat( thumbnailImageUris, not( nil()), this.options.componentName + ".thumbnailImageUris" );
+      
+      this.constructionChain = new Chain();
+      this.containerElement = containerElement;
+      this.currentThumbnailIndex = 0;
+      this.delay = 1000 / this.options.scrollingFrequency;
+      this.dimensions;
+      this.lastMouseMoveEvent;
+      this.limit;
+      this.listElement;
+      this.scrollingTimer;
+      this.thumbnails = new ArrayList();
+      this.thumbnailsConstructionChain = new Chain();
+      this.thumbnailImageUris = thumbnailImageUris;
+      this.tween;
+      this.wrapperElement;
+   },
+   
+   //Public accessor and mutator methods
+   construct : function(){
+      this.startTimeOutTimer( 'construct' );
+      this.compileConstructionChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }      
+   },
+
+   destroy : function(){
+      this.destroyThumnailElements();
+      this.destroyListElement();
+      this.destroyWrapperElement();
+   },
+   
+   update : function( slideIndex ){
+      this.currentThumbnailIndex = slideIndex;
+      this.updateThumbnails();
+      this.scrollToCurrent();
+   },
+   
+   //Properties
+   getElement : function(){ return this.wrapperElement; },
+   getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.thumbnailsClass; },
+   getListElement : function(){ return this.listElement; },
+   getSlideThumbnails : function(){ return this.thumbnails; },
+   
+   //Protected, private helper methods
+   addEvents : function(){
+      document.addEvents({
+         'mousemove' : this.onMouseMove
+      });
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   calculateLimit : function(){
+      var length = this.dimensions[2];
+      var width = this.dimensions[4];
+      var lineItemElementCoordinates = this.wrapperElement.getElement( 'li:nth-child(' + 1 + ')' ).getCoordinates();
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      var units = wrapperElementCoordinates[width] >= lineItemElementCoordinates[width] ? Math.floor( wrapperElementCoordinates[width] / lineItemElementCoordinates[width] ) : 1;
+      var x = Math.ceil( this.thumbnailImageUris.length / units );
+      var len = x * lineItemElementCoordinates[length];
+      this.listElement.setStyle( length, len );
+      //this.listElement.getElements( 'li' ).setStyles({ 'height' : lineItemElementCoordinates.height, 'width' : lineItemElementCoordinates.width });
+      
+      this.limit = wrapperElementCoordinates[length] - len;
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain : function(){
+      this.constructionChain.chain( 
+         this.createWrapperElement, 
+         this.createListElement, 
+         this.createThumbnailElements,
+         this.determineDimensions,
+         this.calculateLimit,
+         this.updateThumbnails,
+         this.addEvents,
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
+   createListElement : function(){
+      this.listElement = new Element( 'ul', { 'role' : 'menu', 'styles' : { 'left' : 0, 'position' : 'absolute', 'top' : 0 }});
+      this.listElement.inject( this.wrapperElement );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   createThumbnailElements : function(){
+      this.thumbnailImageUris.each( function( thumbnailUri, index ) {
+         this.thumbnailsConstructionChain.chain(
+            function(){
+               var slideThumbnail = new MediaPlayerThumbnail( this.listElement, thumbnailUri, index, {
+                  dimensions : this.dimensions,
+                  fastTransformation : this.options.fastTransformation,
+                  onConstructed : this.onThumbnailConstructed,
+                  onSelected : this.onThumbnailSelected 
+               });
+               slideThumbnail.construct();
+               this.thumbnails.add( slideThumbnail );
+            }.bind( this )
+         );
+      }, this );
+      
+      this.thumbnailsConstructionChain.chain(
+         function(){
+            this.thumbnailsConstructionChain.clearChain();
+            this.constructionChain.callChain(); 
+         }.bind( this )
+      ).callChain();
+   }.protect(),
+   
+   createWrapperElement : function(){
+      this.wrapperElement = new Element( 'div', { 'class' : this.getElementClass() });
+      this.wrapperElement.set({ 'role' : 'menubar', 'styles' : { 'overflow' : 'hidden' }});
+      this.wrapperElement.inject( this.containerElement );
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyListElement : function(){
+      if( this.listElement ) this.listElement.destroy();
+   }.protect(),
+
+   destroyThumnailElements : function(){
+      this.thumbnails.each( function( slideThumbnail, index ){
+         slideThumbnail.destroy();
+      }.bind( this ));
+   }.protect(),
+   
+   destroyWrapperElement : function(){
+      if( this.wrapperElement ){
+         this.wrapperElement.removeEvents();
+         this.wrapperElement.destroy();
+      }
+   }.protect(),
+   
+   determineDimensions : function(){
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      if( !this.options.scroll )
+         this.options.scroll = (wrapperElementCoordinates.height > wrapperElementCoordinates.width) ? 'y' : 'x';
+      this.dimensions = ( this.options.scroll == 'y' ) ? 'top bottom height y width'.split( ' ' ) : 'left right width x height'.split( ' ' );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+   
+   mouseIsWithinThumbnailsArea : function( mouseMoveEvent ){
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      return mouseMoveEvent.page.x > wrapperElementCoordinates.left && 
+             mouseMoveEvent.page.x < wrapperElementCoordinates.right && 
+             mouseMoveEvent.page.y > wrapperElementCoordinates.top && 
+             mouseMoveEvent.page.y < wrapperElementCoordinates.bottom; 
+   }.protect(),
+   
+   onMouseMove : function( mouseMoveEvent ) {
+      this.lastMouseMoveEvent = mouseMoveEvent;
+      if( this.mouseIsWithinThumbnailsArea( mouseMoveEvent )) {
+         if( !this.scrollingTimer ) {
+            this.scrollingTimer = this.scroll.periodical( this.options.scrollingFrequency / this.options.tweenProperties.fps );
+         }
+      }else {
+         clearTimeout( this.scrollingTimer );
+         this.scrollingTimer = null;
+      }
+   },
+
+   onThumbnailConstructed: function( thumbnail ){
+      this.thumbnailsConstructionChain.callChain();
+   },
+   
+   onThumbnailSelected : function( thumbnail ){
+      this.fireEvent( 'mediaPosition', thumbnail.getIndex() );
+   },
+   
+   revertConstruction : function( error ){
+      this.error =  error;
+      this.stopTimeOutTimer();
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+
+   scroll : function() {
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      var listElementPosition = this.listElement.getPosition();
+      var axis = this.dimensions[3];
+      var delta = null;
+      var pos = this.dimensions[0];
+      var size = this.dimensions[2];
+      var value;
+      
+      var area = wrapperElementCoordinates[this.dimensions[2]] / 3;
+      var page = this.lastMouseMoveEvent.page;
+      var velocity = -(this.delay * 0.01 );
+      if( page[axis] < ( wrapperElementCoordinates[pos] + area ))
+         delta = ( page[axis] - wrapperElementCoordinates[pos] - area ) * velocity;
+      else if( page[axis] > (wrapperElementCoordinates[pos] + wrapperElementCoordinates[size] - area ))
+         delta = ( page[axis] - wrapperElementCoordinates[pos] - wrapperElementCoordinates[size] + area ) * velocity;
+      if( delta ) {
+         value = ( listElementPosition[axis] - wrapperElementCoordinates[pos] + delta ).limit( this.limit, 0 );
+         this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
+         this.tween.set( value );
+      }
+   },
+   
+   scrollToCurrent : function(){
+      var wrapperElementCoordinates = this.wrapperElement.getCoordinates();
+      var listElementPosition = this.listElement.getPosition();
+      var axis = this.dimensions[3];
+      var delta = null;
+      var pos = this.dimensions[0];
+      var size = this.dimensions[2];
+      var value;
+      
+      var thumbnailCoordinates = this.thumbnails.get( this.currentThumbnailIndex ).getCoordinates();
+      delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (thumbnailCoordinates[size] / 2) - thumbnailCoordinates[pos];
+      value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
+      this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
+      if( this.options.fastTransformation ) this.tween.set( value );
+      else this.tween.start( value );
+   }.protect(),
+   
+   updateThumbnails : function(){
+      var delay = Math.max( 1000 / this.thumbnails.length, 100 );
+      this.thumbnails.each(function( thumbnail, index ){
+         var isCurrent = this.currentThumbnailIndex == index;
+         thumbnail.update.delay( delay, this, isCurrent );
+      }.bind( this ));
+      this.constructionChain.callChain();
+   }.protect(),
+
+   timeOut : function( exception ){
+      this.revertConstruction( exception );
+   }.protect()
+   
+});
+/*
+Name: 
+    - MediaPlayerTitleBar
+
+Description: 
+    - Displays media title. 
+
+Requires:
+   - 
+
+Provides:
+   - MediaPlayerTitleBar
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var MediaPlayerTitleBar = new Class({
+   Implements : [AssertionBehavior, Events, Options],
+   Binds : ['signAreaUpdateFinished', 'update'],
+   
+   options : {
+      captionClass : "captions",
+      eventDeliveryDelay : 5,
+      hiddenClass : "hidden",
+      idPrefix : "Slideshow-",
+      slideShowClass : "slideshow",
+      morphProperties : { duration: 'normal', link: 'cancel', transition: Fx.Transitions.Sine.easeOut },
+      visibleClass : "visible"
+   },
+
+   initialize : function( containerElement, options ) {
+      this.setOptions( options );
+      this.assertThat( containerElement, not( nil()), "SlideCaption.containerElement" );
+      
+      this.captionElement;
+      this.containerElement = containerElement;
+      this.id = this.options.idPrefix + Date.now();
+      this.morph;
+      this.text;
+   },
+   
+   //Public accessor and mutator methods
+   construct : function(){
+      this.createCaptionElement();
+      this.finalizeConstruction();
+   },
+   
+   destroy : function(){
+      this.removeEvents();
+      this.destroyCaptionElement();
+   },
+   
+   update : function( text, fast ){
+      this.text = text;
+      this.fast = fast;
+      
+      if( this.morph ) this.morph.cancel();
+      
+      if( this.text ){
+         if( fast ) this.flashCaption();
+         else this.morphCaption();
+      }else this.hideCaption();
+   },
+   
+   //Properties
+   getCaptionClass : function(){ return this.options.slideShowClass + "-" + this.options.captionClass; },
+   getCaptionElement : function(){ return this.captionElement; },
+   getHiddenClass : function(){ return this.getCaptionClass() + "-" + this.options.hiddenClass; },
+   getId : function(){ return this.id; },
+   getVisibleClass : function(){ return this.getCaptionClass() + "-" + this.options.visibleClass; },
+   
+   //Protected, private helper methods
+   createCaptionElement : function(){
+      this.captionElement = new Element( 'div', { 'class' : this.getCaptionClass(), 'id' : this.id });
+      this.captionElement.set({ 'aria-busy' : false, 'aria-hidden' : false, 'role' : 'description' });
+      this.captionElement.inject( this.containerElement );
+   }.protect(),
+   
+   destroyCaptionElement : function(){
+      if( this.captionElement ) this.captionElement.destroy();
+   }.protect(),
+   
+   flashCaption : function(){
+      this.captionElement.set({ 'aria-hidden': false, 'text': this.text });
+      this.captionElement.removeClass( this.getHiddenClass() );
+      this.captionElement.addClass( this.getVisibleClass() );
+   }.protect(),
+   
+   finalizeConstruction : function(){
+      this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   hideCaption : function(){
+      this.captionElement.set({ 'aria-hidden': true, 'text': "" });
+      this.captionElement.removeClass( this.getVisibleClass() );
+      this.captionElement.addClass( this.getHiddenClass() );
+   }.protect(),
+   
+   morphCaption : function(){
+      this.captionElement.set({ 'aria-hidden': false, 'text': this.text });
+      this.morph = new Fx.Morph( this.captionElement, this.options.morphProperties );
+      this.morph.start( "." + this.getVisibleClass() );
+   }.protect(),
+   
+   signAreaUpdateFinished : function(){
+      this.captionElement.set( 'aria-busy', false );
+   }.protect(),
+   
+   removeEvents : function(){
+      if( this.captionElement ) this.captionElement.removeEvents();
+   }
+});
+/*
+Name: 
+    - MediaPlayerWidget
+
+Description: 
+    - Plays different type of media like audio, video or slide show. 
+
+Requires:
+    - BrowserWidget
+    
+Provides:
+    - MediaPlayerWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+var MediaPlayerWidget = new Class({
+   Extends : BrowserWidget,
+   Binds : ['autoStartMedia', 'constructDisplay', 'destroyDisplay', 'onDisplayConstructed', 'onDisplayDestroyed', 'releaseMedia'],
+   constants : {
+   },
+   
+   options : {
+      startPaused : false
+   },
+
+   initialize : function( options, resourceBundle ) {
+      this.parent( options, resourceBundle );
+      
+      this.display;
+      this.media;
+   },
+   
+   onDisplayConstructed : function(){
+      this.constructionChain.callChain();
+   },
+   
+   onDisplayDestroyed : function(){
+      this.destructionChain.callChain();
+   },
+   
+   //Properties
+   getDisplay : function(){ return this.display; },
+   getMedia : function(){ return this.media; },
+   getStartPaused: function() { return this.options.startPaused; },
+   
+   //Protected, private helper methods
+   autoStartMedia : function(){
+      if( !this.options.startPaused ) this.media.start();
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructDisplay, this.autoStartMedia, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.releaseMedia, this.destroyDisplay, this.finalizeDestruction );
+   }.protect(),
+   
+   constructDisplay: function(){
+      var displayOptions = { startPaused : this.options.startPaused };
+      var eventHandlers = { onConstructed : this.onDisplayConstructed, onDestroyed : this.onDisplayDestroyed };
+      this.display = new MediaPlayerDisplay( this.containerElement, this.media, Object.merge( displayOptions, eventHandlers ));
+      this.display.construct();
+   }.protect(),
+   
+   destroyDisplay: function(){
+      if( this.display ) this.display.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   releaseMedia : function(){
+      if( this.media ) this.media.relase();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   unmarshallComponents : function(){
+      this.media = new SlideShow( this.i18Resource, this.dataXml );
+      this.media.unmarshall();
+   }.protect()
+});
+/*
+Name: 
+    - MediaStartStopButton
+
+Description: 
+    - Represents the start/stop button in the media player controller panel. 
+
+Requires:
+   - MediaControllerButton
+
+Provides:
+    - MediaStartStopButton
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var MediaStartStopButton = new Class({
+   Extends : MediaControllerButton,
+   Binds: [],
+   
+   options : {
+      action : 'pause',
+      buttonClass : 'pause',
+      key : 'p',
+      label : 'P',
+      playClass : 'play',
+      startPaused : false,
+      tabIndex : 2
+   },
+
+   //Constructor
+   initialize: function( containerElement, options ){
+      this.parent( containerElement, options );
+      
+      this.paused = this.options.startPaused;
+   },
+   
+   //Public accessor and mutator methods
+   onSelected: function(){
+      if( this.paused ) this.start();
+      else this.stop();
+      this.parent();
+   },
+   
+   start: function(){
+      this.listItemElement.removeClass( this.getElementClass() );
+      this.paused = false;
+      this.listItemElement.addClass( this.getElementClass() );
+   },
+   
+   stop: function(){
+      this.listItemElement.removeClass( this.getElementClass() );
+      this.paused = true;
+      this.listItemElement.addClass( this.getElementClass() );
+   },
+   
+   //Properties
+   getElementClass : function(){ return this.paused ? this.options.playClass + ' ' + this.options.buttonClass : this.options.buttonClass; },
+   
+   //Protected, private helper methods
 });
 /*
 ---
@@ -20691,7 +23786,89 @@ MooEditable.UI.MenuList = new Class({
 	}
 	
 });
-/*Name:     - NewsReaderWidgetDescription:     - Shows RSS feed to the user. The levevel details can be customized.Requires:    - Provides:    - NewsReaderWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUI//= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar NewsReaderWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructChannel', 'destroyChannel'],      options : {      channelOptions : {},      channelSelector : "//rss/channel",      componentName : "NewsReaderWidget",      useLocalizedData : true,      widgetContainerId : "NewsReaderWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.channel;   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallChannel();      this.parent();   },      //Properties   getChannel : function() { return this.channel; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructChannel, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyChannel, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructChannel : function(){      this.channel.construct( this.containerElement );      this.constructionChain.callChain();   }.protect(),      destroyChannel : function(){      this.channel.destroy();   }.protect(),      unmarshallChannel : function(){      var channelElement = this.dataXml.selectNode( this.options.channelSelector );      if( channelElement ){         this.channel = new RssChannel( this.dataXml, this.i18Resource, this.elementFactory, this.options.channelOptions );         this.channel.unmarshall();      }         }.protect()});
+/*
+Name: 
+    - NewsReaderWidget
+
+Description: 
+    - Shows RSS feed to the user. The levevel details can be customized.
+
+Requires:
+    - 
+Provides:
+    - NewsReaderWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var NewsReaderWidget = new Class({
+   Extends : BrowserWidget,
+   Binds : ['constructChannel', 'destroyChannel'],
+   
+   options : {
+      channelOptions : {},
+      channelSelector : "/pn:rss/pn:channel",
+      componentName : "NewsReaderWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pn='http://www.processpuzzle.com/PartyNews'",
+      useLocalizedData : true,
+      widgetContainerId : "NewsReaderWidget"
+   },
+   
+   //Constructor
+   initialize : function( options, resourceBundle, elementFactoryOptions ) {
+      this.parent( options, resourceBundle, elementFactoryOptions );
+      
+      this.channel;
+   },
+
+   //Public accesors and mutators
+   
+   //Properties
+   getChannel : function() { return this.channel; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructChannel, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain : function(){
+      this.destructionChain.chain( this.destroyChannel, this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
+   constructChannel : function(){
+      this.channel.construct( this.containerElement );
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyChannel : function(){
+      this.channel.destroy();
+   }.protect(),
+   
+   unmarshallComponents : function(){
+      var channelElement = this.dataXml.selectNode( this.options.channelSelector );
+      if( channelElement ){
+         this.channel = new RssChannel( this.dataXml, this.i18Resource, this.elementFactory, this.options.channelOptions );
+         this.channel.unmarshall();
+      }      
+   }.protect()
+});
 /*
 Name: RssChannel
 
@@ -20721,26 +23898,26 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var RssChannel = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
 
    options: {
-      buildDateSelector : "//rss/channel/lastBuildDate",
-      descriptionSelector : "//rss/channel/description",
+      buildDateSelector : "/pn:rss/pn:channel/pn:lastBuildDate",
+      descriptionSelector : "/pn:rss/pn:channel/pn:description",
       descriptionStyle : "rssChannelDescription",
-      documentsSelector : "//rss/channel/docs",
-      generatorSelector : "//rss/channel/generator",
+      documentsSelector : "/pn:rss/pn:channel/pn:docs",
+      generatorSelector : "/pn:rss/pn:channel/pn:generator",
       itemOptions : {},
-      itemsSelector : "//rss/channel/item",
+      itemsSelector : "/pn:rss/pn:channel/pn:item",
       itemsWrapperStyle : "rssItemsWrapper",
-      languageSelector : "//rss/channel/language",
-      linkSelector : "//rss/channel/link",
-      managingEditorSelector : "//rss/channel/managingEditor",
-      publicationDateSelector : "//rss/channel/pubDate",
+      languageSelector : "/pn:rss/pn:channel/pn:language",
+      linkSelector : "/pn:rss/pn:channel/pn:link",
+      managingEditorSelector : "/pn:rss/pn:channel/pn:managingEditor",
+      publicationDateSelector : "/pn:rss/pn:channel/pn:pubDate",
       showDescription: true, 
       showTitle: true, 
-      titleSelector : "//rss/channel/title",
+      titleSelector : "/pn:rss/pn:channel/pn:title",
       titleStyle : "rssChannelTitle",
-      webMasterSelector : "//rss/channel/webMaster",
+      webMasterSelector : "/pn:rss/pn:channel/pn:webMaster",
       wrapperElementId : "rssChannelWrapper",
       wrapperElementTag : "div"
    },
@@ -20748,7 +23925,7 @@ var RssChannel = new Class({
    //Constructor
    initialize: function ( rssResource, internationalization, elementFactory, options ) {
       // parameter assertions
-      assertThat( rssResource, not( nil() ));
+      this.assertThat( rssResource, not( nil() ));
       this.setOptions( options );
       
       this.buildDate;
@@ -20922,17 +24099,17 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var RssItem = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
 
    options: {
-      descriptionSelector: "description",
+      descriptionSelector: "pn:description",
       descriptionStyle : "rssItemDescription",
-      globalUniqueIdSelector: "guid",
-      linkSelector: "link",
-      publicationDateSelector: "pubDate",
+      globalUniqueIdSelector: "pn:guid",
+      linkSelector: "pn:link",
+      publicationDateSelector: "pn:pubDate",
       showDescription: true, 
       showTitle: true, 
-      titleSelector: "title",
+      titleSelector: "pn:title",
       titleStyle : "rssItemTitle",
       trancatedDescriptionEnding : "...",
       truncatedDescriptionLength : 120,
@@ -20942,7 +24119,7 @@ var RssItem = new Class({
    //Constructor
    initialize: function ( itemResource, elementFactory, options ) {
       // parameter assertions
-      assertThat( itemResource, not( nil() ));      
+      this.assertThat( itemResource, not( nil() ));      
       this.setOptions( options );
       
       this.containerElement;
@@ -21063,7 +24240,7 @@ var RssResource = new Class({
    //Constructor
    initialize: function ( uri, options ) {
       // parameter assertions
-      assertThat( uri, not( nil() ));
+      this.assertThat( uri, not( nil() ));
       
       this.parent( uri, options );
 
@@ -21090,7 +24267,98 @@ var RssResource = new Class({
    }.protect(),
    
 });
-/*Name:    - PartyEventWidgetDescription:     - Shows list of events to the user. The level details can be customized.Requires:    - BrowserWidgetProvides:    - PartyEventWidgetPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUI//= require_directory ../FundamentalTypes//= require ../BrowserWidget/BrowserWidget.jsvar PartyEventWidget = new Class({   Extends : BrowserWidget,   Binds : ['constructEvents', 'destroyEvents'],      options : {      componentName : "EventWidget",      eventOptions : {},      eventsSelector : "//pp:eventList/events/event",      useLocalizedData : true,      widgetContainerId : "EventWidget"   },      //Constructor   initialize : function( options, resourceBundle, elementFactoryOptions ) {      this.parent( options, resourceBundle, elementFactoryOptions );            this.events = new ArrayList();   },   //Public accesors and mutators   construct : function(){      this.parent();   },      destroy : function() {      this.parent();   },      unmarshall : function(){      this.unmarshallEvents();      this.parent();   },      //Properties   getEvents : function() { return this.events; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain( this.constructEvents, this.finalizeConstruction );   }.protect(),      compileDestructionChain : function(){      this.destructionChain.chain( this.destroyEvents, this.destroyChildHtmlElements, this.finalizeDestruction );   }.protect(),      constructEvents : function(){      this.events.each( function( event, index ){         event.construct( this.containerElement );      }.bind( this ));            this.constructionChain.callChain();   }.protect(),      destroyEvents : function(){      this.events.each( function( event, index ){         event.destroy();      }.bind( this ));            this.destructionChain.callChain();   }.protect(),      unmarshallEvents : function(){      var eventElements = this.dataXml.selectNodes( this.options.eventsSelector );      if( eventElements ){         eventElements.each( function( eventElement, index ){            var event = new PartyEvent( eventElement, this.elementFactory, this.options.eventOptions );            event.unmarshall();            this.events.add( event );         }.bind( this ));      }         }.protect()});
+/*
+Name:
+    - PartyEventWidget
+Description: 
+    - Shows list of events to the user. The level details can be customized.
+Requires:
+    - BrowserWidget
+Provides:
+    - PartyEventWidget
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
+
+
+
+
+var PartyEventWidget = new Class({
+   Extends : BrowserWidget,
+   Binds : ['constructEvents', 'destroyEvents'],
+   
+   options : {
+      componentName : "PartyEventWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:pe='http://www.processpuzzle.com/PartyEvent'",
+      eventOptions : {},
+      eventsSelector : "/pe:eventList/pe:events/pe:event",
+      useLocalizedData : true,
+      widgetContainerId : "EventWidget"
+   },
+   
+   //Constructor
+   initialize : function( options, resourceBundle, elementFactoryOptions ) {
+      this.parent( options, resourceBundle, elementFactoryOptions );
+      
+      this.events = new ArrayList();
+   },
+
+   //Public accesors and mutators
+   
+   //Properties
+   getEvents : function() { return this.events; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructEvents, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain : function(){
+      this.destructionChain.chain( this.destroyEvents, this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+   
+   constructEvents : function(){
+      this.events.each( function( event, index ){
+         event.construct( this.containerElement );
+      }.bind( this ));
+      
+      this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyEvents : function(){
+      this.events.each( function( event, index ){
+         event.destroy();
+      }.bind( this ));
+      
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   unmarshallComponents : function(){
+      var eventElements = this.dataXml.selectNodes( this.options.eventsSelector );
+      if( eventElements ){
+         eventElements.each( function( eventElement, index ){
+            var event = new PartyEvent( eventElement, this.elementFactory, this.options.eventOptions );
+            event.unmarshall();
+            this.events.add( event );
+         }.bind( this ));
+      }      
+   }.protect()
+});
 /*
 Name: 
    - PartyEvent
@@ -21125,27 +24393,27 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var PartyEvent = new Class({
-   Implements: Options,
+   Implements: [AssertionBehavior, Options],
 
    options: {
-      descriptionSelector: "description",
+      descriptionSelector: "pe:description",
       descriptionStyle : "eventDescription",
-      endDateSelector : "schedule/endDate",
+      endDateSelector : "pe:schedule/pe:endDate",
       isFullDaySelector : "@isFullDay",
-      linkSelector: "link",
-      locationAddressSelector: "location/address",
-      locationLinkSelector: "location/link",
+      linkSelector: "pe:link",
+      locationAddressSelector: "pe:location/pe:address",
+      locationLinkSelector: "pe:location/pe:link",
       locationStyle : "eventLocation",
-      programDescriptionSelector : "program/description",
-      programLinkSelector : "program/link",
-      publicationDateSelector: "pubDate",
+      programDescriptionSelector : "pe:program/pe:description",
+      programLinkSelector : "pe:program/pe:link",
+      publicationDateSelector: "pe:publicationDate",
       scheduleStyle: "eventSchedule",
       showDescription: true,
       showLocation: true,
       showSchedule: true,
       showTitle: true, 
-      startDateSelector : "schedule/startDate",
-      titleSelector: "title",
+      startDateSelector : "pe:schedule/pe:startDate",
+      titleSelector: "pe:title",
       titleStyle : "eventTitle",
       trancatedDescriptionEnding : "...",
       truncatedDescriptionLength : 120,
@@ -21155,7 +24423,7 @@ var PartyEvent = new Class({
    //Constructor
    initialize: function ( eventResource, elementFactory, options ) {
       // parameter assertions
-      assertThat( eventResource, not( nil() ));      
+      this.assertThat( eventResource, not( nil() ));      
       this.setOptions( options );
       
       this.containerElement;
@@ -21297,442 +24565,6 @@ var PartyEvent = new Class({
       this.isFullDay = XmlResource.selectNodeText( this.options.isFullDaySelector, this.eventResource );
       this.startDate = XmlResource.selectNodeText( this.options.startDateSelector, this.eventResource );
       this.endDate = XmlResource.selectNodeText( this.options.endDateSelector, this.eventResource );
-   }.protect()
-});
-/*
-Name: 
-    - PhotoGaleryImage
-
-Description: 
-    - Represents an image of a photo galery. 
-
-Requires:
-
-Provides:
-    - PhotoGaleryImage
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-var PhotoGaleryImage = new Class({
-   Implements : Options,
-   
-   options : {
-      captionSelector : "caption",
-      linkSelector : "link",
-      thumbnailSelector : "thumbnailUri",
-      uriSelector : "uri"
-   },
-
-   //Constructor
-   initialize: function( definitionXml, internationalization, options ){
-      this.setOptions( options );
-      this.anchorElement;
-      this.caption;
-      this.data;
-      this.dataAsText;
-      this.definitionXml = definitionXml;
-      this.internationalization = internationalization;
-      this.link;
-      this.thumbnailUri;
-      this.uri;
-      this.state = PhotoGaleryImage.States.INITIALIZED;
-   },
-   
-   //Public accessor and mutator methods
-   construct: function(){
-      this.compileDataFromProperties();
-      this.state = PhotoGaleryImage.States.CONSTRUCTED;
-   },
-   
-   destroy: function(){
-      this.data = null;
-      this.dataAsText = null;
-      this.link = null;
-      this.thumbnailUri = null;
-      this.uri = null;
-      this.state = PhotoGaleryImage.States.INITIALIZED;
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.state = PhotoGaleryImage.States.UNMARSHALLED;
-   },
-   
-   //Properties
-   getCaption: function() { return this.caption; },
-   getData: function() { return this.data; },
-   getDataAsText: function() { return this.dataAsText; },
-   getLink: function() { return this.link; },
-   getState: function() { return this.state; },
-   getThumbnailUri: function() { return this.thumbnailUri; },
-   getUri: function() { return this.uri; },
-   
-   //Protected, private helper methods
-   compileDataFromProperties: function(){
-      var caption = this.caption ? "caption:'" + this.caption + "'" : null;
-      var href = this.link ? "href:'" + this.link + "'" : null;
-      var thumbnail = this.thumbnailUri ? "thumbnail:'" + this.thumbnailUri + "'" : null;
-      
-      var dataFragment = caption ? caption : "";
-
-      if( dataFragment != "" && href ) dataFragment += ", ";
-      dataFragment += href ? href : "";
-
-      if( dataFragment != "" && thumbnail ) dataFragment += ", ";
-      dataFragment += thumbnail ? thumbnail : "";
-      
-      this.dataAsText = "'" + this.uri + "': {" + dataFragment + "}";
-      this.data = eval( "({" + this.dataAsText + "})" );
-   }.protect(),
-   
-   unmarshallProperties: function(){
-      this.caption = XmlResource.selectNodeText( this.options.captionSelector, this.definitionXml );
-      this.caption = this.internationalization.getText( this.caption );
-      this.link = XmlResource.selectNodeText( this.options.linkSelector, this.definitionXml );
-      this.thumbnailUri = XmlResource.selectNodeText( this.options.thumbnailSelector, this.definitionXml );
-      this.uri = XmlResource.selectNodeText( this.options.uriSelector, this.definitionXml );
-   }.protect(),
-});
-
-PhotoGaleryImage.States = { UNINITIALIZED : 0, INITIALIZED : 1, UNMARSHALLED : 2, CONSTRUCTED : 3 };
-/*
-Name: 
-    - PhotoGaleryWidget
-
-Description: 
-    - Represents a collection of images with thumbnails, displays the selected one in original size and runs slide show. 
-
-Requires:
-    - PhotoGaleryImage, BrowserWidget, WidgetElementFactory
-    
-Provides:
-    - PhotoGaleryWidget
-
-Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
-http://www.processpuzzle.com
-
-Authors: 
-    - Zsolt Zsuffa
-
-Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
-GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
-or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-
-
-
-
-var PhotoGaleryWidget = new Class({
-   Extends : BrowserWidget,
-   Binds : ['compileDataObject', 'instantiateSlideShow', 'onComplete', 'onEnd', 'onShow', 'onStart'],
-   options : {
-      accessKeysDefault : null,
-      accessKeysSelector : "pp:widgetDefinition/properties/accessKeys",
-      automaticallyLinkSlideDefault : false,
-      automaticallyLinkSlideSelector : "pp:widgetDefinition/properties/automaticallyLinkSlideToFullSizedImage",
-      centerImagesDefault : true,
-      centerImagesSelector : "pp:widgetDefinition/properties/centerImages",
-      componentName : "PhotoGaleryWidget",
-      descriptionSelector : "/pp:widgetDefinition/description", 
-      effectDurationDefault : 750,
-      effectDurationSelector : "pp:widgetDefinition/properties/effectDuration",
-      eventDeliveryDelay : 50,
-      firstSlideDefault: 0,
-      firstSlideSelector: "pp:widgetDefinition/properties/firstSlide",
-      galeryLinkDefault: null,
-      galeryLinkSelector: "pp:widgetDefinition/properties/galeryLink",
-      heightDefault: 300,
-      heightSelector: "pp:widgetDefinition/properties/height",
-      imageFolderUriDefault: "",
-      imageFolderUriSelector: "pp:widgetDefinition/properties/imageFolderUri",
-      imagesSelector: "/pp:widgetData/images/image",
-      loopShowDefault: true,
-      loopShowSelector: "pp:widgetDefinition/properties/loopShow",
-      nameSelector : "/pp:widgetDefinition/name",
-      overlapImagesDefault : true,
-      overlapImagesSelector : "pp:widgetDefinition/properties/overlapImages",
-      resizeImagesDefault : true,
-      resizeImagesSelector : "pp:widgetDefinition/properties/resizeImages",
-      showControllerDefault : true,
-      showControllerSelector : "pp:widgetDefinition/properties/showController",
-      showImageCaptionsDefault : true,
-      showImageCaptionsSelector : "pp:widgetDefinition/properties/showImageCaptions",
-      showSlidesRandomDefault : false,
-      showSlidesRandomSelector : "pp:widgetDefinition/properties/showSlidesRandom",
-      showThumbnailsDefault : true,
-      showThumbnailsSelector : "pp:widgetDefinition/properties/showThumbnails",
-      skipTransitionDefault : null,
-      skipTransitionSelector : "pp:widgetDefinition/properties/skipTransition",
-      slideChangeDelayDefault : 2000,
-      slideChangeDelaySelector : "pp:widgetDefinition/properties/slideChangeDelay",
-      slideTransitionDefault : "Sine",
-      slideTransitionSelector : "pp:widgetDefinition/properties/slideTransition",
-      startPausedDefault : true,
-      startPausedSelector : "pp:widgetDefinition/properties/startPaused",
-      thumbnailFileNameRuleDefault : null,
-      thumbnailFileNameRuleSelector : "pp:widgetDefinition/properties/thumbnailFileNameRule",
-      widthDefault : 450,
-      widthSelector : "pp:widgetDefinition/properties/width"
-   },
-
-   //Constructor
-   initialize: function( options, internationalization ){
-      this.setOptions( options );
-      this.parent( options, internationalization );
-      
-      //Private attributes
-      this.accessKeys;
-      this.automaticallyLinkSlide;
-      this.centerImages;
-      this.constructionChain = new Chain();
-      this.data;
-      this.dataAsText = "";
-      this.effectDuration;
-      this.firstSlide;
-      this.galeryLink;
-      this.height;
-      this.images = new LinkedHashMap();
-      this.imageFolderUri;
-      this.loopShow;
-      this.overlapImages;
-      this.resizeImages;
-      this.showController;
-      this.showImageCaptions;
-      this.showSlidesRandom;
-      this.showThumbnails;
-      this.skipTransition;
-      this.slideChangeDelay;
-      this.slideShow;
-      this.slideTransition;
-      this.startPaused;
-      this.thumbnailFileNameRule;
-      this.width;
-   },
-   
-   //Public accessor and mutator methods
-   construct: function(){
-      this.parent();
-   },
-   
-   destroy: function(){
-      this.destroyComponents();
-      this.destroyChildElements( this.containerElement );
-      this.resetFields();
-      this.parent();
-   },
-   
-   onComplete: function(){
-      if( this.state < BrowserWidget.States.CONSTRUCTED ){
-         this.logger.trace( this.options.componentName + ".onComplete() completed to load Slideshow 2." );
-         this.constructionChain.callChain();
-      }
-   },
-   
-   onEnd: function(){
-      this.logger.trace( this.options.componentName + ".onEnd() ended Slideshow 2." );
-   },
-   
-   onShow: function(){
-      if( this.state < BrowserWidget.States.CONSTRUCTED ){
-         this.logger.trace( this.options.componentName + ".onShow() started to load Slideshow 2." );
-         this.constructionChain.callChain();
-      }
-   },
-   
-   onStart: function(){
-      if( this.state < BrowserWidget.States.CONSTRUCTED ){
-         this.logger.trace( this.options.componentName + ".onStart() started to load Slideshow 2." );
-         this.constructionChain.callChain();
-      }
-   },
-   
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallImages();
-      return this.parent();
-   },
-   
-   //Properties
-   getAccessKeys: function() { return this.accessKeys; },
-   getAutomaticallyLinkSlide: function() { return this.automaticallyLinkSlide; },
-   getCenterImages: function() { return this.centerImages; },
-   getData: function() { return this.data; },
-   getEffectDuration: function() { return this.effectDuration; },
-   getFirstSlide: function() { return this.firstSlide; },
-   getGaleryLink: function() { return this.galeryLink; },
-   getHeight: function() { return this.height; },
-   getImages: function() { return this.images; },
-   getImageFolderUri: function() { return this.imageFolderUri; },
-   getLoopShow: function() { return this.loopShow; },
-   getOverlapImages: function() { return this.overlapImages; },
-   getResizeImages: function() { return this.resizeImages; },
-   getShowController: function() { return this.showController; },
-   getShowImageCaptions: function() { return this.showImageCaptions; },
-   getShowSlidesRandom: function() { return this.showSlidesRandom; },
-   getShowThumbnails: function() { return this.showThumbnails; },
-   getSkipTransition: function() { return this.skipTransition; },
-   getSlideChangeDelay: function() { return this.slideChangeDelay; },
-   getSlideShow: function() { return this.slideShow; },
-   getSlideTransition: function() { return this.slideTransition; },
-   getStartPaused: function() { return this.startPaused; },
-   getThumbnailFileNameRule: function() { return this.thumbnailFileNameRule; },
-   getWidth: function() { return this.width; },
-   
-   //Protected and private helper methods
-   compileDataObject: function(){
-      this.images.each( function( imageEntry, index ){
-         var image = imageEntry.getValue();
-         image.construct();
-         if( this.dataAsText ) this.dataAsText += ", ";
-         this.dataAsText += image.getDataAsText();
-      }, this );
-      
-      this.data = eval( "({" + this.dataAsText + "})" );
-      this.constructionChain.callChain();
-   }.protect(),
-   
-   compileConstructionChain: function(){
-      this.constructionChain.chain(
-         this.compileDataObject,
-         this.instantiateSlideShow,
-         this.finalizeConstruction
-      );
-      
-   }.protect(),
-   
-   destroyChildElements: function( parentElement ){
-      var childElements = parentElement.getChildren ? parentElement.getChildren( '*' ) : new Array();
-      childElements.each( function( childElement, index ){
-         if( childElement.getChildren( '*' ).length > 0 ) this.destroyChildElements( childElement );
-         
-         if( childElement.removeEvents ) childElement.removeEvents();
-         if( childElement.destroy ) childElement.destroy();
-      }.bind( this ));
-   }.protect(),
-   
-   destroyComponents: function(){
-      if( this.slideShow ) this.slideShow.destroy();
-   }.protect(),
-   
-   instantiateSlideShow: function(){
-      var slideShowOptions = {
-         captions : this.showImageCaptions,
-         center : this.centerImages,
-         controller : this.showController,
-         delay : this.slideChangeDelay,
-         duration : this.effectDuration,
-         fast : this.skipTransition,
-         height : this.height,
-         href : this.galeryLink,
-         hu : this.imageFolderUri,
-         linked : this.automaticallyLinkSlide,
-         loop : this.loopShow,
-         onComplete : this.onComplete,
-         onEnd : this.onEnd,
-         onShow : this.onShow,
-         onStart : this.onStart,
-         overlap : this.overlapImages,
-         paused : this.startPaused,
-         random : this.showSlidesRandom,
-         replace : this.thumbnailFileNameRule,
-         resize : this.resizeImages,
-         slide : this.firstSlide,
-         thumbnails : this.showThumbnails,
-         transition : this.slideTransition,
-         width : this.width
-      };
-      this.slideShow = new Slideshow( this.containerElement, this.data, slideShowOptions );
-   }.protect(),
-   
-   resetFields: function(){
-      this.accessKeys = null;
-      this.automaticallyLinkSlide = null;
-      this.centerImages = null;
-      this.data = null;
-      this.dataAsText = "";
-      this.effectDuration = null;
-      this.firstSlide = null;
-      this.galeryLink = null;
-      this.height = null;
-      this.imageFolderUri = null;
-      this.loopShow = null;
-      this.overlapImages = null;
-      this.resizeImages = null;
-      this.showController = null;
-      this.showImageCaptions = null;
-      this.showSlidesRandom = null;
-      this.showThumbnails = null;
-      this.skipTransition = null;
-      this.slideChangeDelay = null;
-      this.slideTransition = null;
-      this.startPaused = null;
-      this.thumbnailFileNameRule = null;
-      this.width = null;
-      this.images.clear();
-   }.protect(),
-   
-   unmarshallImages: function(){
-      var imagesElement = this.dataXml.selectNodes( this.options.imagesSelector );
-      if( imagesElement ){
-         imagesElement.each( function( imageElement, index ){
-            var image = new PhotoGaleryImage( imageElement, this.i18Resource );
-            image.unmarshall();
-            this.images.put( image.getUri(), image );
-         }, this );
-      }
-   }.protect(),
-   
-   unmarshallProperties: function(){
-      this.accessKeys = this.unmarshallProperty( this.options.accessKeysDefault, this.options.accessKeysSelector );
-      this.automaticallyLinkSlide = this.unmarshallProperty( this.options.automaticallyLinkSlideDefault, this.options.automaticallyLinkSlideSelector );
-      this.centerImages = parseBoolean( this.unmarshallProperty( this.options.centerImagesDefault, this.options.centerImagesSelector ));
-      this.effectDuration = parseInt( this.unmarshallProperty( this.options.effectDurationDefault, this.options.effectDurationSelector ));
-      this.firstSlide = parseInt( this.unmarshallProperty( this.options.firstSlideDefault, this.options.firstSlideSelector ));
-      this.galeryLink = this.unmarshallProperty( this.options.galeryLinkDefault, this.options.galeryLinkSelector );
-      this.height = parseInt( this.unmarshallProperty( this.options.heightDefault, this.options.heightSelector ));
-      this.imageFolderUri = this.unmarshallProperty( this.options.imageFolderUriDefault, this.options.imageFolderUriSelector );
-      this.loopShow = parseBoolean( this.unmarshallProperty( this.options.loopShowDefault, this.options.loopShowSelector ));
-      this.overlapImages = parseBoolean( this.unmarshallProperty( this.options.overlapImagesDefault, this.options.overlapImagesSelector ));
-      this.resizeImages = parseBoolean( this.unmarshallProperty( this.options.resizeImagesDefault, this.options.resizeImagesSelector ));
-      this.showController = parseBoolean( this.unmarshallProperty( this.options.showControllerDefault, this.options.showControllerSelector ));
-      this.showImageCaptions = parseBoolean( this.unmarshallProperty( this.options.showImageCaptionsDefault, this.options.showImageCaptionsSelector ));
-      this.showSlidesRandom = parseBoolean( this.unmarshallProperty( this.options.showSlidesRandomDefault, this.options.showSlidesRandomSelector ));
-      this.showThumbnails = parseBoolean( this.unmarshallProperty( this.options.showThumbnailsDefault, this.options.showThumbnailsSelector ));
-      this.skipTransition = eval( "(" + this.unmarshallProperty( this.options.skipTransitionDefault, this.options.skipTransitionSelector ) + ")" );
-      this.slideChangeDelay = parseInt( this.unmarshallProperty( this.options.slideChangeDefault, this.options.slideChangeDelaySelector ));
-      this.slideTransition = this.unmarshallProperty( this.options.slideTransitionDefault, this.options.slideTransitionSelector );
-      this.startPaused = parseBoolean( this.unmarshallProperty( this.options.startPausedDefault, this.options.startPausedSelector ));
-      this.thumbnailFileNameRule = this.unmarshallProperty( this.options.thumbnailFileNameRuleDefault, this.options.thumbnailFileNameRuleSelector );
-      this.width = parseInt( this.unmarshallProperty( this.options.widthDefault, this.options.widthSelector ));
-   }.protect(),
-   
-   unmarshallProperty: function( defaultValue, selector ){
-      var propertyValue = this.definitionXml.selectNodeText( selector );
-      if( propertyValue ) return propertyValue;
-      else return defaultValue;
    }.protect()
 });
 /*
@@ -22125,19 +24957,20 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var ResourceManager = new Class({
-   Implements: [Events, Options],
+   Implements: [AssertionBehavior, Events, Options],
    Binds: ['onResourceError', 'onResourceLoaded'],   
 
    options: {
-      documentImagesSelector: "images/image",
-      documentScriptsSelector: "javaScripts/javaScript",
-      documentStyleSheetsSelector: "styleSheets/styleSheet",
+      documentImagesSelector: "sd:images/*",
+      documentScriptsSelector: "sd:javaScripts/*",
+      documentStyleSheetsSelector: "sd:styleSheets/*",
       eventFireDelay : 5,
       type : null
    },
    
    //Constructor
    initialize: function( resourceDefinition, options ){
+      this.assertThat( resourceDefinition, not( nil() ), "ResourceManager.resourceDefinition" );
       this.setOptions( options );
       
       this.error = null;
@@ -22334,7 +25167,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var ScrollArea = new Class({
-   Implements : Options,
+   Implements : [AssertionBehavior, Options],
    Binds : ['onScrollContent', 'onScrollableElementClick', 'onScrollableElementKeyDown', 'onScrollableElementMouseWheel'],
    options : {
       componentName : "ScrollArea",
@@ -22347,7 +25180,7 @@ var ScrollArea = new Class({
    },
 
    initialize : function( scrollableElement, windowFxScroll, options ) {
-      assertThat( scrollableElement, not( nil() ));
+      this.assertThat( scrollableElement, not( nil() ));
       this.setOptions( options );
 
       this.borderHeight;
@@ -22574,7 +25407,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var ScrollControls = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds : ['onDocumentClick', 'onDocumentKeyDown', 'onDocumentMouseUp', 'scrollDown', 'scrollUp'],
    options : {
       componentName : "ScrollControls",
@@ -22593,8 +25426,8 @@ var ScrollControls = new Class({
    },
 
    initialize : function( contentViewElement, overHang, options ) {
-      assertThat( contentViewElement, not( nil() ));
-      assertThat( overHang, not( nil() ));
+      this.assertThat( contentViewElement, not( nil() ));
+      this.assertThat( overHang, not( nil() ));
       this.setOptions( options );
 
       this.contentViewElement = contentViewElement;
@@ -23234,1323 +26067,6 @@ var SkinSelectorWidget = new Class({
    }.protect()
    
 });
-/**
- * Script: Slideshow.js Slideshow - A javascript class for Mootools to stream
- * and animate the presentation of images on your website.
- * 
- * License: MIT-style license.
- * 
- * Copyright: Copyright (c) 2011 [Aeron
- * Glemann](http://www.electricprism.com/aeron/).
- * 
- * Dependencies: Mootools 1.3.1 Core: Fx.Morph, Fx.Tween, Selectors,
- * Element.Dimensions. Mootools 1.3.1.1 More: Assets.
- */
-
-
-
-
-(function() {
-   WhenPaused = 1 << 0;
-   WhenPlaying = 1 << 1;
-   OnStart = 1 << 2;
-
-   Slideshow = new Class({
-            Implements : [Chain, Events, Options],
-
-            options : {/*
-                         * onComplete: $empty, onEnd: $empty, onStart: $empty,
-                         */
-               accesskeys : {
-                  'first' : {
-                     'key' : 'shift left',
-                     'label' : 'Shift + Leftwards Arrow'},
-                  'prev' : {
-                     'key' : 'left',
-                     'label' : 'Leftwards Arrow'},
-                  'pause' : {
-                     'key' : 'p',
-                     'label' : 'P'},
-                  'next' : {
-                     'key' : 'right',
-                     'label' : 'Rightwards Arrow'},
-                  'last' : {
-                     'key' : 'shift right',
-                     'label' : 'Shift + Rightwards Arrow'}},
-               captions : true,
-               center : true,
-               classes : [/*
-                            * 'slideshow', 'first', 'prev', 'play', 'pause',
-                            * 'next', 'last', 'images', 'captions',
-                            * 'controller', 'thumbnails', 'hidden', 'visible',
-                            * 'inactive', 'active', 'loader'
-                            */],
-               controller : true,
-               data : null,
-               delay : 2000,
-               duration : 1000,
-               fast : false,
-               height : false,
-               href : '',
-               hu : '',
-               linked : false,
-               loader : true,
-               loop : true,
-               match : /\?slide=(\d+)$/,
-               overlap : true,
-               paused : false,
-               random : false,
-               replace : [/(\.[^\.]+)$/, 't$1'],
-               resize : 'fill',
-               slide : 0,
-               thumbnails : true,
-               titles : false,
-               transition : 'sine:in:out',
-               width : false},
-
-            /**
-             * Constructor: initialize Creates an instance of the Slideshow
-             * class.
-             * 
-             * Arguments: element - (element) The wrapper element. data - (array
-             * or object) The images and optional thumbnails, captions and links
-             * for the show. options - (object) The options below.
-             * 
-             * Syntax: var myShow = new Slideshow(element, data, options);
-             */
-
-            initialize : function( el, data, options ) {
-               this.setOptions( options );
-               this.el = document.id( el );
-               if( !this.el ) return;
-               
-               var match = window.location.href.match( this.options.match );
-               this.slide = this._slide = this.options.match && match ? match[1].toInt() : this.options.slide;
-               this.counter = this.timeToNextTransition = this.timeToTransitionComplete = 0;
-               this.direction = 'left';
-               this.cache = {};
-               this.paused = false;
-               if( !this.options.overlap ) this.options.duration *= 2;
-               var anchor = this.el.getElement( 'a' ) || new Element( 'a' );
-               if( !this.options.href ) this.options.href = anchor.get( 'href' ) || '';
-               if( this.options.hu.length && !this.options.hu.test( /\/$/ ) ) this.options.hu += '/';
-               if( this.options.fast === true ) this.options.fast = WhenPaused | WhenPlaying;
-
-               // styles
-               var keys = 'slideshow first prev play pause next last images captions controller thumbnails hidden visible inactive active loader'.split( ' ' );
-               var values = keys.map( function( key, i ) {
-                  return this.options.classes[i] || key;
-               }, this );
-               this.classes = values.associate( keys );
-               this.classes.get = function() {
-                  var str = '.' + this.slideshow;
-                  for( var i = 0, l = arguments.length; i < l; i++ )
-                     str += '-' + this[arguments[i]];
-                  return str;
-               }.bind( this.classes );
-
-               // data
-               if( !data ){
-                  this.options.hu = '';
-                  data = {};
-                  var thumbnails = this.el.getElements( this.classes.get( 'thumbnails' ) + ' img' );
-                  this.el.getElements( this.classes.get( 'images' ) + ' img' ).each( function( img, i ) {
-                     var src = img.src, caption = img.alt || img.title, href = img.getParent().href, thumbnail = thumbnails[i] ? thumbnails[i].src : '';
-                     data[src] = {
-                        'caption' : caption,
-                        'href' : href,
-                        'thumbnail' : thumbnail};
-                  } );
-               }
-               var loaded = this.load( data );
-               if( !loaded )
-                  return;
-
-               // events
-               this.events = {};
-               this.events.push = function( type, fn ) {
-                  if( !this[type] )
-                     this[type] = [];
-                  this[type].push( fn );
-                  document.addEvent( type, fn );
-                  return this;
-               }.bind( this.events );
-
-               this.accesskeys = {};
-               for( action in this.options.accesskeys ){
-                  var obj = this.options.accesskeys[action];
-                  this.accesskeys[action] = accesskey = { 'label' : obj.label };
-                  ['shift', 'control', 'alt'].each( function( modifier ) {
-                     var re = new RegExp( modifier, 'i' );
-                     accesskey[modifier] = obj.key.test( re );
-                     obj.key = obj.key.replace( re, '' );
-                  });
-                  accesskey.key = obj.key.trim();
-               }
-
-               this.events.push( 'keyup', function( e ) {
-                  Object.each( this.accesskeys, function( accesskey, action ) {
-                     if( e.key == accesskey.key && e.shift == accesskey.shift && e.control == accesskey.control && e.alt == accesskey.alt )
-                        this[action]();
-                  }, this );
-               }.bind( this ) );
-
-               // required elements
-               var el = this.el.getElement( this.classes.get( 'images' ) );
-               var img = this.el.getElement( 'img' ) || new Element( 'img' );
-               var images = el ? el.empty() : new Element( 'div', { 'class' : this.classes.get( 'images' ).substr( 1 ) }).inject( this.el );
-               var div = images.getSize();
-               this.height = this.options.height || div.y;
-               this.width = this.options.width || div.x;
-               images.set( { 'styles' : { 'height' : this.height, 'width' : this.width}} );
-               this.el.store( 'images', images );
-               this.a = this.image = img;
-               if( Browser.ie && Browser.version >= 7 ) this.a.style.msInterpolationMode = 'bicubic';
-               this.a.set( 'styles', { 'display' : 'none' });
-               this.b = this.a.clone();
-               [this.a, this.b].each( function( img ) {
-                  anchor.clone().cloneEvents( anchor ).grab( img ).inject( images );
-               });
-
-               // optional elements
-               this.options.captions && new Caption( this );
-               this.options.controller && new Controller( this );
-               this.options.loader && new Loader( this );
-               this.options.thumbnails && new Thumbnails( this );
-
-               // begin show
-               this._preload( this.options.fast & OnStart );
-            },
-
-            /**
-             * Public method: go Jump directly to a slide in the show.
-             * 
-             * Arguments: n - (integer) The index number of the image to jump
-             * to, 0 being the first image in the show.
-             * 
-             * Syntax: myShow.go(n);
-             */
-
-            go : function( n, direction ) {
-               var nextSlide = (this.slide + this.data.images.length) % this.data.images.length;
-               if( n == nextSlide || Date.now() < this.timeToTransitionComplete )
-                  return;
-               clearTimeout( this.timer );
-               this.timeToNextTransition = 0;
-               this.direction = direction ? direction : n < this._slide ? 'right' : 'left';
-               this.slide = this._slide = n;
-               if( this.preloader )
-                  this.preloader = this.preloader.destroy();
-               this._preload( (this.options.fast & WhenPlaying) || (this.paused && this.options.fast & WhenPaused) );
-            },
-
-            /**
-             * Public method: first Goes to the first image in the show.
-             * 
-             * Syntax: myShow.first();
-             */
-
-            first : function() {
-               this.prev( true );
-            },
-
-            /**
-             * Public method: prev Goes to the previous image in the show.
-             * 
-             * Syntax: myShow.prev();
-             */
-
-            prev : function( first ) {
-               var n = 0;
-               if( !first ){
-                  if( this.options.random ){
-                     if( this.showed.i < 2 )
-                        return;
-                     this.showed.i -= 2;
-                     n = this.showed.array[this.showed.i];
-                  }else
-                     n = (this.slide - 1 + this.data.images.length) % this.data.images.length;
-               }
-               this.go( n, 'right' );
-            },
-
-            /**
-             * Public method: pause Toggles play / pause state of the show.
-             * 
-             * Arguments: p - (undefined, 1 or 0) Call pause with no arguments
-             * to toggle the pause state. Call pause(1) to force pause, or
-             * pause(0) to force play.
-             * 
-             * Syntax: myShow.pause(p);
-             */
-
-            pause : function( p ) {
-               if( p != undefined )
-                  this.paused = p ? false : true;
-               if( this.paused ){ // play
-                  this.paused = false;
-                  this.timeToTransitionComplete = Date.now() + this.timeToTransitionComplete;
-                  this.timer = this._preload.delay( 50, this );
-                  [this.a, this.b].each( function( img ) {
-                     ['morph', 'tween'].each( function( p ) {
-                        if( this.retrieve && this.retrieve( p ))
-                           this.get( p ).resume();
-                     }, img );
-                  } );
-                  
-                  this.controller && this.el.retrieve( 'pause' ).getParent().removeClass( this.classes.play );
-               }else{ // pause
-                  this.paused = true;
-                  this.timeToTransitionComplete = this.timeToTransitionComplete - Date.now();
-                  clearTimeout( this.timer );
-                  [this.a, this.b].each( function( img ) {
-                     ['morph', 'tween'].each( function( p ) {
-                        if( this.retrieve && this.retrieve( p ) )
-                           this.get( p ).pause();
-                     }, img );
-                  });
-                  
-                  if( this.controller && this.el.retrieve && this.el.retrieve( 'pause' )){
-                     var pauseValue = this.el.retrieve( 'pause' );
-                     if( pauseValue.getParent() ) pauseValue.getParent().addClass( this.classes.play );
-                  };
-               }
-            },
-
-            /**
-             * Public method: next Goes to the next image in the show.
-             * 
-             * Syntax: myShow.next();
-             */
-
-            next : function( last ) {
-               var n = last ? this.data.images.length - 1 : this._slide;
-               this.go( n, 'left' );
-            },
-
-            /**
-             * Public method: last Goes to the last image in the show.
-             * 
-             * Syntax: myShow.last();
-             */
-
-            last : function() {
-               this.next( true );
-            },
-
-            /**
-             * Public method: load Loads a new data set into the show: will stop
-             * the current show, rewind and rebuild thumbnails if applicable.
-             * 
-             * Arguments: data - (array or object) The images and optional
-             * thumbnails, captions and links for the show.
-             * 
-             * Syntax: myShow.load(data);
-             */
-
-            load : function( data ) {
-               this.firstrun = true;
-               this.showed = { 'array' : [], 'i' : 0 };
-               if( typeOf( data ) == 'array' ){
-                  this.options.captions = false;
-                  data = new Array( data.length ).associate( data.map( function( image, i ) {
-                     return image + '?' + i
-                  }));
-               }
-               this.data = {
-                  'images' : [],
-                  'captions' : [],
-                  'hrefs' : [],
-                  'thumbnails' : [],
-                  'targets' : [],
-                  'titles' : []};
-               for( var image in data ){
-                  var obj = data[image] || {}, image = this.options.hu + image, caption = obj.caption ? obj.caption.trim() : '', href = obj.href ? obj.href
-                        .trim() : this.options.linked ? image : this.options.href, target = obj.target ? obj.target.trim() : '_self', thumbnail = obj.thumbnail ? this.options.hu
-                        + obj.thumbnail.trim()
-                        : image.replace( this.options.replace[0], this.options.replace[1] ), title = caption.replace( /<.+?>/gm, '' ).replace( /</g, '&lt;' )
-                        .replace( />/g, '&gt;' ).replace( /"/g, "'" );
-                  this.data.images.push( image );
-                  this.data.captions.push( caption );
-                  this.data.hrefs.push( href );
-                  this.data.targets.push( target );
-                  this.data.thumbnails.push( thumbnail );
-                  this.data.titles.push( title );
-               }
-               if( this.options.random )
-                  this.slide = this._slide = Number.random( 0, this.data.images.length - 1 );
-
-               // only run when data is loaded dynamically into an existing
-               // slideshow instance
-
-               if( this.options.thumbnails && this.el.retrieve( 'thumbnails' ) )
-                  this._thumbnails();
-               if( this.el.retrieve( 'images' ) ){
-                  [this.a, this.b].each( function( img ) {
-                     ['morph', 'tween'].each( function( p ) {
-                        if( this.retrieve( p ) )
-                           this.get( p ).cancel();
-                     }, img );
-                  } );
-                  this.slide = this._slide = this.timeToTransitionComplete = 0;
-                  this.go( 0 );
-               }
-               return this.data.images.length;
-            },
-
-            /**
-             * Public method: destroy Destroys a Slideshow instance.
-             * 
-             * Arguments: p - (string) The images and optional thumbnails,
-             * captions and links for the show.
-             * 
-             * Syntax: myShow.destroy(p);
-             */
-
-            destroy : function( p ) {
-               Object.each( this.events, function( array, e ) {
-                  if( 'each' in array )
-                     array.each( function( fn ) {
-                        document.removeEvent( e, fn );
-                     } );
-               } );
-               this.pause( 1 );
-               'caption loader thumbnails'.split( ' ' ).each( function( i, timer ) {
-                  this.options[i] && this[i].retrieve && (timer = this[i].retrieve( 'timer' )) && clearTimeout( timer );
-               }, this );
-               typeOf( this.el[p] ) == 'function' && this.el[p]();
-               if( this.el.eliminate ) this.el.eliminate( 'uid' );
-               if( this.preloader && this.preloader.removeEvents ) this.preloader.removeEvents();
-               if( this.preloader && this.preloader.destroy ) this.preloader.destroy();
-            },
-
-            /**
-             * Private method: preload Preloads the next slide in the show, once
-             * loaded triggers the show, updates captions, thumbnails, etc.
-             */
-            _preload : function( fast ) {
-               var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' );
-               var cached = loaded = !!this.cache[src];
-               if( !cached ){
-                  if( !this.preloader )
-                     this.preloader = new Asset.image( src, {
-                        'onerror' : function() {
-                           // do something
-                        },
-                        'onload' : function() {
-                           this.store( 'loaded', true );
-                        }} );
-                  loaded = this.preloader.retrieve( 'loaded' ) && this.preloader.get( 'width' );
-               }
-               
-               if( loaded && Date.now() > this.timeToNextTransition && Date.now() > this.timeToTransitionComplete ){
-                  var src = this.data.images[this._slide].replace( /([^?]+).*/, '$1' );
-                  if( this.preloader ){
-                     this.cache[src] = {
-                        'height' : this.preloader.get( 'height' ),
-                        'src' : src,
-                        'width' : this.preloader.get( 'width' )}
-                  }
-                  if( this.stopped ){
-                     if( this.options.captions )
-                        this.caption.get( 'morph' ).cancel().start( this.classes.get( 'captions', 'hidden' ) );
-                     this.pause( 1 );
-                     if( this.end )
-                        this.fireEvent( 'end' );
-                     this.stopped = this.end = false;
-                     return;
-                  }
-                  this.image = this.counter % 2 ? this.b : this.a;
-                  this.image.set( 'styles', {
-                     'display' : 'block',
-                     'height' : null,
-                     'visibility' : 'hidden',
-                     'width' : null,
-                     'zIndex' : this.counter} );
-                  this.image.set( this.cache[src] );
-                  this.image.width = this.cache[src].width;
-                  this.image.height = this.cache[src].height;
-                  this.options.resize && this._resize( this.image );
-                  this.options.center && this._center( this.image );
-                  var anchor = this.image.getParent();
-                  if( this.data.hrefs[this._slide] ){
-                     anchor.set( 'href', this.data.hrefs[this._slide] );
-                     anchor.set( 'target', this.data.targets[this._slide] );
-                  }else{
-                     anchor.erase( 'href' );
-                     anchor.erase( 'target' );
-                  }
-                  var title = this.data.titles[this._slide];
-                  this.image.set( 'alt', title );
-                  this.options.titles && anchor.set( 'title', title );
-                  this.options.loader && this.loader.fireEvent( 'hide' );
-                  this.options.captions && this.caption.fireEvent( 'update', fast );
-                  this.options.thumbnails && this.thumbnails.fireEvent( 'update', fast );
-                  this._show( fast );
-                  this._loaded( fast );
-               }else{
-                  if( Date.now() > this.timeToNextTransition && this.options.loader ){
-                     this.loader.fireEvent( 'show' );
-                  }
-                  this.timer = this._preload.delay( 50, this, fast );
-               }
-            },
-
-            /**
-             * Private method: show Does the slideshow effect.
-             */
-            _show : function( fast ) {
-               if( !this.image.retrieve( 'morph' ) ){
-                  var options = this.options.overlap ? {
-                     'link' : 'cancel'} : {
-                     'link' : 'chain'};
-                  $$( this.a, this.b ).set( 'morph', Object.merge( options, {
-                     'duration' : this.options.duration,
-                     'onStart' : this._start.bind( this ),
-                     'onComplete' : this._complete.bind( this ),
-                     'transition' : this.options.transition} ) );
-               }
-               var hidden = this.classes.get( 'images', (this.direction == 'left' ? 'next' : 'prev') ), visible = this.classes.get( 'images', 'visible' ), img = this.counter % 2 ? this.a
-                     : this.b;
-               if( fast ){
-                  img.get( 'morph' ).cancel().set( hidden );
-                  this.image.get( 'morph' ).cancel().set( visible );
-               }else{
-                  if( this.options.overlap ){
-                     img.get( 'morph' ).set( visible );
-                     this.image.get( 'morph' ).set( hidden ).start( visible );
-                  }else{
-                     var fn = function( visible ) {
-                        this.image.get( 'morph' ).start( visible );
-                     }.pass( visible, this );
-                     if( this.firstrun )
-                        return fn();
-                     hidden = this.classes.get( 'images', (this.direction == 'left' ? 'prev' : 'next') );
-                     this.image.get( 'morph' ).set( hidden );
-                     img.get( 'morph' ).set( visible ).start( hidden ).chain( fn );
-                  }
-               }
-               
-               this.fireEvent( 'show' );
-            },
-
-            /**
-             * Private method: loaded Run after the current image has been
-             * loaded, sets up the next image to be shown.
-             */
-
-            _loaded : function( fast ) {
-               this.counter++;
-               this.timeToNextTransition = Date.now() + this.options.duration + this.options.delay;
-               this.direction = 'left';
-               this.timeToTransitionComplete = fast ? 0 : Date.now() + this.options.duration;
-               if( this._slide == (this.data.images.length - 1) && !this.options.loop && !this.options.random )
-                  this.stopped = this.end = true;
-               if( this.options.random ){
-                  this.showed.i++;
-                  if( this.showed.i >= this.showed.array.length ){
-                     var n = this._slide;
-                     if( this.showed.array.getLast() != n )
-                        this.showed.array.push( n );
-                     while( this._slide == n )
-                        this.slide = this._slide = Number.random( 0, this.data.images.length - 1 );
-                  }else
-                     this.slide = this._slide = this.showed.array[this.showed.i];
-               }else{
-                  this.slide = this._slide;
-                  this._slide = (this.slide + 1) % this.data.images.length;
-               }
-               if( this.image.getStyle( 'visibility' ) != 'visible' )
-                  (function() {
-                     this.image.setStyle( 'visibility', 'visible' );
-                  }).delay( 1, this );
-               if( this.preloader )
-                  this.preloader = this.preloader.destroy();
-               this.paused || this._preload();
-            },
-
-            /**
-             * Private method: center Center an image.
-             */
-
-            _center : function( img ) {
-               var size = img.getSize(), h = size.y, w = size.x;
-               img.set( 'styles', {
-                  'left' : (w - this.width) / -2,
-                  'top' : (h - this.height) / -2} );
-            },
-
-            /**
-             * Private method: resize Resizes an image.
-             */
-
-            _resize : function( img ) {
-               var h = img.get( 'height' ).toFloat(), w = img.get( 'width' ).toFloat(), dh = this.height / h, dw = this.width / w;
-               if( this.options.resize == 'fit' )
-                  dh = dw = dh > dw ? dw : dh;
-               if( this.options.resize == 'fill' )
-                  dh = dw = dh > dw ? dh : dw;
-               img.set( 'styles', {
-                  'height' : Math.ceil( h * dh ),
-                  'width' : Math.ceil( w * dw )} );
-            },
-
-            /**
-             * Private method: start Callback on start of slide change.
-             */
-
-            _start : function() {
-               this.fireEvent( 'start' );
-            },
-
-            /**
-             * Private method: complete Callback on start of slide change.
-             */
-
-            _complete : function() {
-               if( this.firstrun && this.options.paused ) this.pause( 1 );
-               this.firstrun = false;
-               this.fireEvent( 'complete', [], 10 );
-            }} );
-
-   /**
-    * Private method: captions Builds the optional caption element, adds
-    * interactivity. This method can safely be removed if the captions option is
-    * not enabled.
-    */
-
-   var Caption = new Class( {
-      Implements : [Chain, Events, Options],
-
-      options : {/*
-                   * duration: 500, fps: 50, transition: 'sine:in:out', unit:
-                   * false,
-                   */
-         delay : 0,
-         link : 'cancel'},
-
-      initialize : function( slideshow ) {
-         if( !slideshow )
-            return;
-         var options = slideshow.options.captions;
-         if( options === true )
-            options = {};
-         this.setOptions( options );
-         var el = slideshow.el.getElement( slideshow.classes.get( 'captions' ) ), caption = el ? el.dispose().empty() : new Element( 'div', {
-            'class' : slideshow.classes.get( 'captions' ).substr( 1 )} );
-         slideshow.caption = caption;
-         caption.set( {
-            'aria-busy' : false,
-            'aria-hidden' : false,
-            'events' : {
-               'update' : this.update.bind( slideshow )},
-            'morph' : this.options,
-            'role' : 'description'} ).store( 'delay', this.options.delay );
-         if( !caption.get( 'id' ) )
-            caption.set( 'id', 'Slideshow-' + Date.now() );
-         slideshow.el.retrieve( 'images' ).set( 'aria-labelledby', caption.get( 'id' ) );
-         caption.inject( slideshow.el );
-      },
-
-      update : function( fast ) {
-         var empty = !this.data.captions[this._slide].length, timer;
-         if( timer = this.caption.retrieve( 'timer' ) )
-            clearTimeout( timer );
-         if( fast ){
-            var p = empty ? 'hidden' : 'visible';
-            this.caption.set( {
-               'aria-hidden' : empty,
-               'html' : this.data.captions[this._slide]} ).get( 'morph' ).cancel().set( this.classes.get( 'captions', p ) );
-         }else{
-            var fn1 = empty ? function() {
-            } : function( caption ) {
-               this.caption.store( 'timer', setTimeout( function( caption ) {
-                  this.caption.set( 'html', caption ).morph( this.classes.get( 'captions', 'visible' ) );
-               }.pass( caption, this ), this.caption.retrieve( 'delay' ) ) );
-            }.pass( this.data.captions[this._slide], this );
-            var fn2 = function() {
-               this.caption.set( 'aria-busy', false );
-            }.bind( this );
-            this.caption.set( 'aria-busy', true ).get( 'morph' ).cancel().start( this.classes.get( 'captions', 'hidden' ) ).chain( fn1, fn2 );
-         }
-      }} );
-
-   /**
-    * Private method: controller Builds the optional controller element, adds
-    * interactivity. This method can safely be removed if the controller option
-    * is not enabled.
-    */
-
-   var Controller = new Class(
-         {
-            Implements : [Chain, Events, Options],
-
-            options : {/*
-                         * duration: 500, fps: 50, transition: 'sine:in:out',
-                         * unit: false,
-                         */
-               link : 'cancel'},
-
-            initialize : function( slideshow ) {
-               if( !slideshow )
-                  return;
-               var options = slideshow.options.captions;
-               if( options === true )
-                  options = {};
-               this.setOptions( options );
-               var el = slideshow.el.getElement( slideshow.classes.get( 'controller' ) ), controller = el ? el.dispose().empty() : new Element( 'div', {
-                  'class' : slideshow.classes.get( 'controller' ).substr( 1 )} );
-               slideshow.controller = controller;
-               controller.set( {
-                  'aria-hidden' : false,
-                  'role' : 'menubar'} );
-               var ul = new Element( 'ul', {
-                  'role' : 'menu'} ).inject( controller ), i = 0;
-               Object.each( slideshow.accesskeys, function( accesskey, action ) {
-                  var li = new Element( 'li', {
-                     'class' : (action == 'pause' && this.options.paused) ? this.classes.play + ' ' + this.classes[action] : this.classes[action]} )
-                        .inject( ul );
-                  var a = this.el.retrieve( action, new Element( 'a', {
-                     'role' : 'menuitem',
-                     'tabindex' : i++,
-                     'title' : accesskey.label} ).inject( li ) );
-                  a.set( 'events', {
-                     'click' : function( action ) {
-                        this[action]()
-                     }.pass( action, this ),
-                     'mouseenter' : function( active ) {
-                        this.addClass( active )
-                     }.pass( this.classes.active, a ),
-                     'mouseleave' : function( active ) {
-                        this.removeClass( active )
-                     }.pass( this.classes.active, a )} );
-               }, slideshow );
-               controller.set( {
-                  'events' : {
-                     'hide' : this.hide.pass( slideshow.classes.get( 'controller', 'hidden' ), controller ),
-                     'show' : this.show.pass( slideshow.classes.get( 'controller', 'visible' ), controller )},
-                  'morph' : this.options} ).store( 'hidden', false );
-               slideshow.events.push( 'keydown', this.keydown.bind( slideshow ) ).push( 'keyup', this.keyup.bind( slideshow ) ).push( 'mousemove',
-                     this.mousemove.bind( slideshow ) );
-               controller.inject( slideshow.el ).fireEvent( 'hide' );
-            },
-
-            hide : function( hidden ) {
-               if( this.get( 'aria-hidden' ) == 'false' )
-                  this.set( 'aria-hidden', true ).morph( hidden );
-            },
-
-            keydown : function( e ) {
-               Object.each( this.accesskeys, function( accesskey, action ) {
-                  if( e.key == accesskey.key && e.shift == accesskey.shift && e.control == accesskey.control && e.alt == accesskey.alt ){
-                     if( this.controller.get( 'aria-hidden' ) == 'true' )
-                        this.controller.get( 'morph' ).set( this.classes.get( 'controller', 'visible' ) );
-                     this.el.retrieve( action ).fireEvent( 'mouseenter' );
-                  }
-               }, this );
-            },
-
-            keyup : function( e ) {
-               Object.each( this.accesskeys, function( accesskey, action ) {
-                  if( e.key == accesskey.key && e.shift == accesskey.shift && e.control == accesskey.control && e.alt == accesskey.alt ){
-                     if( this.controller.get( 'aria-hidden' ) == 'true' )
-                        this.controller.set( 'aria-hidden', false ).fireEvent( 'hide' );
-                     this.el.retrieve( action ).fireEvent( 'mouseleave' );
-                  }
-               }, this );
-            },
-
-            mousemove : function( e ) {
-               var images = this.el.retrieve( 'images' ).getCoordinates(), action = (e.page.x > images.left && e.page.x < images.right && e.page.y > images.top && e.page.y < images.bottom) ? 'show'
-                     : 'hide';
-               this.controller.fireEvent( action );
-            },
-
-            show : function( visible ) {
-               if( this.get( 'aria-hidden' ) == 'true' )
-                  this.set( 'aria-hidden', false ).morph( visible );
-            }} );
-
-   /**
-    * Private method: loader Builds the optional loader element, adds
-    * interactivity. This method can safely be removed if the loader option is
-    * not enabled.
-    */
-
-   var Loader = new Class( {
-      Implements : [Chain, Events, Options],
-
-      options : {/*
-                   * duration: 500, transition: 'sine:in:out', unit: false,
-                   */
-         fps : 20,
-         link : 'cancel'},
-
-      initialize : function( slideshow ) {
-         if( !slideshow )
-            return;
-         var options = slideshow.options.loader;
-         if( options === true )
-            options = {};
-         this.setOptions( options );
-         var loader = new Element( 'div', {
-            'aria-hidden' : false,
-            'class' : slideshow.classes.get( 'loader' ).substr( 1 ),
-            'morph' : this.options,
-            'role' : 'progressbar'} ).store( 'animate', false ).store( 'i', 0 ).store( 'delay', 1000 / this.options.fps ).inject( slideshow.el );
-         slideshow.loader = loader;
-         var url = loader.getStyle( 'backgroundImage' ).replace( /url\(['"]?(.*?)['"]?\)/, '$1' ).trim();
-         if( url ){
-            if( url.test( /\.png$/ ) && Browser.ie && Browser.version < 7 )
-               loader.setStyles( {
-                  'backgroundImage' : 'none',
-                  'filter' : 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src="' + url + '", sizingMethod="crop")'} );
-            new Asset.image( url, {
-               'onload' : function() {
-                  var size = loader.getSize(), width = this.get( 'width' ), height = this.get( 'height' );
-                  if( width > size.x )
-                     loader.store( 'x', size.x ).store( 'animate', 'x' ).store( 'frames', (width / size.x).toInt() );
-                  if( height > size.y )
-                     loader.store( 'y', size.y ).store( 'animate', 'y' ).store( 'frames', (height / size.y).toInt() );
-               }} );
-         }
-         loader.set( 'events', {
-            'animate' : this.animate.bind( loader ),
-            'hide' : this.hide.pass( slideshow.classes.get( 'loader', 'hidden' ), loader ),
-            'show' : this.show.pass( slideshow.classes.get( 'loader', 'visible' ), loader )} );
-         loader.fireEvent( 'hide' );
-      },
-
-      animate : function() {
-         var animate = this.retrieve( 'animate' );
-         if( !animate )
-            return;
-         var i = (this.retrieve( 'i' ).toInt() + 1) % this.retrieve( 'frames' );
-         this.store( 'i', i );
-         var n = (i * this.retrieve( animate )) + 'px';
-         if( animate == 'x' )
-            this.setStyle( 'backgroundPosition', n + ' 0px' );
-         if( animate == 'y' )
-            this.setStyle( 'backgroundPosition', '0px ' + n );
-      },
-
-      hide : function( hidden ) {
-         if( this.get( 'aria-hidden' ) == 'false' ){
-            this.set( 'aria-hidden', true ).morph( hidden );
-            if( this.retrieve( 'animate' ) )
-               clearTimeout( this.retrieve( 'timer' ) );
-         }
-      },
-
-      show : function( visible ) {
-         if( this.get( 'aria-hidden' ) == 'true' ){
-            this.set( 'aria-hidden', false ).morph( visible );
-            if( this.retrieve( 'animate' ) ){
-               this.store( 'timer', function() {
-                  this.fireEvent( 'animate' )
-               }.periodical( this.retrieve( 'delay' ), this ) );
-            }
-         }
-      }} );
-
-   /**
-    * Private method: thumbnails Builds the optional thumbnails element, adds
-    * interactivity. This method can safely be removed if the thumbnails option
-    * is not enabled.
-    */
-
-   var Thumbnails = new Class({
-      Implements : [Chain, Events, Options],
-      options : { /* duration: 500, transition: 'sine:in:out', unit: false, */
-         columns : null,
-         fps : 50,
-         link : 'cancel',
-         position : null,
-         rows : null,
-         scroll : null
-      },
-
-      initialize : function( slideshow ) {
-         var options = (slideshow.options.thumbnails === true) ? {} : slideshow.options.thumbnails;
-         this.setOptions( options );
-         var el = slideshow.el.getElement( slideshow.classes.get( 'thumbnails' ) );
-         var thumbnails = el ? el.empty() : new Element( 'div', { 'class' : slideshow.classes.get( 'thumbnails' ).substr( 1 )} );
-         slideshow.thumbnails = thumbnails;
-         thumbnails.set({ 'role' : 'menubar', 'styles' : { 'overflow' : 'hidden' } });
-         var uid = thumbnails.retrieve( 'uid', 'Slideshow-' + Date.now() );
-         var ul = new Element( 'ul', {
-            'role' : 'menu',
-            'styles' : {
-               'left' : 0,
-               'position' : 'absolute',
-               'top' : 0 
-            },
-            'tween' : { 'link' : 'cancel' }
-         }).inject( thumbnails );
-         
-         slideshow.data.thumbnails.each( function( thumbnail, i ) {
-            var li = new Element( 'li', { 'id' : uid + i } ).inject( ul );
-            var a = new Element( 'a', {
-               'class' : slideshow.classes.get( 'thumbnails', 'hidden' ).substr( 1 ),
-               'events' : { 'click' : this.click.pass( i, slideshow ) },
-               'href' : slideshow.data.images[i],
-               'morph' : this.options,
-               'role' : 'menuitem',
-               'tabindex' : i
-            }).store( 'uid', i ).inject( li );
-                  
-            if( slideshow.options.titles )
-               a.set( 'title', slideshow.data.titles[i] );
-            new Asset.image( thumbnail, { 'onload' : this.onload.pass( i, slideshow ) } ).inject( a );
-         }, this );
-         
-         thumbnails.set( 'events', {
-            'scroll' : this.scroll.bind( thumbnails ),
-            'update' : this.update.bind( slideshow )
-         });
-
-         var coords = thumbnails.getCoordinates();
-         if( !options.scroll ) options.scroll = (coords.height > coords.width) ? 'y' : 'x';
-         var props = (options.scroll == 'y') ? 'top bottom height y width'.split( ' ' ) : 'left right width x height'.split( ' ' );
-         thumbnails.store( 'props', props );
-         thumbnails.store( 'delay', 1000 / this.options.fps );
-         slideshow.events.push( 'mousemove', this.mousemove.bind( thumbnails ) );
-         thumbnails.inject( slideshow.el );
-      },
-
-      click : function( i ) {
-         this.go( i );
-         return false;
-      },
-
-      mousemove : function( e ) {
-         var coords = this.getCoordinates();
-         if( e.page.x > coords.left && e.page.x < coords.right && e.page.y > coords.top && e.page.y < coords.bottom ){
-            this.store( 'page', e.page );
-            if( !this.retrieve( 'mouseover' ) ){
-               this.store( 'mouseover', true );
-               this.store( 'timer', function() {
-                  this.fireEvent( 'scroll' );
-               }.periodical( this.retrieve( 'delay' ), this ) );
-            }
-            }else{
-               if( this.retrieve( 'mouseover' ) ){
-                  this.store( 'mouseover', false );
-                  clearTimeout( this.retrieve( 'timer' ) );
-               }
-            }
-         },
-
-      onload : function( i ) {
-         var thumbnails = this.thumbnails;
-         var a = thumbnails.getElements( 'a' )[i];
-         if( a ){
-            (function( a ) {
-               var visible = i == this.slide ? 'active' : 'inactive';
-               if( a.store ){
-                  a.store( 'loaded', true );
-                  var morphProperty = a.get( 'morph' );
-                  morphProperty.set( this.classes.get( 'thumbnails', 'hidden' ));
-                  morphProperty.start( this.classes.get( 'thumbnails', visible ));
-                  
-               }
-            }).delay( Math.max( 1000 / this.data.thumbnails.length, 100 ), this, a );
-         }
-
-         if( thumbnails.retrieve( 'limit' ) ) return;
-               
-         var props = thumbnails.retrieve( 'props' );    //left right width x height
-         var options = this.options.thumbnails;
-         var pos = props ? props[1] : 'right';
-         var length = props[2];
-         var width = props[4];
-         var li = thumbnails.getElement( 'li:nth-child(' + (i + 1) + ')' ).getCoordinates();
-
-         if( options.columns || options.rows ){
-            thumbnails.setStyles( {
-               'height' : this.height,
-               'width' : this.width
-            });
-            if( options.columns.toInt() ) thumbnails.setStyle( 'width', li.width * options.columns.toInt() );
-            if( options.rows.toInt() ) thumbnails.setStyle( 'height', li.height * options.rows.toInt() );
-         }
-         var div = thumbnails.getCoordinates();
-         if( options.position ){
-            if( options.position.test( /bottom|top/ ) ){
-               thumbnails.setStyles({
-                  'bottom' : 'auto',
-                  'top' : 'auto' 
-               }).setStyle( options.position, -div.height );
-            }
-            if( options.position.test( /left|right/ ) ){
-               thumbnails.setStyles({
-                  'left' : 'auto',
-                  'right' : 'auto'
-               }).setStyle( options.position, -div.width );
-            }
-         }
-         
-         var units = div[width] >= li[width] ? Math.floor( div[width] / li[width] ) : 1;
-         var x = Math.ceil( this.data.images.length / units );
-         var r = this.data.images.length % units;
-         var len = x * li[length], ul = thumbnails.getElement( 'ul' ).setStyle( length, len );
-         ul.getElements( 'li' ).setStyles({
-            'height' : li.height,
-            'width' : li.width
-         });
-         thumbnails.store( 'limit', div[length] - len );
-      },
-
-      scroll : function( n, fast ) {
-         var div = this.getCoordinates();
-         var ul = this.getElement( 'ul' ).getPosition();
-         var props = this.retrieve( 'props' );
-         var axis = props[3];
-         var delta;
-         var pos = props[0];
-         var size = props[2];
-         var value;
-         var tween = this.getElement( 'ul' ).set( 'tween', { 'property' : pos } ).get( 'tween' );
-         if( n != undefined ){
-            var uid = this.retrieve( 'uid' ), li = document.id( uid + n ).getCoordinates();
-            delta = div[pos] + (div[size] / 2) - (li[size] / 2) - li[pos];
-            value = (ul[axis] - div[pos] + delta).limit( this.retrieve( 'limit' ), 0 );
-            tween[fast ? 'set' : 'start']( value );
-         } else{
-            var area = div[props[2]] / 3, page = this.retrieve( 'page' ), velocity = -(this.retrieve( 'delay' ) * 0.01);
-            if( page[axis] < (div[pos] + area) ) delta = (page[axis] - div[pos] - area) * velocity;
-            else if( page[axis] > (div[pos] + div[size] - area) ) delta = (page[axis] - div[pos] - div[size] + area) * velocity;
-            if( delta ){
-               value = (ul[axis] - div[pos] + delta).limit( this.retrieve( 'limit' ), 0 );
-               tween.set( value );
-            }
-         }
-      },
-
-      update : function( fast ) {
-         var thumbnails = this.thumbnails;
-         var uid = thumbnails.retrieve( 'uid' );
-         thumbnails.getElements( 'a' ).each( function( a, i ) {
-            if( a.retrieve( 'loaded' ) ){
-               if( a.retrieve( 'uid' ) == this._slide ){
-                  if( !a.retrieve( 'active', false ) ){
-                     a.store( 'active', true );
-                     var active = this.classes.get( 'thumbnails', 'active' );
-                     if( fast ) a.get( 'morph' ).set( active );
-                     else a.morph( active );
-                  }
-               }else{
-                  if( a.retrieve( 'active', true ) ){
-                     a.store( 'active', false );
-                     var inactive = this.classes.get( 'thumbnails', 'inactive' );
-                     if( fast ) a.get( 'morph' ).set( inactive );
-                     else a.morph( inactive );
-                  }
-               }
-            }
-         }, this );
-         
-         if( !thumbnails.retrieve( 'mouseover' ) ) thumbnails.fireEvent( 'scroll', [this._slide, fast] );
-      }
-   });
-})();
-/**
-Script: Slideshow.Flash.js
-	Slideshow.Flash - Flash extension for Slideshow.
-
-License:
-	MIT-style license.
-
-Copyright:
-	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
-
-Dependencies:
-	Slideshow.
-*/
-
-
-
-
-
-(function(){
-	Slideshow.Flash = new Class({
-		Extends: Slideshow,
-	
-		options: {
-			color: ['#FFF']
-		},
-	
-	/**
-	Constructor: initialize
-		Creates an instance of the Slideshow class.
-
-	Arguments:
-		element - (element) The wrapper element.
-		data - (array or object) The images and optional thumbnails, captions and links for the show.
-		options - (object) The options below.
-
-	Syntax:
-		var myShow = new Slideshow.Flash(element, data, options);
-*/
-
-		initialize: function(el, data, options){
-			options = options || {};
-			options.overlap = true;
-			if (options.color)
-				options.color = Array.from(options.color);
-			this.parent(el, data, options);
-		},
-
-	/**
-	Private method: show
-		Does the slideshow effect.
-*/
-
-		_show: function(fast){
-			if (!this.image.retrieve('tween'))
-			  $$(this.a, this.b).set('tween', {'duration': this.options.duration, 'link': 'cancel', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'property': 'opacity'});
-			if (fast)
-				this.image.get('tween').cancel().set(1);
-			else {
-				this.el.retrieve('images').setStyle('background', this.options.color[this.slide % this.options.color.length]);
-				var img = (this.counter % 2) ? this.a : this.b;
-				img.get('tween').cancel().set(0);
-				this.image.get('tween').set(0).start(1);
-			}
-		}
-	});
-})();
-/**
-Script: Slideshow.Fold.js
-	Slideshow.Fold - Flash extension for Slideshow.
-
-License:
-	MIT-style license.
-
-Copyright:
-	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
-
-Dependencies:
-	Slideshow.
-*/
-
-
-
-
-
-Slideshow.Fold = new Class({
-	Extends: Slideshow,
-	
-/**
-Private method: show
-	Does the slideshow effect.
-*/
-
-	_show: function(fast){
-		if (!this.image.retrieve('tween')){
-			var options = (this.options.overlap) ? {'duration': this.options.duration} : {'duration': this.options.duration / 2};
-			$$(this.a, this.b).set('tween', Object.merge(options, {'link': 'chain', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'property': 'clip', 'transition': this.options.transition}));
-		}
-		var img = (this.counter % 2) ? this.a : this.b,
-			rect = this._rect(this.image),
-			half = Math.ceil(rect.top + (rect.bottom - rect.top) / 2);
-			
-		if (fast){			
-			img.get('tween').cancel().set('rect(0, 0, 0, 0)');
-			this.image.get('tween').cancel().set('rect(auto, auto, auto, auto)'); 			
-		} 
-		else {
-			if (this.options.overlap){	
-				img.get('tween').set('rect(auto, auto, auto, auto)');
-				this.image.get('tween')
-					.set(rect.top + ' ' + rect.left + ' ' + half + ' ' + rect.left)
-					.start(rect.top + ' ' + rect.right + ' ' + half + ' ' + rect.left)
-					.start(rect.top + ' ' + rect.right + ' ' + rect.bottom + ' ' + rect.left);
-			} 
-			else	{
-				var fn = function(rect){
-					this.image.get('tween')
-						.set(rect.top + ' ' + rect.left + ' ' + half + ' ' + rect.left)
-						.start(rect.top + ' ' + rect.right + ' ' + half + ' ' + rect.left)
-						.start(rect.top + ' ' + rect.right + ' ' + rect.bottom + ' ' + rect.left);
-				}.pass(rect, this);
-				if (this.firstrun)
-					return fn();
-				rect = this._rect(img);
-				img.get('tween')
-					.set(rect.top + ' ' + rect.right + ' ' + rect.bottom + ' ' + rect.left)
-					.start(rect.top + ' ' + rect.right + ' ' + half + ' ' + rect.left)
-					.start(rect.top + ' ' + rect.left + ' ' + half + ' ' + rect.left).chain(fn);
-			}
-		}
-	},
-	
-	/**
-	Private method: rect
-		Calculates the clipping rect
-	*/
-
-	_rect: function(img){
-		var rect = img.getCoordinates(this.el.retrieve('images'));
-		rect.left = (rect.left < 0) ? Math.abs(rect.left) : 0;
-		rect.top = (rect.top < 0) ? Math.abs(rect.top) : 0;
-		rect.right = (rect.right > this.width) ? rect.left + this.width : rect.width;
-		rect.bottom = (rect.bottom > this.height) ? rect.top + this.height : rect.height;
-		return rect;		
-	}
-});
-/**
-Script: Slideshow.KenBurns.js
-	Slideshow.KenBurns - KenBurns extension for Slideshow, includes zooming and panning effects.
-
-License:
-	MIT-style license.
-
-Copyright:
-	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
-	
-Dependencies:
-	Slideshow.
-*/
-
-
-
-
-
-(function(){
-	Slideshow.KenBurns = new Class({
-		Extends: Slideshow,
-
-		options: {
-			pan: [100, 100],
-			zoom: [50, 50]
-		},
-
-	/**
-	Constructor: initialize
-		Creates an instance of the Slideshow class.
-
-	Arguments:
-		element - (element) The wrapper element.
-		data - (array or object) The images and optional thumbnails, captions and links for the show.
-		options - (object) The options below.
-
-	Syntax:
-		var myShow = new Slideshow.KenBurns(element, data, options);
-	*/
-
-		initialize: function(el, data, options){
-			options = options || {};
-			options.overlap = true;
-			options.resize = 'fill';
-			['pan', 'zoom'].each(function(p){
-				if (this[p] != undefined){
-					if (typeOf(this[p]) != 'array') this[p] = [this[p], this[p]];
-					this[p].map(function(n){return (n.toInt() || 0).limit(0, 100);});					
-				}
-			}, options);
-			this.parent(el, data, options);
-		},
-
-	/**
-	Private method: show
-		Does the slideshow effect.
-	*/
-
-		_show: function(fast){
-			if (!this.image.retrieve('morph')){
-				$$(this.a, this.b).set({
-					'tween': {'duration': this.options.duration, 'link': 'cancel', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'property': 'opacity'},
-					'morph': {'duration': (this.options.delay + this.options.duration * 2), 'link': 'cancel', 'transition': 'linear'}
-				});
-			}
-			this.image.set('styles', {'bottom': 'auto', 'left': 'auto', 'right': 'auto', 'top': 'auto'});
-			var props = ['top left', 'top right', 'bottom left', 'bottom right'][this.counter % 4].split(' ');
-			this.image.setStyles([0, 0].associate(props));
-			var src = this.data.images[this._slide].replace(/([^?]+).*/, '$1'),
-				cache = this.cache[src];
-			dh = this.height / cache.height;
-			dw = this.width / cache.width;
-			delta = (dw > dh) ? dw : dh;
-			var values = {},
-				zoom = (Number.random.apply(Number, this.options.zoom) / 100.0) + 1,
-				pan = Math.abs((Number.random.apply(Number, this.options.pan) / 100.0) - 1);
-			['height', 'width'].each(function(prop, i){
-				var e = Math.ceil(cache[prop] * delta),
-					s = (e * zoom).toInt();		
-				values[prop] = [s, e];
-				if (dw > dh || i){
-					e = (this[prop] - this.image[prop]);
-					s = (e * pan).toInt();			
-					values[props[i]] = [s, e];
-				}
-			}, this);
-			var paused = ((this.firstrun && this.options.paused) || this.paused);
-			if (fast || paused){
-				this._center(this.image);
-				this.image.get('morph').cancel();
-				if (paused)
-					this.image.get('tween').cancel().set(0).start(1);
-				else
-					this.image.get('tween').cancel().set(1);
-			} 
-			else{
-				this.image.get('morph').start(values);
-				this.image.get('tween').set(0).start(1);
-			}
-		}
-	});
-})();
-/*
-Script: Slideshow.Push.js
-	Slideshow.Push - Push extension for Slideshow.
-
-License:
-	MIT-style license.
-
-Copyright:
-	Copyright (c) 2008 [Aeron Glemann](http://www.electricprism.com/aeron/).
-	
-Dependencies:
-	Slideshow.
-	Mootools 1.3.1 More: Fx.Elements.
-*/
-
-
-
-
-
-Slideshow.Push = new Class({
-	Extends: Slideshow,
-	
-	initialize: function(el, data, options){
-		options = options || {};
-		options.overlap = true;		
-		this.parent(el, data, options);
-	},
-
-	_show: function(fast){
-		var images = [this.image, ((this.counter % 2) ? this.a : this.b)];
-		if (!this.image.retrieve('fx'))
-			this.image.store('fx', new Fx.Elements(images, {'duration': this.options.duration, 'link': 'cancel', 'onStart': this._start.bind(this), 'onComplete': this._complete.bind(this), 'transition': this.options.transition }));
-		this.image.set('styles', {'left': 'auto', 'right': 'auto' }).setStyle(this.direction, this.width);
-		var values = {'0': {}, '1': {} };
-		values['0'][this.direction] = [this.width, 0];
-		values['1'][this.direction] = [0, -this.width];
-		if (images[1].getStyle(this.direction) == 'auto'){
-			var width = this.width - images[1].width;	
-			images[1].set('styles', {'left': 'auto', 'right': 'auto' }).setStyle(this.direction, width);		 
-			values['1'][this.direction] = [width, -this.width];
-		}
-		if (fast){
-		 	for (var prop in values)
-		 		values[prop][this.direction] = values[prop][this.direction][1];			
-			this.image.retrieve('fx').cancel().set(values);
-		} 
-		else
-			this.image.retrieve('fx').start(values);
-	}
-});
 /*
 Name: DocumentElement
 
@@ -24581,18 +26097,32 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var DocumentElement = new Class({
-   Implements: [Events, Options, TimeOutBehaviour],
-   Binds: ['associateEditor', 'authorization', 'checkTimeOut', 'createHtmlElement', 'constructPlugin', 'finalizeConstruction', 'injectHtmlElement', 'onPluginConstructed', 'onPluginError'],   
+   Implements: [AssertionBehavior, Events, Options, TimeOutBehaviour],
+   Binds: [
+      'associateEditor', 
+      'authorization', 
+      'checkTimeOut', 
+      'createHtmlElement', 
+      'constructPlugin',
+      'destroyHtmlElements',
+      'destroyPlugin',
+      'detachEditor',
+      'finalizeConstruction', 
+      'finalizeDestruction',
+      'injectHtmlElement', 
+      'onPluginConstructed', 
+      'onPluginError'],   
    
    options: {
       componentName : "DocumentElement",
       defaultTag : "div",
+      delay : 100,
       eventFireDelay : 2,
       idPrefix : "Desktop-Element-",
       idSelector : "@id",
       isEditable : false,
       isEditableSelector : "@isEditable",
-      pluginSelector : "plugin",
+      pluginSelector : "sd:plugin",
       referenceSelector : "@href",
       sourceSelector : "@source",
       styleSelector : "@elementStyle",
@@ -24601,8 +26131,8 @@ var DocumentElement = new Class({
    
    //Constructor
    initialize: function( definitionElement, bundle, options ){
-      assertThat( definitionElement, not( nil() ));
-      assertThat( bundle, not( nil() ));
+      this.assertThat( definitionElement, not( nil() ), "DocumentElement.definitionElement" );
+      this.assertThat( bundle, not( nil() ), "DocumentElement.bundle" );
       this.setOptions( options );
 
       //Protected, private variables
@@ -24611,6 +26141,7 @@ var DocumentElement = new Class({
       
       this.constructionChain = new Chain();
       this.contextElement;
+      this.destructionChain = new Chain();
       this.editable;
       this.editor;
       this.elementFactory;
@@ -24634,24 +26165,22 @@ var DocumentElement = new Class({
       if( this.status != DocumentElement.States.UNMARSHALLED ) 
          throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
       this.logger.trace( this.options.componentName + ".construct() of '" + this.id + "'started." );
-      assertThat( contextElement, not( nil() ));
+      this.assertThat( contextElement, not( nil() ), "DocumentElement.contextElement" );
       this.contextElement = contextElement;
       this.where = where;
       this.elementFactory = new WidgetElementFactory( contextElement, this.resourceBundle );
       this.startTimeOutTimer( 'construct' );
       this.compileConstructionChain();
-      this.constructionChain.callChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( new DocumentElementConstructionException( this.id, { cause : exception })); }
    },
    
    destroy: function(){
-      if( this.status == DocumentElement.States.INITIALIZED ) throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
-
-      if( this.plugin ) this.plugin.destroy();
-      if( this.status == DocumentElement.States.CONSTRUCTED ) this.deleteHtmlElement();
-      if( this.status <= DocumentElement.States.CONSTRUCTED )this.resetProperties();
-      if( this.editor ) this.editor.detach();
-      this.error = null;
-      this.status = DocumentElement.States.INITIALIZED;
+      if( this.status == DocumentElement.States.INITIALIZED ) 
+         throw new UnconfiguredDocumentElementException( 'destroy', 'initialized' );
+      this.compileDestructionChain();
+      this.destructionChain.callChain();      
    },
    
    onPluginConstructed: function(){
@@ -24659,8 +26188,7 @@ var DocumentElement = new Class({
    },
    
    onPluginError: function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    },
    
    unmarshall: function(){
@@ -24673,6 +26201,7 @@ var DocumentElement = new Class({
    getDefinitionElement: function() { return this.definitionElement; },
    getBind: function() { return this.bind; },
    getEditor: function() { return this.editor; },
+   getError: function() { return this.error; },
    getHtmlElement: function() { return this.htmlElement; },
    getId: function() { return this.id; },
    getPlugin: function() { return this.plugin; },
@@ -24706,8 +26235,12 @@ var DocumentElement = new Class({
       this.constructionChain.chain( this.createHtmlElement, this.injectHtmlElement, this.constructPlugin, this.authorization, this.associateEditor, this.finalizeConstruction );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
+   }.protect(),
+   
    constructPlugin: function(){
-      if( this.plugin ){ this.plugin.construct();
+      if( this.plugin ){ this.plugin.construct( this.contextElement );
       }else this.constructionChain.callChain();
    }.protect(),
    
@@ -24742,6 +26275,22 @@ var DocumentElement = new Class({
       if( attributeNode ) return attributeNode.value;
       else return defaultValue;
    }.protect(),
+   
+   destroyHtmlElements: function(){
+      if( this.status == DocumentElement.States.CONSTRUCTED ) this.deleteHtmlElement();
+      if( this.status <= DocumentElement.States.CONSTRUCTED )this.resetProperties();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   destroyPlugin: function(){
+      if( this.plugin ) this.plugin.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   detachEditor: function(){
+      if( this.editor ) this.editor.detach();
+      this.destructionChain.callChain();
+   }.protect(),
       
    finalizeConstruction: function(){
       this.stopTimeOutTimer();
@@ -24750,9 +26299,20 @@ var DocumentElement = new Class({
       this.fireEvent( 'constructed', this, this.options.eventFireDelay );
    }.protect(),
    
+   finalizeDestruction: function(){
+      this.error = null;
+      this.destructionChain.clearChain();
+      this.status = DocumentElement.States.INITIALIZED;
+      this.fireEvent( 'destructed', this, this.options.eventFireDelay );
+   }.protect(),
+   
    injectHtmlElement: function(){
       this.htmlElement.inject( this.contextElement, this.where );
       this.constructionChain.callChain();
+   }.protect(),
+   
+   instantiateConstructionException : function( exception ){
+      return new DocumentElementConstructionException( this.id, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
    }.protect(),
    
    resetProperties: function(){
@@ -24764,18 +26324,19 @@ var DocumentElement = new Class({
       this.text = null;
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( exception ){
+      this.error = this.instantiateConstructionException( exception );
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
-      if( this.plugin ) this.plugin.destroy();
+      if( this.plugin && this.plugin.getState() > DocumentElement.States.INITIALIZED ) this.plugin.destroy();
       this.deleteHtmlElement();
       this.status = DocumentElement.States.INITIALIZED;
+      this.logger.error( this.error.getMessage() + this.error.stackTrace() );
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 
    timeOut : function( exception ){
-      this.error = exception;
-      this.revertConstruction();
+      this.revertConstruction( exception );
    }.protect(),
    
    unmarshallId: function(){
@@ -24865,11 +26426,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDocumentElement = new Class({
    Extends: DocumentElement,
-   Binds: ['constructNestedElements', 'onNestedElementConstructed', 'onNestedElementConstructionError'],
+   Binds: ['constructNestedElements', 'destroyNestedElements', 'onNestedElementConstructed', 'onNestedElementConstructionError'],
    
    options: {
       componentName : "CompositeDocumentElement",
-      subElementsSelector : "compositeElement | element | compositeDataElement | dataElement | formElement | formField | tableElement",
+      subElementsSelector : "sd:compositeElement | sd:element | sd:compositeDataElement | sd:dataElement | sd:formElement | sd:formField | sd:tableElement",
       tagName : "div"
    },
    
@@ -24884,28 +26445,13 @@ var CompositeDocumentElement = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.parent( contextElement, where );
-   },
-   
-   destroy: function(){
-      this.elements.each( function( elementsEntry, index ){
-         var nestedElement = elementsEntry.getValue();
-         if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
-      }, this );
-      this.numberOfConstructedNestedElements = 0;
-      this.parent();
-   },
-   
    onNestedElementConstructed: function( nestedElement ){
       this.numberOfConstructedNestedElements++;
       this.nestedElementsConstructionChain.callChain();
    },
    
    onNestedElementConstructionError: function( error ){
-      this.error = error;
-      this.revertConstruction();
-      this.fireEvent( 'constructionError', this.error );
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
@@ -24935,6 +26481,10 @@ var CompositeDocumentElement = new Class({
       );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyNestedElements, this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
+   }.protect(),
+   
    constructNestedElements: function( contextElement ){
       if( contextElement ) this.nestedElementsContext = contextElement;
       else this.nestedElementsContext = this.htmlElement;
@@ -24959,20 +26509,29 @@ var CompositeDocumentElement = new Class({
       }else this.constructionChain.callChain();
    }.protect(),
    
+   destroyNestedElements: function(){
+      this.elements.each( function( elementsEntry, index ){
+         var nestedElement = elementsEntry.getValue();
+         if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
+      }, this );
+      this.numberOfConstructedNestedElements = 0;
+      this.destructionChain.callChain();
+   }.protect(),
+   
    instantiateDocumentElement: function( elementDefinition ){
       var documentElementOptions = { onConstructed : this.onNestedElementConstructed, onConstructionError : this.onNestedElementConstructionError };
       if( this.options.variables ) documentElementOptions['variables'] = this.options.variables;
       return DocumentElementFactory.create( elementDefinition, this.resourceBundle, this.dataXml, documentElementOptions );
    }.protect(),
    
-   revertConstruction: function(){
+   revertConstruction: function( error ){
       this.elements.each( function( elementsEntry, index ){
          var nestedElement = elementsEntry.getValue();
          if( nestedElement.getState() > DocumentElement.States.INITIALIZED ) nestedElement.destroy();
       }, this );
       this.elements.clear();
       this.numberOfConstructedNestedElements = 0;
-      this.parent();
+      this.parent( error );
    }.protect(),
    
    unmarshallNestedElement: function( subElementDefinition, options ){
@@ -25028,7 +26587,9 @@ var DataElementBehaviour = new Class({
       indexVariableSelector : "@indexVariable",
       maxOccuresSelector : "@maxOccures",
       minOccuresSelector : "@minOccures",
+      notAvailableText : "N/A",
       overwriteElementReference : true,
+      relaxedBinding : true,
       sourceSelector : "@source",
       variables : { index : "'*'" }
    },
@@ -25111,6 +26672,8 @@ var DataElementBehaviour = new Class({
       }, this );
       
       this.numberOfConstructedSiblings = 0;
+
+      this.destructionChain.callChain();
    }.protect(),
    
    initializeBindVariables : function(){
@@ -25166,6 +26729,9 @@ var DataElementBehaviour = new Class({
          }
       
          if( this.text ) this.text.trim();
+         else if( this.options.relaxedBinding ) this.text = this.options.notAvailableText;
+         else throw new InvalidBindingException( this.id, this.bind );
+         
          if( href && this.options.overwriteElementReference ) this.reference = href;
       }      
       this.constructionChain.callChain();
@@ -25216,7 +26782,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var CompositeDataElement = new Class({
    Extends: CompositeDocumentElement,
-   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
+   Binds: ['constructSiblings', 'destroySiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -25237,17 +26803,6 @@ var CompositeDataElement = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.contextElement = contextElement;
-      this.where = where;
-      this.parent( contextElement, where );
-   },
-   
-   destroy: function(){
-      this.destroySiblings();
-      this.parent();
-   },
-   
    unmarshall: function(){
       this.unmarshallDataBehaviour();
       this.parent();
@@ -25268,6 +26823,10 @@ var CompositeDataElement = new Class({
          this.constructSiblings,
          this.finalizeConstruction 
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroySiblings, this.destroyNestedElements, this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
    }.protect()
    
 });
@@ -25304,7 +26863,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var DataElement = new Class({
    Extends: DocumentElement,
-   Binds: ['constructSiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
+   Binds: ['constructSiblings', 'destroySiblings', 'finalizeConstruction', 'onSiblingConstructed', 'onSiblingConstructionError', 'retrieveData'],
    Implements: DataElementBehaviour,
    
    options: {
@@ -25321,16 +26880,6 @@ var DataElement = new Class({
    },
    
    //Public mutators and accessor methods
-   construct: function( contextElement, where ){
-      this.parent( contextElement, where );
-   },
-   
-   destroy: function(){
-      this.destroySiblings();
-      this.parent();
-      this.numberOfConstructedSiblings = 0;
-   },
-   
    unmarshall: function(){
       this.unmarshallDataBehaviour();
       this.parent();
@@ -25350,6 +26899,10 @@ var DataElement = new Class({
          this.constructSiblings, 
          this.finalizeConstruction 
       );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroySiblings, this.destroyPlugin, this.destroyHtmlElements, this.detachEditor, this.finalizeDestruction );
    }.protect(),
    
    injectHtmlElement: function(){
@@ -25395,7 +26948,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var DocumentElementEditor = new Class({
-   Implements: [Events, Options],
+   Implements: [AssertionBehavior, Events, Options],
    Binds: ['onBlur', 'onClick'],
    options: {
       dataType : 'string', //DocumentElementEditor.DataType.STRING,
@@ -25407,7 +26960,7 @@ var DocumentElementEditor = new Class({
    
    initialize: function( subjectHtmlElement, options ){
       this.setOptions( options );
-      assertThat( subjectHtmlElement, not( nil() ));
+      this.assertThat( subjectHtmlElement, not( nil() ));
       
       //private fields
       this.inputElement;
@@ -25482,6 +27035,7 @@ var DocumentElementEditor = new Class({
       this.text = this.inputElement.get( 'value' );
       this.inputElement.removeEvents();
       this.inputElement.destroy();
+      this.inputElement = null;
       this.subjectHtmlElement.removeEvent( 'focus', this.onClick );
       this.subjectHtmlElement.removeEvent( 'click', this.onClick );
       this.subjectHtmlElement.set( 'text', this.text );
@@ -25588,17 +27142,54 @@ var DocumentBody = new Class({
    //Public mutators and accessor methods
    construct: function( contextElement, where ){
       this.parent( contextElement, where );
-   },
-   
-   constructed: function(){
-      this.parent();
-   },
-   
-   unmarshall: function(){
-      this.parent();
    }
-
+   
    //Properties
+});
+/*
+Name: 
+   - DocumentElementConstructionException
+
+Description: 
+   - Thrown when configuring a document element fails.
+
+Requires: WebUIException
+
+Provides: 
+   - DocumentElementConstructionException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+   - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DocumentElementConstructionException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Constructing of '{documentElementId}' document element failed.",
+      name: "DocumentElementConstructionException"
+   },
+   
+   //Constructor
+   initialize : function( documentElementId, options ){
+      this.setOptions( options );
+      this.parent( options );
+      this.parameters = { documentElementId : documentElementId };
+   }
 });
 /*
 Name: DocumentElementEditorFactory
@@ -25708,27 +27299,27 @@ var DocumentElementFactory = new Class({
    create: function( definitionXmlElement, bundle, data, options ){
       var newDocumentElement;
       switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "COMPOSITEDATAELEMENT": 
+      case "SD:COMPOSITEDATAELEMENT": 
          newDocumentElement = new CompositeDataElement( definitionXmlElement, bundle, data, options ); break;
-      case "COMPOSITEELEMENT": 
+      case "SD:COMPOSITEELEMENT": 
          newDocumentElement = new CompositeDocumentElement( definitionXmlElement, bundle, data, options ); break;
-      case "DATAELEMENT": 
+      case "SD:DATAELEMENT": 
          newDocumentElement = new DataElement( definitionXmlElement, bundle, data, options ); break;
-      case "DOCUMENTBODY": 
+      case "SD:DOCUMENTBODY": 
          newDocumentElement = new DocumentBody( definitionXmlElement, bundle, data, options ); break;
-      case "DOCUMENTFOOTER": 
+      case "SD:DOCUMENTFOOTER": 
          newDocumentElement = new DocumentFooter( definitionXmlElement, bundle, data, options ); break;
-      case "DOCUMENTHEADER": 
+      case "SD:DOCUMENTHEADER": 
          newDocumentElement = new DocumentHeader( definitionXmlElement, bundle, data, options ); break;
-      case "FORMELEMENT": 
+      case "SD:FORMELEMENT": 
          newDocumentElement = new FormElement( definitionXmlElement, bundle, data, options ); break;
-      case "FORMFIELD": 
+      case "SD:FORMFIELD": 
          newDocumentElement = new FormField( definitionXmlElement, bundle, data, options ); break;
-      case "TABLEELEMENT": 
+      case "SD:TABLEELEMENT": 
          newDocumentElement = new TableElement( definitionXmlElement, bundle, data, options ); break;
-      case "TABLECOLUMN": 
+      case "SD:TABLECOLUMN": 
          newDocumentElement = new TableColumn( definitionXmlElement, bundle, data, options ); break;
-      case "ELEMENT":
+      case "SD:ELEMENT":
       default:
          newDocumentElement = new DocumentElement( definitionXmlElement, bundle, options ); break;
       }
@@ -25879,119 +27470,108 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 
+
 var DocumentPlugin = new Class({
-   Implements: [Events, Options],
-   Binds: ['finalizeConstruction', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed', 'onWidgetError'],   
+   Extends: DocumentElement,
+   Binds: ['destroyWidget', 'instantiateWidget', 'loadResources', 'onResourceError', 'onResourcesLoaded', 'onWidgetConstructed', 'onWidgetError', 'releaseResources'],   
    
    options: {
       componentName : "DocumentPlugin",
       nameSelector : "@name",
-      optionsSelector : "widget/options",
-      resourcesSelector : "resources",
-      widgetNameSelector : "widget/@name"
+      optionsSelector : "sd:widget/sd:options",
+      resourcesSelector : "sd:resources",
+      widgetNameSelector : "sd:widget/@name"
    },
    
    //Constructor
    initialize: function( definitionElement, internationalization, options ){
-      this.setOptions( options );
+      this.parent( definitionElement, internationalization, options );
 
       //Protected, private variables
-      this.constructChain = new Chain();
-      this.definitionElement = definitionElement;
-      this.error = null;
-      this.internationalization = internationalization;
-      this.logger = Class.getInstanceOf( WebUILogger );
       this.name;
-      this.onLoad;
       this.resources;
-      this.state = DocumentPlugin.States.INITIALIZED;
       this.widget;
       this.widgetName;
       this.widgetOptions;
-      
-      this.constructChain.chain( this.loadResources, this.instantiateWidget, this.finalizeConstruction );
    },
    
    //Public mutators and accessor methods
-   construct: function(){
-      this.logger.trace( this.options.componentName + ".construct() of '" + this.name + "' started." );
-      this.constructChain.callChain();
-   },
-   
-   destroy: function(){
-      if( this.resources ) this.resources.release();
-      if( this.widget && this.widget.destroy && typeOf( this.widget.destroy ) == 'function' ) this.widget.destroy();
-      this.state = DocumentPlugin.States.INITIALIZED;
-   },
-   
-   loadResources: function(){
-      if( this.resources ) this.resources.load();
-      else this.constructChain.callChain();
-   },
-   
    onResourceError: function( error ){
-      this.error = error;
+      this.revertConstruction( error );
    },
    
    onResourcesLoaded: function(){
       if( this.resources.isSuccess() ){
-         this.state = DocumentPlugin.States.LOADED;
          this.fireEvent( 'resourcesLoaded', this );
-         this.constructChain.callChain();
+         this.constructionChain.callChain();
       }else {
-         this.constructChain.clearChain();
-         this.resources.release();
-         this.fireEvent( 'constructionError', this.error );
+         this.error = new WebUIException({ description : "Loading plugin resources failed." });
+         this.revertConstruction( this.error );
       }
    },
    
    onWidgetConstructed: function(){
-      this.constructChain.callChain();
+      this.constructionChain.callChain();
    },
    
    onWidgetError: function( error ){
-      this.error = error;
-      this.constructChain.clearChain();
-      this.fireEvent( 'constructionError', this.error );
+      this.revertConstruction( error );
    },
    
    unmarshall: function(){
-      this.unmarshallProperties();
       this.unmarshallResources();
       this.unmarshallWidget();
-      this.state = DocumentPlugin.States.UNMARSHALLED;
+      this.parent();
    },
 
    //Properties
-   getDefinitionElement: function() { return this.definitionElement; },
-   getError: function() { return this.error; },
-   getOnLoad: function() { return this.onLoad; },
    getResources: function() { return this.resources; },
-   getState: function() { return this.state; },
    getWidget: function() { return this.widget; },
    getWidgetName: function() { return this.widgetName; },
    getWidgetOptions: function() { return this.widgetOptions; },
-   isSuccess: function() { return this.error == null; },
 
    //Protected, pirvated helper methods
-   finalizeConstruction: function(){
-      this.constructChain.clearChain();
-      this.state = DocumentPlugin.States.CONSTRUCTED;
-      this.fireEvent( 'constructed', this );
+   compileConstructionChain : function(){
+      this.constructionChain.chain( this.loadResources, this.instantiateWidget, this.authorization, this.associateEditor, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.releaseResources, this.destroyWidget, this.detachEditor, this.finalizeDestruction );
+   }.protect(),
+   
+   destroyWidget: function(){
+      if( this.widget && this.widget.destroy && typeOf( this.widget.destroy ) == 'function' ) this.widget.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   instantiateConstructionException : function( exception ){
+      var componentName = ( this.widget && this.widget.options.componentName ) ? this.widget.options.componentName : this.options.componentName;  
+      return new DocumentPluginConstructionException( this.widgetName, { cause : exception, source : componentName + ".revertConstruction()" });
    }.protect(),
    
    instantiateWidget: function(){
       if( this.widgetName ){
          try{
             var widgetClass = eval( this.widgetName );
-            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onError : this.onWidgetError } );
-            this.widget = new widgetClass( mergedOptions, this.internationalization );
+            if( !this.widgetOptions['widgetContainerId'] ) this.widgetOptions['widgetContainerId'] = this.contextElement.get( 'id' );
+            var mergedOptions = Object.merge( this.widgetOptions, { onConstructed : this.onWidgetConstructed, onConstructionError : this.onWidgetError } );
+            this.widget = new widgetClass( mergedOptions, this.resourceBundle );
             this.widget.unmarshall();
             this.widget.construct();
          }catch( exception ){
-            this.onWidgetError( exception );
+            this.onWidgetError( new WidgetConstructionException( this.widgetName, { cause : exception }));
          }
       }else this.onWidgetConstructed();
+   }.protect(),
+   
+   loadResources: function(){
+      if( this.resources ) this.resources.load();
+      else this.constructionChain.callChain();
+   }.protect(),
+   
+   releaseResources: function(){
+      if( this.resources ) this.resources.release();
+      this.destructionChain.callChain();
    }.protect(),
    
    unmarshallOptions: function(){
@@ -26005,6 +27585,7 @@ var DocumentPlugin = new Class({
    
    unmarshallProperties: function(){
       this.name = XmlResource.selectNodeText( this.options.nameSelector, this.definitionElement );
+      this.parent();
    }.protect(),
    
    unmarshallResources: function() {
@@ -26021,7 +27602,52 @@ var DocumentPlugin = new Class({
    }
 });
 
-DocumentPlugin.States = { INITIALIZED : 0, UNMARSHALLED : 1, LOADED : 2, CONSTRUCTED : 3 };
+//DocumentPlugin.States = { INITIALIZED : 0, UNMARSHALLED : 1, LOADED : 2, CONSTRUCTED : 3 };
+/*
+Name: 
+   - DocumentPluginConstructionException
+
+Description: 
+   - Thrown when configuring a document plugin fails.
+
+Requires: WebUIException
+
+Provides: 
+   - DocumentPluginConstructionException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+   - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var DocumentPluginConstructionException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Constructing of '{widgetName}' document plugin failed.",
+      name: "DocumentPluginConstructionException"
+   },
+   
+   //Constructor
+   initialize : function( widgetName, options ){
+      this.setOptions( options );
+      this.parent( options );
+      this.parameters = { widgetName : widgetName };
+   }
+});
 /*
 Name: FormElement
 
@@ -26340,9 +27966,6 @@ var ImageLensBehaviour = new Class({
       var imageSrc = options.imageSrc ? options.imageSrc : $(this).attr("src");
       var imageTag = "<img style='display:none;' src='" + imageSrc + "' />";
 
-      var widthRatio = 0;
-      var heightRatio = 0;
-
       $(imageTag).load(function () {
           widthRatio = $(this).width() / obj.width();
           heightRatio = $(this).height() / obj.height();
@@ -26365,6 +27988,50 @@ var ImageLensBehaviour = new Class({
       + "px;border: " + String(options.borderSize) + "px solid " + options.borderColor 
       + ";background-repeat: no-repeat;position: absolute;";
    }.protect()
+});
+/*
+Name: InvalidBindingException
+
+Description: Thrown when a DataElement's 'bind' attribute doesn't results in valid data.
+
+Requires:
+   - WebUIExceptions
+
+Provides:
+   - InvalidBindingException
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+	- Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+var InvalidBindingException = new Class({
+   Extends: WebUIException,
+   options: {
+      description: "Data element's: '{dataElementId}' bind property: '{bindValue}' doesn't returns any data.",
+      name: "InvalidBindingException"
+   },
+   
+   //Constructor
+   initialize : function( dataElementId, bindValue, options ){
+      this.setOptions( options );
+      this.parent( options );
+      this.parameters = { dataElementId : dataElementId, bindValue : bindValue };
+   }	
 });
 /*
 Name: MissingBindVariableException
@@ -26410,7 +28077,161 @@ var MissingBindVariableException = new Class({
       this.parameters = { dataElementId : dataElementId };
    }	
 });
-/*Name: SmartDocumentDescription: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.Requires:Provides:    - SmartDocumentPart of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. http://www.processpuzzle.comAuthors:     - Zsolt ZsuffaCopyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty ofMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.*///= require_directory ../MochaUI//= require_directory ../FundamentalTypes//= require ../AbstractDocument/AbstractDocument.jsvar SmartDocument = new Class({   Extends: AbstractDocument,   Binds : ['constructBody',             'constructFooter',             'constructHeader',             'destroyHeaderBodyAndFooter',            'determineContainerElement',             'loadResources',             'onBodyConstructed',             'onConstructionError',            'onFooterConstructed',             'onHeaderConstructed',            'onResourceError',            'onResourcesLoaded'],      options : {      componentName : "SmartDocument",      bodySelector : "documentBody",      footerSelector : "documentFooter",      headerSelector : "documentHeader",      rootElementName : "/smartDocumentDefinition"   },      //Constructor   initialize : function( i18Resource, options ) {      this.parent( i18Resource, options );      this.documentBody = null;      this.documentFooter = null;      this.documentHeader = null;   },   //Public accesors and mutators   construct: function(){      this.parent();   },      destroy: function() {      this.parent();   },      onBodyConstructed: function(){      this.constructionChain.callChain();   },      onFooterConstructed: function(){      this.constructionChain.callChain();   },      onHeaderConstructed: function(){      this.constructionChain.callChain();   },      unmarshall: function(){      var documentComponentOptions = { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError };      if( this.options.documentVariables ) documentComponentOptions['variables'] = this.options.documentVariables      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, documentComponentOptions );      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, documentComponentOptions );      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, documentComponentOptions );      this.parent();   },      //Properties   getBody: function() { return this.documentBody; },   getFooter: function() { return this.documentFooter; },   getHeader: function() { return this.documentHeader; },      //Protected, private helper methods   compileConstructionChain: function(){      this.constructionChain.chain(         this.determineContainerElement,         this.loadResources,         this.constructHeader,         this.constructBody,         this.constructFooter,         this.finalizeConstruction      );   }.protect(),      compileDestructionChain: function(){      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );   }.protect(),      constructBody : function(){      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructFooter: function(){      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      constructHeader: function(){      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );      else this.constructionChain.callChain();   }.protect(),      destroyHeaderBodyAndFooter: function(){      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.destructionChain.callChain();   }.protect(),      resetProperties: function(){      this.documentHeader = null;      this.documentBody = null;      this.documentFooter = null;      this.parent();   }.protect(),      revertConstruction: function(){      if( this.resources ) this.resources.release();      if( this.documentHeader ) this.documentHeader.destroy();      if( this.documentBody ) this.documentBody.destroy();      if( this.documentFooter ) this.documentFooter.destroy();      this.parent();   }.protect(),      unmarshallDocumentComponent: function( selector, options ){      var documentComponent = null;      var componentDefinition = this.documentDefinition.selectNode( selector );      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );      if( documentComponent ) documentComponent.unmarshall();      return documentComponent;   }.protect()   });
+/*
+Name: SmartDocument
+
+Description: Represents a document of a Panel. Reads it's own structure and content from xml files and constructs HTML based on them.
+
+Requires:
+
+Provides:
+    - SmartDocument
+
+Part of: ProcessPuzzle Browser UI, Back-end agnostic, desktop like, highly configurable, browser font-end, based on MochaUI and MooTools. 
+http://www.processpuzzle.com
+
+Authors: 
+    - Zsolt Zsuffa
+
+Copyright: (C) 2011 This program is free software: you can redistribute it and/or modify it under the terms of the 
+GNU General Public License as published by the Free Software Foundation, either version 3 of the License, 
+or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+
+
+
+var SmartDocument = new Class({
+   Extends: AbstractDocument,
+   Binds : ['constructBody', 
+            'constructFooter', 
+            'constructHeader', 
+            'destroyHeaderBodyAndFooter',
+            'determineContainerElement', 
+            'loadResources', 
+            'onBodyConstructed', 
+            'onConstructionError',
+            'onFooterConstructed', 
+            'onHeaderConstructed',
+            'onResourceError',
+            'onResourcesLoaded'],
+   
+   options : {
+      componentName : "SmartDocument",
+      bodySelector : "sd:documentBody",
+      footerSelector : "sd:documentFooter",
+      headerSelector : "sd:documentHeader",
+      rootElementName : "/sd:smartDocumentDefinition",
+   },
+   
+   //Constructor
+   initialize : function( i18Resource, options ) {
+      this.parent( i18Resource, options );
+
+      this.documentBody = null;
+      this.documentFooter = null;
+      this.documentHeader = null;
+   },
+
+   //Public accesors and mutators
+   construct: function(){
+      this.parent();
+   },
+   
+   destroy: function() {
+      this.parent();
+   },
+   
+   onBodyConstructed: function(){
+      this.constructionChain.callChain();
+   },
+   
+   onFooterConstructed: function(){
+      this.constructionChain.callChain();
+   },
+   
+   onHeaderConstructed: function(){
+      this.constructionChain.callChain();
+   },
+   
+   unmarshall: function(){
+      var documentComponentOptions = { onConstructed : this.onHeaderConstructed, onConstructionError : this.onConstructionError };
+      if( this.options.documentVariables ) documentComponentOptions['variables'] = this.options.documentVariables;
+      this.documentHeader = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.headerSelector, documentComponentOptions );
+      this.documentBody = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.bodySelector, documentComponentOptions );
+      this.documentFooter = this.unmarshallDocumentComponent( this.options.rootElementName + "/" + this.options.footerSelector, documentComponentOptions );
+      this.parent();
+   },
+   
+   //Properties
+   getBody: function() { return this.documentBody; },
+   getFooter: function() { return this.documentFooter; },
+   getHeader: function() { return this.documentHeader; },
+   
+   //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain(
+         this.determineContainerElement,
+         this.loadResources,
+         this.constructHeader,
+         this.constructBody,
+         this.constructFooter,
+         this.finalizeConstruction
+      );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain(  this.destroyHeaderBodyAndFooter, this.releseResource, this.detachEditor, this.resetProperties, this.finalizeDestruction );
+   }.protect(),
+   
+   constructBody : function(){
+      if( this.documentBody ) this.documentBody.construct( this.containerElement, 'bottom' );
+      else this.constructionChain.callChain();
+   }.protect(),
+   
+   constructFooter: function(){
+      if( this.documentFooter ) this.documentFooter.construct( this.containerElement, 'bottom' );
+      else this.constructionChain.callChain();
+   }.protect(),
+   
+   constructHeader: function(){
+      if( this.documentHeader ) this.documentHeader.construct( this.containerElement, 'bottom' );
+      else this.constructionChain.callChain();
+   }.protect(),
+   
+   destroyHeaderBodyAndFooter: function(){
+      if( this.documentHeader && this.documentHeader.getState() > DocumentElement.States.INITIALIZED ) this.documentHeader.destroy();
+      if( this.documentBody && this.documentBody.getState() > DocumentElement.States.INITIALIZED ) this.documentBody.destroy();
+      if( this.documentFooter && this.documentFooter.getState() > DocumentElement.States.INITIALIZED ) this.documentFooter.destroy();
+      this.destructionChain.callChain();
+   }.protect(),
+   
+   resetProperties: function(){
+      this.documentHeader = null;
+      this.documentBody = null;
+      this.documentFooter = null;
+      this.parent();
+   }.protect(),
+   
+   revertConstruction: function(){
+      this.destroyHeaderBodyAndFooter();
+      if( this.resources ) this.resources.release();
+      this.parent();
+   }.protect(),
+   
+   unmarshallDocumentComponent: function( selector, options ){
+      var documentComponent = null;
+      var componentDefinition = this.documentDefinition.selectNode( selector );
+      if( componentDefinition ) documentComponent = DocumentElementFactory.create( componentDefinition, this.i18Resource, this.documentContent, options );
+      if( documentComponent ) documentComponent.unmarshall();
+      return documentComponent;
+   }.protect()
+   
+});
 /*
 Name: TableBody
 
@@ -27047,7 +28868,7 @@ var TableRow = new Class({
    
    options: {
       componentName : "TableRow",
-      tableColumnsSelector : "tableColumn"
+      tableColumnsSelector : "sd:tableColumn"
    },
    
    //Constructor
@@ -27439,7 +29260,7 @@ var DuplicatedTabException = new Class({
 
 
 var Tab = new Class( {
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds : ['onSelection'],
 
    options : {
@@ -27451,13 +29272,13 @@ var Tab = new Class( {
       idPrefix : "tab_",
       idSelector : "@tabId",
       isDefaultSelector : "@isDefault",
-      messagePropertiesSelector : "messageProperties",
+      messagePropertiesSelector : "pp:messageProperties",
       tabsStyle : "Tabs"},
 
    // Constructor
    initialize : function( definition, internationalization, options ) {
       // check parameter assertions
-      assertThat( internationalization, not( nil() ));
+      this.assertThat( internationalization, not( nil() ), "Tab.internationalization" );
 
       this.setOptions( options );
 
@@ -27494,7 +29315,7 @@ var Tab = new Class( {
    },
 
    construct : function( parentElement ) {
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.createHtmlElements( parentElement );
       this.visible = true;
    },
@@ -27675,17 +29496,14 @@ var TabWidget = new Class( {
       buttonPrefix : "button_",
       closeButtonCaptionKey : "TabWidget.Close",
       componentName : "TabWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:td='http://www.processpuzzle.com/TabsDefinition'",
       idDefault : "TabWidget",
-      idSelector : "/pp:tabWidgetDefinition/tabWidget/@tabWidgetId",
       printButtonCaptionKey : "TabWidget.Print",
-      selectedTabClassDefault : "selectedTab",
-      selectedTabClassSelector : "/pp:tabWidgetDefinition/tabWidget/@selectedTabClass",
-      showCloseButtonDefault : false,
-      showCloseButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showCloseButton",
-      showPrintButtonDefault : false,
-      showPrintButtonSelector : "/pp:tabWidgetDefinition/tabWidget/@showPrintButton",
+      selectedTabClass : "selectedTab",
+      showCloseButton : false,
+      showPrintButton : false,
       tabCaptionSelector : "@caption",
-      tabDefinitionSelector : "/pp:tabWidgetDefinition/tabWidget/tab",
+      tabDefinitionSelector : "/td:tabsDefinition/td:tabs/td:tab",
       tabIdSelector : "@tabId",
       tabIsDefaultSelector : "@isDefault",
       tabLeftImage : "Images/DocumentTab-Left.gif",
@@ -27694,21 +29512,23 @@ var TabWidget = new Class( {
       tabRightOnImage : "Images/DocumentTab-Right-Selected.gif",
       tabsSelector : "tab",
       widgetContainerId : "TabWidget",
-      widgetDefinitionSelector : "/pp:tabWidgetDefinition/tabWidget",
-      widgetDefinitionURI : "TabsDefinition.xml"},
+      widgetDefinitionURI : "TabsDefinition.xml"
+   },
 
    // Constructor
    initialize : function( options, resourceBundle ) {
       this.setOptions( options );
       this.parent( options, resourceBundle );
+      
+      // Assertions
+      this.assertThat( this.definitionXml, not( nil()), "TabWidget.definitionXml" );
+      this.assertThat( this.dataXml, not( nil()), "TabWidget.dataXml" );
 
       // Private instance variables
       this.activeTab = null;
       this.buttonsListElement;
       this.id;
       this.isVisible = false;
-      this.selectedTabClass;
-      this.showCloseButton;
       this.showPrintButton;
       this.tabListElement;
       this.tabs = new LinkedHashMap();
@@ -27745,11 +29565,6 @@ var TabWidget = new Class( {
          if( aTab.changeCaption != null )
             aTab.changeCaption( controller );
       }
-   },
-
-   construct : function() {
-      this.parent();
-      this.isVisible = true;
    },
 
    destroy : function() {
@@ -27848,27 +29663,21 @@ var TabWidget = new Class( {
       if( this.tabs.size() == 0 ) this.activeTab = null;
    },
 
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallTabs();
-      this.parent();
-   },
-
    // Properties
    activeTabId : function() { return(tabs.getCountOfObjects() > 0 ? activeTab.getId() : "undefined"); },
    getActiveTab : function() { return this.activeTab; },
    getCloseButtonId : function() { return this.options.buttonPrefix + this.options.closeButtonCaptionKey; },
    getId : function() { return this.id; },
    getPrintButtonId : function() { return this.options.buttonPrefix + this.options.printButtonCaptionKey; },
-   getSelectedTabClass : function() { return this.selectedTabClass; },
-   getShowCloseButton : function() { return this.showCloseButton; },
-   getShowPrintButton : function() { return this.showPrintButton; },
+   getSelectedTabClass : function() { return this.options.selectedTabClass; },
+   getShowCloseButton : function() { return this.options.showCloseButton; },
+   getShowPrintButton : function() { return this.options.showPrintButton; },
    getTabById : function( tabId ) { return this.tabs.get( tabId ); },
    getTabCount : function() { return this.tabs.size(); },
    getTabExist : function( tabId ) { return tabs.exists( tabId ); },
    getTabs : function() { return this.tabs; },
-   isCloseButtonVisible : function() { return this.showCloseButton; },
-   isPrintButtonVisible : function() { return this.showPrintButton; },
+   isCloseButtonVisible : function() { return this.options.showCloseButton; },
+   isPrintButtonVisible : function() { return this.options.showPrintButton; },
    setCloseButtonVisibility : function( value ) { this.options.showCloseButton = value; },
    setPrintButtonVisibility : function( value ) { this.options.showPrintButton = value; },
    setBackgroundImage : function( image ) { backgroundImage = (image == null ? backgroundImage : image); },
@@ -27899,10 +29708,10 @@ var TabWidget = new Class( {
    }.protect(),
    
    constructButtons : function() {
-      if( this.showCloseButton || this.showPrintButton ){
+      if( this.options.showCloseButton || this.options.showPrintButton ){
          this.buttonsListElement = this.elementFactory.create( 'ul', null, null, null, { 'class' : this.options.BUTTONCLASSNAME } );
-         if( this.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
-         if( this.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
+         if( this.options.showCloseButton ) this.createButton( this.options.closeButtonCaptionKey, this.onClose );
+         if( this.options.showPrintButton ) this.createButton( this.options.printButtonCaptionKey, this.onPrint );
       }
       this.constructionChain.callChain();
    }.protect(),
@@ -27927,6 +29736,11 @@ var TabWidget = new Class( {
       this.constructionChain.callChain();
    }.protect(),
 
+   finalizeConstruction : function(){
+      this.isVisible = true;
+      this.parent();
+   }.protect(),
+   
    hideButtons : function() {
       if( htmlDivElement != null ){
          var tabLists = htmlDivElement.getElementsByTagName( "ul" );
@@ -27985,15 +29799,8 @@ var TabWidget = new Class( {
       return save;
    }.protect(),
    
-   unmarshallProperties: function(){
-      this.id = this.definitionXml.selectNodeText( this.options.idSelector, null, this.options.idDefault );
-      this.selectedTabClass = this.definitionXml.selectNodeText( this.options.selectedTabClassSelector, null, this.options.selectedTabClassDefault );
-      this.showCloseButton = parseBoolean( this.definitionXml.selectNodeText( this.options.showCloseButtonSelector, null, this.options.showCloseButtonDefault ));
-      this.showPrintButton = parseBoolean( this.definitionXml.selectNodeText( this.options.showCloseButtonSelector, null, this.options.showCloseButtonDefault ));
-   }.protect(),
-
-   unmarshallTabs : function() {
-      var tabDefinitions = this.definitionXml.selectNodes( this.options.tabDefinitionSelector );
+   unmarshallComponents : function() {
+      var tabDefinitions = this.dataXml.selectNodes( this.options.tabDefinitionSelector );
       tabDefinitions.each( function( tabDefinition, index ){
          var newTab = new Tab( tabDefinition, this.i18Resource, { onTabSelected : this.onTabSelected });
          newTab.unmarshall();
@@ -28279,7 +30086,7 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
    
    getLoggingAppenderCommandLineObjectExpansionDepth : function( appenderName ) {
       var selectorExp = this.options.appenderCommandLineObjectExpansionDepthSelector.substitute( {appenderName : appenderName} );
@@ -28305,7 +30112,7 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
    
    getLoggingAppenderFocusPopUp : function( appenderName ) {
       var selectorExp = this.options.appenderFocusPopUpSelector.substitute( {appenderName : appenderName} );
@@ -28359,7 +30166,7 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
 
    getLoggingAppenderReopenWhenClosed : function( appenderName ) {
       var selectorExp = this.options.appenderReopenWhenClosedSelector.substitute( {appenderName : appenderName} );
@@ -28373,8 +30180,8 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
-	
+   },
+   
    getLoggingAppenderScrollToLatestMessage : function( appenderName ) {
       var selectorExp = this.options.appenderScrollToLatestMessageSelector.substitute( {appenderName : appenderName} );
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
@@ -28405,14 +30212,14 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
 
    getLoggingAppenderTimerInterval : function( appenderName ) {
       var selectorExp = this.options.appenderTimerIntervalSelector.substitute( {appenderName : appenderName} );
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
 
    getLoggingAppenderType : function( appenderName ) {
       var selectorExp = this.options.appenderTypeSelector.substitute( {appenderName : appenderName} );
@@ -28421,7 +30228,7 @@ var WebUIConfiguration = new Class({
       else return null;
    },
    
-	getLoggingAppenderURL : function( appenderName ) {
+   getLoggingAppenderURL : function( appenderName ) {
       var selectorExp = this.options.appenderURLSelector.substitute( {appenderName : appenderName} );
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
@@ -28444,13 +30251,13 @@ var WebUIConfiguration = new Class({
       var selectedElement = this.xmlResource.selectNode( selectorExp, this.loggingElement ); 
       if( selectedElement ) return selectedElement.value;
       else return null;
-	},
+   },
    
    getLoggingAppenderWidth : function( appenderName ) {
       return parseInt( this.determineLoggingElementValue( this.options.appenderWidthSelector.substitute( {appenderName : appenderName} )));
    },
 
-	getLoggingLayoutName : function( layoutIndex ) {
+   getLoggingLayoutName : function( layoutIndex ) {
       var layoutElements = this.getLoggingLayoutElements();
       return this.xmlResource.selectNode( this.options.layoutNameSelector, layoutElements[layoutIndex] ).value;
    },
@@ -28707,14 +30514,14 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var ToolBarButton = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds: ['onSelection'],
    
    options : {
       buttonStyle : "toolBarButton",
-      captionSelector : "caption",
-      iconImageSelector : "iconImage",
-      messagePropertiesSelector : "messageProperties",
+      captionSelector : "tb:caption",
+      iconImageSelector : "tb:iconImage",
+      messagePropertiesSelector : "pp:messageProperties",
       nameSelector : "@name",
       showCaption : false,
       toolTipStyle : "toolBarToolTip"
@@ -28740,7 +30547,7 @@ var ToolBarButton = new Class({
    
    //Public accessor and mutator methods
    construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.parentElement = parentElement;
       this.instantiateHtmlElements();
       this.state = ToolBarButton.States.CONSTRUCTED;
@@ -28832,9 +30639,9 @@ var ToolBarButtonFactory = new Class({
    create: function( definitionXmlElement, htmlElementFactory, options ){
       var newButton;
       switch( definitionXmlElement.tagName.toUpperCase() ){
-      case "DIVIDER": 
+      case "TB:DIVIDER": 
          newButton = new ToolBarDivider( definitionXmlElement, htmlElementFactory, options ); break;
-      case "BUTTON":
+      case "TB:BUTTON":
       default:
          newButton = new ToolBarButton( definitionXmlElement, htmlElementFactory, options ); break;
       }
@@ -28880,11 +30687,11 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var ToolBarDivider = new Class({
-   Implements : Options,
+   Implements : [AssertionBehavior, Options],
    
    options : {
       dividerStyle : "toolBarDivider",
-      iconImageSelector : "iconImage",
+      iconImageSelector : "tb:iconImage",
       dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
       namePrefix : "divider_"
    },
@@ -28905,7 +30712,7 @@ var ToolBarDivider = new Class({
    
    //Public accessor and mutator methods
    construct: function( parentElement ){
-      assertThat( parentElement, not( nil() ));
+      this.assertThat( parentElement, not( nil() ));
       this.parentElement = parentElement;
       this.instantiateHtmlElements();
       this.state = ToolBarButton.States.CONSTRUCTED;
@@ -28919,7 +30726,6 @@ var ToolBarDivider = new Class({
    },
    
    onSelection: function(){
-      
    },
    
    unmarshall: function(){
@@ -28979,47 +30785,29 @@ You should have received a copy of the GNU General Public License along with thi
 
 var ToolBarWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['onButtonSelection'],
+   Binds : ['constructButtons', 'constructHtmlElements', 'destroyButtons', 'destroyHtmlElements', 'onButtonSelection'],
    options : {
-      buttonsSelector : "/toolBarDefinition/buttons/button | /toolBarDefinition/buttons/divider",
+      buttonsSelector : "/tb:toolBarDefinition/tb:buttons/tb:button | /tb:toolBarDefinition/tb:buttons/tb:divider",
       componentName : "ToolBarWidget",
-      descriptionSelector : "/toolBarDefinition/description", 
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:tb='http://www.processpuzzle.com/ToolBar'",
       dividerIconImageUri : "Desktops/Images/ToolboxDivider.jpg",
-      listStyleSelector : "/toolBarDefinition/buttons/@elementStyle",
-      nameSelector : "/toolBarDefinition/name",
-      showCaptionsSelector : "/toolBarDefinition/showCaptions"
+      listStyleSelector : "/tb:toolBarDefinition/tb:buttons/@elementStyle",
+      showCaptions : false
    },
 
    //Constructor
    initialize: function( options, internationalization ){
-      //this.setOptions( options );
       this.parent( options, internationalization );
       
       //Private attributes
       this.buttons = new LinkedHashMap();
-      this.description;
       this.dividers = new ArrayList();
-      this.name;
       this.listElement;
       this.listStyle;
-      this.showCaptions = false;
       this.wrapperElement;
    },
    
    //Public accessor and mutator methods
-   construct: function(){
-      this.constructHtmlElements();
-      this.constructButtons();
-      return this.parent();
-   },
-   
-   destroy: function(){
-      this.destroyButtons();
-      this.destroyDividers();
-      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
-      if( this.wrapperElement && this.wrapperElement.destroy ) this.wrapperElement.destroy();
-      this.parent();
-   },
    
    onButtonSelection: function( button ){
       var argumentText = button.getMessageProperties();
@@ -29029,12 +30817,6 @@ var ToolBarWidget = new Class({
       this.messageBus.notifySubscribers( new MenuSelectedMessage( arguments ));
    },
    
-   unmarshall: function(){
-      this.unmarshallProperties();
-      this.unmarshallButtons();
-      return this.parent();
-   },
-   
    //Properties
    getButtons: function() { return this.buttons; },
    getDescription: function() { return this.description; },
@@ -29042,16 +30824,26 @@ var ToolBarWidget = new Class({
    getName: function() { return this.name; },
    
    //Protected and private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.constructHtmlElements, this.constructButtons, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyButtons, this.destroyHtmlElements, this.destroyChildHtmlElements, this.finalizeDestruction );
+   }.protect(),
+      
    constructButtons: function(){
       this.buttons.each( function( buttonEntry, index ){
          var toolBarButton = buttonEntry.getValue();
          toolBarButton.construct( this.listElement );
       }, this );
+      this.constructionChain.callChain();
    }.protect(),
    
    constructHtmlElements: function(){
       this.wrapperElement = this.elementFactory.create( 'div', null, this.containerElement, WidgetElementFactory.Positions.LastChild, { id : this.name });
       this.listElement = this.elementFactory.create( 'ul', null, this.wrapperElement, WidgetElementFactory.Positions.LastChild, { 'class' : this.listStyle } );
+      this.constructionChain.callChain();
    }.protect(),
    
    destroyButtons: function(){
@@ -29061,30 +30853,31 @@ var ToolBarWidget = new Class({
       }, this );
       
       this.buttons.clear();
+      this.destructionChain.callChain();
    }.protect(),
    
-   destroyDividers: function(){
-      this.buttons.each( function( divider, index ) {
-         divider.destroy();
-      }, this );
-      
-      this.buttons.clear();
+   destroyHtmlElements: function(){
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      if( this.wrapperElement && this.wrapperElement.destroy ) this.wrapperElement.destroy();
+      this.destructionChain.callChain();
    }.protect(),
    
    unmarshallButtons: function(){
-      var buttonDefinitions = this.definitionXml.selectNodes( this.options.buttonsSelector );
+      var buttonDefinitions = this.dataXml.selectNodes( this.options.buttonsSelector );
       buttonDefinitions.each( function( buttonDefinition, index ){
-         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
+         var toolBarButton = ToolBarButtonFactory.create( buttonDefinition, this.elementFactory, { onSelection : this.onButtonSelection, showCaption : this.options.showCaptions, dividerIconImageUri : this.options.dividerIconImageUri } );
          toolBarButton.unmarshall();
          this.buttons.put( toolBarButton.getName(), toolBarButton );
       }, this );
    }.protect(),
    
+   unmarshallComponents: function(){
+      this.unmarshallButtons();
+   }.protect(),
+   
    unmarshallProperties: function(){
-      this.description = this.definitionXml.selectNodeText( this.options.descriptionSelector );
-      this.listStyle = this.definitionXml.selectNodeText( this.options.listStyleSelector );
-      this.name = this.definitionXml.selectNodeText( this.options.nameSelector );
-      this.showCaptions = parseBoolean( this.definitionXml.selectNodeText( this.options.showCaptionsSelector, null, false ));
+      this.parent();
+      this.listStyle = this.dataXml.selectNodeText( this.options.listStyleSelector );
    }.protect()
 
 });
@@ -29333,14 +31126,14 @@ You should have received a copy of the GNU General Public License along with thi
 
 
 var TreeNode = new Class({
-   Implements : [Events, Options],
+   Implements : [AssertionBehavior, Events, Options],
    Binds : ['addNodeEvents', 'createNodeCaption', 'createNodeHandlerImage', 'createNodeIcon', 'createNodeWrapperElement', 'finalizeConstruction', 'insertTrailingImages', 'onCaptionClick'],
    options : {
       captionSelector : '@caption',
       componentName : "TreeNode",
-      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com'",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:tr='http://www.processpuzzle.com/TreeDefinition",
       imageUriSelector : '@image',
-      messageSelector : 'messageProperties',
+      messageSelector : 'pp:messageProperties',
       nodeIDSelector : '@nodeId',
       orderNumberSelector : '@orderNumber',
       selectable : false,
@@ -29351,9 +31144,9 @@ var TreeNode = new Class({
    // constructor
    initialize : function( parentNode, nodeType, nodeResource, elementFactory, options ) {
       // parameter assertions
-      assertThat( nodeType, not( nil() ) );
-      assertThat( nodeResource, not( nil() ) );
-      assertThat( elementFactory, not( nil() ) );
+      this.assertThat( nodeType, not( nil()), "TreeNode.nodeType" );
+      this.assertThat( nodeResource, not( nil()), "TreeNode.nodeResource" );
+      this.assertThat( elementFactory, not( nil()), "TreeNode.elementFactory" );
       this.setOptions( options );
 
       // private instance variables
@@ -29611,7 +31404,7 @@ var CompositeTreeNode = new Class( {
    },
    
    options : {
-      childNodesSelector : 'treeNode',
+      childNodesSelector : 'tr:treeNode',
       componentName : "CompositeTreeNode",
       initialyOpened : false,
       isOpenedSelector : "@isOpened"
@@ -29675,8 +31468,8 @@ var CompositeTreeNode = new Class( {
    
    onChildNodeConstructed : function( childNode ){
       this.numberOfConstructedChildNodes++;
-      if( this.numberOfConstructedChildNodes == this.childNodes.size() ) this.constructionChain.callChain();
-
+      if( this.numberOfConstructedChildNodes == this.childNodes.size() ) 
+         this.constructionChain.callChain();
    },
 
    onNodeHandlerClick : function() {
@@ -29765,7 +31558,7 @@ var CompositeTreeNode = new Class( {
       return this.currentNodeNameInPath( nextPathFragment );
    }.protect(),
    
-   pathRefersToSubnode : function( path ){ return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) > 0 }.protect(),
+   pathRefersToSubnode : function( path ){ return path.indexOf( this.constants.NODE_PATH_SEPARATOR ) > 0; }.protect(),
    pathStartsWithThisNode : function( path ){ return this.currentNodeNameInPath( path ) == this.caption; }.protect(),
    
    replaceNodeHandlerImage : function(){
@@ -29933,7 +31726,7 @@ var RootTreeNode = new Class({
    }.protect(),
    
    finalizeConstruction : function(){
-      if( this.options.isVisible ) this.parent()
+      if( this.options.isVisible ) this.parent();
       else {
          this.state = BrowserWidget.States.UNMARSHALLED;
          this.constructionChain.clearChain();
@@ -30044,7 +31837,7 @@ var TreeNodeFactory = new Class({
 
    //Public mutators and accessors
    create: function( parentNode, nodeResource, elementFactory, options ){
-      var hasChildNodes = XmlResource.selectNodes( "treeNode", nodeResource ).length > 0 ? true : false;
+      var hasChildNodes = XmlResource.selectNodes( "tr:treeNode", nodeResource ).length > 0 ? true : false;
       var treeNode;
       
       if( hasChildNodes ) treeNode = new CompositeTreeNode( parentNode, this.compositeTreeNodeType, nodeResource, elementFactory, options );
@@ -30104,11 +31897,12 @@ var TreeWidget = new Class( {
    
    options : {
       componentName : "TreeWidget",
+      dataXmlNameSpace : "xmlns:pp='http://www.processpuzzle.com' xmlns:tr='http://www.processpuzzle.com/TreeDefinition'",
       imagesFolder : "",
       nodeOptions : {},
       nodeTypeOptions : {},
       pathSeparator : ".",
-      rootNodeSelector : "//pp:treeDefinition/rootNode",
+      rootNodeSelector : "/tr:treeDefinition/tr:rootNode",
       showRootNode : false,
       widgetContainerId : "TreeWidget"
    },
@@ -30132,14 +31926,6 @@ var TreeWidget = new Class( {
       if( this.rootNode != null ) this.rootNode.changeCaption( this.controller );
    },
 
-   construct : function() {
-      this.parent();
-   },
-
-   destroy : function() {
-      this.parent();
-   },
-   
    findNodeByPath : function( path ){
       return this.rootNode ? this.rootNode.findNodeByPath( path ) : null;
    },
@@ -30158,10 +31944,6 @@ var TreeWidget = new Class( {
       this.constructionChain.callChain();
    },
    
-   unmarshall : function() {
-      this.unmarshallRootNode();
-   },
-
    // Properties
    getCompositeTreeNodeType : function() { return this.compositeTreeNodeType; },
    getRootNode : function() { return this.rootNode; },
@@ -30202,11 +31984,15 @@ var TreeWidget = new Class( {
       this.rootNodeType = TreeNodeFactory.singleInstance.getRootTreeNodeType();
    }.protect(),
    
+   unmarshallComponents : function(){
+      this.unmarshallRootNode();
+   }.protect(),
+   
    unmarshallRootNode : function(){
       var rootNodeElement = this.dataXml.selectNode( this.options.rootNodeSelector );
       if( rootNodeElement ){
          var nodeOptions = Object.merge( this.options.nodeOptions, { isVisible : this.options.showRootNode, onConstructed : this.onRootNodeConstructed, onNodeSelected : this.onNodeSelected });
-         this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, this.options.nodeOptions );
+         this.rootNode = new RootTreeNode( this.rootNodeType, rootNodeElement, this.elementFactory, nodeOptions );
          this.rootNode.unmarshall();
       }      
    }.protect()   
@@ -30392,7 +32178,8 @@ var WebUIController = new Class({
             'loadInternationalizations',
             'loadWebUIConfiguration',
             'onDesktopComponentConstructed',
-            'onDesktopConstructed', 
+            'onDesktopConstructed',
+            'onLocalizationResourcesLoaded',
             'onError', 
             'restoreComponentsState',
             'storeComponentsState',
@@ -30436,7 +32223,7 @@ var WebUIController = new Class({
       this.locale;
       this.logger;
       this.messageBus = new WebUIMessageBus();
-      this.resourceBundle;
+      this.localizationResourceManager;
       this.prefferedLanguage;
       this.recentHash = this.determineCurrentHash();
       this.refreshUrlTimer;
@@ -30458,7 +32245,6 @@ var WebUIController = new Class({
          this.restoreComponentsState(),
          this.determineCurrentUserLocale();
          this.determineDefaultSkin();
-         this.loadInternationalizations();
 
          this.logger.debug( "Browser Interface is initialized with context root prefix: "  + this.options.contextRootPrefix );
       }else{
@@ -30508,7 +32294,7 @@ var WebUIController = new Class({
          if( this.languageSelector ) this.languageSelector.destroy();
          this.desktop.destroy();
          this.webUIConfiguration.release();
-         this.resourceBundle.release();
+         this.localizationResourceManager.release();
          window.location.hash = "";
          clearInterval( this.refreshUrlTimer );
          this.isConfigured = false;
@@ -30544,9 +32330,12 @@ var WebUIController = new Class({
       this.configurationChain.callChain();
    },
    
+   onLocalizationResourcesLoaded : function(){
+      this.configurationChain.callChain();
+   },
+   
    onError: function( error ){
-      this.error = error;
-      this.showWebUIExceptionPage( this.error );
+      this.revertConstruction( error );
    },
 	
    restoreComponentsState : function(){
@@ -30600,7 +32389,7 @@ var WebUIController = new Class({
    getLogger : function() { return this.logger; },
    getMessageBus : function() { return this.messageBus; },
    getPrefferedLanguage : function() { return this.prefferedLanguage; },
-   getResourceBundle : function() { return this.resourceBundle; },
+   getResourceBundle : function() { return this.localizationResourceManager; },
    getStateManager : function() { return this.stateManager; },
    getText : function( key, defaultValue ) { return this.getTextInternal( key, defaultValue  ); },
    getUserLocation : function() { return this.userLocation; },
@@ -30626,7 +32415,7 @@ var WebUIController = new Class({
    constructDesktop : function() {
       this.logger.debug( this.options.componentName + ".constructDesktop() started." );
       var desktopConfigurationUri = this.webUIConfiguration.getSkinConfiguration( this.skin );
-      this.desktop = new Desktop( this.webUIConfiguration, this.resourceBundle, { 
+      this.desktop = new Desktop( this.webUIConfiguration, this.localizationResourceManager, { 
          configurationURI : desktopConfigurationUri,
          onDesktopComponentConstructed : this.onDesktopComponentConstructed,
          onConstructed : this.onDesktopConstructed, 
@@ -30684,12 +32473,12 @@ var WebUIController = new Class({
    }.protect(),
 
    getTextInternal : function ( key, defaultValue ) {
-      if( this.resourceBundle == null)
+      if( this.localizationResourceManager == null)
          if( defaultValue != null ) return defaultValue;
          else return key;
       var returnValue;
       try {
-         returnValue = this.resourceBundle.getText(key);
+         returnValue = this.localizationResourceManager.getText(key);
       } catch (e) {
          if( e instanceof IllegalArgumentException ) {
             if(defaultValue != null) return defaultValue;
@@ -30712,13 +32501,11 @@ var WebUIController = new Class({
    loadInternationalizations : function () {
       this.logger.debug( this.options.componentName + ".loadInternationalizations() started." );
       try{
-         this.resourceBundle = new XMLResourceBundle( this.webUIConfiguration );
-         this.resourceBundle.load( this.locale );
-         this.logger.debug( "Resource bundles: " + this.options.contextRootPrefix + this.resourceBundle.getResourceBundleNames() + " was loaded." );
+         this.localizationResourceManager = new LocalizationResourceManager( this.webUIConfiguration, { onFailure : this.onError, onSuccess : this.onLocalizationResourcesLoaded } );
+         this.localizationResourceManager.load( this.locale );
       }catch( e ) {
          this.onError( e );
       }
-      this.configurationChain.callChain();
    }.protect(),
    
    loadWebUIConfiguration : function() {
@@ -30729,6 +32516,12 @@ var WebUIController = new Class({
          this.onError( e );
       }
       this.configurationChain.callChain();
+   }.protect(),
+   
+   revertConstruction : function( error ){
+      this.error = error;
+      this.destroySplashForm();
+      this.showWebUIExceptionPage( this.error );
    }.protect(),
 
    setLanguage : function( newLanguage ) {
@@ -30758,17 +32551,22 @@ var WebUIController = new Class({
       this.warningContainer.grab( warningHeader );
       
       var warningNameElement = new Element( 'h3' );
-      warningNameElement.appendText( exception.name );
+      warningNameElement.appendText( exception.getName() );
       this.warningContainer.grab( warningNameElement );
       
-      var messageElement = new Element( 'p' );
-      messageElement.appendText( exception.message );
+      var messageElement = new Element( 'div' );
+      messageElement.appendText( exception.getMessage() );
       this.warningContainer.grab( messageElement );
       
-      var stackElement = new Element( 'p' );
-      if( exception.stack ) {
-         stackElement.appendText( exception.stack );
-         this.warningContainer.grab( stackElement );
+      var stackElement = new Element( 'div' );
+      this.warningContainer.grab( stackElement );
+      if( exception.stackTrace ) {
+         var lines = exception.stackTrace().split(/\r\n|\r|\n/);
+         lines.each( function( line, index ){
+            var lineElement = new Element( 'div' );
+            lineElement.appendText( line );
+            this.warningContainer.grab( lineElement );
+         }.bind( this ));
       }
    }.protect(),
 	
