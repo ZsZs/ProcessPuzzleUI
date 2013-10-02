@@ -267,7 +267,7 @@ window.DesktopPanelTest = new Class( {
    construct_whenPluginIsErroneous_loadsErrorDocument : function() {
       this.testCaseChain.chain(
          function(){ 
-            this.constructPanel( this.panelWithErroneousPlugin ); 
+            this.constructPanel( this.panelWithErroneousPlugin, {}, {}, { widgetName : "none" }); 
          }.bind( this ),
          function(){
             //documentLoaded event was fired
@@ -463,12 +463,13 @@ window.DesktopPanelTest = new Class( {
    },
    
    //Private helper methods
-   constructPanel : function( panelToConstruct, panelPropertyOverwrites, panelOptionsOverwrites ) {
+   constructPanel : function( panelToConstruct, panelPropertyOverwrites, panelOptionsOverwrites, panelPluginPropertyOverwrites ) {
       this.column.unmarshall();
       panelToConstruct.unmarshall();
       
       this.overwritePanelOptions( panelToConstruct, panelOptionsOverwrites );
       this.overwritePanelProperties( panelToConstruct, panelPropertyOverwrites );
+      this.overwritePanelPluginProperties( panelToConstruct, panelPluginPropertyOverwrites );
       
       MUI.myChain = new Chain();
       MUI.myChain.chain( function() {
@@ -489,6 +490,12 @@ window.DesktopPanelTest = new Class( {
       };
    }.protect(),
    
+   overwritePanelPluginProperties: function( panel, panelPluginPropertyOverwrites ){
+      for( var property in panelPluginPropertyOverwrites ){
+         panel.plugin[property] = panelPluginPropertyOverwrites[property];
+      };
+   }.protect(),
+
    overwritePanelProperties: function( panel, panelPropertyOverwrites ){
       for( var property in panelPropertyOverwrites ){
          panel[property] = panelPropertyOverwrites[property];
