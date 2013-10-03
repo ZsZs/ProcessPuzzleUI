@@ -165,10 +165,10 @@
 	<!-- Internationalization Configuration -->
 	<in:internationalization>
 		<in:resouceBundles nameSpace="xmlns:pp='http://www.processpuzzle.com/ResourceBundle'">
-	      <in:resourceBundle baseNameOnlyVersionExists="true">Configuration/DesktopInternationalization</in:resourceBundle>
-         <in:resourceBundle localeSpecificVersionsExists="true">Configuration/ConsoleInternationalization</in:resourceBundle>
-         <in:resourceBundle baseNameOnlyVersionExists="true">Configuration/PhotoGaleryInternationalization</in:resourceBundle>
-         <in:resourceBundle localeSpecificVersionsExists="true">Content/WidgetExamples/WidgetExamplesInternationalization</in:resourceBundle>
+	      <in:resourceBundle baseNameOnlyVersionExists="false">Configuration/DesktopInternationalization</in:resourceBundle>
+         <in:resourceBundle localeSpecificVersionsExists="false">Configuration/ConsoleInternationalization</in:resourceBundle>
+         <in:resourceBundle baseNameOnlyVersionExists="true" localeSpecificVersionsExists="false">Configuration/PhotoGaleryInternationalization</in:resourceBundle>
+         <in:resourceBundle baseNameOnlyVersionExists="false" localeSpecificVersionsExists="true">Content/WidgetExamples/WidgetExamplesInternationalization</in:resourceBundle>
 		</in:resouceBundles>
 		
 		<in:availableLocales>
