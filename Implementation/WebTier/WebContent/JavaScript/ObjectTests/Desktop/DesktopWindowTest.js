@@ -1,4 +1,4 @@
-window.RemoteResourceTest = new Class( {
+window.DesktopWindowTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['onConstructed', 'prepareWindowConstruction'],
 
@@ -75,10 +75,10 @@ window.RemoteResourceTest = new Class( {
    unmarshall_determinesProperties : function(){
       this.windowWithHtmlContent.unmarshall();
         
-      assertThat( this.windowWithHtmlContent.getContentUrl(), equalTo( this.desktopDefinition.selectNodeText( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/contentURL" ) ));
+      assertThat( this.windowWithHtmlContent.getContentUrl(), equalTo( this.desktopDefinition.selectNodeText( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/dc:contentURL" ) ));
       assertThat( this.windowWithHtmlContent.getHeight(), equalTo( this.desktopDefinition.selectNode( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@height" ).value ));
       assertThat( this.windowWithHtmlContent.getName(), equalTo( this.desktopDefinition.selectNode( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@name" ).value ));
-      assertThat( this.windowWithHtmlContent.getTitle(), equalTo( this.desktopInternationalization.getText( this.desktopDefinition.selectNodeText( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/title" ) )));
+      assertThat( this.windowWithHtmlContent.getTitle(), equalTo( this.desktopInternationalization.getText( this.desktopDefinition.selectNodeText( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/dc:title" ) )));
       assertThat( this.windowWithHtmlContent.getWidth(), equalTo( this.desktopDefinition.selectNode( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT + "/@width" ).value ));
    },
      

@@ -4,7 +4,7 @@
    xmlns:dc="http://www.processpuzzle.com/DesktopConfiguration"
    xmlns:pp="http://www.processpuzzle.com"
    xmlns:sd="http://www.processpuzzle.com/SmartDocument"
-   xsi:schemaLocation="http://www.processpuzzle.com/DesktopConfiguration file:///e:/PublicRepositories/ProcessPuzzleUI/Implementation/WebTier/Schemas/DesktopConfiguration.xsd">
+   xsi:schemaLocation="http://www.processpuzzle.com/DesktopConfiguration http://processpuzzle.com/Schemas/DesktopConfiguration.xsd">
 
 	<dc:name>ProcessPuzzle</dc:name>
 	<dc:version>1.0</dc:version>
