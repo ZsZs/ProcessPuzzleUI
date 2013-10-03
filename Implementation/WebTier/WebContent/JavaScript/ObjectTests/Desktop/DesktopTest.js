@@ -94,27 +94,27 @@ window.DesktopTest = new Class( {
    unmarshall_unmarshallsDesktopComponents : function() {
       this.desktop.unmarshall();
       
-      assertThat( this.desktop.getName(), equalTo( this.desktopConfiguration.selectNodeText( "/desktopConfiguration/name" )));
-      assertThat( this.desktop.getDescription(), equalTo( this.desktopConfiguration.selectNodeText( "/desktopConfiguration/description" )));
-      assertThat( this.desktop.getVersion(), equalTo( this.desktopConfiguration.selectNodeText( "/desktopConfiguration/version" )));
-      assertThat( this.desktop.getContainerId(), equalTo( this.desktopConfiguration.selectNodeText( "/desktopConfiguration/containerId" )));
+      assertThat( this.desktop.getName(), equalTo( this.desktopConfiguration.selectNodeText( "/dc:desktopConfiguration/dc:name" )));
+      assertThat( this.desktop.getDescription(), equalTo( this.desktopConfiguration.selectNodeText( "/dc:desktopConfiguration/dc:description" )));
+      assertThat( this.desktop.getVersion(), equalTo( this.desktopConfiguration.selectNodeText( "/dc:desktopConfiguration/dc:version" )));
+      assertThat( this.desktop.getContainerId(), equalTo( this.desktopConfiguration.selectNodeText( "/dc:desktopConfiguration/dc:containerId" )));
       
       assertThat( this.desktop.getResources().getState(), equalTo( ResourceManager.States.UNMARSHALLED ));
       assertThat( this.desktop.getHeader().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       assertThat( this.desktop.getFooter().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       assertThat( this.desktop.getWindowDocker().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       
-      assertThat( this.desktop.getColumns().size(), equalTo( this.desktopConfiguration.selectNodes( "/desktopConfiguration/columns/column" ).length ));
+      assertThat( this.desktop.getColumns().size(), equalTo( this.desktopConfiguration.selectNodes( "/dc:desktopConfiguration/dc:columns/dc:column" ).length ));
       this.desktop.getColumns().each( function( columnEntry, index ){
          assertThat( columnEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       });
       
-      assertThat( this.desktop.getPanels().size(), equalTo( this.desktopConfiguration.selectNodes( "/desktopConfiguration/panels/panel" ).length ));
+      assertThat( this.desktop.getPanels().size(), equalTo( this.desktopConfiguration.selectNodes( "/dc:desktopConfiguration/dc:panels/dc:panel" ).length ));
       this.desktop.getPanels().each( function( panelEntry, index ){
          assertThat( panelEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       });
       
-      assertThat( this.desktop.getWindows().size(), equalTo( this.desktopConfiguration.selectNodes( "/desktopConfiguration/windows/window" ).length ));
+      assertThat( this.desktop.getWindows().size(), equalTo( this.desktopConfiguration.selectNodes( "/dc:desktopConfiguration/dc:windows/dc:window" ).length ));
       this.desktop.getWindows().each( function( windowEntry, index ){
          assertThat( windowEntry.getValue().getState(), equalTo( DesktopElement.States.UNMARSHALLED ));
       });
