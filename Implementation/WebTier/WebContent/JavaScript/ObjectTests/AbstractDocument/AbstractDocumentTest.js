@@ -16,7 +16,7 @@ window.AbstractDocumentTest = new Class( {
    constants : {
       WEBUI_CONFIGURATION_URI : "../HtmlDocument/WebUIConfiguration.xml",
       DOCUMENT_CONTAINER_ID : "abstractDocument",
-      DOCUMENT_CONTENT_URI : "../AbstractDocument/HtmlDocument_en.html",
+      DOCUMENT_CONTENT_URI : "../AbstractDocument/HtmlDocument",
       DOCUMENT_DEFINITION_URI : "../AbstractDocument/HtmlDocumentDefinition.xml"
    },
    
@@ -41,11 +41,12 @@ window.AbstractDocumentTest = new Class( {
       this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
       
-      this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
+      this.documentContentResource = new XmlResource(  this.constants.DOCUMENT_CONTENT_URI + "_en.html", { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/HtmlDocument'" } );
       this.documentDefinition = new XmlResource( this.constants.DOCUMENT_DEFINITION_URI, { nameSpaces : "xmlns:sd='http://www.processpuzzle.com/SmartDocument'" } );
       this.documentContainerElement = $( this.constants.DOCUMENT_CONTAINER_ID );
       this.abstractDocument = new AbstractDocument( this.bundle, { 
-         documentContentUri : this.constants.DOCUMENT_CONTENT_URI, 
+         documentContentUri : this.constants.DOCUMENT_CONTENT_URI,
+         documentContentExtension : ".html",
          documentContainerId : this.constants.DOCUMENT_CONTAINER_ID,
          documentDefinitionUri : this.constants.DOCUMENT_DEFINITION_URI, 
          onDocumentError : this.onDocumentError,
@@ -82,7 +83,8 @@ window.AbstractDocumentTest = new Class( {
       assertThat( this.abstractDocument.getHandleMenuSelectedEvents(), equalTo( parseBoolean( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:handleMenuSelectedEvents" ))));
       assertThat( this.abstractDocument.getName(), equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:name" )));
       assertThat( this.abstractDocument.getVersion(), equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:version" )));
-      assertThat( this.abstractDocument.contentUri, equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:contentUri" )));
+      assertThat( this.abstractDocument.getDocumentContentUri(), equalTo( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:contentUri" )));
+      assertThat( this.abstractDocument.getDocumentContentLocaleSpecificVersionsExists(), equalTo( parseBoolean( this.documentDefinition.selectNodeText( "/sd:htmlDocumentDefinition/sd:contentUri/@localeSpecificVersionsExists" ))));
    },
    
    unmarshall_whenSpecified_instantiatesAndUnmarshallsResources : function() {

@@ -22,7 +22,7 @@
   <xs:element name="name" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="version" type="xs:string"/>
-  <xs:element name="contentUri" type="xs:string"/>
+  <xs:element name="contentUri" type="ContentUri"/>
   <xs:element name="handleMenuSelectedEvents" type="xs:boolean"/>
 
   <xs:element name="resources">
@@ -84,8 +84,14 @@
 
   <xs:complexType name="Option">
     <xs:sequence></xs:sequence>
-	<xs:attribute name="name" type="xs:string" />
-	<xs:attribute name="value" type="xs:string" />
+  </xs:complexType>
+  
+  <xs:complexType name="ContentUri">
+    <xs:simpleContent>
+     <xs:extension base="xs:string">
+       <xs:attribute name="localeSpecificVersionsExists" type="xs:boolean" use="optional" default="true" />
+     </xs:extension>
+   </xs:simpleContent>
   </xs:complexType>
 
 </xs:schema>

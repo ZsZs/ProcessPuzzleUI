@@ -7,7 +7,7 @@
    <sd:name>Test Html Document</sd:name>
    <sd:description>This configuration supports testing plain Html document.</sd:description>
    <sd:version>0.5</sd:version>
-   <sd:contentUri>../HtmlDocument/HtmlDocument</sd:contentUri>
+   <sd:contentUri localeSpecificVersionsExists="true">../HtmlDocument/HtmlDocument</sd:contentUri>
    <sd:handleMenuSelectedEvents>true</sd:handleMenuSelectedEvents>
    
    <sd:resources>

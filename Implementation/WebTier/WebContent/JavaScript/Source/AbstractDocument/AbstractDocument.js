@@ -59,6 +59,8 @@ var AbstractDocument = new Class({
       descriptionSelector : "sd:description",
       documentContainerId : "DocumentContainer",
       documentContentExtension : ".xml",
+      documentContentLocaleSpecificVersionsExists : true,
+      documentContentLocaleSpecificVersionsExistsSelector : "sd:contentUri/@localeSpecificVersionsExists",
       documentContentUri : null,
       documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com/'",
       documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
@@ -199,7 +201,8 @@ var AbstractDocument = new Class({
    getContainerElement: function() { return this.containerElement; },
    getDescription: function() { return this.description; },
    getDocumentContent: function() { return this.documentContent; },
-   getDocumentContentUri: function() { return this.options.documentContentUr; },
+   getDocumentContentLocaleSpecificVersionsExists: function() { return this.options.documentContentLocaleSpecificVersionsExists; },
+   getDocumentContentUri: function() { return this.contentUri; },
    getDocumentDefinition: function() { return this.documentDefinition; },
    getDocumentDefinitionUri: function() { return this.options.documentDefinitionUri; },
    getEditor: function() { return this.editor; },
@@ -324,7 +327,8 @@ var AbstractDocument = new Class({
       this.name = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.nameSelector );
       this.version = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.versionSelector );
       this.contentUri = this.documentDefinition.selectNodeText( this.options.rootElementName + "/" + this.options.contentUriSelector );
-      //if( !this.options.documentContentUri && this.contentUri ) this.options.documentContentUri = this.contentUri;
+      if( !this.options.documentContentUri && this.contentUri ) this.options.documentContentUri = this.contentUri;
+      this.options.documentContentLocaleSpecificVersionsExists = parseBoolean( this.documentDefinition.selectNodeText( this.options.documentContentLocaleSpecificVersionsExistsSelector, null, this.options.documentContentLocaleSpecificVersionsExists ));
    }.protect(),
       
    unmarshallResources: function(){
