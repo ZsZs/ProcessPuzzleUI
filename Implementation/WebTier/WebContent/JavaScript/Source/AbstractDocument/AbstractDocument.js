@@ -262,7 +262,8 @@ var AbstractDocument = new Class({
    loadDocumentContent: function() {
       if( this.options.documentContentUri ){
          try{
-            var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), { contentType: this.options.documentContentExtension.substring( 1 ) });
+        	var uriOptions = { contentType: this.options.documentContentExtension.substring( 1 ), localeSpecificVersionsExists : this.options.documentContentLocaleSpecificVersionsExists};
+            var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), uriOptions );
             this.documentContent = new XmlResource( resourceUri.determineLocalizedUri(), { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
             try{

@@ -35,7 +35,8 @@ var ResourceUri = new Class({
       componentName : "ResourceUri",
       contentType : "xml",
       documentType : null,
-      documentTypeKey : 'documentType'
+      documentTypeKey : 'documentType',
+      localeSpecificVersionsExists : true
    },
    
    // Constructor
@@ -68,8 +69,9 @@ var ResourceUri = new Class({
    },
    
    determineLocalizedUri : function(){
-      var localizedUri = this.fullUri.indexOf( "." + this.options.contentType ) >= 0 ? this.fullUri.substring( 0, this.fullUri.lastIndexOf( "." + this.options.contentType )) : this.fullUri; 
-      localizedUri += "_" + this.locale.getLanguage() + "." + this.options.contentType;
+      var localizedUri = this.fullUri.indexOf( "." + this.options.contentType ) >= 0 ? this.fullUri.substring( 0, this.fullUri.lastIndexOf( "." + this.options.contentType )) : this.fullUri;
+      if( this.options.localeSpecificVersionsExists ) localizedUri += "_" + this.locale.getLanguage() + "." + this.options.contentType;
+      else localizedUri += "." + this.options.contentType;
       return localizedUri;
    },
    

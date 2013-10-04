@@ -10,6 +10,7 @@ window.ResourceUriTest = new Class( {
          { method : 'determineDocumentVariables_whenGiven_instantiatesObject', isAsynchron : false },
          { method : 'determineUri_stripsFromQuery', isAsynchron : false },
          { method : 'determineLocalizedUri_injectsLanguageCodeIntoUri', isAsynchron : false },
+         { method : 'determineLocalizedUri_whenUnlocalized_skipsLanguageCodeFromUri', isAsynchron : false },
          { method : 'isLocal_whenUriNotContainsHostname_thanReturnsTrue', isAsynchron : false },
          { method : 'isLocal_whenUriContainsDifferentHostname_thanReturnsFalse', isAsynchron : false }]
    },
@@ -31,12 +32,14 @@ window.ResourceUriTest = new Class( {
       this.htmlResourceUri;
       this.smartDocumentUri;
       this.xmlResourceUri;
+      this.unlocalizedDocumentUri;
    },
 
    beforeEachTest : function(){
       this.htmlResourceUri = new ResourceUri( this.constants.HTML_RESOURCE_URI, this.locale, { contentType : 'html', documentType : AbstractDocument.Types.HTML });
       this.smartDocumentUri = new ResourceUri( this.constants.SMART_DOCUMENT_URI );
       this.xmlResourceUri = new ResourceUri( this.constants.XML_RESOURCE_URI, this.locale );
+      this.unlocalizedDocumentUri = new ResourceUri( this.constants.HTML_RESOURCE_URI, this.locale, { contentType : 'html', localeSpecificVersionsExists : false });
    },
    
    afterEachTest : function (){
@@ -72,6 +75,10 @@ window.ResourceUriTest = new Class( {
       assertThat( this.xmlResourceUri.determineLocalizedUri(), equalTo( this.constants.LOCALIZED_XML_RESOURCE_URI ));
    },
    
+   determineLocalizedUri_whenUnlocalized_skipsLanguageCodeFromUri : function(){
+	  assertThat( this.unlocalizedDocumentUri.determineLocalizedUri(), equalTo( this.constants.HTML_RESOURCE_URI ));
+   },
+		   
    isLocal_whenUriNotContainsHostname_thanReturnsTrue : function(){
       assertThat( this.htmlResourceUri.isLocal(), is( true ));
       assertThat( this.xmlResourceUri.isLocal(), is( true ));
