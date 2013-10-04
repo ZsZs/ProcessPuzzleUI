@@ -46,6 +46,7 @@ var SmartDocument = new Class({
       bodySelector : "sd:documentBody",
       footerSelector : "sd:documentFooter",
       headerSelector : "sd:documentHeader",
+      documentContentLocaleSpecificVersionsExists : false,
       rootElementName : "/sd:smartDocumentDefinition",
    },
    
