@@ -18,7 +18,7 @@ window.PartyEventWidgetTest = new Class( {
       LOCALIZED_DATA_URI : "../PartyEventWidget/TestEvents_en.xml",
       WIDGET_CONTAINER_ID : "EventWidget",
       WIDGET_DATA_URI : "../PartyEventWidget/TestEvents.xml",
-      WIDGET_DEFINITION_URI : "../PartyEventWidget/EventWidgetDefinition.xml"
+      WIDGET_DEFINITION_URI : "../PartyEventWidget/PartyEventWidgetDefinition.xml"
    },
    
    initialize : function( options ) {
