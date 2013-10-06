@@ -262,7 +262,7 @@ var AbstractDocument = new Class({
    loadDocumentContent: function() {
       if( this.options.documentContentUri ){
          try{
-        	var uriOptions = { contentType: this.options.documentContentExtension.substring( 1 ), localeSpecificVersionsExists : this.options.documentContentLocaleSpecificVersionsExists};
+        	   var uriOptions = { contentType: this.options.documentContentExtension.substring( 1 ), localeSpecificVersionsExists : this.options.documentContentLocaleSpecificVersionsExists};
             var resourceUri = new ResourceUri( this.options.documentContentUri, this.i18Resource.getLocale(), uriOptions );
             this.documentContent = new XmlResource( resourceUri.determineLocalizedUri(), { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
@@ -273,9 +273,11 @@ var AbstractDocument = new Class({
             }
          }
       }else {
-         this.options.documentContentUri = this.options.documentDefinitionUri.substring( 0, this.options.documentDefinitionUri.lastIndexOf( ".xml" ));
+         var uriOptions = { contentType: this.options.documentContentExtension.substring( 1 ), localeSpecificVersionsExists : this.options.documentContentLocaleSpecificVersionsExists};
+         var resourceUri = new ResourceUri( this.options.documentDefinitionUri.substring( 0, this.options.documentDefinitionUri.lastIndexOf( ".xml" )), this.i18Resource.getLocale(), uriOptions );
+         this.options.documentContentUri = resourceUri.determineLocalizedUri();
          try{
-            this.documentContent = new XmlResource( this.options.documentContentUri + "_" + this.i18Resource.getLocale().getLanguage() + this.options.documentContentExtension, { nameSpaces : this.options.documentContentNameSpace });
+            this.documentContent = new XmlResource( this.options.documentContentUri, { nameSpaces : this.options.documentContentNameSpace });
          }catch( e ){
             this.logger.trace( "Content of " + this.name + " document couldn't be loaded." );
          }

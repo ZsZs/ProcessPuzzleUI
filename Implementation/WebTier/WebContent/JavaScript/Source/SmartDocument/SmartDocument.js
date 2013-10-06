@@ -44,9 +44,9 @@ var SmartDocument = new Class({
    options : {
       componentName : "SmartDocument",
       bodySelector : "sd:documentBody",
+      documentContentLocaleSpecificVersionsExists : false,
       footerSelector : "sd:documentFooter",
       headerSelector : "sd:documentHeader",
-      documentContentLocaleSpecificVersionsExists : false,
       rootElementName : "/sd:smartDocumentDefinition",
    },
    
