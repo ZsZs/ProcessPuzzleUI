@@ -163,17 +163,19 @@
 
   <xs:complexType name="Plugin">
     <xs:sequence>
-        <xs:element ref="resources" minOccurs="0" maxOccurs="1" />
-		<xs:element name="widget" type="Widget" />
+      <xs:element ref="resources" minOccurs="0" maxOccurs="1" />
+		<xs:element ref="widget"  minOccurs="1" maxOccurs="1" />
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Widget">
-    <xs:sequence>
-	  <xs:element ref="options" minOccurs="0" maxOccurs="1" />
-	</xs:sequence>
-	<xs:attribute name="name" type="xs:NCName" />
-  </xs:complexType>
+  <xs:element name="widget">
+	  <xs:complexType>
+	    <xs:sequence>
+	     <xs:element ref="options" minOccurs="0" maxOccurs="1" />
+	   </xs:sequence>
+	   <xs:attribute name="name" type="xs:NCName" />
+	  </xs:complexType>
+  </xs:element>
 
   <xs:complexType name="DataElement">
     <xs:complexContent>

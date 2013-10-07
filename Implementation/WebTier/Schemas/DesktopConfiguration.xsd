@@ -120,7 +120,7 @@
   <xs:complexType>
    <xs:sequence>
     <xs:element ref="sd:resources" minOccurs="0" maxOccurs="1" />
-    <xs:element name="widget" type="sd:Widget" />
+    <xs:element ref="sd:widget" minOccurs="1" maxOccurs="1" />
    </xs:sequence>
   </xs:complexType>
  </xs:element>
