@@ -147,7 +147,7 @@ var XmlResource = new Class({
       var selectedElements = this.selectNodes( selector, subNode );
       if( selectedElements && selectedElements.length > 0 && selectedElements[0] ) {
          return XmlResource.determineNodeText( selectedElements[0] );
-      }else if( defaultValue ) return defaultValue;
+      }else if( typeof defaultValue != 'undefined' ) return defaultValue;
       else return null;
    }, 
    
