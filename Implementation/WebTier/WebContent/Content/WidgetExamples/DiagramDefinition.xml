@@ -74,12 +74,12 @@
       
       <uml:inheritanceConnection name="ClassIsSpecializedFigure" source="OperationFigure" target="DiagramWidget.ExampleClassOne.name"/>
       
-      <uml:associationConnection name="association_1" source="ClassFigure" target="AttributeFigure">
+      <uml:associationConnection name="association_1" source="DiagramWidget.ExampleClassTwo.name" target="AttributeFigure">
          <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
          <uml:targetRole name="attributes" multiplicity="*" containment="by reference"/>
       </uml:associationConnection>
       
-      <uml:associationConnection name="association_2" source="ClassFigure" target="OperationFigure">
+      <uml:associationConnection name="association_2" source="DiagramWidget.ExampleClassTwo.name" target="OperationFigure">
          <uml:sourceRole name="" multiplicity="1..n" containment="by value"/>
          <uml:targetRole name="operations" multiplicity="*" containment="by reference"/>
       </uml:associationConnection>
