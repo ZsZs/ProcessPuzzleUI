@@ -8,6 +8,7 @@
    <sd:name>Personal To Do List</sd:name>
    <sd:description>To Do list of the logged in person.</sd:description>
    <sd:version>0.5</sd:version>
+   <sd:contentUri localeSpecificVersionsExists="true">Content/System/Workflow</sd:contentUri>
    
    <sd:resources>
       <sd:styleSheets></sd:styleSheets>

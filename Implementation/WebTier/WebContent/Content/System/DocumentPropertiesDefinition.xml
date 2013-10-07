@@ -8,6 +8,7 @@
    <sd:name>Document Properties Document</sd:name>
    <sd:description>Shows the properties of the selected document.</sd:description>
    <sd:version>0.5</sd:version>
+   <sd:contentUri localeSpecificVersionsExists="true">Content/System/DocumentProperties</sd:contentUri>
    
    <sd:resources>
       <sd:styleSheets></sd:styleSheets>

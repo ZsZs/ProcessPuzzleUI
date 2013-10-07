@@ -8,6 +8,7 @@
    <sd:name>Static Document</sd:name>
    <sd:description>Demonstrates static content of a Smart Document.</sd:description>
    <sd:version>0.5</sd:version>
+   <sd:contentUri localeSpecificVersionsExists="true">Content/DynamicContent</sd:contentUri>
    
    <sd:resources>
       <sd:styleSheets><sd:styleSheet>Desktops/ProcessPuzzle/Styles/DynamicDocument.css</sd:styleSheet></sd:styleSheets>
