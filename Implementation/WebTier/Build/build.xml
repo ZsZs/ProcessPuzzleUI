@@ -11,6 +11,10 @@
 	<property file="${common.build.path}/common.build.properties" />
 	
 	<path id="project.auxiliary.classpath">
+      <fileset dir="${project.root}/${project.library.dir}">
+         <include name="**/*.jar" />
+         <exclude name="**/*.copyarea.db" />
+      </fileset>
 	</path>
 	
 	<patternset id="javascript.source.files">
