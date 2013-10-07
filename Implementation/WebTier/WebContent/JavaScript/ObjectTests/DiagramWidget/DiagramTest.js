@@ -16,7 +16,7 @@ window.DiagramTest = new Class( {
       LANGUAGE : "hu",
       DIAGRAM_CONTAINER_ID : "DiagramContainer",
       DIAGRAM_DEFINITION_URI : "../DiagramWidget/DiagramDefinition.xml",
-      FIGURES_SELECTOR : "/dd:diagramDefinition/dd:figures/dd:annotation | //dd:diagramDefinition/dd:figures/uml:class | //dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
+      FIGURES_SELECTOR : "/dd:diagramDefinition/dd:figures/dd:annotation | //dd:diagramDefinition/dd:figures/uml:class | /dd:diagramDefinition/dd:figures/uml:associationConnection | //dd:diagramDefinition/dd:figures/uml:inheritanceConnection",
       WEBUI_CONFIGURATION_URI : "../DiagramWidget/WebUIConfiguration.xml",
       WIDGET_DEFINITION_URI : "../DiagramWidget/DiagramWidgetDefinition.xml"
    },
