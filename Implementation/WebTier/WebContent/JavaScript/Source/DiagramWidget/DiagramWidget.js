@@ -57,6 +57,10 @@ var DiagramWidget = new Class({
    onDiagramErase: function(){
       this.destructionChain.callChain();
    },
+   
+   construct: function(){
+	  return this.parent();
+   },
       
    unmarshall: function(){
       return this.parent();
