@@ -60,7 +60,7 @@ var AbstractDocument = new Class({
       documentContainerId : "DocumentContainer",
       documentContentExtension : ".xml",
       documentContentLocaleSpecificVersionsExists : true,
-      documentContentLocaleSpecificVersionsExistsSelector : "sd:contentUri/@localeSpecificVersionsExists",
+      documentContentLocaleSpecificVersionsExistsSelector : "//sd:contentUri/@localeSpecificVersionsExists",
       documentContentUri : null,
       documentContentNameSpace : "xmlns:pp='http://www.processpuzzle.com/'",
       documentDefinitionNameSpace: "xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
@@ -101,6 +101,7 @@ var AbstractDocument = new Class({
       this.version;
       
       this.loadDocumentDefinition();
+      this.unmarshallProperties();
       this.loadDocumentContent();
       this.state = AbstractDocument.States.INITIALIZED;
    },
