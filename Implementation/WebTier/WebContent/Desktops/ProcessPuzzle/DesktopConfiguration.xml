@@ -54,7 +54,7 @@
                   <sd:styleSheet>Desktops/ProcessPuzzle/Styles/VerticalMenuLayout.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <dc:widget name="HierarchicalMenuWidget">
+            <sd:widget name="HierarchicalMenuWidget">
                <sd:options>
                   <sd:option name="contextItemId" value="'MenuWidget/YourMenu'"/>
                   <sd:option name="componentName" value="'verticalMenuColumn'"/>
@@ -63,7 +63,7 @@
                   <sd:option name="widgetDataURI" value="'Configuration/WebUIMenuDefinition.xml'"/>
                   <sd:option name="widgetDefinitionURI" value="'Desktops/ProcessPuzzle/Widgets/MenuWidgetDefinition.xml'"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
 			</dc:plugin>
 		</dc:panel>
 		
@@ -72,7 +72,7 @@
          <dc:panelHeader>
             <dc:plugin>
                <sd:resources></sd:resources>
-               <dc:widget name="ToolBarWidget">
+               <sd:widget name="ToolBarWidget">
                   <sd:options>
                      <sd:option name="componentName " value="'documentEditorToolBar'"/>
                      <sd:option name="dividerIconImageUri" value="'Desktops/ProcessPuzzle/Images/ToolboxDivider.jpg'"/>
@@ -80,7 +80,7 @@
                      <sd:option name="widgetDataURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'Desktops/ProcessPuzzle/Widgets/DocumentEditorToolBarDefinition.xml'" />
                   </sd:options>
-               </dc:widget>
+               </sd:widget>
             </dc:plugin>
          </dc:panelHeader>
 		</dc:panel>
@@ -94,14 +94,14 @@
                      <sd:styleSheet>Desktops/ProcessPuzzle/Styles/ConsoleTabs.css</sd:styleSheet>
                   </sd:styleSheets>
                </sd:resources>
-               <dc:widget name="TabWidget">
+               <sd:widget name="TabWidget">
                   <sd:options>
                      <sd:option name="componentName " value="'consoleTabs'"/>
                      <sd:option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'Desktops/ProcessPuzzle/Widgets/TabWidgetDefinition.xml'" />
                   </sd:options>
-               </dc:widget> 
+               </sd:widget> 
             </dc:plugin>
          </dc:panelHeader>
          <dc:document tag="div" id="consoleDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
@@ -119,7 +119,7 @@
                   <sd:styleSheet>Desktops/ProcessPuzzle/Styles/EventsPanel.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <dc:widget name="PartyEventWidget">
+            <sd:widget name="PartyEventWidget">
                <sd:options>
                   <sd:option name="componentName" value="'UpcommingEventsWidget'"/>
                   <sd:option name="eventOptions" value="{ showDescription : true, showTitle : true, truncateDescription : true }"/>
@@ -127,7 +127,7 @@
                   <sd:option name="widgetDataURI" value="'Content/WidgetExamples/UpcommingEvents.xml'"/>
                   <sd:option name="widgetDefinitionURI" value="'Content/WidgetExamples/UpcommingEventsDefinition.xml'"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
          </dc:plugin>
 		</dc:panel>
 		
@@ -140,7 +140,7 @@
                   <sd:styleSheet>Desktops/ProcessPuzzle/Styles/NewsPanel.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <dc:widget name="NewsReaderWidget">
+            <sd:widget name="NewsReaderWidget">
                <sd:options>
                   <sd:option name="componentName" value="'TopNewsWidget'"/>
                   <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
@@ -148,7 +148,7 @@
                   <sd:option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
                   <sd:option name="widgetDefinitionURI" value="'Content/WidgetExamples/SiteNewsDefinition.xml'"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
          </dc:plugin>
 		</dc:panel>
 		

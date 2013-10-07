@@ -49,7 +49,7 @@
          <dc:panelHeader>
             <dc:plugin>
                <sd:resources></sd:resources>
-               <dc:widget name="ToolBarWidget">
+               <sd:widget name="ToolBarWidget">
                   <sd:options>
                      <sd:option name="componentName " value="'documentEditorToolBar'"/>
                      <sd:option name="dividerIconImageUri" value="'Desktops/ProcessPuzzle/Images/ToolboxDivider.jpg'"/>
@@ -57,7 +57,7 @@
                      <sd:option name="widgetDataURI" value="'Configuration/DocumentEditorToolBar.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/DocumentEditorToolBarDefinition.xml'" />
                   </sd:options>
-               </dc:widget>
+               </sd:widget>
             </dc:plugin>
          </dc:panelHeader>
 		</dc:panel>
@@ -71,14 +71,14 @@
                      <sd:styleSheet>Desktops/ProcessPuzzle/Styles/ConsoleTabs.css</sd:styleSheet>
                   </sd:styleSheets>
                </sd:resources>
-               <dc:widget name="TabWidget">
+               <sd:widget name="TabWidget">
                   <sd:options>
                      <sd:option name="componentName " value="'consoleTabs'"/>
                      <sd:option name="widgetContainerId" value="'consolePanel_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'Configuration/ConsoleTabsDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/TabWidgetDefinition.xml'" />
                   </sd:options>
-               </dc:widget> 
+               </sd:widget> 
             </dc:plugin>
          </dc:panelHeader>
          <dc:document tag="div" id="consoleDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
@@ -96,7 +96,7 @@
                   <sd:styleSheet>Desktops/MochaUI/Styles/EventsPanel.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <dc:widget name="PartyEventWidget">
+            <sd:widget name="PartyEventWidget">
                <sd:options>
                   <sd:option name="widgetContainerId" value="'UpcommingEvents'"/>
                   <sd:option name="widgetDataURI" value="'Content/WidgetExamples/UpcommingEvents.xml'"/>
@@ -104,7 +104,7 @@
                   <sd:option name="componentName" value="'UpcommingEventsWidget'"/>
                   <sd:option name="eventOptions" value="{ showDescription : true, showTitle : true, truncateDescription : true }"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
          </dc:plugin>
       </dc:panel>
       
@@ -117,7 +117,7 @@
                   <sd:styleSheet>Desktops/MochaUI/Styles/NewsPanel.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <dc:widget name="NewsReaderWidget">
+            <sd:widget name="NewsReaderWidget">
                <sd:options>
                   <sd:option name="widgetContainerId" value="'TopNews'"/>
                   <sd:option name="widgetDataURI" value="'Content/WidgetExamples/SiteNews.xml'"/>
@@ -125,7 +125,7 @@
                   <sd:option name="componentName" value="'TopNewsWidget'"/>
                   <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
          </dc:plugin>
       </dc:panel>
       
@@ -138,14 +138,14 @@
                      <sd:styleSheet>Desktops/MochaUI/Styles/CommunityPanelTabs.css</sd:styleSheet>
                   </sd:styleSheets>
                </sd:resources>
-               <dc:widget name="TabWidget">
+               <sd:widget name="TabWidget">
                   <sd:options>
                      <sd:option name="componentName" value="'communityTabs'"/>
                      <sd:option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/TabWidgetDefinition.xml'" />
                   </sd:options>
-               </dc:widget> 
+               </sd:widget> 
             </dc:plugin>
          </dc:panelHeader>
          <dc:document tag="div" id="communityDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">

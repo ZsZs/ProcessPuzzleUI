@@ -63,13 +63,13 @@
                   </sd:styleSheets>
                   <sd:javaScripts></sd:javaScripts>
                </sd:resources>
-               <dc:widget name="ToolBarWidget">
+               <sd:widget name="ToolBarWidget">
                   <sd:options>
                      <sd:option name="widgetContainerId" value="'documents-panel_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'../ToolBarWidget/ToolBarDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'../ToolBarWidget/ToolBarWidgetDefinition.xml'"/>
                   </sd:options>
-               </dc:widget>
+               </sd:widget>
             </dc:plugin>
          </dc:panelHeader>
 			<dc:document tag="div" id="panelDocumentWrapper" elementStyle="panelDocumentWrapper" type="SmartDocument">
@@ -87,13 +87,13 @@
                      <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/DocumentSelector.css</sd:styleSheet>
                   </sd:styleSheets>
                </sd:resources>
-               <dc:widget name="TabWidget">
+               <sd:widget name="TabWidget">
                   <sd:options>
                      <sd:option name="widgetContainerId" value="'console_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'../TabWidget/TabsDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'../TabWidget/TabWidgetDefinition.xml'"/>
                   </sd:options>
-               </dc:widget>
+               </sd:widget>
             </dc:plugin>
          </dc:panelHeader>
 		</dc:panel>
@@ -101,12 +101,12 @@
 		<dc:panel name="eventsPanel" columnReference="mainColumn" showHeader="true">
          <dc:title>DesktopConfigurator.Panel.eventsTitle</dc:title>
          <dc:plugin>
-            <dc:widget name="PartyEventWidget">
+            <sd:widget name="PartyEventWidget">
                <sd:options>
                   <sd:option name="widgetDataURI" value="'../PartyEventWidget/TestEvents.xml'"/>
                   <sd:option name="widgetDefinitionURI" value="'../PartyEventWidget/PartyEventWidgetDefinition.xml'"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
          </dc:plugin>
 		</dc:panel>
 		
@@ -119,7 +119,7 @@
                   <sd:styleSheet>../Desktop/Skins/ProcessPuzzle/Styles/NewsPanel.css</sd:styleSheet>
                </sd:styleSheets>
             </sd:resources>
-            <dc:widget name="NewsReaderWidget">
+            <sd:widget name="NewsReaderWidget">
                <sd:options>
                   <sd:option name="widgetContainerId" value="'TopNews'"/>
                   <sd:option name="widgetDataURI" value="'../NewsReaderWidget/TestNews.xml'"/>
@@ -127,7 +127,7 @@
                   <sd:option name="componentName" value="'NewsReaderWidget'"/>
                   <sd:option name="channelOptions" value="{ showDescription : false, showTitle : false, itemOptions : { truncateDescription : true }}"/>
                </sd:options>
-            </dc:widget>
+            </sd:widget>
          </dc:plugin>
       </dc:panel>
       
