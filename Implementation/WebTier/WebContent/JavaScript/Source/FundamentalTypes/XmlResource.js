@@ -120,9 +120,10 @@ var XmlResource = new Class({
       this.xmlDoc = null;
    },
    
-   selectNode : function( selector, subNode ) {
+   selectNode : function( selector, subNode, defaultValue ) {
       var selectedNodes = this.selectNodes( selector, subNode );
-      if( selectedNodes )  return selectedNodes[0];
+      if( selectedNodes && selectedNodes.length > 0 )  return selectedNodes[0];
+      else if( typeof defaultValue != 'undefined' ) return defaultValue;
       else return null;
    }, 
    
@@ -196,9 +197,10 @@ XmlResource.determineNodeText = function( xmlElement, defaultValue ) {
    return nodeText;
 };
 
-XmlResource.selectNode = function( selector, xmlElement ){
+XmlResource.selectNode = function( selector, xmlElement, defaultValue ){
    var selectedNodes = XmlResource.selectNodes( selector, xmlElement );
    if( selectedNodes )  return selectedNodes[0];
+   else if( typeof defaultValue != 'undefined' ) return defaultValue;
    else return null;
 };
 
