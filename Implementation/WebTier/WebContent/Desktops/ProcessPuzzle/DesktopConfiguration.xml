@@ -161,14 +161,14 @@
                      <sd:styleSheet>Desktops/ProcessPuzzle/Styles/CommunityPanelTabs.css</sd:styleSheet>
                   </sd:styleSheets>
                </sd:resources>
-               <dc:widget name="TabWidget">
+               <sd:widget name="TabWidget">
                   <sd:options>
                      <sd:option name="componentName" value="'communityTabs'"/>
                      <sd:option name="widgetContainerId" value="'communityPanel_headerToolbox'"/>
                      <sd:option name="widgetDataURI" value="'Configuration/CommunityTabsDefinition.xml'"/>
                      <sd:option name="widgetDefinitionURI" value="'Desktops/MochaUI/Widgets/TabWidgetDefinition.xml'" />
                   </sd:options>
-               </dc:widget> 
+               </sd:widget> 
             </dc:plugin>
          </dc:panelHeader>
          <dc:document tag="div" id="communityDocumentWrapper" elementStyle="documentWrapper" type="SmartDocument">
