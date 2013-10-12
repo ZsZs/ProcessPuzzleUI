@@ -31,6 +31,5 @@
 	<classpathentry kind="lib" path="Libraries/osgi-resource-locator-1.0.1.jar"/>
 	<classpathentry kind="lib" path="Libraries/persistence-api-1.0.jar"/>
 	<classpathentry kind="lib" path="Libraries/validation-api-1.1.0.Final.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ProcessPuzzle-Production-Dependencies"/>
 	<classpathentry kind="output" path="Build/classes"/>
 </classpath>
