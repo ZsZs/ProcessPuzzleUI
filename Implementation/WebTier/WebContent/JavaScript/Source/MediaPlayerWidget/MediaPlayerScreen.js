@@ -100,14 +100,14 @@ var MediaPlayerScreen = new Class({
    }.protect(),
    
    destroyImageElements : function(){
-      if( this.imageElement ){ this.imageElement.destroy(); }
-      if( this.anchorElement ){ this.anchorElement.destroy(); }
+      if( this.imageElement && this.imageElement.destroy ){ this.imageElement.destroy(); }
+      if( this.anchorElement && this.anchorElement.destroy ){ this.anchorElement.destroy(); }
       this.anchorElement = null;
       this.imageElement = null;
    }.protect(),
    
    destroyScreenElement : function(){
-      if( this.screenElement ) this.screenElement.destroy();
+      if( this.screenElement && this.screenElement ) this.screenElement.destroy();
    }.protect(),
    
    finalizeConstruction : function(){
