@@ -29,6 +29,7 @@ window.DesktopPanelTest = new Class( {
    },
 
    constants : {
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
       COLUMN_DEFINITION : "/dc:desktopConfiguration/dc:columns/dc:column[@name='mainColumn']",
@@ -80,7 +81,7 @@ window.DesktopPanelTest = new Class( {
       this.resourceBundle.load( new ProcessPuzzleLocale({ language : "hu" }) );
       this.componentStateManager = new ComponentStateManager();
 
-      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'"});
+      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : this.constants.DESKTOP_CONFIGURATION_NAMESPACE });
       this.columnDefinition = this.desktopDefinition.selectNode( this.constants.COLUMN_DEFINITION );
       this.column = new DesktopColumn( this.columnDefinition, { componentContainerId : this.constants.PAGE_WRAPPER_ID } );
       
@@ -411,7 +412,7 @@ window.DesktopPanelTest = new Class( {
             this.constructPanel( this.panelWithDocument );
          }.bind( this ),
          function(){
-            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/document/documentDefinitionUri" ) ) );
+            assertThat( this.loadedDocumentUri, equalTo( this.desktopDefinition.selectNodeText( this.constants.PANEL_WITH_DOCUMENT_DEFINITION + "/dc:document/dc:documentDefinitionUri" ) ) );
          }.bind( this ),
          function(){
             var message = new MenuSelectedMessage({ activityType : AbstractDocument.Activity.LOAD_DOCUMENT, documentType : AbstractDocument.Types.SMART, documentURI : this.constants.ERRONEOUS_DOCUMENT_URI, originator : "verticalMenuColumn" });

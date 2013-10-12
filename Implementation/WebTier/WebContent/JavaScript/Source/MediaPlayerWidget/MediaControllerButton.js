@@ -103,11 +103,11 @@ var MediaControllerButton = new Class({
    }.protect(),
    
    destroyElements : function(){
-      if( this.anchorElement ) this.anchorElement.destroy();
-      if( this.listItemElement ) this.listItemElement.destroy();
+      if( this.anchorElement && this.anchorElement.destroy ) this.anchorElement.destroy();
+      if( this.listItemElement && this.listItemElement.destroy ) this.listItemElement.destroy();
    }.protect(),
    
    removeEvents : function(){
-      if( this.anchorElement ) this.anchorElement.removeEvents();
+      if( this.anchorElement && this.anchorElement.removeEvents ) this.anchorElement.removeEvents();
    }.protect()
 });

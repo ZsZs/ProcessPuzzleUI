@@ -16,6 +16,7 @@ window.DesktopWindowTest = new Class( {
    },
 
    constants : {
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
       WINDOW_DEFINITION_WITH_HTMLCONTENT : "/dc:desktopConfiguration/dc:windows/dc:window[@name='aboutDialog']",
@@ -44,7 +45,7 @@ window.DesktopWindowTest = new Class( {
       this.desktopInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.desktopInternationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
         
-      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'" } );
+      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : this.constants.DESKTOP_CONFIGURATION_NAMESPACE });
       var elementDefinition = this.desktopDefinition.selectNode( this.constants.WINDOW_DEFINITION_WITH_HTMLCONTENT );
       this.windowWithHtmlContent = new DesktopWindow( elementDefinition, this.desktopInternationalization, { componentContainerId : this.constants.PAGE_WRAPPER_ID, onConstructed : this.onConstructed } );
       

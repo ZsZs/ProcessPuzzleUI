@@ -13,6 +13,7 @@ window.DesktopDocumentTest = new Class( {
    },
 
    constants : {
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "Desktop",
       HEADER_DEFINITION_SELECTOR : "/dc:desktopConfiguration/dc:header",
@@ -40,7 +41,7 @@ window.DesktopDocumentTest = new Class( {
       this.desktopInternationalization = new LocalizationResourceManager( this.webUIConfiguration );
       this.desktopInternationalization.load( new ProcessPuzzleLocale({ language : "en" }) );
         
-      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI );
+      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : this.constants.DESKTOP_CONFIGURATION_NAMESPACE });
       this.headerDefinition = this.desktopDefinition.selectNode( this.constants.HEADER_DEFINITION_SELECTOR );
       this.desktopDocument = new DesktopDocument( 
          this.headerDefinition, 

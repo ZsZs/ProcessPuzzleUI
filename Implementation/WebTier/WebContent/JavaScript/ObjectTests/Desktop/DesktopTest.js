@@ -14,6 +14,7 @@ window.DesktopTest = new Class( {
    },
 
    constants : {
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
       DESKTOP_DOCKER_AUTOHIDE_ELEMENT_ID : 'dockAutoHide',

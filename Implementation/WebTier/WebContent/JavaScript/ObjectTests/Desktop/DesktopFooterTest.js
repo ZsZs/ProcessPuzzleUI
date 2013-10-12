@@ -8,6 +8,7 @@ window.DesktopFooterTest = new Class( {
    },
 
    constants : {
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "Desktop",
       FOOTER_DEFINITION_SELECTOR : "/dc:desktopConfiguration/dc:footer",
@@ -29,7 +30,7 @@ window.DesktopFooterTest = new Class( {
       this.bundle = new LocalizationResourceManager( this.webUIConfiguration );
       this.bundle.load( new ProcessPuzzleLocale({ language : "en" }) );
         
-      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI );
+      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : this.constants.DESKTOP_CONFIGURATION_NAMESPACE });
       this.desktopFooterDefinition = this.desktopDefinition.selectNode( this.constants.FOOTER_DEFINITION_SELECTOR );
       this.desktopFooter = new DesktopFooter( this.desktopFooterDefinition, this.bundle, 
          { componentContainerId : this.constants.DESKTOP_CONTAINER_ID, onConstructed : this.onConstructed, onError : this.onError } );

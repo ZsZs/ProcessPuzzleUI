@@ -201,7 +201,7 @@ var MediaPlayerController = new Class({
    }.protect(),
    
    destroyControllerWrapperElement : function(){
-      if( this.controllerWrapperElement ) this.controllerWrapperElement.destroy();
+      if( this.controllerWrapperElement && this.controllerWrapperElement.destroy ) this.controllerWrapperElement.destroy();
    }.protect(),
 
    finalizeConstruction : function(){
@@ -228,7 +228,7 @@ var MediaPlayerController = new Class({
    },
    
    removeEvents : function(){
-      if( this.controllerWrapperElement ) this.controllerWrapperElement.removeEvents();
+      if( this.controllerWrapperElement && this.controllerWrapperElement.removeEvents ) this.controllerWrapperElement.removeEvents();
       document.removeEvent( 'mousemove', this.onMouseMove );
       document.removeEvent( 'keydown', this.onKeyDown );
       document.removeEvent( 'keyup', this.onKeyUp );

@@ -12,6 +12,7 @@ window.DesktopColumnTest = new Class( {
    },
 
    constants : {
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       DESKTOP_CONTAINER_ID : "desktop",
       COLUMN_DEFINITION : "/dc:desktopConfiguration/dc:columns/dc:column[@name='leftColumn']",
@@ -35,7 +36,7 @@ window.DesktopColumnTest = new Class( {
       this.webUIConfiguration = new WebUIConfiguration( this.constants.WEBUI_CONFIGURATION_URI );
       this.webUILogger = new WebUILogger( this.webUIConfiguration );
       
-      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration'" } );
+      this.desktopDefinition = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : this.constants.DESKTOP_CONFIGURATION_NAMESPACE } );
       this.elementDefinition = this.desktopDefinition.selectNode( this.constants.COLUMN_DEFINITION );
       this.column = new DesktopColumn( this.elementDefinition, { componentContainerId : this.constants.DESKTOP_CONTAINER_ID, onConstructed : this.onConstructed, onError : this.onError } );
       this.desktopContainerElement = $( this.constants.DESKTOP_CONTAINER_ID );

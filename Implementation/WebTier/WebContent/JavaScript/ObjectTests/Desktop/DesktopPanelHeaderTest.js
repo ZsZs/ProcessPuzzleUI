@@ -12,6 +12,7 @@ window.DesktopPanelHeaderTest = new Class({
 
    constants : {
       CONFIGURATION_URI : "../Desktop/WebUIConfiguration.xml",
+      DESKTOP_CONFIGURATION_NAMESPACE : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:pp='http://www.processpuzzle.com' xmlns:sd='http://www.processpuzzle.com/SmartDocument'",
       DESKTOP_CONFIGURATION_URI : "../Desktop/Skins/ProcessPuzzle/DesktopConfiguration.xml",
       PANEL_HEADER_SELECTOR : "/dc:desktopConfiguration/dc:panels/dc:panel[@name='console']/dc:panelHeader"
    },
@@ -33,7 +34,7 @@ window.DesktopPanelHeaderTest = new Class({
         
       this.componentStateManager = new ComponentStateManager();
       this.messageBus = new WebUIMessageBus();
-      this.desktopConfiguration = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : "xmlns:dc='http://www.processpuzzle.com/DesktopConfiguration' xmlns:sd='http://www.processpuzzle.com/SmartDocument'"} );
+      this.desktopConfiguration = new XmlResource( this.constants.DESKTOP_CONFIGURATION_URI, { nameSpaces : this.constants.DESKTOP_CONFIGURATION_NAMESPACE });
       this.panelHeaderDefinition = this.desktopConfiguration.selectNode( this.constants.PANEL_HEADER_SELECTOR );
       this.panelHeader = new DesktopPanelHeader( this.panelHeaderDefinition, this.bundle, {
          componentContainerId : "console_header",
