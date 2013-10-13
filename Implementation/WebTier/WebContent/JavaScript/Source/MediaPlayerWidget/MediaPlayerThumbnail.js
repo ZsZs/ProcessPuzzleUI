@@ -134,17 +134,17 @@ var MediaPlayerThumbnail = new Class( {
    
    destroyAnchorElement : function(){
       if( this.anchorElement ){
-         this.anchorElement.removeEvents();
-         this.anchorElement.destroy();
+         if( this.anchorElement.removeEvents ) this.anchorElement.removeEvents();
+         if( this.anchorElement.destroy ) this.anchorElement.destroy();
       }
    }.protect(),
 
    destroyListItemElement : function(){
-      if( this.listItemElement ) this.listItemElement.destroy();
+      if( this.listItemElement && this.listItemElement.destroy ) this.listItemElement.destroy();
    }.protect(),
    
    destroyImageElement : function(){
-      if( this.imageElement ) this.imageElement.destroy();
+      if( this.imageElement && this.imageElement.destroy ) this.imageElement.destroy();
    }.protect(),
    
    finalizeConstruction : function(){

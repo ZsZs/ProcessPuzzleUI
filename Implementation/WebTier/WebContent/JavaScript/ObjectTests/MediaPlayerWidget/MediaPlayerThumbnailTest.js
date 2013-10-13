@@ -6,7 +6,7 @@ window.MediaPlayerThumbnailTest = new Class( {
       testMethods : [
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
          { method : 'construct_createsElements', isAsynchron : true },
-         { method : 'show_startsMorph', isAsynchron : true },
+         { method : 'update_startsMorph', isAsynchron : true },
          { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
@@ -56,19 +56,19 @@ window.MediaPlayerThumbnailTest = new Class( {
          }.bind( this ),
          function(){
             assertThat( this.containerElement.getElement( 'li' ), equalTo( this.thumbnail.getElement() ));
-            assertThat( this.containerElement.getElement( 'li a' ), JsHamcrest.Matchers.instanceOf( Element ));
-            assertThat( this.containerElement.getElement( 'li a img' ), JsHamcrest.Matchers.instanceOf( Element ));
+            assertThat( instanceOf( this.containerElement.getElement( 'li a' ), Element ), is( true ));
+            assertThat( instanceOf( this.containerElement.getElement( 'li a img' ), Element ), is( true ));
                
             this.testMethodReady();
          }.bind( this )
       ).callChain();
    },
    
-   show_startsMorph : function() {
+   update_startsMorph : function() {
       this.testCaseChain.chain(
          function(){ this.thumbnail.construct(); }.bind( this ),
          function(){ 
-            this.thumbnail.show( true ); 
+            this.thumbnail.update( true ); 
             this.timer = this.checkMorphReady.periodical( 500 );
          }.bind( this ),
          function(){

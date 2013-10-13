@@ -1,4 +1,4 @@
-window.MediaPlayerThumbnailsTest = new Class( {
+window.MediaPlayerThumbnailsBarTest = new Class( {
    Implements : [Events, JsTestClass, Options],
    Binds : ['checkMorphReady', 'onConstructed', 'onConstructionError'],
 
@@ -57,7 +57,7 @@ window.MediaPlayerThumbnailsTest = new Class( {
          function(){ this.thumbnails.construct(); }.bind( this ),
          function(){
             assertThat( this.containerElement.getElement( 'div.' + this.thumbnails.getElementClass() ), equalTo( this.thumbnails.getElement() ));
-            assertThat( this.thumbnails.getElement(), JsHamcrest.Matchers.instanceOf( Element ));
+            assertThat( instanceOf( this.thumbnails.getElement(), Element ));
             assertThat( this.thumbnails.getElement().hasClass( this.constants.SLIDESHOW_CLASS + "-" + this.constants.THUMBNAILS_CLASS ), is( true ));
                   
             this.testMethodReady();

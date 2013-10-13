@@ -184,7 +184,7 @@ var MediaPlayerThumbnailsBar = new Class({
    }.protect(),
    
    destroyListElement : function(){
-      if( this.listElement ) this.listElement.destroy();
+      if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
    }.protect(),
 
    destroyThumnailElements : function(){
@@ -195,8 +195,8 @@ var MediaPlayerThumbnailsBar = new Class({
    
    destroyWrapperElement : function(){
       if( this.wrapperElement ){
-         this.wrapperElement.removeEvents();
-         this.wrapperElement.destroy();
+         if( this.wrapperElement.removeEvents ) this.wrapperElement.removeEvents();
+         if( this.wrapperElement.destroy ) this.wrapperElement.destroy();
       }
    }.protect(),
    
