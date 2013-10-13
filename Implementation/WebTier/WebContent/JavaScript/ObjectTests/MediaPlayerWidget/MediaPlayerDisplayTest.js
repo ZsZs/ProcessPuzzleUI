@@ -3,6 +3,7 @@ window.MediaPlayerDisplayTest = new Class( {
    Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onUpdated'],
 
    options : {
+      isAfterEachTestAsynchron : true,
       testMethods : [
          { method : 'construct_constructsComponents', isAsynchron : true },
          { method : 'construct_subscribesToControllerEvents', isAsynchron : true },
@@ -40,7 +41,16 @@ window.MediaPlayerDisplayTest = new Class( {
    },
    
    afterEachTest : function (){
-      this.display.destroy();
+      this.afterEachTestChain.chain(
+         function(){
+            this.display.destroy();
+         }.bind( this ),
+         function(){
+            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+            this.display = null;
+            this.afterEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    construct_constructsComponents : function() {
@@ -93,10 +103,7 @@ window.MediaPlayerDisplayTest = new Class( {
             this.display.construct();
          }.bind( this ),
          function(){
-            this.display.destroy();
-               
-            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
-               
+            // See: afterEachTests()
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -113,7 +120,7 @@ window.MediaPlayerDisplayTest = new Class( {
    },
    
    onDestroyed : function( error ){
-      this.testCaseChain.callChain();
+      this.afterEachTestChain.callChain();
    },
 
    onUpdated : function(){
