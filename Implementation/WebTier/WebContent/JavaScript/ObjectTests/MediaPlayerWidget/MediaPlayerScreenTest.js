@@ -1,12 +1,13 @@
 window.ScreenTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['checkMorphReady', 'onFailure', 'onSuccess'],
+   Binds : ['onConstructed', 'onConstructionError', 'onDestroyed', 'onUpdated'],
 
    options : {
+      isAfterEachTestAsynchron : true,
       testMethods : [
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
-         { method : 'construct_createsScreenElement', isAsynchron : false },
-         { method : 'destroy_removesAllCreatedElements', isAsynchron : false }],
+         { method : 'construct_createsScreenElement', isAsynchron : true },
+         { method : 'destroy_removesAllCreatedElements', isAsynchron : true }],
    },
 
    constants : {
@@ -25,11 +26,27 @@ window.ScreenTest = new Class( {
 
    beforeEachTest : function(){
       this.containerElement = $( this.constants.CONTAINER_ELEMENT_ID );
-      this.screen = new MediaPlayerScreen( this.containerElement, { screenClass : this.constants.SCREEN_CLASS, slideShowClass : this.constants.SLIDESHOW_CLASS } );
+      this.screen = new MediaPlayerScreen( this.containerElement, { 
+         onConstructed : this.onConstructed, 
+         onConstructionError : this.onConstructionError, 
+         onDestroyed : this.onDestroyed,
+         onUpdated : this.onUpdated,
+         screenClass : this.constants.SCREEN_CLASS, 
+         slideShowClass : this.constants.SLIDESHOW_CLASS });
    },
    
    afterEachTest : function (){
-      this.screen.destroy();
+      this.afterEachTestChain.chain(
+         function(){
+            if( this.screen.isConstructed() ) this.screen.destroy();
+            else this.afterEachTestChain.callChain();
+         }.bind( this ),
+         function(){
+            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+            this.screen = null;
+            this.afterEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
@@ -37,31 +54,44 @@ window.ScreenTest = new Class( {
    },
    
    construct_createsScreenElement : function(){
-      this.screen.construct();
-      
-      assertThat( this.containerElement.getElement( '.' + this.screen.getElementClass() ), equalTo( this.screen.getElement() ));
+      this.testCaseChain.chain(
+         function(){
+            this.screen.construct();
+         }.bind( this ),
+         function(){
+            assertThat( this.containerElement.getElement( '.' + this.screen.getElementClass() ), equalTo( this.screen.getElement() ));
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    destroy_removesAllCreatedElements : function(){
-      this.screen.construct();
-      this.screen.destroy();
-      
-      assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+      this.testCaseChain.chain(
+         function(){
+            this.screen.construct();
+         }.bind( this ),
+         function(){
+            // See: afterEachTests()
+            this.testMethodReady();
+         }.bind( this )
+      ).callChain();
    },
    
    //Protected, private helper methods
-   checkMorphReady : function(){
-      if( !this.controller.morph.isRunning() ){
-         clearInterval( this.timer );
-         this.testCaseChain.callChain();
-      }
-   },
-   
-   onSuccess : function(){
+   onConstructed : function(){
       this.testCaseChain.callChain();
    },
    
-   onFailure : function( error ){
+   onConstructionError : function( error ){
+      this.error = error;
+      this.testCaseChain.callChain();
+   },
+   
+   onDestroyed : function( error ){
+      this.afterEachTestChain.callChain();
+   },
+
+   onUpdated : function(){
       this.testCaseChain.callChain();
    }
 

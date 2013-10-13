@@ -32,7 +32,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerScreen = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds: ['onImageLoaded'],
+   Binds: ['createScreenElement', 'destroyScreenElement', 'finalizeConstruction', 'finalizeDestruction', 'onImageLoaded'],
    
    options : {
       eventDeliveryDelay : 5,
@@ -49,7 +49,9 @@ var MediaPlayerScreen = new Class({
       this.assertThat( containerElement, not( nil() ), "Screen.containerElement" );
 
       this.anchorElement;
+      this.constructionChain = new Chain();
       this.containerElement = containerElement;
+      this.destructionChain = new Chain();
       this.height;
       this.imageElement;
       this.screenElement;
@@ -58,8 +60,10 @@ var MediaPlayerScreen = new Class({
    
    //Public accessor and mutator methods
    construct: function(){
-      this.createScreenElement();
-      this.finalizeConstruction();
+      this.compileConstructionChain();
+      
+      try{ this.constructionChain.callChain(); }
+      catch( exception ){ this.revertConstruction( exception ); }
    },
    
    coordinateIsWithinScreen : function( coordinate ){
@@ -68,7 +72,8 @@ var MediaPlayerScreen = new Class({
    },
    
    destroy: function(){
-      this.destroyScreenElement();
+      this.compileDestructionChain();
+      this.destructionChain.callChain();
    },
    
    update: function( imageUri ){
@@ -79,8 +84,17 @@ var MediaPlayerScreen = new Class({
    //Properties
    getElement : function(){ return this.screenElement; },
    getElementClass : function(){ return this.options.slideShowClass + "-" + this.options.screenClass; },
+   isConstructed : function(){ return !(typeof this.screenElement == 'undefined');},
    
    //Protected, private helper methods
+   compileConstructionChain: function(){
+      this.constructionChain.chain( this.createScreenElement, this.finalizeConstruction );
+   }.protect(),
+   
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyScreenElement, this.finalizeDestruction );
+   }.protect(),
+   
    createImageElement : function( imageUri ){
       this.imageElement = new Asset.image( imageUri, {
          'onload' : this.onImageLoaded
@@ -97,6 +111,8 @@ var MediaPlayerScreen = new Class({
       
       this.anchorElement = new Element( 'a' );
       this.anchorElement.inject( this.screenElement );
+      
+      this.constructionChain.callChain();
    }.protect(),
    
    destroyImageElements : function(){
@@ -108,10 +124,18 @@ var MediaPlayerScreen = new Class({
    
    destroyScreenElement : function(){
       if( this.screenElement && this.screenElement ) this.screenElement.destroy();
+      this.screenElement = null;
+      this.destructionChain.callChain();
    }.protect(),
    
    finalizeConstruction : function(){
+      this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   finalizeDestruction : function(){
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    
    finalizeUpdate : function(){
