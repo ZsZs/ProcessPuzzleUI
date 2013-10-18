@@ -24,7 +24,14 @@
 
 var BrowserWidget = new Class( {
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
-   Binds : ['broadcastConstructedMessage', 'checkTimeOut', 'destroyChildHtmlElements', 'finalizeConstruction', 'finalizeDestruction', 'webUIMessageHandler'],
+   Binds : [
+      'broadcastConstructedMessage', 
+      'checkTimeOut', 
+      'destroyChildHtmlElements', 
+      'finalizeConstruction', 
+      'finalizeDestruction', 
+      'finalizeRevertConstruction', 
+      'webUIMessageHandler'],
 
    options : {
       componentName : "BrowserWidget",
@@ -250,6 +257,10 @@ var BrowserWidget = new Class( {
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
    }.protect(),
 
+   finalizeRevertConstruction : function(){
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+   
    instantiateConstructionException : function( exception ){
       return new WidgetConstructionException( this.name, { cause : exception, source : this.options.componentName + ".revertConstruction()" });
    }.protect(),
@@ -292,7 +303,9 @@ var BrowserWidget = new Class( {
       this.error = this.instantiateConstructionException( error );
       this.stopTimeOutTimer();
       this.state = BrowserWidget.States.INITIALIZED;
-      this.fireEvent( 'constructionError', this.error );
+      this.logger.error( "Configuring widget: '" + this.name + "' resulted in error." );
+      this.compileDestructionChain();
+      this.destructionChain.callChain();
    }.protect(),
 
    subscribeToWebUIMessages : function() {
