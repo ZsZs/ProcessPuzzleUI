@@ -3,6 +3,7 @@ window.MediaPlayerWidgetTest = new Class( {
    Binds : ['onConstructed', 'onDestroyed', 'onLocalizationFailure', 'onLocalizationLoaded'],
 
    options : {
+      isAfterEachTestAsynchron : true,
       isBeforeEachTestAsynchron : true,
       testMethods : [
          { method : 'initialization_setsState', isAsynchron : false },
@@ -64,11 +65,22 @@ window.MediaPlayerWidgetTest = new Class( {
    },
    
    afterEachTest : function (){
-      this.widget.destroy();
-      this.widgetData.release();
-      this.widgetDefinition.release();
-      this.messageBus.tearDown();
-      this.componentStateManager.reset();
+      this.afterEachTestChain.chain(
+         function(){
+            if( this.widget.getState() == BrowserWidget.States.CONSTRUCTED ) this.widget.destroy();
+            else this.afterEachTestChain.callChain();
+         }.bind( this ),
+         function(){
+            assertThat( this.widget.getState(), either( equalTo( BrowserWidget.States.INITIALIZED )).or( equalTo( BrowserWidget.States.UNMARSHALLED )));
+            assertThat( this.widgetContainerElement.getElements( '*' ).length, equalTo( 0 ));
+            
+            this.widgetData.release();
+            this.widgetDefinition.release();
+            this.messageBus.tearDown();
+            this.componentStateManager.reset();
+            this.afterEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    initialization_setsState : function() {
@@ -124,11 +136,8 @@ window.MediaPlayerWidgetTest = new Class( {
          function(){ this.widget.unmarshall(); this.widget.construct(); }.bind( this ),
          function(){
             assumeThat( this.widget.getState(), equalTo( BrowserWidget.States.CONSTRUCTED ));
-            this.widget.destroy();
-         }.bind( this ),
-         function(){
-            assertThat( this.widget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
-            assertThat( this.widgetContainerElement.getElements( '*' ).length, equalTo( 0 ));
+            
+            // See: afterEachTests()
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -139,10 +148,11 @@ window.MediaPlayerWidgetTest = new Class( {
       this.testCaseChain.callChain();
    },
    
-   onDestroyed : function(){
-      this.testCaseChain.callChain();
+   onDestroyed : function( error ){
+      if( error ) fail( "MediaPlayerWidget was destroyed before the test case finised. See the logs for the error." );
+      else this.afterEachTestChain.callChain();
    },
-   
+
    onLocalizationFailure : function( error ){
       fail( "Failed to load localization resources" );
    },
