@@ -12,6 +12,7 @@ var JsTestClass = new Class({
       this.setOptions( options );
       
       this.afterEachTestChain = new Chain();
+      this.currentTestCase = null;
       this.beforeEachTestChain = new Chain();
       this.testCaseChain = new Chain();
       this.tracer;
