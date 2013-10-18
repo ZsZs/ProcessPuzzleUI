@@ -31,11 +31,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerWidget = new Class({
    Extends : BrowserWidget,
-   Binds : ['autoStartMedia', 'constructDisplay', 'destroyDisplay', 'onDisplayConstructed', 'onDisplayDestroyed', 'releaseMedia'],
+   Binds : ['autoStartMedia', 'constructDisplay', 'destroyDisplay', 'onDisplayConstructed', 'onDisplayConstructionError', 'onDisplayDestroyed', 'releaseMedia'],
    constants : {
    },
    
    options : {
+      componentName : "MediaPlayerWidget",
       startPaused : false
    },
 
@@ -48,6 +49,10 @@ var MediaPlayerWidget = new Class({
    
    onDisplayConstructed : function(){
       this.constructionChain.callChain();
+   },
+   
+   onDisplayConstructionError : function( error ){
+      this.revertConstruction( error );
    },
    
    onDisplayDestroyed : function(){
@@ -75,14 +80,14 @@ var MediaPlayerWidget = new Class({
    
    constructDisplay: function(){
       var displayOptions = { startPaused : this.options.startPaused };
-      var eventHandlers = { onConstructed : this.onDisplayConstructed, onDestroyed : this.onDisplayDestroyed };
+      var eventHandlers = { onConstructed : this.onDisplayConstructed, onConstructionError : this.onDisplayConstructionError, onDestroyed : this.onDisplayDestroyed };
       this.display = new MediaPlayerDisplay( this.containerElement, this.media, Object.merge( displayOptions, eventHandlers ));
       this.display.construct();
    }.protect(),
    
    destroyDisplay: function(){
       if( this.display ) this.display.destroy();
-      this.destructionChain.callChain();
+      else this.destructionChain.callChain();
    }.protect(),
    
    releaseMedia : function(){
