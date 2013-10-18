@@ -31,7 +31,16 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerThumbnail = new Class( {
    Implements : [AssertionBehavior, Events, Options, TimeOutBehaviour],
-   Binds : ['checkTimeOut', 'createAnchorElement', 'createImageElement', 'createListItemElement', 'finalizeConstruction', 'onImageLoaded', 'onSelection', 'update'],
+   Binds : [
+      'checkTimeOut', 
+      'createAnchorElement', 
+      'createImageElement', 
+      'createListItemElement', 
+      'finalizeConstruction', 
+      'onImageLoaded', 
+      'onSelection', 
+      'onUpdateComplete',
+      'update'],
    options : {
       componentName : 'MediaPlayerThumbnail',
       dimensions : ['left', 'right', 'width', 'x', 'height'],
@@ -81,7 +90,7 @@ var MediaPlayerThumbnail = new Class( {
    
    update : function( isCurrent ){
       this.isCurrent = isCurrent;
-      this.morph = new Fx.Morph( this.anchorElement, this.options.morphProperties );
+      this.morph = new Fx.Morph( this.anchorElement, Object.merge( this.options.morphProperties, { onComplete : this.onUpdateComplete }));
       this.morph.start( "." + this.getVisibleClass() );
    },
    
@@ -162,6 +171,10 @@ var MediaPlayerThumbnail = new Class( {
    onSelection : function( clickEvent ) {
       this.fireEvent( 'selected', this );
       return false;
+   },
+   
+   onUpdateComplete : function(){
+      this.fireEvent( 'updated', this );
    },
    
    revertConstruction : function( error ){

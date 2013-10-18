@@ -1,6 +1,6 @@
 window.MediaPlayerThumbnailTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['checkMorphReady', 'onConstructed', 'onDestroyed'],
+   Binds : ['checkMorphReady', 'onConstructed', 'onDestroyed', 'onUpdated'],
 
    options : {
       testMethods : [
@@ -35,6 +35,7 @@ window.MediaPlayerThumbnailTest = new Class( {
       this.thumbnail = new MediaPlayerThumbnail( this.containerElement, this.constants.IMAGE_FOLDER + this.constants.THUMBNAIL_IMAGE_URI, 0, { 
          onConstructed : this.onConstructed,
          onDestroyed : this.onDestroyed,
+         onUpdated : this.onUpdated,
          slideShowClass : this.constants.SLIDESHOW_CLASS,
          thumbnailsClass : this.constants.THUMBNAILS_CLASS,
       });
@@ -69,11 +70,9 @@ window.MediaPlayerThumbnailTest = new Class( {
          function(){ this.thumbnail.construct(); }.bind( this ),
          function(){ 
             this.thumbnail.update( true ); 
-            this.timer = this.checkMorphReady.periodical( 500 );
          }.bind( this ),
          function(){
             assertThat( this.thumbnail.getAnchorElement().getStyle( 'opacity' ), equalTo( 1 ));
-               
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -111,6 +110,9 @@ window.MediaPlayerThumbnailTest = new Class( {
    
    onDestroyed : function(){
       this.testCaseChain.callChain();
-   }
+   },
    
+   onUpdated : function(){
+      this.testCaseChain.callChain();
+   }
 });
