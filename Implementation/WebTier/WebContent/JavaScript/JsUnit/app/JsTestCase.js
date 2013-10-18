@@ -71,6 +71,7 @@ var JsTestCase = new Class({
 
    //Protected, private helper methods
    afterEachTestWrapper: function(){
+      this.state = JsTestCase.States.TEARDOWN;
       this.callAfterEachTest();
       if( this.options.isAfterEachTestAsynchron )
          this.waitForTestMethod();
@@ -80,6 +81,7 @@ var JsTestCase = new Class({
    },
    
    beforeEachTestWrapper: function(){
+      this.state = JsTestCase.States.SETUP;
       this.callBeforeEachTest();
       this.testResult.testStarted();
       if( this.options.isBeforeEachTestAsynchron )
@@ -112,6 +114,7 @@ var JsTestCase = new Class({
    
    testRunWrapper : function(){
       try{
+         this.state = JsTestCase.States.VERIFY;
          this.runTest();
          
          if( this.asynchron ) {
