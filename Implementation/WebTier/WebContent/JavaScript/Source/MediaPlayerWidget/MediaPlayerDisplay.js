@@ -46,8 +46,10 @@ var MediaPlayerDisplay = new Class({
       'destroyTitleBar',
       'finalizeConstruction', 
       'finalizeDestruction',
+      'finalizeRevertConstruction',
       'onComponentConstructed', 
-      'onComponentDestructed',
+      'onComponentConstructionError',
+      'onComponentDestroyed',
       'onComponentUpdated',
       'onMediaBackward',
       'onMediaBeginning',
@@ -59,6 +61,7 @@ var MediaPlayerDisplay = new Class({
       'onUpdateDisplay'],
    
    options : {
+      componentName : "MediaPlayerDisplay",
       eventDeliveryDelay : 5,
       startPaused : false
    },
@@ -74,6 +77,7 @@ var MediaPlayerDisplay = new Class({
       this.controller;
       this.destructionChain = new Chain();
       this.error;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.media = media;
       this.screen;
       this.thumbnailsBar;
@@ -96,6 +100,11 @@ var MediaPlayerDisplay = new Class({
 
    onComponentConstructed : function( component ){
       this.constructionChain.callChain();
+   },
+   
+   onComponentConstructionError : function( component, error ){
+      this.logger.error( "Configuring component: '" + component.options.componentName + "' resulted in error." );
+      this.revertConstruction( error );
    },
    
    onComponentDestroyed : function( component ){
@@ -179,7 +188,7 @@ var MediaPlayerDisplay = new Class({
    
    constructController: function(){
       var displayOptions = { startPaused : this.options.startPaused };
-      var eventHandlers = { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed };
+      var eventHandlers = { onConstructed : this.onComponentConstructed, onConstructionError : this.onComponentConstructionError, onDestroyed : this.onComponentDestroyed };
       this.controller = new MediaPlayerController( this.containerElement, this.screen, Object.merge( displayOptions, eventHandlers ));
       this.controller.construct();
    }.protect(),
@@ -187,6 +196,7 @@ var MediaPlayerDisplay = new Class({
    constructScreen: function(){
       this.screen = new MediaPlayerScreen( this.containerElement, { 
          onConstructed : this.onComponentConstructed, 
+         onConstructionError : this.onComponentConstructionError, 
          onDestroyed : this.onComponentDestroyed, 
          onUpdated : this.onComponentUpdated,
       });
@@ -196,6 +206,7 @@ var MediaPlayerDisplay = new Class({
    constructThumbnailsBar: function(){
       this.thumbnailsBar = new MediaPlayerThumbnailsBar( this.containerElement, this.media.getThumbnailsUri(), { 
          onConstructed : this.onComponentConstructed, 
+         onConstructionError : this.onComponentConstructionError, 
          onDestroyed : this.onComponentDestroyed,
          onMediaPosition : this.onMediaPosition
       });
@@ -203,28 +214,32 @@ var MediaPlayerDisplay = new Class({
    }.protect(),
    
    constructTitleBar: function(){
-      this.titleBar = new MediaPlayerTitleBar( this.containerElement, { onConstructed : this.onComponentConstructed, onDestroyed : this.onComponentDestroyed });
+      this.titleBar = new MediaPlayerTitleBar( this.containerElement, { 
+         onConstructed : this.onComponentConstructed, 
+         onConstructionError : this.onComponentConstructionError, 
+         onDestroyed : this.onComponentDestroyed 
+      });
       this.titleBar.construct();
    }.protect(),
    
    destroyController: function(){
       if( this.controller ) this.controller.destroy();
-      this.destructionChain.callChain();
+      else this.destructionChain.callChain();
    }.protect(),
    
    destroyScreen: function(){
       if( this.screen ) this.screen.destroy();
-      this.destructionChain.callChain();
+      else this.destructionChain.callChain();
    }.protect(),
    
    destroyThumbnailsBar: function(){
       if( this.thumbnailsBar ) this.thumbnailsBar.destroy();
-      this.destructionChain.callChain();
+      else this.destructionChain.callChain();
    }.protect(),
    
    destroyTitleBar: function(){
       if( this.titleBar ) this.titleBar.destroy();
-      this.destructionChain.callChain();
+      else this.destructionChain.callChain();
    }.protect(),
    
    finalizeConstruction : function(){
@@ -239,10 +254,15 @@ var MediaPlayerDisplay = new Class({
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
    }.protect(),
 
+   finalizeRevertConstruction : function(){
+      this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+   
    revertConstruction : function( error ){
       this.error = error;
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
+      this.logger.error( "Configuring 'Media Player Display' resulted in error." );
       this.fireEvent( 'constructionError', this.error );
    }.protect(),
 

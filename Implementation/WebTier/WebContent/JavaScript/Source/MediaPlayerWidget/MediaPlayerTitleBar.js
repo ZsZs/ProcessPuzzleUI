@@ -35,6 +35,7 @@ var MediaPlayerTitleBar = new Class({
    
    options : {
       captionClass : "captions",
+      componentName : "MediaPlayerTitleBar",
       eventDeliveryDelay : 5,
       hiddenClass : "hidden",
       idPrefix : "Slideshow-",
@@ -63,6 +64,7 @@ var MediaPlayerTitleBar = new Class({
    destroy : function(){
       this.removeEvents();
       this.destroyCaptionElement();
+      this.fireEvent( 'destroyed', this );      
    },
    
    update : function( text, fast ){
@@ -92,7 +94,7 @@ var MediaPlayerTitleBar = new Class({
    }.protect(),
    
    destroyCaptionElement : function(){
-      if( this.captionElement ) this.captionElement.destroy();
+      if( this.captionElement && this.captionElement.destroy ) this.captionElement.destroy();
    }.protect(),
    
    flashCaption : function(){
@@ -122,6 +124,6 @@ var MediaPlayerTitleBar = new Class({
    }.protect(),
    
    removeEvents : function(){
-      if( this.captionElement ) this.captionElement.removeEvents();
+      if( this.captionElement && this.captionElement.removeEvents ) this.captionElement.removeEvents();
    }
 });

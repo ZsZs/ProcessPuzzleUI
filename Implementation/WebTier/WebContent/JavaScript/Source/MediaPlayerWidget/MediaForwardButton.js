@@ -38,6 +38,7 @@ var MediaForwardButton = new Class({
    options : {
       action : 'next',
       buttonClass : 'next',
+      componentName : "MediaForwardButton",
       key : 'right',
       label : 'Rightwards Arrow',
       tabIndex : 3

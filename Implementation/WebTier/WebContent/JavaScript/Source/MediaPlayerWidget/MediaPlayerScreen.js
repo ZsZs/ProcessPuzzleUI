@@ -32,9 +32,10 @@ You should have received a copy of the GNU General Public License along with thi
 
 var MediaPlayerScreen = new Class({
    Implements : [AssertionBehavior, Events, Options],
-   Binds: ['createScreenElement', 'destroyScreenElement', 'finalizeConstruction', 'finalizeDestruction', 'onImageLoaded'],
+   Binds: ['createScreenElement', 'destroyScreenElement', 'finalizeConstruction', 'finalizeDestruction', 'finalizeRevertConstruction', 'onImageLoaded'],
    
    options : {
+      componentName : "MediaPlayerScreen",
       eventDeliveryDelay : 5,
       height: 300,
       resize : 'fill',
@@ -54,6 +55,7 @@ var MediaPlayerScreen = new Class({
       this.destructionChain = new Chain();
       this.height;
       this.imageElement;
+      this.logger = Class.getInstanceOf( WebUILogger );
       this.screenElement;
       this.width;
    },
@@ -138,6 +140,10 @@ var MediaPlayerScreen = new Class({
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    
+   finalizeRevertConstruction : function(){
+      this.fireEvent( 'constructionError', this, this.error );
+   }.protect(),
+   
    finalizeUpdate : function(){
       this.fireEvent( 'updated', this, this.options.eventDeliveryDelay );      
    }.protect(),
@@ -153,6 +159,14 @@ var MediaPlayerScreen = new Class({
       if( this.options.resize == 'fit') dh = dw = dh > dw ? dw : dh;
       if( this.options.resize == 'fill') dh = dw = dh > dw ? dh : dw;
       img.set( 'styles', { 'height' : Math.ceil( h * dh ), 'width' : Math.ceil( w * dw ) });
-   }.protect()
+   }.protect(),
    
+   revertConstruction : function( error ){
+      this.error = error;
+      this.stopTimeOutTimer();
+      this.constructionChain.clearChain();
+      this.logger.error( "Configuring 'Media Player Screen' resulted in error." );
+      this.fireEvent( 'constructionError', this, this.error );
+   }.protect()
+
 });

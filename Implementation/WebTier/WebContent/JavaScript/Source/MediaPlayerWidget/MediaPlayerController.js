@@ -84,6 +84,7 @@ var MediaPlayerController = new Class({
       this.removeEvents();
       this.destroyButtons();
       this.destroyControllerWrapperElement();
+      this.fireEvent( 'destroyed', this );      
    },
 
    hide : function() {

@@ -38,6 +38,7 @@ var MediaBackwardButton = new Class({
    options : {
       action : 'prev',
       buttonClass : 'prev',
+      componentName : "MediaBackwardButton",
       key : 'left',
       label : 'Leftwards Arrow',
       tabIndex : 1

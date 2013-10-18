@@ -38,6 +38,7 @@ var MediaEndButton = new Class({
    options : {
       action : 'last',
       buttonClass : 'last',
+      componentName : "MediaEndButton",
       key : 'shift right',
       label : 'Shift + Rightwards Arrow',
       tabIndex : 4

@@ -36,6 +36,7 @@ var MediaControllerButton = new Class({
    options : {
       action : null,
       buttonClass : null,
+      componentName : "MediaControllerButton",
       isActiveClass : 'active',
       key : null,
       label : null,

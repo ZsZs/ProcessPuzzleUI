@@ -38,6 +38,7 @@ var MediaBeginningButton = new Class({
    options : {
       action : 'first',
       buttonClass : 'first',
+      componentName : "MediaBeginningButton",
       key : 'shift left',
       label : 'Shift + Leftwards Arrow',
       tabIndex : 0
