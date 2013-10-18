@@ -1,8 +1,9 @@
 window.MediaPlayerThumbnailsBarTest = new Class( {
    Implements : [Events, JsTestClass, Options],
-   Binds : ['checkMorphReady', 'onConstructed', 'onConstructionError'],
+   Binds : ['checkMorphReady', 'onConstructed', 'onConstructionError', 'onDestroyed', 'onUpdated'],
 
    options : {
+      isAfterEachTestAsynchron : true,
       testMethods : [
          { method : 'initialize_whenContainerElementIsUndefined_throwsAssertionException', isAsynchron : false },
          { method : 'construct_createsWrapperElement', isAsynchron : true },
@@ -38,14 +39,25 @@ window.MediaPlayerThumbnailsBarTest = new Class( {
       this.thumbnails = new MediaPlayerThumbnailsBar( this.containerElement, this.thummnailImages, { 
          onConstructed : this.onConstructed,
          onConstructionError : this.onConstructionError,
+         onDestroyed : this.onDestroyed,
+         onUpdated : this.onUpdated,
          slideShowClass : this.constants.SLIDESHOW_CLASS,
          thumbnailsClass : this.constants.THUMBNAILS_CLASS
       });
    },
    
    afterEachTest : function (){
-      this.thumbnails.destroy();
-      this.thummnailImages.empty();
+      this.afterEachTestChain.chain(
+         function(){
+            this.thumbnails.destroy();
+         }.bind( this ),
+         function(){
+            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+            this.thummnailImages.empty();
+            this.thumbnails = null;
+            this.afterEachTestReady();
+         }.bind( this )
+      ).callChain();
    },
    
    initialize_whenContainerElementIsUndefined_throwsAssertionException : function() {
@@ -91,7 +103,6 @@ window.MediaPlayerThumbnailsBarTest = new Class( {
          function(){ this.thumbnails.construct(); }.bind( this ),
          function(){
             this.thumbnails.update( 3 );
-            this.timer = this.checkMorphReady.periodical( 500 );
          }.bind( this ),
          function(){
             assertThat( Math.abs( parseInt( this.thumbnails.getListElement().getStyle( 'left' ))), greaterThan( 0 ));
@@ -105,9 +116,7 @@ window.MediaPlayerThumbnailsBarTest = new Class( {
       this.testCaseChain.chain(
          function(){ this.thumbnails.construct(); }.bind( this ),
          function(){
-            this.thumbnails.destroy();
-      
-            assertThat( this.containerElement.getElements( '*' ).length, equalTo( 0 ));
+            // See: afterEachTests()
             this.testMethodReady();
          }.bind( this )
       ).callChain();
@@ -127,6 +136,14 @@ window.MediaPlayerThumbnailsBarTest = new Class( {
    
    onConstructionError : function(){
       this.testCaseChain.callChain();
-   }   
+   },
+
+   onDestroyed : function( error ){
+      this.afterEachTestChain.callChain();
+   },
+
+   onUpdated : function(){
+      this.testCaseChain.callChain();
+   }
 
 });

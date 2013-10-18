@@ -38,11 +38,17 @@ var MediaPlayerThumbnailsBar = new Class({
       'createListElement', 
       'createThumbnailElements',
       'createWrapperElement', 
+      'destroyListElement', 
+      'destroyThumnailElements', 
+      'destroyWrapperElement',
       'determineDimensions',
       'finalizeConstruction',
+      'finalizeDestruction', 
       'onMouseMove', 
+      'onUpdateComplete',
       'onThumbnailConstructed',
       'onThumbnailSelected', 
+      'onThumbnailUpdated',
       'scroll',
       'updateThumbnails'],
    options : {
@@ -69,6 +75,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.containerElement = containerElement;
       this.currentThumbnailIndex = 0;
       this.delay = 1000 / this.options.scrollingFrequency;
+      this.destructionChain = new Chain();
       this.dimensions;
       this.lastMouseMoveEvent;
       this.limit;
@@ -78,6 +85,7 @@ var MediaPlayerThumbnailsBar = new Class({
       this.thumbnailsConstructionChain = new Chain();
       this.thumbnailImageUris = thumbnailImageUris;
       this.tween;
+      this.updateChain = new Chain();
       this.wrapperElement;
    },
    
@@ -91,9 +99,8 @@ var MediaPlayerThumbnailsBar = new Class({
    },
 
    destroy : function(){
-      this.destroyThumnailElements();
-      this.destroyListElement();
-      this.destroyWrapperElement();
+      this.compileDestructionChain();
+      this.destructionChain.callChain();
    },
    
    update : function( slideIndex ){
@@ -145,6 +152,10 @@ var MediaPlayerThumbnailsBar = new Class({
       );
    }.protect(),
    
+   compileDestructionChain: function(){
+      this.destructionChain.chain( this.destroyThumnailElements, this.destroyListElement, this.destroyWrapperElement, this.finalizeDestruction );
+   }.protect(),
+   
    createListElement : function(){
       this.listElement = new Element( 'ul', { 'role' : 'menu', 'styles' : { 'left' : 0, 'position' : 'absolute', 'top' : 0 }});
       this.listElement.inject( this.wrapperElement );
@@ -159,7 +170,8 @@ var MediaPlayerThumbnailsBar = new Class({
                   dimensions : this.dimensions,
                   fastTransformation : this.options.fastTransformation,
                   onConstructed : this.onThumbnailConstructed,
-                  onSelected : this.onThumbnailSelected 
+                  onSelected : this.onThumbnailSelected, 
+                  onUpdated : this.onThumbnailUpdated 
                });
                slideThumbnail.construct();
                this.thumbnails.add( slideThumbnail );
@@ -185,12 +197,14 @@ var MediaPlayerThumbnailsBar = new Class({
    
    destroyListElement : function(){
       if( this.listElement && this.listElement.destroy ) this.listElement.destroy();
+      this.destructionChain.callChain();
    }.protect(),
 
    destroyThumnailElements : function(){
       this.thumbnails.each( function( slideThumbnail, index ){
          slideThumbnail.destroy();
       }.bind( this ));
+      this.destructionChain.callChain();
    }.protect(),
    
    destroyWrapperElement : function(){
@@ -198,6 +212,7 @@ var MediaPlayerThumbnailsBar = new Class({
          if( this.wrapperElement.removeEvents ) this.wrapperElement.removeEvents();
          if( this.wrapperElement.destroy ) this.wrapperElement.destroy();
       }
+      this.destructionChain.callChain();
    }.protect(),
    
    determineDimensions : function(){
@@ -212,6 +227,11 @@ var MediaPlayerThumbnailsBar = new Class({
       this.stopTimeOutTimer();
       this.constructionChain.clearChain();
       this.fireEvent( 'constructed', this, this.options.eventDeliveryDelay );
+   }.protect(),
+   
+   finalizeDestruction : function(){
+      this.destructionChain.clearChain();
+      this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );      
    }.protect(),
    
    mouseIsWithinThumbnailsArea : function( mouseMoveEvent ){
@@ -234,6 +254,10 @@ var MediaPlayerThumbnailsBar = new Class({
       }
    },
 
+   onUpdateComplete : function(){
+      this.fireEvent( 'updated', this );
+   },
+   
    onThumbnailConstructed: function( thumbnail ){
       this.thumbnailsConstructionChain.callChain();
    },
@@ -242,10 +266,14 @@ var MediaPlayerThumbnailsBar = new Class({
       this.fireEvent( 'mediaPosition', thumbnail.getIndex() );
    },
    
+   onThumbnailUpdated : function( thumbnail ){
+      this.updateChain.callChain();
+   },
+   
    revertConstruction : function( error ){
       this.error =  error;
       this.stopTimeOutTimer();
-      this.fireEvent( 'constructionError', this.error );
+      this.fireEvent( 'constructionError', this, this.error );
    }.protect(),
 
    scroll : function() {
@@ -283,22 +311,33 @@ var MediaPlayerThumbnailsBar = new Class({
       var thumbnailCoordinates = this.thumbnails.get( this.currentThumbnailIndex ).getCoordinates();
       delta = wrapperElementCoordinates[pos] + (wrapperElementCoordinates[size] / 2) - (thumbnailCoordinates[size] / 2) - thumbnailCoordinates[pos];
       value = (listElementPosition[axis] - wrapperElementCoordinates[pos] + delta).limit( this.limit, 0 );
-      this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos }));
+      this.tween = new Fx.Tween( this.listElement, Object.merge( this.options.tweenProperties, { 'property' : pos, onComplete : this.onUpdateComplete }));
       if( this.options.fastTransformation ) this.tween.set( value );
       else this.tween.start( value );
-   }.protect(),
-   
-   updateThumbnails : function(){
-      var delay = Math.max( 1000 / this.thumbnails.length, 100 );
-      this.thumbnails.each(function( thumbnail, index ){
-         var isCurrent = this.currentThumbnailIndex == index;
-         thumbnail.update.delay( delay, this, isCurrent );
-      }.bind( this ));
-      this.constructionChain.callChain();
    }.protect(),
 
    timeOut : function( exception ){
       this.revertConstruction( exception );
-   }.protect()
+   }.protect(),
+   
+   updateThumbnails : function(){
+      var delay = Math.max( 1000 / this.thumbnails.length, 100 );
+      
+      this.thumbnails.each(function( thumbnail, index ){
+         this.updateChain.chain(
+            function(){
+               var isCurrent = this.currentThumbnailIndex == index;
+               thumbnail.update.delay( delay, this, isCurrent );
+            }.bind( this )
+         );
+      }.bind( this ));
+      
+      this.updateChain.chain(
+         function(){
+            this.updateChain.clearChain();
+            this.constructionChain.callChain(); 
+         }.bind( this )
+      ).callChain();
+   }.protect(),
    
 });
