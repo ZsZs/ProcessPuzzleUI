@@ -254,6 +254,7 @@ var BrowserWidget = new Class( {
       this.logger.trace( this.options.componentName + ".onDestroyed() of '" + this.name + "'." );
       this.state = BrowserWidget.States.INITIALIZED;
       this.destructionChain.clearChain();
+      if( this.error ) this.finalizeRevertConstruction();
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );
    }.protect(),
 

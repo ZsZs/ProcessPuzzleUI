@@ -216,10 +216,14 @@ window.BrowserWidgetTest = new Class( {
             this.browserWidget.construct();
          }.bind( this ),
          function(){
+            //'constructionError' event received
             assertThat( this.browserWidget.getState(), equalTo( BrowserWidget.States.INITIALIZED ));
             assertThat( this.browserWidget.getError(), JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
             assertThat( this.error, JsHamcrest.Matchers.instanceOf( WidgetConstructionException ));
             assertThat( this.error.getCause(), JsHamcrest.Matchers.instanceOf( TimeOutException ));
+         }.bind( this ),
+         function(){
+            //'destroyed' event received
             this.testMethodReady();
          }.bind( this )
       ).callChain();
