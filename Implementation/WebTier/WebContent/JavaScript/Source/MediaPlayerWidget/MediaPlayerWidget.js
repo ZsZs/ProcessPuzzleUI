@@ -45,6 +45,7 @@ var MediaPlayerWidget = new Class({
       
       this.display;
       this.media;
+      this.increaseConstructionTimeOut();
    },
    
    onDisplayConstructed : function(){
@@ -88,6 +89,10 @@ var MediaPlayerWidget = new Class({
    destroyDisplay: function(){
       if( this.display ) this.display.destroy();
       else this.destructionChain.callChain();
+   }.protect(),
+   
+   increaseConstructionTimeOut: function(){
+      this.options.delay = 400;
    }.protect(),
    
    releaseMedia : function(){

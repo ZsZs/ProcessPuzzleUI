@@ -87,6 +87,8 @@ var MediaPlayerThumbnailsBar = new Class({
       this.tween;
       this.updateChain = new Chain();
       this.wrapperElement;
+      
+      this.increaseConstructionTimeOut();
    },
    
    //Public accessor and mutator methods
@@ -232,6 +234,10 @@ var MediaPlayerThumbnailsBar = new Class({
    finalizeDestruction : function(){
       this.destructionChain.clearChain();
       this.fireEvent( 'destroyed', this, this.options.eventDeliveryDelay );      
+   }.protect(),
+   
+   increaseConstructionTimeOut: function(){
+      this.options.delay = 400;
    }.protect(),
    
    mouseIsWithinThumbnailsArea : function( mouseMoveEvent ){

@@ -82,6 +82,8 @@ var MediaPlayerDisplay = new Class({
       this.screen;
       this.thumbnailsBar;
       this.titleBar;
+      
+      this.increaseConstructionTimeOut();
    },
    
    //Public accessor and mutator methods
@@ -256,6 +258,10 @@ var MediaPlayerDisplay = new Class({
 
    finalizeRevertConstruction : function(){
       this.fireEvent( 'constructionError', this.error );
+   }.protect(),
+   
+   increaseConstructionTimeOut: function(){
+      this.options.delay = 400;
    }.protect(),
    
    revertConstruction : function( error ){
