@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-	elementFormDefault="qualified"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<xs:schema elementFormDefault="qualified"
+	xmlns:atd="http://www.processpuzzle.com/ArtifactTypeDefinition"
+	xmlns:bd="http://www.processpuzzle.com/BusinessDefinitionsConfiguration"
 	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
-	xmlns:bd="http://www.processpuzzle.com/BusinessDefinitionsConfiguration" 
+	xmlns:pd="http://www.processpuzzle.com/ProtocolDefinition"
+	xmlns:prt="http://www.processpuzzle.com/PartyRelationshipTypeDefinition"
+	xmlns:pt="http://www.processpuzzle.com/PartyTypeDefinition"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	targetNamespace="http://www.processpuzzle.com/BusinessDefinitionsConfiguration">
-	
-  <xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd"/>
-  
-  <xs:element name="businessDefinitions">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="ge:schema" minOccurs="1" maxOccurs="1" />
-        <xs:element ref="ge:mapping" minOccurs="1" maxOccurs="unbounded" />
-        <xs:element ref="bd:businessDefinition" minOccurs="1" maxOccurs="unbounded" />
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  
-  <xs:element name="businessDefinition" type="xs:anyURI"/>
-  
+
+	<xs:import namespace="http://www.processpuzzle.com/ArtifactTypeDefinition"	schemaLocation="ArtifactTypeDefinition.xsd" />
+	<xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd" />
+	<xs:import namespace="http://www.processpuzzle.com/PartyRelationshipTypeDefinition" schemaLocation="PartyRelationshipTypeDefinition.xsd" />
+	<xs:import namespace="http://www.processpuzzle.com/PartyTypeDefinition"	schemaLocation="PartyTypeDefinition.xsd" />
+	<xs:import namespace="http://www.processpuzzle.com/ProtocolDefinition" schemaLocation="ProtocolDefinition.xsd" />
+
+	<xs:element name="businessDefinitions">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ge:schema" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="ge:mapping" minOccurs="1" maxOccurs="unbounded" />
+				<xs:element ref="bd:businessDefinition" minOccurs="1"	maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="businessDefinition">
+		<xs:complexType>
+			<xs:sequence maxOccurs="1">
+				<xs:element name="partyTypes" type="pt:PartyTypes"	minOccurs="0"></xs:element>
+				<xs:element name="partyRoleTypes" type="prt:PartyRoleTypes"	minOccurs="0"></xs:element>
+				<xs:element name="partyRelationshipTypes" type="prt:PartyRelationshipTypes" minOccurs="0"></xs:element>
+				<xs:element name="artifactTypes" type="atd:ArtifactTypeListDefinition" minOccurs="0"></xs:element>
+				<xs:element name="protocols" type="pd:ProtocolListDefinition" minOccurs="0"></xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 </xs:schema>

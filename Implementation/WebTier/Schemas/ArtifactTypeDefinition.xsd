@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:atd="http://www.processpuzzle.com/ArtifactTypeDefinition"
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	targetNamespace="http://www.processpuzzle.com/ArtifactTypeDefinition">
+
+	<xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd" />
+	
+	<!-- ArtifactTypeListDefinition Begin -->
+	<xs:complexType name="ArtifactTypeListDefinition">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="artifactTypeGroup">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="defaultAccessRights" type="atd:AccessRightsList" minOccurs="0" maxOccurs="1" />
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="artifactType" type="atd:ArtifactTypeDefinition"></xs:element>
+						</xs:sequence>
+					</xs:sequence>
+					<xs:attribute name="name" type="xs:token" use="required"></xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArtifactTypeDefinition">
+		<xs:sequence>
+			<xs:element ref="ge:description" minOccurs="0" maxOccurs="1"></xs:element>
+			<xs:element name="caption" type="xs:string"></xs:element>
+			<xs:element name="baseUri" type="xs:string"></xs:element>
+			<xs:element name="defaultAccessRights" type="atd:AccessRightsList" minOccurs="0" maxOccurs="1" />
+			<xs:element name="creationProperties" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="creationProperty" type="atd:PropertyDefinition"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="availableViews" maxOccurs="unbounded" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:choice>
+							<xs:element name="propertyViewType" type="atd:PropertyViewType"></xs:element>
+							<xs:element name="printViewType" type="atd:PrintViewType"></xs:element>
+							<xs:element name="editableTextViewType" type="atd:EditableTextViewType"></xs:element>
+							<xs:element name="artifactListViewType" type="atd:ArtifactListViewType"></xs:element>
+							<xs:element name="artifactModificationsViewType" type="atd:ArtifactModificationsViewType"></xs:element>
+							<xs:element name="relatedArtifactsViewType" type="atd:RelatedArtifactsViewType"></xs:element>
+							<xs:element name="artifactCommentsViewType" type="atd:ArtifactCommentsViewType"></xs:element>
+							<xs:element name="accessRightsViewType" type="atd:AccessRightsViewType"></xs:element>
+							<xs:element name="artifactCustomFormViewType" type="atd:ArtifactCustomFormViewType"></xs:element>
+							<xs:element name="listQueryViewType" type="atd:ListQueryViewType"></xs:element>
+						</xs:choice>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="associatedMenuItems" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="menuItem" type="atd:MenuItemDefinition"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:ID" use="required"></xs:attribute>
+		<xs:attribute name="group" type="xs:token" use="required"></xs:attribute>
+		<xs:attribute name="artifactClassName" type="xs:token" use="required"></xs:attribute>
+		<xs:attribute name="domainClassName" type="xs:token"></xs:attribute>
+		<xs:attribute name="instanceFolder" type="xs:string" use="optional"></xs:attribute>
+		<xs:attribute name="pessimisticLock" type="xs:boolean" use="optional" default="false"></xs:attribute>
+		<xs:attribute name="isSystem" type="xs:boolean" use="optional" default="false"></xs:attribute>
+		<xs:attribute name="isVersionControlled" type="xs:boolean" use="optional" default="false"></xs:attribute>
+		<xs:attribute name="createOnStartUp" type="xs:boolean" use="optional" default="false"></xs:attribute>
+		<xs:attribute name="isSingleton" type="xs:boolean" use="optional" default="false"></xs:attribute>
+		<xs:attribute name="refreshOnDocumentActivation" type="xs:boolean" default="false"></xs:attribute>
+		<xs:attribute name="refreshOnViewActivation" type="xs:boolean" default="false"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ArtifactViewType">
+		<xs:sequence>
+			<xs:element name="viewCaption" type="xs:string" />
+			<xs:element name="viewAccessUrl" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="associatedMenuItems" maxOccurs="unbounded" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="menuItem" type="atd:MenuItemDefinition"></xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:token" use="required"></xs:attribute>
+		<xs:attribute name="clientType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="PropertyView"></xs:enumeration>
+					<xs:enumeration value="NativeView"></xs:enumeration>
+					<xs:enumeration value="BrowseView"></xs:enumeration>
+					<xs:enumeration value="PrintView"></xs:enumeration>
+					<xs:enumeration value="EditableHtmlView"></xs:enumeration>
+					<xs:enumeration value="CustomFormView"></xs:enumeration>
+					<xs:enumeration value="ListQueryView"></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="presentationUri" type="xs:token" use="optional"></xs:attribute>
+		<xs:attribute name="viewClassName" type="xs:token" use="optional"></xs:attribute>
+		<xs:attribute name="isDefault" type="xs:boolean" default="false" use="optional" />
+		<xs:attribute name="isStatic" type="xs:boolean" default="true" use="optional" />
+	</xs:complexType>
+
+	<!-- ViewType extensions - begin -->
+	<xs:complexType name="PropertyViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="PrintViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType">
+				<xs:attribute name="xmlToFoXsltPath" type="xs:token" use="required"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="EditableTextViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType">
+				<xs:attribute name="xmlToHtmlXsltPath" type="xs:token" use="required"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ArtifactListViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType">
+				<xs:attribute name="listedArtifactType" type="xs:token" use="required"></xs:attribute>
+				<xs:attribute name="orderBy" type="xs:token" use="optional"></xs:attribute>
+				<xs:attribute name="order" type="atd:SortOrder" use="optional"></xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ListQueryViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType">
+				<xs:sequence>
+					<xs:element name="preDefinedQueries" maxOccurs="1" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="query" minOccurs="1" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="ge:description"></xs:element>
+											<xs:element name="statement" type="xs:string"></xs:element>
+										</xs:sequence>
+										<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="targetPropertyView" type="xs:token" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ArtifactModificationsViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="RelatedArtifactsViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ArtifactCommentsViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="AccessRightsViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ArtifactCustomFormViewType">
+		<xs:complexContent>
+			<xs:extension base="atd:ArtifactViewType"></xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ViewType extensions - end -->
+
+	<xs:complexType name="MenuItemDefinition">
+		<xs:sequence>
+			<xs:element name="command" type="atd:WebUICommandDefinition" minOccurs="0" maxOccurs="1"></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:token" use="required"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="PropertyDefinition">
+		<xs:sequence minOccurs="0" maxOccurs="1">
+			<xs:element name="defaultValue" ></xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:token" use="required"></xs:attribute>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="string"></xs:enumeration>
+					<xs:enumeration value="integer"></xs:enumeration>
+					<xs:enumeration value="date"></xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:simpleType name="ViewTypeName">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="ArtifactPropertyViewType"></xs:enumeration>
+			<xs:enumeration value="ArtifactListViewType"></xs:enumeration>
+			<xs:enumeration value="ArtifactPrintViewType"></xs:enumeration>
+			<xs:enumeration value="ArtifactModificationsViewType"></xs:enumeration>
+			<xs:enumeration value="ArtifactCommentsViewType"></xs:enumeration>
+			<xs:enumeration value="AccessRightsViewType"></xs:enumeration>
+			<xs:enumeration value="ArtifactCustomFormViewType"></xs:enumeration>
+			<xs:enumeration value="EditableTextViewType"></xs:enumeration>
+			<xs:enumeration value="RelatedArtifactsViewType"></xs:enumeration>
+			<xs:enumeration value="ListQueryViewType"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="BaseTypeName">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Document"></xs:enumeration>
+			<xs:enumeration value="List"></xs:enumeration>
+			<xs:enumeration value="InfoPage"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="WebUICommandDefinition">
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+		<xs:attribute name="type" type="atd:CommandTypeName" use="required"></xs:attribute>
+		<xs:attribute name="customPrefix" type="xs:string" use="optional"></xs:attribute>
+		<xs:attribute name="actionStatement" type="xs:string" use="optional"></xs:attribute>
+		<xs:attribute name="description" type="xs:string" use="optional"></xs:attribute>
+	</xs:complexType>
+
+	<xs:simpleType name="CommandTypeName">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CustomCommand"></xs:enumeration>
+			<xs:enumeration value="PrintActiveDocumentCommand"></xs:enumeration>
+			<xs:enumeration value="CloseActiveDocumentCommand"></xs:enumeration>
+			<xs:enumeration value="OpenDocumentSelectedInListCommand"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="SortOrder">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="asc"></xs:enumeration>
+			<xs:enumeration value="desc"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ArtifactTypeListDefinition End -->
+
+
+	<xs:complexType name="AccessRightsList">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="accessRight" type="atd:AccessRightDefinition" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AccessRightDefinition">
+		<xs:attribute name="partyRoleType" type="xs:token" />
+		<xs:attribute name="canRead" type="xs:boolean" />
+		<xs:attribute name="canCreate" type="xs:boolean" />
+		<xs:attribute name="canModify" type="xs:boolean" />
+		<xs:attribute name="canDelete" type="xs:boolean" />
+	</xs:complexType>
+</xs:schema>

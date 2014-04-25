@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:pd="http://www.processpuzzle.com/ProtocolDefinition"
+	targetNamespace="http://www.processpuzzle.com/ProtocolDefinition">
+	
+	<!-- ProtocolDefinition Begin -->
+	<xs:complexType name="ProtocolListDefinition">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element name="activities" type="pd:ActivityListDefinition" />
+			<xs:element name="workflowDetails" type="pd:WorkflowDetailListDefinition" />
+			<xs:element name="lifeCycleProtocols" type="pd:LifeCycleListDefinition" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ActivityListDefinition">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="activity" type="pd:ActivityProtocolListDefinitionType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ActivityProtocolListDefinitionType">
+		<xs:attribute name="name" type="xs:ID" use="required" />
+		<xs:attribute name="performerRole" type="xs:IDREF" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="WorkflowDetailListDefinition">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="workflowDetail" type="pd:WorkflowDetailProtocolType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="WorkflowDetailProtocolType">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="activity" type="xs:IDREF"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"></xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="LifeCycleListDefinition">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="lifeCycleProtocolType" type="pd:LifeCycleProtocolType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="LifeCycleProtocolType">
+		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			<xs:element name="lifecyclePhase" type="pd:LifeCyclePhaseProtocolType" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="prefix" type="xs:string" use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="LifeCyclePhaseProtocolType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded" >
+			<xs:element name="workflowDetail" type="pd:WorkflowDetailProtocolType" minOccurs="0" />
+			<xs:element name="activity" type="xs:IDREF" minOccurs="0"/>
+		</xs:choice>
+		<xs:attribute name="name" type="xs:string" use="required" />
+	</xs:complexType>
+	<!-- ProtocolDefinition End -->
+	
+</xs:schema>

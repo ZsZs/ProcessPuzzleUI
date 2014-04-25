@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:pt="http://www.processpuzzle.com/PartyTypeDefinition"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	targetNamespace="http://www.processpuzzle.com/PartyTypeDefinition">
+
+	<xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd" />
+
+	<!-- PartyType Begin -->
+	<xs:complexType name = "PartyTypes">
+		<xs:sequence minOccurs = "0" maxOccurs = "unbounded">
+			<xs:element name = "partyType" type = "pt:PartyType" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="PartyType">
+		<xs:sequence minOccurs="0" maxOccurs = "1">
+			<xs:element ref="ge:description" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:ID" use="required" />
+		<xs:attribute name="partyClassName" type="xs:string" />
+	</xs:complexType>
+	
+</xs:schema>

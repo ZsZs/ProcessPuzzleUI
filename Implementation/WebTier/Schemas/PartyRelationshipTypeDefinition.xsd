@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	elementFormDefault="qualified"
+	xmlns:ge="http://www.processpuzzle.com/GlobalElements" 
+	xmlns:prt="http://www.processpuzzle.com/PartyRelationshipTypeDefinition"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	targetNamespace="http://www.processpuzzle.com/PartyRelationshipTypeDefinition">
+
+	<xs:import namespace="http://www.processpuzzle.com/GlobalElements" schemaLocation="GlobalElements.xsd" />
+
+	<!-- PartyRoleTypeDefinition Begin -->
+	<xs:complexType name="PartyRoleTypes">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="partyRoleType" type="prt:PartyRoleType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PartyRoleType">
+		<xs:sequence minOccurs="0" maxOccurs="1">
+			<xs:element ref="ge:description" />
+			<xs:element name="partyRoleConstraints">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="partyRoleConstraint" type="prt:PartyRoleConstraint" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:ID" use="required"></xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="PartyRoleConstraint">
+		<xs:attribute name="typeOfParty" type="xs:IDREF"  use="required" />
+	</xs:complexType>
+
+	<xs:complexType name="PartyRelationshipTypes">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="partyRelationshipType" type="prt:PartyRelationshipType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PartyRelationshipType">
+		<xs:sequence minOccurs="0" maxOccurs="1">
+			<xs:element name="partyRelationshipConstraints">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="partyRelationshipConstraint" type="prt:PartyRelationshipConstraint" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:token" />
+	</xs:complexType>
+
+	<xs:complexType name="PartyRelationshipConstraint">
+		<xs:attribute name="clientRoleType" type="xs:token" use="required" />
+		<xs:attribute name="supplierRoleType" type="xs:token" use="required" />
+	</xs:complexType>
+
+</xs:schema>
