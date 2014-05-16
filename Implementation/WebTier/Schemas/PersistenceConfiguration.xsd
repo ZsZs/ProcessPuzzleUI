@@ -113,6 +113,14 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="region">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="pr:factory_class"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="provider_class" type="xs:string"/>
   <xs:element name="use_second_level_cache" type="xs:boolean"/>
   <xs:element name="use_query_cache" type="xs:boolean"/>
