@@ -1,0 +1,112 @@
+!3 Overview
+Framed Content Manager ...
+!***> Framed Content Manager - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_FramedContentManagerOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * .#initialize
+***!
+!***> Public accessors and mutators
+  * .#enhanceUrl
+  * .#loadContent
+  * .#determineRealUrl
+  * .#determineContextRoot
+***!
+!***> Properties
+  *  
+***!
+
+!3 Details
+
+!anchor initialize
+!style_darkBlue{'''initialize (aFrameSet, aContentFrame)'''} method ...
+
+'''Parameters:'''
+aFrameSet :  - ...
+aContentFrame :  -...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-initialize-!|'''with parameters'''|!-'aFrameSet', 'aContentFrame'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor enhanceUrl
+!style_darkBlue{'''enhanceUrl (document)'''} method ...
+
+'''Parameters:'''
+document :  - ...
+
+'''Return value:'''
+ENHANCEDURL
+
+!***> Tests
+|'''invoke'''|!-enhanceUrl-!|'''with parameters'''|!-document-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadContent
+!style_darkBlue{'''loadContent ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-loadContent-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor determineRealUrl
+!style_darkBlue{'''determineRealUrl(anEnhancedUrl)'''} method ...
+
+'''Parameters:'''
+anEnhancedUrl : string - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-determineRealUrl-!|'''with parameters'''|!-'http://www.itkodex.hu'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor determineContextRoot
+!style_darkBlue{'''determineContextRoot(aFramesetUrl)'''} method ...
+
+'''Parameters:'''
+aFramesetUrl : string - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-determineContextRoot-!|'''with parameters'''|!-'url'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

@@ -1,0 +1,293 @@
+'''Methods:'''
+!***> Constructor
+  * .#constructor
+***!
+!***> Public accessors and mutators
+  * .#activate
+  * .#changeCaption
+  * .#deActivate
+  * .#getCaption
+  * .#getId
+  * .#getName
+  * .#getObjectToSelect
+  * .#hide
+  * .#isActive
+  * .#isVisible
+  * .#mayDeActivate
+  * .#onClick
+  * .#replaceObjectToSelect
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!anchor constructor
+!style_darkBlue{'''constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-activate-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(<div id="tabWidget"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activate
+!style_darkBlue{'''activate()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-activate-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(<div id="tabWidget"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor changeCaption
+!style_darkBlue{'''changeCaption(controller)'''} method ...
+
+'''Parameters:'''
+controller : - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-changeCaption-!|'''with parameters'''|!-'controller'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor deActivate
+!style_darkBlue{'''deActivate()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-deActivate-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getCaption
+!style_darkBlue{'''getCaption()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-getCaption-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getId
+!style_darkBlue{'''getId()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-getId-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getName
+!style_darkBlue{'''getName()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-getName-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getObjectToSelect
+!style_darkBlue{'''getObjectToSelect()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-getObjectToSelect-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isActive
+!style_darkBlue{'''isActive()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-isActive-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isVisible
+!style_darkBlue{'''isVisible()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-isVisible-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor mayDeActivate
+!style_darkBlue{'''mayDeActivate()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-mayDeActivate-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor onClick
+!style_darkBlue{'''onClick()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-onClick-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor replaceObjectToSelect
+!style_darkBlue{'''replaceObjectToSelect(theObjectToSelect)'''} method ...
+
+'''Parameters:'''
+theObjectToSelect : - ...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-replaceObjectToSelect-!|'''with parameters'''|!-'theObjectToSelect'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+!anchor show
+!style_darkBlue{'''show()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

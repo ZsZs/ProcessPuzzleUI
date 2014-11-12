@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<properties>
+	<Files>true</Files>
+	<Properties>true</Properties>
+	<RecentChanges>true</RecentChanges>
+	<Refactor>true</Refactor>
+	<Search>true</Search>
+	<Versions>true</Versions>
+	<WhereUsed>true</WhereUsed>
+	<WikiImport>
+		<Source>http://test.processpuzzle.com:80/ProcessPuzzleBrowserInterface.DocumentsAndTests.GenericUiServices.TabWidget.InvertedTabWidget</Source>
+		<LastRemoteModification>20110709192739</LastRemoteModification>
+		<AutoUpdate/>
+	</WikiImport>
+</properties>

@@ -1,0 +1,145 @@
+'''Methods:'''
+!***> Constructor
+  * initialize
+***!
+!***> Public accessors and mutators
+  * .#changeCaptions
+  * .#clearContainerElement
+  * .#hideWidget
+  * .#loadWidget
+  * .#removeWidgetTree
+  * .#showWidget
+***!
+!***> Properties
+  * 
+***!
+
+
+!anchor changeCaptions
+!style_darkBlue{'''changeCaptions ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-changeCaptions-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor clearContainerElement
+!style_darkBlue{'''clearContainerElement ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-clearContainerElement-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(<div id="widgetContainer"><div id="parent"></div></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+!anchor hideWidget
+!style_darkBlue{'''hideWidget ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-hideWidget-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+ 
+----
+
+!anchor initalize
+!style_darkBlue{'''initialize (domDocument, widgetContainerId, resourceBundle, locale)'''} method ...
+
+'''Parameters:'''
+domDocument :  - ...
+widgetContainerId :  - ...
+resourceBundle :  - ...
+locale :  - ...
+
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-initialize-!|'''with parameters'''|!-domDocument, widgetContainerId, resourceBundle, locale-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadWidget
+!style_darkBlue{'''loadWidget ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-loadWidget-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(<div id="treeWidget"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeWidgetTree
+!style_darkBlue{'''removeWidgetTree ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-removeWidgetTree-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor showWidget
+!style_darkBlue{'''showWidget ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-showWidget-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(<DIV id="treeWidget"></DIV>) |
+|'''invoke tear down'''|
+
+***!
+
+----

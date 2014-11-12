@@ -1,0 +1,60 @@
+[[!img-r http://test.processpuzzle.com/files/ProcessPuzzle/ProcessPuzzle-Logo-small.jpg][http://www.processpuzzle.com]]
+!3 !-ProcessPuzzle-! Browser Interface - Project
+!-ProcessPuzzle-! Browser UI is a desktop like, back-end agnostic browser interface for almost any kind of applications. Highly configurability and seamless internationalization support is it's distinquishing feature.
+
+ * '''[[Getting Started Guide][>GettingStarted]]''' - provides an overview and step by step guide for easy configure you first browser UI
+ * '''[[Documentation and Acceptance Tests][>DocumentsAndTests]]''' - library documentation and acceptance tests defined by the product owner
+ * '''[[Download][https://github.com/ZsZs/LiTest]]''' - binaries and source code
+ * '''[[Build Results][http://build.processpuzzle.com/dashboard/tab/dashboard]]''' - of continuous integration, such as test- results, coverage and static code analysis
+ * '''[[Product Backlog][>ProductBacklog]]''' - helps to manage - define, estimate and prioritize - product owner's needs
+ * '''[[Sprint Backlogs][>SpringBacklogs]]''' - helps to manage - define, estimate and prioritize - developer's tasks
+ * '''[[Developers][>DeveloperList]]''' - who undertake serious responsibility in this project
+
+!***> Project specific variables
+!define ApplicationConfigurationDescriptor {classpath:com/processpuzzle/sharedfixtures/domaintier/configuration_descriptor.xml}
+!define DatabaseType {HSQLDB}
+!define DatabaseConnection {mem:ENYV_TEST_DB}
+!define DatabaseUser {sa}
+!define DatabasePassword {}
+***!
+
+!***> Project specific test runner
+!define TEST_RUNNER {fitlibrary.suite.FitLibraryServer}
+***!
+
+!***> Project specific Class Path
+'''!-ProcessPuzzle-!''' framework libraries
+!path ${ViewPath}\${COMMONS_DISTRIBUTION_DIR}\ProcessPuzzleCommons-DomainLogic-0.1.0.jar
+!path ${ViewPath}\${LITEST_DISTRIBUTION_DIR}\LiTest-DomainLogic-0.3.0.jar
+
+
+'''Third party libraries for !-ProcessPuzzle-! domain tier:'''
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Apache Commons\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Castor\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\DOM4J\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\FOP\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Google-Collect\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Hamcrest\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Hibernate\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\JAXB-RI\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Jaxen\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\JiBX\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\jTDS\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Log4J\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\SLF4J\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Spring\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Xerces\*.jar
+!path ${ViewPath}\ProcessPuzzleCommons\Deployment\ProductionLibraries\Xalan\*.jar
+
+'''HSQL JDBC dirver'''
+!path ${ViewPath}\ProcessPuzzle\Framework\build\DevelopmentLibraries\HSQL\*.jar
+
+'''Oracle Thin JDBC dirver'''
+!path ${ViewPath}\ProcessPuzzle\Framework\build\ProductionLibraries\Oracle-JDBC\ojdbc14.jar
+
+'''!-HtmlUnit-! for testing Browser UI'''
+!path ${ViewPath}\ProcessPuzzle\Framework\build\DevelopmentLibraries\HtmlUnit\*.jar
+
+'''tools.jar needed for Java Compiler API'''
+!path ${JavaHome}\lib\tools.jar
+***!

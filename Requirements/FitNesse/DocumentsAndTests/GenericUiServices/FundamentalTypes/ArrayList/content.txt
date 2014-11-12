@@ -1,0 +1,4 @@
+!3 !-ArrayList-! - Documentation and Tests
+!***> Overview
+!img http://files/ProcessPuzzle/Images/DesignModel_ArrayListDetails.gif
+***!

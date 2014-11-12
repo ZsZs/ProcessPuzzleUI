@@ -1,0 +1,190 @@
+!3 Overview
+Document Relationship Widget ...
+!***> Document Relationship Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_DocumentRelationshipWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#cancelOperation
+  * .#documentDeSelectionEvent
+  * .#documentSelectionEvent
+  * .#documentRelationshipWidget
+  * .#hide
+  * .#newRelatedFile
+  * .#newRelationship
+  * .#removeRelationship
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+
+!anchor cancelOperation
+!style_darkBlue{'''cancelOperation ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-cancelOperation-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor documentDeSelctionEvent
+!style_darkBlue{'''documentDeSelctionEvent ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-documentDeSelectionEvent-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor documentSelectionEvent
+!style_darkBlue{'''documentSelectionEvent ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-documentSelectionEvent-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor documentRelationshipWidget
+!style_darkBlue{'''documentRelationshipWidget(containerDivId)'''} method ...
+
+'''Parameters:'''
+containerDivId : integer - ...
+
+'''Return Value: '''
+...
+
+
+!***> Tests
+|'''invoke'''|!-documentRelationshipWidget-!|'''with parameters'''|!-0-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor newRelatedFile
+!style_darkBlue{'''newRelatedFile ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-newRelatedFile-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor newRelationship
+!style_darkBlue{'''newRelationship ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-newRelationship-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeRelationship
+!style_darkBlue{'''removeRelationship ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-removeRelationship-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show 
+!style_darkBlue{'''show ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!--!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

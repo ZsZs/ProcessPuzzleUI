@@ -1,0 +1,412 @@
+!3 Overview
+Web UI Controller ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#changeCaptions
+  * .#configurerLogger
+  * .#getText
+  * .#loadDocumentByName
+  * .#loadDocumentById
+  * .#loadDocumentByUri
+  * .#loadInfoPanelDocumentByName
+  * .#loadInfoPanelDocumentById
+  * .#loadInfoPanelDocumentUri
+  * .#loadDocumentManager
+  * .#loadInfoManager
+  * .#loadMenuManager
+  * .#loadResourceBundle
+  * .#loadArtifactTypeLoader
+  * .#loadArtifactTypes
+  * .#loadWebUiProperties
+  * .#setLanguage
+  * .#reloadActiveDocument
+  * .#showWebUiExceptionPage
+  * .#unLoadInfoPanelDocument 
+***!
+!***> Properties
+  * 
+***!
+
+!anchor changeCaptions
+!style_darkBlue{'''changeCaptions()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-changeCaptions-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor configurerLogger
+!style_darkBlue{'''configurerLogger()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-configurerLogger-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getText
+!style_darkBlue{'''getText(key, defaultValue)'''} method ...
+
+'''Parameters:'''
+key : - ...
+defaultValue : - ... 
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-getText-!|'''with parameters'''|!-'key',  'defaultValue'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentByName
+!style_darkBlue{'''loadDocumentByName(documentType, name, viewNameToActivate )'''} method ...
+
+'''Parameters:'''
+documentType :  - ...
+name :  - ...
+viewNameToActivate :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadDocumentByName-!|'''with parameters'''|!-'documentType', 'name', 'viewNameToActivate'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentById
+!style_darkBlue{'''loadDocumentById(documentType, name, id, viewNameToActivate )'''} method ...
+
+'''Parameters:'''
+documentType :  - ...
+name :  - ...
+id :  - ...
+viewNameToActivate :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadDocumentById-!|'''with parameters'''|!-'documentType', 'name', 'id', 'viewNameToActivate'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentByUri
+!style_darkBlue{'''loadDocumentByUri(documentType, name, uri, viewNameToActivate )'''} method ...
+
+'''Parameters:'''
+documentType :  - ...
+name :  - ...
+uri :  - ...
+viewNameToActivate :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadDocumentByUri-!|'''with parameters'''|!-'documentType', 'name', 'uri', 'viewNameToActivate'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadInfoPanelDocumentByName
+!style_darkBlue{'''loadInfoPanelDocumentByName(documentType, name )'''} method ...
+
+'''Parameters:'''
+documentType :  - ...
+name :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadInfoPanelDocumentByName-!|'''with parameters'''|!-'documentType', 'name'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadInfoPanelDocumentById
+!style_darkBlue{'''loadInfoPanelDocumentById(documentType, name, id,viewNameToActivate )'''} method ...
+
+'''Parameters:'''
+documentType :  - ...
+name :  - ...
+id :  - ...
+viewNameToActivate :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadInfoPanelDocumentById-!|'''with parameters'''|!-'documentType', 'name', 'id', 'viewNameToActivate'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadInfoPanelDocumentUri
+!style_darkBlue{'''loadInfoPanelDocumentUri(documentType, uri)'''} method ...
+
+'''Parameters:'''
+documentType :  - ...
+uri :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadInfoPanelDocumentUri-!|'''with parameters'''|!-'documentType','uri'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentManager
+!style_darkBlue{'''loadDocumentManager(documentSelector, viewSelector, documentFrame, emptyPagesHref)'''} method ...
+
+'''Parameters:'''
+documentSelector :  - ...
+viewSelector :  - ...
+documentFrame :  - ...
+emptyPagesHref :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadDocumentManager-!|'''with parameters'''|!-'documentSelector', 'viewSelector', 'documentFrame', 'emptyPagesHref'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadInfoManager
+!style_darkBlue{'''loadInfoManager(infoPanelSelector, infoFrame, emptyPagesHref)'''} method ...
+
+'''Parameters:'''
+infoPanelSelector :  - ...
+infoFrame :  - ...
+emptyPagesHref :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadInfoManager-!|'''with parameters'''|!-'infoPanelSelector', 'infoFrame', 'emptyPagesHref'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadMenuManager
+!style_darkBlue{'''loadMenuManager(menuWidget)'''} method ...
+
+'''Parameters:'''
+menuWidget :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadMenuManager-!|'''with parameters'''|!-'menuWidget'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadResourceBundle
+!style_darkBlue{'''loadResourceBundle(fileName, theLocale)'''} method ...
+
+'''Parameters:'''
+fileName :  - ...
+theLocale :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadResourceBundle-!|'''with parameters'''|!-'fileName', 'theLocale'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadArtifactTypeLoader
+!style_darkBlue{'''loadArtifactTypeLoader(theArtifactTypeLoader)'''} method ...
+
+'''Parameters:'''
+theArtifactTypeLoader :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadArtifactTypeLoader-!|'''with parameters'''|!-'theArtifactTypeLoader'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadArtifactTypes
+!style_darkBlue{'''loadArtifactTypes(businessDefinitionFileName)'''} method ...
+
+'''Parameters:'''
+businessDefinitionFileName :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadArtifactTypes-!|'''with parameters'''|!-'businessDefinitionFileName'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadWebUiProperties
+!style_darkBlue{'''loadWebUiProperties()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-loadWebUiProperties-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setLanguage
+!style_darkBlue{'''setLanguage(newLanguage)'''} method ...
+
+'''Parameters:'''
+newLanguage :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-setLanguage-!|'''with parameters'''|!-'newLanguage'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor reloadActiveDocument
+!style_darkBlue{'''reloadActiveDocument()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-reloadActiveDocument-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor showWebUiExceptionPage
+!style_darkBlue{'''showWebUiExceptionPage(e)'''} method ...
+
+'''Parameters:'''
+e :  - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-showWebUiExceptionPage-!|'''with parameters'''|!-'e'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor unLoadInfoPanelDocument 
+!style_darkBlue{'''unLoadInfoPanelDocument (documentName)'''} method ...
+
+'''Parameters:'''
+documentName : - ...
+
+'''Return Value : ''' - ...
+...
+
+!***> Tests
+|'''invoke'''|!-unLoadInfoPanelDocument-!|'''with parameters'''|!-'documentName'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

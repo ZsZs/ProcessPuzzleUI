@@ -1,0 +1,318 @@
+!3 Overview
+Document View ...
+
+'''Methods:'''
+!***> Constructor
+  * .#_Constructor
+***!
+!***> Public accessors and mutators
+  * .#activate
+  * .#deActivate
+  * .#isStatic
+  * .#isActive
+  * .#getBaseUrl
+  * .#getCaption
+  * .#getClassName
+  * .#getContentUri
+  * .#getName
+  * .#getParentDocument
+  * .#getPossibleMenus
+  * .#setBaseUrl
+  * .#setToDynamic
+  * .#setPossibleMenus
+  * .#setViewParameter
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor _Constructor
+!style_darkBlue{'''_Constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-_Constructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activate
+!style_darkBlue{'''activate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-activate-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor deActivate
+!style_darkBlue{'''deActivate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-deActivate-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isStatic
+!style_darkBlue{'''isStatic ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+ISSTATIC.
+
+!***> Tests
+|'''invoke'''|!-isStatic-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isActive
+!style_darkBlue{'''isActive ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+ISACTIVE.
+
+!***> Tests
+|'''invoke'''|!-isActive-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+----
+
+!anchor getBaseUrl
+!style_darkBlue{'''getBaseUrl ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+URI.
+
+!***> Tests
+|'''invoke'''|!-getBaseUrl-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getCaption
+!style_darkBlue{'''getCaption ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+CAPTION.
+
+!***> Tests
+|'''invoke'''|!-getCaption-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getClassName
+!style_darkBlue{'''getClassName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+"DOCUMENTVIEW"
+
+!***> Tests
+|'''invoke'''|!-getClassName-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getContentUri
+!style_darkBlue{'''getContentUri (theDocument, theCommand)'''} method ...
+
+'''Parameters:'''
+theDocument :  - ...
+theCommand :  - ...
+
+'''Return value:'''
+DETERMINEDCONTENTURI.
+
+!***> Tests
+|'''invoke'''|!-getContentUri-!|'''with parameters'''|!-'theDocument', 'theCommand'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getName
+!style_darkBlue{'''getName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+NAME.
+
+!***> Tests
+|'''invoke'''|!-getName-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getParentDocument
+!style_darkBlue{'''getParentDocument ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+PARENTDOCUMENT.
+
+!***> Tests
+|'''invoke'''|!-getParentDocument-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getPossibleMenus
+!style_darkBlue{'''getPossibleMenus ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+POSSIBLEMENUS.
+
+!***> Tests
+|'''invoke'''|!-getPossibleMenus-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setBaseUrl
+!style_darkBlue{'''setBaseUrl (newUri)'''} method ...
+
+'''Parameters:'''
+newUri :  - ...
+
+'''Return value:'''
+None.
+
+!****> Tests
+|'''invoke'''|!-setBaseUrl-!|'''with parameters'''|!-newUri-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setToDynamic
+!style_darkBlue{'''setToDynamic ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setToDynamic-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setPossibleMenus
+!style_darkBlue{'''setPossibleMenus ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setPossibleMenus-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setViewParameter
+!style_darkBlue{'''setViewParameter (aParameter)'''} method ...
+
+'''Parameters:'''
+aParameter : - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setViewParameter-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

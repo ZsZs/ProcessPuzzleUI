@@ -1,0 +1,700 @@
+!3 Overview
+
+Document  ...
+
+'''Methods:'''
+!***> Constructor
+  * .#_Constructor
+***!
+!***> Public accessors and mutators
+  * .#activate
+  * .#activateView
+  * .#cancel
+  * .#deActivate
+  * .#getActiveView
+  * .#getBaseUri
+  * .#getContainingWindow
+  * .#getDocumentId
+  * .#getDocumentName
+  * .#getDocumentType
+  * .#getListedDocumentType
+  * .#getNameToShow
+  * .#getPossibleMenus
+  * .#getPossibleViews
+  * .#getPropertyFile
+  * .#getSelectedInstanceId
+  * .#getSelectedInstanceName
+  * .#getTarget
+  * .#getUrl
+  * .#getViewByClass
+  * .#getViewForName
+  * .#getViewNameToActivate
+  * .#getViewSelector
+  * .#isDirty
+  * .#mayDeActivate
+  * .#observe
+  * .#open
+  * .#save
+  * .#setDocumentId
+  * .#setListedDocumentType
+  * .#setToClean
+  * .#setToDirty
+  * .#setSelectedInstance
+  * .#setUrl
+  * .#setViewNameToActivate
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor _Constructor
+!style_darkBlue{'''_Constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-_Constructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activate
+!style_darkBlue{'''activate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-activate-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activateView
+!style_darkBlue{'''activateView (viewName)'''} method ...
+
+'''Parameters:'''
+viewName : - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-activateView-!|'''with parameters'''|!-viewName-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor cancel
+!style_darkBlue{'''cancel ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-cancel-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor deActivate
+!style_darkBlue{'''deActivate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-deActivate-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getActiveView
+!style_darkBlue{'''getActiveView ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+ACTIVEVIEW.
+
+!***> Tests
+|'''invoke'''|!-getActiveView-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getBaseUri
+!style_darkBlue{'''getBaseUri ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+BASEURI.
+
+!***> Tests
+|'''invoke'''|!-getBaseUri-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+ 
+!anchor getContainingWindow
+!style_darkBlue{'''getContainingWindow ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+CONTAININGFRAME.
+
+!***> Tests
+|'''invoke'''|!-getContainingWindow-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getDocumentId
+!style_darkBlue{'''getDocumentId()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+ARTIFACTID.
+
+!***> Tests
+|'''invoke'''|!-getDocumentId-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getDocumentName
+!style_darkBlue{'''getDocumentName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+NAME.
+
+!***> Tests
+|'''invoke'''|!-getDocumentName-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getDocumentType
+!style_darkBlue{'''getDocumentType ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+ARTIFACTTYPE.
+
+!***> Tests
+|'''invoke'''|!-getDocumentType-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getListedDocumentType
+!style_darkBlue{'''getListedDocumentType ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+LISTEDDOCUMENTTYPE.
+
+!***> Tests
+|'''invoke'''|!-getListedDocumentType-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getNameToShow
+!style_darkBlue{'''getNameToShow ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+NAMETOSHOW.
+
+!***> Tests
+|'''invoke'''|!-getNameToShow-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getPossibleMenus
+!style_darkBlue{'''getPossibleMenus ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+POSSIBLEMENUS.
+
+!***> Tests
+|'''invoke'''|!-getPossibleMenus-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getPossibleViews
+!style_darkBlue{'''getPossibleViews ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+POSSIBLEVIEWS.
+
+!***> Tests
+|'''invoke'''|!-getPossibleViews-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getPropertyFile
+!style_darkBlue{'''getPropertyFile ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+PROPERTYFILE.
+
+!***> Tests
+|'''invoke'''|!-getPropertyFile-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getSelectedInstanceId
+!style_darkBlue{'''getSelectedInstanceId ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+SELECTEDINSTANCEID.
+
+!***> Tests
+|'''invoke'''|!-getSelectedInstanceId-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getSelectedInstanceName
+!style_darkBlue{'''getSelectedInstanceName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+SELECTEDINSTANCENAME.
+
+!***> Tests
+|'''invoke'''|!-getSelectedInstanceName-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getTarget
+!style_darkBlue{'''getTarget ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+TARGET.
+
+!***> Tests
+|'''invoke'''|!-getTarget-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getUrl
+!style_darkBlue{'''getUrl ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+GIVENURI.
+
+!****> Tests
+|'''invoke'''|!-getUrl-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getViewByClass
+!style_darkBlue{'''getViewByClass ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-getViewByClass-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getViewForName
+!style_darkBlue{'''getViewForName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+VIEWNAME.
+
+!***> Tests
+|'''invoke'''|!-getViewForName-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getViewNameToActivate
+!style_darkBlue{'''getViewNameToActivate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+VIEWNAMETOACTIVATE.
+
+!***> Tests
+|'''invoke'''|!-getViewNameToActivate-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getViewSelector
+!style_darkBlue{'''getViewSelector ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+VIEWSELECTOR.
+
+!***> Tests
+|'''invoke'''|!-getViewSelector-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isDirty
+!style_darkBlue{'''isDirty ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+DIRTY.
+
+!***> Tests
+|'''invoke'''|!-isDirty-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor mayDeActivate
+!style_darkBlue{'''mayDeActivate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+TRUE.
+
+!***> Tests
+|'''invoke'''|!-mayDeActivate-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor observe
+!style_darkBlue{'''observe (theEvent)'''} method ...
+
+'''Parameters:'''
+theEvent :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-observe-!|'''with parameters'''|!-theEvent-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor open
+!style_darkBlue{'''open ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-open-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor save
+!style_darkBlue{'''save ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-save-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setDocumentId
+!style_darkBlue{'''setDocumentId (newId)'''} method ...
+
+'''Parameters:'''
+newId :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setDocumentId-!|'''with parameters'''|!-newId-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setListedDocumentType
+!style_darkBlue{'''setListedDocumentType (ldType)'''} method ...
+
+'''Parameters:'''
+ldType :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setListedDocumentType-!|'''with parameters'''|!-ldType-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setToClean
+!style_darkBlue{'''setToClean ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setToClean-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setToDirty
+!style_darkBlue{'''setToDirty ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setToDirty-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setSelectedInstance
+!style_darkBlue{'''setSelectedInstance (instId, instName)'''} method ...
+
+'''Parameters:'''
+instId :  - ...
+instName :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setSelectedInstance-!|'''with parameters'''|!-'instId', 'instName'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setUrl
+!style_darkBlue{'''setUrl (newUrl)'''} method ...
+
+'''Parameters:'''
+newUrl :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setUrl-!|'''with parameters'''|!-newUrl-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setViewNameToActivate
+!style_darkBlue{'''setViewNameToActivate (viewName)'''} method ...
+
+'''Parameters:'''
+viewName :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setViewNameToActivate-!|'''with parameters'''|!-viewName-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

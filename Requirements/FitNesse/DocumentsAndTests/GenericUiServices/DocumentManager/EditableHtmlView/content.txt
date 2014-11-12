@@ -1,0 +1,34 @@
+!3 Overview
+Editable Html View ...
+
+'''Methods:'''
+!***> Constructor
+  * .#_Constructor
+***!
+!***> Public accessors and mutators
+  * .#
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor _Constructor
+!style_darkBlue{'''_Constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-_Constructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

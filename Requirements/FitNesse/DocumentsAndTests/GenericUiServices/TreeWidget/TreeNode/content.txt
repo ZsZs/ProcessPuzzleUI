@@ -1,0 +1,290 @@
+!3 Overview
+Tree Node is the most fundamental constituent of the Tree Widget. It provides the functionality of displaying a single node in the tree. It also facilitates of user interactions such as opening and closing or dragging and drop a node.
+'''Methods:'''
+!***> Constructor
+ * .#initialize
+***!
+!***> Public accessors and mutators
+ * .#appendChild
+ * .#bubbleUpNames
+ * .#changeCaption
+ * .#determineLevel
+ * .#expand
+ * .#findChildNodeByName
+ * .#findNodeByPath
+ * .#hide
+ * .#make
+ * .#removeChild
+ * .#removeDivElement
+ * .#setParentNode
+ * .#show
+***!
+!***> Properties
+ * caption - 
+ * childs - list of child nodes. Implemented with Array.
+ * nextNode - points to the next child node of the same parent.
+ * previousNode - point to the previous child node of the same parent.
+***!
+
+!3 Details
+
+!anchor appendChild
+!style_darkBlue{'''appendChild( childNode )'''} method appends the given !-TreeNode-! as the '''last''' child. The child node's parent becomes the subject node and it's previous node, the last node before addition. The last node's next node before addition became the new node.
+
+'''Parameters:'''
+childNode : !-TreeNode-! - The node which should be added as child. The same child node can be added more than once.
+
+'''Return value:''' 
+none.
+
+!***> Tests
+|'''instantiate'''|!-TreeNode-!|'''with arguments'''|'parentId', 'folderNodeType', webUiController|'''as'''|parentNode|
+
+|'''instantiate'''|!-TreeNode-!|'''with arguments'''|'childOneId', 'pageNodeType', webUiController|'''as'''|childNodeOne|
+
+|'''instantiate'''|!-TreeNode-!|'''with arguments'''|'childTwoId', 'pageNodeType', webUiController|'''as'''|childNodeTwo|
+
+|'''invoke'''|appendChild|'''of'''|parentNode|'''with parameters'''|newTreeNode|
+
+|'''assert that'''|parentNode.childs.lenght|'''equals to'''|2|
+
+|'''assert that'''|childNodeOne.parent|'''equals to'''|parentNode|
+
+|'''assert that'''|childNodeTwo.parent|'''equals to'''|parentNode|
+
+|'''assert that'''|childNodeOne.nextNode|'''equals to'''|childNodeTwo|
+
+|'''assert that'''|childNodeTwo.previousNode|'''equals to'''|childNodeOne|
+
+***!
+
+----
+
+!anchor initialize
+!style_darkBlue{'''initialize( nodeId, nodeType, webUiController, options )'''} method initializes a new tree node.
+
+'''Parameters:'''
+nodeId : String - Unique identifier of the new node. I should be unique within the whole tree. It is required.
+nodeType : String - Unique name of the new node. Name can't contain white spaces and special characters.
+webUiController : String - 
+
+'''Options : ''' - ...
+imageOpen : "page16x16.gif",
+imageClosed : "page16x16.gif",
+pictureFolder : "images",
+resourceBundle : null,
+selectable : false,
+state : "closed",
+target : null,
+type : pageNodeType,
+url : null
+
+'''Return value:'''
+newTreeNode : !-TreeNode-! - Newly created and initialized tree node object.
+
+!***> Tests
+|'''invoke'''|!-initialize-!|'''with parameters'''|!-nodeId, nodeType, webUiController, options-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor bubbleUpNames
+!style_darkBlue{'''bubbleUpNames (list, index)'''} method ...
+
+'''Parameters:'''
+list : - ...
+index : - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-bubbleUpNames-!|'''with parameters'''|!-list, index-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor changeCaption
+!style_darkBlue{'''changeCaption (controller)'''} method ...
+
+'''Parameters:'''
+controller : - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-changeCaption-!|'''with parameters'''|!-controller-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor determineLevel 
+!style_darkBlue{'''determineLevel ()'''} method ...
+
+'''Parameters:'''
+None. 
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-determineLevel-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor expand
+!style_darkBlue{'''expand ()'''} method ...
+
+'''Parameters:'''
+None. 
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-expand-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor findChildNodeByName
+!style_darkBlue{'''findChildNodeByName (name)'''} method ...
+
+'''Parameters:'''
+name : String - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-findChildNodeByName-!|'''with parameters'''|!-name-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor findNodeByPath
+!style_darkBlue{'''findNodeByPath (path)'''} method ...
+
+'''Parameters:'''
+path : - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-findNodeByPath-!|'''with parameters'''|!-path-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor make
+!style_darkBlue{'''make (prefix)'''} method ...
+
+'''Parameters:'''
+prefix : - ... 
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-make-!|'''with parameters'''|!-prefix-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeChild
+!style_darkBlue{'''removeChild (childNode)'''} method ...
+
+'''Parameters:'''
+childNode : - ... 
+
+'''Return value:'''
+FOUND
+
+!***> Tests
+|'''invoke'''|!-removeChild-!|'''with parameters'''|!-childNode-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeDivElement
+!style_darkBlue{'''removeDivElement ()'''} method ...
+
+'''Parameters:'''
+None.  
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-removeDivElement-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+----

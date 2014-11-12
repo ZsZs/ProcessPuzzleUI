@@ -1,0 +1,53 @@
+!3 Overview
+Menu Events ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#getMenuItem
+  * .#setMenuItem
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor getMenuItem
+!style_darkBlue{'''getMenuItem ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-getMenuItem-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setMenuItem
+!style_darkBlue{'''setMenuItem ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-setMenuItem-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+----

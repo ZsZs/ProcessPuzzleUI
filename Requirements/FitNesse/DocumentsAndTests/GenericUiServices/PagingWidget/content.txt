@@ -1,0 +1,113 @@
+!3 Overview
+Paging Widget ...
+!***> Paging Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_PagingWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#pagingWidget
+  * .#setCurrentStart
+  * .#setMaxReturnSize
+  * .#setRowCount
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor pagingWidget
+!style_darkBlue{'''pagingWidget(widgetId, resourceBundle)'''} method ...
+
+'''Parameters:'''
+widgetId :  - ...
+resourceBundle : - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-pagingWidget-!|'''with parameters'''|!-'widgetId', 'resourceBundle'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setCurrentStart
+!style_darkBlue{'''setCurrentStart(theStart)'''} method ...
+
+'''Parameters:'''
+theStart : integer - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-setCurrentStart-!|'''with parameters'''|!-0-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setMaxReturnSize
+!style_darkBlue{'''setMaxReturnSize(theSize)'''} method ...
+
+'''Parameters:'''
+theSize : integer - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-setMaxReturnSize-!|'''with parameters'''|!-25-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setRowCount
+!style_darkBlue{'''setRowCount(theCount)'''} method ...
+
+'''Parameters:'''
+theCount : integer - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-setRowCount-!|'''with parameters'''|!-0-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+----

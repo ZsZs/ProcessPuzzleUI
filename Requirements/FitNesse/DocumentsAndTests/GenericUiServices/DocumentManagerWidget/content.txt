@@ -1,0 +1,69 @@
+!3 Overview
+Document Reservation Widget ...
+!***> Document Reservation Widget - Overview
+!img http://files/ProcessPuzzle/Images/DesignModel_DocumentManagerWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#cancel
+  * .#checkSelection
+  * .#hide
+  * .#release
+  * .#reserve
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+!anchor cancel
+!style_darkBlue{'''cancel()'''} method ...
+
+'''Parameters:'''
+-
+
+----
+
+!anchor checkSelection
+!style_darkBlue{'''checkSelection()'''} method ...
+
+'''Parameters:'''
+-
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide()'''} method ...
+
+'''Parameters:'''
+-
+
+----
+
+!anchor release
+!style_darkBlue{'''release()'''} method ...
+
+'''Parameters:'''
+-
+
+----
+
+!anchor reserve
+!style_darkBlue{'''reserve()'''} method ...
+
+'''Parameters:'''
+-
+
+----
+
+!anchor show
+!style_darkBlue{'''show()'''} method ...
+
+'''Parameters:'''
+-
+
+----

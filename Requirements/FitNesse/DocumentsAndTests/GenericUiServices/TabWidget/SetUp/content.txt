@@ -1,0 +1,37 @@
+!define htmlSource (
+
+<script type="text/javascript">
+	function !-setUp()-! {
+		tabsDiv = !-document.getElementById("tabWidget")-!;
+		tabWidget = new !-TabWidget(tabsDiv)-!;
+	};
+</script>
+
+<div id="tabWidget">
+</div>
+)
+
+|'''add'''|hu.itkodex.litest.fitnesse.!-LoggingConfigurator-!|'''as'''|loggingConfigurator|
+|'''add'''|hu.itkodex.litest.fitnesse.!-BrowserWidgetTester-!|'''as'''|browserWidgetTester|
+
+|'''select'''|loggingConfigurator|
+
+!***> Configure logging
+!include .LocalSettings.CommonTestHelpers.LoggingConfiguration
+***!
+
+|Import|
+|hu.itkodex.litest.fitnesse|
+
+|'''select'''|browserWidgetTester|
+
+|'''set host'''|${TestServer}|
+
+|'''set test page'''|${TestServer}/${PAGE_PATH}|
+
+|'''add to body'''|${htmlSource}|
+
+|'''invoke set up'''|
+
+|'''set widget variable'''|tabWidget|
+

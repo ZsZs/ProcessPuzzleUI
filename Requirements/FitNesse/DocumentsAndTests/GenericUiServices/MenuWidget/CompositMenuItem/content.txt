@@ -1,0 +1,231 @@
+!3 Overview
+Composit Menu Item ...
+
+'''Methods:'''
+!***> Constructor
+  *
+***!
+!***> Public accessors and mutators
+  * .#addDualStateMenu
+  * .#addSubMenu
+  * .#collapseSubMenus
+  * .#changeCaptions
+  * .#expandSubMenus
+  * .#findMenuByName
+  * .#getCountOfItems
+  * .#getDefinitionTermElement
+  * .#hide
+  * .#removeMenuItem
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor addDualStateMenu
+!style_darkBlue{'''addDualStateMenu (menuName, caption, command, isOn, preferredIndex)'''} method ...
+
+'''Parameters:'''
+menuName : String - ...
+caption : String - ...
+command :  - ...
+isOn :  - ...
+preferredIndex :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-addDualStateMenu-!|'''with parameters'''|!-'menuName', 'caption', 'command', 'isOn', 'preferredIndex'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor addSubMenu
+!style_darkBlue{'''addSubMenu (menuName, caption, command, preferredIndex)'''} method ...
+
+'''Parameters:'''
+menuName : String - ...
+caption : String - ...
+command :  - ...
+preferredIndex :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-addSubMenu-!|'''with parameters'''|!-'menuName', 'caption', 'command', 'preferredIndex'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor collapseSubMenus
+!style_darkBlue{'''collapseSubMenus ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-collapseSubMenus-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor changeCaptions
+!style_darkBlue{'''changeCaptions (controller)'''} method ...
+
+'''Parameters:'''
+controller :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-changeCaptions-!|'''with parameters'''|!-'controller'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor expandSubMenus
+!style_darkBlue{'''expandSubMenus ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-expandSubMenus-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor findMenuByName
+!style_darkBlue{'''findMenuByName (menuName)'''} method ...
+
+'''Parameters:'''
+menuName : String - ...
+
+'''Return value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-findMenuByName-!|'''with parameters'''|!-'menuName'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getCountOfItems
+!style_darkBlue{'''getCountOfItems ()'''} method ...
+
+'''Parameters:'''
+'None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-getCountOfItems-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getDefinitionTermElement
+!style_darkBlue{'''getDefinitionTermElement ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-getDefinitionTermElement-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeMenuItem 
+!style_darkBlue{'''removeMenuItem (menuName)'''} method ...
+
+'''Parameters:'''
+menuName :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-callopseSubMenus-!|'''with parameters'''|!-'menuName'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show (theDLElement)'''} method ...
+
+'''Parameters:'''
+theDLELement :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-'theDLElement'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+----

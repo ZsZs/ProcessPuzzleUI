@@ -1,0 +1,134 @@
+Set up for Tree Widget tests.
+
+!define htmlSource (
+<div id="simpleTreeView">
+	<div class="trigger">
+		<nobr>
+			<IMG class="nodeimage" src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/minus_no_root.gif">
+			<IMG class="nodeimage" src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/folder_open.gif">
+			<span class="treetitle" id=branch1>Node1</SPAN>
+		</NOBR>
+	</DIV>
+	<div class="trigger">
+		<nobr>
+			<IMG class="nodeimage" src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+			<IMG class="nodeimage" height=0 src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/t.gif" width="0"> 
+			<IMG class="nodeimage" src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/page16x16.gif">
+			<span class="treetitle" id="branch1">Doc1</SPAN>
+		</NOBR>
+	</DIV>
+	<div class=trigger>
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/t.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/page16x16.gif">
+		<span class=treetitle id=branch1>Doc2</SPAN>
+	</DIV>
+	<div class=trigger>
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/minus.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/folder_open.gif">
+		<span class=treetitle id=branch1>Node3</SPAN>
+	</DIV>
+	<div class=trigger>
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/lastnode.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/page16x16.gif">
+		<span class=treetitle id=branch1>Doc5</SPAN>
+	</DIV>
+	<div class=trigger>
+		<nobr>
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/minus_last.gif">
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/folder_open.gif">
+			<span class=treetitle id=branch1>Node4</SPAN>
+		</NOBR>
+	</DIV>
+	<div class=trigger>
+		<nobr>
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/white.gif">
+			<IMG class=nodeimage height=0 src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/t.gif" width="0"> 
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/page16x16.gif">
+			<span class=treetitle id=branch1>Doc3</SPAN>
+		</NOBR>
+	</DIV>
+	<div class=trigger>
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/line.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/white.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/lastnode.gif">
+		<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/page16x16.gif">
+		<span class=treetitle id=branch1>Doc4</SPAN>
+	</DIV>
+	<div class=trigger>
+		<nobr>
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/plus_last.gif">
+			<IMG class=nodeimage src="./files/ProcessPuzzle/JavaScript/TreeWidget/images/folder_closed.gif">
+			<span class=treetitle id=branch1>Node2</SPAN>
+		</NOBR>
+	</DIV>
+</DIV>
+
+<script type="text/javascript">
+	var webUiController;
+	var treeWidget;
+
+	function !-setUp()-! {
+		!-webUiController = new WebUiController( "" );-!
+		!-webUiController.loadResourceBundle( "Internalization/TestResources" );-!
+
+		treeDiv = !- document.getElementById("treeWidget")-!;
+		treeWidget = new !- TreeWidget(treeDiv)-!;
+	};
+
+	function !-tearWown() {
+		webUiController = null;
+		treeWidget = null;
+	};-!
+
+</script>
+
+<div id="treeWidget"></div>
+)
+
+!define includedCSS (
+<script type="text/javascript">
+	function !-importCSS( cssFilePath ) {
+		var headID = !-document.getElementsByTagName( "head" )[0];
+		var cssNode = document.createElement( 'link' );
+		cssNode.type = 'text/css';
+		cssNode.rel = 'stylesheet';
+		cssNode.href = cssFilePath;
+		cssNode.media = 'screen';
+		headID.appendChild( cssNode );
+	};-!
+
+	!-window.addEvent( 'domready', function() {-!
+		!-importCSS( './files/ProcessPuzzle/JavaScript/TreeWidget/TreeWidget.css' );-!
+	!-});-!
+</script>
+)
+
+${includedCSS}
+
+|'''add'''|hu.itkodex.litest.fitnesse.!-LoggingConfigurator-!|'''as'''|loggingConfigurator|
+|'''add'''|hu.itkodex.litest.fitnesse.!-BrowserWidgetTester-!|'''as'''|browserWidgetTester|
+
+|'''select'''|loggingConfigurator|
+
+!***> Configure logging
+!include .LocalSettings.CommonTestHelpers.LoggingConfiguration
+***!
+
+|Import|
+|hu.itkodex.litest.fitnesse|
+
+|'''select'''|browserWidgetTester|
+
+|'''set host'''|${TestServer}|
+
+|'''set test page'''|${TestServer}/${PAGE_PATH}|
+
+|'''add to body'''|${htmlSource}|
+
+|'''invoke set up'''|

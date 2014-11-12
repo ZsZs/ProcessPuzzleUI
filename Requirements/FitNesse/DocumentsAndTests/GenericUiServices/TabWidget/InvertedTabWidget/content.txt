@@ -1,0 +1,26 @@
+'''Methods:'''
+!***> Public accessors and mutators
+  * .#invertedTabWidget
+***!
+!***> Properties
+  * 
+***!
+
+!anchor invertedTabWidget
+!style_darkBlue{'''invertedTabWidget(theDivElement)'''} method ...
+
+'''Parameters:'''
+theDivelement : - ...
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-invertedTabWidget-!|'''with parameters'''|!-'theDivElement'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

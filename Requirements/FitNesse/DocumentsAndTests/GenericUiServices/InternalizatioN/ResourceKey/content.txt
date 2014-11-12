@@ -1,0 +1,94 @@
+!3 Overview
+
+Resource Key ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#compareTo
+  * .#equals  
+  * .#hashCode
+  * .#toString
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+----
+
+!anchor compareTo
+!style_darkBlue{'''compareTo(otherKey)'''} method ...
+
+'''Parameters:'''
+otherKey :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-compareTo-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor equals
+!style_darkBlue{'''equals (obj)'''} method ...
+
+'''Parameters:'''
+obj :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-equals-!|'''with parameters'''|!-'obj'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hashCode
+!style_darkBlue{'''hashCode()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-hashCode-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor toString
+!style_darkBlue{'''toString ()'''} method ...
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-toString-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

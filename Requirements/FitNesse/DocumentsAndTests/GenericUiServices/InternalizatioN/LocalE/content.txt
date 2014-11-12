@@ -1,0 +1,74 @@
+!3 Overview
+
+Locale ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#getCountry
+  * .#getLanguage
+  * .#getVariant
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+
+!anchor getCountry
+!style_darkBlue{'''getCountry()'''} method ...
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+COUNTRY.
+
+!***> Tests
+|'''invoke'''|!-getCountry-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getLanguage
+!style_darkBlue{'''getLanguage ()'''} method ...
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+LANGUAGE.
+
+!***> Tests
+|'''invoke'''|!-getLanguage-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getVariant
+!style_darkBlue{'''getVariant ()'''} method ...
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+VARIANT.
+
+!***> Tests
+|'''invoke'''|!-getVariant-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

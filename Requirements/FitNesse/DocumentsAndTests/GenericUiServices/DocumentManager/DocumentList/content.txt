@@ -1,0 +1,112 @@
+!3 Overview
+Document List ...
+
+'''Methods:'''
+!***> Constructor
+  * .#_Constructor
+***!
+!***> Public accessors and mutators
+  * .#getListedDocumentType
+  * .#getSelectedInstanceId
+  * .#getSelectedInstanceName
+  * .#setSelectedInstance
+***!
+!***> Properties
+  * 
+***!
+
+
+!3 Details
+
+
+!anchor _Constructor
+!style_darkBlue{'''_Constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-_Constructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getListedDocumentType
+!style_darkBlue{'''getListedDocumentType ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+LISTEDDOCUMENTTYPE.
+
+!***> Tests
+|'''invoke'''|!-getListedDocumentType-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getSelectedInstanceId
+!style_darkBlue{'''getSelectedInstanceId ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+SELECTEDINSTANCEID.
+
+!***> Tests
+|'''invoke'''|!-getSelectedInstanceId-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getSelectedInstanceName
+!style_darkBlue{'''getSelectedInstanceName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+SELECTEDINSTANCENAME.
+
+!***> Tests
+|'''invoke'''|!-getSelectedInstanceName-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setSelectedInstance
+!style_darkBlue{'''setSelectedInstance (id, name)'''} method ...
+
+'''Parameters:'''
+id :  - ...
+name :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setSelectedInstance-!|'''with parameters'''|!-'id', 'name'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

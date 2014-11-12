@@ -1,0 +1,36 @@
+!3 Overview
+File Upload Widget ...
+!***> File Upload Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_FileUploadWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor show
+!style_darkBlue{'''show ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

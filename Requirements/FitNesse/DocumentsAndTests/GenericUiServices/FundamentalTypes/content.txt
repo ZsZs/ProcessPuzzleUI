@@ -1,0 +1,6 @@
+!3 Fundamental Types - Documentation and Tests
+!***> Overview
+!img http://files/ProcessPuzzle/Images/DesignModel_FundamentalTypesBrowerUILayerOverview.gif
+***!
+
+ * '''[[Array List][^ArrayList]]''' - is a !-JavaScript-! implementation of Java !-ArrayList-!

@@ -1,0 +1,35 @@
+!3 Overview
+End State ...
+
+'''Methods:'''
+!***> Constructor
+  * .#initialize 
+***!
+!***> Public accessors and mutators
+  * .#
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor initialize
+!style_darkBlue{'''initialize (name, description)'''} method ...
+
+'''Parameters:'''
+name : String -  ...
+description :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-initialize-!|'''with parameters'''|!-'name', 'description'-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

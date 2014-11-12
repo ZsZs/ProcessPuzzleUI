@@ -1,0 +1,112 @@
+!3 Overview
+Data Retriever ...
+!***> Data Retriever - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_DataRetrieverOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#makeHttpRequest
+  * .#processDatas 
+  * .#setMethod
+  * .#setMode
+  * .#setParameters 
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor makeHttpRequest
+!style_darkBlue{'''makeHttpRequest (callBackFunction)'''} method ...
+
+'''Parameters:'''
+callBackFunction : - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-makeHttpRequest-!|'''with parameters'''|!-callBackFunction-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor processDatas
+!style_darkBlue{'''processDatas (elementName, tagName)'''} method ...
+
+'''Parameters:'''
+elementName : String - ...
+tagName : String - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-processDatas-!|'''with parameters'''|!-'elementName', 'tagName'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setMethod
+!style_darkBlue{'''setMethod ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setMethod-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setMode
+!style_darkBlue{'''setMode ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-setMode-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setParameters
+!style_darkBlue{'''setParameters ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-setParameters-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----

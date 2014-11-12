@@ -1,0 +1,54 @@
+!3 Overview
+Authentication Widget ...
+!***> Authentication Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_AuthenticationWidetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#remove
+  * .#login
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor remove
+!style_darkBlue{'''remove ()'''} method ...
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-remove-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor login
+!style_darkBlue{'''login ()'''} method ...
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-login-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----

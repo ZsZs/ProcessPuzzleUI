@@ -1,0 +1,92 @@
+!3 Overview
+Sub Menu Item ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#changeCaption
+  * .#getCommand
+  * .#hide
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+
+!anchor changeCaption
+!style_darkBlue{'''changeCaption (controller)'''} method ...
+
+'''Parameters:'''
+controller :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-changeCaption-!|'''with parameters'''|!-'controller'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getCommand
+!style_darkBlue{'''getCommand ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+COMMAND.
+
+!***> Tests
+|'''invoke'''|!-getCommand-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide (element)'''} method ...
+
+'''Parameters:'''
+element :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!-element-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show (theDTElement)'''} method ...
+
+'''Parameters:'''
+'''theDTElement : ''' - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-'theDTElement'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+----

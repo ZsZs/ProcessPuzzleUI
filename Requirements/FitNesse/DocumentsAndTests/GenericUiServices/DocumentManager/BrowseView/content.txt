@@ -1,0 +1,204 @@
+!3 Overview
+Browse View ...
+
+'''Methods:'''
+!***> Constructor
+  * .#_BrowseViewConstructor
+***!
+!***> Public accessors and mutators
+  * .#getContentUri
+  * .#getListFromElement
+  * .#getNumberOfListedElement 
+  * .#getQuery
+  * .#getSelectedId
+  * .#setListFromElement
+  * .#setNumbeOfListedElement
+  * .#setSelectedId
+  * .#setViewParameter
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor _BrowseViewConstructor
+!style_darkBlue{'''_BrowseViewConstructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-_BrowseViewConstructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getContentUri
+!style_darkBlue{'''getContentUri (theDocument)'''} method ...
+
+'''Parameters:'''
+theDocument : - ...
+
+'''Return value:'''
+CONTENTURL.
+
+!***> Tests
+|'''invoke'''|!-getContentUrl-!|'''with parameters'''|!-'theDocument'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getListFromElement
+!style_darkBlue{'''getListFromElement ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+LISTFROMELEMENT.
+
+!***> Tests
+|'''invoke'''|!-getListFromElement-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getNumberOfListedElement
+!style_darkBlue{'''getNumberOfListedElement ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+NUMBEROFLISTOFELEMENT.
+
+!***> Tests
+|'''invoke'''|!-getNumberOfListedElement-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getQuery
+!style_darkBlue{'''getQuery ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+QUERY.
+
+!***> Tests
+|'''invoke'''|!-getQuery-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getSelectedId
+!style_darkBlue{'''getSelectedId ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+SELECTEDID.
+
+!***> Tests
+|'''invoke'''|!-getSelectedId-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setListFromElement
+!style_darkBlue{'''setListFromElement (aQuery)'''} method ...
+
+'''Parameters:'''
+aQuery :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setListFromElement-!|'''with parameters'''|!-'aQuery'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setNumbeOfListedElement
+!style_darkBlue{'''setNumbeOfListedElement (aNumbeOfListedElement)'''} method ...
+
+'''Parameters:'''
+aNumbeOfListedElement :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setNumbeOfListedElement-!|'''with parameters'''|!-'aNumbeOfListedElement'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setSelectedId
+!style_darkBlue{'''setSelectedId ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setSelectedId-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setViewParameter
+!style_darkBlue{'''setViewParameter (aQuery)'''} method ...
+
+'''Parameters:'''
+aQuery :  - ... 
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-setViewParameter-!|'''with parameters'''|!-'aQuery'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----
