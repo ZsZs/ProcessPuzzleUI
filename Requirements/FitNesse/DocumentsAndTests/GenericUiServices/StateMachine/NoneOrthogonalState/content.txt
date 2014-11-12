@@ -1,0 +1,34 @@
+!3 Overview
+None Orthogonal State ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#uniqueStateIdentifier
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor uniqueStateIdentifier
+!style_darkBlue{'''uniqueStateIdentifier ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-uniqueStateIdentifier-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

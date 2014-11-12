@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<properties>
+	<Files>true</Files>
+	<LastModifyingUser>zsolt.zsuffa</LastModifyingUser>
+	<Properties>true</Properties>
+	<RecentChanges>true</RecentChanges>
+	<Refactor>true</Refactor>
+	<Search>true</Search>
+	<Versions>true</Versions>
+	<WhereUsed>true</WhereUsed>
+	<WikiImport>
+		<Source>http://test.processpuzzle.com:80/ProcessPuzzleBrowserInterface.SpringBacklogs</Source>
+		<LastRemoteModification>20110703115956</LastRemoteModification>
+		<AutoUpdate/>
+	</WikiImport>
+</properties>

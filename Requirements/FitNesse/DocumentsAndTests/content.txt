@@ -1,0 +1,3 @@
+!3 !-ProcessPuzzle-! Browser Interface
+
+As this component is part of the [[!-ProcessPuzzle-! Framework][.ProcessPuzzleFramework]] it's documentation and tests can be [[there][.ProcessPuzzleFramework.DocumentsAndTests.BrowserInterface]].

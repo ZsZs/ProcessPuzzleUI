@@ -1,0 +1,333 @@
+!3 Overview
+Document Manager ...
+!***> Document Manager - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_DocumentManagerOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * .#constructor
+***!
+!***> Public accessors and mutators
+  * .#loadedDocuments
+  * .#getActiveDocument
+  * .#getDocumentCount
+  * .#getDocumentSelector
+  * .#setCompositeItemNameInMenu
+  * .#activateDocument
+  * .#changeCaptions
+  * .#hideDocumentSelector
+  * .#loadDocumentById
+  * .#loadDocumentByName
+  * .#loadDocumentByUri
+  * .#observe
+  * .#showDocumentSelector
+  * .#unLoadDocument
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+The Document Manager containst the following classes:
+
+ * [[Browse View][^BrowseView]] ...
+ * [[Custom Form View][^CustomFormView]] ...
+ * [[Document][^DocumenT]] ...
+ * [[Document Events][^DocumentEvents]] ...
+ * [[Document List][^DocumentList]] ...
+ * [[Document View][^DocumentView]] ...
+ * [[Editable Html View][^EditableHtmlView]] ...
+ * [[Editable Text View][^EditableTextView]] ...
+ * [[List Query View][^ListQueryView]] ...
+ * [[Native View][^NativeView]] ...
+ * [[Print View][^PrintView]] ...
+ * [[Property View][^PropertyView]] ...
+
+
+----
+----
+
+!anchor constructor
+!style_darkBlue{'''constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-constructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadedDocuments
+!style_darkBlue{'''loadedDocuments ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-loadedDocuments-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getActiveDocument
+!style_darkBlue{'''getActiveDocument ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getActiveDocument-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getDocumentCount
+!style_darkBlue{'''getDocumentCount ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getDocumentCount-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getDocumentSelector
+!style_darkBlue{'''getDocumentSelector ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getDocumentSelector-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setCompositeItemNameInMenu
+!style_darkBlue{'''setCompositeItemNameInMenu ()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setCompositeItemNameMenu-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activateDocument
+!style_darkBlue{'''activateDocument (documentName)'''} method ...
+
+'''Parameters:'''
+documentName :   - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-activateDocument-!|'''with parameters'''|!-document-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor changeCaptions
+!style_darkBlue{'''changeCaptions (aController)'''} method ...
+
+'''Parameters:'''
+aController :   - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-changeCaptions-!|'''with parameters'''|!-aController-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hideDocumentSelector
+!style_darkBlue{'''hideDocumentSelector ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!*** Tests
+|'''invoke'''|!-hideDocumentSelector-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentById
+!style_darkBlue{'''loadDocumentById (documentType, name, id, viewNameToActivate)'''} method ...
+
+'''Parameters:'''
+documentType :  - ... 
+name :  - ...
+id :  - ...
+viewNameToActivate :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-loadDocumentById-!|'''with parameters'''|!-documentType, 'documentName', 'docId', viewName-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentByName
+!style_darkBlue{'''loadDocumentByName (documentType, name, viewNameToActivate)'''} method ...
+
+'''Parameters:'''
+documentType :  - ... 
+name :  - ...
+viewNameToActivate :  - ... 
+
+'''Return value:'''
+None.
+
+
+!***> Tests
+|'''invoke'''|!-loadDocumentByName-!|'''with parameters'''|!-documentType, 'documentName', viewName-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadDocumentByUri
+!style_darkBlue{'''loadDocumentByUri (documentType, name, url, viewNameToActivate)'''} method ...
+
+'''Parameters:'''
+documentType :  - ... 
+name :  - ...
+url:  - ...
+viewNameToActivate :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-loadDocumentByUri-!|'''with parameters'''|!-documentType, uri, viewName-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor observe
+!style_darkBlue{'''observe (theEvent)'''} method ...
+
+'''Parameters:'''
+theEvent :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-eventHandler-!|'''with parameters'''|!-theEvent-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor showDocumentSelector
+!style_darkBlue{'''showDocumentSelector (showClose, showPrint)'''} method ...
+
+'''Parameters:'''
+showClose :  - ...
+showPrint :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-showDocumentselector-!|'''with parameters'''|!-showClose, showPrint-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor unLoadDocument
+!style_darkBlue{'''unLoadDocument (documentName, documentType)'''} method ...
+
+'''Parameters:'''
+documentName :  - ...
+documentType :  - ... 
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-unloadDocument-!|'''with parameters'''|!-'documentName', documentType-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+----
+----
+
+
+

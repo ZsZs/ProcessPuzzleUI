@@ -1,0 +1,57 @@
+!define htmlSource (<script type="text/javascript">
+	var LANGUAGE = "hu";
+	var RESOURCE_PATH = !-"Internalization/TestResources"-!;
+	var WIDGET_CONTAINER_ID = "widgetContainer";
+	var browserWidget;
+	var locale = new !-Locale( LANGUAGE )-!;
+	var resourceBundle;
+
+	function !-setUp() {
+		resourceBundle = new XMLResourceBundle( RESOURCE_PATH );
+		browserWidget = new BrowserWidget( document, WIDGET_CONTAINER_ID, resourceBundle, locale );
+	}-!
+
+	function !-tearDown() {
+		$( WIDGET_CONTAINER_ID ).getChildren().each( function( element ) {
+			if( element.id != PARENT_ID ) 
+				element.destroy();
+			else {
+				element.getChildren().each( function( childElement ) {
+					childElement.destroy();
+				});
+			}
+		});
+	}-!
+</script>
+
+<div id="widgetContainer">
+    <div id="parent"></div>
+</div>
+)
+
+|'''add'''|hu.itkodex.litest.fitnesse.!-LoggingConfigurator-!|'''as'''|loggingConfigurator|
+|'''add'''|hu.itkodex.litest.fitnesse.!-BrowserWidgetTester-!|'''as'''|browserWidgetTester|
+
+|'''select'''|loggingConfigurator|
+
+!***> Configure logging
+!include .LocalSettings.CommonTestHelpers.LoggingConfiguration
+***!
+
+|Import|
+|hu.itkodex.litest.fitnesse|
+
+|'''select'''|browserWidgetTester|
+
+|'''set host'''|${TestServer}|
+
+|'''set test page'''|${TestServer}/${PAGE_PATH}|
+
+|'''add to body'''|${htmlSource}|
+
+|'''invoke set up'''|
+
+|'''set widget variable'''|browserWidget|
+
+|'''set widget container id'''|widgetContainer|
+

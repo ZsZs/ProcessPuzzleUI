@@ -1,0 +1,11 @@
+!3 Overview
+Tree Widget displays XML data in an Explorer like tree. Each node type - i.e. xml element type - can have different icon, moreover different icons for open and closed state. Use can open and close nodes by clicking on them.
+!***> Tree Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_TreeWidgetOverview.gif
+***!
+
+!3 Details
+The !-TreeWidget JavaScript-! component consists of the following classes:
+ * [[Root Node][^RootNode]] is special tree node in which it doesn't has parent.
+ * [[Tree Node][^TreeNode]] is the most fundamental constituent of the Tree Widget. It provides the functionality of displaying a single node in the tree. It also permits of opening and closing a node.
+ * [[Tree Widget][^TreeWidget]] is the root of this component. It provides standardized interface for handling the behavior of the tree.

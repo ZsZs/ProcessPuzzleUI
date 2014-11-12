@@ -1,0 +1,113 @@
+!3 Overview
+
+XML Resource Bundle ...
+
+'''Methods:'''
+!***> Constructor
+  * .#constructor
+***!
+!***> Public accessors and mutators
+  * .#getFile
+  * .#getText
+  * .#isLoaded
+  * .#loadFile
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor constructor
+!style_darkBlue{'''constructor(chars, offset, length)'''} method ...
+
+'''Parameters:'''
+chars : - ...
+offset :  - ...
+length : - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-constructor-!|'''with parameters'''|!-'chars','offset','length'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getFile
+!style_darkBlue{'''getFile (key)'''} method ...
+
+'''Parameters:'''
+key :  - ...
+
+'''Return value:'''
+FILE.
+
+!***> Tests
+|'''invoke'''|!-getFile-!|'''with parameters'''|!-'key'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getText
+!style_darkBlue{'''getText (key)'''} method ...
+
+'''Parameters:'''
+key :  - ...
+
+'''Return value:'''
+STRING.
+
+!***> Tests
+|'''invoke'''|!-getText-!|'''with parameters'''|!-'key'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+
+!anchor isLoaded
+!style_darkBlue{'''isLoaded (strXML)'''} method ...
+
+'''Parameters:'''
+strXML :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-isLoaded-!|'''with parameters'''|!-'strXML-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadFile
+!style_darkBlue{'''loadFile (locale)'''} method ...
+
+'''Parameters:'''
+locale :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-loadFile-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

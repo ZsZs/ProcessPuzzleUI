@@ -1,0 +1,153 @@
+!3 Overview
+Composite State ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#addSubState
+  * .#findSubStateByKind
+  * .#invalidStateMachineException
+  * .#removeSubState
+  * .#reset
+  * .#uniqueStateIdentifier
+  * .#validate
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor addSubState 
+!style_darkBlue{'''addSubState (subState)'''} method ...
+
+'''Parameters:'''
+subState :  -  ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-addSubState-!|'''with parameters'''|!-'subState'-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor findSubStateByKind
+!style_darkBlue{'''findSubStateByKind (kindOfSubState)'''} method ...
+
+'''Parameters:'''
+kindOfSubState :   -  ...
+
+'''Return value:'''
+SUBSTATE.
+
+!***> Tests
+|'''invoke'''|!-findSubStateByKind-!|'''with parameters'''|!-'kindOfSubState'-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+
+!anchor invalidStateMachineException
+!style_darkBlue{''' invalidStateMachineException (stateMachine, message, source)'''} method ...
+
+'''Parameters:'''
+stateMachine :  - ...
+message :  - ...
+source :  -  ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!- invalidStateMachineException-!|'''with parameters'''|!-'stateMachine', 'message', 'source'-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+
+!anchor removeSubState
+!style_darkBlue{'''removeSubState (subStateName)'''} method ...
+
+'''Parameters:'''
+subStateName :  -  ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-removeSubState-!|'''with parameters'''|!-'subStateName'-!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor reset
+!style_darkBlue{'''reset ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-reset-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+
+!anchor uniqueStateIdentifier
+!style_darkBlue{'''uniqueStateIdentifier ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+HELLO.
+
+!***> Tests
+|'''invoke'''|!-uniqueStateIdentifier-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor validate
+!style_darkBlue{'''validate ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+TRUE
+
+!***> Tests
+|'''invoke'''|!-validate-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

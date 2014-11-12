@@ -1,0 +1,16 @@
+!3 Overview
+Internalization !-JavaScript-! component provides client (browser) side internationalization. Permits of label, caption, text e.t.c. substitution in widgets built exclusively in the browser. It retrieves XML resources bundles and makes translations available for the different Browser UI components.
+
+!*** Internalization - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_InternalizationOverview.gif
+***!
+
+!3 Details
+
+The Internalization !-JavaScript-! component consists of the following classes:
+ * [[Locale ][^LocalE]] ...
+ * [[Resource Cache][^ResourceCache]] ...
+ * [[Resource Key][^ResourceKey]] ...
+ * [[Xml Bundle Parser][^XmlBundleParser]] ...
+ * [[Xml Resource Bundle][^XmlResourceBundle]] ...
+

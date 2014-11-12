@@ -1,0 +1,112 @@
+!3 Overview
+Folder Manager Widget ...
+!***> Folder Manager Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_FolderManagerWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#clearContainerElement
+  * .#createNewNode
+  * .#deleteNode
+  * .#moveNode
+  * .#renameNode
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor clearContainerElement
+!style_darkBlue{'''clearContainerElement ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-createContainerElement-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createNewNode
+!style_darkBlue{'''createNewNode (captionList)'''} method ...
+
+'''Parameters:'''
+captionList :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-createNewNode-!|'''with parameters'''|!-captionList-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor deleteNode
+!style_darkBlue{'''deleteNode ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-deleteNode-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor moveNode
+!style_darkBlue{'''moveNode ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-moveNode-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor renameNode
+!style_darkBlue{'''renameNode ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-renameNode-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

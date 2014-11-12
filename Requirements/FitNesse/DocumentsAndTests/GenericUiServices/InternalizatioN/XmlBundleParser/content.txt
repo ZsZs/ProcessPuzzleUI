@@ -1,0 +1,116 @@
+!3 Overview
+
+XML Bundle Parser ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#characters
+  * .#endElement
+  * .#parse
+  * .setXML
+  * .#startElement
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor characters
+!style_darkBlue{'''characters(chars, offset, length)'''} method ...
+
+'''Parameters:'''
+chars :  - ...
+offset :  - ... 
+length :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-characters-!|'''with parameters'''|!-'chars','offset','length'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor endElement
+!style_darkBlue{'''endElement (qName)'''} method ...
+
+'''Parameters:'''
+qName :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-endElement-!|'''with parameters'''|!-'qName'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor parse
+!style_darkBlue{'''parse (theCache, theFilename, theTargetLocale)'''} method ...
+
+'''Parameters:'''
+theCache :  - ...
+theFilename :  - ...
+theTargetLocale :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-parse-!|'''with parameters'''|!-'theCache','theFilename','theTagetLocale'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setXML
+!style_darkBlue{'''setXML (strXML)'''} method ...
+
+'''Parameters:'''
+strXML :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-startElement-!|'''with parameters'''|!-'strXML'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor startElement
+!style_darkBlue{'''startElement (qName, attrs)'''} method ...
+
+'''Parameters:'''
+qName :  - ...
+attrs :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-startElement-!|'''with parameters'''|!-'qName','attrs'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

@@ -1,0 +1,621 @@
+'''Methods:'''
+!***> Constructor
+  * .#constructor
+***!
+!***> Public accessors and mutators
+  * .#activateTab
+  * .#activeTabId
+  * .#addNewTab
+  * .#changeCaptions
+  * .#getActiveTab
+  * .#getTabByName
+  * .#hide
+  * .#isCloseButtonVisible
+  * .#isVisible
+  * .#isPrintButtonVisible
+  * .#moveFirstToLast
+  * .#moveLastToFirst
+  * .#observe
+  * .#onCloseClick
+  * .#onPrintClick
+  * .#removeAllTabs
+  * .#removeTab
+  * .#replaceDocumentOfTab
+  * .#saveWidgetState
+  * .#setBackGroundImage 
+  * .#setCloseButton
+  * .#setPrintButton
+  * .#setTabLeftImage
+  * .#setTabLeftOnImage
+  * .#setTabRightImage
+  * .#setTabRightOnImage 
+  * .#show
+  * .#showCloseButton
+  * .#showPrintButton
+  * .#tabCount 
+  * .#tabExist
+***!
+!***> Properties
+  * 
+***!
+
+!anchor constructor
+!style_darkBlue{'''constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-constructor-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(<div id="tabWidget"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activateTab
+!style_darkBlue{'''activateTab (tabName)'''} method ...
+
+'''Parameters:'''
+tabName:  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-activateTab-!|'''with parameters'''|!-'tabName'-!|
+|'''expected element'''|!style_red(<div id="tabWidget"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor activeTabId
+!style_darkBlue{'''activeTabId ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-activateTabId-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor addNewTab
+!style_darkBlue{'''addNewTab (tabName, tabCaption, htmlDivElement, objectToSelect)'''} method ...
+
+'''Parameters:'''
+tabName : String - ...
+tabCaption :  - ...
+htmlDivElement :  - ...
+objectToSelect :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-addNewTab-!|'''with parameters'''|!-'tabName', 'tabCaption', 'htmlDivElement', 'objectToSelect'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor changeCaptions
+!style_darkBlue{'''changeCaptions (controller)'''} method ...
+
+'''Parameters:'''
+controller :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-changeCaptions-!|'''with parameters'''|!-'controller'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getActiveTab
+!style_darkBlue{'''getActiveTab ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getactiveTab-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getTabByName
+!style_darkBlue{'''getTabByName (tabName)'''} method ...
+
+'''Parameters:'''
+tabName :  String - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getTabByName-!|'''with parameters'''|!-'tabName'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isCloseButtonVisible
+!style_darkBlue{'''isCloseButtonVisible ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-isCloseButtonVisible-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isPrintButtonVisible
+!style_darkBlue{'''isPrintButtonVisible ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-isPrintButtonVisible-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isVisible
+!style_darkBlue{'''isVisible ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-isVisible-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(<div id="tabWidget"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor moveFirstToLast
+!style_darkBlue{'''moveFirstToLast ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-moveFirstToLast-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor moveLastToFirst
+!style_darkBlue{'''moveLastToFirst ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-moveLastToFirst-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor observe
+!style_darkBlue{'''observe (aTab)'''} method ...
+
+'''Parameters:'''
+aTab :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-observe-!|'''with parameters'''|!-'aTab'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor onCloseClick
+!style_darkBlue{'''onCloseClick ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-onCloseClick-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor onPrintClick
+!style_darkBlue{'''onPrintClick ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-onPrintClick-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor replaceDocumentOfTab
+!style_darkBlue{'''replaceDocumentOfTab (tabName, objectToSelect)'''} method ...
+
+'''Parameters:'''
+tabName : String - ...
+objectToSelect :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-replaceDocumentOfTab-!|'''with parameters'''|!-'tabName', 'objectToSelect'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeTab
+!style_darkBlue{'''removeTab (tabName)'''} method ...
+
+'''Parameters:'''
+tabName :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-removeTab-!|'''with parameters'''|!-'tabName'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeAllTabs
+!style_darkBlue{'''removeAllTabs ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-removeAllTabs-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor saveWidgetState
+!style_darkBlue{'''saveWidgetState (delimiter)'''} method ...
+
+'''Parameters:'''
+delimiter :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-saveWidgetState-!|'''with parameters'''|!-'delimiter'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setBackGroundImage
+!style_darkBlue{'''setBackGroundImage (image)'''} method ...
+
+'''Parameters:'''
+image : - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setBackGroundImage-!|'''with parameters'''|!-'image'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setCloseButton
+!style_darkBlue{'''setCloseButton (setValue)'''} method ...
+
+'''Parameters:'''
+setValue :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setCloseButton-!|'''with parameters'''|!-'setValue'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setPrintButton
+!style_darkBlue{'''setPrintButton (setValue)'''} method ...
+
+'''Parameters:'''
+setValue :  - ... 
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setPrintButton-!|'''with parameters'''|!-'setValue'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setTabLeftImage
+!style_darkBlue{'''setTabLeftImage (image)'''} method ...
+
+'''Parameters:'''
+image :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setTabLeftImage-!|'''with parameters'''|!-'image'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setTabLeftOnImage
+!style_darkBlue{'''setTabLeftOnImage (image)'''} method ...
+
+'''Parameters:'''
+image :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setBTabLeftOnImage-!|'''with parameters'''|!-'image'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setTabRightImage
+!style_darkBlue{'''setTabRightImage (image)'''} method ...
+
+'''Parameters:'''
+image : - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setTabRightImage-!|'''with parameters'''|!-'image'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setTabRightOnImage
+!style_darkBlue{'''setTabRightOnImage (image)'''} method ...
+
+'''Parameters:'''
+image :  - ... 
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-setTabRightOnImage-!|'''with parameters'''|!-'image'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show (doNotActivate)'''} method ...
+
+'''Parameters:'''
+doNotActivate : - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-'doNotActivate'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor showCloseButton
+!style_darkBlue{'''showCloseButton (value)'''} method ...
+
+'''Parameters:'''
+value :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-showCloseButton-!|'''with parameters'''|!-'value'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor showPrintButton
+!style_darkBlue{'''showPrintButton (value)'''} method ...
+
+'''Parameters:'''
+value :  - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-showPrintButton-!|'''with parameters'''|!-'value'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor tabCount
+!style_darkBlue{'''tabCount ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-tabCount-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor tabExist 
+!style_darkBlue{'''tabExist (tabName)'''} method ...
+
+'''Parameters:'''
+tabName : String - ...
+
+'''Return Value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-tabExist-!|'''with parameters'''|!-'tabName'-!|
+|'''expected element'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

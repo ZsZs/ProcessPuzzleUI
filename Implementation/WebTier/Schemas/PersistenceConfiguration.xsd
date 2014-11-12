@@ -108,6 +108,7 @@
       <xs:sequence>
         <xs:element ref="pr:provider_class"/>
         <xs:element ref="pr:use_second_level_cache"/>
+        <xs:element ref="pr:region"/>
         <xs:element ref="pr:use_query_cache"/>
       </xs:sequence>
     </xs:complexType>

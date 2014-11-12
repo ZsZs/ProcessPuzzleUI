@@ -1,0 +1,50 @@
+!3 Overview
+State Machine is a simplified implementation of the UML State Machine. It's purpose is to reuse when the statuses of the browser interface widgets should be managed.
+!***> State Machine - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_StatemachineOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#uniqueStateIdentifier
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+
+The State Machine containst the following classes:
+
+ * [[Composite State][^CompositeState]] ...
+ * [[End State][^EndState]] ...
+ * [[None Orthogonal State][^NoneOrthogonalState]] ...
+ * [[Simple State][^SimpleState]] ...
+ * [[Start State][^StartState]] ...
+ * [[State][^StatE]] ...
+
+
+----
+----
+
+!anchor uniqueStateIdentifier
+!style_darkBlue{'''uniqueStateIdentifier()'''} method ...
+
+'''Parameters:'''
+...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-uniqueStateidenifier-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

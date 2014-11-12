@@ -1,0 +1,7 @@
+|!-SetUpTwoLevelFrammedSite-!|
+
+|Frame|Default Html|Order Html|
+|Header|header.hu.html|header.en.html|
+|Leftmenu|leftmenubar.hu.html|leftmenubar.en.html|
+|Content|content.hu.html|content.en.html|
+|Footer|footer.hu.html|footer.en.html|

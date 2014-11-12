@@ -1,0 +1,697 @@
+!3 Overview
+Browser Widget is the generic base class of all other !-JavaScript-! widgets. It facilitates creating, adding and modifying DOM elements to the widget in a standardized way. It helps to use styles consistently within the whole application. 
+!***> Browser Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_BrowserWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * .#initialize
+***!
+!***> Public accessors and mutators
+  * .#appendElement
+  * .#appendNewAnchor
+  * .#appendNewButton
+  * .#appendNewCollabsibleArea
+  * .#appendNewDivision
+  * .#appendNewFieldSet
+  * .#appendNewForm
+  * .#appendNewHiddenDivision
+  * .#appendNewRowLabel
+  * .#appendNewRowValue
+  * .#appendNewStaticRow
+  * .#appendNewTable
+  * .#appendNewText
+  * .#createAnchor
+  * .#createButton
+  * .#createCollapsibleArea
+  * .#createDivision
+  * .#createElement
+  * .#createFieldSet
+  * .#createHiddenDivision
+  * .#createRowLabel
+  * .#createRowValue
+  * .#createStaticRow
+  * .#createTable
+  * .#createText
+  * .#findElementById
+  * .#getText
+  * .#removeChild
+  * .#removeWidget
+  * .#updateText
+***!
+!***> Properties
+  * .#getContainerElement
+  * .#getI18ResourceBundle
+***!
+
+!3 Details
+
+!anchor appendElement
+!style_darkBlue{'''appendElement (element, parentElement)'''} method appends the given element to a given parent element as the last element. The appended element will be last element of the parent or container.
+
+'''Parameters:'''
+element : Element - HTML element which should be added to the parent or the container. Can't be null. 
+parentElement : Element - HTML element to which the given child element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-appendElement-!|'''with parameters'''|!-new Element( 'SPAN' )-!|
+|'''expected container'''|!style_red(<div id="widgetContainer"><div id="parent"></div><span></span></div>)|
+|'''invoke tear down'''|
+|'''invoke'''|!-appendElement-!|'''with parameters'''|!-new Element( 'SPAN' ), 'parent'-!|
+|'''expected container'''|!style_red(<div id="widgetContainer"><div id="parent"><span></span></div></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewAnchor
+!style_darkBlue{'''appendNewAnchor (id, nodeText, clickEventHandler, parentElement)'''} method creates a new ANCHOR element and appends to the container element as the last element.
+
+'''Parameters:'''
+id : String - Anchor id.
+nodeText : String - Text value of the new anchor element.
+clickEventHandler : Eventhandler - Click event handler function for the new anchor element.
+parentElement : Element - HTML element to which the new ANCHOR element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created ANCHOR element.
+
+!***> Tests
+|'''invoke'''|!-appendNewAnchor-!|'''with parameters'''|!-'anchorId', 'Text', function alertOnClick() { alert("You clicked on the link."); }-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><a id="anchorId" href="#">Text</a></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewButton
+!style_darkBlue{'''appendNewButton (resourceKey, onClickBack, parentElement)'''} method creates a new BUTTON element and appends to the container element as the last element.
+
+'''Parameters:'''
+resourceKey : String - Key in the Resource Bundle for the INPUT element's value property.
+onClickCallBack : Eventhandler - Click event handler function for the new input element.
+parentElement : Element - HTML element to which the new BUTTON element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created BUTTON element
+
+!***> Tests
+|'''invoke'''|!-appendNewButton-!|'''with parameters'''|!-'Print', function alertOnClick() { alert("You clicked on the link."); }-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><input type="button" value="Print" class="buttonSmall"/></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewCollapsibleArea
+!style_darkBlue{'''appendNewCollapsibleArea (parentElement)'''} method creates a new DIV element and appends to the container element as the last element.
+
+'''Parameters:'''
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element.
+
+!***> Tests
+|'''invoke'''|!-appendNewCollapsibleArea-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><div class="readOnlyContainer"></div></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewDivision
+!style_darkBlue{'''appendNewDivision (parentElement)'''} method creates a new DIV element and appends to the container element as the last element.
+
+'''Parameters:'''
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element.
+
+!***> Tests
+|'''invoke'''|!-appendNewDivision-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><div class="readOnlyContainer"></div></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewFieldset
+!style_darkBlue{'''appendNewFieldSet (imageId, parentElement)'''} method creates a new FIELDSET element and appends to the container element as the last element.
+
+'''Parameters:'''
+imageId : String - ...
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created FIELDSET element
+
+!***> Tests
+|'''invoke'''|!-appendNewFieldSet-!|'''with parameters'''|!-'fieldSetImageId'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><fieldset style="border-color: #336699; width: 100%;"><legend><img id="fieldSetImageId" title="Show/Hide" style="cursor: pointer;" alt="Show/Hide" src="images/expver.png"/></legend></fieldset></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewForm
+!style_darkBlue{'''appendNewForm (formName, methodType, parentElement  )'''} method creates a new FORM element and appends to the container element as the last element. The new form's id is set by formName parameter. 
+
+'''Parameters:'''
+formName : String - Name of the form to be created.
+methodType : String - Form's HTTP method type, GET or POST.
+parentElement : Element - HTML element to which the new FORM element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created FORM element
+
+!***> Tests
+|'''invoke'''|!-appendNewForm-!|'''with parameters'''|!-'formId', 'POST'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><form id="formId" method="POST"/></div>>!)|
+|'''invoke tear down'''|
+|'''invoke'''|!-appendNewForm-!|'''with parameters'''|!-'formId', 'POST', 'parent'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"><form id="formId" method="POST"/></div></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewHiddenDivision
+!style_darkBlue{'''appendNewHiddenDivision (divId, parentElement)'''} method creates a new DIV element and appends to the container element as the last element.
+
+'''Parameters:'''
+divId : String - ...
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element
+
+!***> Tests
+|'''invoke'''|!-appendNewHiddenDivision-!|'''with parameters'''|!-'hiddenDivId'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><div id="hiddenDivId" style="display: none;" class="readOnlyContainer"></div></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewRowLabel
+!style_darkBlue{'''appendNewRowLabel (labelText, parentElement)'''} method creates a new SPAN element and appends to the container element as the last element.
+
+'''Parameters:'''
+labelText : String - Text for the form element's label.
+parentElement : Element - HTML element to which the new SPAN element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created SPAN element
+
+!***> Tests
+|'''invoke'''|!-appendNewRowLabel-!|'''with parameters'''|!-'labelText'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><span class="label">labelText</span></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewRowValue
+!style_darkBlue{'''appendNewRowValue (parentElement)'''} method creates a new SPAN element and appends to the container element as the last element.
+
+'''Parameters:'''
+parentElement : Element - HTML element to which the new SPAN element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created SPAN element
+
+!***> Tests
+|'''invoke'''|!-appendNewRowValue-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><span class="formw"></span></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewStaticRow
+!style_darkBlue{'''appendNewStaticRow (labelText, valueText, valueElementId, parentElement)'''} method creates a new division and two spans inside this division. The first span stands for a form's label and the second for a value. All newly created elements gets a predefined style: row, label, and formw. The complete division will be added to the given parent element as the last child. This method is mainly used for building up forms in a standardized way.
+
+'''Parameters:'''
+labelText : String - Text for the form element's label.
+valueText : String - Text for the form element's value.
+valueElementId : String - Id for the form element's value.
+parentElement : Element - HTML element to which the new DIV element should be added. Usually this is a FORM element. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element
+
+!***> Tests
+|'''invoke'''|!-appendNewStaticRow-!|'''with parameters'''|!-'A new row:', 'value in row', 'newRowId'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div><div class="row"><span class="label">A new row:</span><span id="newRowId" class="formw">value in row</span></div></div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewTable
+!style_darkBlue{'''appendNewTable (tableDefinition, parentElement)'''} method creates a new TABLE element and appends to the container element as the last element.
+
+'''Parameters:'''
+tableDefinition :  - ...
+parentElement : Element - HTML element to which the new TABLE element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created TABLE element
+
+!***> Tests
+|'''invoke'''|!-appendNewTable-!|'''with parameters'''|!-'parent'-!|
+|'''expected container'''|!style_red(!<<table><thead><tr><th>First Column</th><th>Second Column</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor appendNewText
+!style_darkBlue{'''appendNewText (text, parentElement)'''} method creates a new DIV element and appends to the container element as the last element.
+
+'''Parameters:'''
+text : String - ...
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element
+
+!***> Tests
+|'''invoke'''|!-appendNewText-!|'''with parameters'''|!-'text'-!|
+|'''expected container'''|!style_red(!<<div id="widgetContainer"><div id="parent"></div>text</div>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createAnchor
+!style_darkBlue{'''createAnchor (id, nodeText, clickEventHandler)'''} method creates a new ANCHOR element and sets anchor's text, id and click event handler properties with the given values.
+
+'''Parameters:'''
+id : String - Identifier of the new anchor element.
+nodeText : String - Text value of the new anchor element.
+clickEventHandler : Eventhandler - Click event handler function for the new anchor element.
+
+'''Return value:'''
+Returns the created ANCHOR element.
+
+!***> Tests
+|'''invoke'''|!-createAnchor-!|'''with parameters'''|!-'anchorId', 'a link'-!|
+|'''expected element'''|!style_red(!<<A id=anchorId href="#">a link</A>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createButton
+!style_darkBlue{'''createButton (resourceKey, onClickCallBack)'''} method creates a new INPUT element of type BUTTON and sets it's class, value and click event handler properties with the given values.
+
+'''Parameters:'''
+resourceKey : String - Key in the Resource Bundle for the INPUT element's value property.
+onClickCallBack : Eventhandler - Click event handler function for the new input element.
+
+'''Return value:'''
+Returns the created INPUT element.
+
+!***> Tests
+|'''invoke'''|!-createButton-!|'''with parameters'''|!-'Print'-!|
+|'''expected element'''|!style_red(!<<INPUT type=button value=Print class=buttonSmall></INPUT>>!)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createCollapsibleArea
+!style_darkBlue{'''createCollapsibleArea (parentElement)'''} method creates a new DIV element with a predefined class.
+
+'''Parameters:'''
+parentElement: Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element.
+
+!***> Tests
+|'''invoke'''|!-createCollapsibleArea-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(!<<DIV class=readOnlyContainer></DIV>>!)|
+|'''invoke tear down'''|
+
+***!
+
+
+----
+
+!anchor createDivision
+!style_darkBlue{'''createDivision (parentElement)'''} method creates a new division
+
+'''Parameters:'''
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element.
+
+!***> Tests
+|'''invoke'''|!-createDivision-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(!<<DIV class=readOnlyContainer></DIV>>!) |
+|'''invoke tear down'''|
+
+***!
+
+
+----
+
+!anchor createElement
+!style_darkBlue{'''createElement (elementName)'''} method creates a new...
+
+'''Parameters:'''
+elementName : String - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-createElement-!|'''with parameters'''|!- -!|
+|'''expected element'''|!style_red(<DIV class=readOnlyContainer></DIV>) |
+|'''invoke tear down'''|
+
+***!
+
+----
+!anchor createFieldSet
+!style_darkBlue{'''createFieldSet ()'''} method creates a new Fieldset.
+
+'''Parameters:'''
+parentElement : Element - HTML element to which the new DIV element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+imageId : String - ...
+
+'''Return value:'''
+Returns the created FIELDSET element.
+
+!***> Tests
+|'''invoke'''|!-createFieldSet-!|'''with parameters'''|!-'fieldSetImageId'-!|
+|'''expected element'''|!style_red(<FIELDSET style="border-color: #336699; width: 100%;"><LEGEND><IMG id=fieldSetImageId title=Show/Hide style="cursor: pointer;" alt=Show/Hide src=images/expver.png></IMG></LEGEND></FIELDSET>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createForm
+!style_darkBlue{'''createForm (formId, methodType)'''} method creates a new FORM element and appends to the container element as the last element.
+
+'''Parameters:'''
+formId : String - ... 
+methodType : String - ...
+
+'''Return value:'''
+Returns the created FORM element.
+
+!***> Tests
+|'''invoke'''|!-createForm-!|'''with parameters'''|!-'formId', 'POST'-!|
+|'''expected element'''|!style_red(<FORM id=formId method=POST></FORM>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createHiddenDivision
+!style_darkBlue{'''createHiddenDivision (divId)'''} method creates a new hidden Division.
+
+'''Parameters:'''
+divId : String - ...
+
+'''Return value:'''
+Returns the created DIV element.
+
+!***> Tests
+|'''invoke'''|!-createHiddenDivision-!|'''with parameters'''|!-'divId'-!|
+|'''expected element'''|!style_red(<DIV id=divId style="display: none;" class=readOnlyContainer></DIV>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createRowLabel
+!style_darkBlue{'''createRowLabel (labelText)'''} method creates a new Row Label Element.
+
+'''Parameters:'''
+labelText : String - ...
+
+'''Return value:'''
+Returns the created SPAN element.
+
+!***> Tests
+|'''invoke'''|!-createRowLabel-!|'''with parameters'''|!-'labelText'-!|
+|'''expected element'''|!style_red(<SPAN class=label>labelText</SPAN>) |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createRowValue
+!style_darkBlue{'''createRowValue ()'''} method creates a new Row Value Element.
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+Returns the created SPAN element.
+
+!***> Tests
+|'''invoke'''|!-createRowValue-!|'''with parameters'''|!--!|
+|'''expected element'''|!style_red(<SPAN class=formw></SPAN>) |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createStaticRow
+!style_darkBlue{'''createStaticRow (labelText, valueText, valueElementId, parentElement)'''} method creates a new division and two spans inside this division. The first span stands for a form's label and the second for a value. All newly created elements gets a predefined style: row, label, and formw. The complete division will be added to the given parent element as the last child. This method is mainly used for building up forms in a standardized way.
+
+'''Parameters:'''
+labelText : String - Text for the form element's label.
+valueText : String - Text for the form element's value.
+valueElementId : String - Id for the form element's value.
+parentElement : Element - HTML element to which the new FORM element should be added. If ''parentElement'' is a valid Element in the container than ''element'' will be the last child of it, otherwise ''element'' is added to the !-''containerElement''-!.
+
+'''Return value:'''
+Returns the created DIV element.
+
+!***> Tests
+|'''invoke'''|!-createStaticRow-!|'''with parameters'''|!-'A new row:', 'value in row', 'newRowId'-!|
+|'''expected element'''|!style_red(<DIV class=row><SPAN class=label>A new row:</SPAN><SPAN id=newRowId class=formw>value in row</SPAN></DIV>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createTable
+!style_darkBlue{'''createTable (theTableDefinition)'''} method creates a new Table
+
+'''Parameters:'''
+theTableDefinition :  - ...
+
+'''Return value:'''
+Returns the created TABLE element.
+
+!***> Tests
+|'''invoke'''|!-createTable-!|'''with parameters'''|!-parentElement=parent&labelText=A new row:&valueText=value in row&texElementId=newRowId-!|
+|'''expected'''|!style_red(<table><thead><tr><th>First Column</th><th>Second Column</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor createText
+!style_darkBlue{'''createText (text)'''} method creates a new text.
+
+'''Parameters:'''
+text : String - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-createText-!|'''with parameters'''|!-'text'-!|
+|'''expected element'''|!style_red(<DIV>text</DIV>) |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor initialize !style_darkBlue{'''initialize (domDocument, widgetContainerId, resourceBundle)'''} instantiates and initializes a new Browser Widget.
+
+'''Parameters:'''
+domDocument : Document - HTML document within which the widget container exists. Can't be null or empty.
+widgetContainerId : String - Identifier of the container element. Can't be null or empty.
+resourceBundle : !-XmlResourceBundle-! - Resources for internationalization. Can't be null or empty.
+
+'''Return Value: '''
+...
+
+!***> Tests
+|'''instantiate'''|
+|'''dom document'''|'''container element id'''|'''resource bundle'''|'''is success?'''|
+|document|widgetContainer|!-TestResources.xml-!|!style_red(yes)|
+|null|widgetContainer|(!-TestResources.xml-!|!style_red(no)|
+|document|null|(!-TestResources.xml-!|!style_red(no)|
+|document|widgetContainer|null|!style_red(no)|
+|document|blabla|!-TestResources.xml-!|!style_red(no)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor findElementById
+!style_darkBlue{'''findElementById (id, parentElement)'''} - Looks for an element with the specified id inside the widget container. 
+
+'''Parameters:'''
+id : String - Identifier of the DOM element looked for.
+parentElement : Element - Parent element whose child is looked for. If its null than the widget container is used.
+
+'''Return value:'''
+Returns the FOUNDELEMENT.
+
+!***> Tests
+|'''invoke'''|!-findElementById-!|'''with parameters'''|!-id = "searchedElementId" & parentElement = $() -!|
+|'''expected element'''|!style_red(<TD id="searchedElementId">1</TD>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getText
+!style_darkBlue{'''getText (key)'''} - Retrieves text form the resource bundle. 
+
+'''Parameters:'''
+key : String - Key of the text in resource bundle.
+
+'''Return value:'''
+Returns the STRING element.
+
+!***> Tests
+|'''invoke'''|!-getText-!|'''with parameters'''|!-key = "Print" -!|
+|'''expected value'''|!style_red(Nyomtatás)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeChild
+!style_darkBlue{'''removeChild (parentElement, childElement)'''} method.
+
+'''Parameters : '''
+parentElement : Element - Parent element whose child is looked for. If its null than the widget container is used.
+childElement : Element -
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-removeChild-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(<div id="widgetContainer"><div id="parent"></div>text</div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor removeWidget
+!style_darkBlue{'''removeWidget ()'''} method...
+
+'''Parameters:'''
+None. 
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-removeWidget-!|'''with parameters'''|!--!|
+|'''expected container'''| !style_red(<div id="widgetContainer"></div>)|
+|'''invoke tear down'''|
+
+***!
+----
+
+!anchor updateText
+!style_darkBlue{'''updateText (theContainerElement, parentElement)'''} method...
+
+'''Parameters:'''
+theContainerElement : Element - ...
+parentElement : Element - Parent element whose child is looked for. If its null than the widget container is used.
+
+'''Return value:'''
+None.
+
+!****> Tests
+|'''invoke'''|!-updateText-!|'''with parameters'''|!-'parent', 'newText'-!|
+|'''expected container'''|!style_red(<div id="widgetContainer"><div id="parent">newText</div></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getContainerElement
+!style_darkBlue{'''getContainerElement ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getContainerElement-!|'''with parameters'''|!--!|
+|'''expected container'''|!style_red(<div id="widgetContainer"></div>)|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getI18ResourceBundle
+!style_darkBlue{'''getI18ResourceBundle ()'''} method...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-getI18ResourceBundle-!|'''with parameters'''|!--!|
+|'''expected container'''| |
+|'''invoke tear down'''|
+
+***!
+----

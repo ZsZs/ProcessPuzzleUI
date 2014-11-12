@@ -1,0 +1,52 @@
+!3 Overview
+Print View ...
+
+'''Methods:'''
+!***> Constructor
+  * .#_PrintViewConstructor
+***!
+!***> Public accessors and mutators
+  * .#getContentUri
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor _PrintViewConstructor
+!style_darkBlue{'''_PrintViewConstructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-_PrintViewConstructor-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getContentUri
+!style_darkBlue{'''getContentUri (theDocument)'''} method ...
+
+'''Parameters:'''
+theDocument :  - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-getContentUri-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

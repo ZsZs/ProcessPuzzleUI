@@ -1,0 +1,39 @@
+Core Scripts provides fundamental functionality to handle collections, files, xml, xml transformations, events.
+
+!***> Core Scripsts - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_CoreScriptsOverview.gif
+***!
+
+!3 !-XmlResource-!
+!-XmlResource-! facilitates accessing XML resources either on a server or in the file system. It also provides functionality to transform the XML resource to another with XSL Transformation.
+
+'''Methods:'''
+!***> Constructor
+  * .#initialize - The constructor takes the unified resource identifier and tries to retrieve the resource.
+***!
+!***> Public accessors and mutators
+  * .#refresh - Tries to retrieve the given xml resource again.
+***!
+
+!anchor initialize
+!style_darkBlue{'''!-XmlResource.initialize()-!'''} constructor takes the unified resource identifier and tries to retrieve the resource.
+
+'''Parameters:'''
+uri : String - Universal resource identifier.
+
+'''Return value:'''
+xmlResource : Object - The !-XmlResource-! object which was instantiated.
+
+----
+
+!anchor refresh
+!style_darkBlue{'''!-XmlResource.refresh()-!'''} method tries to retrieve the resource - identified by the constructor's uri parameter - again.
+
+'''Parameters:'''
+None
+
+'''Return value:'''
+isSuccess : Boolean - Signs if the resource was successfully retrieved.
+
+----
+----

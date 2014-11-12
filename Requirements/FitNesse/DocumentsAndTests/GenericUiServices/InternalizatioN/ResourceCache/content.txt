@@ -1,0 +1,36 @@
+!3 Overview
+
+Resource Cache ...
+
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#getResource
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor getResource
+!style_darkBlue{'''getResource (name, type)'''} method ...
+
+'''Parameters:'''
+name : String - ...
+type :  - ...
+
+'''Return value:'''
+KEY.
+
+!***> Tests
+|'''invoke'''|!-getResource-!|'''with parameters'''|!-'name','type'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

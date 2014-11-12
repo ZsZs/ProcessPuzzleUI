@@ -1,0 +1,186 @@
+!3 Overview
+Menu Item ...
+
+'''Methods:'''
+!***> Constructor
+  * .#constructor
+***!
+!***> Public accessors and mutators
+  * .#getCaption
+  * .#getName
+  * .#getPreferedIndex
+  * .#hide
+  * .#isVisible
+  * .#onClick
+  * .#setCaption
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+
+!anchor constuctor
+!style_darkBlue{'''constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-constructor-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getCaption
+!style_darkBlue{'''getCaption ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+CAPTION.
+
+!***> Tests
+|'''invoke'''|!-getCaption-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getName
+!style_darkBlue{'''getName ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+NAME.
+
+!***> Tests
+|'''invoke'''|!-getName-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor getPreferedIndex
+!style_darkBlue{'''getPreferedIndex ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+PREFEREDINDEX.
+
+!***> Tests
+|'''invoke'''|!-getPreferedIndex-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide (element)'''} method ...
+
+'''Parameters:'''
+element :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!-'element'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isVisible
+!style_darkBlue{'''isVisible()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+ISVISIBLE.
+
+!***> Tests
+|'''invoke'''|!-isVisible-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor onClick
+!style_darkBlue{'''onClick (theEvent)'''} method ...
+
+'''Parameters:'''
+theEvent :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-onClick-!|'''with parameters'''|!-'theEvent'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor setCaption
+!style_darkBlue{'''setCaption (newCaption)'''} method ...
+
+'''Parameters:'''
+newCaption :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-setCaption-!|'''with parameters'''|!-'newCaption'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show (element)'''} method ...
+
+'''Parameters:'''
+element :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-'element'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+----

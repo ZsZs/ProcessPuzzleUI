@@ -1,0 +1,20 @@
+!3 WEB User Interface State Manager.
+
+!***> !-ProcessPuzzle-! WEB User Interface State Manager - Overview
+
+***!
+
+ 
+'''Rule:''' A megadott paraméterekkel meg kell kapni a teljes URL-t.
+
+|!-CheckStateFullUrl-!|
+|Headerpage|Mainmenu|Leftpage|Leftmenu|Content|Statuspage|Url()|
+|Header.html|Trainings|?|Leftmenubar.html|Content.html|Footer.html|http://www.itkodex.hu/index.html#Frame[Header.html]&MainMenu=Trainings;Frame[Leftmenu.html]&SubmMenu=Overview|
+
+'''Rule:''' A Html oldal az URL-ben megadott adatokkal elérhetőségét teljes mértékben meghatározza.
+
+|!-RestoreStateFromUrl-!|
+|url|Headerpage()|Mainmenu()|Leftpage()|Leftmenu()|Content()|Statuspage()|
+|http://www.itkodex.hu/index.html#Frame[Header.html]&MainMenu=Trainings;Frame[Leftmenu.html]&SubmMenu=Overview|Header.html|Trainings|?|Leftmenubar.html|Content.html|Footer.html|
+
+[['''<< Egy szinttel feljebb lépés'''][.LocalSettings.ProcessPuzzleFramework.BrowserInterface]]

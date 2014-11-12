@@ -1,0 +1,13 @@
+!3 Overview
+Web UI Controller ...
+!***> Web UI Controller - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_WebUIControllerOverview.gif
+***!
+
+
+!3 Details
+
+The !-WebUiController JavaScript-! component consists of the following classes:
+ * [[WebUIController][^WebuiController]] 
+
+

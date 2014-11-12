@@ -1,0 +1,132 @@
+!3 Overview
+Document Reservation Widget ...
+!***> Document Reservation Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_DocumentReservationWidgetOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#cancel
+  * .#checkSelection
+  * .#hide
+  * .#release
+  * .#reserve
+  * .#show
+***!
+!***> Properties
+  * 
+***!
+
+----
+
+!3 Details
+!anchor cancel
+!style_darkBlue{'''cancel ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-cancel-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor checkSelection
+!style_darkBlue{'''checkSelection ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-checkSelection-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor release
+!style_darkBlue{'''release ()'''} method ...
+
+'''Parameters:'''
+None. 
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-release-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor reserve
+!style_darkBlue{'''reserve ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-reserve-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-none-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+----

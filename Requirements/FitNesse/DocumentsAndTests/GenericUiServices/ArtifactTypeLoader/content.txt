@@ -1,0 +1,130 @@
+!3 Overview
+Artifact Type Loader ...
+!***> Artifact Type Loader - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_ArtifactTypeLoaderOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#loadTypesFromFile
+  * .#loadTypesFromXml
+  * .#contains
+  * .#get
+  * .#put
+  * .#remove
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+!anchor loadTypesFromFile
+!style_darkBlue{'''loadTypesFromFile (xmlResourceName)'''} method ...
+
+'''Parameters:'''
+xmlResourceName : String - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-loadTypesFromFile-!|'''with parameters'''|!-'fileName'-!|
+|'''expected'''|!style_red()|  
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor loadTypesFromXml
+!style_darkBlue{'''loadTypesFromXml (xml)'''} method ...
+
+'''Parameters:'''
+xml : String - ...
+
+'''Return value:'''
+None.
+
+!***> Tests
+|'''invoke'''|!-loadTypesFromXml-!|'''with parameters'''|!-'xml'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor contains
+!style_darkBlue{'''contains (typeName)'''} method ...
+
+'''Parameters:'''
+typeName : String - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-contains-!|'''with parameters'''|!-'typeName'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor get
+!style_darkBlue{'''get (typeName)'''} method ...
+
+'''Parameters:'''
+typeName : String - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-get-!|'''with parameters'''|!-'typeName'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor put
+!style_darkBlue{'''put (typeName, type)'''} method ...
+
+'''Parameters:'''
+typeName : String - ...
+type :  - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-put-!|'''with parameters'''|!-'typeName', type-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor remove
+!style_darkBlue{'''remove (typeName)'''} method ...
+
+'''Parameters:'''
+typeName : String - ...
+
+'''Return value:'''
+...
+
+!***> Tests
+|'''invoke'''|!-remove-!|'''with parameters'''|!-'typeName'-!|
+|'''expected'''|!style_red()|
+|'''invoke tear down'''|
+
+***!
+
+----

@@ -1,0 +1,147 @@
+!3 Overview
+Dual State Menu Item ...
+
+'''Methods:'''
+!***> Constructor
+  * .#constructor
+***!
+!***> Public accessors and mutators
+  * .#changeCaption
+  * .#hide
+  * .#isIsOn
+  * .#show
+  * .#turnOff
+  * .#turnOn
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor changeCaption
+!style_darkBlue{'''changeCaption (controller)'''} method ...
+
+'''Parameters:'''
+controller :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-changeCaption-!|'''with parameters'''|!-'controller'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor constuctor
+!style_darkBlue{'''constructor ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-constructor-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor hide
+!style_darkBlue{'''hide ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-hide-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor isIsOn
+!style_darkBlue{'''isIsOn ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+...
+
+!***> Tests
+|'''invoke'''|!-isIsOn!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor show
+!style_darkBlue{'''show (theDLElement)'''} method ...
+
+'''Parameters:'''
+theDLELement :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-show-!|'''with parameters'''|!-'theDLElement'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor turnOff
+!style_darkBlue{'''turnOff ()'''} method ...
+
+'''Parameters:'''
+None.
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-turnOff-!|'''with parameters'''|!--!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+
+!anchor turnOn
+!style_darkBlue{'''turnOn (theNewStatus)'''} method ...
+
+'''Parameters:'''
+theNewStatus :  - ...
+
+'''Return value: '''
+None.
+
+!***> Tests
+|'''invoke'''|!-turnOn-!|'''with parameters'''|!-'theNewStatus'-!|
+|'''expected'''| |
+|'''invoke tear down'''|
+
+***!
+
+----
+----

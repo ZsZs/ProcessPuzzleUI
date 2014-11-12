@@ -1,0 +1,17 @@
+!3 Overview
+Tab Widget ...
+!***> Tab Widget - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_TabWidgetOverview.gif
+***!
+
+!3 Details
+
+The Tab Widget Java Script component consists of the following classes:
+
+ * [[Tab][^TaB]] 
+ * [[Tab Widget][^TabWidget]] is the root of this component. It provides standardized interface for handling the behavior of the tabs.
+ * [[Inverted Tab Widget][^InvertedTabWidget]] 
+
+
+
+

@@ -1,0 +1,38 @@
+!3 Overview
+Frame Set Manager ...
+!***> Frame Set Manager - Overview
+!img http://test.itkodex.hu/files/ProcessPuzzle/Images/DesignModel_FrameSetManagerOverview.gif
+***!
+'''Methods:'''
+!***> Constructor
+  * 
+***!
+!***> Public accessors and mutators
+  * .#frameSetManager
+  * .#loadFrameContent
+***!
+!***> Properties
+  * 
+***!
+
+!3 Details
+
+!anchor frameSetManager
+!style_darkBlue{'''frameSetManager(frameSet)'''} method ...
+
+'''Parameters:'''
+'''frameSet : '''_FrameSet - ...
+
+|'''invoke'''|!-frameSetManager-!|'''with parameters'''|!-frameSet-!|
+|'''expected'''| |
+----
+
+!anchor loadFrameContent
+!style_darkBlue{'''loadFrameContent(content)'''} method ...
+
+'''Parameters:'''
+'''content: ''' _HtmlPage - ...
+
+|'''invoke'''|!-loadFrameContent-!|'''with parameters'''|!-htmlPage-!|
+|'''expected'''| |
+----
