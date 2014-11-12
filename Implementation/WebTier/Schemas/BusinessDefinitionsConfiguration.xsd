@@ -21,7 +21,7 @@
 			<xs:sequence>
 				<xs:element ref="ge:schema" minOccurs="1" maxOccurs="1" />
 				<xs:element ref="ge:mapping" minOccurs="1" maxOccurs="unbounded" />
-				<xs:element ref="bd:businessDefinition" minOccurs="1"	maxOccurs="unbounded" />
+				<xs:element name="businessDefinition" type="xs:string" minOccurs="1"	maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
