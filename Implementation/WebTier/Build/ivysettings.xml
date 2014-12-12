@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivysettings>
+    <properties file="${ivy.settings.dir}/component.properties"/>
+    <properties file="${ivy.settings.dir}/local.build.properties"/>
+    <settings defaultResolver="resolver.chain" />
+    <include file="${common.build.path}/ivysettings-common.xml" />
+</ivysettings>

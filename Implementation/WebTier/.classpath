@@ -11,25 +11,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="Libraries/jersey-client.jar"/>
-	<classpathentry exported="true" kind="lib" path="Libraries/jersey-common.jar"/>
-	<classpathentry exported="true" kind="lib" path="Libraries/jersey-container-servlet-core.jar"/>
-	<classpathentry exported="true" kind="lib" path="Libraries/jersey-container-servlet.jar"/>
-	<classpathentry exported="true" kind="lib" path="Libraries/jersey-server.jar"/>
-	<classpathentry exported="true" kind="lib" path="Libraries/javax.ws.rs-api-2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="Libraries/guava-14.0.1.jar"/>
-	<classpathentry kind="lib" path="Libraries/hk2-api-2.2.0-b14.jar"/>
-	<classpathentry kind="lib" path="Libraries/hk2-locator-2.2.0-b14.jar"/>
-	<classpathentry kind="lib" path="Libraries/hk2-utils-2.2.0-b14.jar"/>
-	<classpathentry kind="lib" path="Libraries/asm-all-repackaged-2.2.0-b14.jar"/>
-	<classpathentry kind="lib" path="Libraries/cglib-2.2.0-b14.jar"/>
-	<classpathentry kind="lib" path="Libraries/javax.annotation-api-1.2.jar"/>
-	<classpathentry kind="lib" path="Libraries/javax.inject-2.2.0-b14.jar"/>
-	<classpathentry kind="lib" path="Libraries/javax.servlet-api-3.0.1.jar"/>
-	<classpathentry kind="lib" path="Libraries/jaxb-api-2.2.7.jar"/>
-	<classpathentry kind="lib" path="Libraries/org.osgi.core-4.2.0.jar"/>
-	<classpathentry kind="lib" path="Libraries/osgi-resource-locator-1.0.1.jar"/>
-	<classpathentry kind="lib" path="Libraries/persistence-api-1.0.jar"/>
-	<classpathentry kind="lib" path="Libraries/validation-api-1.1.0.Final.jar"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=ProcessPuzzleUI+-+Web+Tier&amp;ivyXmlPath=Build%2Fivy.xml&amp;confs=*"/>
 	<classpathentry kind="output" path="Build/classes"/>
 </classpath>
